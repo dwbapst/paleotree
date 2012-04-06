@@ -1,0 +1,24 @@
+version 1.3 -
+-Added new features to sampleRanges for variation in sampling rate similar to Liow et al. 2010
+-New feature added to binTimeData to allow for pre-made intervals to be used
+-Changed the naming of output from diversity curve functions, simFossilTaxa and sampling rate estimating functions
+-Added split.int and timelims arguments to diversity curve functions to stop 'spiky' diversity curve syndrome
+-changed all 'T's and 'F's to TRUE and FALSE statements in code
+-changes made to simFossilTaxa for pure-birth simulations
+-changes made to simFossilTaxa_SRcond to fix simulations to right number of nExtant with bifurcation/anagenesis
+-added some additional warning messages to functions
+-New function for simulating speciational/cladogenetic patterns of trait evolution under a Brownian model
+-New functions for analyzing differences in time-scaling across two phylo objects
+
+version 1.2 - 02/22/12
+-changes made to "bin_" time-scaling functions to improve computational speed
+-changes made to some help files to add clarification, some examples added
+
+version 1.1 - 02/13/12
+-changes made to conditioning structure in simFossilTaxa
+	-changes also to simFossilTaxa_SRCond and simPaleoTrees as a result of this
+-additional clarification of help files
+-changed all calls of print() in the functions to message()
+
+version 1.0 - 01/27/12
+-first release

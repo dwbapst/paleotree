@@ -1,0 +1,27 @@
+binTimeData             Bin Temporal Ranges in Discrete Intervals
+degradeTree             Randomly collapse nodes on a phylogeny
+depthRainbow            Paint Tree Branch Depth by Color
+dropZLB                 Drop Terminal Branches of Various Types
+expandTaxonTree         Extrapolating Lower Taxon Phylogenies from
+                        Higher Taxon Trees
+getSampProbDisc         Fit Models of Sampling Probability to
+                        Discrete-Interval Taxon Ranges
+getSampRateCont         Fit Models of Sampling Rates to Continuous-Time
+                        Taxon Ranges
+multiDiv                Calculating Diversity Curves Across Multiple
+                        Datasets
+paleotree-package       paleotree: Paleontological and Phylogenetic
+                        Analyses of Evolution
+plotTraitgram           Plot a Traitgram for Continuous Traits
+sProb2sRate             Converting Sampling Estimates
+sampleRanges            Sampling Taxon Ranges
+simFossilTaxa           Simulating Taxa in the Fossil Record
+simPaleoTrees           Simulating Un-Conditioned Trees of Fossil Taxa
+srcTimePaleoPhy         SampRate-Calibrated Timescaling of
+                        Paleo-Phylogenies
+taxa2cladogram          Converting taxon data into cladogram
+taxa2phylo              Convert taxon data into Phylogeny
+taxicDivCont            Diversity Curves
+timePaleoPhy            Timescaling of Paleo-Phylogenies
+timeSliceTree           Taking a Timeslice of a Tree
+unitLengthTree          Scale Tree to Unit-Length

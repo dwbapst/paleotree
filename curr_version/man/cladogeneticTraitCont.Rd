@@ -14,6 +14,8 @@ This function simulates continuous trait evolution where change occurs under a B
 
 Importantly, the change only occurs at the base of 'new' species, thus allowing cladogenetic trait evolution to be asymmetrical at branching points: i.e. only one branch actually changes position in trait-space, as expected under a budding cladogenesis model. This distinction is important as converting the taxa matrix to a phylogeny and simulating the trait changes under a 'speciational' tree-transformation would assume that divergence occurred on both daughter lineages at each node. (This has been the standard approach for simulating cladogenetic trait change on trees).
 
+Cryptic taxa generated with prop.cryptic in simFossilTaxa will not differ at all in trait values. These species will all be identical.
+
 See this link for additional details: 
 http://nemagraptus.blogspot.com/2012/03/simulating-budding-cladogenetictrait.html
 }
@@ -29,10 +31,15 @@ This function is similar to Brownian motion simulation functions such as \code{r
 See also \code{\link{unitLengthTree}} in this package and \code{speciationalTree} in the package geiger. These are tree transformation functions; along with BM simulation functions, they would be expected to have a similar effect as this function (when cladogenesis is 'bifurcating' and not 'budding'; see above).
 }
 \examples{
-require(geiger)
-dev.new()
+layout(1)
 set.seed(444)
 taxa<-simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=30,maxtime=1000,plot=TRUE)
+trait<-cladogeneticTraitCont(taxa)
+tree<-taxa2phylo(taxa)
+plotTraitgram(trait,tree,conf.int=FALSE)
+
+#with cryptic speciation
+taxa<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=30,maxtime=1000,plot=TRUE)
 trait<-cladogeneticTraitCont(taxa)
 tree<-taxa2phylo(taxa)
 plotTraitgram(trait,tree,conf.int=FALSE)

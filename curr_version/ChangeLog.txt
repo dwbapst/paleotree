@@ -1,4 +1,5 @@
 version 1.3 -
+-The various 'bin' time-scaling functions for phylogenies now include a non-stochastic option, for prettier plotting.
 -Added new features to sampleRanges for variation in sampling rate similar to Liow et al. 2010
 -New feature added to binTimeData to allow for pre-made intervals to be used
 -Changed the naming of output from diversity curve functions, simFossilTaxa and sampling rate estimating functions

@@ -2,7 +2,7 @@
 \alias{taxa2phylo}
 \title{Convert taxon data into Phylogeny}
 \description{Convert temporal and ancestor-descendant relationships of taxa into a time-scaled phylogeny}
-\usage{taxa2phylo(taxad, obs_time = NULL, plot = F)}
+\usage{taxa2phylo(taxad, obs_time = NULL, plot = FALSE)}
 \arguments{
   \item{taxad}{A five-column matrix of taxonomic data, as output by simFossilTaxa}
   \item{obs_time}{Per-taxon times of observation; if NULL, the LADs (column 4) in taxad2 are used}
@@ -17,6 +17,8 @@ All data relating to when static morpho-taxa appear or disappear in the record i
 Please, DO NOT use this function to time-scale a real tree for a real dataset. It assumes you know the divergence/speciation times of the branching nodes perfectly, which is almost impossible given the nature of the fossil record. Use timePaleoPhy or srcTimePaleoPhy instead.
 
 DO use this function when doing simulations and you want to make a tree of the 'true' history, such as for simulating trait evolution along phylogenetic branches.
+
+Unlike taxa2cladogram, this function does not merge cryptic taxa in output from simFossilTaxa and I do not offer an option to secondarily drop them. The tip labels should provide the necessary information for users to drop such taxa, however. See simFossilTaxa.
 }
 \value{
 The resulting phylogeny with branch lengths is output as an object of class phylo. This function will output trees with the element $root.time, which is the time of the root divergence in absolute time.
@@ -35,4 +37,9 @@ phyloDiv(tree)
 rangesCont<-sampleRanges(taxa,r=0.5)
 tree<-taxa2phylo(taxa,obs_time=rangesCont[,2])
 phyloDiv(tree,drop.ZLB=FALSE)
+
+#testing with cryptic speciation
+taxaCrypt<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=10,maxtaxa=20,maxtime=1000,maxExtant=0)
+treeCrypt<-taxa2phylo(taxaCrypt)
+layout(1);plot(treeCrypt)
 }

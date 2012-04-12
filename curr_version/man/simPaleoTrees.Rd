@@ -2,8 +2,8 @@
 \alias{simPaleoTrees}
 \title{Simulating Un-Conditioned Trees of Fossil Taxa}
 \description{Creates sets of paleo-trees with minimal conditioning and with sampling, except node-times are known perfectly}
-\usage{simPaleoTrees(p, q, r, ntrees=1, all.extinct=F, modern.samp=F, mintime=1, 
-	maxtime=100, mintaxa=2, maxtaxa=500, drop.zlb = T, plot = F)}
+\usage{simPaleoTrees(p, q, r, ntrees = 1, all.extinct = FALSE, modern.samp = FALSE, mintime = 1, 
+	maxtime = 100, mintaxa = 2, maxtaxa = 500, drop.zlb = TRUE, print.runs = TRUE, plot = FALSE)}
 \arguments{
   \item{p}{Instantaneous rate of speciation per lineage-time units}
   \item{q}{Instantaneous rate of extinction per lineage-time units}
@@ -16,6 +16,7 @@
   \item{mintaxa}{Minimum number of taxa allowed over entire simulation}
   \item{maxtaxa}{Maximum number of taxa allowed over entire simulation}
   \item{drop.zlb}{Should zero-length branches be dropped?}
+  \item{print.runs}{Print the proportion of simulations accepted for output?}
   \item{plot}{Should data be plotted as it is simulated?}
 }
 \details{
@@ -24,6 +25,8 @@ Essentially a complex wrapper for simFossilTaxa, sampleRanges and taxa2phylo, th
 simPaleoTrees essentially uses simFossilTaxa with no.cond=T and other minimal conditioning, to get as unbiased a sample of simulations as possible (without exceeding the maximum constraints). This is useful for birth-death analyses, although a number of options available in simFossilTaxa are thus unavailable in simPaleoTrees. By default, there is no conditioning on the number of extant taxa, living taxa are sampled perfectly at time 0 and zero-length branches are dropped. Unlike simPaleoTrees, you cannot condition on a certain number of extant taxa, only whether they are allowed or not (via all.extinct). There are also no options relating to speciation modes: taxa are only simulated under budding cladogenesis.
 
 Because the divergence times are known perfectly, yet tips are at the apparent time of extinction and unsampled taxa are dropped, one should not use the output of this analysis except for very specialized simulation analyses. The results are probably not anything like real data, at least in most qualities.
+
+The print.runs argument does not work precisely as in simFossilTaxa; it only counts how many accepted datasets from simFossilTaxa are acceptable for output after the simulation of sampling.
 }
 \value{
 Output is an object of class multiphylo containing the simulated phylogenies, unless ntrees=1 in which case the output is a phylogeny of class 'phylo'. Additionally, each of these simulated phylogenies will have the original simulated taxa data (from simFossilTaxa) and sampled ranges (from sampleRanges) attached as the elements $taxa and $ranges.
@@ -33,15 +36,15 @@ Output is an object of class multiphylo containing the simulated phylogenies, un
 \code{\link{simFossilTaxa}},\code{\link{taxa2phylo}},\code{\link{sampleRanges}},
 }
 \examples{
-dev.new()
+layout(1)
 set.seed(444)
 #simulate trees conditioned to have no living descendants
-trees<-simPaleoTrees(p=0.1,q=0.1,r=0.5,ntrees=10,all.extinct=TRUE,maxtime=100,plot=TRUE)
+trees<-simPaleoTrees(p=0.1,q=0.1,r=0.5,ntrees=10,all.extinct=TRUE,maxtime=100,print.runs=TRUE,plot=TRUE)
 #number of tips
 sapply(trees,Ntip)
 
 #simulate trees conditioned to (possibly) have living descendants and perfect sampling at modern
-trees<-simPaleoTrees(p=0.1,q=0.1,r=0.5,ntrees=10,all.extinct=FALSE,maxtime=100,modern.samp=TRUE,plot=TRUE)
+trees<-simPaleoTrees(p=0.1,q=0.1,r=0.5,ntrees=10,all.extinct=FALSE,maxtime=100,modern.samp=TRUE,print.runs=TRUE,plot=TRUE)
 #number of tips
 sapply(trees,Ntip)
 }

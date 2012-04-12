@@ -5,7 +5,7 @@
 \title{Diversity Curves}
 \description{Plots diversity curves based on taxic range data (in both discrete and continuous time) and for phylogenies.}
 \usage{
-taxicDivCont(timeData, int.length = 1, int.times = NULL, plot = TRUE, plotLogRich = FALSE, timelims = NULL)
+taxicDivCont(timeData, int.length = 1, int.times = NULL, plot = TRUE, plotLogRich = FALSE, timelims = NULL, drop.cryptic = FALSE)
 
 taxicDivDisc(timeList, int.times = NULL, plot = TRUE, split.ints=TRUE, plotLogRich = FALSE, timelims = NULL)
 
@@ -20,6 +20,7 @@ phyloDiv(tree, int.length = 1, int.times = NULL, plot = TRUE, plotLogRich = FALS
   \item{split.int}{For discrete time data, should calculated/input intervals be split at discrete time interval boundaries? If FALSE, can create apparent artifacts in calculating the diversity curve. See below.}
   \item{plot}{If true, diversity curve is plotted}
   \item{plotLogRich}{If true, taxic diversity plotted on log scale}
+  \item{drop.cryptic}{If true, cryptic taxa are merged to form one taxon for estimating taxon curves. Only works for objects from simFossilTaxa.}
   \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only affects plotting. Given as either NULL (the default) or as a vector of length two as for 'xlim' in the basic R function plot.}
   \item{drop.ZLB}{If true, zero-length terminal branches are dropped from the input tree}
 }

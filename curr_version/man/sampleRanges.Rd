@@ -14,6 +14,7 @@
   \item{min.taxa}{Minimum number of taxa sampled. The default is 2.}
   \item{ranges.only}{Give time of all sampling events as a list or taxon ranges only?}
   \item{minInt}{Minimum interval size used for simulating complex models}
+  \item{merge.cryptic}{Should sampling events for cryptic species be merged into one taxon?}
   \item{alt.method}{Use the alternative method of discretizing time even if a simple model of sampling is being simulated?}
   \item{plot}{If true, plots the sampling models for each taxon against time}
 }
@@ -33,6 +34,8 @@ As with many functions in the paleotree library, absolute time is always decreas
 If min.taxa=0, the simulation may output ranges for which no taxa were ever sampled.
 
 If modern.samp.prob=1.0 (the default), then living taxa will always be sampled at least at the present day (if there are any living taxa). If the probability is less than 1, they will be sampled with that probability at the modern day.
+
+By default, this function will merge sampling events from morphologically cryptic taxa, listing them as occurances for the earliest member of that group. To change this behavior, set merge.cryptic to FALSE.
 
 Conditioning on sampling some minimum number of taxa may create strange simulation results for some analyses, such as simulation analyses of birth-death processes. Set min.taxa=0 to remove this conditioning.
 }
@@ -77,6 +80,11 @@ taxicDivCont(rangesCont1)
 layout(1:2)
 rangesCont1<-sampleRanges(taxa,r=0.5,alpha=4,beta=4,rTimeRatio=5,plot=T)
 taxicDivCont(rangesCont1)
+
+#testing with cryptic speciation
+taxaCrypt<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+rangesCrypt<-sampleRanges(taxaCrypt,r=0.5)
+taxicDivCont(rangesCrypt)
 
 \dontrun{
 #simulate a model where sampling rate evolves under brownian motion

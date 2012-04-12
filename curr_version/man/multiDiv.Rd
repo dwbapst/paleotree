@@ -5,7 +5,7 @@
 \description{Given a list of data, such as taxic range and phylogenetic trees, diversity curves are calculated for the same intervals across all the individual datasets. A median curve with 95 percent quantile bounds can be calculated and plotted.
 }
 \usage{
-multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE, drop.ZLB=TRUE, plotLogRich = FALSE, timelims = NULL)
+multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE, drop.ZLB=TRUE, drop.cryptic = FALSE, plotLogRich = FALSE, timelims = NULL)
 plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL)
 }
 \arguments{
@@ -13,6 +13,7 @@ plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL)
   \item{int.length}{Time interval length}
   \item{plot}{Should the median diversity curve be plotted}
   \item{drop.ZLB}{Should terminal zero-length branches be dropped on phylogenetic datasets?}
+  \item{drop.cryptic}{If true, cryptic taxa are merged to form one taxon for estimating taxon curves. Only works for objects from simFossilTaxa.}
   \item{split.int}{For discrete time data, should calculated/input intervals be split at discrete time interval boundaries? If FALSE, can create apparent artifacts in calculating the diversity curve.}
   \item{results}{The output of a previous run of multiDiv}
   \item{plotLogRich}{If true, taxic diversity plotted on log scale}

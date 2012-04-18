@@ -2,10 +2,11 @@
 \alias{multiDiv}
 \alias{plotMultiDiv}
 \title{Calculating Diversity Curves Across Multiple Datasets}
-\description{Given a list of data, such as taxic range and phylogenetic trees, diversity curves are calculated for the same intervals across all the individual datasets. A median curve with 95 percent quantile bounds can be calculated and plotted.
+\description{Calculates multiple diversity curves from a list of datasets of taxic ranges and/or phylogenetic trees, for the same intervals for all the individual datasets. A median curve with 95 percent quantile bounds can be calculated and plotted.
 }
 \usage{
 multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE, drop.ZLB=TRUE, drop.cryptic = FALSE, plotLogRich = FALSE, timelims = NULL)
+
 plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL)
 }
 \arguments{
@@ -20,15 +21,15 @@ plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL)
   \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only affects plotting. Given as either NULL (the default) or as a vector of length two as for 'xlim' in the basic R function plot.}
 }
 \details{
-This function is essentially a wrapper for the individual diversity curve functions included in this package (paleotree). It will intuitively decide whether datasets it is given are continuous-time taxic ranges, discrete-time (binned interval) taxic ranges or phylogenetic trees, as long as they are formatted as the individual functions request. A list that contains a mix of data types is entirely acceptable. A list of matrices output from simFossilTaxa is allowable, and considered as input for taxicDivCont. Data of an unknown type gives back an error.
+This function is essentially a wrapper for the individual diversity curve functions included in paleotree. multiDiv will intuitively decide whether input datasets are continuous-time taxic ranges, discrete-time (binned interval) taxic ranges or phylogenetic trees, as long as they are formatted as required by the respective diversity curve functions. A list that contains a mix of data types is entirely acceptable. A list of matrices output by simFossilTaxa is allowable, and treated as input for taxicDivCont. Data of an unknown type gives back an error.
 
 The argument split.int splits intervals, if and only if discrete interval time data is included among the datasets. See the help file for taxicDivDisc to see an explanation of why split.int=TRUE by default is probably a good thing.
 
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
 
-The 'averaged' curve is actually the median rather than the mean as diversity counts are often highly skewed (in my experience).
+The 'averaged' curve is actually the median rather than the mean as diversity counts are often highly skewed (in the author's experience).
 
-The shaded certainty region around the median curve is the two-tailed 95 percent lower and upper quantiles, calculated from the observed data. It is not a true confidence interval, as it has no relaitonship to the standard error.
+The shaded certainty region around the median curve is the two-tailed 95 percent lower and upper quantiles, calculated from the observed data. It is not a true confidence interval, as it has no relationship to the standard error.
 }
 \value{
 A list composed of three elements will be invisibly returned:
@@ -38,33 +39,33 @@ A list composed of three elements will be invisibly returned:
 }
 \author{David W. Bapst}
 \seealso{
-The diversity curve functions used: \code{\link{phyloDiv}},\code{\link{taxicDivCont}},\code{\link{taxicDivDisc}},
+The diversity curve functions used include: \code{\link{phyloDiv}}, \code{\link{taxicDivCont}} and \code{\link{taxicDivDisc}}.
 
-Also see the function LTT.average.root() in the package TreeSim, which calculates an average LTT curve for multiple phylogenies.
+Also see the function LTT.average.root in the package TreeSim, which calculates an average LTT curve for multiple phylogenies.
 }
 \examples{
-dev.new()
 set.seed(444)
-taxa<-simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
-rangesCont<-sampleRanges(taxa,r=0.5)
-rangesDisc<-binTimeData(rangesCont,int.length=1)
+taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+rangesCont <- sampleRanges(taxa,r=0.5)
+rangesDisc <- binTimeData(rangesCont,int.length=1)
 cladogram<-taxa2cladogram(taxa,plot=TRUE)
 #using multiDiv with very different data types
-ttree<-timePaleoPhy(cladogram,rangesCont,type="basic",add.term=TRUE,plot=FALSE)
-input<-list(rangesCont,rangesDisc,ttree)
+ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",add.term=TRUE,plot=FALSE)
+input <- list(rangesCont,rangesDisc,ttree)
 multiDiv(input,plot=TRUE)
 
 #using multiDiv with samples of trees
-ttrees<-timePaleoPhy(cladogram,rangesCont,type="basic",randres=TRUE,ntrees=10,add.term=TRUE)
+ttrees <- timePaleoPhy(cladogram,rangesCont,type="basic",randres=TRUE,ntrees=10,add.term=TRUE)
 multiDiv(ttrees)
 #uncertainty in diversity history is solely due to 
- #the random resolution of polytomies
+   #the random resolution of polytomies
 
 #multiDiv can also take output from simFossilTaxa
 #what do many simulations run under some conditions 'look' like on average?
 set.seed(444)
-taxa<-simFossilTaxa(p=0.3,q=0.1,nruns=20,maxtime=20,maxtaxa=100,plot=TRUE,min.cond=FALSE)
+taxa <- simFossilTaxa(p=0.3,q=0.1,nruns=20,maxtime=20,maxtaxa=100,plot=TRUE,min.cond=FALSE)
 multiDiv(taxa)
-#increasing cone of diversity! Even better on a log scale:
+#increasing cone of diversity! 
+#Even better on a log scale:
 multiDiv(taxa,plotLogRich=TRUE)
 }

@@ -14,15 +14,16 @@ Returns the modified phylogeny as an object of class phylo. Any $root.time eleme
 }
 \author{David W. Bapst}
 \seealso{
-\code{\link{timePaleoPhy}},
+\code{
+As alternative to using this for comparative studies, see \link{timePaleoPhy}}
 
 See also \code{speciationalTree} in the package geiger, which does essentially the same thing.
 }
 \examples{
-dev.new()
 set.seed(444)
-tree<-rtree(10)
-layout(matrix(1:2,,2))
+tree <- rtree(10)
+layout(1:2)
 plot(tree)
 plot(unitLengthTree(tree))
+layout(1)
 }

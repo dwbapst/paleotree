@@ -32,15 +32,13 @@ simFossilTaxa_SRCond(r, avgtaxa, p, q, anag.rate = 0, prop.bifurc = 0,
   \item{avgtaxa}{Desired average number of taxa}
 }
 \details{
-simFossilTaxa simulates a birth-death process (Kendall, 1948; Nee, 2006), but unlike most functions for this implemented in R, this function includes 
+simFossilTaxa simulates a birth-death process (Kendall, 1948; Nee, 2006), but unlike most functions for this implemented in R, this function enmeshes the simulation of speciation and extinction with explicit models of how lineages are morphologically differentiated in the fossil record, as morphotaxa are the basic units of paleontological estimates of diversity and phylogenetics.
 
-simulates the diversification of clades where taxa are relatively morphologically static over long time intervals. The output is a description of the temporal and phylogenetic relationships of those morphotaxa. This is meant to emulate the sort of data that paleobiologists often work with, especially in well-sampled groups.
+simFossilTaxa runs many simulations of diversification and runs are only accepted for output if and when they meet the conditioning criteria, both minima and maxima. If min.cond is true (the default), simulations will be stopped and immediately accepted when clades satisfy mintime, mintaxa, minExtant and maxExtant (if the later is set). This stopping is technically almost immediate, see below. To reduce the effect of one conditioning criterion, simply set that limit to an arbitrarily low or high number (depending if it is a minimum or maximum constraint). If min.cond is false, simulation runs are not stopped and evaluated for output acceptance until they (a) go completely extinct or (b) hit either maxtaxa or maxtime. Whether the simulation runs are accepted or not for output is still dependent on mintaxa, mintime, minExtant and maxExtant. Note that some combinations of conditions, such as attempting to condition on a specific non-zero value of minExtant and maxExtant, may take a long time to fin any acceptable simulation runs.
 
-If min.cond=T (the default), simulations will stop when clades satisfy mintime, mintaxa, minExtant and maxExtant (if the later is set). To reduce the effect of one condition, simply set the limit to an arbitrarily low number. If min.cond=F, then the simulations are not stopped until they (a) go extinct or (b) hit either maxtaxa or maxtime. Whether they are accepted or not for output is still dependent on mintaxa, mintime, minExtant and maxExtant. Note that some combinations of conditions, such as setting minExtant=maxExtant>0 
+Hartmann et al. (2011) recently discovered a potential statistical artifact when branching simulations are conditioned on some maximum number of taxa. Thus, this function continues the simulation once mintaxa or minExtant is hit, until the next taxon (limit +1) originates. Once the simulation terminates, it is judged whether it is acceptable for all conditions given and if so, the run is accepted as a dataset for output.
 
-Hartmann et al. (2011) recently discovered a potential statistical artifact when branching simulations are conditioned on some maximum number of taxa. Thus, this function continues the simulation once mintaxa or minExtant is hit, until the next taxon (limit +1) originates. Once the simulation terminates, it is judged whether it is acceptable for all conditions given and if so, it is accepted as a dataset to be output.
-
-Please note that mintaxa and maxtaxa refer to the number of static morphotaxa that were birthed over the entire evolutionary history of the simulated clade, not the extant richness at the end of the simulation. Use minExtant and maxExtant if you want to condition on the number of taxa living at some time.
+Please note that mintaxa and maxtaxa refer to the number of static morphotaxa birthed over the entire evolutionary history of the simulated clade, not the extant richness at the end of the simulation. Use minExtant and maxExtant if you want to condition on the number of taxa living at some time.
 
 The simFossilTaxa function can effectively simulate clades evolving under any combination of the three "modes" of speciation generally referred to by paleontologists: budding cladogenesis, branching cladogenesis and anagenesis (Foote, 1996). The first two are "speciation" in the typical sense used by biologists, with the major distinction between these two modes being whether the ancestral taxon shifts morphologically at the time of speciation. The third is where a morphotaxon changes into another morphotaxon with no branching, hence the use of the terms "pseudoextinction" and "pseudospeciation". As bifurcation and budding are both branching events, both are controlled by the p, the instantaneous rate, while the probability of a branching event being either is set by u. By default, only budding cladogenesis occurs To have these three modes occur in equal proportions, set p to be twice the value of w and set u to 0.5. 
 
@@ -54,13 +52,13 @@ If conditions are such that a clade survives to maxtime, then maxtime will becom
 
 simFossilTaxa simulates single taxa until they go extinct or exceed maxtime. This means the function may have fully simulated some lineages for thousands of time-steps while others are not yet simulated, and thus sometimes overshoot constraints on the number of taxa. This function will automatically discard any runs where the number of taxa exceeds 2 x maxtaxa to avoid blowing up computation time. This is likely to happen under a pure-birth scenario; I suggest using low maxtime settings if doing a pure-birth simulation.
 
-simFossilTaxa_SRCond is a wrapper for simFossilTaxa for when you want clades of a particular size, post-sampling. This function accomplishes this task by first calculating the expected proportion of taxa sampled, given the sampling rate and the rates which control lineage termination: extinction, anagenesis and bifurcation. The average original clade size needed to produce the number of sampled taxa given by avgtaxa is calculated with the following equation:
+simFossilTaxa_SRCond is a wrapper for simFossilTaxa for when clades of a particular size are desired, post-sampling. This function accomplishes this task by first calculating the expected proportion of taxa sampled, given the sampling rate and the rates which control lineage termination: extinction, anagenesis and bifurcation. The average original clade size needed to produce the number of sampled taxa given by avgtaxa is calculated with the following equation:
 
 \eqn{N = (average number of taxa desired) / ( 1 - exp( -r / (q + anag.rate + (prop.bifurc * p)) ))}
 
-We will call that quantity N. Note that u * p describes the rate of bifurcation, as u is the ratio of budding to bifurcating cladogenesis. This equation will diverge in ways that are not easily predicted as the rate of cryptic speciation increases.
+We will call that quantity N. Note that the quantity (prop.bifurc * p) describes the rate of bifurcation when there is no cryptic cladogenesis, as prop.bifurc is the ratio of budding to bifurcating cladogenesis. This equation will diverge in ways that are not easily predicted as the rate of cryptic speciation increases.
 
-This value is used with simFossilTaxa, where mintaxa is set to N and maxtaxa set to 2*N. simFossilTaxa_SRcond will generally produce simulated datasets that are generally of that size or larger post-sampling (although there can be some variance). Some combinations of p, q, r and avgtaxa may take an extremely long time to find large enough datasets. Some combinations may produce very strange datasets that may have weird structure that is only a result of the conditioning (for example, the only clades that have many taxa when net diversification is low or negative will have lots of very early divergences, which could impact analyses). Needless to say, conditioning can be very difficult.
+Next, this value is used with simFossilTaxa, where mintaxa is set to N and maxtaxa set to 2*N. simFossilTaxa_SRcond will generally produce simulated datasets that are generally of that size or larger post-sampling (although there can be some variance). Some combinations of parameters may take an extremely long time to find large enough datasets. Some combinations may produce very strange datasets that may have weird structure that is only a result of the conditioning (for example, the only clades that have many taxa when net diversification is low or negative will have lots of very early divergences, which could impact analyses). Needless to say, conditioning can be very difficult.
 
 More details on this function's design can be read here:
 http://nemagraptus.blogspot.com/2012/04/simulating-fossil-record.html
@@ -75,21 +73,20 @@ Each matrix of simulated data also has rownames, generally of the form "t1" and 
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
 }
 \references{
-Foote, M. 1996. On the Probability of Ancestors in the Fossil Record. Paleobiology 22(2):141-151.
+Foote, M. 1996 On the Probability of Ancestors in the Fossil Record. \emph{Paleobiology} \bold{22}(2):141--151.
 
-Hartmann, K., D. Wong, and T. Stadler. 2010. Sampling Trees from Evolutionary Models. Systematic Biology 59(4):465-476.
+Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary Models. \emph{Systematic Biology} \bold{59}(4):465--476.
 
-Kendall, D. G. 1948. On the Generalized "Birth-and-Death" Process. The Annals of Mathematical Statistics 19(1):1-15.
+Kendall, D. G. 1948 On the Generalized "Birth-and-Death" Process. \emph{The Annals of Mathematical Statistics} \bold{19}(1):1--15.
 
-Nee, S. 2006. Birth-Death Models in Macroevolution. Annual Review of Ecology, Evolution, and Systematics 37(1):1-17.
+Nee, S. 2006 Birth-Death Models in Macroevolution. \emph{Annual Review of Ecology, Evolution, and Systematics} \bold{37}(1):1--17.
 }
 \author{David W. Bapst}
-\seealso{\code{\link{sampleRanges}},\code{\link{simPaleoTrees}},\code{\link{taxa2phylo}},\code{\link{taxa2cladogram}},
+\seealso{\code{\link{sampleRanges}}, \code{\link{simPaleoTrees}}, \code{\link{taxa2phylo}}, \code{\link{taxa2cladogram}}
 }
 \examples{
 set.seed(444)
-layout(1)
-taxa<-simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
 #let's see what the 'true' diversity curve looks like in this case
 #plot the FADs and LADs with taxicDivCont
 taxicDivCont(taxa[,3:4])
@@ -97,27 +94,25 @@ taxicDivCont(taxa[,3:4])
 
 #make datasets with multiple speciation modes
 #following has anagenesis, budding cladogenesis and bifurcating cladogenesis
-	#all set to 1/2 extinction rate
+    #all set to 1/2 extinction rate
 set.seed(444)
-layout(1)
-res<-simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0.5,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
+res <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0.5,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
 #what does this mix of speciation modes look like as a phylogeny?
-tree<-taxa2phylo(res,plot=TRUE)
+tree <- taxa2phylo(res,plot=TRUE)
 
 #some other options with cryptic speciation
-taxaCrypt1<-simFossilTaxa(p=0.1,q=0.1,anag.rate=0,prop.bifurc=0,prop.crypt=0.5,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
-tree1<-taxa2phylo(taxaCrypt1,plot=TRUE)
-taxaCrypt2<-simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0.5,prop.crypt=0.5,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
-tree2<-taxa2phylo(taxaCrypt2,plot=TRUE)
-taxaCrypt3<-simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0,prop.crypt=1,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
-tree3<-taxa2phylo(taxaCrypt2,plot=TRUE)
+taxaCrypt1 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0,prop.bifurc=0,prop.crypt=0.5,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
+tree1 <- taxa2phylo(taxaCrypt1,plot=TRUE)
+taxaCrypt2 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0.5,prop.crypt=0.5,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
+tree2 <- taxa2phylo(taxaCrypt2,plot=TRUE)
+taxaCrypt3 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0,prop.crypt=1,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
+tree3 <- taxa2phylo(taxaCrypt2,plot=TRUE)
 
 #can generate datasets that meet multiple conditions: time, # total taxa, # extant taxa
 set.seed(444)
-layout(1)
-res<-simFossilTaxa(p=0.1,q=0.1,mintime=10,mintaxa=30,maxtaxa=40,minExtant=10,maxExtant=20,nruns=20,plot=FALSE,print.runs=TRUE)
+res <- simFossilTaxa(p=0.1,q=0.1,mintime=10,mintaxa=30,maxtaxa=40,minExtant=10,maxExtant=20,nruns=20,plot=FALSE,print.runs=TRUE)
 #use print.run to know how many simulations were accepted of the total generated
-layout(matrix(1:2,2,))
+layout(1:2)
 #histogram of # taxa over evolutionary history
 hist(sapply(res,nrow),main="#taxa")
 #histogram of # extant taxa at end of simulation
@@ -125,30 +120,31 @@ hist(sapply(res,function(x) sum(x[,5])),main="#extant")
 
 #pure-birth example
 #note that conditioning is tricky
-taxa<-simFossilTaxa(p=0.1,q=0,mintime=10,mintaxa=100,maxtime=100,maxtaxa=100,nruns=10,plot=T)
+layout(1)
+taxa <- simFossilTaxa(p=0.1,q=0,mintime=10,mintaxa=100,maxtime=100,maxtaxa=100,nruns=10,plot=TRUE)
 
 #can generate datasets where simulations go until extinction or max limits
-	#and THEN are evaluated whether they meet min limits
-	#good for producing unconditioned birth-death trees
+     #and THEN are evaluated whether they meet min limits
+     #good for producing unconditioned birth-death trees
 set.seed(444)
-layout(1)
-res<-simFossilTaxa(p=0.1,q=0.1,maxtaxa=100,maxtime=100,nruns=10,plot=TRUE,print.runs=TRUE,min.cond=FALSE)
+res <- simFossilTaxa(p=0.1,q=0.1,maxtaxa=100,maxtime=100,nruns=10,plot=TRUE,print.runs=TRUE,min.cond=FALSE)
 #hey, look, we accepted everything! (That's what we want.)
-layout(matrix(1:2,2,))
+layout(1:2)
 #histogram of # taxa over evolutionary history
 hist(sapply(res,nrow),main="#taxa")
 #histogram of # extant taxa at end of simulation
 hist(sapply(res,function(x) sum(x[,5])),main="#extant")
 
 #using the SRcond version
-set.seed(444)
 layout(1)
-avgtaxa<-50
-r<-0.5
-taxa<-simFossilTaxa_SRCond(r=r,p=0.1,q=0.1,nruns=20,avgtaxa=avgtaxa)
+set.seed(444)
+avgtaxa <- 50
+r <- 0.5
+taxa <- simFossilTaxa_SRCond(r=r,p=0.1,q=0.1,nruns=20,avgtaxa=avgtaxa)
 #now let's use sampleRanges and count number of sampled taxa
-ranges<-lapply(taxa,sampleRanges,r=r)
-ntaxa<-sapply(ranges,function(x) sum(!is.na(x[,1])))
-hist(ntaxa);mean(ntaxa)
+ranges <- lapply(taxa,sampleRanges,r=r)
+ntaxa <- sapply(ranges,function(x) sum(!is.na(x[,1])))
+hist(ntaxa)
+mean(ntaxa)
 #works okay... some parameter combinations are difficult to get right number of taxa
 }

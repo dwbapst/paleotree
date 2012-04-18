@@ -6,7 +6,7 @@
 \alias{qsRate2Comp}
 \alias{probAnc}
 \title{Converting Sampling Estimates}
-\description{Various functions for converting between estimates of sampling in the fossil record}
+\description{Various functions for converting between estimates of sampling in the fossil record.}
 \usage{
 sProb2sRate(R, int.length = 1)
 sRate2sProb(r, int.length = 1)
@@ -28,11 +28,11 @@ This is a family of functions which all convert from some estimate of sampling t
 
 As with many models used in the paleotree library, it is generally assumed that the fossil record of interest is composed of discrete relatively-static taxonomic units which diversify mainly by budding cladogenesis, and that sampling is a very rare event well approximated by a model of exponential waiting times. The veracity of those assumptions is difficult to test and the senstivity of these analyses to relaxing those assumptions probably varies.
 
-sProb2sRate() and sRate2sProb() give very rough conversions for converting between the probability of sampling once per time interval (R or "sProb" in this package as used in the references below) and the instantaneous rate of sampling per lineage/time unit ("sRate" or r). If you have estimates of the speciation and extinction rate, use pqsRate2sProb() instead for a more accurate estimate of R.
+sProb2sRate and sRate2sProb give very rough conversions for converting between the probability of sampling once per time interval (R or "sProb" in this package as used in the references below) and the instantaneous rate of sampling per lineage/time unit ("sRate" or r). If you have estimates of the speciation and extinction rate, use pqsRate2sProb() instead for a more accurate estimate of R.
 
-qsProb2Comp() and qsRate2Comp() are different calculations for "Pp" or the probability/proportion of taxa sampled in a clade. Theoretically, one could use it to extrapolate out the 'true' diversity, assuming the sampling rate model was correct. See Foote and Raup, 1996.
+qsProb2Comp and qsRate2Comp are different calculations for "Pp" or the probability/proportion of taxa sampled in a clade. Theoretically, one could use it to extrapolate out the 'true' diversity, assuming the sampling rate model was correct. See Foote and Raup, 1996.
 
-probAnc() obtains the probability of sampling indirect ancestors for a group as given by Foote (1996), assuming only budding cladogenesis, given the sampling probability and estimates of the diversification rate.
+probAnc obtains the probability of sampling indirect ancestors for a group as given by Foote (1996), assuming only budding cladogenesis, given the sampling probability and estimates of the diversification rate.
 
 See the references below for a more detailed explanation of the methods and formulae used. The relevant equations are generally found in the appendices of those papers.
 }
@@ -40,19 +40,19 @@ See the references below for a more detailed explanation of the methods and form
 The converted sampling estimate, depending on the function used. See details above.
 }
 \references{
-Foote, M. 1996. On the Probability of Ancestors in the Fossil Record. Paleobiology 22(2):141-151.
+Foote, M. 1996 On the Probability of Ancestors in the Fossil Record. \emph{Paleobiology} \bold{22}(2):141--151.
 
-Foote, M. 1997. Estimating Taxonomic Durations and Preservation Probability. Paleobiology 23(3):278-300.
+Foote, M. 1997 Estimating Taxonomic Durations and Preservation Probability. \emph{Paleobiology} \bold{23}(3):278--300.
 
-Foote, M. 2000. Origination and extinction components of taxonomic diversity: general problems. Pp. 74-102. In D. H. Erwin, and S. L. Wing, eds. Deep Time: Paleobiology's Perspective. The Paleontological Society, Lawrence, Kansas.
+Foote, M. 2000 Origination and extinction components of taxonomic diversity: general problems. Pp. 74--102. In D. H. Erwin, and S. L. Wing, eds. Deep Time: Paleobiology's Perspective. The Paleontological Society, Lawrence, Kansas.
 
-Foote, M., and D. M. Raup. 1996. Fossil preservation and the stratigraphic ranges of taxa. Paleobiology 22(2):121-140.
+Foote, M., and D. M. Raup. 1996 Fossil preservation and the stratigraphic ranges of taxa. \emph{Paleobiology} \bold{22}(2):121--140.
 
-Solow, A. R., and W. Smith. 1997. On Fossil Preservation and the Stratigraphic Ranges of Taxa. Paleobiology 23(3):271-277.
+Solow, A. R., and W. Smith. 1997 On Fossil Preservation and the Stratigraphic Ranges of Taxa. \emph{Paleobiology} \bold{23}(3):271--277.
 }
 \author{David W. Bapst, with advice from Michael Foote}
 \seealso{
-\code{\link{sampleRanges}},\code{\link{getSampRateCont}},\code{\link{getSampProbDisc}}
+\code{\link{sampleRanges}}, \code{\link{getSampRateCont}}, \code{\link{getSampProbDisc}}
 }
 \examples{
 sRate2sProb(r=0.5)

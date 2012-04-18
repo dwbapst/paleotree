@@ -2,8 +2,10 @@
 \alias{sampleRanges}
 \title{Sampling Taxon Ranges}
 \description{A function for simulating the effect of incomplete sampling of the fossil record.}
-\usage{sampleRanges(taxad, r, alpha = 1, beta = 1, rTimeRatio = 1, modern.samp.prob = 1, 
-	min.taxa = 2, ranges.only = TRUE, minInt = 0.01, alt.method = FALSE, plot = TRUE)}
+\usage{
+sampleRanges(taxad, r, alpha = 1, beta = 1, rTimeRatio = 1, modern.samp.prob = 1, min.taxa = 2, 
+    ranges.only = TRUE, minInt = 0.01, merge.cryptic = TRUE, alt.method = FALSE, plot = FALSE)
+}
 \arguments{
   \item{taxad}{A two-column matrix of per-taxon ranges. The five-column matrix output of simFossilTaxa can also be supplied.}
   \item{r}{Instantaneous average sampling rate per lineage time units; given as a vector of length one or length equal to the number of taxa}
@@ -31,35 +33,34 @@ Because sampling rate varies over time within lineages under any of these more c
 
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
 
-If min.taxa=0, the simulation may output ranges for which no taxa were ever sampled.
+If min.taxa is set to zero, the simulation may produce output in which no taxa were ever sampled.
 
-If modern.samp.prob=1.0 (the default), then living taxa will always be sampled at least at the present day (if there are any living taxa). If the probability is less than 1, they will be sampled with that probability at the modern day.
+If modern.samp.prob is set to 1.0 (the default), then living taxa will always be sampled at least at the present day (if there are any living taxa). If the probability is less than 1, they will be sampled with that probability at the modern day.
 
 By default, this function will merge sampling events from morphologically cryptic taxa, listing them as occurances for the earliest member of that group. To change this behavior, set merge.cryptic to FALSE.
 
 Conditioning on sampling some minimum number of taxa may create strange simulation results for some analyses, such as simulation analyses of birth-death processes. Set min.taxa=0 to remove this conditioning.
 }
 \value{
-If ranges.only=T, then the output is a two-column per-taxon matrix of first and last appearances in absolute time. NAs mean the taxon was never sampled in the simulation.
+If ranges.only is TRUE, then the output is a two-column per-taxon matrix of first and last appearances in absolute time. NAs mean the taxon was never sampled in the simulation.
 
-If ranges.only=F, then the output is a list, where each element is a vector of sampling events the timing of sampling events, each corresponding to a different taxon in the input. Elements that are NA are unsampled taxa.
+If ranges.only is FALSE (the default), the output is a list, where each element is a vector of sampling events the timing of sampling events, each corresponding to a different taxon in the input. Elements that are NA are unsampled taxa.
 }
 \references{
-Foote, M. 1997. Estimating Taxonomic Durations and Preservation Probability. Paleobiology 23(3):278-300.
+Foote, M. 1997 Estimating Taxonomic Durations and Preservation Probability. \emph{Paleobiology} \bold{23}(3):278--300.
 
-Liow, L. H., T. B. Quental, and C. R. Marshall. 2010. When Can Decreasing Diversification Rates Be Detected with Molecular Phylogenies and the Fossil Record? Systematic Biology 59(6):646-659.
+Liow, L. H., T. B. Quental, and C. R. Marshall. 2010 When Can Decreasing Diversification Rates Be Detected with Molecular Phylogenies and the Fossil Record? \emph{Systematic Biology} \bold{59}(6):646--659.
 }
 \author{David W. Bapst}
-\seealso{\code{\link{simFossilTaxa}},\code{\link{binTimeData}}}
+\seealso{\code{\link{simFossilTaxa}}, \code{\link{binTimeData}}}
 \examples{
-layout(1)
 set.seed(444)
-taxa<-simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
-layout(matrix(1:2,2,))
+taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+layout(1:2)
 #let's see what the 'true' diversity curve looks like in this case
 taxicDivCont(taxa)
-#simulate a fossil record with imperfect sampling with sampleRanges()
-rangesCont<-sampleRanges(taxa,r=0.5)
+#simulate a fossil record with imperfect sampling with sampleRanges
+rangesCont <- sampleRanges(taxa,r=0.5)
 #plot the diversity curve based on the sampled ranges
 taxicDivCont(rangesCont)
 #compare the true history to what we might observe!
@@ -68,44 +69,46 @@ taxicDivCont(rangesCont)
 
 #a pull-to-the-recent model with x5 increase over time similar to Liow et al.'s  incP
 layout(1:2)
-rangesCont1<-sampleRanges(taxa,r=0.5,rTimeRatio=5,plot=T)
+rangesCont1 <- sampleRanges(taxa,r=0.5,rTimeRatio=5,plot=TRUE)
 taxicDivCont(rangesCont1)
 
 #a hat-shaped model
 layout(1:2)
-rangesCont1<-sampleRanges(taxa,r=0.5,alpha=4,beta=4,plot=T)
+rangesCont1 <- sampleRanges(taxa,r=0.5,alpha=4,beta=4,plot=TRUE)
 taxicDivCont(rangesCont1)
 
 #a combination of these
 layout(1:2)
-rangesCont1<-sampleRanges(taxa,r=0.5,alpha=4,beta=4,rTimeRatio=5,plot=T)
+rangesCont1 <- sampleRanges(taxa,r=0.5,alpha=4,beta=4,rTimeRatio=5,plot=TRUE)
 taxicDivCont(rangesCont1)
 
 #testing with cryptic speciation
-taxaCrypt<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
-rangesCrypt<-sampleRanges(taxaCrypt,r=0.5)
+layout(1)
+taxaCrypt <- simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0,plot=TRUE)
+rangesCrypt <- sampleRanges(taxaCrypt,r=0.5)
 taxicDivCont(rangesCrypt)
 
 \dontrun{
 #simulate a model where sampling rate evolves under brownian motion
 tree<-taxa2phylo(taxa,obs=taxa[,3])
-sampRateBM<-rTraitCont(tree)
-sampRateBM<-sampRateBM-min(sampRateBM)
+sampRateBM <- rTraitCont(tree)
+sampRateBM <- sampRateBM-min(sampRateBM)
 layout(1:2)
-rangesCont1<-sampleRanges(taxa,r=sampRateBM,plot=T)
+rangesCont1 <- sampleRanges(taxa,r=sampRateBM,plot=TRUE)
 taxicDivCont(rangesCont1)
 
 #evolving sampling rate, hat model and pull of the recent
 layout(1:2)
-rangesCont1<-sampleRanges(taxa,r=sampRateBM,alpha=4,beta=4,rTimeRatio=5,plot=T)
+rangesCont1 <- sampleRanges(taxa,r=sampRateBM,alpha=4,beta=4,rTimeRatio=5,plot=TRUE)
 taxicDivCont(rangesCont1)
+layout(1)
 
 #the simpler model is simulated by pulling waiting times from an exponential
 #more complicated models are simulated by discretizing time into small intervals
 #are these two methods comparable?
 #let's look at the number of taxa sampled under both methods
-summary(replicate(100,sum(!is.na(sampleRanges(taxa,r=0.5,alt.method=F)[,1]))))
-summary(replicate(100,sum(!is.na(sampleRanges(taxa,r=0.5,alt.method=T)[,1]))))
+summary(replicate(100,sum(!is.na(sampleRanges(taxa,r=0.5,alt.method=FALSE)[,1]))))
+summary(replicate(100,sum(!is.na(sampleRanges(taxa,r=0.5,alt.method=TRUE)[,1]))))
 #they look pretty similar!
 }
 }

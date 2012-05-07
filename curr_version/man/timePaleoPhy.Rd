@@ -59,6 +59,8 @@ As with many functions in the paleotree library, absolute time is always decreas
 timePaleoPhy can only be applied to datasets where taxon appearances are in continuous time. bin_timePaleoPhy is a wrapper of timePaleoPhy which produces timescaled trees for datasets which only have interval data available. For each output tree, taxon FADs and LADs are placed within their listed intervals under a uniform distribution. Thus, a large sample of time-scaled trees will approximate the uncertainty in the actual timing of the FADs and LADs. 
 
 By setting the argument nonstoch.bin to TRUE, the dates are NOT stochastically pulled from uniform bins but instead FADs are assigned to the earliest time of whichever interval they were placed in and LADs are placed at the most recent time in their placed interval. This option may be useful for plotting. The sites argument becomes arbitrary if nonstoch.bin is TRUE.
+
+If timeData or the elements of timeList are actually data.frames (as output by read.csv or read.table), these will be coerced to a matrix.
 }
 \value{
 The output of these functions is a time-scaled tree or set of time-scaled trees, of either class phylo or multiphylo, depending on the argument ntrees. All trees are output with an element $root.time. This is the time of the root on the tree and is important for comparing patterns across trees.
@@ -110,12 +112,12 @@ phyloDiv(ttree)
 #if we set ntrees>1, timePaleoPhy will make multiple time-trees
 ttrees <- timePaleoPhy(cladogram,rangesCont,type="basic",ntrees=9,randres=TRUE,add.term=TRUE,plot=TRUE)
 #let's compare nine of them at once in a plot
-layout(matrix(1:9,3,3))
+layout(matrix(1:9,3,3));parOrig <- par(mar=c(1,1,1,1))
 for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label=FALSE,no.margin=TRUE)}
 #they are all a bit different!
 
 #can plot the median diversity curve with multiDiv
-layout(1)
+layout(1);par(parOrig)
 multiDiv(ttrees)
 
 #compare different methods of timePaleoPhy

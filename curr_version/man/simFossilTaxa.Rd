@@ -6,11 +6,12 @@
 \usage{
 simFossilTaxa(p, q, anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0, nruns = 1, 
    mintaxa = 1, maxtaxa = 1000, mintime = 1,maxtime = 1000, minExtant = 0, 
-   maxExtant = NULL, min.cond = TRUE, print.runs = FALSE, plot = FALSE)
+   maxExtant = NULL, min.cond = TRUE, count.cryptic = FALSE, print.runs = FALSE, 
+   plot = FALSE)
 
 simFossilTaxa_SRCond(r, avgtaxa, p, q, anag.rate = 0, prop.bifurc = 0, 
    prop.cryptic = 0, nruns = 1, maxtime = 1000, maxExtant = NULL, 
-   print.runs = FALSE, plot = FALSE)
+   count.cryptic = FALSE, print.runs = FALSE, plot = FALSE)
 }
 \arguments{
   \item{p}{Instantaneous rate of speciation/branching}
@@ -26,6 +27,7 @@ simFossilTaxa_SRCond(r, avgtaxa, p, q, anag.rate = 0, prop.bifurc = 0,
   \item{minExtant}{Minimum number of living taxa allowed at end of simulations}
   \item{maxExtant}{Maximum number of living taxa allowed at end of simulations}
   \item{min.cond}{Stop simulations when they hit minimum conditions or go until they hit maximum conditions?}
+  \item{count.cryptic}{Should cryptic taxa be counted as seperate taxa for conditioning?}
   \item{print.runs}{Print the proportion of simulations accepted for output?}
   \item{plot}{Plot the diversity curves of the accepted datasets as they are simulated?}
   \item{r}{Instantaneous sampling rate per time unit}
@@ -107,6 +109,26 @@ taxaCrypt2 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0.5,prop.cryp
 tree2 <- taxa2phylo(taxaCrypt2,plot=TRUE)
 taxaCrypt3 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0,prop.crypt=1,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
 tree3 <- taxa2phylo(taxaCrypt2,plot=TRUE)
+
+set.seed(444)
+#can choose to condition on total morphologically-distinguishable taxa or total taxa (inc cryptic taxa)
+    #with count.cryptic=FALSE
+taxa<-simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,mintaxa=20,count.cryptic=FALSE,plot=TRUE)
+    nrow(taxa)					#number of lineages (inc. cryptic)
+    length(unique(taxa[,6]))			#number of morph-distinguishable taxa
+#now with count.cryptic=TRUE
+taxa<-simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,mintaxa=20,count.cryptic=TRUE,plot=TRUE)
+    nrow(taxa)					#number of lineages (inc. cryptic)
+    length(unique(taxa[,6]))			#number of morph-distinguishable taxa
+#can choose to condition on total morphologically-distinguishable living taxa or total living taxa (inc cryptic taxa)
+    #with count.cryptic=FALSE
+taxa<-simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,minExtant=20,count.cryptic=FALSE,plot=TRUE)
+    sum(taxa[,5])			#number of still-living lineages (inc. cryptic)
+    length(unique(taxa[taxa[,5]==1,6]))		#number of still-living morph-distinguishable taxa
+#now with count.cryptic=TRUE
+taxa<-simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,minExtant=20,count.cryptic=TRUE,plot=TRUE)
+    sum(taxa[,5])			#number of still-living lineages (inc. cryptic)
+    length(unique(taxa[taxa[,5]==1,6]))		#number of still-living morph-distinguishable taxa
 
 #can generate datasets that meet multiple conditions: time, # total taxa, # extant taxa
 set.seed(444)

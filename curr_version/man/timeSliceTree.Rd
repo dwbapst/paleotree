@@ -17,7 +17,9 @@ The sliceTime is always calculated as on the same scale as ttree$root.time. In o
 If drop.extinct=T, then extinct tips are dropped and (if present) the $root.time of ttree is adjusted. This is done using the function dropExtinct. 
 }
 \value{
-Returns the modified phylogeny as an object of class phylo. Tip labels for cut branches which held multiple descendant tips will be the label for the earliest appearing tip descendant of that branch.
+Returns the modified phylogeny as an object of class phylo. 
+
+Tip labels for cut branches which held multiple descendant tips will be the label for the earliest appearing tip descendant of that branch. This is somewhat arbitrary; the actual morphotaxon present at that time might have been a different taxon. For simulated datasets, use taxa2phylo.
 }
 \author{David W. Bapst}
 \seealso{\code{\link{phyloDiv}}, \code{\link{dropExtinct}}, \code{\link{dropExtant}}

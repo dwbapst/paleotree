@@ -54,6 +54,8 @@ Unlike timePaleoPhy, SRC methods will always resolve polytomies (using the sampl
 srcTimePaleoPhy is only applicable to datasets with taxon occurances in continuous time. bin_srcTimePaleoPhy is a wrapper of srcTimePaleoPhy which produces timescaled trees for datasets which only have interval data available. For each output tree, taxon FADs and LADs are placed within their listed intervals under a uniform distribution. Thus, a large sample of time-scaled trees will approximate the uncertainty in the actual timing of the FADs and LADs.
 
 By setting the argument nonstoch.bin to TRUE in bin_srcTimePaleoPhy, the dates are NOT stochastically pulled from uniform bins but instead FADs are assigned to the earliest time of whichever interval they were placed in and LADs are placed at the most recent time in their placed interval. This option may be useful for plotting. The sites argument becomes arbitrary if nonstoch.bin is TRUE.
+
+If timeData or the elements of timeList are actually data.frames (as output by read.csv or read.table), these will be coerced to a matrix.
 }
 \note{
 Most importantly, please note the stochastic element of the SRC method. It does not use traditional optimization methods, but instead pulls node times from a distribution. This means analyses MUST be done over many SRC-timescaled trees for analytical rigor! No one tree is correct.

@@ -33,6 +33,8 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	#node.mins<-runif(9,50,300)
 	require(ape)	
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
+		}else{stop("Error: timeData not of matrix or data.frame format")}}
 	#remove taxa that are NA or missing in timeData
 	if(ntrees<1){stop("Error: ntrees<1")}
 	if(!add.term & rand.obs){stop("Error: Inconsistent arguments: add.term must be true for rand.obs to have any effect on output!")}
@@ -40,6 +42,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	if(ntrees==1 & randres){message("Warning: Do not interpret a single randomly-resolved tree")}
 	if(ntrees==1 & rand.obs){message("Warning: Do not interpret a single tree with randomly-placed obs times")}
 	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))])
+	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
@@ -172,12 +175,17 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 		#this is useful when you have a specimen or measurement but you don't know its placement in the species' range
 	require(ape)
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
+		}else{stop("Error: timeList[[1]] not of matrix or data.frame format")}}
+	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])
+		}else{stop("Error: timeList[[2]] not of matrix or data.frame format")}}
 	if(ntrees==1 & !nonstoch.bin){
 		message("Warning: Do not interpret a single tree; dates are stochastically pulled from uniform distributions")}
 	if(ntrees<1){stop("Error: ntrees<1")}
 	#clean out all taxa which are NA or missing for timeData
 	if(ntrees==1 & randres){message("Warning: Do not interpret a single randomly-resolved tree")}
 	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))])
+	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}
 	if(any(apply(timeList[[1]],1,diff)>0)){stop("Error: timeList[[1]] not in intervals in time relative to modern")}
@@ -268,11 +276,14 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 	#
 	require(ape)#;require(phangorn)
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
+		}else{stop("Error: timeData not of matrix or data.frame format")}}
 	if(rand.obs & FAD.only){stop("Error: rand.obs and FAD.only cannot both be true")}
 	#first clean out all taxa which are NA or missing in timeData
 	if(ntrees==1){message("Warning: Do not interpret a single SRC time-scaled tree")}
 	if(ntrees<1){stop("Error: ntrees<1")}
 	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))])
+	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
@@ -503,6 +514,10 @@ bin_srcTimePaleoPhy<-function(tree,timeList,sampRate,ntrees=1,nonstoch.bin=FALSE
 		#this is useful when you have a specimen or measurement but you don't know its placement in the species' range
 	require(ape)
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
+		}else{stop("Error: timeList[[1]] not of matrix or data.frame format")}}
+	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])
+		}else{stop("Error: timeList[[2]] not of matrix or data.frame format")}}
 	if(ntrees<1){stop("Error: ntrees<1")}
 	if(ntrees==1){message("Warning: Do not interpret a single SRC time-scaled tree")}
 	if(ntrees==1 & !nonstoch.bin){
@@ -510,6 +525,7 @@ bin_srcTimePaleoPhy<-function(tree,timeList,sampRate,ntrees=1,nonstoch.bin=FALSE
 	if(rand.obs & FAD.only){stop("Error: rand.obs and FAD.only cannot both be true")}
 	#clean out all taxa which are NA or missing for timeData
 	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))])
+	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}
 	if(any(apply(timeList[[1]],1,diff)>0)){stop("Error: timeList[[1]] not in intervals in time relative to modern")}
@@ -839,6 +855,8 @@ getSampRateCont<-function(timeData,n_tbins=1,grp1=NA,grp2=NA,threshold=0.1,est_o
 		}			
 	}
 	#########################
+	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
+		}else{stop("Error: timeData not of matrix or data.frame format")}}
 	#get rid of any NAs
 	if(length(grp1)>1){
 		if(length(grp1)!=nrow(timeData)){stop("Error: grp1 is not same length as timeData")}
@@ -1267,6 +1285,7 @@ sampleRanges<-function(taxad,r,alpha=1,beta=1,rTimeRatio=1,modern.samp.prob=1,mi
 		}
 	if(ncol(taxad)==2){			#assumes it has two matrices
 		living<-NULL
+		cryptic<-rep(NA,nrow(taxad))
 		timeData<-taxad
 		names<-if(is.null(rownames(taxad))){paste("t",1:nrow(taxad),sep="")}else{rownames(taxad)}
 		}	
@@ -1619,7 +1638,7 @@ plotTraitgram<-function(trait,tree,trait.name="'trait'",conf.int=TRUE,lwd=1.5){
 	}
 
 simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,mintaxa=1,maxtaxa=1000,
-	mintime=1,maxtime=1000,minExtant=0,maxExtant=NULL,min.cond=TRUE,print.runs=FALSE,plot=FALSE){
+	mintime=1,maxtime=1000,minExtant=0,maxExtant=NULL,min.cond=TRUE,count.cryptic=FALSE,print.runs=FALSE,plot=FALSE){
 	#simulates taxon evolution as in a fossil record, birth, death and anagenesis as parameters
 		#plot argument will produce a diversity curve everytime a new clade is made
 		#Time-scale is backwards, as expected for paleo data (root is always expected to be at maxtime1
@@ -1642,11 +1661,13 @@ simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,min
 	#pure birth example
 	#set.seed(444);p=0.1;q=0;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE
 	#cryptic speciation
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.5;prop.cryptic=0.5;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE
-	#set.seed(444);p=0.1;q=0.1
+	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.5;prop.cryptic=0.5;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
+	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=TRUE
+	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
 	#idiot proofing
-	if(any(c(p,q,anag.rate,prop.bifurc,prop.cryptic)<0)){
-		"Error: bad parameters input, p, q, anag.rate, prop.bifurc or prop.cryptic are less than 0"}
+	if(any(c(p,q,anag.rate,prop.bifurc,prop.cryptic)<0)){stop(
+		"Error: bad parameters input, p, q, anag.rate, prop.bifurc or prop.cryptic are less than 0")}
+	if(prop.bifurc>0 & prop.cryptic==1){stop()}
 	if(nruns<1){stop("Error: nruns<1")}
 	if(maxtaxa<0){stop("Error: maxtaxa<0")}
 	if(mintaxa<1){stop("Error: mintaxa<1")}
@@ -1704,7 +1725,9 @@ simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,min
 					}
 				#these loops ONLY end if maxtime1 is hit, so to kill a run, you need to change maxtime1
 					#then you'll need to evaluate it again to make sure it meets criteria
-				if(length(unique(taxad[,5]))>maxtaxa){
+				#count numtax and numext based on count.cryptic
+				if(count.cryptic){numtax<-nrow(taxad)}else{numtax<-length(unique(taxad[,5]))}
+				if(numtax>maxtaxa){
 					maxtime1<-min(c(maxtime1,taxad[maxtaxa+1,3]))
 					if(!min.cond){eval<-TRUE}
 					}
@@ -1716,12 +1739,18 @@ simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,min
 					}
 				#simulation MUST always terminate if maxtaxa or maxtime are hit (these are safety limits)
 					#maxExtant is a similar soft bound; the real bounds that will determine the output are the mins...
-				numext<-sum(is.na(taxad[,4]))+sum(taxad[!is.na(taxad[,4]),4]>=maxtime1)	#number of extant taxa
+				if(count.cryptic){
+					numtax<-nrow(taxad)
+					numext<-sum(is.na(taxad[,4]))+sum(taxad[!is.na(taxad[,4]),4]>=maxtime1)	#extant taxa w/cryptic
+				}else{
+					numtax<-length(unique(taxad[,5]))
+					numext<-length(unique(taxad[(is.na(taxad[,4]) | taxad[,4]>=maxtime1),5]))
+					}
 				#want to end the function if >mintaxa,>mintime,>minExtant1 and >maxExtant
-				if(max(taxad[,3:4],na.rm=TRUE)>=mintime & ifelse(numext>0,length(unique(taxad[,5]))>mintaxa,length(unique(taxad[,5]))>=mintaxa)
+				if(max(taxad[,3:4],na.rm=TRUE)>=mintime & ifelse(numext>0,numtax>mintaxa,numtax>=mintaxa)
 					& numext>=minExtant1 & ifelse(is.null(maxExtant),TRUE,numext<=maxExtant) & min.cond){
 						#if conditions have been hit,reset maxtime1 to the FAD of the newest living taxa that broke conditions
-					if(any(is.na(taxad[,4]))){		#if its dead, don't change maxtime1
+					if(any(is.na(taxad[,4]))){		#if its dead, don't change maxtime1...
 						maxtime2<-min(c(maxtime1,max(taxad[is.na(taxad[,4]) | taxad[,4]>=maxtime1,3])))
 						if(maxtime2>mintime){maxtime1<-maxtime2}
 						}
@@ -1741,14 +1770,19 @@ simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,min
 				posstimes<-sort(unique(c(taxad[,3:4],maxtime1)))
 				maxtimes<-posstimes[posstimes>=mintime & posstimes<=maxtime1]				#make vector of maxtimes
 				mtds<-lapply(maxtimes,function(x) matrix(taxad[taxad[,3]<x,],sum(taxad[,3]<x),)) 	#maxtime taxa datasets
-				numext<-sapply(1:length(mtds),function(x) sum(mtds[[x]][,4]>=maxtimes[x]))		#number of extant taxa
-				numtaxa<-sapply(mtds,function(x) length(unique(x[,5])))
+				if(count.cryptic){
+					numtaxa<-sapply(mtds,function(x) nrow(x))
+					numexta<-sapply(1:length(mtds),function(x) sum(mtds[[x]][,4]>=maxtimes[x]))		#number of extant taxa
+				}else{	#do not count cryptics
+					numtaxa<-sapply(mtds,function(x) length(unique(x[,5])))
+					numexta<-sapply(1:length(mtds),function(x) length(unique(mtds[[x]][mtds[[x]][,4]>=maxtimes[x],5])))
+					}
 				minta<-numtaxa>=mintaxa									#is the clade big enough, per mintaxa?
 				maxta<-numtaxa<=maxtaxa									#is the clade small enough, per maxtaxa?
 				minti<-maxtimes>=mintime							#is the simulation long enough, per mintime?
 				maxti<-maxtimes<=maxtime							#is the simulation short enough, per maxtime?
-				maxext<-if(!is.null(maxExtant)){maxExtant>=numext}else{TRUE}	#is the number of extant taxa <= max?
-				minext<-minExtant<=numext						#is there the right number of extant taxa?
+				maxext<-if(!is.null(maxExtant)){maxExtant>=numexta}else{TRUE}	#is the number of extant taxa <= max?
+				minext<-minExtant<=numexta						#is there the right number of extant taxa?
 				evalcond<-maxext & minext & minta & maxta & minti & maxti	#evaluate conditions				
 				#numext<-sum(is.na(taxad[,4]))+sum(taxad[!is.na(taxad[,4]),4]>=maxtime1)	
 				if(any(evalcond)){
@@ -1812,6 +1846,8 @@ taxicDivCont<-function(timeData,int.length=1,int.times=NULL,plot=TRUE,plotLogRic
 			timeData<-cbind(timeDataF,timeDataL)
 			}
 		}	
+	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
+		}else{stop("Error: timeData not of matrix or data.frame format")}}
 	timeData<-timeData[!is.na(timeData[,1]),,drop=FALSE]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
@@ -1852,6 +1888,10 @@ taxicDivDisc<-function(timeList,int.times=NULL,plot=TRUE,plotLogRich=FALSE,timel
 		#HOWEVER this could be pretty misleading!
 		#standing richness may never be high as the apparent richness of some bins
 	#output (if TRUE) is 3 col matrix of int-start, int-end, div
+	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
+		}else{stop("Error: timeList[[1]] not of matrix or data.frame format")}}
+	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])
+		}else{stop("Error: timeList[[2]] not of matrix or data.frame format")}}
 	intMat<-timeList[[1]]	#the intervals the DATA is given in
 	timeData<-timeList[[2]]
 	timeData<-timeData[!is.na(timeData[,1]),,drop=FALSE]
@@ -2112,7 +2152,7 @@ simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mi
 		rerun<-TRUE
 		while(rerun){
 			ntries<-ntries+1
-			taxa<-suppressMessages(simFossilTaxa(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,mintaxa=mintaxa,
+			taxa<-suppressMessages(simFossilTaxa(p=p,q=q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,mintaxa=mintaxa,
 				maxtaxa=maxtaxa,maxtime=maxtime,maxExtant=ifelse(all.extinct,0,maxtaxa),min.cond=FALSE,plot=plot))
 			ranges<-sampleRanges(taxa,r,min.taxa=0,modern.samp.prob=modern.samp.prob)
 			if(sum(!is.na(ranges[,1]))>1){
@@ -2138,7 +2178,8 @@ simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mi
 	return(res)
 	}
 
-simFossilTaxa_SRCond<-function(r,avgtaxa,p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,maxtime=1000,maxExtant=NULL,print.runs=FALSE,plot=FALSE){
+simFossilTaxa_SRCond<-function(r,avgtaxa,p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,maxtime=1000,
+	maxExtant=NULL,count.cryptic=FALSE,print.runs=FALSE,plot=FALSE){
 	#wrapper for simulating clades large enough for 
 		#getting some avg number of taxa under a given sampling parameter
 	#for sampling: proper conditioning on number of taxa
@@ -2148,9 +2189,9 @@ simFossilTaxa_SRCond<-function(r,avgtaxa,p,q,anag.rate=0,prop.bifurc=0,prop.cryp
 			#These should work well if avgtaxa is large (~50 or so)
 	#simFossilTaxa_SRCond(r=0.1,p=0.1,q=0.1,nruns=10,avgtaxa=50,maxExtant=0)
 	N<-avgtaxa/(1-exp(-r/(q+anag.rate+(prop.bifurc*p))))
-	results<-simFossilTaxa(p,q,prop.bifurc,anag.rate,prop.cryptic,nruns,mintaxa=N,
-			maxtaxa=2*N,maxtime=maxtime,maxExtant=maxExtant,print.runs=print.runs,plot=plot)
-	if(nruns==1){results<-results[[1]]}
+	results<-simFossilTaxa(p=p,q=q,anag.rate=anag.rate,prop.bifurc=prop.bifurc,prop.cryptic=prop.cryptic,nruns=nruns,mintaxa=N,
+			maxtaxa=2*N,maxtime=maxtime,maxExtant=maxExtant,count.cryptic=FALSE,print.runs=print.runs,plot=plot)
+	#if(nruns==1){results<-results[[1]]}
 	return(results)
 	}
 

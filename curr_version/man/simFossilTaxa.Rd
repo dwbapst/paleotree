@@ -5,38 +5,38 @@
 \description{Functions for simulating taxon ranges and relationships under various models of evolution}
 \usage{
 simFossilTaxa(p, q, anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0, nruns = 1, 
-   mintaxa = 1, maxtaxa = 1000, mintime = 1,maxtime = 1000, minExtant = 0, 
-   maxExtant = NULL, min.cond = TRUE, count.cryptic = FALSE, print.runs = FALSE, 
-   plot = FALSE)
+    mintaxa = 1, maxtaxa = 1000, mintime = 1,maxtime = 1000, minExtant = 0, 
+    maxExtant = NULL, min.cond = TRUE, count.cryptic = FALSE, print.runs = FALSE, 
+    plot = FALSE)
 
 simFossilTaxa_SRCond(r, avgtaxa, p, q, anag.rate = 0, prop.bifurc = 0, 
-   prop.cryptic = 0, nruns = 1, maxtime = 1000, maxExtant = NULL, 
-   count.cryptic = FALSE, print.runs = FALSE, plot = FALSE)
+    prop.cryptic = 0, nruns = 1, maxtime = 1000, maxExtant = NULL, 
+    count.cryptic = FALSE, print.runs = FALSE, plot = FALSE)
 }
 \arguments{
-  \item{p}{Instantaneous rate of speciation/branching}
-  \item{q}{Instantaneous rate of extinction}
-  \item{anag.rate}{Instantaneous rate of pseudoextinction/anagensis}
-  \item{prop.bifurc}{Proportion of morphological branching by bifurcating cladogenesis relative to budding cladogenesis}
-  \item{prop.cryptic}{Proportion of cryptic speciation by relative to morphological branching, such as bifurcating and budding}
-  \item{nruns}{Number of datasets to be output}
-  \item{mintaxa}{Minimum number of total taxa over the entire history of a clade necessary for a dataset to be accepted}
-  \item{maxtaxa}{Maximum number of total taxa over the entire history of a clade necessary for a dataset to be accepted}
-  \item{mintime}{Minimum time units to run any given simulation before stopping it}
-  \item{maxtime}{Maximum time units to run any given simulation before stopping it}
-  \item{minExtant}{Minimum number of living taxa allowed at end of simulations}
-  \item{maxExtant}{Maximum number of living taxa allowed at end of simulations}
-  \item{min.cond}{Stop simulations when they hit minimum conditions or go until they hit maximum conditions?}
-  \item{count.cryptic}{Should cryptic taxa be counted as seperate taxa for conditioning?}
-  \item{print.runs}{Print the proportion of simulations accepted for output?}
-  \item{plot}{Plot the diversity curves of the accepted datasets as they are simulated?}
-  \item{r}{Instantaneous sampling rate per time unit}
-  \item{avgtaxa}{Desired average number of taxa}
+  \item{p}{Instantaneous rate of speciation/branching.}
+  \item{q}{Instantaneous rate of extinction.}
+  \item{anag.rate}{Instantaneous rate of pseudoextinction/anagensis.}
+  \item{prop.bifurc}{Proportion of morphological branching by bifurcating cladogenesis relative to budding cladogenesis.}
+  \item{prop.cryptic}{Proportion of cryptic speciation by relative to morphological branching, such as bifurcating and budding.}
+  \item{nruns}{Number of datasets to be output.}
+  \item{mintaxa}{Minimum number of total taxa over the entire history of a clade necessary for a dataset to be accepted.}
+  \item{maxtaxa}{Maximum number of total taxa over the entire history of a clade necessary for a dataset to be accepted.}
+  \item{mintime}{Minimum time units to run any given simulation before stopping.}
+  \item{maxtime}{Maximum time units to run any given simulation before stopping.}
+  \item{minExtant}{Minimum number of living taxa allowed at end of simulations.}
+  \item{maxExtant}{Maximum number of living taxa allowed at end of simulations.}
+  \item{min.cond}{If TRUE, the default, simulations are stopped when they meet all minimum conditions. If FALSE, simulations will continue until they hit maximum conditions, but are only accepted as long as they still meet all minimum conditions in addition.}
+  \item{count.cryptic}{If TRUE, cryptic taxa are counted as seperate taxa for conditioning.}
+  \item{print.runs}{If TRUE, prints the proportion of simulations accepted for output to the terminal.}
+  \item{plot}{If TRUE, plots the diversity curves of accepted simulations.}
+  \item{r}{Instantaneous sampling rate per time unit.}
+  \item{avgtaxa}{Desired average number of taxa.}
 }
 \details{
-simFossilTaxa simulates a birth-death process (Kendall, 1948; Nee, 2006), but unlike most functions for this implemented in R, this function enmeshes the simulation of speciation and extinction with explicit models of how lineages are morphologically differentiated in the fossil record, as morphotaxa are the basic units of paleontological estimates of diversity and phylogenetics.
+simFossilTaxa simulates a birth-death process (Kendall, 1948; Nee, 2006), but unlike most functions for this implemented in R, this function enmeshes the simulation of speciation and extinction with explicit models of how lineages are morphologically differentiated, as morphotaxa are the basic units of paleontological estimates of diversity and phylogenetics.
 
-simFossilTaxa runs many simulations of diversification and runs are only accepted for output if and when they meet the conditioning criteria, both minima and maxima. If min.cond is true (the default), simulations will be stopped and immediately accepted when clades satisfy mintime, mintaxa, minExtant and maxExtant (if the later is set). This stopping is technically almost immediate, see below. To reduce the effect of one conditioning criterion, simply set that limit to an arbitrarily low or high number (depending if it is a minimum or maximum constraint). If min.cond is false, simulation runs are not stopped and evaluated for output acceptance until they (a) go completely extinct or (b) hit either maxtaxa or maxtime. Whether the simulation runs are accepted or not for output is still dependent on mintaxa, mintime, minExtant and maxExtant. Note that some combinations of conditions, such as attempting to condition on a specific non-zero value of minExtant and maxExtant, may take a long time to fin any acceptable simulation runs.
+Any particular use of simFossilTaxa will probably involve iteratively running many simulations of diversification. Simulation runs are only accepted for output if and when they meet the conditioning criteria defined in the arguments, both minima and maxima. If min.cond is true (the default), simulations will be stopped and accepted when clades satisfy mintime, mintaxa, minExtant and maxExtant (if the later is set). To reduce the effect of one conditioning criterion, simply set that limit to an arbitrarily low or high number (depending if a minimum or maximum constraint is involved). If min.cond is false, simulation runs are not stopped and evaluated for output acceptance until they (a) go completely extinct or (b) hit either maxtaxa or maxtime. Whether the simulation runs are accepted or not for output is still dependent on mintaxa, mintime, minExtant and maxExtant. Note that some combinations of conditions, such as attempting to condition on a specific non-zero value of minExtant and maxExtant, may take a long time to find any acceptable simulation runs.
 
 Hartmann et al. (2011) recently discovered a potential statistical artifact when branching simulations are conditioned on some maximum number of taxa. Thus, this function continues the simulation once mintaxa or minExtant is hit, until the next taxon (limit +1) originates. Once the simulation terminates, it is judged whether it is acceptable for all conditions given and if so, the run is accepted as a dataset for output.
 
@@ -44,9 +44,9 @@ Please note that mintaxa and maxtaxa refer to the number of static morphotaxa bi
 
 The simFossilTaxa function can effectively simulate clades evolving under any combination of the three "modes" of speciation generally referred to by paleontologists: budding cladogenesis, branching cladogenesis and anagenesis (Foote, 1996). The first two are "speciation" in the typical sense used by biologists, with the major distinction between these two modes being whether the ancestral taxon shifts morphologically at the time of speciation. The third is where a morphotaxon changes into another morphotaxon with no branching, hence the use of the terms "pseudoextinction" and "pseudospeciation". As bifurcation and budding are both branching events, both are controlled by the p, the instantaneous rate, while the probability of a branching event being either is set by u. By default, only budding cladogenesis occurs To have these three modes occur in equal proportions, set p to be twice the value of w and set u to 0.5. 
 
-This function now also includes the ability to simulate cryptic cladogenesi. The available patterns of morphological speciation can see as a gradient, where cryptic cladogenesis has no morphological shifts in either daughter branches after a branching event, budding cladogenesis results in one morphological shift and shifts occur along both daughter lineages in bifurcating cladogenesis. The argument prop.cryptic dictates what proportion of cladogenesis events (with rate p) are cryptic versus those that have some morphological divergence; prop.bifurc controls the proportion of morphologically divergent cladogenesis which is bifurcating relative to budding. Thus, for example, the probability of a given cladogenesis even being budding is (1-prop.cryptic)*prop.bifurc. 
+This function also includes the ability to simulate cryptic cladogenesis. The available patterns of morphological speciation thus form a gradient: cryptic cladogenesis has no morphological shifts in either daughter branches after a branching event, budding cladogenesis has one morphological shift in the two daughter lineages and, in bifurcating cladogenesis, shifts occur in both daughter lineages. The argument prop.cryptic dictates what proportion of branching/cladogenesis events (the overall occurance of which with rate p) are cryptic versus those that have some morphological divergence (either budding of bifurcating. prop.bifurc controls the proportion of morphologically divergent cladogenesis which is bifurcating relative to budding. Thus, for example, the probability of a given cladogenesis event being budding is (1-prop.cryptic)*prop.bifurc. 
 
-For the purposes of mintaxa and maxtaxa, the number of unique morphologically distinguishable taxa is checked (i.e. the number of unique values in column 6 of the simulated data). This is not true of minExtant and maxExtant, which just looks at the number of lineages present at the modern day. See below about the output data structure to see how information about cryptic cladogenesis is recorded. New features have been added to taxa2phylo, taxa2cladogram and taxicDivCont which change how cryptic species are handled.
+When there is cryptic speciation, by default, the conditioning arguments involving numbers of taxa (mintaxa, maxtaxa, minExtant and maxExtant) count the number of unique morphologically distinguishable taxa is checked (i.e. the number of unique values in column 6 of the simulated data). This behavior can be changed with the argument count.cryptic.See below about the output data structure to see how information about cryptic cladogenesis is recorded. The functions taxa2phylo, taxa2cladogram and taxicDivCont each handle cryptic species in different ways, as described in their respective help files.
 
 If maxExtant is 0, then the function will be limited to only accepting simulations that end in total clade extinction before maxtime.
 
@@ -54,9 +54,9 @@ If conditions are such that a clade survives to maxtime, then maxtime will becom
 
 simFossilTaxa simulates single taxa until they go extinct or exceed maxtime. This means the function may have fully simulated some lineages for thousands of time-steps while others are not yet simulated, and thus sometimes overshoot constraints on the number of taxa. This function will automatically discard any runs where the number of taxa exceeds 2 x maxtaxa to avoid blowing up computation time. This is likely to happen under a pure-birth scenario; I suggest using low maxtime settings if doing a pure-birth simulation.
 
-simFossilTaxa_SRCond is a wrapper for simFossilTaxa for when clades of a particular size are desired, post-sampling. This function accomplishes this task by first calculating the expected proportion of taxa sampled, given the sampling rate and the rates which control lineage termination: extinction, anagenesis and bifurcation. The average original clade size needed to produce the number of sampled taxa given by avgtaxa is calculated with the following equation:
+simFossilTaxa_SRCond is a wrapper for simFossilTaxa for when clades of a particular size are desired, post-sampling. This function accomplishes this task by first calculating the expected proportion of taxa sampled, given the sampling rate and the rates which control lineage termination: extinction, anagenesis and bifurcation. The average original clade size needed to produce, on average, a given number of sampled taxa (the argument 'avgtaxa') is calculated with the following equation:
 
-\eqn{N = (average number of taxa desired) / ( 1 - exp( -r / (q + anag.rate + (prop.bifurc * p)) ))}
+\eqn{N = (avgtaxa) / ( 1 - exp( -r / (q + anag.rate + (prop.bifurc * p)) ))}
 
 We will call that quantity N. Note that the quantity (prop.bifurc * p) describes the rate of bifurcation when there is no cryptic cladogenesis, as prop.bifurc is the ratio of budding to bifurcating cladogenesis. This equation will diverge in ways that are not easily predicted as the rate of cryptic speciation increases.
 
@@ -98,41 +98,52 @@ taxicDivCont(taxa[,3:4])
 #following has anagenesis, budding cladogenesis and bifurcating cladogenesis
     #all set to 1/2 extinction rate
 set.seed(444)
-res <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0.5,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
+res <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0.5,mintaxa=30,maxtaxa=60,
+    maxExtant=0,nruns=1,plot=TRUE)
 #what does this mix of speciation modes look like as a phylogeny?
 tree <- taxa2phylo(res,plot=TRUE)
 
 #some other options with cryptic speciation
-taxaCrypt1 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0,prop.bifurc=0,prop.crypt=0.5,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
+taxaCrypt1 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0,prop.bifurc=0,prop.crypt=0.5,mintaxa=30,
+    maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
 tree1 <- taxa2phylo(taxaCrypt1,plot=TRUE)
-taxaCrypt2 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0.5,prop.crypt=0.5,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
+taxaCrypt2 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0.5,prop.crypt=0.5,
+    mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
 tree2 <- taxa2phylo(taxaCrypt2,plot=TRUE)
-taxaCrypt3 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0,prop.crypt=1,mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
+taxaCrypt3 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0,prop.crypt=1,
+    mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
 tree3 <- taxa2phylo(taxaCrypt2,plot=TRUE)
 
 set.seed(444)
-#can choose to condition on total morphologically-distinguishable taxa or total taxa (inc cryptic taxa)
-    #with count.cryptic=FALSE
-taxa<-simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,mintaxa=20,count.cryptic=FALSE,plot=TRUE)
-    nrow(taxa)					#number of lineages (inc. cryptic)
-    length(unique(taxa[,6]))			#number of morph-distinguishable taxa
+#can choose to condition on total morphologically-distinguishable taxa 
+    #or total taxa including cryptic taxa with count.cryptic=FALSE
+taxa<-simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,mintaxa=20,
+    count.cryptic=FALSE,plot=TRUE)
+nrow(taxa)                 #number of lineages (inc. cryptic)
+length(unique(taxa[,6]))            #number of morph-distinguishable taxa
 #now with count.cryptic=TRUE
-taxa<-simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,mintaxa=20,count.cryptic=TRUE,plot=TRUE)
-    nrow(taxa)					#number of lineages (inc. cryptic)
-    length(unique(taxa[,6]))			#number of morph-distinguishable taxa
-#can choose to condition on total morphologically-distinguishable living taxa or total living taxa (inc cryptic taxa)
-    #with count.cryptic=FALSE
-taxa<-simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,minExtant=20,count.cryptic=FALSE,plot=TRUE)
-    sum(taxa[,5])			#number of still-living lineages (inc. cryptic)
-    length(unique(taxa[taxa[,5]==1,6]))		#number of still-living morph-distinguishable taxa
+taxa <- simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,mintaxa=20,
+    count.cryptic=TRUE,plot=TRUE)
+nrow(taxa)                  #number of lineages (inc. cryptic)
+length(unique(taxa[,6]))              #number of morph-distinguishable taxa
+
+#now let's look at extant numbers of taxa
+#can choose to condition on total morphologically-distinguishable living taxa 
+    #or total living taxa including cryptic taxa with count.cryptic=FALSE
+taxa <- simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,minExtant=20,
+    count.cryptic=FALSE,plot=TRUE)
+    sum(taxa[,5])             #number of still-living lineages (inc. cryptic)
+    length(unique(taxa[taxa[,5]==1,6]))	  #number of still-living morph-dist. taxa
 #now with count.cryptic=TRUE
-taxa<-simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,minExtant=20,count.cryptic=TRUE,plot=TRUE)
-    sum(taxa[,5])			#number of still-living lineages (inc. cryptic)
-    length(unique(taxa[taxa[,5]==1,6]))		#number of still-living morph-distinguishable taxa
+taxa <- simFossilTaxa(0.1,0.1,prop.cryptic=1,anag.rate=0.05,minExtant=20,
+    count.cryptic=TRUE,plot=TRUE)
+    sum(taxa[,5])              #number of still-living lineages (inc. cryptic)
+    length(unique(taxa[taxa[,5]==1,6]))	   #number of still-living morph-dist, taxa
 
 #can generate datasets that meet multiple conditions: time, # total taxa, # extant taxa
 set.seed(444)
-res <- simFossilTaxa(p=0.1,q=0.1,mintime=10,mintaxa=30,maxtaxa=40,minExtant=10,maxExtant=20,nruns=20,plot=FALSE,print.runs=TRUE)
+res <- simFossilTaxa(p=0.1,q=0.1,mintime=10,mintaxa=30,maxtaxa=40,minExtant=10,maxExtant=20,
+    nruns=20,plot=FALSE,print.runs=TRUE)
 #use print.run to know how many simulations were accepted of the total generated
 layout(1:2)
 #histogram of # taxa over evolutionary history
@@ -143,13 +154,15 @@ hist(sapply(res,function(x) sum(x[,5])),main="#extant")
 #pure-birth example
 #note that conditioning is tricky
 layout(1)
-taxa <- simFossilTaxa(p=0.1,q=0,mintime=10,mintaxa=100,maxtime=100,maxtaxa=100,nruns=10,plot=TRUE)
+taxa <- simFossilTaxa(p=0.1,q=0,mintime=10,mintaxa=100,maxtime=100,maxtaxa=100,
+    nruns=10,plot=TRUE)
 
 #can generate datasets where simulations go until extinction or max limits
      #and THEN are evaluated whether they meet min limits
      #good for producing unconditioned birth-death trees
 set.seed(444)
-res <- simFossilTaxa(p=0.1,q=0.1,maxtaxa=100,maxtime=100,nruns=10,plot=TRUE,print.runs=TRUE,min.cond=FALSE)
+res <- simFossilTaxa(p=0.1,q=0.1,maxtaxa=100,maxtime=100,nruns=10,plot=TRUE,
+    print.runs=TRUE,min.cond=FALSE)
 #hey, look, we accepted everything! (That's what we want.)
 layout(1:2)
 #histogram of # taxa over evolutionary history

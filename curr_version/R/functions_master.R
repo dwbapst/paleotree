@@ -1259,7 +1259,7 @@ dropZLB<-function(tree){
 	}
 
 sampleRanges<-function(taxad,r,alpha=1,beta=1,rTimeRatio=1,modern.samp.prob=1,min.taxa=2,
-	ranges.only=TRUE,minInt=0.01,merge.cryptic=TRUE,alt.method=FALSE,plot=FALSE){
+	ranges.only=TRUE,minInt=0.01,merge.cryptic=TRUE,randLiveHat=TRUE,alt.method=FALSE,plot=FALSE){
 	#sample ranges using a taxad matrix as input 
 	#if (ranges.only=TRUE): outputs matrix of FADs/LADs, with NAs for unsampled taxa
 	#if (ranges.only=FALSE): outputs per-species list with vectors of dates where that species was sampled
@@ -1284,11 +1284,14 @@ sampleRanges<-function(taxad,r,alpha=1,beta=1,rTimeRatio=1,modern.samp.prob=1,mi
 		names<-if(is.null(rownames(taxad))){paste("t",taxad[,1],sep="")}else{rownames(taxad)}
 		}
 	if(ncol(taxad)==2){			#assumes it has two matrices
-		living<-NULL
+		living<-rep(0,nrow(taxad))
 		cryptic<-rep(NA,nrow(taxad))
 		timeData<-taxad
 		names<-if(is.null(rownames(taxad))){paste("t",1:nrow(taxad),sep="")}else{rownames(taxad)}
-		}	
+		}
+	if(nrow(taxad)<min.taxa){stop("Error: min.taxa set higher than number of taxa in input")}	
+	if(merge.cryptic==TRUE & nrow(taxad)<sum(!is.na(cryptic))){
+		stop("Error: min.taxa set higher than number of non-cryptic taxa in input")}
 	timeData<-timeData[!is.na(timeData[,1]),,drop=FALSE]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
@@ -1329,8 +1332,12 @@ sampleRanges<-function(taxad,r,alpha=1,beta=1,rTimeRatio=1,modern.samp.prob=1,mi
 		#first get the different of each min int from the midpoints, then calculate the change r accordint to rTimeChange
 		taxa.shiftTimes<-lapply(1:length(r),function(x) taxa.midpoints[x]-rangesTimes[[x]])
 		taxa.rShiftTime<-lapply(1:length(r),function(x) rTimeChange[x]*taxa.shiftTimes[[x]])
+		#if randLiveHat is TRUE, scale 
+		#for each taxon decide on an end.hat; use runif if extant, 1 is extinct
+		if(randLiveHat){end.hat<-ifelse(living==1,runif(length(living)),1)
+			}else{end.hat<-rep(1,length(rangesTimes))}
 		#now get the hat component, combine with the time component
-		scaledTimes<-lapply(rangesTimes,function(x) seq(0,1,length.out=length(x)))
+		scaledTimes<-lapply(1:length(end.hat),function(x) seq(0,end.hat[x],length.out=length(rangesTimes[[x]])))
 		rHat<-lapply(1:length(r),function(x) r[x]*dbeta(scaledTimes[[x]],alpha[x],beta[x]))
 		rHatTime<-lapply(1:length(r),function(x) rHat[[x]]+taxa.rShiftTime[[x]])
 		#transform so that the hats always are above zero but have correct means and correct timechange slope (so complicated!)
@@ -1370,7 +1377,7 @@ sampleRanges<-function(taxad,r,alpha=1,beta=1,rTimeRatio=1,modern.samp.prob=1,mi
 			}else{
 				samps<-rangesTimes[[i]][sapply(rHatTime[[i]],function(x) runif(1)<=(x*minInt))]
 				}
-			if(!is.null(living) & modern.samp.prob>0){if(living[i]==1){		#rework modern.sampling as a probability
+			if(modern.samp.prob>0){if(living[i]==1){		#rework modern.sampling as a probability
 				if(runif(1)<=modern.samp.prob){samps<-c(samps,0)}
 				}}
 			if(length(samps)>0){samp_occ[[i]]<-samps}else{samp_occ[[i]]<-NA}

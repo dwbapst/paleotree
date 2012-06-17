@@ -13,7 +13,7 @@ This function simulates an ideal cladistic process, where the relationships of a
 
 The result will probably not be fully resolved, as including both ancestor and descendant taxa will generally make it impossible to produce a fully nesting system of relationships. For example, consider a set of three morphologically-static taxa where the first is an ancestor (either direct or indirect, ala Foote, 1996) of both the second and third. If we imagine an ideal cladistic analysis of the morphological characters of those three taxa, this set of taxa will be unable to be broken up into bifurcating-nested relationships and thus result in a polytomy. Any set of ancestor-descendant relationships will have many of these, as some ancestors must have more than one descendant for the clade to diversify, as noted by Wagner and Erwin, 1995.
 
-If there are cryptic taxa present in the output from simFossilTaxa, these and any of their morphologically distinguishable descendants are collapsed into a polytomy to simulate the expected pattern of lack of phylogenetic resolution. In addition to this merging, they can be dropped, and only the first 'species' of each cryptic taxon assemblage is listed among the tip taxa (what we would actually expect to obtain, as wouldn't recognize cryptic taxa as different OTUs). By default, cryptic taxa are not dropped so that the same number of taxa as in the simulated data is retained.
+If there are cryptic taxa present in the output from simFossilTaxa, these and any of their morphologically distinguishable descendants are collapsed into a polytomy to simulate the expected pattern of lack of phylogenetic resolution. In addition to this merging, cryptic taxa can be dropped via the argument drop.cryptic, such that only the first 'species' of each cryptic taxon assemblage is listed among the tip taxa (what we would actually expect to obtain, as wouldn't recognize cryptic taxa as different OTUs). By default, cryptic taxa are not dropped so that the same number of taxa as in the simulated data is retained.
 }
 \value{
 The resulting phylogeny without branch lengths is output as an object of class phylo.
@@ -35,11 +35,13 @@ taxa<-simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxEx
 #let's use taxa2cladogram() to get the 'ideal' cladogram of the taxa
 layout(1:2)
 cladogram<-taxa2cladogram(taxa,plot=TRUE)
-#compare the "real" time-scaled tree of taxon last occurrences (taxa2phylo) to the 'ideal' cladogram
+#compare the "real" time-scaled tree of taxon last occurrences (taxa2phylo) 
+     #to the 'ideal' cladogram
 tree<-taxa2phylo(taxa,plot=TRUE)
 
 #testing with cryptic speciation
-taxaCrypt<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=10,maxtaxa=20,maxtime=1000,maxExtant=0)
+taxaCrypt<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=10,maxtaxa=20,
+    maxtime=1000,maxExtant=0)
 layout(1:2);parOrig<-par(mar=c(0,0,0,0))
 cladoCrypt1<-taxa2cladogram(taxaCrypt,drop.cryptic=FALSE)
 plot(cladoCrypt1)

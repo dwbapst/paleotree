@@ -4,11 +4,13 @@
 \title{Timescaling of Paleo-Phylogenies}
 \description{Timescales an unscaled cladogram of fossil taxa using information on their temporal ranges, using various methods. Also can resolve polytomies randomly and output samples of randomly-resolved trees.}
 \usage{
-timePaleoPhy(tree, timeData, type = "basic", vartime = NULL, ntrees = 1, randres = FALSE, 
-    add.term = FALSE, rand.obs = FALSE, node.mins = NULL, plot = FALSE)
+timePaleoPhy(tree, timeData, type = "basic", vartime = NULL, ntrees = 1,
+    randres = FALSE, add.term = FALSE, rand.obs = FALSE, 
+    node.mins = NULL, plot = FALSE)
 
-bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL, ntrees = 1,  nonstoch.bin=FALSE, 
-    randres = FALSE, sites = NULL,  add.term = FALSE, rand.obs = FALSE, node.mins = NULL, plot = FALSE)
+bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL, ntrees = 1,
+    nonstoch.bin=FALSE, randres = FALSE, sites = NULL,  add.term = FALSE,
+    rand.obs = FALSE, node.mins = NULL, plot = FALSE)
 }
 \arguments{
   \item{tree}{An unscaled cladogram of fossil taxa}
@@ -35,7 +37,7 @@ bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL, ntrees = 1,  no
 
   \item{nonstoch.bin}{If true, dates are not stochastically pulled from uniform distributions. See below for more details.}
 
-  \item{sites}{Optional two column matrix, composed of site IDs for taxon FADs and LADs. The sites argument allows users to constrain the placement of dates in bin_timePaleoPhy by restricting multiple fossil taxa whose FADs or LADs are from the same very temporally restricted sites (such as fossil-rich Lagerstatten) to always have the same date, across many iterations of time-scaled trees from bin_timePaleoPhy. To do this, simply give a matrix where the "site" of each FAD and LAD for every taxon is listed, as corresponding to the second matrix in timeList. If no sites matrix is given (the default), then it is assumed all fossil come from different "sites" and there is no shared temporal structure among the events.}
+  \item{sites}{Optional two column matrix, composed of site IDs for taxon FADs and LADs. The sites argument allows users to constrain the placement of dates by restricting multiple fossil taxa whose FADs or LADs are from the same very temporally restricted sites (such as fossil-rich Lagerstatten) to always have the same date, across many iterations of time-scaled trees. To do this, simply give a matrix where the "site" of each FAD and LAD for every taxon is listed, as corresponding to the second matrix in timeList. If no sites matrix is given (the default), then it is assumed all fossil come from different "sites" and there is no shared temporal structure among the events.}
 }
 \details{
 This function is an attempt to unify and collect previously used and discussed methods for time-scaling phylogenies of fossil taxa. Unfortunately, it is difficult to attribute some time-scaling methods to specific references in the literature. A review of these time-scaling methods is forthcoming (Bapst, in prep).
@@ -103,14 +105,16 @@ phyloDiv(ttree)
 #that tree didn't look very resolved, does it? (See Wagner and Erwin 1995 to see why)
 #can randomly resolve trees using the argument randres
 #each resulting tree will have polytomies randomly resolved in different ways using multi2di
-ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",ntrees=1,randres=TRUE,add.term=TRUE,plot=TRUE)
+ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",ntrees=1,randres=TRUE,
+    add.term=TRUE,plot=TRUE)
 #notice well the warning it prints!
 #now let's plot the first tree (both trees will be identical because we used set.seed)
 phyloDiv(ttree)
 #we would need to set ntrees to a large number to get a fair sample of trees
 
 #if we set ntrees>1, timePaleoPhy will make multiple time-trees
-ttrees <- timePaleoPhy(cladogram,rangesCont,type="basic",ntrees=9,randres=TRUE,add.term=TRUE,plot=TRUE)
+ttrees <- timePaleoPhy(cladogram,rangesCont,type="basic",ntrees=9,randres=TRUE,
+    add.term=TRUE,plot=TRUE)
 #let's compare nine of them at once in a plot
 layout(matrix(1:9,3,3));parOrig <- par(mar=c(1,1,1,1))
 for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label=FALSE,no.margin=TRUE)}
@@ -146,10 +150,12 @@ ttree2 <- timePaleoPhy(cladogram,rangesCont,type="basic",
 #Using bin_timePaleoPhy to timescale with discrete interval data
 #first let's use binTimeData() to bin in intervals of 1 time unit
 rangesDisc <- binTimeData(rangesCont,int.length=1)
-ttreeB1 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,randres=TRUE,add.term=TRUE,plot=FALSE)
+ttreeB1 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,randres=TRUE,
+    add.term=TRUE,plot=FALSE)
 #notice the warning it prints!
 phyloDiv(ttreeB1)
 #can also force the appearance timings not to be chosen stochastically
-ttreeB2 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,nonstoch.bin=TRUE,randres=TRUE,add.term=TRUE,plot=FALSE)
+ttreeB2 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,
+    nonstoch.bin=TRUE,randres=TRUE,add.term=TRUE,plot=FALSE)
 phyloDiv(ttreeB2)
 }

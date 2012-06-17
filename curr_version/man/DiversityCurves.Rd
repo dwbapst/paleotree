@@ -5,11 +5,14 @@
 \title{Diversity Curves}
 \description{Functions to plot diversity curves based on taxic range data, in both discrete and continuous time, and for phylogenies.}
 \usage{
-taxicDivCont(timeData, int.length = 1, int.times = NULL, plot = TRUE, plotLogRich = FALSE, timelims = NULL, drop.cryptic = FALSE)
+taxicDivCont(timeData, int.length = 1, int.times = NULL, plot = TRUE, 
+    plotLogRich = FALSE, timelims = NULL, drop.cryptic = FALSE)
 
-taxicDivDisc(timeList, int.times = NULL, plot = TRUE, plotLogRich = FALSE, timelims = NULL, split.int = TRUE)
+taxicDivDisc(timeList, int.times = NULL, plot = TRUE, plotLogRich = FALSE, 
+    timelims = NULL, split.int = TRUE)
 
-phyloDiv(tree, int.length = 1, int.times = NULL, plot = TRUE, plotLogRich = FALSE, drop.ZLB = TRUE, timelims = NULL)
+phyloDiv(tree, int.length = 1, int.times = NULL, plot = TRUE, plotLogRich = FALSE, 
+    drop.ZLB = TRUE, timelims = NULL)
 }
 \arguments{
   \item{timeData}{Two-column matrix giving the per-taxon first and last appearances in absolute time. The matrices output by simFossilTaxa can also be supplied to taxicDivCont.}
@@ -25,9 +28,9 @@ phyloDiv(tree, int.length = 1, int.times = NULL, plot = TRUE, plotLogRich = FALS
   \item{drop.ZLB}{If true, zero-length terminal branches are dropped from the input tree}
 }
 \details{
-Background: Diversity curves are plots of species/taxon/lineage richness over time for a particular group of organisms. For paleontological studies, these are generally based on per-taxon range data while more recently in evolutionary biology, molecular phylogenies have been used to calculate lineage-through-time plots (LTTs). Neither of these are without their weaknesses; reconstructing the true history of biodiversity is exceedingly difficult for any group.
+Background: Diversity curves are plots of species/taxon/lineage richness over time for a particular group of organisms. For paleontological studies, these are generally based on per-taxon range data while more recently in evolutionary biology, molecular phylogenies have been used to calculate lineage-through-time plots (LTTs). Neither of these approaches are without their particular weaknesses; reconstructing the true history of biodiversity is a difficult task no matter what data is available.
 
-The diversity curves produced by these functions will always measure diversity within binned time intervals (and plot them as rectangular bins). For continuous-time data or phylogenies, one could decrease the int.length used to get what is essentially an 'instantaneous' estimate of diversity. This is warned against, however, as most historical diversity data will have some time-averaging or uncertain temporal resolution and thus probably is not finely-resolved enough to calculate instantaneous estimates of diversity.
+The diversity curves produced by these functions will always measure diversity within binned time intervals (and plot them as rectangular bins). For continuous-time data or phylogenies, one could decrease the int.length used to get what is essentially an 'instantaneous' estimate of diversity. This is warned against, however, as most historical diversity data will have some time-averaging or uncertain temporal resolution and thus is probably not finely-resolved enough to calculate instantaneous estimates of diversity.
 
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
 
@@ -35,7 +38,7 @@ As diversity is counted within binned intervals, the true standing diversity may
 
 The timeList object should be a list composed of two matrices, the first matrix giving by-interval start and end times (in absolute time), the secont matrix giving the by-taxon first and last appearances in the intervals defined in the first matrix, numbered as the rows. Absolute time should be decreasing, while the intervals should be numbered so that the number increases with time. Unlike getSampProbDisc, the intervals can be overlapping. See the documentation for binTimeData for more information.
 
-phyloDiv will resolve polytomies to be dichotomous nodes seperated by zero-length branches prior to calculating the diversity curve. There is not option to change this, but it should not affect the use of the function. phyloDiv will also drop zero-length terminal branches, as with the function dropZLB. This is done by default but can be turned off by setting the argument drop.zlb to false.
+phyloDiv will resolve polytomies to be dichotomous nodes seperated by zero-length branches prior to calculating the diversity curve. There is no option to alter this behavior, but it should not affect the use of the function because the addition of the zero-length branches should produce an identical diveristy history as a polytomy. phyloDiv will also drop zero-length terminal branches, as with the function dropZLB. This the default behavior for the function but can be turned off by setting the argument drop.zlb to FALSE.
 }
 \value{
 These functions will invisibly return a three-column matrix, where the first two columns are interval start and end times and the third column is the number of taxa/lineages counted in that interval.

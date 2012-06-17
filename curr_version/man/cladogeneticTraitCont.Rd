@@ -6,13 +6,13 @@
 \arguments{
   \item{taxa}{A five-column matrix of taxonomic data, as output by simFossilTaxa}
   \item{rate}{rate of trait change; variance of evolutionary change distribution per speciation event}
-  \item{meanChange}{Mean change per speciation event. Default is 0; change to simulate 'speciational trends'.}
+  \item{meanChange}{Mean change per speciation event. Default is 0; change to simulate 'active' speciational trends, where the expected change at each speciational event is non-zero.}
   \item{rootTrait}{The trait value of the first taxon in the dataset; set to 0 by default.}
 }
 \details{
-This function simulates continuous trait evolution where change occurs under a Brownian model, but only at events that create new 'species', either branching events or anagenesis (pseudospeciation); i.e. the types of 'morphological differentiation' which can be simulated in the function simFossilTaxa. This is sometimes referred to as cladogenetic or speciation trait evolution and is heavily related to Puncuated Equilibrium theory. Anagenestic shifts aren't cladogenetic events per se (no branching!), so perhaps the best way to this of this function is it allows traits to change anytime simFossilTaxa created a new 'morphotaxon' in a simulation.
+This function simulates continuous trait evolution where change occurs under a Brownian model, but only at events that create new distinct morphotaxa (i.e. species as recognized in the fossil record), either branching events or anagenesis (pseudospeciation). These are the types of morphological differentiation which can be simulated in the function simFossilTaxa. This is sometimes referred to as cladogenetic or speciation trait evolution and is related to Puncuated Equilibrium theory. Anagenestic shifts aren't cladogenetic events per se (no branching!), so perhaps the best way to this of this function is it allows traits to change anytime simFossilTaxa created a new 'morphotaxon' in a simulation.
 
-Importantly, the change only occurs at the base of 'new' species, thus allowing cladogenetic trait evolution to be asymmetrical at branching points: i.e. only one branch actually changes position in trait-space, as expected under a budding cladogenesis model. This distinction is important as converting the taxa matrix to a phylogeny and simulating the trait changes under a 'speciational' tree-transformation would assume that divergence occurred on both daughter lineages at each node. (This has been the standard approach for simulating cladogenetic trait change on trees).
+Importantly, trait changes only occur at the base of 'new' species, thus allowing cladogenetic trait evolution to be asymmetrical at branching points: i.e. only one branch actually changes position in trait-space, as expected under a budding cladogenesis model. This distinction is important as converting the taxa matrix to a phylogeny and simulating the trait changes under a 'speciational' tree-transformation would assume that divergence occurred on both daughter lineages at each node. (This has been the standard approach for simulating cladogenetic trait change on trees).
 
 Cryptic taxa generated with prop.cryptic in simFossilTaxa will not differ at all in trait values. These species will all be identical.
 
@@ -38,7 +38,8 @@ tree <- taxa2phylo(taxa)
 plotTraitgram(trait,tree,conf.int=FALSE)
 
 #with cryptic speciation
-taxa <- simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=30,maxtime=1000,plot=TRUE)
+taxa <- simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=30,maxtime=1000,
+  plot=TRUE)
 trait <- cladogeneticTraitCont(taxa)
 tree <- taxa2phylo(taxa)
 plotTraitgram(trait,tree,conf.int=FALSE)

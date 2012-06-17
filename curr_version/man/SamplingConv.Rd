@@ -24,15 +24,15 @@ probAnc(p, q, R)
 }
 
 \details{
-This is a family of functions which all convert from some estimate of sampling to another estimate of sampling. Some of these also require estimates of the diversification rate. Diversification rates should always be the instanteous rate (often called the per-capita rates by paleontologists).
+This is a family of functions which all convert from some estimate of sampling to another estimate of sampling. Some of these also require estimates of an rate associated with taxonomic diversification, such as the speciation/origination rate or extinction rate. Diversification rates used in these functions should always be the instantaneous rates, often called the per-capita rates by paleontologists (Foote, 2000).
 
-As with many models used in the paleotree library, it is generally assumed that the fossil record of interest is composed of discrete relatively-static taxonomic units which diversify mainly by budding cladogenesis, and that sampling is a very rare event well approximated by a model of exponential waiting times. The veracity of those assumptions is difficult to test and the senstivity of these analyses to relaxing those assumptions probably varies.
+As with many models used in the paleotree library, it is generally assumed that the fossil record of interest is composed of discrete relatively-static taxonomic units which diversify mainly by budding cladogenesis, and that sampling events are rare and approximated by a Poisson model of exponentially-distributed waiting times between sampling events. The veracity of those assumptions is difficult to test and the senstivity of these analyses to relaxing those assumptions probably varies.
 
-sProb2sRate and sRate2sProb give very rough conversions for converting between the probability of sampling once per time interval (R or "sProb" in this package as used in the references below) and the instantaneous rate of sampling per lineage/time unit ("sRate" or r). If you have estimates of the speciation and extinction rate, use pqsRate2sProb() instead for a more accurate estimate of R.
+sProb2sRate and sRate2sProb give rough conversions for the probability of sampling once per time interval (R or "sProb" in this package as used in the references below) and the instantaneous rate of sampling per lineage/time unit ("sRate" or r). If you have estimates of the speciation and extinction rate, use pqsRate2sProb instead for a more accurate estimate of R.
 
-qsProb2Comp and qsRate2Comp are different calculations for "Pp" or the probability/proportion of taxa sampled in a clade. Theoretically, one could use it to extrapolate out the 'true' diversity, assuming the sampling rate model was correct. See Foote and Raup, 1996.
+qsProb2Comp and qsRate2Comp are different calculations for "Pp" or the probability/proportion of taxa sampled in a clade. Theoretically, one could use it to extrapolate out the 'true' diversity, assuming the sampling rate model was correct. (See Foote and Raup, 1996.)
 
-probAnc obtains the probability of sampling indirect ancestors for a group as given by Foote (1996), assuming only budding cladogenesis, given the sampling probability and estimates of the diversification rate.
+probAnc obtains the probability of sampling indirect ancestors for a group as given by Foote (1996), assuming only budding cladogenesis, given the sampling probability and estimates of the diversification rates.
 
 See the references below for a more detailed explanation of the methods and formulae used. The relevant equations are generally found in the appendices of those papers.
 }

@@ -18,7 +18,7 @@ The output tree will probably be a rough unresolved view of the relationships am
 
 The taxaData vector should have one element per lower-level taxon that is to be added to the tree. The name of each element in the vector should be the names of the lower-level taxa, which will be used as new tip labels of the output lower-taxon tree.
 
-The collapse vector should be used if there is doubt about the monophyly of any of the higher-level taxa included in the input taxontree. By default, all higher-level taxa are treated as monophyletic if not otherwise specified.
+By default, all higher-level taxa are treated as monophyletic clades if not otherwise specified. The collapse vector can (and probably should) be used if there is doubt about the monophyly of any higher-level taxa included in the input taxontree, so that such a group would be treated as a paraphyletic group in the output tree. 
 
 The output tree will always lack branch lengths and thus will not be time-scaled.
 }

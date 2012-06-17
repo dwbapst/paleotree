@@ -14,10 +14,9 @@ Returns the modified phylogeny as an object of class phylo. Any $root.time eleme
 }
 \author{David W. Bapst}
 \seealso{
-\code{
-As alternative to using this for comparative studies, see \link{timePaleoPhy}}
+As an alternative to using unitLengthTree in comparative studies, see \code{\link{timePaleoPhy}}
 
-See also \code{speciationalTree} in the package geiger, which does essentially the same thing.
+See also \code{speciationalTree} in the package geiger, which does essentially the same thing as unitLengthTree.
 }
 \examples{
 set.seed(444)

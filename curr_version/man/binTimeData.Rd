@@ -2,7 +2,7 @@
 \alias{binTimeData}
 \title{Bin Temporal Ranges in Discrete Intervals}
 \description{
-Converts a matrix of continuous-time first occurances and last occurances for fossil taxa into first and last occurances given in discrete-time intervals, along with information of the dates of the given intervals.
+Converts a matrix of continuous-time first occurances and last occurances for fossil taxa into first and last occurances given in discrete-time intervals, which is output along with information of the dates of the given intervals.
 }
 \usage{
 binTimeData(timeData, int.length = 1, start = NA, int.times = NULL)
@@ -14,9 +14,11 @@ binTimeData(timeData, int.length = 1, start = NA, int.times = NULL)
   \item{int.times}{A two column matrix with the start and end times of the intervals to be used.}
 }
 \details{
-This function takes a matrix of per-taxon first and last occurrances and divides those occurances into sequential non-overlappling time intervals, with each interval of uniform duration equal to int.length. 
+This function takes a matrix of per-taxon first and last occurrances and, by dividing the time-scale into time intervals of non-zero length, lists taxon occurances within those interval. By default, a set of sequential non-overlapping time-interval of equal non-zero length are used, with the length controlled by the argument int.length.
 
-Alternatively, a two column matrix of the interval start and end times to be used. None of these intervals can have a duration (temporal length) equal to or less than zero. If a first or last appearance in the input range data could fit into multiple intervals (i.e. the input dicrete time intervals are overlapping), then the appearance data is placed in the interval of the shortest duration. When output, the interval times matrix (see below) will be sorted from first to last.
+Alternatively, a two column matrix of interval start and end times to be used can be input via the argument int.times. None of these intervals can have a duration (temporal length) greater than zero. If a first or last appearance in the input range data could fit into multiple intervals (i.e. the input dicrete time intervals are overlapping), then the appearance data is placed in the interval of the shortest duration. When output, the interval times matrix (see below) will be sorted from first to last.
+
+This function is for simulating the effect of having a discrete timescale for analyses using simulations. This function should not be used for non-simulations uses, such as binning temporal occurances for analyses of real data. In those case, the temporal ranges (which, in real data, will probably be given as discrete time intervals) should already be tabulated within discrete intervals prior to use in paleotree. The user should place the temporal information in a list object, as described for the output of binTimeData (see below).
 
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero. However, the numbering of intervals giving in the output increases with time, as these are numbered relative to each other, from first to last.
 }

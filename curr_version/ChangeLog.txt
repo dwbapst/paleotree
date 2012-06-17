@@ -1,4 +1,6 @@
-version 1.4 -
+version 1.4 - 06/17/12
+-Added a CITATION file, accessible via citation("paleotree")
+-Added randLiveHat option to sampleRanges which controls how the 'hats' of taxa still alive at the modern day are treated
 -modified how timeData and timeList input were handled in various functions so that data.frames were converted to matrices
 -Added count.cryptic argument to simFossilTaxa and simFossilTaxa_SRCond
 -Fixed error where simFossilTaxa_SRCond treated anag.rate as prop.bifurc (and vice versa)

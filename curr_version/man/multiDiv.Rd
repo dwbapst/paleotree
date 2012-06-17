@@ -2,10 +2,11 @@
 \alias{multiDiv}
 \alias{plotMultiDiv}
 \title{Calculating Diversity Curves Across Multiple Datasets}
-\description{Calculates multiple diversity curves from a list of datasets of taxic ranges and/or phylogenetic trees, for the same intervals for all the individual datasets. A median curve with 95 percent quantile bounds can be calculated and plotted.
+\description{Calculates multiple diversity curves from a list of datasets of taxic ranges and/or phylogenetic trees, for the same intervals, for all the individual datasets. A median curve with 95 percent quantile bounds is also calculated and plotted for each interval.
 }
 \usage{
-multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE, drop.ZLB=TRUE, drop.cryptic = FALSE, plotLogRich = FALSE, timelims = NULL)
+multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE, drop.ZLB=TRUE, 
+    drop.cryptic = FALSE, plotLogRich = FALSE, timelims = NULL)
 
 plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL)
 }
@@ -27,9 +28,9 @@ The argument split.int splits intervals, if and only if discrete interval time d
 
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
 
-The 'averaged' curve is actually the median rather than the mean as diversity counts are often highly skewed (in the author's experience).
+The 'averaged' curve is actually the median rather than the mean as diversity counts are often highly skewed (in this author's experience).
 
-The shaded certainty region around the median curve is the two-tailed 95 percent lower and upper quantiles, calculated from the observed data. It is not a true confidence interval, as it has no relationship to the standard error.
+The shaded certainty region around the median curve is the two-tailed 95 percent lower and upper quantiles, calculated from the observed data. It is not a true probabilisitc confidence interval, as it has no relationship to the standard error.
 }
 \value{
 A list composed of three elements will be invisibly returned:
@@ -41,7 +42,7 @@ A list composed of three elements will be invisibly returned:
 \seealso{
 The diversity curve functions used include: \code{\link{phyloDiv}}, \code{\link{taxicDivCont}} and \code{\link{taxicDivDisc}}.
 
-Also see the function LTT.average.root in the package TreeSim, which calculates an average LTT curve for multiple phylogenies.
+Also see the function LTT.average.root in the package TreeSim, which calculates an average LTT curve for multiple phylogenies, the functions mltt.plot in ape and ltt in phytools.
 }
 \examples{
 set.seed(444)

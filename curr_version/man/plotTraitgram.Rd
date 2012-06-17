@@ -38,6 +38,7 @@ Also see the functions \code{traitgram} in the library picante and \code{phenogr
 set.seed(444)
 tree <- rtree(10)
 trait <- rTraitCont(tree)
+
 #first, traitgram without conf intervals
 plotTraitgram(trait,tree,conf.int=FALSE)
 

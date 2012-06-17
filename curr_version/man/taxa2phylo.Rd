@@ -15,7 +15,7 @@ By default, the dates selected ('obs-time' argument) are the last occurances of 
 
 All data relating to when static morpho-taxa appear or disappear in the record is lost; branching points will be the actual time of speciation, which (under budding) will often be in the middle of the temporal range of a taxon.
 
-Cryptic taxa are not dropped or merged as can be done with taxa2cladogram. The purpose of taxa2phylo is to obtain the 'true' pattern of evolution for the observation times, independent of what we would actually able to recover.
+Cryptic taxa are not dropped or merged as can be done with taxa2cladogram. The purpose of taxa2phylo is to obtain the 'true' pattern of evolution for the observation times, independent of what we might actually be able to recover, for the purpose of comparing in simulation analyses.
 
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
 }
@@ -49,7 +49,8 @@ phyloDiv(tree,drop.ZLB=FALSE)
 #note that it drops taxa which were never sampled!
 
 #testing with cryptic speciation
-taxaCrypt<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=10,maxtaxa=20,maxtime=1000,maxExtant=0)
+taxaCrypt<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=10,maxtaxa=20,
+    maxtime=1000,maxExtant=0)
 treeCrypt<-taxa2phylo(taxaCrypt)
 layout(1)
 plot(treeCrypt)

@@ -1,6 +1,6 @@
 Package: paleotree
 Type: Package
-Version: 1.4
+Version: 1.5
 Title: Paleontological and Phylogenetic Analyses of Evolution
 Date: 06-17-12
 Author: David Bapst

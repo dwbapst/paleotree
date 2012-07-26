@@ -18,7 +18,9 @@ Returns the modified tree as an object of class phylo, with no edge lengths.
 }
 \author{David W. Bapst}
 
-\seealso{\code{\link{di2multi}}}
+\seealso{
+\code{\link{di2multi}},\code{\link{timeLadderTree}},
+}
 \examples{
 set.seed(444)
 tree <- rtree(100)

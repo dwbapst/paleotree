@@ -1,3 +1,5 @@
+version 1.5 -
+
 version 1.4 - 06/17/12
 -Added a CITATION file, accessible via citation("paleotree")
 -Added randLiveHat option to sampleRanges which controls how the 'hats' of taxa still alive at the modern day are treated

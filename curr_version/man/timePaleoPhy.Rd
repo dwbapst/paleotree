@@ -5,12 +5,12 @@
 \description{Timescales an unscaled cladogram of fossil taxa using information on their temporal ranges, using various methods. Also can resolve polytomies randomly and output samples of randomly-resolved trees.}
 \usage{
 timePaleoPhy(tree, timeData, type = "basic", vartime = NULL, ntrees = 1,
-    randres = FALSE, add.term = FALSE, rand.obs = FALSE, 
+    randres = FALSE, timeres = FALSE, add.term = FALSE, rand.obs = FALSE, 
     node.mins = NULL, plot = FALSE)
 
 bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL, ntrees = 1,
-    nonstoch.bin=FALSE, randres = FALSE, sites = NULL,  add.term = FALSE,
-    rand.obs = FALSE, node.mins = NULL, plot = FALSE)
+    nonstoch.bin=FALSE, randres = FALSE, timeres = FALSE, sites = NULL,  
+    add.term = FALSE, rand.obs = FALSE, node.mins = NULL, plot = FALSE)
 }
 \arguments{
   \item{tree}{An unscaled cladogram of fossil taxa}
@@ -23,7 +23,9 @@ bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL, ntrees = 1,
 
   \item{ntrees}{Number of time-scaled trees to output. If ntrees is greater than one and both randres and rand.obs are false, the function will fail and a warning is issued, as these arguments would simply produce multiple identical time-scaled trees.}
 
-  \item{randres}{Should polytomies be randomly resolved? By default, timePaleoPhy does not resolve polytomies, instead outputting a time-scaled tree that is only as resolved as the input tree. If randres=T, then polytomies will be randomly resolved using multi2di() from the package ape. If randres=T and ntrees=1, a warning is printed that users should analyze multiple randomly-resolved trees, rather than a single such tree, although a tree is still output.}
+  \item{randres}{Should polytomies be randomly resolved? By default, timePaleoPhy does not resolve polytomies, instead outputting a time-scaled tree that is only as resolved as the input tree. If randres=T, then polytomies will be randomly resolved using \code{\link{multi2di}} from the package ape. If randres=T and ntrees=1, a warning is printed that users should analyze multiple randomly-resolved trees, rather than a single such tree, although a tree is still output.}
+
+  \item{timeres}{Should polytomies be resolved relative to the order of appearance of lineages? By default, timePaleoPhy does not resolve polytomies, instead outputting a time-scaled tree that is only as resolved as the input tree. If timeres=T, then polytomies will be resolved with respect to time using the paleotree function \code{\link{timeLadderTree}}. See that functions help page for more information; the result of time-order resolving of polytomies generally does not differ across multiple uses, unlike use of multi2di.}
 
   \item{add.term}{If true, adds terminal ranges.By default, this function will not add the ranges of taxa when time-scaling a tree, so that the tips correspond temporally to the first appearance datums of the given taxa. If add.term=T, then the 'terminal ranges' of the taxa are added to the tips after tree is time-scaled, such that the tips now correspond to the last appearance datums.}
 
@@ -108,8 +110,6 @@ phyloDiv(ttree)
 ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",ntrees=1,randres=TRUE,
     add.term=TRUE,plot=TRUE)
 #notice well the warning it prints!
-#now let's plot the first tree (both trees will be identical because we used set.seed)
-phyloDiv(ttree)
 #we would need to set ntrees to a large number to get a fair sample of trees
 
 #if we set ntrees>1, timePaleoPhy will make multiple time-trees
@@ -119,6 +119,11 @@ ttrees <- timePaleoPhy(cladogram,rangesCont,type="basic",ntrees=9,randres=TRUE,
 layout(matrix(1:9,3,3));parOrig <- par(mar=c(1,1,1,1))
 for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label=FALSE,no.margin=TRUE)}
 #they are all a bit different!
+
+#we can also resolve the polytomies in the tree according to time of first appearance
+	#via the function timeLadderTree, by setting the argument 'timeres' to TRUE
+ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",ntrees=1,timeres=TRUE,
+    add.term=TRUE,plot=TRUE)
 
 #can plot the median diversity curve with multiDiv
 layout(1);par(parOrig)
@@ -154,8 +159,12 @@ ttreeB1 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,randres=T
     add.term=TRUE,plot=FALSE)
 #notice the warning it prints!
 phyloDiv(ttreeB1)
-#can also force the appearance timings not to be chosen stochastically
-ttreeB2 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,
-    nonstoch.bin=TRUE,randres=TRUE,add.term=TRUE,plot=FALSE)
+#with time-order resolving via timeLadderTree
+ttreeB2 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,timeres=TRUE,
+    add.term=TRUE,plot=FALSE)
 phyloDiv(ttreeB2)
+#can also force the appearance timings not to be chosen stochastically
+ttreeB3 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,
+    nonstoch.bin=TRUE,randres=TRUE,add.term=TRUE,plot=FALSE)
+phyloDiv(ttreeB3)
 }

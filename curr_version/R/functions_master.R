@@ -1,6 +1,6 @@
 #functions_master.R
 
-timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=FALSE,add.term=FALSE,
+timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=FALSE,timeres=FALSE,add.term=FALSE,
 	rand.obs=FALSE,node.mins=NULL,plot=FALSE){
 	#fast time calibration for phylogenies of fossil taxa; basic methods
 		#this code inspired by similar code from G. Lloyd and G. Hunt
@@ -35,12 +35,14 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
 		}else{stop("Error: timeData not of matrix or data.frame format")}}
-	#remove taxa that are NA or missing in timeData
 	if(ntrees<1){stop("Error: ntrees<1")}
 	if(!add.term & rand.obs){stop("Error: Inconsistent arguments: add.term must be true for rand.obs to have any effect on output!")}
 	if(ntrees>1 & !randres & !rand.obs){stop("Error: Time-scale more trees without randomly resolving or random obs?!")}
 	if(ntrees==1 & randres){message("Warning: Do not interpret a single randomly-resolved tree")}
 	if(ntrees==1 & rand.obs){message("Warning: Do not interpret a single tree with randomly-placed obs times")}
+	if(randres & timeres){stop(
+		"Error: Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!")}
+	#remove taxa that are NA or missing in timeData
 	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))])
 	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
 	timeData<-timeData[!is.na(timeData[,1]),]
@@ -51,7 +53,11 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	saveTD<-timeData
 	for(ntr in 1:ntrees){
 		#resolve nodes, if tree is not binary
-		if(!is.binary.tree(savetree) & randres){tree<-multi2di(savetree)}else{tree<-savetree}
+		tree<-savetree
+		if(!is.binary.tree(savetree)){
+			if(randres){tree<-multi2di(savetree)}
+			if(timeres){tree<-timeLadderTree(savetree,timeData)}
+			}
 		if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}else{timeData<-saveTD}
 		ntime<-sapply(1:Nnode(tree),function(x) 
 			max(timeData[tree$tip.label[unlist(prop.part(tree)[x])],1]))	#first, get node times
@@ -159,8 +165,8 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	return(ttrees)
 	}
 
-bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nonstoch.bin=FALSE,randres=FALSE,sites=NULL,
-	add.term=FALSE,rand.obs=FALSE,node.mins=NULL,plot=FALSE){
+bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nonstoch.bin=FALSE,randres=FALSE,timeres=FALSE,
+	sites=NULL,add.term=FALSE,rand.obs=FALSE,node.mins=NULL,plot=FALSE){
 	#wrapper for applying non-SRC time-scaling to timeData where FADs and LADs are given as bins 
 		#see timePaleoPhy function for more details
 	#input is a list with (1) interval times matrix and (2) species FOs and LOs
@@ -184,6 +190,8 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 	if(ntrees<1){stop("Error: ntrees<1")}
 	#clean out all taxa which are NA or missing for timeData
 	if(ntrees==1 & randres){message("Warning: Do not interpret a single randomly-resolved tree")}
+	if(randres & timeres){stop(
+		"Error: Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!")}
 	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))])
 	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
@@ -218,7 +226,11 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 			}
 		rownames(timeData)<-rownames(timeList[[2]])
 		if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
-		if(!is.binary.tree(tree) & randres){tree1<-multi2di(tree)}else{tree1<-tree}
+		tree1<-tree
+		if(!is.binary.tree(tree)){
+			if(randres){tree1<-multi2di(tree)}
+			if(timeres){tree1<-timeLadderTree(tree,timeData)}	
+			}
 		ttrees[[ntrb]]<-suppressMessages(timePaleoPhy(tree1,timeData,type=type,vartime=vartime,ntrees=1,
 			randres=FALSE,add.term=add.term,rand.obs=FALSE,node.mins=node.mins,plot=plot))
 		}
@@ -397,7 +409,7 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 					}}
 				#replace original node with new, resolved, scaled node
 				if(node!=(Ntip(ktree)+1)){	#if it isn't the node
-					drtips<-unlist(Descendants(ktree,node))	#ape needs better tree editting functions
+					drtips<-tree$tip.label[prop.part(tree)[[node-Ntip(tree)]]]
 					tip_lab<-ktree$tip.label[drtips[1]]	#I need to cut out all but one tip, for the sole purpose of putting it all back later)
 					droptree<-collapse.singles(drop.tip(ktree,drtips[-1]))
 					droptree$edge.length[droptree$edge[,2]==which(droptree$tip.label==tip_lab)]<-new_stem	#reset edge length leading to remaining tip to new_stem
@@ -1671,10 +1683,11 @@ simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,min
 	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.5;prop.cryptic=0.5;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
 	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=TRUE
 	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
+	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
 	#idiot proofing
 	if(any(c(p,q,anag.rate,prop.bifurc,prop.cryptic)<0)){stop(
 		"Error: bad parameters input, p, q, anag.rate, prop.bifurc or prop.cryptic are less than 0")}
-	if(prop.bifurc>0 & prop.cryptic==1){stop()}
+	if(prop.bifurc>0 & prop.cryptic==1){stop("Error: Prop.bifurc greater than 0 even though cryptic cladogenesis = 1??")}
 	if(nruns<1){stop("Error: nruns<1")}
 	if(maxtaxa<0){stop("Error: maxtaxa<0")}
 	if(mintaxa<1){stop("Error: mintaxa<1")}
@@ -1697,7 +1710,8 @@ simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,min
 	ntries<-0
 	for(i in 1:nruns){
 		ntries<-ntries+1
-		taxad<-matrix(c(1,NA,0,NA,1),1,);pqw<-p+q+anag.rate
+		taxad<-matrix(c(1,NA,0,NA,1),1,)
+		pqw<-p+q+anag.rate
 		maxtime1<-maxtime;continue<-TRUE;eval<-FALSE
 		while(any(is.na(taxad[,4])) & continue){
 			tpot<-is.na(taxad[,4])
@@ -1784,8 +1798,8 @@ simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,min
 					numtaxa<-sapply(mtds,function(x) length(unique(x[,5])))
 					numexta<-sapply(1:length(mtds),function(x) length(unique(mtds[[x]][mtds[[x]][,4]>=maxtimes[x],5])))
 					}
-				minta<-numtaxa>=mintaxa									#is the clade big enough, per mintaxa?
-				maxta<-numtaxa<=maxtaxa									#is the clade small enough, per maxtaxa?
+				minta<-numtaxa>=mintaxa								#is the clade big enough, per mintaxa?
+				maxta<-numtaxa<=maxtaxa								#is the clade small enough, per maxtaxa?
 				minti<-maxtimes>=mintime							#is the simulation long enough, per mintime?
 				maxti<-maxtimes<=maxtime							#is the simulation short enough, per maxtime?
 				maxext<-if(!is.null(maxExtant)){maxExtant>=numexta}else{TRUE}	#is the number of extant taxa <= max?
@@ -2284,4 +2298,74 @@ addTermBranchLength<-function(tree,addtime=0.001){
 	if(!is.null(tree$root.time)){tree$root.time<-tree$root.time+addtime}
 	return(tree)
 	}
+
+rootSplit<-function(tree){
+	#returns a list with the daughter taxa of the two clades at the root split
+	tips<-lapply(tree$edge[tree$edge[,1]==(Ntip(tree)+1),2],function(zz) 
+		if(zz>Ntip(tree)){tree$tip.label[prop.part(tree)[[zz-Ntip(tree)]]]
+			}else{tree$tip.label[zz]})
+	return(tips)
+	}
+
+timeLadderTree<-function(tree,timeData){
+	#resolves all polytomies in a tree as ladders to match FADs in timeData
+	#only applicable to continuous time data
+	require(ape)	
+	#first sanitize data
+	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
+		}else{stop("Error: timeData not of matrix or data.frame format")}}
+	if(ncol(timeData)==6){timeData<-timeData[,3:4,drop=FALSE]}	#also allow it to accept taxad objects
+	#first clean out all taxa which are NA or missing in timeData
+	#remove taxa that are NA or missing in timeData
+	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))])
+	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+	timeData<-timeData[!is.na(timeData[,1]),]
+	if(any(is.na(timeData))){stop("Error: Weird NAs in Data??")}
+	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
+	#node IDs of polytomies
+	nodes<-Ntip(tree)+1:Nnode(tree)
+	polys<-nodes[sapply(nodes,function(x) sum(tree$edge[,1]==x)>2)]
+	#error if no polytomies
+	if(length(polys)==0){stop("Error: No Polytomies in Cropped Tree?")}
+	while(length(polys)>0){
+		node<-polys[1]
+		#make a list of the first FAD of each descendant
+		desc<-tree$edge[tree$edge[,1]==node,2]
+		dTips<-lapply(desc,function(x) if(x>Ntip(tree)){
+			tree$tip.label[prop.part(tree)[[x-Ntip(tree)]]]
+			}else{tree$tip.label[x]})
+		#get max FAD
+		dFADs<-sapply(dTips,function(x) max(timeData[x,1]))
+		#build a ladderized subtree of the node
+		subtree<-stree(length(dFADs),type="left")
+		#figure out the order of tips, use a second vector of random numbers for ties
+		subtree$tip.label<-desc[order(-dFADs,sample(1:length(dFADs)))]
+		#stick on tip labels
+		for(i in desc){
+			dtip<-which(subtree$tip.label==i)
+			if(i>Ntip(tree)){		#if its a clade
+				subclade<-extract.clade(tree,i)
+				subtree<-bind.tree(subtree,subclade,where=dtip)
+				subtree<-collapse.singles(subtree)
+				}else{subtree$tip.label[dtip]<-tree$tip.label[i]}	#if its a tip
+			}
+		#replace original node with new, resolved, scaled node
+		if(node!=(Ntip(tree)+1)){	#if it isn't the root node
+			drtips<-prop.part(tree)[[node-Ntip(tree)]]
+			tip_lab<-tree$tip.label[drtips[1]]	#I need to cut out all but one tip, for the sole purpose of putting it all back later)
+			droptree<-collapse.singles(drop.tip(tree,drtips[-1]))
+			droptree<-bind.tree(droptree,subtree,where=which(droptree$tip.label==tip_lab))	#put in subtree at tip
+			tree<-droptree
+		}else{				#if it is the root node
+			tree<-subtree
+			}	
+		nodes<-Ntip(tree)+1:Nnode(tree)
+		polys<-nodes[sapply(nodes,function(x) sum(tree$edge[,1]==x)>2)]
+		}
+	tree$edge.length<-NULL
+	return(tree)
+	}
+
+
 

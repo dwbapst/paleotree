@@ -1,16 +1,16 @@
-\name{srcTimescaling}
-\alias{srcTimePaleoPhy}
-\alias{bin_srcTimePaleoPhy}
+\name{cal3Timescaling}
+\alias{cal3TimePaleoPhy}
+\alias{bin_cal3TimePaleoPhy}
 \title{SampRate-Calibrated Timescaling of Paleo-Phylogenies}
 \description{
 Timescales an unscaled cladogram of fossil taxa, using information on their ranges and an estimate of the instantaneous rate of sampling. The output is a sample of timescaled trees, as resulting from a stochastic algorithm that samples observed gaps in the fossil record with weights calculated from the sampling rate. This function also uses the sampling-rate calibrated time-scaling algorithm to resolve polytomies randomly and infer potential ancestor-descendant relationships, simultaneous with the time-scaling treatment.}
 \usage{
-srcTimePaleoPhy(tree, timeData, sampRate, ntrees = 1, anc.wt = 1, node.mins = NULL, 
-    rand.obs = FALSE, FAD.only = FALSE, root.max = 200, old.src=FALSE, plot = FALSE)
+cal3TimePaleoPhy(tree, timeData, sampRate, ntrees = 1, anc.wt = 1, node.mins = NULL, 
+    rand.obs = FALSE, FAD.only = FALSE, root.max = 200, plot = FALSE)
 
-bin_srcTimePaleoPhy(tree, timeList, sampRate, ntrees = 1, nonstoch.bin=FALSE,
+bin_cal3TimePaleoPhy(tree, timeList, sampRate, ntrees = 1, nonstoch.bin=FALSE,
     sites = NULL, anc.wt = 1, node.mins = NULL, rand.obs = FALSE, FAD.only = FALSE,
-    root.max = 200, old.src = FALSE, plot = FALSE)
+    root.max = 200, plot = FALSE)
 }
 \arguments{
   \item{tree}{An unscaled cladogram of fossil taxa}
@@ -31,9 +31,7 @@ bin_srcTimePaleoPhy(tree, timeList, sampRate, ntrees = 1, nonstoch.bin=FALSE,
 
   \item{root.max}{Maximum time before the first FAD that the root can be pushed back to}
 
-  \item{old.src}{Use the older version of calculating gaps found in SRC timescaling functions in paleotree versions 1.0-1.4}
-
-  \item{plot}{If true, plots the input, "basic" timescaled and output SRC-timescaled phylogenies}
+  \item{plot}{If true, plots the input, "basic" timescaled and output cal3-timescaled phylogenies}
 
   \item{timeList}{A list composed of two matrices giving interval times and taxon appearance datums, as would be output by binTimeData. The rownames of the second matrix should be the taxon IDs}
 
@@ -66,6 +64,7 @@ Most importantly, please note the stochastic element of the SRC method. It does 
 \value{
 The output of these functions is a time-scaled tree or set of time-scaled trees, of either class phylo or multiphylo, depending on the argument ntrees. All trees are output with an element $root.time. This is the time of the root on the tree and is important for comparing patterns across trees.
 
+
 Trees created with bin_srcTimePaleoPhy will output with some additional elements, in particular $ranges.used, a matrix which records the continuous-time ranges generated for time-scaling each tree. (Essentially a pseudo-timeData matrix.)
 }
 \references{
@@ -73,8 +72,6 @@ Bapst, in prep. Time-scaling Trees of Fossil Taxa. To be submitted to \emph{Pale
 }
 \author{David W. Bapst}
 \seealso{
-In particular, see the other rate-calibrated time-scaling method: code{\link{cal3TimePaleoPhy}}
-
 \code{\link{timePaleoPhy}}, \code{\link{binTimeData}}, \code{\link{getSampRateCont}}, \code{\link{multi2di}}
 }
 \examples{
@@ -85,22 +82,28 @@ taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,max
 rangesCont <- sampleRanges(taxa,r=0.5)
 #let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
 cladogram <- taxa2cladogram(taxa,plot=TRUE)
-#this library allows one to use SRC type time-scaling methods (Bapst, in prep.)
+#this library allows one to use rate calibrated type time-scaling methods (Bapst, in prep.)
 #to use these, we need an estimate of the sampling rate (we set it to 0.5 above)
 SRres <- getSampRateCont(rangesCont)
 sRate <- SRres[[2]][2]
-#now let's try srcTimePaleoPhy, which timescales using a sampling rate to calibrate
+#we also need extinction rate and branching rate; we can get extRate from getSampRateCont too
+#we'll assume extRate=brRate (ala Foote et al., 1999); may not always be a good assumption
+divRate<-SRres[[2]][1]
+#now let's try cal3TimePaleoPhy, which timescales using a sampling rate to calibrate
 #This can also resolve polytomies based on sampling rates, with some stochastic decisions
-ttree <- srcTimePaleoPhy(cladogram,rangesCont,sampRate=sRate,ntrees=1,plot=TRUE)
+ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
+    sampRate=sRate,ntrees=1,plot=TRUE)
 #notice the warning it gives!
 phyloDiv(ttree)
 
-#by default, srcTimePaleoPhy is allowed to predict indirect ancestor-descendant relationships
+#by default, cal3TimePaleoPhy is allowed to predict indirect ancestor-descendant relationships
 #can turn this off by setting anc.wt=0
-ttree <- srcTimePaleoPhy(cladogram,rangesCont,sampRate=sRate,ntrees=1,anc.wt=0,plot=TRUE)
+ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
+    sampRate=sRate,ntrees=1,anc.wt=0,plot=TRUE)
 
 #to get a fair sample of trees, let's increase ntrees
-ttrees <- srcTimePaleoPhy(cladogram,rangesCont,sampRate=sRate,ntrees=9,plot=FALSE)
+ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
+    sampRate=sRate,ntrees=9,plot=FALSE)
 #let's compare nine of them at once in a plot
 layout(matrix(1:9,3,3));parOrig<-par(mar=c(0,0,0,0))
 for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label=FALSE)}
@@ -114,8 +117,8 @@ multiDiv(ttrees)
 #let's say we have (molecular??) evidence that node #5 is at least 1200 time-units ago
 nodeDates <- rep(NA,(Nnode(cladogram)-1))
 nodeDates[5]<-1200
-ttree <- srcTimePaleoPhy(cladogram,rangesCont,sampRate=sRate,ntrees=1,
-    node.mins=nodeDates,plot=TRUE)
+ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
+    sampRate=sRate,ntrees=1,node.mins=nodeDates,plot=TRUE)
 
 #example with time in discrete intervals
 set.seed(444)
@@ -132,12 +135,15 @@ sProb <- SPres[[2]][2]
 #but that's the sampling PROBABILITY per bin, not the instantaneous rate of change
 #we can use sProb2sRate() to get the rate. We'll need to also tell it the int.length
 sRate1 <- sProb2sRate(sProb,int.length=1)
+#we also need extinction rate and branching rate (see above)
+divRate<-SPres[[2]][1]
 #estimates that r=0.3... kind of low (simulated sampling rate is 0.5)
 #Note: for real data, you may need to use an average int.length (no constant length)
-ttree <- bin_srcTimePaleoPhy(cladogram,rangesDisc,sampRate=sRate1,ntrees=1,plot=TRUE)
+ttree <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,
+    sampRate=sRate1,ntrees=1,plot=TRUE)
 phyloDiv(ttree)
 #can also force the appearance timings not to be chosen stochastically
-ttree1 <- bin_srcTimePaleoPhy(cladogram,rangesDisc,sampRate=sRate1,ntrees=1,
-    nonstoch.bin=TRUE,plot=TRUE)
+ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,
+    sampRate=sRate1,ntrees=1,nonstoch.bin=TRUE,plot=TRUE)
 phyloDiv(ttree1)
 }

@@ -19,6 +19,9 @@ This function is for resolving trees when a continuous time-scale is known. For 
 Taxa with the same identical first appearance date will be ordered randomly. Thus, the output is slightly stochastic, but only when ties exist. This is probably uncommon with real data on continuous time-scales.
 
 Taxa not shared between the tree and the timeData matrix, or listed as having a FAD or LAD of NA in timeData will be dropped and will not be included in the output tree.
+
+See this blog post for more information:
+http://nemagraptus.blogspot.com/2012/07/resolving-polytomies-according-to.html
 }
 \value{
 Returns the modified tree as an object of class phylo, with no edge lengths.

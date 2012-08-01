@@ -68,6 +68,8 @@ If timeData or the elements of timeList are actually data.frames (as output by r
 }
 \value{
 The output of these functions is a time-scaled tree or set of time-scaled trees, of either class phylo or multiphylo, depending on the argument ntrees. All trees are output with an element $root.time. This is the time of the root on the tree and is important for comparing patterns across trees.
+
+Trees created with bin_timePaleoPhy will output with some additional elements, in particular $ranges.used, a matrix which records the continuous-time ranges generated for time-scaling each tree. (Essentially a pseudo-timeData matrix.)
 }
 \references{
 Bapst, in prep. Time-scaling Trees of Fossil Taxa. To be submitted to \emph{Paleobiology}

@@ -328,7 +328,7 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 			tipd<-cbind(ID=(1:Ntip(ttree1)),FAD=(timeData1[tipl,1]),LAD=(timeData1[tipl,2]),SR=(sampRate[tipl]))
 			if(node==(Ntip(ktree)+1)){
 				min_zip<-(-root.max)	#if root, allow to be push back up to root.max
-				root_push<--seq(min_zip,0,by=0.1)
+				stem_len<-root.max
 			}else{									#if not root, push down to lower node
 				min_zip<-(-ktree$edge.length[ktree$edge[,2]==node])
 				stem_len<-ktree$edge.length[ktree$edge[,2]==node]
@@ -354,11 +354,14 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 					dnode1<-dnodes[which(dlen==min(dlen))[1]]		#just pick first appearing
 					}
 				#make sure to include stem length in calculations!
-				if(node==(Ntip(ktree)+1)){
+				if(old.src & node==(Ntip(ktree)+1)){
 					#07-29-12: this treats the stem length as a single gap
 						#given that this should be a single gap and not gamma distributed, no old.src distinction
+					#08-02-12: WRONG, why do this at all? just let root.max be stem.len!!!
+					root_push<--seq(min_zip,0,by=0.1)
 					root_prob<-dSR[dnode1==dnodes]*exp(-dSR[dnode1==dnodes]*root_push)
 					stem_len<-sample(root_push,1,prob=root_prob)
+					#in new SRC, the stem_len will remain the -min_zip
 					}
 				#make data structure for placed lineages; anc= row of anc lineage, events in time-from-stem 
 				plin<-c(dnode1,(dlen[dnode1==dnodes]+stem_len),drng[dnode1==dnodes],NA,
@@ -704,6 +707,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 				SR=sampRate[tipl],BR=brRate[tipl],ER=extRate[tipl],Ps=Ps[tipl])
 			if(node==(Ntip(ktree)+1)){
 				min_zip<-(-root.max)	#if root, allow to be push back up to root.max
+				stem_len<-root.max
 				root_push<--seq(min_zip,0,by=0.1)
 			}else{									#if not root, push down to lower node
 				min_zip<-(-ktree$edge.length[ktree$edge[,2]==node])
@@ -728,12 +732,13 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 				#08-01-12: choice of starting lineage doesn't matter (see SRC method)
 				dnode1<-dnodes[which(dlen==min(dlen))[1]]		#just pick first appearing
 				#make sure to include stem length in calculations!
-				if(node==(Ntip(ktree)+1)){
-					#07-29-12: this treats the stem length as a single gap
-						#given that this should be a single gap and not gamma distributed
-					root_density<-dexp(root_push,rate=dSR[dnode1==dnodes]+(dBR[dnode1==dnodes]*dPs[dnode1==dnodes]))
-					stem_len<-sample(root_push,1,prob=root_density)
-					}
+				#08-03-12: as with new SRC above, the stem length will JUST be the -min_zip: max root.push!
+				#if(node==(Ntip(ktree)+1)){
+				#	#07-29-12: this treats the stem length as a single gap
+				#		#given that this should be a single gap and not gamma distributed
+				#	root_density<-dexp(root_push,rate=dSR[dnode1==dnodes]+(dBR[dnode1==dnodes]*dPs[dnode1==dnodes]))
+				#	stem_len<-sample(root_push,1,prob=root_density)
+				#	}
 				#make data structure for placed lineages; anc= row of anc lineage, events in time-from-stem 
 				plin<-c(dnode1,(dlen[dnode1==dnodes]+stem_len),drng[dnode1==dnodes],NA,
 					0,dlen[dnode1==dnodes]+stem_len,dlen[dnode1==dnodes]+drng[dnode1==dnodes]+stem_len)
@@ -2630,45 +2635,6 @@ cladogeneticTraitCont<-function(taxa,rate=1,meanChange=0,rootTrait=0){
 		}
 	names(traits)<-rownames(taxa)
 	return(traits)
-	}
-
-compareNodeAges<-function(tree1,tree2){
-	#output vector of shifts in node dates
-	require(ape)
-	if(class(tree1)!="phylo"){stop("Error: tree1 is not of class phylo")}
-	if(class(tree2)!="phylo"){stop("Error: tree2 is not of class phylo")}
-	matches1<-which(!is.na(match(tree1$tip.label,tree2$tip.label)))[1]
-	tipmatch<-tree1$tip.label[matches1]
-	if(length(matches1)<1){stop("Error: No shared taxa!")}
-	mtimeA<-dist.nodes(tree1)[matches1,Ntip(tree1)+1]
-	mtimeB<-dist.nodes(tree2)[match(tipmatch,tree2$tip.label),Ntip(tree2)+1]
-	tree1<-drop.tip(tree1,tree1$tip.label[is.na(match(tree1$tip.label,tree2$tip.label))])
-	tree2<-drop.tip(tree2,tree2$tip.label[is.na(match(tree2$tip.label,tree1$tip.label))])
-	ntime1<-dist.nodes(tree1)[,Ntip(tree1)+1]
-	ntime2<-dist.nodes(tree2)[,Ntip(tree2)+1]
-	mtime1<-ntime1[match(tipmatch,tree1$tip.label)]
-	mtime2<-ntime2[match(tipmatch,tree2$tip.label)]
-	if(!is.null(tree1$root.time)){
-		tree1$root.time<-tree1$root.time-(mtimeA-mtime1)
-		ntime1<-tree1$root.time-ntime1
-		if(min(ntime1)<0){stop("Error: tree1$root.time is less than total depth of tree1!")}
-	}else{
-		ntime1<-max(ntime1)-ntime1
-		}
-	if(!is.null(tree2$root.time)){
-		tree2$root.time<-tree2$root.time-(mtimeB-mtime2)
-		ntime2<-tree2$root.time-ntime2
-		if(min(ntime2)<0){stop("Error: tree2$root.time is less than total depth of tree2!")}
-	}else{
-		ntime2<-max(ntime2)-ntime2
-		}
-	matches<-match(lapply(prop.part(tree1),function(x) sort(tree1$tip.label[x])),
-		lapply(prop.part(tree2),function(x) sort(tree2$tip.label[x])))
-	ages1<-ntime1[Ntip(tree1)+which(!is.na(matches))]
-	ages2<-ntime2[Ntip(tree2)+matches[!is.na(matches)]]
-	age_diff<-ages1-ages2
-	names(age_diff)<-NULL
-	return(age_diff)
 	}
 
 compareTermBranches<-function(tree1,tree2){

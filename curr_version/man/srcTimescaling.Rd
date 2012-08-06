@@ -31,7 +31,7 @@ bin_srcTimePaleoPhy(tree, timeList, sampRate, ntrees = 1, nonstoch.bin=FALSE,
 
   \item{root.max}{Maximum time before the first FAD that the root can be pushed back to}
 
-  \item{old.src}{Use the older version of calculating gaps found in SRC timescaling functions in paleotree versions 1.0-1.4}
+  \item{old.src}{Use the older version of calculating gaps found in SRC timescaling functions in paleotree versions 1.0-1.4. The older version of the SRC method treats the time between branching points and the FAD of the later appearing daughter lineage as an exponentially-distributed random variable. The newer version, more in line with the reasoning behind the newer cal3 method, treats the summed amount of unobserved evolutionary history between some stem age, a branching event and the FADs of two daughter lineages as a gamma-distributed random variable, with a shape parameter of 2 and the sampling rate used as the rate parameters. This makes the newer version comparable to the algorithm used in cal3 timescaling, which only differs in the choice of the rate parameter.}
 
   \item{plot}{If true, plots the input, "basic" timescaled and output SRC-timescaled phylogenies}
 

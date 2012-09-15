@@ -1,0 +1,29 @@
+\name{reverseList}
+\alias{reverseList}
+\title{Reverse List Structure}
+\description{
+Takes a list and reverses the list structure, such that list composed of five elements with eight sub-elements is restructured to have eight elements with five sub-elements each, with the order of elements and sub-elements being retained despite their reversal in hierarchical position.
+}
+\usage{
+reverseList(list, simplify = FALSE)
+}
+\arguments{
+  \item{list}{A list composed of multiple elements, with each element a vector or list of equal length}
+  \item{simplify}{Should the result be simplified, as the argument in sapply}
+}
+\details{
+The function will fail and return an error if all sub-elements are not vectors or lists of equal length.
+
+This function can be useful for instances when each element of a list is by-sample, composed of multiple, different tests on that sample, but where for further analysis/plotting, it would be beneficial to have a list where each element represented values from the same test performed across multiple samples (i.e. plotting a box-plot).
+}
+\value{
+Returns a list with a reversed structure relative to the input, see above.
+}
+\author{
+David W. Bapst
+}
+\examples{
+list1<-list(list(1:3),list(1:3),list(1:3))
+reverseList(list1,simplify=FALSE)
+reverseList(list1,simplify=TRUE)
+}

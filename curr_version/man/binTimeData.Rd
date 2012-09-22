@@ -21,6 +21,8 @@ Alternatively, a two column matrix of interval start and end times to be used ca
 This function is for simulating the effect of having a discrete timescale for analyses using simulations. This function should not be used for non-simulations uses, such as binning temporal occurances for analyses of real data. In those case, the temporal ranges (which, in real data, will probably be given as discrete time intervals) should already be tabulated within discrete intervals prior to use in paleotree. The user should place the temporal information in a list object, as described for the output of binTimeData (see below).
 
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero. However, the numbering of intervals giving in the output increases with time, as these are numbered relative to each other, from first to last.
+
+As of version 1.5, taxa which are extant as indicated in timeData as being in the time interval which overlaps with the modern, if there is such a time interval (previously they were erroneously listed as NA).
 }
 \value{
 A list containing:
@@ -48,4 +50,20 @@ rangesDisc1 <- binTimeData(rangesCont,int.times=presetIntervals)
 taxicDivDisc(rangesDisc1)
 #now let's plot diversity with (different) equal length intervals used above
 taxicDivDisc(rangesDisc1,int.times=equalDiscInt[,1:2])
+
+#example with extant taxa
+set.seed(444)
+taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000)
+#simulate a fossil record with imperfect sampling with sampleRanges()
+rangesCont <- sampleRanges(taxa,r=0.5,,modern.samp.prob=1)
+#Now let's use binTimeData() to bin in intervals of 1 time unit
+rangesDisc <- binTimeData(rangesCont,int.length=1)
+#plot with taxicDivDisc()
+taxicDivDisc(rangesDisc)
+#example with pre-set intervals input (including overlappling)
+presetIntervals <- cbind(c(40,30,20,10),c(30,20,10,0))
+rangesDisc1 <- binTimeData(rangesCont,int.times=presetIntervals)
+taxicDivDisc(rangesDisc1)
+
+
 }

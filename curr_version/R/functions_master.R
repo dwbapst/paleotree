@@ -1638,7 +1638,7 @@ binTimeData<-function(timeData,int.length=1,start=NA,int.times=NULL){
 		#arbitrarily starts bin at the first fad; this can be changed by setting 'start'
 			#start must be greater than max(timeData)
 			#the last bin is cut off at zero (present day)
-	#x<-runif(100);x<-cbind(x+rexp(100),x)
+	#x<-c(0,runif(99));timeData<-cbind(x+rexp(100),x);int.length=1;start=NA;int.times=NULL
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data?")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
@@ -1650,6 +1650,8 @@ binTimeData<-function(timeData,int.length=1,start=NA,int.times=NULL){
 		bins<-unique(ifelse(bins<0,0,bins))	#get rid of any extra zeroes or negative numbers
 		fads<-sapply(timeData[,1],function(x) which(bins<x)[1]-1)
 		lads<-sapply(timeData[,2],function(x) which(bins<x)[1]-1)
+		fads[timeData[,1]==0]<-length(bins)-1
+		lads[timeData[,2]==0]<-length(bins)-1
 		res<-list(int.times=cbind(int.start=bins[1:(length(bins)-1)],int.end=bins[2:length(bins)]),
 			taxon.times=cbind(first.int=fads,last.int=lads))
 	}else{
@@ -1658,6 +1660,10 @@ binTimeData<-function(timeData,int.length=1,start=NA,int.times=NULL){
 		int.times<-int.times[order(int.durs),]
 		Fint<-sapply(timeData[,1],function(x) which(apply(int.times,1,function(y) y[1]>=x & y[2]<x))[1])
 		Lint<-sapply(timeData[,2],function(x) which(apply(int.times,1,function(y) y[1]>=x & y[2]<x))[1])
+		if(any(int.times[,2]==0)){
+			Fint[timeData[,1]==0]<-which(int.times[,2]==0)[1]
+			Lint[timeData[,2]==0]<-which(int.times[,2]==0)[1]
+			}
 		taxon.times<-cbind(first.int=Fint,last.int=Lint)
 		rownames(taxon.times)<-rownames(timeData)
 		taxon.times<-taxon.times[!apply(taxon.times,1,function(x) any(is.na(x))),]
@@ -2307,11 +2313,11 @@ taxicDivCont<-function(timeData,int.length=1,int.times=NULL,plot=TRUE,plotLogRic
 		times1<-sort(times1)
 		if(plotLogRich){
 			plot(times1[div1>0],div1[div1>0],type="l",log="y",
-				xlim=if(is.null(timelims)){c(max(times1),min(times1))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xlab="Time (Before Present)",ylab="taxic Richness (Log Scale)")		
 		}else{
 			plot(times1,div1,type="l",
-				xlim=if(is.null(timelims)){c(max(times1),min(times1))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xlab="Time (Before Present)",ylab="Taxic Richness")
 			}
 		}
@@ -2373,11 +2379,11 @@ taxicDivDisc<-function(timeList,int.times=NULL,plot=TRUE,plotLogRich=FALSE,timel
 		times1<-sort(times1)
 		if(plotLogRich){
 			plot(times1[div1>0],div1[div1>0],type="l",log="y",
-				xlim=if(is.null(timelims)){c(max(times1),min(times1))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xlab="Time (Before Present)",ylab="Taxic Richness (Log Scale)")		
 		}else{
 			plot(times1,div1,type="l",
-				xlim=if(is.null(timelims)){c(max(times1),min(times1))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xlab="Time (Before Present)",ylab="Taxic Richness")
 			}
 		}
@@ -2436,11 +2442,11 @@ phyloDiv<-function(tree,int.length=1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,
 		par(mar=c(5,4,2,2))
 		if(plotLogRich){
 			plot(times1[div1>0],div1[div1>0],type="l",log="y",
-				xlim=if(is.null(timelims)){c(max(times1),min(times1))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xlab="Time (Before Present)",ylab="Lineage Richness (Log Scale)")		
 		}else{
 			plot(times1,div1,type="l",
-				xlim=if(is.null(timelims)){c(max(times1),min(times1))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				ylim=c(0,max(div1)+1),
 				xlab="Time (Before Present)",ylab="Lineage Richness")
 			}
@@ -2556,13 +2562,13 @@ plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL){
 		mdiv1[mdiv1[,2]<1,2]<-1;mdiv1[mdiv1[,3]<1,3]<-1
 		y_lim<-c(min(mdiv1[mdiv1>=1]),max(mdiv1[mdiv1>=1]))
 		plot(times1[mdiv1[,3]>0],mdiv1[mdiv1[,3]>0,3],type="n",ylim=y_lim,log="y",
-				xlim=if(is.null(timelims)){c(max(times1),min(times1))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 			xlab="Time (Before Present)",ylab="Log Lineage/Taxic Richness",
 			main=paste("Median Diversity Curve"))
 	}else{
 		y_lim<-c(min(mdiv1),max(mdiv1))
 		plot(times1,mdiv1[,3],type="n",ylim=y_lim,
-				xlim=if(is.null(timelims)){c(max(times1),min(times1))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 			xlab="Time (Before Present)",ylab="Lineage/Taxic Richness",
 			main=paste("Median Diversity Curve"))
 		}
@@ -2845,3 +2851,20 @@ reverseList<-function(list,simplify=FALSE){
 	names(list1)<-names(list[[1]])
 	return(list1)
 	}
+
+freqRat<-function(timeData,plot=FALSE){
+	#timeData is discrete bin data, like from binTimeData
+	if(length(timeData)==2){timeData<-timeData[[2]]}	#if a timeList matrix...
+	timeData<-timeData[!is.na(timeData[,1]),]
+	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
+	if(any(apply(timeData,1,diff)<0)){
+		stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
+	if(any(timeData[,2]<0)){stop("Error: Some dates in timeList[[2]] <0 ?")}
+	durations<-apply(timeData,1,diff)+1
+	f1<-sum(durations==1);f2<-sum(durations==2);f3<-sum(durations==3)
+	freqRat<-(f2^2)/(f1*f3)
+	names(freqRat)<-"freqRat"
+	if(plot){hist(durations,breaks=max(durations),xlab="Duration (time-units)",main="")}
+	return(freqRat)
+	}
+

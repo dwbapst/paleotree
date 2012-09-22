@@ -51,7 +51,7 @@ Foote, M., and D. M. Raup. 1996 Fossil preservation and the stratigraphic ranges
 }
 \author{David W. Bapst, with considerable advice from Michael Foote.}
 \seealso{
-\code{\link{getSampRateCont}}, \code{\link{sProb2sRate}}, \code{\link{qsProb2Comp}}
+ \code{\link{freqRat}},  \code{\link{getSampRateCont}}, \code{\link{sProb2sRate}}, \code{\link{qsProb2Comp}}
 }
 \examples{
 #Simulate some fossil ranges with simFossilTaxa

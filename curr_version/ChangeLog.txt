@@ -1,4 +1,13 @@
 version 1.5 -
+-New functions, cal3TimeScaling and bin_cal3TimeScaling, similar to SRC methods but different probability equations used, req div rates
+-Modifications to SRC methods to work more like how cal3 calculates unobs evol history at each node
+-Added function freqRat for estimating the per-interval sampling probability via the frequency ratio method of Foote and Raup (1996)
+-Added function rootSplit, which finds most basal split among a set of taxa
+-Added function timeLadderTree, which resolves polytomies according to order of appearance
+-Added function reverseList, which takes a hierarchial list and reverses that hierarchial order
+-fixed bug in binTimeData where extant taxa were returned as NA in the output timeList object
+-Modified function compareNodeAges to allow multiple trees as input, for all nodes shared in common among all input trees
+-Modification to diversity curve functions so plots are cut off before going past the Modern (time 0)
 
 version 1.4 - 06/17/12
 -Added a CITATION file, accessible via citation("paleotree")

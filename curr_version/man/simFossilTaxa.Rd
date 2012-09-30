@@ -56,9 +56,9 @@ simFossilTaxa simulates single taxa until they go extinct or exceed maxtime. Thi
 
 simFossilTaxa_SRCond is a wrapper for simFossilTaxa for when clades of a particular size are desired, post-sampling. This function accomplishes this task by first calculating the expected proportion of taxa sampled, given the sampling rate and the rates which control lineage termination: extinction, anagenesis and bifurcation. The average original clade size needed to produce, on average, a given number of sampled taxa (the argument 'avgtaxa') is calculated with the following equation:
 
-\eqn{N = (avgtaxa) / ( 1 - exp( -r / (q + anag.rate + (prop.bifurc * p)) ))}
+\eqn{N = avgtaxa / (r / (r + (q + anag.rate + (prop.bifurc * p)) ))}
 
-We will call that quantity N. Note that the quantity (prop.bifurc * p) describes the rate of bifurcation when there is no cryptic cladogenesis, as prop.bifurc is the ratio of budding to bifurcating cladogenesis. This equation will diverge in ways that are not easily predicted as the rate of cryptic speciation increases.
+We will call that quantity N. Note that the quantity (prop.bifurc * p) describes the rate of bifurcation when there is no cryptic cladogenesis, as prop.bifurc is the ratio of budding to bifurcating cladogenesis. This equation will diverge in ways that are not easily predicted as the rate of cryptic speciation increases. Note, as of version 1.5, this equation was altered to the form above. The previous form was similar and at values of avgtaxa greater than 10 or so, produces almost identical values. The above is preferred for its relationship to taxonomic completeness (Solow and Smith, 1997).
 
 Next, this value is used with simFossilTaxa, where mintaxa is set to N and maxtaxa set to 2*N. simFossilTaxa_SRcond will generally produce simulated datasets that are generally of that size or larger post-sampling (although there can be some variance). Some combinations of parameters may take an extremely long time to find large enough datasets. Some combinations may produce very strange datasets that may have weird structure that is only a result of the conditioning (for example, the only clades that have many taxa when net diversification is low or negative will have lots of very early divergences, which could impact analyses). Needless to say, conditioning can be very difficult.
 
@@ -82,6 +82,8 @@ Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary Mod
 Kendall, D. G. 1948 On the Generalized "Birth-and-Death" Process. \emph{The Annals of Mathematical Statistics} \bold{19}(1):1--15.
 
 Nee, S. 2006 Birth-Death Models in Macroevolution. \emph{Annual Review of Ecology, Evolution, and Systematics} \bold{37}(1):1--17.
+
+Solow, A. R., and W. Smith. 1997 On Fossil Preservation and the Stratigraphic Ranges of Taxa. \emph{Paleobiology} \bold{23}(3):271--277.
 }
 \author{David W. Bapst}
 \seealso{\code{\link{sampleRanges}}, \code{\link{simPaleoTrees}}, \code{\link{taxa2phylo}}, \code{\link{taxa2cladogram}}

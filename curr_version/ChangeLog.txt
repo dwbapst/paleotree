@@ -8,6 +8,7 @@ version 1.5 -
 -fixed bug in binTimeData where extant taxa were returned as NA in the output timeList object
 -Modified function compareNodeAges to allow multiple trees as input, for all nodes shared in common among all input trees
 -Modification to diversity curve functions so plots are cut off before going past the Modern (time 0)
+-Modification to avgtaxa equation used in simFossilTaxa_SRcond. See help file for details.
 
 version 1.4 - 06/17/12
 -Added a CITATION file, accessible via citation("paleotree")

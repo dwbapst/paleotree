@@ -20,7 +20,7 @@ This frequency ratio is generally referred to as the 'freqRat' in paleobiologica
 
 It is relatively easy to visually test if range data fits expectation that true taxon durations are exponentially distributed by plotting the frequencies of the observed ranges on a log scale: data beyond the 'singletons' category should have a linear slope, implying that durations were originally exponentially distributed. (Note, a linear scale is used for the plotting diagram made by this function when 'plot' is TRUE, so that plot cannot be used for this purpose.)
 
-The accuracy of this method tends to be poor at small interval length and even relatively large sample sizes. A portion at the bottom of the examples in the help file examine this issue in greater detail with simulations. This package author recommends using the ML method developed in Foote (1997) instead, which is usable via the function \code\link{getSampProbDisc}}.
+The accuracy of this method tends to be poor at small interval length and even relatively large sample sizes. A portion at the bottom of the examples in the help file examine this issue in greater detail with simulations. This package author recommends using the ML method developed in Foote (1997) instead, which is usable via the function \code{\link{getSampProbDisc}}.
 }
 \value{
 This function returns the per-interval sampling probability as the "freqRat".
@@ -32,7 +32,7 @@ Foote, M., and D. M. Raup. 1996 Fossil preservation and the stratigraphic ranges
 }
 \author{David W. Bapst}
 \seealso{
-\code\link{getSampProbDisc}}, \code{\link{getSampRateCont}}, \code{\link{sProb2sRate}}, \code{\link{qsProb2Comp}}
+\code{\link{getSampProbDisc}}, \code{\link{getSampRateCont}}, \code{\link{sProb2sRate}}, \code{\link{qsProb2Comp}}
 }
 \examples{
 #Simulate some fossil ranges with simFossilTaxa

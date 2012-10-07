@@ -28,7 +28,7 @@ compareTermBranches calculates the changes in the terminal branch lengths attach
 \value{
 compareTermBranches returns a vector of temporal shifts for terminal branches with the shared tip names as labels.
 
-compareNodeAges, if both tree1 and tree2 are single trees, outputs a vector of temporal shifts for nodes. If tree2 is multiple trees, then a matrix is output, with each row representing each tree (and carrying its name, if any is given). For either case, the column names or element names (for a vector) are the sorted taxon names of the particular clade, the dates of which are given in that column. See above for more details. These names can be very long when large trees are considered.
+compareNodeAges, if both tree1 and tree2 are single trees, outputs a vector of temporal shifts for nodes on tree2 with respect to tree1. If tree2 is multiple trees, then a matrix is output, with each row representing each tree in tree2 (and carrying the name of each tree, if any is given). The values are temporal shifts for each tree in tree2 with respect to tree1. For either case, the column names or element names (for a vector) are the sorted taxon names of the particular clade, the dates of which are given in that column. See above for more details. These names can be very long when large trees are considered.
 }
 \author{David W. Bapst}
 \seealso{

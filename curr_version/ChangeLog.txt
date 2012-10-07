@@ -1,4 +1,4 @@
-version 1.5 -
+version 1.5 - 10/05/12
 -New functions, cal3TimeScaling and bin_cal3TimeScaling, similar to SRC methods but different probability equations used, req div rates
 -Modifications to SRC methods to work more like how cal3 calculates unobs evol history at each node
 -Added function freqRat for estimating the per-interval sampling probability via the frequency ratio method of Foote and Raup (1996)
@@ -9,6 +9,7 @@ version 1.5 -
 -Modified function compareNodeAges to allow multiple trees as input, for all nodes shared in common among all input trees
 -Modification to diversity curve functions so plots are cut off before going past the Modern (time 0)
 -Modification to avgtaxa equation used in simFossilTaxa_SRcond. See help file for details.
+-Warning/Error Line added to timePaleoPhy in case phylogeny tips are not a character vector like they should be
 
 version 1.4 - 06/17/12
 -Added a CITATION file, accessible via citation("paleotree")

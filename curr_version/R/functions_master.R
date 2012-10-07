@@ -28,13 +28,14 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 		#ALL TREES ARE OUTPUT WITH ELEMENTs "$root.time"
 		#this is the time of the root on the tree, which is important for comparing across trees
 		#this must be calculated prior to adding anything to terminal branches
-	#tree<-rtree(10);tree$edge.length<-NULL;type="basic";vartime=NULL;add.term="none";node.mins=NULL
+	#tree<-rtree(10);tree$edge.length<-NULL;type="basic";vartime=NULL;add.term=FALSE;node.mins=NULL
 	#timeData<-runif(10,30,200);timeData<-cbind(timeData,timeData-runif(10,1,20));rownames(timeData)<-tree$tip.label
 	#node.mins<-runif(9,50,300)
 	require(ape)	
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
 		}else{stop("Error: timeData not of matrix or data.frame format")}}
+	if(class(tree$tip.label)!="character"){stop("Error: tree tip labels are not a character vector")}
 	if(ntrees<1){stop("Error: ntrees<1")}
 	if(!add.term & rand.obs){stop("Error: Inconsistent arguments: add.term must be true for rand.obs to have any effect on output!")}
 	if(ntrees>1 & !randres & !rand.obs){stop("Error: Time-scale more trees without randomly resolving or random obs?!")}

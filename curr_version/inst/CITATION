@@ -4,9 +4,9 @@
               title = "paleotree: Paleontological and Phylogenetic Analyses of Evolution",
               author = "David W. Bapst",
               year = "2012",
-	      textVersion=paste("Bapst, David W. (In Press)",
-			"paleotree: an R package for paleontological and phylogenetic analyses of evolution",
-			"Methods Ecol. Evol.","doi: 10.1111/j.2041-210X.2012.00223.x")	   
+	      textVersion=paste("Bapst, David W. (2012). ",
+			"paleotree: an R package for paleontological and phylogenetic analyses of evolution. ",
+			"Methods Ecol. Evol. ", "3: 803-807. ","doi: 10.1111/j.2041-210X.2012.00223.x")	   
 	)
 
 	citFooter("As paleotree is continually evolving, you may want to cite its version number. Find it with 'help(package=paleotree)'.")

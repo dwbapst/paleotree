@@ -40,6 +40,11 @@ layout(1:2)
 plot(ladderize(tree),show.tip.label=FALSE)
 plot(ladderize(tree1),show.tip.label=FALSE)
 
+#an example with applying timeLadderTree to discrete time data
+rangeData<-binTimeData(ranges,int.len=5)	#sim discrete range data
+tree2<-bin_timePaleoPhy(tree,timeList=rangeData,timeres=TRUE)
+plot(ladderize(tree),show.tip.label=FALSE)
+plot(ladderize(tree2),show.tip.label=FALSE)
 
 layout(1)
 }

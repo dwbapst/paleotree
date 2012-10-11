@@ -26,7 +26,7 @@ bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
 
   \item{ntrees}{Number of time-scaled trees to output}
 
-  \item{anc.wt}{Weighting against inferring ancestor-descendant relationships. The argument anc.wt allows users to change the default consideration of anc-desc relationships. This value is used as a multiplier applied to the probability of choosing any node position which would infer an ancestor-descendant relationship. By default, anc.wt=1, and thus these probabilities are unaltered. if anc.wt is less than 1, the probabilities decrease and at anc.wt=0, no ancestor-descendant relationships are inferred at all.}
+  \item{anc.wt}{Weighting against inferring ancestor-descendant relationships. The argument anc.wt allows users to change the default consideration of anc-desc relationships. This value is used as a multiplier applied to the probability of choosing any node position which would infer an ancestor-descendant relationship. By default, anc.wt=1, and thus these probabilities are unaltered. if anc.wt is less than 1, the probabilities decrease and at anc.wt=0, no ancestor-descendant relationships are inferred at all. Can be a single value or a vector of per-taxon values, such as if a user wants to only allow plesiomorphic taxa to be ancestors.}
 
   \item{rand.obs}{Should the tips represent observation times uniform distributed within taxon ranges? If rand.obs is TRUE, then it is assumed that users wish the tips to represent observations made with some temporal uncertainty, such that they might have come from any point within a taxon's range. This might be the case, for example, if a user is interested in applying phylogeny-based approaches to studying trait evolution, but have per-taxon measurements of traits that come from museum specimens with uncertain temporal placement. When rand.obs=T, the tips are placed randomly within taxon ranges, as if uniformly distributed.}
 
@@ -59,7 +59,7 @@ The branching and extinction rate are the 'per-capita' instantaneous origination
 
 By default, the cal3 functions will consider that ancestor-descendant relationships may exist among the given taxa, under a budding cladogenetic or anagenetic modes. Which tips are designated as which is given by two additional elements added to the output tree, $budd.tips (taxa designated as ancestors via budding cladogenesis) and $anag.tips (taxa designated as ancestors via anagenesis). This can be turned off by setting anc.wt=0. As this function may infer anagenetic relationships during time-scaling, this can create zero-length terminal branches in the output. Use \code{\link{dropZLB}} to get rid of these before doing analyses of lineage diversification.
 
-Unlike timePaleoPhy, cal3 methods will always resolve polytomies (using the sampling-rate calibrated algorithm) and will always add the terminal ranges of taxa. However, because of the ability to infer potential ancestor-descendant relationships, the length of terminal branches may be shorter than taxon ranges themselves, as budding may have occurred during the range of a morphologically static taxon. By resolving polytomies with the cal3 method, this function allows for taxa to be ancestral to more than one descendant taxon. Thus, users who believe their dataset may contain indirect ancestors are encouraged by the package author to try cal3 methods with their consensus trees, as opposed to using the set of most parsimonious trees. Comparing the results of these two approaches may be very revealing.
+Unlike timePaleoPhy, cal3 methods will always resolve polytomies. In general, this is done using the rate calibrated algorithm, although if argument randres=TRUE, polytomies will be randomly resolved with uniform probability, ala multi2di from ape. Also, cal3 will always add the terminal ranges of taxa. However, because of the ability to infer potential ancestor-descendant relationships, the length of terminal branches may be shorter than taxon ranges themselves, as budding may have occurred during the range of a morphologically static taxon. By resolving polytomies with the cal3 method, this function allows for taxa to be ancestral to more than one descendant taxon. Thus, users who believe their dataset may contain indirect ancestors are encouraged by the package author to try cal3 methods with their consensus trees, as opposed to using the set of most parsimonious trees. Comparing the results of these two approaches may be very revealing.
 
 cal3TimePaleoPhy is only applicable to datasets with taxon occurances in continuous time. In comparison, bin_cal3TimePaleoPhy is a wrapper of cal3TimePaleoPhy which produces timescaled trees for datasets which only have interval data available. For each output tree, taxon FADs and LADs are placed within their listed intervals under a uniform distribution. Thus, a large sample of time-scaled trees will approximate the uncertainty in the actual timing of the FADs and LADs.
 
@@ -164,4 +164,11 @@ phyloDiv(ttree)
 ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,
     sampRate=sRate1,ntrees=1,nonstoch.bin=TRUE,plot=TRUE)
 phyloDiv(ttree1)
+
+
+#example with multiple values of anc.wt
+ancWt <- sample(0:1,nrow(rangesDisc[[2]]),replace=TRUE)
+names(ancWt)<-rownames(rangesDisc[[2]])
+ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,
+    sampRate=sRate1,ntrees=1,anc.wt=ancWt,plot=TRUE)
 }

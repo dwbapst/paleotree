@@ -242,7 +242,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 	}
 
 srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NULL,
-	rand.obs=FALSE,FAD.only=FALSE,root.max=200,old.src=FALSE,plot=FALSE){
+	rand.obs=FALSE,FAD.only=FALSE,root.max=200,randres=FALSE,old.src=FALSE,plot=FALSE){
 	#Samp Rate Conditioned Time Scaling via the stochastic ZIPPER method!
 		#NOW with polytomy-resolving power via the PARALLEL ZIPPER method!
 	#resolves relationships and time-scales trees using sampling-rate calibration
@@ -287,8 +287,14 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 	#tree<-rtree(10);tree$edge.length<-sample(0:1,Nedge(tree),replace=TRUE);tree<-di2multi(tree)
 	#ntrees=2;anc.wt=1;add.zombie=FALSE;node.mins=NULL;sampRate=rep(0.1,Ntip(tree));names(sampRate)<-tree$tip.label
 	#timeData<-runif(Ntip(tree),200,400);timeData<-cbind(timeData,timeData-runif(Ntip(tree),1,80))
-	#rownames(timeData)<-tree$tip.label;root.max=200;plot=TRUE;rand.obs=TRUE;FAD.only=FALSE;old.src=FALSE
+	#rownames(timeData)<-tree$tip.label;root.max=200;plot=TRUE;rand.obs=TRUE;FAD.only=FALSE;old.src=FALSE;randres=FALSE
 	#node.mins<-c(-sort(-runif(1,600,900)),rep(NA,Nnode(tree)-1))	#assume two very deep divergences
+	#
+	#better example data?
+	#set.seed(444);taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+	#timeData <- sampleRanges(taxa,r=0.5);tree <- taxa2cladogram(taxa,plot=TRUE);SRres<-getSampRateCont(rangesCont)
+	#sampRate<-SRres[[2]][2];ntrees=1;anc.wt=1;node.mins=NULL;rand.obs=FALSE;FAD.only=FALSE;root.max=200
+	#randres=FALSE;old.src=FALSE;plot=FALSE
 	#
 	require(ape)#;require(phangorn)
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
@@ -307,6 +313,11 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 		#if it is a species-named vector, all the species better be there1
 		}else{if(any(is.na(match(tree$tip.label,names(sampRate))))){
 			stop("Sampling Rates Not Given For All Taxa!")}}
+	#allow per-taxon anc.wt values
+	if(length(anc.wt)==1){anc.wt<-rep(anc.wt,Ntip(tree));names(anc.wt)<-tree$tip.label
+		#if it is a species-named vector, all the species better be there1
+		}else{if(any(is.na(match(tree$tip.label,names(anc.wt))))){
+			stop("Ancestral Weights Not Given For All Taxa on Tree!")}}
 	if(length(node.mins)!=Nnode(tree) & !is.null(node.mins)){stop("node.mins length != Nnode!")}
 	ttree1<-timePaleoPhy(tree,timeData,type="basic",node.mins=node.mins,add.term=FALSE)
 	#identify which nodes are min-locked; make sure to update when resolving polytomies
@@ -319,6 +330,7 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 			}else{timeData1<-timeData}
 		if(FAD.only){timeData1<-cbind(timeData[,1],timeData[,1])}else{timeData1<-timeData}
 		ktree<-ttree1
+		if(randres){ktree<-multi2di(ktree)}
 		nodes<-(1:Nnode(ktree))+Ntip(ktree)		#get a vector of all internal nodes	
 		nodes<-nodes[order(-node.depth(ktree)[-(1:Ntip(ktree))])]	#order by depth
 		anags<-character();budds<-character()
@@ -326,7 +338,8 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 			#save_tree<-ktree;dev.new();plot(ktree)
 			node<-nodes[1]
 			tipl<-ktree$tip.label
-			tipd<-cbind(ID=(1:Ntip(ttree1)),FAD=(timeData1[tipl,1]),LAD=(timeData1[tipl,2]),SR=(sampRate[tipl]))
+			tipd<-cbind(ID=(1:Ntip(ttree1)),FAD=(timeData1[tipl,1]),LAD=(timeData1[tipl,2])
+				,SR=(sampRate[tipl]),ancWt=(anc.wt[tipl]))
 			if(node==(Ntip(ktree)+1)){
 				min_zip<-(-root.max)	#if root, allow to be push back up to root.max
 				stem_len<-root.max
@@ -340,11 +353,12 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 			#if(any(dnodes==which(ktree$tip.label=="t10"))){break()}
 			if(length(dnodes)>2){		#if node is a polytomy, use PARALLEL ZIPPER
 				#pick a starting lineage
-				dSR<-numeric();drng<-numeric()		
+				dSR<-drng<-danc.wt<-numeric()		
 				for(i in dnodes){		#for each desc, get vector of SR for earliest and range if desc is a tip
 					dtips<-match(unlist(Descendants(ktree,i)),tipd[,1])
 					dearly<-which(tipd[dtips,2]==max(tipd[dtips,2]))[1]
 					dSR[length(dSR)+1]<-tipd[dearly,4]
+					danc.wt[length(danc.wt)+1]<-tipd[dearly,5]
 					drng[length(drng)+1]<-ifelse(length(dtips)>1,NA,diff(unlist(tipd[dtips,3:2])))
 					}
 				if(old.src){	#old SRC has first lineage picked by probability of gap
@@ -366,20 +380,21 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 					}
 				#make data structure for placed lineages; anc= row of anc lineage, events in time-from-stem 
 				plin<-c(dnode1,(dlen[dnode1==dnodes]+stem_len),drng[dnode1==dnodes],NA,
-					0,dlen[dnode1==dnodes]+stem_len,dlen[dnode1==dnodes]+drng[dnode1==dnodes]+stem_len)
+					0,dlen[dnode1==dnodes]+stem_len,dlen[dnode1==dnodes]+drng[dnode1==dnodes]+stem_len,
+					danc.wt[dnode1==dnodes])
 				plin<-matrix(plin,1,)
-				colnames(plin)<-c("node","brl","rng","anc","tSpec","tFO","tLO")
+				colnames(plin)<-c("node","brl","rng","anc","tSpec","tFO","tLO","ancWt")
 				#place additional lineages, in order of max zip, using parallel zippers along placed lineages
 				#add_nodes will hold necessary information on dlen, rng, SR for unplaced nodes
-				add_nodes<-cbind(dnodes,dlen+stem_len,drng,dSR)[-which(dnodes==dnode1),]
+				add_nodes<-cbind(dnodes,dlen+stem_len,drng,dSR,danc.wt)[-which(dnodes==dnode1),]
 				add_nodes<-add_nodes[order(dlen[-which(dnodes==dnode1)]),]
-				colnames(add_nodes)<-c("node","dstem","rng","SR")	#dstem is distance from stem to FAD
+				colnames(add_nodes)<-c("node","dstem","rng","SR","ancWt")	#dstem is distance from stem to FAD
 				for(i in 1:nrow(add_nodes)){
 					#identify each currently placed lineage, produce zipper for each relative to stem point
 					zips<-matrix(,1,3)
 					for(j in 1:nrow(plin)){
 						min_zip<-plin[j,5]	#time of speciation (stem time for each placed lineage)
-						max_zip<-ifelse(anc.wt>0 & !is.na(plin[j,7]),	#max zip is complicated
+						max_zip<-ifelse(plin[j,8]>0 & !is.na(plin[j,7]),	#max zip is complicated, dependent on anc.wt
 							min(add_nodes[i,2],plin[j,7]),	#min of LAD of the placed lineage or FAD of the lineage to be placed
 							min(add_nodes[i,2],plin[j,6]))	#min of LAD of the placed lineage or FAD of the lineage to be placed
 						if(minlocked){max_zip<-stem_len}			#if minlocked, node must be not earlier than original node time
@@ -388,8 +403,8 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 						if(old.src){
 							gap<-add_nodes[i,2]-poss_zip	#inferred gap for lineage to be placed
 							linDense<-ifelse(poss_zip>plin[j,6],
-								anc.wt*add_nodes[i,4]*exp(-add_nodes[i,4]*gap),	#with anc.wt
-									 add_nodes[i,4]*exp(-add_nodes[i,4]*gap))	#without anc.wt
+								plin[j,8]*add_nodes[i,4]*exp(-add_nodes[i,4]*gap),	#with anc.wt (of the PLACED LINEAGE)
+									    add_nodes[i,4]*exp(-add_nodes[i,4]*gap))	#without anc.wt
 						}else{
 							gap1<-plin[j,6]-poss_zip		#waiting time from FAD1 to zip
 							gap1<-ifelse(gap1>0,gap1,0)		#waiting time from branching point to FAD1
@@ -401,8 +416,8 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 								#admittedly not a perfect fit, though!
 							linDense<-dgamma(totalgap,shape=2,rate=add_nodes[i,4])
 							linDense<-ifelse(poss_zip>plin[j,6],
-								anc.wt*linDense,	#with anc.wt
-									 linDense)	#without anc.wt, but with gap1 probability
+								plin[j,8]*linDense,	#with anc.wt (of the PLACED LINEAGE)
+									    linDense)	#without anc.wt, but with gap1 probability
 							}
 						new_zip<-cbind(linDense,plin[j,1],poss_zip)
 						zips<-rbind(zips,new_zip)
@@ -422,7 +437,7 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 						if(plin[ch_anc==plin[,1],6]<ch_tzip){budds<-c(budds,ktree$tip.label[ch_anc])}		#if budding
 						}
 					new_lin<-c(add_nodes[i,1],add_nodes[i,2]-ch_tzip,add_nodes[i,3],
-						ch_anc,ch_tzip,add_nodes[i,2],add_nodes[i,2]+add_nodes[i,3])
+						ch_anc,ch_tzip,add_nodes[i,2],add_nodes[i,2]+add_nodes[i,3],add_nodes[i,5])
 					plin<-rbind(plin,new_lin)	#put in plin
 					}
 				#turn into a subtree using taxa2phylo()
@@ -487,8 +502,9 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 				d2SR<-(tipd[match(unlist(Descendants(ktree,dnode2)),tipd[,1]),4])[d2early]
 				d1rng<-ifelse(dnode1<=Ntip(ktree),diff(unlist(tipd[match(dnode1,tipd[,1]),3:2])),NA)	#if clade, range = NA	
 				d2rng<-ifelse(dnode2<=Ntip(ktree),diff(unlist(tipd[match(dnode2,tipd[,1]),3:2])),NA)
+				d1ancWt<-ifelse(dnode1<=Ntip(ktree),unlist(tipd[match(dnode1,tipd[,1]),5]),0)				
 				#ZIPPPER: first create a list of scenarios, treat the position of the node like a zipper which can be moved up or down
-				max_zip<-ifelse(anc.wt>0 & !is.na(d1rng),min(dlen1+d1rng,dlen2),dlen1)	#if d1 isn't a clade and there can be ancestors	
+				max_zip<-ifelse(d1ancWt>0 & !is.na(d1rng),min(dlen1+d1rng,dlen2),dlen1)	#if d1 isn't a clade and there can be ancestors	
 				if(minlocked){max_zip<-0}		#in single zipper, unlike parallel zipper, 0 is original node time
 				poss_zip<-seq(min_zip,max_zip,by=0.1)
 				if(old.src){
@@ -496,7 +512,7 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 					#edge1 doesn't matter; it's always same length, from the base to dnode1 so no effect on the probability
 					gap2<-dlen2-poss_zip							#calculate gap 2
 					prob_zip<-d2SR*exp(-d2SR*gap2)					#get likelihood weights
-					prob_zip<-ifelse(poss_zip>dlen1,prob_zip*anc.wt,prob_zip)
+					prob_zip<-ifelse(poss_zip>dlen1,prob_zip*d1ancWt,prob_zip)
 					linDensity<-prob_zip/sum(prob_zip)
 				}else{
 					#waiting time from zip (branching point) to FAD1
@@ -511,14 +527,12 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 							#admittedly not a perfect fit, though!
 					linDense<-dgamma(totalgap,shape=2,rate=d2SR)
 					linDensity<-ifelse((stem_len+dlen1)<(stem_len+poss_zip),
-						anc.wt*linDense,	#with anc.wt
-						 linDense)	#without anc.wt, but with gap1 probability
+						d1ancWt*linDense,	#with anc.wt (of the first taxon)
+						 	  linDense)	#without anc.wt, but with gap1 probability
 					}
 				#new as of 08-21-12
 				linDensity[is.na(linDensity)]<-0
 				if(sum(linDensity)==0){linDensity[1]<-1}
-
-
 				ch_zip<-sample(poss_zip,1,prob=linDensity)				#pick zipper location
 				#calculate new branch lengths, adding terminal ranges to tips
 				new_dlen1<-ifelse(ch_zip>dlen1,NA,dlen1-ch_zip)			#If not budding or anagenesis
@@ -569,7 +583,7 @@ srcTimePaleoPhy<-function(tree,timeData,sampRate,ntrees=1,anc.wt=1,node.mins=NUL
 	}
 
 bin_srcTimePaleoPhy<-function(tree,timeList,sampRate,ntrees=1,nonstoch.bin=FALSE,sites=NULL,anc.wt=1,node.mins=NULL,
-	rand.obs=FALSE,FAD.only=FALSE,root.max=200,old.src=FALSE,plot=FALSE){
+	rand.obs=FALSE,FAD.only=FALSE,root.max=200,randres=FALSE,old.src=FALSE,plot=FALSE){
 	#wrapper for applying SRC time-scaling to timeData where FADs and LADs are given as bins 
 		#see SRC function for more details; SR MUST be instantaneous rate (if R, convert to r using functions in this library)
 	#input is a list with (1) interval times matrix and (2) species FOs and LOs
@@ -631,7 +645,7 @@ bin_srcTimePaleoPhy<-function(tree,timeList,sampRate,ntrees=1,nonstoch.bin=FALSE
 		if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
 		if(FAD.only){timeData[,2]<-timeData[,1]}
 		tree2<-suppressMessages(srcTimePaleoPhy(tree,timeData,sampRate,ntrees=1,anc.wt=anc.wt,
-			node.mins=node.mins,root.max=root.max,rand.obs=FALSE,old.src=old.src,plot=plot))
+			node.mins=node.mins,root.max=root.max,rand.obs=FALSE,randres=randres,old.src=old.src,plot=plot))
 		tree2$ranges.used<-timeData
 		ttrees[[ntrb]]<-tree2
 		}
@@ -641,7 +655,7 @@ bin_srcTimePaleoPhy<-function(tree,timeList,sampRate,ntrees=1,nonstoch.bin=FALSE
 
 
 cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt=1,node.mins=NULL,
-	rand.obs=FALSE,FAD.only=FALSE,root.max=200,plot=FALSE){
+	rand.obs=FALSE,FAD.only=FALSE,root.max=200,randres=FALSE,plot=FALSE){
 	#see SRC function for more notation...
 	#function for Ps
 		getPs<-function(p,q,r){
@@ -691,6 +705,11 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 		#if it is a species-named vector, all the species better be there1
 		}else{if(any(is.na(match(tree$tip.label,names(extRate))))){
 			stop("Extinction Rates Not Given For All Taxa on Tree!")}}
+	#allow per-taxon anc.wt values
+	if(length(anc.wt)==1){anc.wt<-rep(anc.wt,Ntip(tree));names(anc.wt)<-tree$tip.label
+		#if it is a species-named vector, all the species better be there1
+		}else{if(any(is.na(match(tree$tip.label,names(anc.wt))))){
+			stop("Ancestral Weights Not Given For All Taxa on Tree!")}}
 	Ps<-sapply(tree$tip.label,function(x) getPs(brRate[x],extRate[x],sampRate[x]))
 	names(Ps)<-tree$tip.label
 	if(length(node.mins)!=Nnode(tree) & !is.null(node.mins)){stop("node.mins length != Nnode!")}
@@ -705,6 +724,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 			}else{timeData1<-timeData}
 		if(FAD.only){timeData1<-cbind(timeData[,1],timeData[,1])}else{timeData1<-timeData}
 		ktree<-ttree1
+		if(randres){ktree<-multi2di(ktree)}
 		nodes<-(1:Nnode(ktree))+Ntip(ktree)		#get a vector of all internal nodes	
 		nodes<-nodes[order(-node.depth(ktree)[-(1:Ntip(ktree))])]	#order by depth
 		anags<-character();budds<-character()
@@ -713,7 +733,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 			node<-nodes[1]
 			tipl<-ktree$tip.label
 			tipd<-cbind(ID=(1:Ntip(ttree1)),FAD=(timeData1[tipl,1]),LAD=(timeData1[tipl,2]),
-				SR=sampRate[tipl],BR=brRate[tipl],ER=extRate[tipl],Ps=Ps[tipl])
+				SR=sampRate[tipl],BR=brRate[tipl],ER=extRate[tipl],Ps=Ps[tipl],ancWt=anc.wt[tipl])
 			if(node==(Ntip(ktree)+1)){
 				min_zip<-(-root.max)	#if root, allow to be push back up to root.max
 				stem_len<-root.max
@@ -728,7 +748,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 			#if(any(dnodes==which(ktree$tip.label=="t10"))){break()}
 			if(length(dnodes)>2){		#if node is a polytomy, use PARALLEL ZIPPER
 				#pick a starting lineage
-				dSR<-drng<-dBR<-dER<-dPs<-numeric()
+				dSR<-drng<-dBR<-dER<-dPs<-danc.wt<-numeric()
 				for(i in dnodes){		#for each desc, get vector of SR for earliest and range if desc is a tip
 					dtips<-match(unlist(Descendants(ktree,i)),tipd[,1])
 					dearly<-which(tipd[dtips,2]==max(tipd[dtips,2]))[1]
@@ -736,6 +756,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 					dBR[length(dBR)+1]<-tipd[dearly,5]
 					dER[length(dER)+1]<-tipd[dearly,6]
 					dPs[length(dPs)+1]<-tipd[dearly,7]
+					danc.wt[length(danc.wt)+1]<-tipd[dearly,8]
 					drng[length(drng)+1]<-ifelse(length(dtips)>1,NA,diff(unlist(tipd[dtips,3:2])))
 					}
 				#08-01-12: choice of starting lineage doesn't matter (see SRC method)
@@ -750,20 +771,21 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 				#	}
 				#make data structure for placed lineages; anc= row of anc lineage, events in time-from-stem 
 				plin<-c(dnode1,(dlen[dnode1==dnodes]+stem_len),drng[dnode1==dnodes],NA,
-					0,dlen[dnode1==dnodes]+stem_len,dlen[dnode1==dnodes]+drng[dnode1==dnodes]+stem_len)
+					0,dlen[dnode1==dnodes]+stem_len,dlen[dnode1==dnodes]+drng[dnode1==dnodes]+stem_len,
+					danc.wt[dnode1==dnodes])
 				plin<-matrix(plin,1,)
-				colnames(plin)<-c("node","brl","rng","anc","tSpec","tFO","tLO")
+				colnames(plin)<-c("node","brl","rng","anc","tSpec","tFO","tLO","ancWt")
 				#place additional lineages, in order of max zip, using parallel zippers along placed lineages
 				#add_nodes will hold necessary information on dlen, rng, SR for unplaced nodes
-				add_nodes<-cbind(dnodes,dlen+stem_len,drng,dSR,dBR,dER,dPs)[-which(dnodes==dnode1),]
+				add_nodes<-cbind(dnodes,dlen+stem_len,drng,dSR,dBR,dER,dPs,danc.wt)[-which(dnodes==dnode1),]
 				add_nodes<-add_nodes[order(dlen[-which(dnodes==dnode1)]),]
-				colnames(add_nodes)<-c("node","dstem","rng","SR","BR","ER","Ps")	#dstem is distance from stem to FAD
+				colnames(add_nodes)<-c("node","dstem","rng","SR","BR","ER","Ps","ancWt")	#dstem is distance from stem to FAD
 				for(i in 1:nrow(add_nodes)){
 					#identify each currently placed lineage, produce zipper for each relative to stem point
 					zips<-matrix(,1,3)
 					for(j in 1:nrow(plin)){
 						min_zip<-plin[j,5]	#time of speciation (stem time for each placed lineage)
-						max_zip<-ifelse(anc.wt>0 & !is.na(plin[j,7]),	#max zip is complicated
+						max_zip<-ifelse(plin[j,8]>0 & !is.na(plin[j,7]),	#max zip is complicated, dependent on anc.wt
 							min(add_nodes[i,2],plin[j,7]),	#min of LAD of the placed lineage or FAD of the lineage to be placed
 							min(add_nodes[i,2],plin[j,6]))	#min of LAD of the placed lineage or FAD of the lineage to be placed
 						if(minlocked){max_zip<-stem_len}			#if minlocked, node must be not earlier than original node time
@@ -780,8 +802,8 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 							#admittedly not a perfect fit, though!
 						linDense<-dgamma(totalgap,shape=2,rate=add_nodes[i,4]+(add_nodes[i,5]*add_nodes[i,7]))
 						linDense<-ifelse(poss_zip>plin[j,6],
-							anc.wt*linDense,	#with anc.wt
-								 linDense)	#without anc.wt, but with gap1 probability
+							plin[j,8]*linDense,	#with anc.wt (of the PLACED LINEAGE)
+								    linDense)	#without anc.wt, but with gap1 probability
 						new_zip<-cbind(linDense,plin[j,1],poss_zip)
 						zips<-rbind(zips,new_zip)
 						}
@@ -800,7 +822,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 						if(plin[ch_anc==plin[,1],6]<ch_tzip){budds<-c(budds,ktree$tip.label[ch_anc])}		#if budding
 						}
 					new_lin<-c(add_nodes[i,1],add_nodes[i,2]-ch_tzip,add_nodes[i,3],
-						ch_anc,ch_tzip,add_nodes[i,2],add_nodes[i,2]+add_nodes[i,3])
+						ch_anc,ch_tzip,add_nodes[i,2],add_nodes[i,2]+add_nodes[i,3],add_nodes[i,8])
 					plin<-rbind(plin,new_lin)	#put in plin
 					}
 				#turn into a subtree using taxa2phylo()
@@ -867,8 +889,9 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 				d2Ps<-(tipd[match(unlist(Descendants(ktree,dnode2)),tipd[,1]),7])[d2early]
 				d1rng<-ifelse(dnode1<=Ntip(ktree),diff(unlist(tipd[match(dnode1,tipd[,1]),3:2])),NA)	#if clade, range = NA	
 				d2rng<-ifelse(dnode2<=Ntip(ktree),diff(unlist(tipd[match(dnode2,tipd[,1]),3:2])),NA)
+				d1ancWt<-ifelse(dnode1<=Ntip(ktree),unlist(tipd[match(dnode1,tipd[,1]),8]),0)
 				#ZIPPPER: first create a list of scenarios, treat the position of the node like a zipper which can be moved up or down
-				max_zip<-ifelse(anc.wt>0 & !is.na(d1rng),min(dlen1+d1rng,dlen2),dlen1)	#if d1 isn't a clade and there can be ancestors	
+				max_zip<-ifelse(d1ancWt>0 & !is.na(d1rng),min(dlen1+d1rng,dlen2),dlen1)	#if d1 isn't a clade and there can be ancestors	
 				if(minlocked){max_zip<-0}		#in single zipper, unlike parallel zipper, 0 is original node time
 				poss_zip<-seq(min_zip,max_zip,by=0.1)
 				#waiting time from zip (branching point) to FAD1
@@ -883,8 +906,8 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 						#admittedly not a perfect fit, though!
 				linDense<-dgamma(totalgap,shape=2,rate=d2SR+(d2BR*d2Ps))
 				linDensity<-ifelse((stem_len+dlen1)<(stem_len+poss_zip),
-					anc.wt*linDense,	#with anc.wt
-					 linDense)	#without anc.wt, but with gap1 probability
+					d1ancWt*linDense,	#with anc.wt (of first taxon)
+					 	  linDense)	#without anc.wt, but with gap1 probability
 				#new as of 08-21-12
 				linDensity[is.na(linDensity)]<-0
 				if(sum(linDensity)==0){linDensity[1]<-1}
@@ -938,7 +961,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	}
 
 bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,nonstoch.bin=FALSE,
-	sites=NULL,anc.wt=1,node.mins=NULL,rand.obs=FALSE,FAD.only=FALSE,root.max=200,plot=FALSE){
+	sites=NULL,anc.wt=1,node.mins=NULL,rand.obs=FALSE,FAD.only=FALSE,root.max=200,randres=FALSE,plot=FALSE){
 	#see the bin_SRC function for more notation...
 	require(ape)
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
@@ -988,7 +1011,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
 		if(FAD.only){timeData[,2]<-timeData[,1]}
 		tree2<-suppressMessages(cal3TimePaleoPhy(tree,timeData,brRate=brRate,extRate=extRate,sampRate=sampRate,
-			ntrees=1,anc.wt=anc.wt,node.mins=node.mins,root.max=root.max,rand.obs=FALSE,plot=plot))
+			ntrees=1,anc.wt=anc.wt,node.mins=node.mins,root.max=root.max,rand.obs=FALSE,randres=randres,plot=plot))
 		tree2$ranges.used<-timeData
 		ttrees[[ntrb]]<-tree2
 		}
@@ -2578,7 +2601,8 @@ plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL){
 	}
 
 simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mintime=1,maxtime=100,
-	mintaxa=2,maxtaxa=500,drop.zlb=TRUE,print.runs=FALSE,plot=FALSE){
+	mintaxa=2,maxtaxa=500,anag.rate=0,prop.bifurc=0,prop.cryptic=0,drop.zlb=TRUE,print.runs=FALSE,
+	plot=FALSE){
 	#this is a wrapper which will create many paleo trees with at least two observed tips
 		#uses simFossilTaxa, sampRanges,taxa2phylo, etc
 		#good if you want to simulate many many trees with extinct taxa
@@ -2597,7 +2621,7 @@ simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mi
 		rerun<-TRUE
 		while(rerun){
 			ntries<-ntries+1
-			taxa<-suppressMessages(simFossilTaxa(p=p,q=q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,mintaxa=mintaxa,
+			taxa<-suppressMessages(simFossilTaxa(p=p,q=q,anag.rate=anag.rate,prop.bifurc=prop.bifurc,prop.cryptic=prop.cryptic,nruns=1,mintaxa=mintaxa,
 				maxtaxa=maxtaxa,maxtime=maxtime,maxExtant=ifelse(all.extinct,0,maxtaxa),min.cond=FALSE,plot=plot))
 			ranges<-sampleRanges(taxa,r,min.taxa=0,modern.samp.prob=modern.samp.prob)
 			if(sum(!is.na(ranges[,1]))>1){

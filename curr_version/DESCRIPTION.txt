@@ -1,8 +1,8 @@
 Package: paleotree
 Type: Package
-Version: 1.5
+Version: 1.6
 Title: Paleontological and Phylogenetic Analyses of Evolution
-Date: 10-05-12
+Date: 
 Author: David Bapst
 Depends: R (>= 2.15.0), ape
 Imports: phangorn, geiger

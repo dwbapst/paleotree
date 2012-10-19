@@ -59,7 +59,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 			if(randres){tree<-multi2di(savetree)}
 			if(timeres){tree<-timeLadderTree(savetree,timeData)}
 			}
-		if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}else{timeData<-saveTD}
+		if(rand.obs){timeData[,2]<-apply(saveTD,1,function(x) runif(1,x[2],x[1]))}else{timeData<-saveTD}
 		ntime<-sapply(1:Nnode(tree),function(x) 
 			max(timeData[tree$tip.label[unlist(prop.part(tree)[x])],1]))	#first, get node times
 		ntime<-c(timeData[tree$tip.label,1],ntime)
@@ -2237,27 +2237,31 @@ simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,min
 				if(any(is.na(taxad[,4]))){stop("Error: Live creatures escaping simulation! Get out now while you still have time!")}
 				posstimes<-sort(unique(c(taxad[,3:4],maxtime1)))
 				maxtimes<-posstimes[posstimes>=mintime & posstimes<=maxtime1]				#make vector of maxtimes
-				mtds<-lapply(maxtimes,function(x) matrix(taxad[taxad[,3]<x,],sum(taxad[,3]<x),)) 	#maxtime taxa datasets
-				if(count.cryptic){
-					numtaxa<-sapply(mtds,function(x) nrow(x))
-					numexta<-sapply(1:length(mtds),function(x) sum(mtds[[x]][,4]>=maxtimes[x]))		#number of extant taxa
-				}else{	#do not count cryptics
-					numtaxa<-sapply(mtds,function(x) length(unique(x[,5])))
-					numexta<-sapply(1:length(mtds),function(x) length(unique(mtds[[x]][mtds[[x]][,4]>=maxtimes[x],5])))
+				if(length(maxtimes)==0){
+					eval<-FALSE
+				}else{
+					mtds<-lapply(maxtimes,function(x) matrix(taxad[taxad[,3]<x,],sum(taxad[,3]<x),)) 	#maxtime taxa datasets
+					if(count.cryptic){
+						numtaxa<-sapply(mtds,function(x) nrow(x))
+						numexta<-sapply(1:length(mtds),function(x) sum(mtds[[x]][,4]>=maxtimes[x]))		#number of extant taxa
+					}else{	#do not count cryptics
+						numtaxa<-sapply(mtds,function(x) length(unique(x[,5])))
+						numexta<-sapply(1:length(mtds),function(x) length(unique(mtds[[x]][mtds[[x]][,4]>=maxtimes[x],5])))
+						}
+					minta<-numtaxa>=mintaxa								#is the clade big enough, per mintaxa?
+					maxta<-numtaxa<=maxtaxa								#is the clade small enough, per maxtaxa?
+					minti<-maxtimes>=mintime							#is the simulation long enough, per mintime?
+					maxti<-maxtimes<=maxtime							#is the simulation short enough, per maxtime?
+					maxext<-if(!is.null(maxExtant)){maxExtant>=numexta}else{TRUE}	#is the number of extant taxa <= max?
+					minext<-minExtant<=numexta						#is there the right number of extant taxa?
+					evalcond<-maxext & minext & minta & maxta & minti & maxti	#evaluate conditions				
+					#numext<-sum(is.na(taxad[,4]))+sum(taxad[!is.na(taxad[,4]),4]>=maxtime1)	
+					if(any(evalcond)){
+						chosen<-rev(which(evalcond))[1]	#choose the last time eval is good to avoid Gerehardt effect
+						taxad<-mtds[[chosen]]
+						maxtime1<-maxtimes[chosen]
+					}else{eval<-FALSE}
 					}
-				minta<-numtaxa>=mintaxa								#is the clade big enough, per mintaxa?
-				maxta<-numtaxa<=maxtaxa								#is the clade small enough, per maxtaxa?
-				minti<-maxtimes>=mintime							#is the simulation long enough, per mintime?
-				maxti<-maxtimes<=maxtime							#is the simulation short enough, per maxtime?
-				maxext<-if(!is.null(maxExtant)){maxExtant>=numexta}else{TRUE}	#is the number of extant taxa <= max?
-				minext<-minExtant<=numexta						#is there the right number of extant taxa?
-				evalcond<-maxext & minext & minta & maxta & minti & maxti	#evaluate conditions				
-				#numext<-sum(is.na(taxad[,4]))+sum(taxad[!is.na(taxad[,4]),4]>=maxtime1)	
-				if(any(evalcond)){
-					chosen<-rev(which(evalcond))[1]	#choose the last time eval is good to avoid Gerehardt effect
-					taxad<-mtds[[chosen]]
-					maxtime1<-maxtimes[chosen]
-				}else{eval<-FALSE}
 				}
 			if(!continue & !eval){
 				#reset if the clade is done (continue=FALSE) but eval is FALSE (didn't hit conditions)
@@ -2480,7 +2484,8 @@ phyloDiv<-function(tree,int.length=1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,
 	return(invisible(res))
 	}
 
-multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,drop.cryptic=FALSE,plotLogRich=FALSE,timelims=NULL){
+multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,
+	drop.cryptic=FALSE,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FALSE,multRainbow=TRUE,divPalette=NULL){
 	#lines up a bunch of taxic or phylo objects and calculates diversity curves simulataneously
 		#across all their objects; intuits the type of object without being told
 		#it also calculates a "average" median curve and 95% quantile intervals
@@ -2570,34 +2575,61 @@ multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,drop
 	q2<-apply(div,1,quantile,probs=0.975)	#the high quantile
 	median.curve<-cbind(median=median,low.95.quantile=q1,high.95.quantile=q2)
 	res<-list(int.times=int.times,div.counts=div,median.curve=median.curve)
-	if(plot){plotMultiDiv(res,plotLogRich=plotLogRich,timelims=timelims)}
+	if(plot){plotMultiDiv(res,plotLogRich=plotLogRich,timelims=timelims,
+		plotMultCurves=plotMultCurves,multRainbow=multRainbow,divPalette=divPalette)}
 	return(invisible(res))
 	}
 
-plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL){
+plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FALSE,multRainbow=TRUE,divPalette=NULL){
 	#plots the median diversity curve for a multiDiv() result
 	int.start<-results[[1]][,1]
 	int.end<-results[[1]][,2]
-	mdiv<-results[[3]]
 	times1<-c(int.start,(int.end+((int.start-int.end)/100)))
-	mdiv1<-rbind(mdiv,mdiv)[order(times1),]
-	times1<-sort(times1)
-	if(plotLogRich){
-		mdiv1[mdiv1[,2]<1,2]<-1;mdiv1[mdiv1[,3]<1,3]<-1
-		y_lim<-c(min(mdiv1[mdiv1>=1]),max(mdiv1[mdiv1>=1]))
-		plot(times1[mdiv1[,3]>0],mdiv1[mdiv1[,3]>0,3],type="n",ylim=y_lim,log="y",
-				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
-			xlab="Time (Before Present)",ylab="Log Lineage/Taxic Richness",
-			main=paste("Median Diversity Curve"))
+	if(plotMultCurves){
+		divs<-results[[2]]	#here's my div information
+		divs1<-rbind(divs,divs)[order(times1),]
+		times1<-sort(times1)
+		#set up the general plotting window
+		if(plotLogRich){
+			y_lim<-c(min(divs1[divs1>=1]),max(divs1[divs1>=1]))
+			plot(times1[divs1[,1]>0],divs1[divs1[,1]>0,1],type="n",ylim=y_lim,log="y",
+					xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlab="Time (Before Present)",ylab="Log Lineage/Taxic Richness",
+				main=paste("Multiple Diversity Curves"))
+		}else{
+			y_lim<-c(min(divs1),max(divs1))
+			plot(times1,divs1[,1],type="n",ylim=y_lim,
+					xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlab="Time (Before Present)",ylab="Lineage/Taxic Richness",
+				main=paste("Multiple Diversity Curves"))
+			}
+		if(is.null(divPalette)){
+			if(multRainbow){divPalette<-rainbow(ncol(divs1))}else{divPalette<-1}
+			}
+		for(i in 1:ncol(divs1)){	#plot each line
+			lines(times1,divs1[,i],lwd=3,col=divPalette[i])
+			}
 	}else{
-		y_lim<-c(min(mdiv1),max(mdiv1))
-		plot(times1,mdiv1[,3],type="n",ylim=y_lim,
-				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
-			xlab="Time (Before Present)",ylab="Lineage/Taxic Richness",
-			main=paste("Median Diversity Curve"))
+		mdiv<-results[[3]]
+		mdiv1<-rbind(mdiv,mdiv)[order(times1),]
+		times1<-sort(times1)
+		if(plotLogRich){
+			mdiv1[mdiv1[,2]<1,2]<-1;mdiv1[mdiv1[,3]<1,3]<-1
+			y_lim<-c(min(mdiv1[mdiv1>=1]),max(mdiv1[mdiv1>=1]))
+			plot(times1[mdiv1[,3]>0],mdiv1[mdiv1[,3]>0,3],type="n",ylim=y_lim,log="y",
+					xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlab="Time (Before Present)",ylab="Log Lineage/Taxic Richness",
+				main=paste("Median Diversity Curve"))
+		}else{
+			y_lim<-c(min(mdiv1),max(mdiv1))
+			plot(times1,mdiv1[,3],type="n",ylim=y_lim,
+					xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlab="Time (Before Present)",ylab="Lineage/Taxic Richness",
+				main=paste("Median Diversity Curve"))
+			}
+		polygon(c(times1,rev(times1)),c(mdiv1[,3],rev(mdiv1[,2])),col="gray",border=NA)
+		lines(times1,mdiv1[,1],lwd=3)
 		}
-	polygon(c(times1,rev(times1)),c(mdiv1[,3],rev(mdiv1[,2])),col="gray",border=NA)
-	lines(times1,mdiv1[,1],lwd=3)
 	}
 
 simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mintime=1,maxtime=100,

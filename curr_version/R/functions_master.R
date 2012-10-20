@@ -2580,7 +2580,8 @@ multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,
 	return(invisible(res))
 	}
 
-plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FALSE,multRainbow=TRUE,divPalette=NULL){
+plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FALSE,
+		multRainbow=TRUE,divPalette=NULL){
 	#plots the median diversity curve for a multiDiv() result
 	int.start<-results[[1]][,1]
 	int.end<-results[[1]][,2]
@@ -2604,7 +2605,8 @@ plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FA
 				main=paste("Multiple Diversity Curves"))
 			}
 		if(is.null(divPalette)){
-			if(multRainbow){divPalette<-rainbow(ncol(divs1))}else{divPalette<-1}
+			if(multRainbow){divPalette<-sample(rainbow(ncol(divs1)))
+				}else{divPalette<-rep(1,ncol(divs1))}
 			}
 		for(i in 1:ncol(divs1)){	#plot each line
 			lines(times1,divs1[,i],lwd=3,col=divPalette[i])

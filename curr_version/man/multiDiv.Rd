@@ -6,9 +6,11 @@
 }
 \usage{
 multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE, drop.ZLB=TRUE, 
-    drop.cryptic = FALSE, plotLogRich = FALSE, timelims = NULL)
+    drop.cryptic = FALSE, plotLogRich = FALSE, timelims = NULL, 
+    plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL)
 
-plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL)
+plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL, 
+    plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL)
 }
 \arguments{
   \item{data}{A list where each element is a dataset formatted to be input in one of the diversity curve functions in this package}
@@ -20,6 +22,9 @@ plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL)
   \item{results}{The output of a previous run of multiDiv}
   \item{plotLogRich}{If true, taxic diversity plotted on log scale}
   \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only affects plotting. Given as either NULL (the default) or as a vector of length two as for 'xlim' in the basic R function plot.}
+  \item{plotMultCurves}{If TRUE, each individual diversity curve is plotted rather than the median diversity curve and 95% quantiles. FALSE by default.}
+  \item{multRainbow}{If TRUE and plotMultCurves are both TRUE, each line is plotted as a different, randomized color using the function rainbow(). If FALSE, each line is plotted as a black line. This argument is ignored if divPalette is supplied.}
+  \item{divPalette}{Can be used so users can pass a vector of chosen color identifiers for each diversity curve in 'data' which will take precedence over multRainbow. Must be the same length as the number of diversity curves supplied.}
 }
 \details{
 This function is essentially a wrapper for the individual diversity curve functions included in paleotree. multiDiv will intuitively decide whether input datasets are continuous-time taxic ranges, discrete-time (binned interval) taxic ranges or phylogenetic trees, as long as they are formatted as required by the respective diversity curve functions. A list that contains a mix of data types is entirely acceptable. A list of matrices output by simFossilTaxa is allowable, and treated as input for taxicDivCont. Data of an unknown type gives back an error.

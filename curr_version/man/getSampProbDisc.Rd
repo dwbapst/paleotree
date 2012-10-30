@@ -75,7 +75,7 @@ print(SPres1)      #let's look at the results
 sProb<-SPres1[[2]][2]
 print(sProb)
 #est. R = ~0.42; not too off what we would expect!
-#for the src based timescaling methods, we want an estimate of the instantaneous samp rate
+#for the rate calibrated timescaling methods, we want an estimate of the instantaneous samp rate
 #we can use sProb2sRate to get the rate. We will also need to also tell it the int.length
 sRate <- sProb2sRate(sProb,int.length=1)
 print(sRate)

@@ -2,6 +2,8 @@ paleotree is an R library for analyzing, time-scaling and simulating phylogenies
 
 http://cran.r-project.org/web/packages/paleotree/index.html
 
+The deprecated folder holds R functions and help files which are no longer considered suitable for public release (but once were).
+
 This code is authored by David Bapst and offered under GPL >2.0.
 
 

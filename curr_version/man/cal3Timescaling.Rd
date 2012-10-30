@@ -6,12 +6,12 @@
 Timescales an unscaled cladogram of fossil taxa, using information on their ranges and estimates of the instantaneous rates of branching, extinction and sampling. The output is a sample of timescaled trees, as resulting from a stochastic algorithm which samples observed gaps in the fossil record with weights calculated based on the input rate estimates. This function also uses the three-rate calibrated time-scaling algorithm to stochastically resolve polytomies and infer potential ancestor-descendant relationships, simultaneous with the time-scaling treatment.}
 \usage{
 cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1, anc.wt = 1,  
-    node.mins = NULL, rand.obs = FALSE, FAD.only = FALSE, root.max = 200, 
-    plot = FALSE)
+    node.mins = NULL, rand.obs = FALSE, FAD.only = FALSE, adj.obs.wt = TRUE,
+    root.max = 200, step.size = 0.1, plot = FALSE)
 
 bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1, 
     nonstoch.bin=FALSE,sites = NULL, anc.wt = 1, node.mins = NULL, rand.obs = FALSE, 
-    FAD.only = FALSE, root.max = 200, plot = FALSE)
+    FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200, step.size = 0.1, plot = FALSE)
 }
 \arguments{
   \item{tree}{An unscaled cladogram of fossil taxa}
@@ -30,11 +30,15 @@ bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
 
   \item{rand.obs}{Should the tips represent observation times uniform distributed within taxon ranges? If rand.obs is TRUE, then it is assumed that users wish the tips to represent observations made with some temporal uncertainty, such that they might have come from any point within a taxon's range. This might be the case, for example, if a user is interested in applying phylogeny-based approaches to studying trait evolution, but have per-taxon measurements of traits that come from museum specimens with uncertain temporal placement. When rand.obs=T, the tips are placed randomly within taxon ranges, as if uniformly distributed.}
 
-  \item{node.mins}{Minimum ages of nodes on the tree. The minimum dates of nodes can be set using node.mins; this argument takes a vector of the same length as the number of nodes, with dates given in the same order as nodes are they are numbered in the tree$edge matrix (note that in tree$edge, the tips are given first Ntip numbers and these are ignored here). Not all nodes need be set; those without minimum dates can be given as NA in node.mins. These nodes will be frozen and will not be shifted by the SRC algorithm. If the dates refer to a polytomy, then the first divergence will be frozen with additional divergence able to occur after the minimum date.}
+  \item{node.mins}{Minimum ages of nodes on the tree. The minimum dates of nodes can be set using node.mins; this argument takes a vector of the same length as the number of nodes, with dates given in the same order as nodes are they are numbered in the tree$edge matrix (note that in tree$edge, the tips are given first Ntip numbers and these are ignored here). Not all nodes need be set; those without minimum dates can be given as NA in node.mins. These nodes will be frozen and will not be shifted by the cal3 algorithm. If the dates refer to a polytomy, then the first divergence will be frozen with additional divergence able to occur after the minimum date.}
 
   \item{FAD.only}{Should the tips represent observation times at the start of the taxon ranges? If TRUE, result is similar to when terminal ranges are no added on with timePaleoPhy. If FAD.only and rand.obs are both TRUE, the function will stop and a warning will be produced.}
 
+  \item{adj.obs.wt}{If the time of observation are before the LAD of a taxon, should the weight of the time of observation be adjusted to account for the known observed history of the taxon which occurs AFTER the time of observation? Should only have an effect if time of observation ISN'T the LAD, if times of observation for a potential ancestor are earlier than the first apperance of their potential descendents and if the ancestral weights for taxa aren't set to zero (so there can be potential ancestors).}
+
   \item{root.max}{Maximum time before the first FAD that the root can be pushed back to}
+
+  \item{step.size}{Step size of increments used in zipper algorithm to assign node ages}
 
   \item{plot}{If true, plots the input, "basic" timescaled and output cal3-timescaled phylogenies}
 
@@ -68,7 +72,7 @@ By setting the argument nonstoch.bin to TRUE in bin_cal3TimePaleoPhy, the dates 
 If timeData or the elements of timeList are actually data.frames (as output by read.csv or read.table), these will be coerced to a matrix.
 }
 \note{
-Most importantly, please note the stochastic element of the rate-calibrated time-scaling methods, both SRC and cal3. These do not use traditional optimization methods, but instead draw divergence times from a distribution defined by the probability of intervals of unobserved evolutionary history. This means analyses MUST be done over many cal3-timescaled trees for analytical rigor! No one tree is correct.
+Most importantly, please note the stochastic element of the three rate-calibrated time-scaling methods. These do not use traditional optimization methods, but instead draw divergence times from a distribution defined by the probability of intervals of unobserved evolutionary history. This means analyses MUST be done over many cal3-timescaled trees for analytical rigor! No one tree is correct.
 }
 \value{
 The output of these functions is a time-scaled tree or set of time-scaled trees, of either class phylo or multiphylo, depending on the argument ntrees. All trees are output with an element $root.time. This is the time of the root on the tree and is important for comparing patterns across trees.
@@ -88,8 +92,6 @@ Stanley, S. M. 1979. Macroevolution: Patterns and Process. W. H. Freeman, Co., S
 }
 \author{David W. Bapst}
 \seealso{
-In particular, see the other rate-calibrated time-scaling method: code{\link{srcTimePaleoPhy}}
-
 \code{\link{timePaleoPhy}}, \code{\link{binTimeData}}, \code{\link{getSampRateCont}}, \code{\link{multi2di}}
 }
 \examples{
@@ -118,6 +120,17 @@ phyloDiv(ttree)
 #can turn this off by setting anc.wt=0
 ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     sampRate=sRate,ntrees=1,anc.wt=0,plot=TRUE)
+
+#let's look at how three trees generated with very different time of obs. look
+ttreeFAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
+    FAD.only=TRUE,rand.obs=FALSE,sampRate=sRate,ntrees=1,plot=TRUE)
+ttreeRand <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
+    FAD.only=FALSE,rand.obs=TRUE,sampRate=sRate,ntrees=1,plot=TRUE)
+#by default the time of observations are the LADs
+ttreeLAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
+    FAD.only=FALSE,rand.obs=FALSE,sampRate=sRate,ntrees=1,plot=TRUE)
+layout(1:3);parOrig<-par(mar=c(0,0,0,0))
+plot(ladderize(ttreeFAD));plot(ladderize(ttreeRand));plot(ladderize(ttreeLAD))
 
 #to get a fair sample of trees, let's increase ntrees
 ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,

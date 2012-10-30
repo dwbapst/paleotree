@@ -51,7 +51,8 @@ hist(compareNodeAges(tree1,tree2))
 hist(compareTermBranches(tree1,tree2))
 
 #testing ability to compare multiple trees with compareNodeAges
-trees <- srcTimePaleoPhy(cladogram,rangesCont,sampRate=0.1,ntrees=10)
+trees <- cal3TimePaleoPhy(cladogram,rangesCont,branchRate=0.1,extRate=0.1,
+    sampRate=0.1,ntrees=10)
 nodeComparison <- compareNodeAges(tree1,trees)
 #plot it as boxplots for each node
 boxplot(nodeComparison,names=NULL);abline(h=0)

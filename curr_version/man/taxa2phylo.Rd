@@ -20,7 +20,7 @@ Cryptic taxa are not dropped or merged as can be done with taxa2cladogram. The p
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
 }
 \note{
-DO NOT use this function to time-scale a real tree for a real dataset. It assumes you know the divergence/speciation times of the branching nodes and relationships perfectly, which is almost impossible given the undersampled nature of the fossil record. Use timePaleoPhy or srcTimePaleoPhy instead.
+DO NOT use this function to time-scale a real tree for a real dataset. It assumes you know the divergence/speciation times of the branching nodes and relationships perfectly, which is almost impossible given the undersampled nature of the fossil record. Use timePaleoPhy or cal3TimePaleoPhy instead.
 
 DO use this function when doing simulations and you want to make a tree of the 'true' history, such as for simulating trait evolution along phylogenetic branches.
 

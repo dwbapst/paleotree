@@ -85,7 +85,7 @@ Smith, A. B. 1994 Systematics and the fossil record: documenting evolutionary pa
 \author{David W. Bapst, heavily inspired by code supplied by Graeme Lloyd and Gene Hunt.}
 
 \seealso{
-\code{\link{srcTimePaleoPhy}}, \code{\link{binTimeData}}, \code{\link{multi2di}}
+\code{\link{cal3TimePaleoPhy}}, \code{\link{binTimeData}}, \code{\link{multi2di}}
 }
 \examples{
 #Simulate some fossil ranges with simFossilTaxa

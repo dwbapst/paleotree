@@ -263,8 +263,15 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	#ntrees=2;anc.wt=1;node.mins=NULL;sampRate=rep(0.1,Ntip(tree));names(sampRate)<-tree$tip.label
 	#brRate<-extRate<-sampRate
 	#timeData<-runif(Ntip(tree),200,400);timeData<-cbind(timeData,timeData-runif(Ntip(tree),1,80))
-	#rownames(timeData)<-tree$tip.label;root.max=200;plot=TRUE;rand.obs=TRUE;FAD.only=FALSE
-	#step.size=0.1;adj.obs.wt=TRUE
+	#rownames(timeData)<-tree$tip.label;root.max=200;plot=TRUE;rand.obs=FALSE;FAD.only=TRUE
+	#step.size=0.1;adj.obs.wt=TRUE;randres=FALSE
+	#
+	#taxa<-simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=50,maxtaxa=100,maxtime=1000,maxExtant=0)
+	#cladogram<-taxa2cladogram(taxa);timeData<-sampleRanges(taxa,r=0.1)
+	#
+	###trying to see if adj.wts works
+	#tree<-rtree(2);anc.wt=1;node.mins=NULL;brRate<-extRate<-sampRate<-0.1;timeData<-cbind(c(100,95),c(90,85));adj.obs.wt=TRUE
+	#rownames(timeData)<-tree$tip.label;root.max=200;plot=TRUE;rand.obs=FALSE;FAD.only=TRUE;ntrees=1;randres=FALSE;step.size=0.1
 	#
 	#add.zombie=FALSE;node.mins<-c(-sort(-runif(1,600,900)),rep(NA,Nnode(tree)-1))	#assume two very deep divergences
 	#
@@ -311,11 +318,11 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 		#10/30/12: get FAD, new LAD (time of observation), and then calculate difference between t.obs and LAD
 		if(rand.obs | FAD.only){
 			if(FAD.only){
-				timeData1<-cbind(timeData[,1],timeData[,1],timeData[,2]-timeData[,1])
+				timeData1<-cbind(timeData[,1],timeData[,1],timeData[,1]-timeData[,2])
 				}
 			if(rand.obs){
 				timeData1<-cbind(timeData[,1],apply(timeData,1,function(x) runif(1,x[2],x[1])))
-				timeData1<-cbind(timeData1,timeData1[,2]-timeData1[,1])
+				timeData1<-cbind(timeData1,timeData1[,2]-timeData[,2])
 				}
 		}else{
 			timeData1<-cbind(timeData,0)
@@ -324,7 +331,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 		if(randres){ktree<-multi2di(ktree)}
 		nodes<-(1:Nnode(ktree))+Ntip(ktree)		#get a vector of all internal nodes	
 		nodes<-nodes[order(-node.depth(ktree)[-(1:Ntip(ktree))])]	#order by depth
-		anags<-character();budds<-character()
+		anags<-character();budds<-character();nAdjZip<-0
 		while(length(nodes)>0){		#can't use a for() because # of nodes may change
 			#save_tree<-ktree;dev.new();plot(ktree)
 			node<-nodes[1]
@@ -407,9 +414,10 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 						#10-30-12 need to correct linDense value for time of observation if difference from LAD =/= 0
 							#use the diffLAD of the PLACED LINEAGE (CAUSE ITS THE ANCESTOR)
 							#if adj.obs.wt, if anc.wt>0 & diffLAD>0 & plin's LAD is before the add_nodes's FAD...
-						if(adj.obs.wt & plin[j,8]>0 & plin[j,9]>0 & add_nodes[i,2]>plin[j,7]){	
+						if(ifelse(is.na(plin[j,7]),FALSE,add_nodes[i,2]>(plin[j,7]+step.size)) & 
+								adj.obs.wt & plin[j,8]>0 & plin[j,9]>0){	
 							adj_max<-max(add_nodes[i,2],plin[j,9]+plin[j,7])
-							adj_zips<-seq(plin[j,7],adj_max,by=step.size) 	#the zips we ain't looking at
+							adj_zips<-seq(plin[j,7]+step.size,adj_max,by=step.size) 	#the zips we ain't looking at
 							#08-01-12: getting the density via the Cal3 algorithm
 							gap1<-plin[j,6]-adj_zips		#waiting time from FAD1 to zip
 							gap1<-ifelse(gap1>0,gap1,0)		#waiting time from branching point to FAD1
@@ -421,6 +429,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 								#admittedly not a perfect fit, though!
 							adj_linDense<-dgamma(adj_totalgap,shape=2,rate=add_nodes[i,4]+(add_nodes[i,5]*add_nodes[i,7]))
 							linDense[length(linDense)]<-linDense[length(linDense)]+sum(adj_linDense*plin[j,8])
+							nAdjZip<-nAdjZip+1
 							}
 						new_zip<-cbind(linDense,plin[j,1],poss_zip)
 						zips<-rbind(zips,new_zip)
@@ -431,6 +440,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 					zip_prob<-zips[,1]
 					zip_prob[is.na(zip_prob)]<-0
 					if(sum(zip_prob)==0){zip_prob<-rep(1,length(zip_prob))}
+					zip_prob<-zip_prob/sum(zip_prob)
 					ch_zip<-sample(1:nrow(zips),1,prob=zip_prob)	#sample zips
 					ch_anc<-zips[ch_zip,2]
 					ch_tzip<-zips[ch_zip,3]
@@ -530,9 +540,9 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 				#10-30-12 need to correct linDense value for time of observation if difference from LAD =/= 0
 					#use the diffLAD of the potential ancestor
 					#if adj.obs.wt, if anc.wt>0 & diffLAD>0 & d1's LAD is before d2's FAD...
-				if(adj.obs.wt & d1ancWt>0 & d1diffLAD>0 & (dlen1+d1rng)<dlen2){
+				if(adj.obs.wt & d1ancWt>0 & d1diffLAD>0 & (dlen1+d1rng+step.size)<dlen2){
 					adj_max<-max(dlen2,d1diffLAD+(dlen1+d1rng))
-					adj_zips<-seq((dlen1+d1rng),adj_max,by=step.size) 	#the zips we ain't looking at
+					adj_zips<-seq((dlen1+d1rng)+step.size,adj_max,by=step.size) 	#the zips we ain't looking at
 					#08-01-12: getting the density via the Cal3 algorithm
 					#waiting time from zip (branching point) to FAD1
 					gap1<-ifelse(adj_zips>dlen1,0,dlen1-adj_zips)		#restrict to be dlen1 if longer than dlen1 (FAD1-time, prob 0 anyway!)
@@ -546,11 +556,13 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 						#admittedly not a perfect fit, though!
 					adj_linDense<-dgamma(totalgap,shape=2,rate=d2SR+(d2BR*d2Ps))
 					linDensity[length(linDensity)]<-linDensity[length(linDensity)]+sum(adj_linDense*d1ancWt)
+					nAdjZip<-nAdjZip+1
 					}
 				#new as of 08-21-12
 				linDensity[is.na(linDensity)]<-0
-				if(sum(linDensity)==0){linDensity[1]<-1}
-				ch_zip<-sample(poss_zip,1,prob=linDensity)				#pick zipper location
+				if(sum(linDensity)==0){linDensity[length(linDensity)]<-1}
+				linDensity1<-linDensity/sum(linDensity)
+				ch_zip<-sample(poss_zip,1,prob=linDensity1)	#pick zipper location
 				#calculate new branch lengths, adding terminal ranges to tips
 				new_dlen1<-ifelse(ch_zip>dlen1,NA,dlen1-ch_zip)			#If not budding or anagenesis
 				new_dlen2<-dlen2-ch_zip		
@@ -575,6 +587,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 		ktree<-reorder(collapse.singles(ktree),"cladewise")
 		ktree$anag.tips<-anags	#record the number of anagenetic ancestors
 		ktree$budd.tips<-budds	#record the number of budding ancestors	
+		ktree$nAdjZip<-nAdjZip
 		#now add root.time: because NO TIPS ARE DROPPED (due to anagenesis) can calculate this now
 			#must be calculated on LADs because the terminal ranges are added to the TREE!!!
 			#should be time of earliest LAD + distance of root from earliest tip
@@ -1350,9 +1363,7 @@ dropZLB<-function(tree){
 	drop_t<-(tree$edge[,2])[drop_e]
 	if((Ntip(tree)-length(drop_t))>1){
 		tree1<-drop.tip(tree,drop_t)
-		orig_dist<-dist.nodes(tree)[which(tree1$tip.label[1]==tree$tip.label),Ntip(tree)+1]
-		new_dist<-dist.nodes(tree1)[1,Ntip(tree1)+1]
-		if(!is.null(tree$root.time)){tree1$root.time<-tree$root.time-(orig_dist-new_dist)}
+		if(!is.null(tree$root.time)){tree1<-fixRootTime(tree,tree1)}
 		res<-tree1
 	}else{res<-NA}
 	return(res)
@@ -1558,8 +1569,17 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	taxad1<-taxad[,1:4]
 	if(any((taxad1[,4]-taxad1[,3])<0)){taxad1[,3:4]<-max(taxad1[,3:4])-taxad1[,3:4]}
 	if(any((taxad1[,4]-taxad1[,3])<0)){stop("Error: Time Error! Check data in taxad")}
-	if(is.null(obs_time)){obs<-taxad1[,4]}else{obs<-max(taxad[,3:4])-obs_time}
-	if(nrow(taxad1)!=length(obs)){stop("#obs != # lineages !")}
+	if(is.null(obs_time)){obs<-taxad1[,4]}else{
+		obs<-max(taxad[,3:4])-obs_time
+		#check if the times of observations are outside of original taxon ranges
+		#nameMatch<-match(names(time.obs),rownames(taxR))
+		#if(any(is.na(nameMatch))){stop("ERROR: names on time.obs and in candleRes don't match")}
+		obsOutRange<-sapply(1:length(obs_time),function(x) if(is.na(obs_time[x])){FALSE}else{
+			(obs_time[x]>taxad[x,3])|(obs_time[x]<taxad[x,4])
+			})
+		if(any(obsOutRange)){stop("ERROR: Given obs_time are outside of the original taxon ranges!")}
+		}
+	if(nrow(taxad1)!=length(obs)){stop("Error: Number of observations are not equal to number of lineages!")}
 	#make observations as fake taxa, assuming that observations are WITHIN actual taxon ranges
 	fake_taxa<-matrix(sapply((1:nrow(taxad1))[!is.na(obs)],function(x) c(nrow(taxad1)+x,taxad1[x,1],obs[x],obs[x])),,4,byrow=TRUE)
 	fake_taxa[,1]<-(1:nrow(fake_taxa))+nrow(taxad1)
@@ -1645,8 +1665,9 @@ dropExtant<-function(tree,tol=0.01){
 	stree<-drop.tip(tree,droppers)
 	if(!is.null(tree$root.time)){
 		#now need to add $root.time given the droppers
-			#should be root.time MINUS distance from furthest tip in tree PLUS distance from latest tip to root of stree
-		stree$root.time<-tree$root.time-max(dnode)+max(dist.nodes(stree)[1:Ntip(stree),Ntip(stree)+1])
+		#should be root.time MINUS distance from earilest tip in tree PLUS distance from earliest tip to root of stree
+		#stree$root.time<-tree$root.time-min(dnode)+min(dist.nodes(stree)[1:Ntip(stree),Ntip(stree)+1])
+		stree<-fixRootTime(tree,stree)
 		}
 	return(stree)
 	}
@@ -1665,8 +1686,9 @@ dropExtinct<-function(tree,tol=0.01,ignore.root.time=FALSE){
 	stree<-drop.tip(tree,droppers)
 	if(!is.null(tree$root.time)){
 		#now need to add $root.time given the droppers
-			#should be root.time MINUS distance from furthest tip in tree PLUS distance from latest tip to root of stree
-		stree$root.time<-tree$root.time-max(dnode)+max(dist.nodes(stree)[1:Ntip(stree),Ntip(stree)+1])
+		#should be root.time MINUS distance from furthest tip in tree PLUS distance from latest tip to root of stree
+		#stree$root.time<-tree$root.time-max(dnode)+max(dist.nodes(stree)[1:Ntip(stree),Ntip(stree)+1])
+		stree<-fixRootTime(tree,stree)
 		}
 	return(stree)
 	}
@@ -1703,7 +1725,7 @@ timeSliceTree<-function(ttree,sliceTime,drop.extinct=FALSE,plot=TRUE){
 	cedge<-sapply(1:Nedge(stree),function(x) any(stree$edge[x,2]==which(dnode>=tslice)))
 	cnode_depth<-dnode[stree$edge[cedge,1]]
 	stree$edge.length[cedge]<-tslice-cnode_depth
-	stree$root.time<-ttree$root.time
+	stree$root.time<-ttree$root.time		#root.time shouldn't (can't?) change!
 	if(drop.extinct){
 		stree1<-dropExtinct(stree,ignore.root.time=TRUE)
 	}else{stree1<-stree}
@@ -2568,3 +2590,83 @@ freqRat<-function(timeData,plot=FALSE){
 	return(freqRat)
 	}
 
+deadTree<-function(ntaxa,sumRate=0.2){
+	#all taxa will always be extinct
+		#assuming the clade is extinct, p and q are meaningless
+		#all trees would have us assume that p=q if analyzed...
+		#we'll just have a 'rate' of events (branching or ext; p+q)
+		#the probability of a branch ending in branching or ext is meaningless!
+			#by definition equal proportion must branch and go extinct
+			#anything else should be indep in a b-d process
+	#lets make the phylogeny 
+	require(ape)
+	tree<-rtree(ntaxa)
+	tree$edge.length<-rexp(ntaxa+ntaxa-2,sumRate)
+	tree$root.time<-max(dist.nodes(tree)[ntaxa+1,])+200
+	return(tree)
+	}
+
+simCandleTaxa<-function(ntaxa,sumRate=0.2){
+	#This function will make ideal cladist datasets
+	#all taxa will be descendants
+		#all evolution prior to branching or differentiation is unsampled
+		#taxa do not differentiatiate over those times
+	require(ape)
+	tree<-deadTree(ntaxa=ntaxa,sumRate=sumRate)
+	taxonNames<-tree$tip.label
+	termEdge<-sapply(tree$edge[,2],function(x) any(x==(1:ntaxa)))
+	#termAnc<-tree$edge[termEdge,1]
+	taxonDurations<-tree$edge.length[termEdge]
+	nodeDist<-dist.nodes(tree)
+	taxonLADs<-tree$root.time-nodeDist[ntaxa+1,1:ntaxa]
+	taxonFADs<-taxonLADs+taxonDurations
+	taxonRanges<-cbind(taxonFADs,taxonLADs)
+	rownames(taxonRanges)<-taxonNames
+	res<-list(taxonRanges=taxonRanges,tree=tree)
+	return(res)
+	}
+
+trueCandle<-function(candleRes,time.obs){
+	#given a per-taxon vector of observation times, returns the true tree
+	#time.obs must have taxon names
+		#for a candle tree datasets
+	require(ape)
+	#first, check if the times of observations are outside of original taxon ranges
+	taxR<-candleRes$taxonRanges
+	nameMatch<-match(names(time.obs),rownames(taxR))
+	if(any(is.na(nameMatch))){stop("ERROR: names on time.obs and in candleRes don't match")}
+	if(any(sapply(1:length(time.obs),function(x) if(is.na(time.obs[x])){FALSE}else{
+			(time.obs[x]>taxR[nameMatch[x],1])|(time.obs[x]<taxR[nameMatch[x],2])}))){
+		stop("ERROR: Given time.obs are outside of the original taxon ranges")}
+	#now onwards with the actual function
+	tree1<-tree<-candleRes$tree
+	termEdge<-sapply(tree1$edge[,2],function(x) any(x==(1:Ntip(tree1))))	
+	newDurations<-taxR[nameMatch,1]-time.obs
+	tipMatch<-sapply(1:Ntip(tree1),function(x) which(tree1$tip.label[x]==names(time.obs)))
+	dropTaxa<-character()
+	for(i in 1:Ntip(tree1)){
+		newDur<-newDurations[tipMatch[i]]
+		if(!is.na(newDur)){
+			tree1$edge.length[tree1$edge[,2]==i]<-newDur
+		}else{
+			dropTaxa<-c(dropTaxa,tree1$tip.label[i])
+			}
+		}
+	if(length(dropTaxa)>0){tree1<-drop.tip(tree1,dropTaxa)}
+	#need to correct root.time if basal outgroups were removed
+	tree1<-fixRootTime(tree,tree1)
+	return(tree1)
+	}
+
+fixRootTime<-function(treeOrig,treeNew){
+	require(ape)
+	if(class(treeOrig)!="phylo"){stop("Error: treeOrig is not of class phylo")}
+	if(class(treeNew)!="phylo"){stop("Error: treeNew is not of class phylo")}
+	if(is.null(treeOrig$root.time)){stop("ERROR: treeOrig passed to fixRootTime with no $root.time??")}
+	orig_dist<-dist.nodes(treeOrig)[
+		which(treeNew$tip.label[1]==treeOrig$tip.label),Ntip(treeOrig)+1
+		]
+	new_dist<-dist.nodes(treeNew)[1,Ntip(treeNew)+1]
+	treeNew$root.time<-treeOrig$root.time-(orig_dist-new_dist)
+	return(treeNew)
+	}

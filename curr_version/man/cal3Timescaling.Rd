@@ -130,7 +130,9 @@ ttreeRand <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRat
 ttreeLAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     FAD.only=FALSE,rand.obs=FALSE,sampRate=sRate,ntrees=1,plot=TRUE)
 layout(1:3);parOrig<-par(mar=c(0,0,0,0))
-plot(ladderize(ttreeFAD));plot(ladderize(ttreeRand));plot(ladderize(ttreeLAD))
+plot(ladderize(ttreeFAD));text(5,5,"time.obs=FAD",cex=1.5,pos=4)
+plot(ladderize(ttreeRand));text(5,5,"time.obs=Random",cex=1.5,pos=4)
+plot(ladderize(ttreeLAD));text(5,5,"time.obs=LAD",cex=1.5,pos=4)
 
 #to get a fair sample of trees, let's increase ntrees
 ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
@@ -166,8 +168,8 @@ sProb <- SPres[[2]][2]
 #but that's the sampling PROBABILITY per bin, not the instantaneous rate of change
 #we can use sProb2sRate() to get the rate. We'll need to also tell it the int.length
 sRate1 <- sProb2sRate(sProb,int.length=1)
-#we also need extinction rate and branching rate (see above)
-divRate<-SPres[[2]][1]
+#we also need extinction rate and branching rate (see above); need to divide by int.length...
+divRate<-SPres[[2]][1]/1
 #estimates that r=0.3... kind of low (simulated sampling rate is 0.5)
 #Note: for real data, you may need to use an average int.length (no constant length)
 ttree <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,

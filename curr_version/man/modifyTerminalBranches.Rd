@@ -3,6 +3,7 @@
 \alias{dropExtinct}
 \alias{dropExtant}
 \alias{addTermBranchLength}
+\alias{fixRootTime}
 \title{Modify or Drop Terminal Branches of Various Types}
 \description{
 These functions modify terminal branches or drop certain terminal branches based on various criteria.
@@ -12,12 +13,15 @@ dropZLB(tree)
 dropExtant(tree, tol = 0.01)
 dropExtinct(tree, tol = 0.01, ignore.root.time = FALSE)
 addTermBranchLength(tree, addtime = 0.001)
+fixRootTime(treeOrig, treeNew)
 }
 \arguments{
   \item{tree}{A phylogeny as a phylo object}
   \item{tol}{Tolerance for determining modern age; used for distinguishing extinct from extant taxa. Tips which end within 'tol' of the furthest distance from the root will be treated as 'extant' taxa for the purpose of keeping or dropping.}
   \item{ignore.root.time}{Ignore root.time in calculating which tips are extinct? root.time will still be adjusted}
   \item{addtime}{Extra amount of time to add to all terminal branch lengths.}
+  \item{treeOrig}{A phylo object of a time-scaled phylogeny with a $root.time element}
+  \item{treeNew}{A phylo object containing a modified form of treeOrig (with no extra tips added)}
 }
 \details{
 DropZLB drops tip-taxa that are attached to the tree via zero-length terminal branches ("ZLBs"). This is sometimes useful for paleo-trees, as various time-scaling methods often produce these ZLBs, taxa whose early appearance causes them to be functionally interpreted as ancestors in some time-scaling methods. Removing ZLBs is advised for analyses of diversification/diversity, as these will appear as simultaneous speciation/extinction events. Note this function only drops tips attached to a terminal zero-length branch; if you want to collapse internal zero-length branches, see the ape function \code{\link{di2multi}}.
@@ -27,9 +31,11 @@ DropExtinct drops all terminal branches which end before the modern (i.e. extinc
 If the input tree has a $root.time element, as expected for most paleo-tree objects handled by this library, that root.time is adjusted if the relative time of the root divergence changes when terminal branches are dropped. Adjusted root.times are only given if the input tree has root.times.
 
 addTermBranchLength adds an amount equal to the argument 'addtime' to the terminal branch lengths of the tree. If there is a $root.time element, this is increased by an amount equal to addtime. A negative amount can be input to reduce the length of terminal branches. However, if negative branch lengths are produced, the function fails and a warning is produced.
+
+When a tree is modified, such as having tips dropped or branches extended, fixRootTime can be used to find the new $root.time. It is mainly used as a utility function called by the other functions discussed in this help file.
 }
 \value{
-Gives back a modified phylogeny as a phylo object
+Gives back a modified phylogeny as a phylo object, generally with a modified $root.time element.
 }
 \author{David W. Bapst}
 \seealso{\code{\link{phyloDiv}}, \code{\link{drop.tip}}, \code{\link{compareTermBranches}}}

@@ -1,4 +1,9 @@
 Version 1.6 -
+-New function fixRootTime which is called by any other function which needs to fix $root.time elements after dropping taxa, etc.
+	-Uses solution for fixing root.times previous being used by dropZLB
+-Inconsistency found in how root.time elements were fixed in terminal-branch dropping functions; dropExtant was found to be buggy
+-New simulation functions for 'candle trees' which are clades were all observable taxa are monophyletic lineages which correspond to the terminal branches of a phylogeny
+-Changes to taxa2phylo so that an error is returned if observation times outside the original taxon ranges are passed to it
 -SRC method is now considered deprecated and is removed from the public release of paleotree, along with any references in the help files. The SRC method, as of 10/29/12, can be found in the paleotree github repo in the deprecated functions folder. THE AUTHOR OF THIS PACKAGE STRONGLY RECOMMENDS NOT TO USE THE SRC METHOD. Users interested in using rate calibrated timescaling should use cal3 instead.
 -cal3 is now modified so that step.size can be changed as an argument
 -cal3 is modified so that differences between time of observation and LAD do not cause differences in the extent to which nodes are dated, by adding the densities calculated for 'unconsidered' potential node ages to the maximum potential node agenot alter the placement of node ages, which can be modified with 

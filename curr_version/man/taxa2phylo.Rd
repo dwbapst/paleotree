@@ -5,7 +5,7 @@
 \usage{taxa2phylo(taxad, obs_time = NULL, plot = FALSE)}
 \arguments{
   \item{taxad}{A five-column matrix of taxonomic data, as output by simFossilTaxa}
-  \item{obs_time}{Per-taxon times of observation; if NULL, the LADs (column 4) in taxad2 are used}
+  \item{obs_time}{A vector of per-taxon times of observation which must be in the same order of taxa as in the object taxad; if NULL, the LADs (column 4) in taxad2 are used}
   \item{plot}{Plot the resulting phylogeny?}
 }
 \details{

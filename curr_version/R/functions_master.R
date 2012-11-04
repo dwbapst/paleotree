@@ -226,14 +226,14 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 			timeData<-cbind(siteTime[sites[,1],1],siteTime[sites[,2],2])
 			}
 		rownames(timeData)<-rownames(timeList[[2]])
-		if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
+		#if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
 		tree1<-tree
 		if(!is.binary.tree(tree)){
 			if(randres){tree1<-multi2di(tree)}
 			if(timeres){tree1<-timeLadderTree(tree,timeData)}	
 			}
 		tree2<-suppressMessages(timePaleoPhy(tree1,timeData,type=type,vartime=vartime,ntrees=1,
-			randres=FALSE,add.term=add.term,rand.obs=FALSE,node.mins=node.mins,plot=plot))
+			randres=FALSE,add.term=add.term,rand.obs=rand.obs,node.mins=node.mins,plot=plot))
 		tree2$ranges.used<-timeData
 		ttrees[[ntrb]]<-tree2
 		}
@@ -661,11 +661,11 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 			timeData<-cbind(siteTime[sites[,1],1],siteTime[sites[,2],2])
 			}
 		rownames(timeData)<-rownames(timeList[[2]])
-		if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
-		if(FAD.only){timeData[,2]<-timeData[,1]}
+		#if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
+		#if(FAD.only){timeData[,2]<-timeData[,1]}
 		tree2<-suppressMessages(cal3TimePaleoPhy(tree,timeData,brRate=brRate,extRate=extRate,sampRate=sampRate,
 			ntrees=1,anc.wt=anc.wt,node.mins=node.mins,adj.obs.wt=adj.obs.wt,root.max=root.max,step.size=step.size,
-			rand.obs=FALSE,randres=randres,plot=plot))
+			FAD.only=FAD.only,rand.obs=rand.obs,randres=randres,plot=plot))
 		tree2$ranges.used<-timeData
 		ttrees[[ntrb]]<-tree2
 		}
@@ -2639,9 +2639,10 @@ trueCandle<-function(candleRes,time.obs){
 			(time.obs[x]>taxR[nameMatch[x],1])|(time.obs[x]<taxR[nameMatch[x],2])}))){
 		stop("ERROR: Given time.obs are outside of the original taxon ranges")}
 	#now onwards with the actual function
-	tree1<-tree<-candleRes$tree
+	tree1<-candleRes$tree
 	termEdge<-sapply(tree1$edge[,2],function(x) any(x==(1:Ntip(tree1))))	
 	newDurations<-taxR[nameMatch,1]-time.obs
+	if(is.null(names(time.obs))){stop("ERROR: No taxon names on observation vector?")}
 	tipMatch<-sapply(1:Ntip(tree1),function(x) which(tree1$tip.label[x]==names(time.obs)))
 	dropTaxa<-character()
 	for(i in 1:Ntip(tree1)){
@@ -2652,9 +2653,10 @@ trueCandle<-function(candleRes,time.obs){
 			dropTaxa<-c(dropTaxa,tree1$tip.label[i])
 			}
 		}
+	treeNoDrop<-tree1		#the root.time can't change cause the term branches got shifted
 	if(length(dropTaxa)>0){tree1<-drop.tip(tree1,dropTaxa)}
 	#need to correct root.time if basal outgroups were removed
-	tree1<-fixRootTime(tree,tree1)
+	tree1<-fixRootTime(treeNoDrop,tree1)	#use the tree after adjusting the term branch lengths
 	return(tree1)
 	}
 

@@ -1,4 +1,5 @@
 Version 1.6 -
+-Changes to bin time-scaling functions so that rand.obs and FAD.only conditions were forwarded to their associated functions, rather than done  by the bin wrapper function (this caused problems with the calculation of the weight adjustment for the cal3 methods)
 -New function fixRootTime which is called by any other function which needs to fix $root.time elements after dropping taxa, etc.
 	-Uses solution for fixing root.times previous being used by dropZLB
 -Inconsistency found in how root.time elements were fixed in terminal-branch dropping functions; dropExtant was found to be buggy

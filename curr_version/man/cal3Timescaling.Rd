@@ -7,11 +7,12 @@ Timescales an unscaled cladogram of fossil taxa, using information on their rang
 \usage{
 cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1, anc.wt = 1,  
     node.mins = NULL, rand.obs = FALSE, FAD.only = FALSE, adj.obs.wt = TRUE,
-    root.max = 200, step.size = 0.1, plot = FALSE)
+    root.max = 200, step.size = 0.1, randres = FALSE, plot = FALSE)
 
 bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1, 
     nonstoch.bin=FALSE,sites = NULL, anc.wt = 1, node.mins = NULL, rand.obs = FALSE, 
-    FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200, step.size = 0.1, plot = FALSE)
+    FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200, step.size = 0.1, randres = FALSE, 
+    plot = FALSE)
 }
 \arguments{
   \item{tree}{An unscaled cladogram of fossil taxa}
@@ -39,6 +40,8 @@ bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
   \item{root.max}{Maximum time before the first FAD that the root can be pushed back to}
 
   \item{step.size}{Step size of increments used in zipper algorithm to assign node ages}
+
+  \item{randres}{Should polytomies be randomly resolved using multi2di in ape rather than using the cal3 algorithm to resolve those polytomies?}
 
   \item{plot}{If true, plots the input, "basic" timescaled and output cal3-timescaled phylogenies}
 
@@ -121,6 +124,8 @@ phyloDiv(ttree)
 ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     sampRate=sRate,ntrees=1,anc.wt=0,plot=TRUE)
 
+
+\dontrun{
 #let's look at how three trees generated with very different time of obs. look
 ttreeFAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     FAD.only=TRUE,rand.obs=FALSE,sampRate=sRate,ntrees=1,plot=TRUE)
@@ -133,6 +138,8 @@ layout(1:3);parOrig<-par(mar=c(0,0,0,0))
 plot(ladderize(ttreeFAD));text(5,5,"time.obs=FAD",cex=1.5,pos=4)
 plot(ladderize(ttreeRand));text(5,5,"time.obs=Random",cex=1.5,pos=4)
 plot(ladderize(ttreeLAD));text(5,5,"time.obs=LAD",cex=1.5,pos=4)
+}
+
 
 #to get a fair sample of trees, let's increase ntrees
 ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
@@ -179,7 +186,6 @@ phyloDiv(ttree)
 ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,
     sampRate=sRate1,ntrees=1,nonstoch.bin=TRUE,plot=TRUE)
 phyloDiv(ttree1)
-
 
 #example with multiple values of anc.wt
 ancWt <- sample(0:1,nrow(rangesDisc[[2]]),replace=TRUE)

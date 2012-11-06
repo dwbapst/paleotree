@@ -105,6 +105,8 @@ res <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0.5,mintaxa=30,maxta
 #what does this mix of speciation modes look like as a phylogeny?
 tree <- taxa2phylo(res,plot=TRUE)
 
+
+\dontrun{
 #some other options with cryptic speciation
 taxaCrypt1 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0,prop.bifurc=0,prop.crypt=0.5,mintaxa=30,
     maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
@@ -115,6 +117,7 @@ tree2 <- taxa2phylo(taxaCrypt2,plot=TRUE)
 taxaCrypt3 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0,prop.crypt=1,
     mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
 tree3 <- taxa2phylo(taxaCrypt2,plot=TRUE)
+}
 
 set.seed(444)
 #can choose to condition on total morphologically-distinguishable taxa 
@@ -159,6 +162,8 @@ layout(1)
 taxa <- simFossilTaxa(p=0.1,q=0,mintime=10,mintaxa=100,maxtime=100,maxtaxa=100,
     nruns=10,plot=TRUE)
 
+
+\dontrun{
 #can generate datasets where simulations go until extinction or max limits
      #and THEN are evaluated whether they meet min limits
      #good for producing unconditioned birth-death trees
@@ -171,6 +176,8 @@ layout(1:2)
 hist(sapply(res,nrow),main="#taxa")
 #histogram of # extant taxa at end of simulation
 hist(sapply(res,function(x) sum(x[,5])),main="#extant")
+}
+
 
 #using the SRcond version
 layout(1)

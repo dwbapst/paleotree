@@ -10,8 +10,8 @@ Analyzes, time-scales and simulates phylogenies of extinct/fossil lineages, alon
 \tabular{ll}{
 Package: \tab paleotree\cr
 Type: \tab Package\cr
-Version: \tab 1.6\cr
-Date: \tab 10-05-12\cr
+Version: \tab 1.7\cr
+Date: \tab \cr
 License: \tab  GPL (>= 2)\cr
 }
 This package contains functions for analyzing sampling rates given ranges of fossil taxa, in both continuous and discrete time, functions for time-scaling phylogenies of fossil taxa and functions for simulating the fossil record in both taxic and phylogenetic varieties.
@@ -22,7 +22,7 @@ David W. Bapst
 Maintainer: David W. Bapst <dwbapst@gmail.com>
 }
 \references{
-Bapst, in press. paleotree: an R package for paleontological and phylogenetic analyses of evolution. \emph{Methods in Ecology and Evolution}. doi: 10.1111/j.2041-210X.2012.00223.x
+Bapst, D.W. 2012. paleotree: an R package for paleontological and phylogenetic analyses of evolution. \emph{Methods in Ecology and Evolution}. 3: 803-807. doi: 10.1111/j.2041-210X.2012.00223.x
 
 Bapst, in prep. Time-scaling Trees of Fossil Taxa. To be submitted to \emph{Paleobiology}.
 }

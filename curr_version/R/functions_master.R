@@ -242,7 +242,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 	}
 
 cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt=1,node.mins=NULL,
-	rand.obs=FALSE,adj.obs.wt=TRUE,FAD.only=FALSE,root.max=200,step.size=0.1,randres=FALSE,plot=FALSE){
+	rand.obs=FALSE,FAD.only=FALSE,adj.obs.wt=TRUE,root.max=200,step.size=0.1,randres=FALSE,plot=FALSE){
 	#see SRC function for more notation...
 	#function for Ps
 		getPs<-function(p,q,r){

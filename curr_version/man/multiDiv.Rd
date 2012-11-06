@@ -22,8 +22,8 @@ plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL,
   \item{results}{The output of a previous run of multiDiv}
   \item{plotLogRich}{If true, taxic diversity plotted on log scale}
   \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only affects plotting. Given as either NULL (the default) or as a vector of length two as for 'xlim' in the basic R function plot.}
-  \item{plotMultCurves}{If TRUE, each individual diversity curve is plotted rather than the median diversity curve and 95% quantiles. FALSE by default.}
-  \item{multRainbow}{If TRUE and plotMultCurves are both TRUE, each line is plotted as a different, randomized color using the function rainbow(). If FALSE, each line is plotted as a black line. This argument is ignored if divPalette is supplied.}
+  \item{plotMultCurves}{If TRUE, each individual diversity curve is plotted rather than the median diversity curve and 95 percent quantiles. FALSE by default.}
+  \item{multRainbow}{If TRUE and plotMultCurves are both TRUE, each line is plotted as a different, randomized color using the function 'rainbow'. If FALSE, each line is plotted as a black line. This argument is ignored if divPalette is supplied.}
   \item{divPalette}{Can be used so users can pass a vector of chosen color identifiers for each diversity curve in 'data' which will take precedence over multRainbow. Must be the same length as the number of diversity curves supplied.}
 }
 \details{

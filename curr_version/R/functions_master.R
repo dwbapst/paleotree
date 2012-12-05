@@ -968,12 +968,15 @@ getSampRateCont<-function(timeData,n_tbins=1,grp1=NA,grp2=NA,threshold=0.1,est_o
 	if(length(grp1)>1){
 		if(length(grp1)!=nrow(timeData)){stop("Error: grp1 is not same length as timeData")}
 		grp1<-grp1[!is.na(timeData[,1])]
+		grp1<-grp1[!(timeData[,2]==0)]
 		}
 	if(length(grp2)>1){
 		if(length(grp2)!=nrow(timeData)){stop("Error: grp2 is not same length as timeData")}		
 		grp2<-grp2[!is.na(timeData[,1])]
+		grp2<-grp2[!(timeData[,2]==0)]
 		}
 	timeData<-timeData[!is.na(timeData[,1]),]
+	timeData<-timeData[!(timeData[,2]==0)]	#drop living taxa
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
 	if(any(timeData[,2]<0)){stop("Error: Some dates in timeData <0 ?")}
@@ -1201,11 +1204,15 @@ getSampProbDisc<-function(timeData,n_tbins=1,grp1=NA,grp2=NA,est_only=FALSE,iter
 		}			
 	}
 	#############################
-	if(length(timeData)==2){timeData<-timeData[[2]]}	#if a timeList matrix...
+	if(length(timeData)==2){	#if a timeList matrix...
+		timeData[[2]][(timeData[[1]][timeData[[2]][,2],1]==0),1]<-NA	#make all extant taxa NAs to LADs
+		timeData<-timeData[[2]]
+		}	
 	#get rid of any NAs
 	if(length(grp1)>1){
 		if(length(grp1)!=nrow(timeData)){stop("Error: grp1 is not same length as timeData")}
 		grp1<-grp1[!is.na(timeData[,1])]
+
 		}
 	if(length(grp2)>1){
 		if(length(grp2)!=nrow(timeData)){stop("Error: grp2 is not same length as timeData")}		
@@ -1328,8 +1335,11 @@ binTimeData<-function(timeData,int.length=1,start=NA,int.times=NULL){
 		bins<-unique(ifelse(bins<0,0,bins))	#get rid of any extra zeroes or negative numbers
 		fads<-sapply(timeData[,1],function(x) which(bins<x)[1]-1)
 		lads<-sapply(timeData[,2],function(x) which(bins<x)[1]-1)
-		fads[timeData[,1]==0]<-length(bins)-1
-		lads[timeData[,2]==0]<-length(bins)-1
+		if(any(timeData[,1]==0) | any(timeData[,2]==0)){
+			bins<-c(bins,0)
+			fads[timeData[,1]==0]<-length(bins)-1
+			lads[timeData[,2]==0]<-length(bins)-1
+			}
 		res<-list(int.times=cbind(int.start=bins[1:(length(bins)-1)],int.end=bins[2:length(bins)]),
 			taxon.times=cbind(first.int=fads,last.int=lads))
 	}else{
@@ -1659,7 +1669,8 @@ dropExtant<-function(tree,tol=0.01){
 		}
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	dnode<-dist.nodes(tree)[1:Ntip(tree),Ntip(tree)+1]
-	if(!is.null(tree$root.time)){if(tree$root.time>max(dnode)){stop("Error: all tips are extinct based on tree$root.time!")}}
+	dnode<-round(dnode,6)
+	if(!is.null(tree$root.time)){if(round(tree$root.time,6)>max(dnode)){stop("Error: all tips are extinct based on tree$root.time!")}}
 	droppers<-which((dnode+tol)>max(dnode))
 	if((Ntip(tree)-length(droppers))<2){stop("Error: Less than 2 tips extinct on the tree!")}
 	stree<-drop.tip(tree,droppers)
@@ -1680,7 +1691,8 @@ dropExtinct<-function(tree,tol=0.01,ignore.root.time=FALSE){
 		}
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	dnode<-dist.nodes(tree)[1:Ntip(tree),Ntip(tree)+1]
-	if(!is.null(tree$root.time) & !ignore.root.time){if(tree$root.time>max(dnode)){stop("Error: all tips are extinct based on tree$root.time!")}}
+	dnode<-round(dnode,6)
+	if(!is.null(tree$root.time) & !ignore.root.time){if(round(tree$root.time,6)>max(dnode)){stop("Error: all tips are extinct based on tree$root.time!")}}
 	droppers<-which((dnode+tol)<max(dnode))
 	if((Ntip(tree)-length(droppers))<2){stop("Error: Less than 2 tips are extant on the tree!")}
 	stree<-drop.tip(tree,droppers)
@@ -2016,7 +2028,7 @@ taxicDivCont<-function(timeData,int.length=1,int.times=NULL,plot=TRUE,plotLogRic
 	return(invisible(res))
 	}
 
-taxicDivDisc<-function(timeList,int.times=NULL,plot=TRUE,plotLogRich=FALSE,timelims=NULL,split.int=TRUE){
+taxicDivDisc<-function(timeList,int.times=NULL,plot=TRUE,plotLogRich=FALSE,timelims=NULL,extant.adjust=0.01,split.int=TRUE){
 	#this function estimates diversity for binned intervals from discrete interval range data
 	#input is a list with (1) interval times matrix and (2) species FOs and LOs
 	#time interval starts and ends can be pre-input as a 2 column matrix
@@ -2029,6 +2041,8 @@ taxicDivDisc<-function(timeList,int.times=NULL,plot=TRUE,plotLogRich=FALSE,timel
 		}else{stop("Error: timeList[[2]] not of matrix or data.frame format")}}
 	intMat<-timeList[[1]]	#the intervals the DATA is given in
 	timeData<-timeList[[2]]
+	#if(drop.extant){timeData[[2]][(timeData[[1]][timeData[[2]][,2],1]==0),1]<-NA}
+	intMat[intMat[,1]==0,1]<-extant.adjust
 	timeData<-timeData[!is.na(timeData[,1]),,drop=FALSE]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(apply(intMat,1,diff)>0)){stop("Error: timeList[[1]] not in intervals in time relative to modern")}
@@ -2082,7 +2096,8 @@ taxicDivDisc<-function(timeList,int.times=NULL,plot=TRUE,plotLogRich=FALSE,timel
 	return(invisible(res))
 	}
 
-phyloDiv<-function(tree,int.length=1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,drop.ZLB=TRUE,timelims=NULL){
+phyloDiv<-function(tree,int.length=1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,
+		drop.ZLB=TRUE,timelims=NULL){
 	#function that computes a diversity curve from a tree file
 		#aka lineage-through-time plot
 	#root.time
@@ -2109,6 +2124,7 @@ phyloDiv<-function(tree,int.length=1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,
 	}else{
 		ntime<-dist.nodes(ttree)[,Ntip(ttree)+1]
 		ntime<-ttree$root.time-ntime
+		ntime<-round(ntime,6)
 		if(min(ntime)<0){stop("Error: tree$root.time is less than total depth of tree!")}
 		}
 	if(is.null(int.times)){
@@ -2147,8 +2163,8 @@ phyloDiv<-function(tree,int.length=1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,
 	return(invisible(res))
 	}
 
-multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,
-	drop.cryptic=FALSE,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FALSE,multRainbow=TRUE,divPalette=NULL){
+multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,drop.cryptic=FALSE,
+	extant.adjust=0.01,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FALSE,multRainbow=TRUE,divPalette=NULL){
 	#lines up a bunch of taxic or phylo objects and calculates diversity curves simulataneously
 		#across all their objects; intuits the type of object without being told
 		#it also calculates a "average" median curve and 95% quantile intervals
@@ -2161,6 +2177,8 @@ multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,
 	#3rd object consists of a 3col matrix of information related to median curve
 		#first column is a per-interval median of the combined diversity curves
 		#second and third columns are 95% quantile intervals on that median
+	#int.length=1;plot=TRUE;split.int=TRUE;drop.ZLB=TRUE;drop.cryptic=FALSE;plotLogRich=FALSE;timeLims=NULL
+	#plotMultCurves=FALSE;multRainbow=TRUE;divPalette=NULL
 	require(ape)
 	tblen<-int.length
 	dclass<-sapply(data,class)	#data classes
@@ -2177,6 +2195,9 @@ multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,
 			)
 	}else{lims1<-NA}
 	if(any(dclass1==2)){
+		for(i in which(dclass1==2)){
+			data[[i]][[1]][data[[i]][[1]][,1]==0,1]<-extant.adjust
+			}
 		lims2<-sapply(data[dclass1==2],function(x) 
 			c(min(x[[1]][max(x[[2]]),]),max(x[[1]][min(x[[2]]),])))
 	}else{lims2<-NA}
@@ -2205,9 +2226,11 @@ multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,
 		splinters<-sapply(data[dclasss=2],function(x) x[[1]][,1])
 		mustSplit<-apply(int.times,1,function(x) any(sapply(splinters,function(y) x[1]>y & x[2]<y)))
 		if(any(mustSplit)){
-				for(i in which(mustSplit)){
+			for(i in which(mustSplit)){
 					splitter<-splinters[sapply(splinters[,1],function(y) int.times[i,1]>y & int.times[i,2]<y),1]
-					int.times<-rbind(int.times,c(int.times[i,1],splitter),c(splitter,int.times[i,2]))
+					#if(length(splitter)>1){stop("Error: Splitter returning more than one value?!")}
+					splitter<-c(int.times[i,1],splitter,int.times[i,2])
+					int.times<-rbind(int.times,cbind(splitter[1:(length(splitter)-1)],splitter[2:length(splitter)]))
 				}
 			int.times<-int.times[-which(mustSplit),]
 			int.times<-int.times[order(-int.times[,1]),]
@@ -2344,8 +2367,8 @@ simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mi
 	return(res)
 	}
 
-simFossilTaxa_SRCond<-function(r,avgtaxa,p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,maxtime=1000,
-	maxExtant=NULL,count.cryptic=FALSE,print.runs=FALSE,plot=FALSE){
+simFossilTaxa_SRCond<-function(r,avgtaxa,p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,mintime=1,maxtime=1000,
+	minExtant=0,maxExtant=NULL,count.cryptic=FALSE,print.runs=FALSE,plot=FALSE){
 	#wrapper for simulating clades large enough for 
 		#getting some avg number of taxa under a given sampling parameter
 	#for sampling: proper conditioning on number of taxa
@@ -2356,7 +2379,8 @@ simFossilTaxa_SRCond<-function(r,avgtaxa,p,q,anag.rate=0,prop.bifurc=0,prop.cryp
 	#simFossilTaxa_SRCond(r=0.1,p=0.1,q=0.1,nruns=10,avgtaxa=50,maxExtant=0)
 	N<-avgtaxa/(r/(r+(q+anag.rate+(prop.bifurc*p))))
 	results<-simFossilTaxa(p=p,q=q,anag.rate=anag.rate,prop.bifurc=prop.bifurc,prop.cryptic=prop.cryptic,nruns=nruns,mintaxa=N,
-			maxtaxa=2*N,maxtime=maxtime,maxExtant=maxExtant,count.cryptic=FALSE,print.runs=print.runs,plot=plot)
+			maxtaxa=2*N,mintime=mintime,maxtime=maxtime,minExtant=minExtant,maxExtant=maxExtant,
+			count.cryptic=FALSE,print.runs=print.runs,plot=plot)
 	#if(nruns==1){results<-results[[1]]}
 	return(results)
 	}
@@ -2509,6 +2533,7 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 		if(!is.null(tree1$root.time)){
 			tree1$root.time<-tree1$root.time-(mtimeA-mtime1)
 			ntime1<-tree1$root.time-ntime1
+			ntime1<-round(ntime1,6)
 			if(min(ntime1)<0){stop(paste("Error: tree1$root.time is less than total depth of tree1!"))}
 		}else{
 			ntime1<-max(ntime1)-ntime1
@@ -2516,6 +2541,7 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 		if(!is.null(tree2$root.time)){
 			tree2$root.time<-tree2$root.time-(mtimeB-mtime2)
 			ntime2<-tree2$root.time-ntime2
+			ntime2<-round(ntime2,6)
 			if(min(ntime2)<0){stop("Error: tree2[",i,"]$root.time is less than total depth of that tree!")}
 		}else{
 			ntime2<-max(ntime2)-ntime2
@@ -2551,7 +2577,7 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 			}
 		}
 	if(dropUnshared){
-		matchMat<-matchMat[,apply(matchMat,2,function(x) all(!is.na(x)))]
+		matchMat<-matchMat[,apply(matchMat,2,function(x) all(!is.na(x))),drop=FALSE]
 		}
 	rownames(matchMat)<-names(trees2)
 	if(length(trees2)==1){
@@ -2576,7 +2602,10 @@ reverseList<-function(list,simplify=FALSE){
 
 freqRat<-function(timeData,plot=FALSE){
 	#timeData is discrete bin data, like from binTimeData
-	if(length(timeData)==2){timeData<-timeData[[2]]}	#if a timeList matrix...
+	if(length(timeData)==2){	#if a timeList matrix...
+		timeData[[2]][(timeData[[1]][timeData[[2]][,2],2]==0),1]<-NA
+		timeData<-timeData[[2]]
+		}	
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(apply(timeData,1,diff)<0)){

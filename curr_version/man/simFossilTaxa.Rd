@@ -5,13 +5,13 @@
 \description{Functions for simulating taxon ranges and relationships under various models of evolution}
 \usage{
 simFossilTaxa(p, q, anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0, nruns = 1, 
-    mintaxa = 1, maxtaxa = 1000, mintime = 1,maxtime = 1000, minExtant = 0, 
+    mintaxa = 1, maxtaxa = 1000, mintime = 1, maxtime = 1000, minExtant = 0, 
     maxExtant = NULL, min.cond = TRUE, count.cryptic = FALSE, print.runs = FALSE, 
     plot = FALSE)
 
 simFossilTaxa_SRCond(r, avgtaxa, p, q, anag.rate = 0, prop.bifurc = 0, 
-    prop.cryptic = 0, nruns = 1, maxtime = 1000, maxExtant = NULL, 
-    count.cryptic = FALSE, print.runs = FALSE, plot = FALSE)
+    prop.cryptic = 0, nruns = 1, mintime = 1, maxtime = 1000, minExtant = 0, 
+    maxExtant = NULL, count.cryptic = FALSE, print.runs = FALSE, plot = FALSE)
 }
 \arguments{
   \item{p}{Instantaneous rate of speciation/branching.}

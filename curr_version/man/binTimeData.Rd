@@ -22,7 +22,7 @@ This function is for simulating the effect of having a discrete timescale for an
 
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero. However, the numbering of intervals giving in the output increases with time, as these are numbered relative to each other, from first to last.
 
-As of version 1.5, taxa which are extant as indicated in timeData as being in the time interval which overlaps with the modern, if there is such a time interval (previously they were erroneously listed as NA).
+As of version 1.7, taxa which are extant as indicated in timeData as being in a time interval bounded (0,0), unless time-bins are preset using arguiment int.times (prior to version 1.5 they were erroneously listed as NA).
 }
 \value{
 A list containing:
@@ -60,10 +60,9 @@ rangesCont <- sampleRanges(taxa,r=0.5,,modern.samp.prob=1)
 rangesDisc <- binTimeData(rangesCont,int.length=1)
 #plot with taxicDivDisc()
 taxicDivDisc(rangesDisc)
+
 #example with pre-set intervals input (including overlappling)
 presetIntervals <- cbind(c(40,30,20,10),c(30,20,10,0))
 rangesDisc1 <- binTimeData(rangesCont,int.times=presetIntervals)
 taxicDivDisc(rangesDisc1)
-
-
 }

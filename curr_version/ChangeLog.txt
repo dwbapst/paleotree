@@ -1,4 +1,9 @@
 Version 1.7 - 
+-altered multiDiv, phyloDiv and taxicDivDisc so to deal with extant datasets better with new arguments and changes to interval splitting
+-add minExtant and mintime options to simFossilTaxa_SRcond to more closely match simFossilTaxa
+-Nodetimes slightly rounded (to six figures) in compareNodeAges, dropExtinct, dropExtant to avoid error relating to negative relative node ages
+-altered binTimeData to place extant taxa in an interval bounded 0,0 for their last occurrence
+-altered getSampProbDisc and getSampRateCont to drop all extant taxa (for getSampProbDisc, this is defined as being in a bin 
 
 Version 1.6 - 11-05-12
 -Changes to bin time-scaling functions so that rand.obs and FAD.only conditions were forwarded to their associated functions, rather than done  by the bin wrapper function (this caused problems with the calculation of the weight adjustment for the cal3 methods)

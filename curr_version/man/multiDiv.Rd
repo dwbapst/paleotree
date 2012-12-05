@@ -6,8 +6,8 @@
 }
 \usage{
 multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE, drop.ZLB=TRUE, 
-    drop.cryptic = FALSE, plotLogRich = FALSE, timelims = NULL, 
-    plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL)
+    drop.cryptic = FALSE, extant.adjust = 0.01, plotLogRich = FALSE, 
+    timelims = NULL, plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL)
 
 plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL, 
     plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL)
@@ -18,6 +18,7 @@ plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL,
   \item{plot}{Should the median diversity curve be plotted}
   \item{drop.ZLB}{Should terminal zero-length branches be dropped on phylogenetic datasets?}
   \item{drop.cryptic}{If true, cryptic taxa are merged to form one taxon for estimating taxon curves. Only works for objects from simFossilTaxa.}
+  \item{extant.adjust}{Amount of time to be added to extend start time for (0,0) bins for extant taxa}
   \item{split.int}{For discrete time data, should calculated/input intervals be split at discrete time interval boundaries? If FALSE, can create apparent artifacts in calculating the diversity curve.}
   \item{results}{The output of a previous run of multiDiv}
   \item{plotLogRich}{If true, taxic diversity plotted on log scale}
@@ -74,4 +75,8 @@ multiDiv(taxa)
 #increasing cone of diversity! 
 #Even better on a log scale:
 multiDiv(taxa,plotLogRich=TRUE)
+
+#compare many discrete diversity curves
+taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=20,maxtime=20,mintaxa=10,maxtaxa=100,plot=FALSE,min.cond=FALSE)
+multiDiv(lapply(taxa,function(x) binTimeData(sampleRanges(x,r=0.5,min.taxa=1),int.length=1)))
 }

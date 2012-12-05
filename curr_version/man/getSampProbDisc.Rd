@@ -43,6 +43,8 @@ If est_only = FALSE (default), then the output is a list:
 \item{message}{Messages output by optim; check to make sure that model convergence occurred}
 
 If multi-class models are fit, the element $parameters will not be present, instead there will be several different elements that describe the characteristic parameter 'components' for each class, rather than representing the parameters of actual taxa in that class. As noted in the $Title, these should not be interpreted as the actual rates/probabilities associated with any real taxa but rather as factors which must be multiplied in combination with the estimates for other classes to be meaningful. For example, for taxa of a given group in a given time bin, their extinction rate is the extinction rate component of that time bin times the extinction rate component of their group. Completeness estimates will be output with these parameters as long as classes are not overlapping, as those estimates would not otherwise refer to meaningful groups of taxa.
+
+As the limited time-window option of Foote (1997) is not implemented, any taxa listed as being in a bin with start time 0 and end time 0 (and thus being extant without question) are dropped before the model fitting it performed.
 }
 \references{
 Foote, M. 1997 Estimating Taxonomic Durations and Preservation Probability. \emph{Paleobiology} \bold{23}(3):278--300.

@@ -31,6 +31,8 @@ This function does not implement the finite window of observation modification f
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
 
 Please check the $message and $convergence elements of the output to make sure that convergence occurred. The likelihood surface can be very flat in some cases, particularly for small datasets (<100 taxa). If convergence was not reached, a warning message is communicated. If the optimizer does not converge, consider increasing iterations or changing the starting values.
+
+As the limited time-window option of Foote (1997) is not implemented, any taxa listed as being at time 0 (and thus being extant) are dropped before the model fitting it performed.
 }
 \value{
 If est_only = T, a matrix of per-taxon sampling and extinction parameters is output.

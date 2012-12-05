@@ -9,7 +9,7 @@ taxicDivCont(timeData, int.length = 1, int.times = NULL, plot = TRUE,
     plotLogRich = FALSE, timelims = NULL, drop.cryptic = FALSE)
 
 taxicDivDisc(timeList, int.times = NULL, plot = TRUE, plotLogRich = FALSE, 
-    timelims = NULL, split.int = TRUE)
+    timelims = NULL, extant.adjust = 0.01, split.int = TRUE)
 
 phyloDiv(tree, int.length = 1, int.times = NULL, plot = TRUE, plotLogRich = FALSE, 
     drop.ZLB = TRUE, timelims = NULL)
@@ -20,11 +20,12 @@ phyloDiv(tree, int.length = 1, int.times = NULL, plot = TRUE, plotLogRich = FALS
   \item{tree}{a time-scaled phylogeny of class phylo}
   \item{int.length}{The length of intervals used to make the diversity curve. Ignored if int.times is given.}
   \item{int.times}{A two-column matrix of the interval start and end times for calculating the diversity curve. If NULL, calculated internally.}
-  \item{split.int}{For discrete time data, should calculated/input intervals be split at discrete time interval boundaries? If FALSE, can create apparent artifacts in calculating the diversity curve. See below.}
   \item{plot}{If true, diversity curve is plotted}
   \item{plotLogRich}{If true, taxic diversity plotted on log scale}
   \item{drop.cryptic}{If true, cryptic taxa are merged to form one taxon for estimating taxon curves. Only works for objects from simFossilTaxa.}
   \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only affects plotting. Given as either NULL (the default) or as a vector of length two as for 'xlim' in the basic R function plot.}
+  \item{extant.adjust}{Amount of time to be added to extend start time for (0,0) bins for extant taxa}
+  \item{split.int}{For discrete time data, should calculated/input intervals be split at discrete time interval boundaries? If FALSE, can create apparent artifacts in calculating the diversity curve. See below.}
   \item{drop.ZLB}{If true, zero-length terminal branches are dropped from the input tree}
 }
 \details{

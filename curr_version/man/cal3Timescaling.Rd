@@ -5,14 +5,15 @@
 \description{
 Timescales an unscaled cladogram of fossil taxa, using information on their ranges and estimates of the instantaneous rates of branching, extinction and sampling. The output is a sample of timescaled trees, as resulting from a stochastic algorithm which samples observed gaps in the fossil record with weights calculated based on the input rate estimates. This function also uses the three-rate calibrated time-scaling algorithm to stochastically resolve polytomies and infer potential ancestor-descendant relationships, simultaneous with the time-scaling treatment.}
 \usage{
-cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1, anc.wt = 1,  
-    node.mins = NULL, rand.obs = FALSE, FAD.only = FALSE, adj.obs.wt = TRUE,
-    root.max = 200, step.size = 0.1, randres = FALSE, plot = FALSE)
+cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1,
+    anc.wt = 1, node.mins = NULL, rand.obs = FALSE, FAD.only = FALSE, 
+    adj.obs.wt = TRUE, root.max = 200, step.size = 0.1, randres = FALSE,
+    plot = FALSE)
 
 bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1, 
-    nonstoch.bin=FALSE,sites = NULL, anc.wt = 1, node.mins = NULL, rand.obs = FALSE, 
-    FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200, step.size = 0.1, randres = FALSE, 
-    plot = FALSE)
+    nonstoch.bin=FALSE,sites = NULL, point.occur = FALSE, anc.wt = 1, 
+    node.mins = NULL, rand.obs = FALSE, FAD.only = FALSE, adj.obs.wt = TRUE,
+    root.max = 200, step.size = 0.1, randres = FALSE, plot = FALSE)
 }
 \arguments{
   \item{tree}{An unscaled cladogram of fossil taxa}
@@ -50,6 +51,8 @@ bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
   \item{nonstoch.bin}{If true, dates are not stochastically pulled from uniform distributions. See below for more details.}
 
   \item{sites}{Optional two column matrix, composed of site IDs for taxon FADs and LADs. The sites argument allows users to constrain the placement of dates by restricting multiple fossil taxa whose FADs or LADs are from the same very temporally restricted sites (such as fossil-rich Lagerstatten) to always have the same date, across many iterations of time-scaled trees. To do this, simply give a matrix where the "site" of each FAD and LAD for every taxon is listed, as corresponding to the second matrix in timeList. If no sites matrix is given (the default), then it is assumed all fossil come from different "sites" and there is no shared temporal structure among the events.}
+
+  \item{point.occur}{If true, will automatically produce a 'sites' matrix which forces all FADs and LADs to equal each other. This should be used when all taxa are only known from single 'point occurances', i.e. each is only recovered from a single bed/horizon, such as a Lagerstatten.}
 }
 \details{
 The three-rate calibrated ("cal3") algorithm time-scales trees by stochastically picking node divergence times relative to a probability distribution of expected waiting times between speciation and first appearance in the fossil record. This algorithm is extended to apply to resolving polytomies and designating possible ancestor-descendant relationships. The full details of this method, its sister method the sampling-rate-calibrated timescaling method and the details of the algorithm will be given in Bapst (in prep for Paleobiology).
@@ -119,7 +122,7 @@ ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
 #notice the warning it gives!
 phyloDiv(ttree)
 
-#by default, cal3TimePaleoPhy is allowed to predict indirect ancestor-descendant relationships
+#by default, cal3TimePaleoPhy may predict indirect ancestor-descendant relationships
 #can turn this off by setting anc.wt=0
 ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     sampRate=sRate,ntrees=1,anc.wt=0,plot=TRUE)
@@ -175,7 +178,8 @@ sProb <- SPres[[2]][2]
 #but that's the sampling PROBABILITY per bin, not the instantaneous rate of change
 #we can use sProb2sRate() to get the rate. We'll need to also tell it the int.length
 sRate1 <- sProb2sRate(sProb,int.length=1)
-#we also need extinction rate and branching rate (see above); need to divide by int.length...
+#we also need extinction rate and branching rate (see above)
+    #need to divide by int.length...
 divRate<-SPres[[2]][1]/1
 #estimates that r=0.3... kind of low (simulated sampling rate is 0.5)
 #Note: for real data, you may need to use an average int.length (no constant length)

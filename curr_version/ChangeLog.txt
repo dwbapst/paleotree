@@ -1,9 +1,13 @@
-Version 1.7 - 
+Version 1.7 - 12-30-12
+-added new argument 'point.occur' bin_timePaleoPhy and bin_cal3TimePaleoPhy to allow for datasets composed on point-occurance/single-find taxa (i.e. FAD is equal to LAD for all taxa), following a conversation with G. Hunt
+-Altered sampleRanges so that taxa with last occurance at time=0 were treated as 'live' even if input was only a two-column matrix of ranges and not a 'simFossilTaxa' matrix result
+-Added a new 'advanced' version of the terminal-taxa / candle simulator, which uses simFossilTaxa to allow for trees with extant taxa
+-At the dogged insistence of my illustrious committee, I have changed the name of the 'candle' model to the 'terminal-taxon' model
 -altered multiDiv, phyloDiv and taxicDivDisc so to deal with extant datasets better with new arguments and changes to interval splitting
 -add minExtant and mintime options to simFossilTaxa_SRcond to more closely match simFossilTaxa
 -Nodetimes slightly rounded (to six figures) in compareNodeAges, dropExtinct, dropExtant to avoid error relating to negative relative node ages
 -altered binTimeData to place extant taxa in an interval bounded 0,0 for their last occurrence
--altered getSampProbDisc and getSampRateCont to drop all extant taxa (for getSampProbDisc, this is defined as being in a bin 
+-altered getSampProbDisc and getSampRateCont to drop all extant taxa (for getSampProbDisc, this is defined as being in a bin defined (0,0); see above for binTimeData)
 
 Version 1.6 - 11-05-12
 -Changes to bin time-scaling functions so that rand.obs and FAD.only conditions were forwarded to their associated functions, rather than done  by the bin wrapper function (this caused problems with the calculation of the weight adjustment for the cal3 methods)

@@ -9,8 +9,9 @@ timePaleoPhy(tree, timeData, type = "basic", vartime = NULL, ntrees = 1,
     node.mins = NULL, plot = FALSE)
 
 bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL, ntrees = 1,
-    nonstoch.bin=FALSE, randres = FALSE, timeres = FALSE, sites = NULL,  
-    add.term = FALSE, rand.obs = FALSE, node.mins = NULL, plot = FALSE)
+    nonstoch.bin=FALSE, randres = FALSE, timeres = FALSE, sites = NULL,
+    point.occur = FALSE, add.term = FALSE, rand.obs = FALSE,
+    node.mins = NULL, plot = FALSE)
 }
 \arguments{
   \item{tree}{An unscaled cladogram of fossil taxa}
@@ -40,6 +41,8 @@ bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL, ntrees = 1,
   \item{nonstoch.bin}{If true, dates are not stochastically pulled from uniform distributions. See below for more details.}
 
   \item{sites}{Optional two column matrix, composed of site IDs for taxon FADs and LADs. The sites argument allows users to constrain the placement of dates by restricting multiple fossil taxa whose FADs or LADs are from the same very temporally restricted sites (such as fossil-rich Lagerstatten) to always have the same date, across many iterations of time-scaled trees. To do this, simply give a matrix where the "site" of each FAD and LAD for every taxon is listed, as corresponding to the second matrix in timeList. If no sites matrix is given (the default), then it is assumed all fossil come from different "sites" and there is no shared temporal structure among the events.}
+
+  \item{point.occur}{If true, will automatically produce a 'sites' matrix which forces all FADs and LADs to equal each other. This should be used when all taxa are only known from single 'point occurances', i.e. each is only recovered from a single bed/horizon, such as a Lagerstatten.}
 }
 \details{
 This function is an attempt to unify and collect previously used and discussed methods for time-scaling phylogenies of fossil taxa. Unfortunately, it is difficult to attribute some time-scaling methods to specific references in the literature. A review of these time-scaling methods is forthcoming (Bapst, in prep).

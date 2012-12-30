@@ -7,7 +7,8 @@
 \usage{
 multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE, drop.ZLB=TRUE, 
     drop.cryptic = FALSE, extant.adjust = 0.01, plotLogRich = FALSE, 
-    timelims = NULL, plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL)
+    timelims = NULL, plotMultCurves = FALSE, multRainbow = TRUE,
+    divPalette = NULL)
 
 plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL, 
     plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL)
@@ -77,6 +78,7 @@ multiDiv(taxa)
 multiDiv(taxa,plotLogRich=TRUE)
 
 #compare many discrete diversity curves
-taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=20,maxtime=20,mintaxa=10,maxtaxa=100,plot=FALSE,min.cond=FALSE)
+taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=20,maxtime=20,
+    mintaxa=10,maxtaxa=100,plot=FALSE,min.cond=FALSE)
 multiDiv(lapply(taxa,function(x) binTimeData(sampleRanges(x,r=0.5,min.taxa=1),int.length=1)))
 }

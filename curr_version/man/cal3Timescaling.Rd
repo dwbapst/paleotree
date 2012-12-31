@@ -11,7 +11,7 @@ cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1,
     plot = FALSE)
 
 bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1, 
-    nonstoch.bin=FALSE,sites = NULL, point.occur = FALSE, anc.wt = 1, 
+    nonstoch.bin = FALSE,sites = NULL, point.occur = FALSE, anc.wt = 1, 
     node.mins = NULL, rand.obs = FALSE, FAD.only = FALSE, adj.obs.wt = TRUE,
     root.max = 200, step.size = 0.1, randres = FALSE, plot = FALSE)
 }
@@ -127,7 +127,6 @@ phyloDiv(ttree)
 ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     sampRate=sRate,ntrees=1,anc.wt=0,plot=TRUE)
 
-
 \dontrun{
 #let's look at how three trees generated with very different time of obs. look
 ttreeFAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
@@ -142,7 +141,6 @@ plot(ladderize(ttreeFAD));text(5,5,"time.obs=FAD",cex=1.5,pos=4)
 plot(ladderize(ttreeRand));text(5,5,"time.obs=Random",cex=1.5,pos=4)
 plot(ladderize(ttreeLAD));text(5,5,"time.obs=LAD",cex=1.5,pos=4)
 }
-
 
 #to get a fair sample of trees, let's increase ntrees
 ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
@@ -191,9 +189,11 @@ ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRa
     sampRate=sRate1,ntrees=1,nonstoch.bin=TRUE,plot=TRUE)
 phyloDiv(ttree1)
 
+\dontrun{
 #example with multiple values of anc.wt
 ancWt <- sample(0:1,nrow(rangesDisc[[2]]),replace=TRUE)
 names(ancWt)<-rownames(rangesDisc[[2]])
 ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,
     sampRate=sRate1,ntrees=1,anc.wt=ancWt,plot=TRUE)
+}
 }

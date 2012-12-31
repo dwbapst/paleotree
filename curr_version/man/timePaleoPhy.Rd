@@ -9,7 +9,7 @@ timePaleoPhy(tree, timeData, type = "basic", vartime = NULL, ntrees = 1,
     node.mins = NULL, plot = FALSE)
 
 bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL, ntrees = 1,
-    nonstoch.bin=FALSE, randres = FALSE, timeres = FALSE, sites = NULL,
+    nonstoch.bin = FALSE, randres = FALSE, timeres = FALSE, sites = NULL,
     point.occur = FALSE, add.term = FALSE, rand.obs = FALSE,
     node.mins = NULL, plot = FALSE)
 }

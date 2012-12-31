@@ -77,8 +77,16 @@ multiDiv(taxa)
 #Even better on a log scale:
 multiDiv(taxa,plotLogRich=TRUE)
 
+#pure-birth example with simFossilTaxa
+#note that conditioning is tricky
+taxa <- simFossilTaxa(p=0.1,q=0,mintime=10,mintaxa=10,maxtime=50,maxtaxa=50,
+    nruns=10,plot=TRUE)
+multiDiv(taxa,plotLogRich=TRUE)
+
 #compare many discrete diversity curves
 taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=20,maxtime=20,
     mintaxa=10,maxtaxa=100,plot=FALSE,min.cond=FALSE)
 multiDiv(lapply(taxa,function(x) binTimeData(sampleRanges(x,r=0.5,min.taxa=1),int.length=1)))
+
+layout(1)
 }

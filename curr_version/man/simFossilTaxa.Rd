@@ -1,6 +1,5 @@
 \name{simFossilTaxa}
 \alias{simFossilTaxa}
-\alias{simFossilTaxa_SRCond}
 \title{Simulating Taxa in the Fossil Record}
 \description{Functions for simulating taxon ranges and relationships under various models of evolution}
 \usage{
@@ -8,10 +7,6 @@ simFossilTaxa(p, q, anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0, nruns = 1,
     mintaxa = 1, maxtaxa = 1000, mintime = 1, maxtime = 1000, minExtant = 0, 
     maxExtant = NULL, min.cond = TRUE, count.cryptic = FALSE, print.runs = FALSE, 
     plot = FALSE)
-
-simFossilTaxa_SRCond(r, avgtaxa, p, q, anag.rate = 0, prop.bifurc = 0, 
-    prop.cryptic = 0, nruns = 1, mintime = 1, maxtime = 1000, minExtant = 0, 
-    maxExtant = NULL, count.cryptic = FALSE, print.runs = FALSE, plot = FALSE)
 }
 \arguments{
   \item{p}{Instantaneous rate of speciation/branching.}
@@ -30,8 +25,6 @@ simFossilTaxa_SRCond(r, avgtaxa, p, q, anag.rate = 0, prop.bifurc = 0,
   \item{count.cryptic}{If TRUE, cryptic taxa are counted as seperate taxa for conditioning.}
   \item{print.runs}{If TRUE, prints the proportion of simulations accepted for output to the terminal.}
   \item{plot}{If TRUE, plots the diversity curves of accepted simulations.}
-  \item{r}{Instantaneous sampling rate per time unit.}
-  \item{avgtaxa}{Desired average number of taxa.}
 }
 \details{
 simFossilTaxa simulates a birth-death process (Kendall, 1948; Nee, 2006), but unlike most functions for this implemented in R, this function enmeshes the simulation of speciation and extinction with explicit models of how lineages are morphologically differentiated, as morphotaxa are the basic units of paleontological estimates of diversity and phylogenetics.
@@ -54,19 +47,13 @@ If conditions are such that a clade survives to maxtime, then maxtime will becom
 
 simFossilTaxa simulates single taxa until they go extinct or exceed maxtime. This means the function may have fully simulated some lineages for thousands of time-steps while others are not yet simulated, and thus sometimes overshoot constraints on the number of taxa. This function will automatically discard any runs where the number of taxa exceeds 2 x maxtaxa to avoid blowing up computation time. This is likely to happen under a pure-birth scenario; I suggest using low maxtime settings if doing a pure-birth simulation.
 
-simFossilTaxa_SRCond is a wrapper for simFossilTaxa for when clades of a particular size are desired, post-sampling. This function accomplishes this task by first calculating the expected proportion of taxa sampled, given the sampling rate and the rates which control lineage termination: extinction, anagenesis and bifurcation. The average original clade size needed to produce, on average, a given number of sampled taxa (the argument 'avgtaxa') is calculated with the following equation:
-
-\eqn{N = avgtaxa / (r / (r + (q + anag.rate + (prop.bifurc * p)) ))}
-
-We will call that quantity N. Note that the quantity (prop.bifurc * p) describes the rate of bifurcation when there is no cryptic cladogenesis, as prop.bifurc is the ratio of budding to bifurcating cladogenesis. This equation will diverge in ways that are not easily predicted as the rate of cryptic speciation increases. Note, as of version 1.5, this equation was altered to the form above. The previous form was similar and at values of avgtaxa greater than 10 or so, produces almost identical values. The above is preferred for its relationship to taxonomic completeness (Solow and Smith, 1997).
-
-Next, this value is used with simFossilTaxa, where mintaxa is set to N and maxtaxa set to 2*N. simFossilTaxa_SRcond will generally produce simulated datasets that are generally of that size or larger post-sampling (although there can be some variance). Some combinations of parameters may take an extremely long time to find large enough datasets. Some combinations may produce very strange datasets that may have weird structure that is only a result of the conditioning (for example, the only clades that have many taxa when net diversification is low or negative will have lots of very early divergences, which could impact analyses). Needless to say, conditioning can be very difficult.
+simFossilTaxa_SRCond is a wrapper for simFossilTaxa for when clades of a particular size are desired, post-sampling. For more details, see the help file at \code{\link{simFossilTaxa_SRCond}}.
 
 More details on this function's design can be read here:
 http://nemagraptus.blogspot.com/2012/04/simulating-fossil-record.html
 }
 \value{
-Both of these functions give back a list containing nruns number of taxa datasets, where each element is a matrix. If nruns=1, the output is  not a list but just a single matrix. Sampling has not been simulated in the output for either function; the output represents the 'true' history of the simualted clade.
+This function gives back a list containing nruns number of taxa datasets, where each element is a matrix. If nruns=1, the output is  not a list but just a single matrix. Sampling has not been simulated in the output for either function; the output represents the 'true' history of the simualted clade.
 
 For each dataset, the output is a six column per-taxon matrix where all entries are numbers, with the first column being the taxon ID, the second being the ancestral taxon ID (the first taxon is NA for ancestor), the third column is the first appearance date of a species in absolute time, the fourth column is the last appearance data and the fifth column records whether a species is still extant at the time the simulation terminated (a value of 1 indicates a taxon is still alive, a value of 0 indicates the taxon is extinct). The sixth column (named "looks.like") gives information about the morphological distinguishability of taxa; if they match the taxon ID, they are not cryptic. If they do not match, then this column identifies which taxon id they would be identified as.
 
@@ -86,7 +73,7 @@ Nee, S. 2006 Birth-Death Models in Macroevolution. \emph{Annual Review of Ecolog
 Solow, A. R., and W. Smith. 1997 On Fossil Preservation and the Stratigraphic Ranges of Taxa. \emph{Paleobiology} \bold{23}(3):271--277.
 }
 \author{David W. Bapst}
-\seealso{\code{\link{sampleRanges}}, \code{\link{simPaleoTrees}}, \code{\link{taxa2phylo}}, \code{\link{taxa2cladogram}}
+\seealso{\code{\link{simFossilTaxa_SRCond}}, \code{\link{sampleRanges}}, \code{\link{simPaleoTrees}}, \code{\link{taxa2phylo}}, \code{\link{taxa2cladogram}}
 }
 \examples{
 set.seed(444)
@@ -105,6 +92,7 @@ res <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0.5,mintaxa=30,maxta
 #what does this mix of speciation modes look like as a phylogeny?
 tree <- taxa2phylo(res,plot=TRUE)
 
+\dontrun{
 #some other options with cryptic speciation
 taxaCrypt1 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0,prop.bifurc=0,prop.crypt=0.5,mintaxa=30,
     maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
@@ -115,6 +103,7 @@ tree2 <- taxa2phylo(taxaCrypt2,plot=TRUE)
 taxaCrypt3 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0.05,prop.bifurc=0,prop.crypt=1,
     mintaxa=30,maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
 tree3 <- taxa2phylo(taxaCrypt2,plot=TRUE)
+}
 
 set.seed(444)
 #can choose to condition on total morphologically-distinguishable taxa 
@@ -153,6 +142,7 @@ hist(sapply(res,nrow),main="#taxa")
 #histogram of # extant taxa at end of simulation
 hist(sapply(res,function(x) sum(x[,5])),main="#extant")
 
+\dontrun{
 #pure-birth example
 #note that conditioning is tricky
 layout(1)
@@ -171,17 +161,8 @@ layout(1:2)
 hist(sapply(res,nrow),main="#taxa")
 #histogram of # extant taxa at end of simulation
 hist(sapply(res,function(x) sum(x[,5])),main="#extant")
+}
 
-#using the SRcond version
 layout(1)
-set.seed(444)
-avgtaxa <- 50
-r <- 0.5
-taxa <- simFossilTaxa_SRCond(r=r,p=0.1,q=0.1,nruns=20,avgtaxa=avgtaxa)
-#now let's use sampleRanges and count number of sampled taxa
-ranges <- lapply(taxa,sampleRanges,r=r)
-ntaxa <- sapply(ranges,function(x) sum(!is.na(x[,1])))
-hist(ntaxa)
-mean(ntaxa)
-#works okay... some parameter combinations are difficult to get right number of taxa
+
 }

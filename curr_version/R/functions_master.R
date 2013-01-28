@@ -2684,13 +2684,14 @@ simTermTaxaAdvanced<-function(p=0.1,q=0.1,mintaxa=1,maxtaxa=1000,mintime=1,maxti
 	ntaxa<-Ntip(tree)
 	#taxonNames<-tree$tip.label
 	termEdge<-sapply(tree$edge[,2],function(x) any(x==(1:ntaxa)))
+	termNodes<-tree$edge[termEdge,2]
 	#termAnc<-tree$edge[termEdge,1]
 	taxonDurations<-tree$edge.length[termEdge]
 	nodeDist<-dist.nodes(tree)
-	taxonLADs<-tree$root.time-nodeDist[ntaxa+1,1:ntaxa]
+	taxonLADs<-tree$root.time-nodeDist[ntaxa+1,termNodes]
 	taxonFADs<-taxonLADs+taxonDurations
 	taxonRanges<-cbind(taxonFADs,taxonLADs)
-	rownames(taxonRanges)<-tree$tip.label[tree$edge[termEdge,2]]
+	rownames(taxonRanges)<-tree$tip.label[termNodes]
 	res<-list(taxonRanges=taxonRanges,tree=tree)
 	return(res)
 	}
@@ -2744,7 +2745,7 @@ fixRootTime<-function(treeOrig,treeNew){
 		]
 	new_dist<-dist.nodes(treeNew)[1,Ntip(treeNew)+1]
 	treeNew$root.time<-treeOrig$root.time-(orig_dist-new_dist)
-	if(max(dist.nodes(treeNew)[,Ntip(treeNew)+1])>treeNew$root.time){
+	if(round(max(dist.nodes(treeNew)[, Ntip(treeNew) + 1]) - treeNew$root.time)>0){
 		stop("Error: fixRootTime isn't fixing correctly, root.time less than max tip-to-root length!")}
 	return(treeNew)
 	}

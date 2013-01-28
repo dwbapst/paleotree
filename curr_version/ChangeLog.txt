@@ -1,3 +1,7 @@
+Version 1.8 - 
+-simTermTaxaAdvanced had a bug which scrambled taxon names; this is fixed
+-Small changes to error checking in trueTermTaxaTree to stop erroneous error messages in environments with excessive numeric precision
+
 Version 1.7 - 12-30-12
 -added new argument 'point.occur' bin_timePaleoPhy and bin_cal3TimePaleoPhy to allow for datasets composed on point-occurance/single-find taxa (i.e. FAD is equal to LAD for all taxa), following a conversation with G. Hunt
 -Altered sampleRanges so that taxa with last occurance at time=0 were treated as 'live' even if input was only a two-column matrix of ranges and not a 'simFossilTaxa' matrix result

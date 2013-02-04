@@ -7,8 +7,8 @@
 \usage{
 multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE, drop.ZLB=TRUE, 
     drop.cryptic = FALSE, extant.adjust = 0.01, plotLogRich = FALSE, 
-    timelims = NULL, plotMultCurves = FALSE, multRainbow = TRUE,
-    divPalette = NULL)
+    timelims = NULL, int.times = NULL, plotMultCurves = FALSE,
+    multRainbow = TRUE, divPalette = NULL)
 
 plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL, 
     plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL)
@@ -21,6 +21,7 @@ plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL,
   \item{drop.cryptic}{If true, cryptic taxa are merged to form one taxon for estimating taxon curves. Only works for objects from simFossilTaxa.}
   \item{extant.adjust}{Amount of time to be added to extend start time for (0,0) bins for extant taxa}
   \item{split.int}{For discrete time data, should calculated/input intervals be split at discrete time interval boundaries? If FALSE, can create apparent artifacts in calculating the diversity curve.}
+  \item{int.times}{An optional two-column matrix of the interval start and end times for calculating the diversity curve. If NULL, calculated internally. If given, the argument split.int and int.length are ignored.}
   \item{results}{The output of a previous run of multiDiv}
   \item{plotLogRich}{If true, taxic diversity plotted on log scale}
   \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only affects plotting. Given as either NULL (the default) or as a vector of length two as for 'xlim' in the basic R function plot.}
@@ -61,6 +62,9 @@ cladogram<-taxa2cladogram(taxa,plot=TRUE)
 ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",add.term=TRUE,plot=FALSE)
 input <- list(rangesCont,rangesDisc,ttree)
 multiDiv(input,plot=TRUE)
+
+#using fixed interval times
+multiDiv(input,int.times=rangesDisc[[1]],plot=TRUE)
 
 #using multiDiv with samples of trees
 ttrees <- timePaleoPhy(cladogram,rangesCont,type="basic",randres=TRUE,ntrees=10,add.term=TRUE)

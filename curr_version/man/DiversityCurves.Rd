@@ -19,7 +19,7 @@ phyloDiv(tree, int.length = 1, int.times = NULL, plot = TRUE, plotLogRich = FALS
   \item{timeList}{A list giving interval data. See details below.}
   \item{tree}{a time-scaled phylogeny of class phylo}
   \item{int.length}{The length of intervals used to make the diversity curve. Ignored if int.times is given.}
-  \item{int.times}{A two-column matrix of the interval start and end times for calculating the diversity curve. If NULL, calculated internally.}
+  \item{int.times}{An optional two-column matrix of the interval start and end times for calculating the diversity curve. If NULL, calculated internally.}
   \item{plot}{If true, diversity curve is plotted}
   \item{plotLogRich}{If true, taxic diversity plotted on log scale}
   \item{drop.cryptic}{If true, cryptic taxa are merged to form one taxon for estimating taxon curves. Only works for objects from simFossilTaxa.}

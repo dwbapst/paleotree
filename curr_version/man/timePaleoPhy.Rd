@@ -5,13 +5,14 @@
 \description{Timescales an unscaled cladogram of fossil taxa using information on their temporal ranges, using various methods. Also can resolve polytomies randomly and output samples of randomly-resolved trees.}
 \usage{
 timePaleoPhy(tree, timeData, type = "basic", vartime = NULL, ntrees = 1,
-    randres = FALSE, timeres = FALSE, add.term = FALSE, rand.obs = FALSE, 
-    node.mins = NULL, plot = FALSE)
+    randres = FALSE, timeres = FALSE, add.term = FALSE,
+    inc.term.adj = FALSE, rand.obs = FALSE, node.mins = NULL,
+    plot = FALSE)
 
 bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL, ntrees = 1,
     nonstoch.bin = FALSE, randres = FALSE, timeres = FALSE, sites = NULL,
-    point.occur = FALSE, add.term = FALSE, rand.obs = FALSE,
-    node.mins = NULL, plot = FALSE)
+    point.occur = FALSE, add.term = FALSE, inc.term.adj = FALSE,
+    rand.obs = FALSE, node.mins = NULL, plot = FALSE)
 }
 \arguments{
   \item{tree}{An unscaled cladogram of fossil taxa}
@@ -29,6 +30,8 @@ bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL, ntrees = 1,
   \item{timeres}{Should polytomies be resolved relative to the order of appearance of lineages? By default, timePaleoPhy does not resolve polytomies, instead outputting a time-scaled tree that is only as resolved as the input tree. If timeres=T, then polytomies will be resolved with respect to time using the paleotree function \code{\link{timeLadderTree}}. See that functions help page for more information; the result of time-order resolving of polytomies generally does not differ across multiple uses, unlike use of multi2di.}
 
   \item{add.term}{If true, adds terminal ranges.By default, this function will not add the ranges of taxa when time-scaling a tree, so that the tips correspond temporally to the first appearance datums of the given taxa. If add.term=T, then the 'terminal ranges' of the taxa are added to the tips after tree is time-scaled, such that the tips now correspond to the last appearance datums.}
+
+  \item{inc.term.adj}{If true, includes terminal ranges in branch length estimates for the various adjustment of branch lengths under all methods except 'basic' (i.e. a terminal length branch will not be treated as zero length is this argument is TRUE if the taxon at this tip has a non-zero duration). By default, this argument is FALSE and this function will not include the ranges of taxa when adjusting branch lengths, so that zero-length branches before first appearance times will be extended. An error is returned if this argument is true but type="basic" or add.term=FALSE, as this argument is inconsistent with those argument options.}
 
   \item{rand.obs}{Should the tips represent observation times uniform distributed within taxon ranges? If rand.obs=T but add.term=F, the function fails and a warning is issued. If rand.obs=TRUE, tips are placed randomly within taxon ranges, as if uniformly distributed. This serves those users that wish for tips to represent observations made with some temporal uncertainty, such that they might have come from any point within a taxon's range. This might be the case, for example, if a user is interested in applying phylogeny-based approaches to studying trait evolution, but have per-taxon measurements of traits that come from museum specimens with uncertain temporal placement. As with randres, multiple trees should be created and then analyzed. }
 
@@ -172,4 +175,19 @@ phyloDiv(ttreeB2)
 ttreeB3 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,
     nonstoch.bin=TRUE,randres=TRUE,add.term=TRUE,plot=FALSE)
 phyloDiv(ttreeB3)
+
+\dontrun{
+#simple three taxon example for testing inc.term.adj
+ranges1<-cbind(c(3,4,5),c(2,3,1));rownames(ranges1)<-paste("t",1:3,sep="")
+clado1<-read.tree(file=NA,text="(t1,(t2,t3));")
+ttree1<-timePaleoPhy(clado1,ranges1,type="mbl",vartime=1)
+ttree2<-timePaleoPhy(clado1,ranges1,type="mbl",vartime=1,add.term=TRUE)
+ttree3<-timePaleoPhy(clado1,ranges1,type="mbl",vartime=1,add.term=TRUE,inc.term.adj=TRUE)
+layout(1:3)
+ttree1$root.time;plot(ttree1);axisPhylo()
+ttree2$root.time;plot(ttree2);axisPhylo()
+ttree3$root.time;plot(ttree3);axisPhylo()
+-apply(ranges1,1,diff)
+}
+
 }

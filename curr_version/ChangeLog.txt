@@ -1,6 +1,7 @@
 Version 1.8 - 
 -simTermTaxaAdvanced had a bug which scrambled taxon names; this is fixed
 -Small changes to error checking in trueTermTaxaTree to stop erroneous error messages in environments with excessive numeric precision
+-added new argument 'inc.term.adj' to timePaleoPhy at the suggestion of Shan Huang which changes allows terminal ranges to be included for adjusting branch lengths under the various non-'basic' method options
 
 Version 1.7 - 12-30-12
 -added new argument 'point.occur' bin_timePaleoPhy and bin_cal3TimePaleoPhy to allow for datasets composed on point-occurance/single-find taxa (i.e. FAD is equal to LAD for all taxa), following a conversation with G. Hunt

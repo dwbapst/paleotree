@@ -1,7 +1,7 @@
 #functions_master.R
 
 timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=FALSE,timeres=FALSE,add.term=FALSE,
-	rand.obs=FALSE,node.mins=NULL,plot=FALSE){
+	inc.term.adj=FALSE,rand.obs=FALSE,node.mins=NULL,plot=FALSE){
 	#fast time calibration for phylogenies of fossil taxa; basic methods
 		#this code inspired by similar code from G. Lloyd and G. Hunt
 	#INITIAL: 
@@ -43,6 +43,10 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	if(ntrees==1 & rand.obs){message("Warning: Do not interpret a single tree with randomly-placed obs times")}
 	if(randres & timeres){stop(
 		"Error: Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!")}
+	if(!add.term & inc.term.adj){stop(
+		"Error: Inconsistent arguments: Terminal ranges cannot be used in adjustment of branch lengths if not added to tree!")}
+	if(type=="basic" & inc.term.adj){stop(
+		"Error: Inconsistent arguments: Terminal range adjustment of branch lengths does not affect basic time-scaling method!")}
 	#remove taxa that are NA or missing in timeData
 	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))])
 	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
@@ -88,6 +92,13 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 		ttree<-tree
 		ttree$edge.length<-sapply(1:Nedge(ttree),function(x) 
 			ntime[ttree$edge[x,1]]-ntime[ttree$edge[x,2]])	#finds each edge length easy peasy, based on G. Lloyd's code
+		#okay, now time to do add terminal branch lengths if inc.term.adj
+		if(add.term & inc.term.adj){
+			obs_ranges<-timeData[,1]-timeData[,2]
+			term_id<-ttree$tip.label[ttree$edge[ttree$edge[,2]<=Ntip(ttree),2]]
+			term_add<-sapply(term_id,function(x) obs_ranges[x])
+			ttree$edge.length[ttree$edge[,2]<=Ntip(ttree)]<-ttree$edge.length[ttree$edge[,2]<=Ntip(ttree)]+term_add
+			}
 		#ttree_basic<-ttree
 		##if type=basic, I don't have to do anything but set root.time
 		if(type=="aba"){	#if (type="aba") then adds vartime to all branches (All Branch Additive) 
@@ -145,14 +156,20 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 					ntime[ttree$edge[x,1]]-ntime[ttree$edge[x,2]])	#update branch lengths using ntime
 				}}
 			}
-		#now add root.time: should be time of earliest FAD + distance of root from earliest tip
-		ttree$root.time<-max(timeData[ttree$tip.label,1])+min(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])	
 		#if add.term!=FALSE, then taxon observed ranges are added to the tree, with the LADs becoming the location of the tips
-		if(add.term){
+		if(add.term & !inc.term.adj){
 			obs_ranges<-timeData[,1]-timeData[,2]
 			term_id<-ttree$tip.label[ttree$edge[ttree$edge[,2]<=Ntip(ttree),2]]
 			term_add<-sapply(term_id,function(x) obs_ranges[x])
 			ttree$edge.length[ttree$edge[,2]<=Ntip(ttree)]<-ttree$edge.length[ttree$edge[,2]<=Ntip(ttree)]+term_add
+			}
+		#now add root.time: 
+		if(add.term){
+			#should be time of earliest LAD + distance of root from earliest tip
+			ttree$root.time<-max(timeData[ttree$tip.label,2])+min(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])	
+		}else{
+			#should be time of earliest FAD + distance of root from earliest tip
+			ttree$root.time<-max(timeData[ttree$tip.label,1])+min(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])	
 			}
 		if(plot){
 			parOrig<-par(mar=c(2.5,1,1,0.5));layout(1:2)
@@ -160,6 +177,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 			plot(ladderize(ttree),show.tip.label=TRUE);axisPhylo()
 			layout(1);par(parOrig)
 			}
+		names(ttree$edge.length)<-NULL
 		ttrees[[ntr]]<-ttree
 		}
 	if(ntrees==1){ttrees<-ttrees[[1]]}
@@ -167,7 +185,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	}
 
 bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nonstoch.bin=FALSE,randres=FALSE,timeres=FALSE,
-	sites=NULL,point.occur=FALSE,add.term=FALSE,rand.obs=FALSE,node.mins=NULL,plot=FALSE){
+	sites=NULL,point.occur=FALSE,add.term=FALSE,inc.term.adj=FALSE,rand.obs=FALSE,node.mins=NULL,plot=FALSE){
 	#wrapper for applying non-SRC time-scaling to timeData where FADs and LADs are given as bins 
 		#see timePaleoPhy function for more details
 	#input is a list with (1) interval times matrix and (2) species FOs and LOs
@@ -240,8 +258,10 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 			if(timeres){tree1<-timeLadderTree(tree,timeData)}	
 			}
 		tree2<-suppressMessages(timePaleoPhy(tree1,timeData,type=type,vartime=vartime,ntrees=1,
-			randres=FALSE,add.term=add.term,rand.obs=rand.obs,node.mins=node.mins,plot=plot))
+			randres=FALSE,add.term=add.term,inc.term.adj=inc.term.adj,rand.obs=rand.obs,
+			node.mins=node.mins,plot=plot))
 		tree2$ranges.used<-timeData
+		names(tree2$edge.length)<-NULL
 		ttrees[[ntrb]]<-tree2
 		}
 	if(ntrees==1){ttrees<-ttrees[[1]]}
@@ -316,7 +336,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	Ps<-sapply(tree$tip.label,function(x) getPs(brRate[x],extRate[x],sampRate[x]))
 	names(Ps)<-tree$tip.label
 	if(length(node.mins)!=Nnode(tree) & !is.null(node.mins)){stop("node.mins length != Nnode!")}
-	ttree1<-timePaleoPhy(tree,timeData,type="basic",node.mins=node.mins,add.term=FALSE)
+	ttree1<-timePaleoPhy(tree,timeData,type="basic",node.mins=node.mins,add.term=FALSE,inc.term.adj=FALSE)
 	#identify which nodes are min-locked; make sure to update when resolving polytomies
 	if(length(node.mins)>0){locked_nodes<-which(!is.na(node.mins))++Ntip(tree)}else{locked_nodes<-NA}
 	ttree1<-collapse.singles(ttree1)
@@ -613,6 +633,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 			plot(ladderize(ktree),show.tip.label=TRUE);axisPhylo();
 			layout(1);par(parOrig)		
 			}
+		names(ktree$edge.length)<-NULL
 		ttrees[[ntr]]<-ktree
 		}
 	if(ntrees==1){ttrees<-ttrees[[1]]}
@@ -681,6 +702,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 			ntrees=1,anc.wt=anc.wt,node.mins=node.mins,adj.obs.wt=adj.obs.wt,root.max=root.max,step.size=step.size,
 			FAD.only=FAD.only,rand.obs=rand.obs,randres=randres,plot=plot))
 		tree2$ranges.used<-timeData
+		names(tree2$edge.length)<-NULL
 		ttrees[[ntrb]]<-tree2
 		}
 	if(ntrees==1){ttrees<-ttrees[[1]]}

@@ -1,6 +1,10 @@
+Version 1.81 - 04-03-13
+-Removed dependency on geiger by changing plotTraitgram to only use ace in ape
+
 Version 1.8 - 02-22-13
 -simTermTaxaAdvanced had a bug which scrambled taxon names; this is fixed
 -Small changes to error checking in trueTermTaxaTree to stop erroneous error messages in environments with excessive numeric precision
+-added new argument 'int.times' to multiDiv to allow prior intervals to be added (note this change previosuly accidentally left out of v1.8 changelog)
 -added new argument 'inc.term.adj' to timePaleoPhy at the suggestion of Shan Huang which allows terminal ranges to be included for adjusting branch lengths under the various non-'basic' timescaling method options
 
 Version 1.7 - 12-30-12

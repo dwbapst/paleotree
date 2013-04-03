@@ -1,3 +1,2 @@
 exportPattern("^[[:alpha:]]+")
-importFrom(geiger,getAncStates) 
 importFrom(phangorn,Descendants,Ancestors) 

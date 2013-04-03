@@ -1,11 +1,11 @@
 Package: paleotree
 Type: Package
-Version: 1.8
+Version: 1.81
 Title: Paleontological and Phylogenetic Analyses of Evolution
-Date: 02-22-13
+Date: 04-03-13
 Author: David Bapst
 Depends: R (>= 2.15.0), ape
-Imports: phangorn, geiger
+Imports: phangorn
 ByteCompile: TRUE
 Maintainer: David Bapst <dwbapst@gmail.com>
 Description: Analyzes, time-scales and simulates phylogenies of extinct/fossil lineages, along with calculation of diversity curves. Also fits likelihood models to estimate sampling rates from stratigraphic ranges.

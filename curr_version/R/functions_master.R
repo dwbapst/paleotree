@@ -1802,8 +1802,8 @@ plotTraitgram<-function(trait,tree,trait.name="'trait'",conf.int=TRUE,lwd=1.5){
 			lines(c(ci[i,1],ci[i,2]),c(times[i+Ntip(tree)],times[i+Ntip(tree)]),lwd=lwd)
 			}
 	}else{
-		#require(geiger)
-		tr1<-c(trait,getAncStates(trait,tree));edges<-tree$edge
+		#require(geiger)	#not anymore, not as of 04-03-13
+		tr1<-c(trait,ace(trait,tree,method="pic")$ace);edges<-tree$edge
 		plot(1,1,type="n",xlim=c(min(tr1)-0.1,max(tr1)+0.1),ylim=c(max(times),min(times)),
 			xlab="Trait Values",ylab="Time  (Before Present)",
 			main=paste("Traitgram of",trait.name))

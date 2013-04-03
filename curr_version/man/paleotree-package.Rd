@@ -10,8 +10,8 @@ Analyzes, time-scales and simulates phylogenies of extinct/fossil lineages, alon
 \tabular{ll}{
 Package: \tab paleotree\cr
 Type: \tab Package\cr
-Version: \tab 1.8\cr
-Date: \tab 02-22-13\cr
+Version: \tab 1.81\cr
+Date: \tab 04-03-13\cr
 License: \tab  GPL (>= 2)\cr
 }
 This package contains functions for analyzing sampling rates given ranges of fossil taxa, in both continuous and discrete time, functions for time-scaling phylogenies of fossil taxa and functions for simulating the fossil record in both taxic and phylogenetic varieties.

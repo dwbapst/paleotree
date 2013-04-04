@@ -15,7 +15,7 @@ plotTraitgram(trait, tree, trait.name = "'trait'", conf.int = TRUE, lwd = 1.5)
   \item{lwd}{The line width used for the figure}
 }
 \details{
-By default, this function uses \code{\link{ace}} from the library ape to reconstruct ancestral traits and confidence intervals with maximum likelihood. If confidence intervals are turned off, a somewhat faster function \code{\link{getAncStates}} from geiger is used.
+By default, this function uses \code{\link{ace}} from the library ape to reconstruct ancestral traits and confidence intervals using the PIC method.
 
 As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
 }

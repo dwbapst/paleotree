@@ -1,4 +1,4 @@
-Version 1.81 - 04-03-13
+Version 1.8.1 - 04-03-13
 -Removed dependency on geiger by changing plotTraitgram to only use ace in ape
 
 Version 1.8 - 02-22-13

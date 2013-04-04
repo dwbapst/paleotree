@@ -10,7 +10,7 @@ Analyzes, time-scales and simulates phylogenies of extinct/fossil lineages, alon
 \tabular{ll}{
 Package: \tab paleotree\cr
 Type: \tab Package\cr
-Version: \tab 1.81\cr
+Version: \tab 1.8.1\cr
 Date: \tab 04-03-13\cr
 License: \tab  GPL (>= 2)\cr
 }

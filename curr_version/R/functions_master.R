@@ -198,6 +198,9 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 		#instead, tips will be randomly placed anywhere in that taxon's range with uniform probability
 		#thus, tip locations will differ slightly for each tree in the sample
 		#this is useful when you have a specimen or measurement but you don't know its placement in the species' range
+	#default options
+	#type="basic";vartime=NULL;ntrees=1;nonstoch.bin=FALSE;randres=FALSE;timeres=FALSE
+	#sites=NULL;point.occur=FALSE;add.term=FALSE;inc.term.adj=FALSE;rand.obs=FALSE;node.mins=NULL;plot=FALSE
 	require(ape)
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
@@ -922,7 +925,7 @@ getSampRateCont<-function(timeData,n_tbins=1,grp1=NA,grp2=NA,threshold=0.1,est_o
 			#first comes rows associated with each time bin, 
 			#than each group in grp1, than grp2
 	#THIS FUNCTION SHOULD OUTPUT A Nx2 MATRIX OF q and r VALUES to the support function
-		#MWAHAHAH!
+		#MWAHAHAH! functions making functions, possible via the magic of lexical scoping!
 	if(n_tbins>1){	#IF THERE ARE TIME BINS
 		if(g1s>0){	#IF THERE ARE GROUPS + TIMEBINS
 			if(g2s>0){	#IF THERE IS TWO GROUPS +TIMEBINS
@@ -1160,7 +1163,7 @@ getSampProbDisc<-function(timeData,n_tbins=1,grp1=NA,grp2=NA,est_only=FALSE,iter
 			#first comes rows associated with each time bin, 
 			#than each group in grp1, than grp2
 	#THIS FUNCTION SHOULD OUTPUT A Nx2 MATRIX OF q and R VALUES to the support function
-		#MWAHAHAH!
+		#MWAHAHAH! functions making functions, possible via the magic of lexical scoping!
 	#note that little r is used here as a shorthand for big R (samp prob, not samp rate)
 	if(n_tbins>1){	#IF THERE ARE TIME BINS
 		if(g1s>0){	#IF THERE ARE GROUPS + TIMEBINS

@@ -48,9 +48,12 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	if(type=="basic" & inc.term.adj){stop(
 		"Error: Inconsistent arguments: Terminal range adjustment of branch lengths does not affect basic time-scaling method!")}
 	#remove taxa that are NA or missing in timeData
-	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))])
-	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
-	timeData<-timeData[!is.na(timeData[,1]),]
+	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
+	if(length(droppers)>0){
+		tree<-drop.tip(tree,droppers)
+		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+		timeData[which(!sapply(rownames(timeData),function(x) any(x==tree$tip.label))),1]<-NA
+		}	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
 	ttrees<-rmtree(ntrees,2)
@@ -215,8 +218,12 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 	if(randres & timeres){stop(
 		"Error: Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!")}
 	if(!is.null(sites) & point.occur){stop("Error: Inconsistent arguments, point.occur=TRUE will replace input 'sites' matrix")}
-	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))])
-	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
+	if(length(droppers)>0){
+		tree<-drop.tip(tree,droppers)
+		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x==tree$tip.label))),1]<-NA
+		}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}
 	if(any(apply(timeList[[1]],1,diff)>0)){stop("Error: timeList[[1]] not in intervals in time relative to modern")}
@@ -248,6 +255,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 			while(length(bad_sites)>0){
 				siteDates[bad_sites]<-apply(siteTime[bad_sites,],1,function(x) runif(1,x[2],x[1]))
 				bad_sites<-unique(as.vector(sites[(siteDates[sites[,1]]-siteDates[sites[,2]])<0,]))
+				print(length(bad_sites))
 				}
 			timeData<-cbind(siteDates[sites[,1]],siteDates[sites[,2]])
 		}else{
@@ -313,8 +321,12 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	#first clean out all taxa which are NA or missing in timeData
 	if(ntrees==1){message("Warning: Do not interpret a single cal3 time-scaled tree")}
 	if(ntrees<1){stop("Error: ntrees<1")}
-	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))])
-	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
+	if(length(droppers)>0){
+		tree<-drop.tip(tree,droppers)
+		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+		timeData[which(!sapply(rownames(timeData),function(x) any(x==tree$tip.label))),1]<-NA
+		}
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
@@ -660,8 +672,12 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 	if(rand.obs & FAD.only){stop("Error: rand.obs and FAD.only cannot both be true")}
 	if(!is.null(sites) & point.occur){stop("Error: Inconsistent arguments, point.occur=TRUE will replace input 'sites' matrix")}
 	#clean out all taxa which are NA or missing for timeData
-	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))])
-	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
+	if(length(droppers)>0){
+		tree<-drop.tip(tree,droppers)
+		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x==tree$tip.label))),1]<-NA
+		}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}
 	if(any(apply(timeList[[1]],1,diff)>0)){stop("Error: timeList[[1]] not in intervals in time relative to modern")}

@@ -53,7 +53,8 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 		tree<-drop.tip(tree,droppers)
 		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
 		timeData[which(!sapply(rownames(timeData),function(x) any(x==tree$tip.label))),1]<-NA
-		}	timeData<-timeData[!is.na(timeData[,1]),]
+		}
+	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
 	ttrees<-rmtree(ntrees,2)

@@ -1,3 +1,7 @@
+Version 1.8.2 - 08-16-13
+-Added sample retiolitid graptolite dataset, try data(retiolinae)
+-Small fix to time-scaling functions to avoid bug associated with geiger 1.99
+
 Version 1.8.1 - 04-03-13
 -Removed dependency on geiger by changing plotTraitgram to only use ace in ape
 

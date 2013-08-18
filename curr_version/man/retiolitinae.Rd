@@ -1,5 +1,7 @@
 \name{retiolitinae}
 \alias{retiolitinae}
+\alias{retioRanges}
+\alias{retioTree}
 \docType{data}
 \title{
 Cladogram and Range Data for the Retiolitinae

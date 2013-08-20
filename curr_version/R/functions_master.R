@@ -256,7 +256,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 			while(length(bad_sites)>0){
 				siteDates[bad_sites]<-apply(siteTime[bad_sites,],1,function(x) runif(1,x[2],x[1]))
 				bad_sites<-unique(as.vector(sites[(siteDates[sites[,1]]-siteDates[sites[,2]])<0,]))
-				print(length(bad_sites))
+				#print(length(bad_sites))
 				}
 			timeData<-cbind(siteDates[sites[,1]],siteDates[sites[,2]])
 		}else{

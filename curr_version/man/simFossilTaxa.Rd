@@ -6,7 +6,7 @@
 simFossilTaxa(p, q, anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0, nruns = 1, 
     mintaxa = 1, maxtaxa = 1000, mintime = 1, maxtime = 1000, minExtant = 0, 
     maxExtant = NULL, min.cond = TRUE, count.cryptic = FALSE, print.runs = FALSE, 
-    plot = FALSE)
+    sortNames = FALSE,plot = FALSE)
 }
 \arguments{
   \item{p}{Instantaneous rate of speciation/branching.}
@@ -24,6 +24,7 @@ simFossilTaxa(p, q, anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0, nruns = 1,
   \item{min.cond}{If TRUE, the default, simulations are stopped when they meet all minimum conditions. If FALSE, simulations will continue until they hit maximum conditions, but are only accepted as long as they still meet all minimum conditions in addition.}
   \item{count.cryptic}{If TRUE, cryptic taxa are counted as seperate taxa for conditioning.}
   \item{print.runs}{If TRUE, prints the proportion of simulations accepted for output to the terminal.}
+  \item{sortNames}{If TRUE, output taxonomic matrices are sorted by the taxon names (rownames; thus sorting cryptic taxa together) rather than by taxon id (which is the order they were simulated in).}
   \item{plot}{If TRUE, plots the diversity curves of accepted simulations.}
 }
 \details{

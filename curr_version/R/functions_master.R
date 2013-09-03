@@ -1448,7 +1448,7 @@ sampleRanges<-function(taxad,r,alpha=1,beta=1,rTimeRatio=1,modern.samp.prob=1,mi
 		#either a single value for all taxa or taxon-specific values
 	#all parameters can be given as single values or species-specific values
 	#names<-paste("t",1:4,sep="");taxad<-cbind(c(250,230,210,200),c(240,215,205,0))
-	#min.taxa=2;minInt=0.01;modern.samp.prob=1.0;plot=T;ranges.only=F;alt.method=F;randLiveHat=TRUE;merge.cryptic=TRUE
+	#min.taxa=2;minInt=0.01;modern.samp.prob=0;plot=T;ranges.only=F;alt.method=F;randLiveHat=TRUE;merge.cryptic=TRUE
 	#r<-c(0.2,0.1,0.3,0.4);alpha<-4;beta<-4;rTimeRatio<-2
 	#r<-c(0,0.1,0.3,0.4);alpha<-beta<-rTimeRatio<-2
 	if(ncol(taxad)==6){				#also allow it to accept taxad objects
@@ -1641,7 +1641,7 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 		obsOutRange<-sapply(1:length(obs_time),function(x) if(is.na(obs_time[x])){FALSE}else{
 			(obs_time[x]>taxad[x,3])|(obs_time[x]<taxad[x,4])
 			})
-		if(any(obsOutRange)){stop("ERROR: Given obs_time are outside of the original taxon ranges!")}
+		if(any(obsOutRange)){stop("ERROR: Given obs_time are outside of the original taxon ranges! If cryptic taxa, perhaps you forgot to set merge.cryptic=FALSE?")}
 		}
 	if(nrow(taxad1)!=length(obs)){stop("Error: Number of observations are not equal to number of lineages!")}
 	#make observations as fake taxa, assuming that observations are WITHIN actual taxon ranges
@@ -1833,7 +1833,8 @@ plotTraitgram<-function(trait,tree,trait.name="'trait'",conf.int=TRUE,lwd=1.5){
 	}
 
 simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,mintaxa=1,maxtaxa=1000,
-	mintime=1,maxtime=1000,minExtant=0,maxExtant=NULL,min.cond=TRUE,count.cryptic=FALSE,print.runs=FALSE,plot=FALSE){
+	mintime=1,maxtime=1000,minExtant=0,maxExtant=NULL,min.cond=TRUE,count.cryptic=FALSE,print.runs=FALSE,
+	sortNames=FALSE,plot=FALSE){
 	#simulates taxon evolution as in a fossil record, birth, death and anagenesis as parameters
 		#plot argument will produce a diversity curve everytime a new clade is made
 		#Time-scale is backwards, as expected for paleo data (root is always expected to be at maxtime1
@@ -2019,6 +2020,9 @@ simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,min
 				names[cry]<-paste("t",taxad2[cry,6],".",sum(taxad2[1:cry,6]==taxad2[cry,6]),sep="")
 			}}
 		rownames(taxad2)<-names
+		if(sortNames){
+			taxad2<-taxad2[order(as.numeric(substring(rownames(taxad2),2))),]
+			}
 		results[[i]]<-taxad2
 		if(plot){
 			taxicDivCont(results[[i]],int.length=0.2)
@@ -2399,7 +2403,7 @@ simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mi
 			ntries<-ntries+1
 			taxa<-suppressMessages(simFossilTaxa(p=p,q=q,anag.rate=anag.rate,prop.bifurc=prop.bifurc,prop.cryptic=prop.cryptic,nruns=1,mintaxa=mintaxa,
 				maxtaxa=maxtaxa,maxtime=maxtime,maxExtant=ifelse(all.extinct,0,maxtaxa),min.cond=FALSE,plot=plot))
-			ranges<-sampleRanges(taxa,r,min.taxa=0,modern.samp.prob=modern.samp.prob)
+			ranges<-sampleRanges(taxa,r,min.taxa=0,modern.samp.prob=modern.samp.prob,merge.cryptic=FALSE)
 			if(sum(!is.na(ranges[,1]))>1){
 				tree<-taxa2phylo(taxa,obs_time=ranges[,2],plot=plot)
 				if(drop.zlb){tree<-dropZLB(tree)}

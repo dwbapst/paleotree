@@ -1,6 +1,9 @@
 Version 1.8.2 - 08-16-13
 -Added sample retiolitid graptolite dataset, try data(retiolinae)
 -Small fix to time-scaling functions to avoid bug associated with geiger 1.99
+-Added minor option to simFossilTaxa to change taxon sorting
+-Added slight change to warning message for taxa2phylo in case data that looks like times of observeration from merged cryptic taxa is passed to it
+-Slight change to simPaleoTrees so that cryptic taxa are never merged when sampleRanges is applied (since that breaks taxa2phylo)
 
 Version 1.8.1 - 04-03-13
 -Removed dependency on geiger by changing plotTraitgram to only use ace in ape

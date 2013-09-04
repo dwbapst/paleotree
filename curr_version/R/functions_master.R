@@ -31,7 +31,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	#tree<-rtree(10);tree$edge.length<-NULL;type="basic";vartime=NULL;add.term=FALSE;node.mins=NULL
 	#timeData<-runif(10,30,200);timeData<-cbind(timeData,timeData-runif(10,1,20));rownames(timeData)<-tree$tip.label
 	#node.mins<-runif(9,50,300)
-	require(ape)	
+	#require(ape)	
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
 		}else{stop("Error: timeData not of matrix or data.frame format")}}
@@ -205,7 +205,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 	#default options
 	#type="basic";vartime=NULL;ntrees=1;nonstoch.bin=FALSE;randres=FALSE;timeres=FALSE
 	#sites=NULL;point.occur=FALSE;add.term=FALSE;inc.term.adj=FALSE;rand.obs=FALSE;node.mins=NULL;plot=FALSE
-	require(ape)
+	#require(ape)
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
 		}else{stop("Error: timeList[[1]] not of matrix or data.frame format")}}
@@ -314,7 +314,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	#
 	#add.zombie=FALSE;node.mins<-c(-sort(-runif(1,600,900)),rep(NA,Nnode(tree)-1))	#assume two very deep divergences
 	#
-	require(ape)#;require(phangorn)
+	#require(ape)#;require(phangorn)
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
 		}else{stop("Error: timeData not of matrix or data.frame format")}}
@@ -660,7 +660,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		sites=NULL,point.occur=FALSE,anc.wt=1,node.mins=NULL,rand.obs=FALSE,FAD.only=FALSE,
 		adj.obs.wt=TRUE,root.max=200,step.size=0.1,randres=FALSE,plot=FALSE){
 	#see the bin_cal3 function for more notation...
-	require(ape)
+	#require(ape)
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
 		}else{stop("Error: timeList[[1]] not of matrix or data.frame format")}}
@@ -741,7 +741,7 @@ expandTaxonTree<-function(taxonTree,taxaData,collapse=NULL,plot=FALSE){
 		#and just replace the genera
 	#taxonTree<-rtree(10);taxonTree$tip.label<-as.character(1:10);collapse<-sample(taxonTree$tip.label,5)
 	#taxaData<-as.character(sample(1:10,100,replace=TRUE));names(taxaData)<-paste("t",1:100,sep="")
-	require(ape)
+	#require(ape)
 	if(class(taxonTree)!="phylo"){stop("Error: taxonTree is not of class phylo")}
 	tree<-taxonTree;tree$edge.length<-rep(1,Nedge(tree))		#get rid of all branch lengths
 	#first, expand all higher taxa to lower taxon polytomies
@@ -1420,7 +1420,7 @@ binTimeData<-function(timeData,int.length=1,start=NA,int.times=NULL){
 dropZLB<-function(tree){
 	#drops terminal branches that are zero length
 		#adjusts tree$root.time if necessary
-	require(ape)
+	#require(ape)
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	drop_e<-(tree$edge[,2]<(Ntip(tree)+1)) & (tree$edge.length==0)
 	drop_t<-(tree$edge[,2])[drop_e]
@@ -1581,7 +1581,7 @@ taxa2cladogram<-function(taxad,drop.cryptic=FALSE,plot=FALSE){
 		#This could be a 'clade' of a single OTU
 		#or a clade of a bunch of taxa where one is a budding ancestor and the other are budding descendants or whatever
 		#the important thing is that there's only so many nodes as there are instances where morphotaxa end/start allowing for homologies
-	require(ape)
+	#require(ape)
 	if(any(taxad[,6]!=taxad[,1])){
 		for(i in which(taxad[,1]!=taxad[,6])){
 			#reset descendants of cryptic taxa so all bud off of first cryptic species		
@@ -1629,7 +1629,7 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 		#this is the time of the root on the tree, which is important for comparing across trees
 		#this must be calculated prior to adding anything to terminal branches
 	#OUTPUT an ape phylo object with the tips at the times of observation
-	require(ape)
+	#require(ape)
 	taxad1<-taxad[,1:4]
 	if(any((taxad1[,4]-taxad1[,3])<0)){taxad1[,3:4]<-max(taxad1[,3:4])-taxad1[,3:4]}
 	if(any((taxad1[,4]-taxad1[,3])<0)){stop("Error: Time Error! Check data in taxad")}
@@ -1717,7 +1717,7 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 
 dropExtant<-function(tree,tol=0.01){
 	#drop all terminal taxa that are more than 0.001 from the modern
-	require(ape)
+	#require(ape)
 	if(is.null(tree$root.time)){
 		message("Warning: no tree$root.time! Assuming latest tip is at present (time=0)")
 		}
@@ -1739,7 +1739,7 @@ dropExtant<-function(tree,tol=0.01){
 
 dropExtinct<-function(tree,tol=0.01,ignore.root.time=FALSE){
 	#drop all terminal taxa that are less than 0.001 from the modern
-	require(ape)
+	#require(ape)
 	if(is.null(tree$root.time)){
 		message("No tree$root.time: Assuming latest tip is at present (time=0)")
 		}
@@ -1765,7 +1765,7 @@ timeSliceTree<-function(ttree,sliceTime,drop.extinct=FALSE,plot=TRUE){
 		#if no root.time, then it is assumed the tip furthest from the root is at 0 (present-day)
 			#a warning will be issued if this is assumed
 		#extinct tips will be dropped if drop.extinct=TRUE
-	require(ape)
+	#require(ape)
 	if(class(ttree)!="phylo"){stop("Error: ttree is not of class phylo")}
 	if(is.null(ttree$root.time)){
 		ttree$root.time<-max(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])
@@ -2169,7 +2169,7 @@ phyloDiv<-function(tree,int.length=1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,
 		#this is advised for paleo-tree analyses of diversification
 	#output (if TRUE) is 3 col matrix of bin-start, bit-end, div
 	#plotLogRich just decides if the div plot if log-scale or not on the y axis
-	require(ape)
+	#require(ape)
 	ttree<-tree
 	if(class(ttree)!="phylo"){stop("Error: ttree is not of class phylo")}
 	tblen<-int.length
@@ -2238,7 +2238,7 @@ multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,drop
 		#second and third columns are 95% quantile intervals on that median
 	#int.length=1;plot=TRUE;split.int=TRUE;drop.ZLB=TRUE;drop.cryptic=FALSE;plotLogRich=FALSE;timeLims=NULL
 	#plotMultCurves=FALSE;multRainbow=TRUE;divPalette=NULL
-	require(ape)
+	#require(ape)
 	dclass<-sapply(data,class)	#data classes
 	dclass1<-numeric(length(dclass));dclass1[dclass=="matrix"]<-1;
 		dclass1[dclass=="list"]<-2;dclass1[dclass=="phylo"]<-3
@@ -2392,7 +2392,7 @@ simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mi
 		#living taxa are sampled perfectly at the present
 		#zero-length branches are dropped
 	#simPaleoTrees(p=0.1,q=0.1,r=0.1,ntrees=10)
-	require(ape)
+	#require(ape)
 	if(mintaxa<2){stop("Error: Need at least two taxa per tree; increase mintaxa")}
 	if(ntrees<1){stop("Error: number of trees to simulate is <1")}
 	res<-rmtree(ntrees,2)
@@ -2465,7 +2465,7 @@ cladogeneticTraitCont<-function(taxa,rate=1,meanChange=0,rootTrait=0){
 
 compareTermBranches<-function(tree1,tree2){
 	#output vector of shifts in terminal branch lengths
-	require(ape)
+	#require(ape)
 	if(class(tree1)!="phylo"){stop("Error: tree1 is not of class phylo")}
 	if(class(tree2)!="phylo"){stop("Error: tree2 is not of class phylo")}
 	tree1<-drop.tip(tree1,tree1$tip.label[is.na(match(tree1$tip.label,tree2$tip.label))])
@@ -2481,7 +2481,7 @@ compareTermBranches<-function(tree1,tree2){
 	}
 
 addTermBranchLength<-function(tree,addtime=0.001){
-	require(ape)
+	#require(ape)
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	tree$edge.length[tree$edge[,2]<(Ntip(tree)+1)]<-tree$edge.length[tree$edge[,2]<(Ntip(tree)+1)]+addtime
 	if(any(tree$edge.length<0)){stop("Error: tree has negative branch lengths!")}
@@ -2500,7 +2500,7 @@ rootSplit<-function(tree){
 timeLadderTree<-function(tree,timeData){
 	#resolves all polytomies in a tree as ladders to match FADs in timeData
 	#only applicable to continuous time data
-	require(ape)	
+	#require(ape)	
 	#first sanitize data
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
@@ -2562,7 +2562,7 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 	#output vector of shifts in node dates
 		#08-02-12: Allows multiple trees2 to be multiple trees
 			#will produce a matrix, each row is a tree in tree2, each column a different but commonly shared clade
-	require(ape)
+	#require(ape)
 	if(class(tree1)!="phylo"){stop("Error: tree1 is not of class phylo")}
 	tree1orig<-tree1
 	if(class(tree2)!="phylo"){
@@ -2688,7 +2688,7 @@ deadTree<-function(ntaxa,sumRate=0.2){
 			#by definition equal proportion must branch and go extinct
 			#anything else should be indep in a b-d process
 	#lets make the phylogeny 
-	require(ape)
+	#require(ape)
 	tree<-rtree(ntaxa)
 	tree$edge.length<-rexp(ntaxa+ntaxa-2,sumRate)
 	tree$root.time<-max(dist.nodes(tree)[ntaxa+1,])+200
@@ -2701,7 +2701,7 @@ simTermTaxa<-function(ntaxa,sumRate=0.2){
 	#all taxa will be descendants
 		#all evolution prior to branching or differentiation is unsampled
 		#taxa do not differentiatiate over those times
-	require(ape)
+	#require(ape)
 	tree<-deadTree(ntaxa=ntaxa,sumRate=sumRate)
 	#taxonNames<-tree$tip.label
 	termEdge<-sapply(tree$edge[,2],function(x) any(x==(1:ntaxa)))
@@ -2725,7 +2725,7 @@ simTermTaxaAdvanced<-function(p=0.1,q=0.1,mintaxa=1,maxtaxa=1000,mintime=1,maxti
 		#taxa do not differentiate over those times
 	#extant example
 		#p=0.1;q=0.1;mintaxa=50;maxtaxa=100;mintime=1;maxtime=1000;minExtant=10;maxExtant=20;min.cond=FALSE
-	require(ape)
+	#require(ape)
 	taxa<-simFossilTaxa(p=p,q=q,mintaxa=mintaxa,maxtaxa=maxtaxa,mintime=mintime,maxtime=maxtime,
 		minExtant=minExtant,maxExtant=maxExtant,min.cond=min.cond,nruns=1,
 		anag.rate=0,prop.bifurc=0,prop.cryptic=0,count.cryptic=FALSE,print.runs=FALSE,plot=FALSE)
@@ -2749,7 +2749,7 @@ trueTermTaxaTree<-function(TermTaxaRes,time.obs){
 		#for a term-taxa (candle) tree datasets
 	#given a per-taxon vector of observation times, returns the true tree
 	#time.obs must have taxon names
-	require(ape)
+	#require(ape)
 	#first, check if the times of observations are outside of original taxon ranges
 	taxR<-TermTaxaRes$taxonRanges
 	nameMatch<-match(names(time.obs),rownames(taxR))
@@ -2782,10 +2782,10 @@ trueTermTaxaTree<-function(TermTaxaRes,time.obs){
 
 fixRootTime<-function(treeOrig,treeNew){
 	treeDepth<-function(tree){
-		require(ape)
+		#require(ape)
 		max(dist.nodes(tree)[,Ntip(tree)+1])
 		}
-	require(ape)
+	#require(ape)
 	if(class(treeOrig)!="phylo"){stop("Error: treeOrig is not of class phylo")}
 	if(class(treeNew)!="phylo"){stop("Error: treeNew is not of class phylo")}
 	if(is.null(treeOrig$root.time)){stop("ERROR: treeOrig passed to fixRootTime with no $root.time??")}

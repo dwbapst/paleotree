@@ -5,22 +5,23 @@
 This function takes a tree composed of higher-leve taxa and a vector of lower-level taxa belonging to the set of higher-level taxa included in the input tree and produces a tree composed of the lower-level taxa, by treating the higher-level taxa as unresolved monophyletic polytomies. A user can also mark higher taxa as paraphyletic such that these are secondarily collapsed and do not form monophyletic clades in the output tree.
 }
 \usage{
-expandTaxonTree(taxonTree, taxaData, collapse = NULL, plot = FALSE)
+expandTaxonTree(taxonTree, taxaData, collapse = NULL, keepBrLen = FALSE, plot = FALSE)
 }
 \arguments{
   \item{taxonTree}{A phylo object where tips represent higher taxa}
   \item{taxaData}{Character vector of higher taxa, with elements names equal to the lower taxa. See below.}
   \item{collapse}{Character vector of non-monophyletic higher taxa to be collapsed}
+  \item{keepBrLen}{Logical, decides if branch lengths should be kept or discarded. FALSE by default. See details below.}
   \item{plot}{If true, plots a comparison between input and output trees}
 }
 \details{
 The output tree will probably be a rough unresolved view of the relationships among the taxa, due to the treatment of higher-level taxa as polytomies. This is similar to the methods used in Webb and Donoghue (2005) and Friedman (2009). Any analyses should be done by resolving this tree with \code{\link{multi2di}} in the ape package or via the various time-scaling functions found in this package (paleotree).
 
-The taxaData vector should have one element per lower-level taxon that is to be added to the tree. The name of each element in the vector should be the names of the lower-level taxa, which will be used as new tip labels of the output lower-taxon tree.
+The taxaData vector should have one element per lower-level taxon that is to be added to the tree. The name of each element in the vector should be the names of the lower-level taxa, which will be used as new tip labels of the output lower-taxon tree. There should be no empty elements! expandTaxonTree won't know what to do with taxa that don't go anywhere.
 
 By default, all higher-level taxa are treated as monophyletic clades if not otherwise specified. The collapse vector can (and probably should) be used if there is doubt about the monophyly of any higher-level taxa included in the input taxontree, so that such a group would be treated as a paraphyletic group in the output tree. 
 
-The output tree will always lack branch lengths and thus will not be time-scaled.
+By default, the output tree will lack branch lengths and thus will not be time-scaled. If keepBrLen is true, then the tree's edge lengths are kept and new taxa are added as zero length branches attaching to a node that represents the previous higher-taxon. This tree is probably not useful for most applications, and may even strongly bias some analyses. USE WITH CAUTION! The 'collapse' vector will cause such edges to be replaced by zero-length branches rather than fully collapsing them, which could have odd effects. If 'collapse' is not null and keepBrLen is true, a warning is issued that the output probably won't make much sense at all.
 }
 \value{Outputs the modified tree as an object of class phylo, with the higher-level taxa expanded into polytomies and the lower-level taxa as the tip labels.}
 \references{

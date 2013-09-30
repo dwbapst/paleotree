@@ -76,6 +76,9 @@ cal3TimePaleoPhy is only applicable to datasets with taxon occurances in continu
 By setting the argument nonstoch.bin to TRUE in bin_cal3TimePaleoPhy, the dates are NOT stochastically pulled from uniform bins but instead FADs are assigned to the earliest time of whichever interval they were placed in and LADs are placed at the most recent time in their placed interval. This option may be useful for plotting. The sites argument becomes arbitrary if nonstoch.bin is TRUE.
 
 If timeData or the elements of timeList are actually data.frames (as output by read.csv or read.table), these will be coerced to a matrix.
+
+A tutorial for applying the time-scaling functions in paleotree, particularly the cal3 method, along with an example using real (graptolite) data, can be found here:
+http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
 }
 \note{
 Most importantly, please note the stochastic element of the three rate-calibrated time-scaling methods. These do not use traditional optimization methods, but instead draw divergence times from a distribution defined by the probability of intervals of unobserved evolutionary history. This means analyses MUST be done over many cal3-timescaled trees for analytical rigor! No one tree is correct.

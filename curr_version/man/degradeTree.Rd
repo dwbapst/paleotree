@@ -2,19 +2,21 @@
 \alias{degradeTree}
 \title{Randomly collapse nodes on a phylogeny}
 \description{This function removes a proportion of the total nodes in a tree, chosen randomly, collapsing the nodes to produce a less-resolved tree.}
-\usage{degradeTree(tree, prop_collapse, node.depth = NA)}
+\usage{degradeTree(tree, prop_collapse, nCollapse = NULL, node.depth = NA, leave.zlb = FALSE)}
 \arguments{
   \item{tree}{A tree of class phylo}
   \item{prop_collapse}{Proportion of nodes to collapse}
+  \item{nCollapse}{Number of nodes to collapse, can be supplied as an alternative to prop_collapse} 
   \item{node.depth}{A number between 0 to 1, which conditions the depth of nodes removed. If NA, no conditioning (this is the default).}
+  \item{leave.zlb}{If FALSE, the default option, the original branch length distribution is destroyed and branches set to zero by this function will return polytomies. If TRUE, then the original edge lengths are kept for unmodified edges, and modified edges are changed to zero length, and are not collapsed into polytomies. The removed branch length is not shifted to other edges.}
 }
 \details{
 The nodes are removed at random using the basic function sample. degradeTree can be conditioned to remove nodes of a particular depth with greater probability/frequency by setting node.depth to a value between zero (favoring the removal of deep nodes close to the root) or one (shallow nodes far from the root). Depth is evaluated based on the number of descendant tips. If node.depth is not NA, the relative proportion of descendants from each node is calculated, summed to 1 and the node.depth value subtracted from this proportion. These values are then squared, normalized again to equal to 1 and then used as the probabilities for sampling nodes for removal.
 
-Branch lengths are removed from the input tree prior to degradation and entirely absent from the output tree.
+By default, branch lengths are removed from the input tree prior to degradation and entirely absent from the output tree. This is changed if argument leave.zlb is TRUE.
 }
 \value{
-Returns the modified tree as an object of class phylo, with no edge lengths.
+Returns the modified tree as an object of class phylo, with no edge lengths by default.
 }
 \author{David W. Bapst}
 

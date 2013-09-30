@@ -57,7 +57,7 @@ There are five method types that can be used by timePaleoPhy. Four of these use 
 \item{"equal"}{The 'equal' method defined by G. Lloyd and used in Brusatte et al. (2008) and Lloyd et al. (2012). Originally usable in code supplied by G. Lloyd, it is recreated here. This method works by increasing the time of the root divergence by some amount (here set by vartime) and then adjusting zero-length branches so that time on early branches is re-apportioned out along those later branches equally.}
 \item{"aba"}{All branches additive. This method takes the "basic" tree and adds vartime to all branches.}
 \item{"zlba"}{Zero-length branches additive. This method adds vartime to all zero-length branches in the "basic" tree. Discussed by Hunt and Carrano, 2010.}
-\item{"mbl"}{Minimum branch length. Scales all branches so they are greater than or equal to vartime, and subtract time added to later branches from earlier branches in order to maintain the temporal structure of events.}
+\item{"mbl"}{Minimum branch length. Scales all branches so they are greater than or equal to vartime, and subtract time added to later branches from earlier branches in order to maintain the temporal structure of events. A version of this was first introduced by Laurin (2004).}
 }
 
 These functions cannot time-scale branches relative to reconstructed character changes along branches, as used by Lloyd et al. (2012).
@@ -71,6 +71,9 @@ timePaleoPhy can only be applied to datasets where taxon appearances are in cont
 By setting the argument nonstoch.bin to TRUE, the dates are NOT stochastically pulled from uniform bins but instead FADs are assigned to the earliest time of whichever interval they were placed in and LADs are placed at the most recent time in their placed interval. This option may be useful for plotting. The sites argument becomes arbitrary if nonstoch.bin is TRUE.
 
 If timeData or the elements of timeList are actually data.frames (as output by read.csv or read.table), these will be coerced to a matrix.
+
+A tutorial for applying the time-scaling functions in paleotree, along with an example using real (graptolite) data, can be found here:
+http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
 }
 \value{
 The output of these functions is a time-scaled tree or set of time-scaled trees, of either class phylo or multiphylo, depending on the argument ntrees. All trees are output with an element $root.time. This is the time of the root on the tree and is important for comparing patterns across trees.
@@ -83,6 +86,8 @@ Bapst, in prep. Time-scaling Trees of Fossil Taxa. To be submitted to \emph{Pale
 Brusatte, S. L., M. J. Benton, M. Ruta, and G. T. Lloyd. 2008 Superiority, Competition, and Opportunism in the Evolutionary Radiation of Dinosaurs. \emph{Science} \bold{321}(5895):1485-91488.
 
 Hunt, G., and M. T. Carrano. 2010 Models and methods for analyzing phenotypic evolution in lineages and clades. In J. Alroy, and G. Hunt, eds. Short Course on Quantitative Methods in Paleobiology. Paleontological Society.
+
+Laurin, M. 2004. The Evolution of Body Size, Cope's Rule and the Origin of Amniotes. \emph{Systematic Biology} 53(4):594-622.
 
 Lloyd, G. T., S. C. Wang, and S. L. Brusatte. 2012 Identifying Heterogeneity in Rates of Morphological Evolutio: Discrete Character Change in the Evolution of Lungfish(Sarcopterygii, Dipnoi). \emph{Evolution} \bold{66}(2):330--348.
 

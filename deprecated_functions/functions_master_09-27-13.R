@@ -50,8 +50,9 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	#remove taxa that are NA or missing in timeData
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
 	if(length(droppers)>0){
+		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
 		tree<-drop.tip(tree,droppers)
-		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+		if(is.null(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
 		timeData[which(!sapply(rownames(timeData),function(x) any(x==tree$tip.label))),1]<-NA
 		}
 	timeData<-timeData[!is.na(timeData[,1]),]
@@ -221,8 +222,9 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 	if(!is.null(sites) & point.occur){stop("Error: Inconsistent arguments, point.occur=TRUE will replace input 'sites' matrix")}
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
+		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
 		tree<-drop.tip(tree,droppers)
-		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data!")}
 		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x==tree$tip.label))),1]<-NA
 		}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
@@ -324,8 +326,9 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	if(ntrees<1){stop("Error: ntrees<1")}
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
 	if(length(droppers)>0){
+		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
 		tree<-drop.tip(tree,droppers)
-		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data!")}
 		timeData[which(!sapply(rownames(timeData),function(x) any(x==tree$tip.label))),1]<-NA
 		}
 	timeData<-timeData[!is.na(timeData[,1]),]
@@ -675,8 +678,10 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 	#clean out all taxa which are NA or missing for timeData
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
+		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
 		tree<-drop.tip(tree,droppers)
-		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+		if(is.null(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
+		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data!")}
 		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x==tree$tip.label))),1]<-NA
 		}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
@@ -774,27 +779,32 @@ depthRainbow<-function(tree){
 	plot(ladderize(tree),show.tip.label=FALSE,edge.color=col_edge);axisPhylo()
 	}
 
-degradeTree<-function(tree,prop_collapse,node.depth=NA){
+degradeTree<-function(tree,prop_collapse,nCollapse=NULL,node.depth=NA,leave.zlb=FALSE){
 	#collapses a given proportion of internal edges, creating polytomies
 		#node.depth conditions on depth of edge in tree
 			# 1 removes more shallow nodes, 0 removes deeper nodes
 	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
-	tree$edge.length<-NULL
-	tree<-collapse.singles(tree)
 	edge<-(1:length(tree$edge))[which(tree$edge[,2]>Ntip(tree))]	#internal edges
+	if(is.null(nCollapse)){nCollapse<-round(prop_collapse*length(edge))}
 	if(is.na(node.depth)){
-		cedge<-sample(edge,round(prop_collapse*length(edge)))	#edges chosen to collapse
+		cedge<-sample(edge,nCollapse)	#edges chosen to collapse
 	}else{
 		node_pdesc<-sapply(prop.part(tree),length)/Ntip(tree)	#prop desc per int node
 		edge_pdesc<-node_pdesc[tree$edge[edge,2]-Ntip(tree)]
 		edge_prob<-(edge_pdesc-node.depth)^2;edge_prob<-edge_prob/sum(edge_prob)
-		cedge<-sample(edge,round(prop_collapse*length(edge)),prob=edge_prob)	#chosen edges	
+		cedge<-sample(edge,nCollapse,prob=edge_prob)	#chosen edges	
 		}
-	tree$edge.length<-rep(1,Nedge(tree))
-	tree$edge.length[cedge]<-0
-	tree<-di2multi(tree)
-	tree<-collapse.singles(tree)
-	tree$edge.length<-NULL
+	if(leave.zlb){
+		tree$edge.length[cedge]<-0
+	}else{
+		tree$edge.length<-NULL
+		tree<-collapse.singles(tree)
+		tree$edge.length<-rep(1,Nedge(tree))
+		tree$edge.length[cedge]<-0
+		tree<-di2multi(tree)
+		tree<-collapse.singles(tree)
+		tree$edge.length<-NULL		
+		}
 	return(tree)
 	}
 

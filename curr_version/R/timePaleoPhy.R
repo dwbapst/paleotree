@@ -30,7 +30,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	#timeData<-runif(10,30,200);timeData<-cbind(timeData,timeData-runif(10,1,20));rownames(timeData)<-tree$tip.label
 	#node.mins<-runif(9,50,300)
 	#require(ape)	
-	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
 		}else{stop("Error: timeData not of matrix or data.frame format")}}
 	if(class(tree$tip.label)!="character"){stop("Error: tree tip labels are not a character vector")}

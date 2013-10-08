@@ -16,7 +16,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 	#type="basic";vartime=NULL;ntrees=1;nonstoch.bin=FALSE;randres=FALSE;timeres=FALSE
 	#sites=NULL;point.occur=FALSE;add.term=FALSE;inc.term.adj=FALSE;rand.obs=FALSE;node.mins=NULL;plot=FALSE
 	#require(ape)
-	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
 	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
 		}else{stop("Error: timeList[[1]] not of matrix or data.frame format")}}
 	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])

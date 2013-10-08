@@ -11,7 +11,7 @@ expandTaxonTree<-function(taxonTree,taxaData,collapse=NULL,keepBrLen=FALSE,plot=
 	#taxonTree<-rtree(10);taxonTree$tip.label<-as.character(1:10);collapse<-sample(taxonTree$tip.label,5)
 	#taxaData<-as.character(sample(1:10,100,replace=TRUE));names(taxaData)<-paste("t",1:100,sep="")
 	#require(ape)
-	if(class(taxonTree)!="phylo"){stop("Error: taxonTree is not of class phylo")}
+	if(!is(taxonTree, "phylo")){stop("Error: taxonTree is not of class phylo")}
 	if(any(is.na(taxaData))){stop("Error: some values of taxonData missing!!")}
 	if(!is.null(collapse) & keepBrLen){
 		message("Warning: collapsed branch lengths turned to zero when keepBrLen is TRUE!")}

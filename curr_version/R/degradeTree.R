@@ -2,7 +2,7 @@ degradeTree<-function(tree,prop_collapse,nCollapse=NULL,node.depth=NA,leave.zlb=
 	#collapses a given proportion of internal edges, creating polytomies
 		#node.depth conditions on depth of edge in tree
 			# 1 removes more shallow nodes, 0 removes deeper nodes
-	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
 	edge<-(1:length(tree$edge))[which(tree$edge[,2]>Ntip(tree))]	#internal edges
 	if(is.null(nCollapse)){nCollapse<-round(prop_collapse*length(edge))}
 	if(is.na(node.depth)){

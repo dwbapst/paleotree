@@ -33,7 +33,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	#add.zombie=FALSE;node.mins<-c(-sort(-runif(1,600,900)),rep(NA,Nnode(tree)-1))	#assume two very deep divergences
 	#
 	#require(ape)#;require(phangorn)
-	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
 		}else{stop("Error: timeData not of matrix or data.frame format")}}
 	if(rand.obs & FAD.only){stop("Error: rand.obs and FAD.only cannot both be true")}

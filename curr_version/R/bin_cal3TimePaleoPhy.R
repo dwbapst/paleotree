@@ -3,7 +3,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		adj.obs.wt=TRUE,root.max=200,step.size=0.1,randres=FALSE,plot=FALSE){
 	#see the bin_cal3 function for more notation...
 	#require(ape)
-	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
 	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
 		}else{stop("Error: timeList[[1]] not of matrix or data.frame format")}}
 	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])

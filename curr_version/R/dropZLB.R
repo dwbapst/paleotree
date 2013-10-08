@@ -2,7 +2,7 @@ dropZLB<-function(tree){
 	#drops terminal branches that are zero length
 		#adjusts tree$root.time if necessary
 	#require(ape)
-	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
 	drop_e<-(tree$edge[,2]<(Ntip(tree)+1)) & (tree$edge.length==0)
 	drop_t<-(tree$edge[,2])[drop_e]
 	if((Ntip(tree)-length(drop_t))>1){

@@ -1,10 +1,10 @@
 dropExtant<-function(tree,tol=0.01){
 	#drop all terminal taxa that are more than 0.001 from the modern
 	#require(ape)
+	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
 	if(is.null(tree$root.time)){
 		message("Warning: no tree$root.time! Assuming latest tip is at present (time=0)")
 		}
-	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
 	dnode<-dist.nodes(tree)[1:Ntip(tree),Ntip(tree)+1]
 	dnode<-round(dnode,6)
 	if(!is.null(tree$root.time)){if(round(tree$root.time,6)>max(dnode)){stop("Error: all tips are extinct based on tree$root.time!")}}

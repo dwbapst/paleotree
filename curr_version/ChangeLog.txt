@@ -1,6 +1,7 @@
-Version
+Version - 
 -Changed all functions to individual R script files rather than single master script. Why didn't I do this years ago??!
 -At suggestion of Fabricio Villalobos, added option to expandTaxonTree that allows branch lengths to be retained and the added lower-taxa are connected with zero-length branches. Only useful for very specific purposes, please use with caution.
+-Changed all lines which checked for class "phylo" of input objects to use is(obj,"phylo") instead of class(obj)=="phylo" per recommendation of Carl Boettiger
 
 Version 1.8.2 - 09-03-13
 -Added sample retiolitid graptolite dataset, try data(retiolinae)

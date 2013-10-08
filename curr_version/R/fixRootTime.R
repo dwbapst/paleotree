@@ -4,8 +4,8 @@ fixRootTime<-function(treeOrig,treeNew){
 		max(dist.nodes(tree)[,Ntip(tree)+1])
 		}
 	#require(ape)
-	if(class(treeOrig)!="phylo"){stop("Error: treeOrig is not of class phylo")}
-	if(class(treeNew)!="phylo"){stop("Error: treeNew is not of class phylo")}
+	if(!is(treeOrig, "phylo")){stop("Error: treeOrig is not of class phylo")}
+	if(!is(treeNew, "phylo")){stop("Error: treeNew is not of class phylo")}
 	if(is.null(treeOrig$root.time)){stop("ERROR: treeOrig passed to fixRootTime with no $root.time??")}
 	orig_dist<-dist.nodes(treeOrig)[
 		which(treeNew$tip.label[1]==treeOrig$tip.label),Ntip(treeOrig)+1

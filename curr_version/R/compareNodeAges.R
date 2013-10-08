@@ -3,13 +3,15 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 		#08-02-12: Allows multiple trees2 to be multiple trees
 			#will produce a matrix, each row is a tree in tree2, each column a different but commonly shared clade
 	#require(ape)
-	if(class(tree1)!="phylo"){stop("Error: tree1 is not of class phylo")}
+	if(!is(tree2, "phylo")){stop("Error: tree1 is not of class phylo")}
 	tree1orig<-tree1
-	if(class(tree2)!="phylo"){
-		if(class(tree2)!="multiPhylo"){stop("Error: tree2 is not of class phylo or multiphylo")}
+	if(!is(tree2, "phylo")){
+		if(!is(tree, "multiPhylo")){stop("Error: tree2 is not of class phylo or multiphylo")}
 		trees2<-tree2
-		#if it isn't multiphylo, make it into one!
-		}else{trees2<-list(tree2);class(trees2)<-"multiPhylo"}
+	}else{		#if it isn't multiphylo, make it into one!
+		trees2<-list(tree2)
+		class(trees2)<-"multiPhylo"
+		}
 	#okay, need to find all matches common to tree1 and tree2
 		#we'll make a MATRIX of all clades held in common between each tree in trees2 and to tree1
 		#each row will be a different tree, each column a different clade

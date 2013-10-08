@@ -3,7 +3,7 @@ timeLadderTree<-function(tree,timeData){
 	#only applicable to continuous time data
 	#require(ape)	
 	#first sanitize data
-	if(class(tree)!="phylo"){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
 		}else{stop("Error: timeData not of matrix or data.frame format")}}
 	if(ncol(timeData)==6){timeData<-timeData[,3:4,drop=FALSE]}	#also allow it to accept taxad objects

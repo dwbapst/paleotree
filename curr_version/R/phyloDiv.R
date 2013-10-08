@@ -15,7 +15,7 @@ phyloDiv<-function(tree,int.length=1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,
 	#plotLogRich just decides if the div plot if log-scale or not on the y axis
 	#require(ape)
 	ttree<-tree
-	if(class(ttree)!="phylo"){stop("Error: ttree is not of class phylo")}
+	if(!is(ttree, "phylo")){stop("Error: ttree is not of class phylo")}
 	tblen<-int.length
 	if(drop.ZLB){ttree<-dropZLB(ttree)}
 	savetree<-ttree

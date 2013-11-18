@@ -1,20 +1,7 @@
 cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt=1,node.mins=NULL,
 	rand.obs=FALSE,FAD.only=FALSE,adj.obs.wt=TRUE,root.max=200,step.size=0.1,randres=FALSE,plot=FALSE){
 	#see SRC function for more notation...
-	#function for Ps
-		getPs<-function(p,q,r){
-			#the probability of sampling at least once an extinct clade of unknown size
-			res<-numeric()
-			for(N in 1:1000){
-				res1<-((p^(N-1))*(q^N)*choose((2*N)-2,N-1))/(N*((p+q+r)^((2*N)-1)))
-				if(is.na(res1)){break}
-				if(res1==Inf){break}
-				if(res1==0){break}
-				res[N]<-res1
-			}
-			res<-1-sum(res)
-			return(res)
-			}
+	#function for Ps - use pqr2Ps
 	#example data
 	#tree<-rtree(10);tree$edge.length<-sample(0:1,Nedge(tree),replace=TRUE);tree<-di2multi(tree)
 	#ntrees=2;anc.wt=1;node.mins=NULL;sampRate=rep(0.1,Ntip(tree));names(sampRate)<-tree$tip.label
@@ -68,7 +55,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 		#if it is a species-named vector, all the species better be there1
 		}else{if(any(is.na(match(tree$tip.label,names(anc.wt))))){
 			stop("Ancestral Weights Not Given For All Taxa on Tree!")}}
-	Ps<-sapply(tree$tip.label,function(x) getPs(brRate[x],extRate[x],sampRate[x]))
+	Ps<-sapply(tree$tip.label,function(x) pqr2Ps(brRate[x],extRate[x],sampRate[x]))
 	names(Ps)<-tree$tip.label
 	if(length(node.mins)!=Nnode(tree) & !is.null(node.mins)){stop("node.mins length != Nnode!")}
 	ttree1<-timePaleoPhy(tree,timeData,type="basic",node.mins=node.mins,add.term=FALSE,inc.term.adj=FALSE)

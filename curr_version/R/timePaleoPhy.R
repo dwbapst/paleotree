@@ -35,12 +35,15 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 		}else{stop("Error: timeData not of matrix or data.frame format")}}
 	if(class(tree$tip.label)!="character"){stop("Error: tree tip labels are not a character vector")}
 	if(ntrees<1){stop("Error: ntrees<1")}
-	if(!add.term & rand.obs){stop("Error: Inconsistent arguments: add.term must be true for rand.obs to have any effect on output!")}
+	if(!add.term & rand.obs){stop(
+		"Error: Inconsistent arguments: randomized observation times are treated as LAST apperance times, so add.term must be true for rand.obs to have any effect on output!"
+		)}
 	if(ntrees>1 & !randres & !rand.obs){stop("Error: Time-scale more trees without randomly resolving or random obs?!")}
 	if(ntrees==1 & randres){message("Warning: Do not interpret a single randomly-resolved tree")}
 	if(ntrees==1 & rand.obs){message("Warning: Do not interpret a single tree with randomly-placed obs times")}
 	if(randres & timeres){stop(
 		"Error: Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!")}
+	if(!add.term & rand.obs){stop(
 	if(!add.term & inc.term.adj){stop(
 		"Error: Inconsistent arguments: Terminal ranges cannot be used in adjustment of branch lengths if not added to tree!")}
 	if(type=="basic" & inc.term.adj){stop(

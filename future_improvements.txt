@@ -1,14 +1,12 @@
 #Paleotree improvement:
 
+#add limited time window option to getSampProbDisc and getSampRateCont
+
 #modifications to diversity curve functions
 	#add an option to the taxic functions to ignore single-interval taxa
 
-#method for getting per capita origination and extinction rates (Foote, 2000)
-
 #make function for finding indirect ancestors / descendants in taxa objects
 	#might be useful for improving efficiency of taxa2phylo
-
-#add limited time window option to getSampProbDisc and getSampRateCont
 
 #implement a "stratophenetic"-esque timescaling method (minimal evol history)
 

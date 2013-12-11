@@ -1,4 +1,4 @@
-taxicDivDisc<-function(timeList,int.times=NULL,plot=TRUE,plotLogRich=FALSE,timelims=NULL,extant.adjust=0.01,split.int=TRUE){
+taxicDivDisc<-function(timeList,int.times=NULL,plot=TRUE,plotLogRich=FALSE,timelims=NULL,extant.adjust=0.001,split.int=TRUE){
 	#this function estimates diversity for binned intervals from discrete interval range data
 	#input is a list with (1) interval times matrix and (2) species FOs and LOs
 	#time interval starts and ends can be pre-input as a 2 column matrix
@@ -15,6 +15,7 @@ taxicDivDisc<-function(timeList,int.times=NULL,plot=TRUE,plotLogRich=FALSE,timel
 	intMat[intMat[,1]==0,1]<-extant.adjust
 	timeData<-timeData[!is.na(timeData[,1]),,drop=FALSE]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
+	if(any(!sapply(intTimes,is.numeric))){stop("Error: Some values in the interval times aren't numeric??")}
 	if(any(apply(intMat,1,diff)>0)){stop("Error: timeList[[1]] not in intervals in time relative to modern")}
 	if(any(intMat[,2]<0)){stop("Error: Some dates in timeList[[1]] <0 ?")}
 	if(any(apply(timeData,1,diff)<0)){stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}

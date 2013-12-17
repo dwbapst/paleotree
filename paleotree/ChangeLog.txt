@@ -4,6 +4,7 @@ Version -
 -Changed all lines which checked for class "phylo" of input objects to use is(obj,"phylo") instead of class(obj)=="phylo" per recommendation of Carl Boettiger
 -Added new warning line to taxicDivDisc so people who try to pass it matrices with character strings in the matrix will get more helpful warning messages
 -Upgraded probAnc and qSProb2comp based on equations in Foote (1996) for all three modes of origination, also fixed some errors in previous versions
+-Removed internal Ps function from cal3, now pqr2Ps which is exported directly to namespace
 
 
 Version 1.8.2 - 09-03-13

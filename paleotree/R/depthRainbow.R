@@ -1,3 +1,24 @@
+#' Paint Tree Branch Depth by Color
+#' 
+#' Paints the edges of a phylogeny with colors relative to their depth.
+#' 
+#' The only purpose of this function is to make an aesthetically-pleasing
+#' graphic of one's tree, where branches are color-coded with a rainbow
+#' palette, relative to their depth. Depth is defined relative to the number of
+#' branching nodes between the basal node of a branch and the root, not the
+#' absolute distance (i.e. branch length) to the root or the distance from the
+#' tips.
+#' 
+#' @param tree A phylo object
+#' @return No value returned, just plots a colorful phylogeny.
+#' @author David W. Bapst
+#' @examples
+#' 
+#' set.seed(444)
+#' tree <- rtree(500)
+#' depthRainbow(tree)
+#' 
+#' @export depthRainbow
 depthRainbow<-function(tree){
 	#plots a tree with edges color-coded to depth
 	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}

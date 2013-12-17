@@ -1,3 +1,48 @@
+#' Plot a Traitgram for Continuous Traits
+#' 
+#' This function uses maximum-likelihood ancestral trait estimation to plot a
+#' 'traitgram' (Ackerly, 2009) given a tree and a set of continuous trait
+#' values.
+#' 
+#' By default, this function uses \code{\link{ace}} from the library ape to
+#' reconstruct ancestral traits and confidence intervals using the PIC method.
+#' 
+#' As with many functions in the paleotree library, absolute time is always
+#' decreasing, i.e. the present day is zero.
+#' 
+#' @param trait a vector of continuous trait values
+#' @param tree a phylo object
+#' @param trait.name The name of the trait plotted, used for the figure's main
+#' title
+#' @param conf.int if true, confidence intervals are plotted
+#' @param lwd The line width used for the figure
+#' @return Returns no value, just plots the traitgram.
+#' @note One should probably never do ancestral trait estimation without
+#' looking at the confidence intervals, as these reconstructed estimates tend
+#' to be very uncertain.
+#' @author David W. Bapst
+#' @seealso \code{\link{ace}}
+#' 
+#' Also see the functions \code{traitgram} in the library picante and
+#' \code{phenogram} in the library phytools.
+#' @references Ackerly, D. 2009 Conservatism and diversification of plant
+#' functional traits: Evolutionary rates versus phylogenetic signal.
+#' \emph{Proceedings of the National Academy of Sciences} \bold{106}(Supplement
+#' 2):19699--19706.
+#' @examples
+#' 
+#' set.seed(444)
+#' tree <- rtree(10)
+#' trait <- rTraitCont(tree)
+#' 
+#' #first, traitgram without conf intervals
+#' plotTraitgram(trait,tree,conf.int=FALSE)
+#' 
+#' #now, with
+#' plotTraitgram(trait,tree)
+#' #not much confidence, eh?
+#' 
+#' @export plotTraitgram
 plotTraitgram<-function(trait,tree,trait.name="'trait'",conf.int=TRUE,lwd=1.5){
 	#traitgram plotted using ML ASR from geiger (or ace() from ape if ci=TRUE)
 	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}

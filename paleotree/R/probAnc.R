@@ -1,3 +1,11 @@
+
+#' probAnc obtains the probability of sampling indirect ancestors for a group
+#' as given by Foote (1996), assuming only budding cladogenesis, given the
+#' sampling probability and estimates of the diversification rates.
+#' 
+#' @examples
+#' probAnc(p=0.1,q=0.1,R=0.5)
+#' 
 probAnc<-function(p,q,R,mode="budding",analysis="directDesc",Mmax=85,nrep=10000){
 	#see Foote, 1996	
 	#calculates prob of taxa with indirect desc under budding speciation

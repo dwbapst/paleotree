@@ -1,4 +1,10 @@
-#a large number of model modifier functions, mostly having to do with parameters
+#' @name Model Methods
+#' A large number of model modifier functions, mostly having to do with parameters.
+
+
+
+
+
 
 #parnames
 

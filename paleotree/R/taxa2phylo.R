@@ -1,3 +1,84 @@
+#' Convert Simulated Taxon Data into a Phylogeny
+#' 
+#' Converts temporal and ancestor-descendant relationships of taxa into a
+#' time-scaled phylogeny
+#' 
+#' As described in the documentation for taxa2cladogram, the relationships
+#' among morphotaxa in the fossil record are difficult to describe in terms of
+#' traditional phylogenies. One possibility is to arbitrarily choose particular
+#' instantaneous points of time in the range of some taxa and describe the
+#' time-scaled relationships of the populations present at those dates. This is
+#' the tactic used by taxa2phylo.
+#' 
+#' By default, the dates selected ('obs-time' argument) are the last occurances
+#' of the taxon, so a simple use of this function will produce a time-scaled
+#' tree which describes the relaitonships of the populations present at the
+#' last occurance of each taxon in the sampled data. Alternatively, obs_time
+#' can be supplied with different dates within the taxon ranges.
+#' 
+#' All data relating to when static morpho-taxa appear or disappear in the
+#' record is lost; branching points will be the actual time of speciation,
+#' which (under budding) will often be in the middle of the temporal range of a
+#' taxon.
+#' 
+#' Cryptic taxa are not dropped or merged as can be done with taxa2cladogram.
+#' The purpose of taxa2phylo is to obtain the 'true' pattern of evolution for
+#' the observation times, independent of what we might actually be able to
+#' recover, for the purpose of comparing in simulation analyses.
+#' 
+#' As with many functions in the paleotree library, absolute time is always
+#' decreasing, i.e. the present day is zero.
+#' 
+#' @param taxad A five-column matrix of taxonomic data, as output by
+#' simFossilTaxa
+#' @param obs_time A vector of per-taxon times of observation which must be in
+#' the same order of taxa as in the object taxad; if NULL, the LADs (column 4)
+#' in taxad2 are used
+#' @param plot Plot the resulting phylogeny?
+#' @return The resulting phylogeny with branch lengths is output as an object
+#' of class phylo. This function will output trees with the element $root.time,
+#' which is the time of the root divergence in absolute time.
+#' 
+#' The tip labels are the rownames from the simulation input; see simFossiltaxa
+#' documentation for details.
+#' @note DO NOT use this function to time-scale a real tree for a real dataset.
+#' It assumes you know the divergence/speciation times of the branching nodes
+#' and relationships perfectly, which is almost impossible given the
+#' undersampled nature of the fossil record. Use timePaleoPhy or
+#' cal3TimePaleoPhy instead.
+#' 
+#' DO use this function when doing simulations and you want to make a tree of
+#' the 'true' history, such as for simulating trait evolution along
+#' phylogenetic branches.
+#' 
+#' Unlike taxa2cladogram, this function does not merge cryptic taxa in output
+#' from simFossilTaxa and I do not offer an option to secondarily drop them.
+#' The tip labels should provide the necessary information for users to drop
+#' such taxa, however. See simFossilTaxa.
+#' @author David W. Bapst
+#' @seealso \code{\link{simFossilTaxa}}, \code{\link{taxa2cladogram}}
+#' @examples
+#' 
+#' set.seed(444)
+#' taxa<-simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+#' #let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
+#' tree<-taxa2phylo(taxa)
+#' phyloDiv(tree)
+#' 
+#' #now a phylogeny with tips placed at the apparent time of extinction for each taxon
+#' rangesCont<-sampleRanges(taxa,r=0.5)
+#' tree<-taxa2phylo(taxa,obs_time=rangesCont[,2])
+#' phyloDiv(tree,drop.ZLB=FALSE)
+#' #note that it drops taxa which were never sampled!
+#' 
+#' #testing with cryptic speciation
+#' taxaCrypt<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=10,maxtaxa=20,
+#'     maxtime=1000,maxExtant=0)
+#' treeCrypt<-taxa2phylo(taxaCrypt)
+#' layout(1)
+#' plot(treeCrypt)
+#' 
+#' @export taxa2phylo
 taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	#INPUT a taxad object and a vector of observation times for each species
 		#if obs=NULL, LADs in taxad1 are used as observation times

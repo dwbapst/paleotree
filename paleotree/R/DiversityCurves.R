@@ -85,12 +85,18 @@
 #' times for calculating the diversity curve. If NULL, calculated internally.
 #' If given, the argument split.int and int.length are ignored.
 
-#' @param plot If true, a diversity curve is plotted.
+#' @param plot If TRUE, a diversity curve generated from the data is plotted.
 
-#' @param plotLogRich If true, taxic diversity is plotted on log scale.
+#' @param plotLogRich If TRUE, taxic diversity is plotted on log scale.
 
-#' @param drop.cryptic If true, cryptic taxa are merged to form one taxon for
+#' @param drop.cryptic If TRUE, cryptic taxa are merged to form one taxon for
 #' estimating taxon curves. Only works for objects from simFossilTaxa.
+
+#' @param drop.singletons If TRUE, taxa confined to a single interval will be
+#' dropped prior to the diversity curve calculation. This is sometimes done if
+#' single intervals have overly high diversities due to the 'monograph' effect
+#' where more named taxa are known in certain intervals largely due to
+#' taxonomic expert effort and not real changes in historical biotic diversity.
 
 #' @param timelims Limits for the x (time) axis for diversity curve plots. Only
 #' affects plotting. Given as either NULL (the default) or as a vector of
@@ -158,7 +164,7 @@
 #' 
 #' #a neat example of using phyDiv with timeSliceTree 
 #'  #to simulate doing molecular-phylogeny studies 
-#'  #of diverification...in the past
+#'  #of diversification...in the past
 #' set.seed(444)
 #' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
 #' taxicDivCont(taxa)
@@ -244,7 +250,8 @@ taxicDivCont<-function(timeData,int.length=1,int.times=NULL,plot=TRUE,plotLogRic
 
 #' @rdname DiversityCurves
 #' @export
-taxicDivDisc<-function(timeList,int.times=NULL,plot=TRUE,plotLogRich=FALSE,timelims=NULL,extant.adjust=0.001,split.int=TRUE){
+taxicDivDisc<-function(timeList,int.times=NULL,drop.singletons=FALSE,plot=TRUE,plotLogRich=FALSE,timelims=NULL,
+		extant.adjust=0.001,split.int=TRUE){
 	#this function estimates diversity for binned intervals from discrete interval range data
 	#input is a list with (1) interval times matrix and (2) species FOs and LOs
 	#time interval starts and ends can be pre-input as a 2 column matrix
@@ -258,6 +265,7 @@ taxicDivDisc<-function(timeList,int.times=NULL,plot=TRUE,plotLogRich=FALSE,timel
 	intMat<-timeList[[1]]	#the intervals the DATA is given in
 	timeData<-timeList[[2]]
 	#if(drop.extant){timeData[[2]][(timeData[[1]][timeData[[2]][,2],1]==0),1]<-NA}
+	if(drop.singletons){timeData<-timeData[timeData[,1]!=timeData[,2],]}
 	intMat[intMat[,1]==0,1]<-extant.adjust
 	timeData<-timeData[!is.na(timeData[,1]),,drop=FALSE]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}

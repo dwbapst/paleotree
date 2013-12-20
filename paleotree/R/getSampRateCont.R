@@ -4,7 +4,11 @@
 #' rates, given a set of continuous-time taxon ranges from the fossil record
 #' 
 #' @details
-#' As of version 1.9 of paleotree, this function is treated 
+#' As of version 1.9 of paleotree, this function is retained for historical
+#' purposes and users should instead apply the functions listed at
+#' \code{\link{durationFreq}}. The new functions do not offer as many options
+#' as this function, but are much simpler and (in a sense) offer very different
+#' options for constraining parameter space.
 #'
 #' This function uses maximum-likelihood solutions obtained by Foote (1997).
 #' These analyses are ideally applied to data from single stratigraphic section
@@ -60,8 +64,10 @@
 #' taxa listed as being at time 0 (and thus being extant) are dropped before
 #' the model fitting it performed.
 #' 
-#' @param timeData Two-column matrix of per-taxon first and last occurrances in
-#' absolute continous time
+#' @param timeData Two-column matrix of per-taxon first and last occurrence
+#' given in continuous time, relative to the modern (i.e. older dates are also
+#' the 'larger' dates).
+
 #' @param n_tbins Number of time bins with different sampling/extinction
 #' parameters
 #' @param grp1 A vector of integers or characters, the same length as the
@@ -70,9 +76,9 @@
 #' @param grp2 A vector of integers or characters, the same length as the
 #' number of taxa in timeData, where each taxon-wise element gives the group ID
 #' of the taxon for the respective row of timeData
-#' @param threshold The smallest allowable range (measured difference in the
-#' FAD and LAD of a taxon). Ranges below this size will be treated as "one-hit"
-#' sampling events.
+#' @param threshold The smallest allowable duration (i.e. the measured difference in
+#' the first and last occurrence dates for a given taxon). Durations below this size 
+#' will be treated as "one-hit" sampling events.
 #' @param est_only If true, function will give back a matrix of ML extinction
 #' rates and sampling probabilities per species rather than usual output (see
 #' below)
@@ -106,14 +112,21 @@
 #' rate component of their group. Completeness estimates will be output with
 #' these parameters as long as classes are not overlapping, as those estimates
 #' would not otherwise refer to meaningful groups of taxa.
+
 #' @author David W. Bapst
-#' @seealso \code{\link{getSampProbDisc}}, \code{\link{sRate2sProb}},
-#' \code{\link{qsRate2Comp}}
+
+#' @seealso 
+#' See the newer version of this method at \code{\link{durationFreq}}.
+#'
+#' Also see \code{\link{freqRat}}, \code{\link{getSampProbDisc}},
+#' \code{\link{sRate2sProb}}, \code{\link{qsRate2Comp}}
+
 #' @references Foote, M. 1997 Estimating Taxonomic Durations and Preservation
 #' Probability. \emph{Paleobiology} \bold{23}(3):278--300.
 #' 
 #' Foote, M., and D. M. Raup. 1996 Fossil preservation and the stratigraphic
 #' ranges of taxa. \emph{Paleobiology} \bold{22}(2):121--140.
+
 #' @examples
 #' 
 #' #Simulate some fossil ranges with simFossilTaxa

@@ -7,6 +7,12 @@
 #' intervals with different parameters.
 #' 
 #' @details
+#' As of version 1.9 of paleotree, this function is retained for historical
+#' purposes and users should instead apply the functions listed at
+#' \code{\link{durationFreq}}. The new functions do not offer as many options
+#' as this function, but are much simpler and (in a sense) offer very different
+#' options for constraining parameter space.
+#'
 #' This function uses maximum-likelihood solutions obtained by Foote (1997).
 #' These analyses are ideally applied to data from single stratigraphic section
 #' but potentially are applicable to regional or global datasets, although the
@@ -72,10 +78,11 @@
 #' not reached, a warning message is communicated. If the optimizer does not
 #' converge, consider increasing iterations or changing the starting values.
 #' 
-#' @param timeData A 2 column matrix with the first and last occurances of taxa
-#' given in relative time intervals. If a list of length two is given for
-#' timeData, such as would be expected if the output of binTimeData was
-#' directly input, the second element is used.
+#' @param timeData A 2 column matrix with the first and last occurrences of taxa
+#' given in relative time intervals (i.e. ordered from first to last). If a list
+#' of length two is given for timeData, such as would be expected if the output 
+#' of binTimeData was directly input, the second element is used.
+
 #' @param n_tbins Number of time bins with different sampling/extinction
 #' parameters
 #' @param grp1 A vector of integers or characters, the same length as the
@@ -122,9 +129,15 @@
 #' taxa listed as being in a bin with start time 0 and end time 0 (and thus
 #' being extant without question) are dropped before the model fitting it
 #' performed.
+
 #' @author David W. Bapst, with considerable advice from Michael Foote.
-#' @seealso \code{\link{freqRat}}, \code{\link{getSampRateCont}},
+
+#' @seealso 
+#' See the newer version of this method at \code{\link{durationFreq}}.
+#'
+#' Also see \code{\link{freqRat}}, \code{\link{getSampRateCont}},
 #' \code{\link{sProb2sRate}}, \code{\link{qsProb2Comp}}
+
 #' @references Foote, M. 1997 Estimating Taxonomic Durations and Preservation
 #' Probability. \emph{Paleobiology} \bold{23}(3):278--300.
 #' 

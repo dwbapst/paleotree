@@ -2,8 +2,9 @@
 
 #add limited time window option to getSampProbDisc and getSampRateCont
 
-#modifications to diversity curve functions
-	#add an option to the taxic functions to ignore single-interval taxa
+#compare make_durationFreq methods relative to getSamp methods
+
+#test if invSurv is working properly
 
 #make function for finding indirect ancestors / descendants in taxa objects
 	#might be useful for improving efficiency of taxa2phylo

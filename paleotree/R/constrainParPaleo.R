@@ -1,3 +1,8 @@
+#constrain 
+
+
+
+
 constrainParPaleo<-function(f, ..., formulae=NULL, names=parnames(f),bounds=parbounds(f),extra=NULL) {
 	#based on Rich FitzJohn's constrain function for diversitree 10-22-13
 		# comment lines with double ## indicate Rich's original comments

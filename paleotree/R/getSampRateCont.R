@@ -3,6 +3,9 @@
 #' Uses maximum likelihood to estimate instantaneous sampling and extinction
 #' rates, given a set of continuous-time taxon ranges from the fossil record
 #' 
+#' @details
+#' As of version 1.9 of paleotree, this function is treated 
+#'
 #' This function uses maximum-likelihood solutions obtained by Foote (1997).
 #' These analyses are ideally applied to data from single stratigraphic section
 #' but potentially are applicable to regional or global datasets, although the

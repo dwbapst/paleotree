@@ -1,3 +1,19 @@
+#' @details
+
+#' @inheritParam
+
+#' @param
+
+#' @return
+
+#' @aliases
+
+#' @seealso
+
+#' @references
+
+#' @examples
+
 make_durationFreqCont<-function(timeData,groups=NULL,dropModern=TRUE,threshold=0.01){
 	#this is the multi-parameter maximum likelihood analysis of binned timeData
 		#uses a set of binned-interval timeData (just the by-species first and last intervals matrix) 

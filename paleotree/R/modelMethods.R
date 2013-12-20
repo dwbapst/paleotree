@@ -1,38 +1,70 @@
-#' @name Model Methods
-#' A large number of model modifier functions, mostly having to do with parameters.
+#' Model Methods
+#'
+#' A large number of functions for obtaining and modifying the parameters
+#' of likelihood models made in paleotree.
+
+#' @details
+
+#' @inheritParam
+
+#' @param
+
+#' @return
+
+#' @aliases
+
+#' @seealso
 
 
+#' @references
 
+#' @examples
 
+#' @name
+#' @rdname
+#' @export
 
 
 #parnames
 
+#' @name modelMethods
+#' @rdname modelMethods
+#' @export
 parnames <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	UseMethod("parnames")
 	}
 
+#' @rdname modelMethods
+#' @export
 parnames.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parnames")
 	}
 
+#' @rdname modelMethods
+#' @export	
 parnames.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parnames")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parnames<-` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	UseMethod("parnames<-")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parnames<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parnames on a constrained function")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parnames<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
@@ -48,31 +80,43 @@ parnames.constrained <- function(x, ...){
 
 #parbounds
 
+#' @rdname modelMethods
+#' @export
 parbounds <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	UseMethod("parbounds")
 	}
 
+#' @rdname modelMethods
+#' @export	
 parbounds.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parbounds")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 parbounds.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parbounds")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parbounds<-` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	UseMethod("parbound<-")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parbounds<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parbounds on a constrained function")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parbounds<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
@@ -87,34 +131,47 @@ parbounds.constrained <- function(x, ...){
 	attr(x,"parbounds")<-value
 	return(x)
 	}
+	
 
 #get upper and lower bounds for parameters
 
+#' @rdname modelMethods
+#' @export
 parLower <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	UseMethod("parLower")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 parLower.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parbounds")[[1]]
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 parLower.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parbounds")[[1]]
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parLower<-` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	UseMethod("parLower<-")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parLower<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parLower on a constrained function")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parLower<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
@@ -125,32 +182,44 @@ parLower.paleotreeFunc <- function(x, ...){
 	attr(x,"parbounds")[[1]]<-value
 	return(x)
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 parUpper <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	UseMethod("parUpper")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 parUpper.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parbounds")[[2]]
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 parUpper.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parbounds")[[2]]
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parUpper<-` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	UseMethod("parUpper<-")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parUpper<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parUpper on a constrained function")
 	}
-
+	
+#' @rdname modelMethods
+#' @export
 `parUpper<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
@@ -164,11 +233,15 @@ parUpper.paleotreeFunc <- function(x, ...){
 
 #initial parameter values
 
+#' @rdname modelMethods
+#' @export
 parInit <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	UseMethod("parInit")
 	}
 
+#' @rdname modelMethods
+#' @export	
 parInit.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	res<-(attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2
@@ -177,6 +250,8 @@ parInit.constrained <- function(x, ...){
 	return(res)
 	}
 
+#' @rdname modelMethods
+#' @export	
 parInit.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	res<-(attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2

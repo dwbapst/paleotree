@@ -6,6 +6,7 @@
 #' groupings of taxa with different parameters and different free-floating time
 #' intervals with different parameters.
 #' 
+#' @details
 #' This function uses maximum-likelihood solutions obtained by Foote (1997).
 #' These analyses are ideally applied to data from single stratigraphic section
 #' but potentially are applicable to regional or global datasets, although the

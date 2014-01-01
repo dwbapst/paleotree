@@ -28,8 +28,6 @@
 #' probability/proportion of taxa sampled in a clade. Theoretically, one could
 #' use it to extrapolate out the 'true' diversity, assuming the sampling rate
 #' model was correct. (See Foote and Raup, 1996.)
-#'
-#' 
 #' 
 #' See the references below for a more detailed explanation of the methods and
 #' formulae used. The relevant equations are generally found in the appendices
@@ -63,7 +61,7 @@
 #' @author David W. Bapst, with advice from Michael Foote.
 
 #' @seealso \code{\link{sampleRanges}}, \code{\link{getSampRateCont}},
-#' \code{\link{getSampProbDisc}} \code{\link{probAnc}} 
+#' \code{\link{getSampProbDisc}} \code{\link{probAnc}}, \code{\link{pqr2Ps}} 
 
 #' @references 
 #' Foote, M. 1996 On the Probability of Ancestors in the Fossil

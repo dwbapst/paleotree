@@ -14,19 +14,28 @@
 #' This is handled by the argument vartime, which is NULL by default and unused
 #' for type "basic".
 #' 
-#' \describe{ \item{"basic"}{This most simple of methods ignores vartime and
+#' \describe{
+
+#'  \item{"basic"}{This most simple of methods ignores vartime and
 #' scales nodes so they are as old as the first appearance of their oldest
-#' descendant (Smith, 1994). This method produces many zero-length branches (Hunt and Carrano, 2010).}
-#' \item{"equal"}{The 'equal' method defined by G. Lloyd and used in Brusatte
+#' descendant (Smith, 1994). This method produces many zero-length branches
+#' (Hunt and Carrano, 2010).}
+
+#'  \item{"equal"}{The 'equal' method defined by G. Lloyd and used in Brusatte
 #' et al. (2008) and Lloyd et al. (2012). Originally usable in code supplied by
 #' G. Lloyd, it is recreated here. This method works by increasing the time of
 #' the root divergence by some amount (here set by vartime) and then adjusting
 #' zero-length branches so that time on early branches is re-apportioned out
-#' along those later branches equally.} \item{"aba"}{All branches additive.
-#' This method takes the "basic" tree and adds vartime to all branches.}
+#' along those later branches equally.}
+
+#' \item{"aba"}{All branches additive. This method takes the "basic" tree and
+#' adds vartime to all branches.}
+
 #' \item{"zlba"}{Zero-length branches additive. This method adds vartime to all
 #' zero-length branches in the "basic" tree. Discussed (possibly?) by Hunt and Carrano,
-#' 2010.} \item{"mbl"}{Minimum branch length. Scales all branches so they are
+#' 2010.} 
+
+#' \item{"mbl"}{Minimum branch length. Scales all branches so they are
 #' greater than or equal to vartime, and subtract time added to later branches
 #' from earlier branches in order to maintain the temporal structure of events.
 #' A version of this was first introduced by Laurin (2004).} }

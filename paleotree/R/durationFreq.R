@@ -91,6 +91,7 @@
 #' @seealso
 #' See the original implementation of these methods at 
 #' \code{\link{getSampRateCont}} and \code{\link{getSampProbDisc}}. 
+#'
 #' Also see \code{\link{freqRat}}, \code{\link{sRate2sProb}},
 #' \code{\link{qsRate2Comp}} \code{\link{sProb2sRate}} and \code{\link{qsProb2Comp}}.
 
@@ -102,7 +103,7 @@
 #' ranges of taxa. \emph{Paleobiology} \bold{22}(2):121--140.
 
 #' @examples
-#'
+#' 
 
 #' @name durationFreq
 #' @rdname durationFreq

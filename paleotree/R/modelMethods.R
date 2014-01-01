@@ -1,28 +1,61 @@
-#' Model Methods
+#' Model Function Methods: Parameter Names, Bounds and Initial Values
 #'
 #' A large number of functions for obtaining and modifying the parameters
-#' of likelihood models made in paleotree.
+#' of likelihood models made in paleotree. These functions allow users to obtain
+#' or set parameter names, or obtain and set parameter bounds, both of which
+#' are treated as an attribute of the function class used by paleotree. In
+#' practice, this allows users to quickly obtain parameter names and upper
+#' and lower values for use in bounded optimizers, including reasonable
+#' starting values.
 
 #' @details
+#' The parInit function calls the bounds for each parameter and gives the midway
+#' value for each, giving a users a shorthand to quickly generate initial
+#' parameter values which are within the set bounds, for use in functions
+#' such as \code{\link{optim}}. These values may be too high (due to the liberal
+#' upper bounds I set for parameters in many of the likelihood functions) and
+#' thus users should always try slightly different values to see if the resulting
+#' maximum likelihood parameter values change.
+#'
+#' As parInit depends on the upper and lower bounds attribute, no function is offered
+#' to allow it to be replaced (as there is nothing to replace!).
 
-#' @inheritParam
+#' @param x A function of S3 class 'paleotreeFunc' with all necessary attributes
+#' expected of that class, which include parameter names and upper and lower bounds.
+#' As I have deliberately not exported the function which creates this class, it
+#' should be impossible for regular users to obtain such objects easily without
+#' using one of the 'make' functions, which automatically output a function of the
+#" appropriate class and attributes.
 
-#' @param
+#' @param ... 'Ignored arguments to future methods' (i.e. for diversitree). Kept here only
+#' so constrainParPaleo is kept as close to the parent method in diversitree as possible.
+
+#' @param value The new value with which to replace the parameter names or bounds. Must
+#' be a vector of the same length as the number of parameters. For parbounds, must
+#' be a list composed of two vectors.
 
 #' @return
+#' Returns the sought parameter names, bounds or initial values or (for the replacement methods) 
+#' returns a modified function with the respective attributes altered.
 
-#' @aliases
+#' @aliases modelMethods parbounds parbounds.constrained parbounds.paleotreeFunc
+#' parInit parInit.constrained parInit.paleotreeFunc parLower
+#' parLower.constrained parLower.paleotreeFunc parnames
+#' parnames.constrained parnames.paleotreeFunc parUpper
+#' parUpper.constrained parUpper.paleotreeFunc
 
 #' @seealso
+#' These model methods were introduced to interact with the new model framework introduced in
+#' paleotree v1.9, in particular to interface with \code{\link{constrainParPaleo}}.
 
-
-#' @references
+#' @author
+#' These functions are strongly based on or inspired by the \code{argnames} functions
+#' provided for handling models in Rich Fitzjohn's library \code{diversitree}, but
+#' the functions presented here are derviations written by David Bapst.
 
 #' @examples
-
-#' @name
-#' @rdname
-#' @export
+#'
+#'
 
 
 #parnames
@@ -36,14 +69,12 @@ parnames <- function(x, ...){
 	}
 
 #' @rdname modelMethods
-#' @export
 parnames.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parnames")
 	}
 
 #' @rdname modelMethods
-#' @export	
 parnames.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parnames")
@@ -57,14 +88,12 @@ parnames.constrained <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
-#' @export
 `parnames<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parnames on a constrained function")
 	}
 	
 #' @rdname modelMethods
-#' @export
 `parnames<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
@@ -87,15 +116,13 @@ parbounds <- function(x, ...){
 	UseMethod("parbounds")
 	}
 
-#' @rdname modelMethods
-#' @export	
+#' @rdname modelMethods	
 parbounds.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parbounds")
 	}
 	
 #' @rdname modelMethods
-#' @export
 parbounds.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parbounds")
@@ -109,14 +136,12 @@ parbounds.constrained <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
-#' @export
 `parbounds<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parbounds on a constrained function")
 	}
 	
 #' @rdname modelMethods
-#' @export
 `parbounds<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
@@ -143,14 +168,12 @@ parLower <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
-#' @export
 parLower.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parbounds")[[1]]
 	}
 	
 #' @rdname modelMethods
-#' @export
 parLower.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parbounds")[[1]]
@@ -164,14 +187,12 @@ parLower.paleotreeFunc <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
-#' @export
 `parLower<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parLower on a constrained function")
 	}
 	
 #' @rdname modelMethods
-#' @export
 `parLower<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
@@ -191,14 +212,12 @@ parUpper <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
-#' @export
 parUpper.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parbounds")[[2]]
 	}
 	
 #' @rdname modelMethods
-#' @export
 parUpper.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parbounds")[[2]]
@@ -212,14 +231,12 @@ parUpper.paleotreeFunc <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
-#' @export
 `parUpper<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parUpper on a constrained function")
 	}
 	
 #' @rdname modelMethods
-#' @export
 `parUpper<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
@@ -241,7 +258,6 @@ parInit <- function(x, ...){
 	}
 
 #' @rdname modelMethods
-#' @export	
 parInit.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	res<-(attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2
@@ -250,8 +266,7 @@ parInit.constrained <- function(x, ...){
 	return(res)
 	}
 
-#' @rdname modelMethods
-#' @export	
+#' @rdname modelMethods	
 parInit.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	res<-(attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2

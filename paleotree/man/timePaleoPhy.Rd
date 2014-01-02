@@ -1,102 +1,290 @@
 \name{timePaleoPhy}
-\alias{timePaleoPhy}
 \alias{bin_timePaleoPhy}
+\alias{timePaleoPhy}
 \title{Timescaling of Paleo-Phylogenies}
-\description{Timescales an unscaled cladogram of fossil taxa using information on their temporal ranges, using various methods. Also can resolve polytomies randomly and output samples of randomly-resolved trees.}
 \usage{
 timePaleoPhy(tree, timeData, type = "basic", vartime = NULL, ntrees = 1,
-    randres = FALSE, timeres = FALSE, add.term = FALSE,
-    inc.term.adj = FALSE, rand.obs = FALSE, node.mins = NULL,
-    plot = FALSE)
+  randres = FALSE, timeres = FALSE, add.term = FALSE,
+  inc.term.adj = FALSE, rand.obs = FALSE, node.mins = NULL,
+  noisyDrop = TRUE, plot = FALSE)
 
-bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL, ntrees = 1,
-    nonstoch.bin = FALSE, randres = FALSE, timeres = FALSE, sites = NULL,
-    point.occur = FALSE, add.term = FALSE, inc.term.adj = FALSE,
-    rand.obs = FALSE, node.mins = NULL, plot = FALSE)
+bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL,
+  ntrees = 1, nonstoch.bin = FALSE, randres = FALSE, timeres = FALSE,
+  sites = NULL, point.occur = FALSE, add.term = FALSE,
+  inc.term.adj = FALSE, rand.obs = FALSE, node.mins = NULL,
+  noisyDrop = TRUE, plot = FALSE)
 }
 \arguments{
-  \item{tree}{An unscaled cladogram of fossil taxa}
+  \item{tree}{An unscaled cladogram of fossil taxa, of
+  class 'phylo'. Tip labels must match the taxon labels in
+  the respective temporal data.}
 
-  \item{timeData}{Two-column matrix of first and last occurrances in absolute continous time, with rownames as the taxon IDs used on the tree}
+  \item{timeData}{Two-column matrix of first and last
+  occurrences in absolute continous time, with row names as
+  the taxon IDs used on the tree. This means the first
+  column is very precise FADs (first appearance dates) and
+  the second column is very precise LADs (last appearance
+  dates), reflect the precise points in time when taxa
+  first and last appear. If there is stratigraphic
+  uncertainty in when taxa appear in the fossil record,
+  please use the 'bin' time-scaling functions.}
 
-  \item{type}{Type of time-scaling method used. Can be "basic", "equal", "aba", "zbla" or "mbl". Type="basic" by default. See the note below for more details}
+  \item{type}{Type of time-scaling method used. Can be
+  "basic", "equal", "aba", "zbla" or "mbl". Type="basic" by
+  default. See the note below for more details}
 
-  \item{vartime}{Time variable; usage depends on the method 'type' argument. Ignored if type = "basic"}
+  \item{vartime}{Time variable; usage depends on the method
+  'type' argument. Ignored if type = "basic"}
 
-  \item{ntrees}{Number of time-scaled trees to output. If ntrees is greater than one and both randres and rand.obs are false, the function will fail and a warning is issued, as these arguments would simply produce multiple identical time-scaled trees.}
+  \item{ntrees}{Number of time-scaled trees to output. If
+  ntrees is greater than one and both randres and rand.obs
+  are false, the function will fail and a warning is
+  issued, as these arguments would simply produce multiple
+  identical time-scaled trees.}
 
-  \item{randres}{Should polytomies be randomly resolved? By default, timePaleoPhy does not resolve polytomies, instead outputting a time-scaled tree that is only as resolved as the input tree. If randres=T, then polytomies will be randomly resolved using \code{\link{multi2di}} from the package ape. If randres=T and ntrees=1, a warning is printed that users should analyze multiple randomly-resolved trees, rather than a single such tree, although a tree is still output.}
+  \item{randres}{Should polytomies be randomly resolved? By
+  default, timePaleoPhy does not resolve polytomies,
+  instead outputting a time-scaled tree that is only as
+  resolved as the input tree. If randres=T, then polytomies
+  will be randomly resolved using \code{\link{multi2di}}
+  from the package ape. If randres=T and ntrees=1, a
+  warning is printed that users should analyze multiple
+  randomly-resolved trees, rather than a single such tree,
+  although a tree is still output.}
 
-  \item{timeres}{Should polytomies be resolved relative to the order of appearance of lineages? By default, timePaleoPhy does not resolve polytomies, instead outputting a time-scaled tree that is only as resolved as the input tree. If timeres=T, then polytomies will be resolved with respect to time using the paleotree function \code{\link{timeLadderTree}}. See that functions help page for more information; the result of time-order resolving of polytomies generally does not differ across multiple uses, unlike use of multi2di.}
+  \item{timeres}{Should polytomies be resolved relative to
+  the order of appearance of lineages? By default,
+  timePaleoPhy does not resolve polytomies, instead
+  outputting a time-scaled tree that is only as resolved as
+  the input tree. If timeres=T, then polytomies will be
+  resolved with respect to time using the paleotree
+  function \code{\link{timeLadderTree}}. See that functions
+  help page for more information; the result of time-order
+  resolving of polytomies generally does not differ across
+  multiple uses, unlike use of multi2di.}
 
-  \item{add.term}{If true, adds terminal ranges.By default, this function will not add the ranges of taxa when time-scaling a tree, so that the tips correspond temporally to the first appearance datums of the given taxa. If add.term=T, then the 'terminal ranges' of the taxa are added to the tips after tree is time-scaled, such that the tips now correspond to the last appearance datums.}
+  \item{add.term}{If true, adds terminal ranges.By default,
+  this function will not add the ranges of taxa when
+  time-scaling a tree, so that the tips correspond
+  temporally to the first appearance datums of the given
+  taxa. If add.term=T, then the 'terminal ranges' of the
+  taxa are added to the tips after tree is time-scaled,
+  such that the tips now correspond to the last appearance
+  datums.}
 
-  \item{inc.term.adj}{If true, includes terminal ranges in branch length estimates for the various adjustment of branch lengths under all methods except 'basic' (i.e. a terminal length branch will not be treated as zero length is this argument is TRUE if the taxon at this tip has a non-zero duration). By default, this argument is FALSE and this function will not include the ranges of taxa when adjusting branch lengths, so that zero-length branches before first appearance times will be extended. An error is returned if this argument is true but type="basic" or add.term=FALSE, as this argument is inconsistent with those argument options.}
+  \item{inc.term.adj}{If true, includes terminal ranges in
+  branch length estimates for the various adjustment of
+  branch lengths under all methods except 'basic' (i.e. a
+  terminal length branch will not be treated as zero length
+  is this argument is TRUE if the taxon at this tip has a
+  non-zero duration). By default, this argument is FALSE
+  and this function will not include the ranges of taxa
+  when adjusting branch lengths, so that zero-length
+  branches before first appearance times will be extended.
+  An error is returned if this argument is true but
+  type="basic" or add.term=FALSE, as this argument is
+  inconsistent with those argument options.}
 
-  \item{rand.obs}{Should the tips represent observation times uniform distributed within taxon ranges? If rand.obs=T but add.term=F, the function fails and a warning is issued. If rand.obs=TRUE, tips are placed randomly within taxon ranges, as if uniformly distributed. This serves those users that wish for tips to represent observations made with some temporal uncertainty, such that they might have come from any point within a taxon's range. This might be the case, for example, if a user is interested in applying phylogeny-based approaches to studying trait evolution, but have per-taxon measurements of traits that come from museum specimens with uncertain temporal placement. As with randres, multiple trees should be created and then analyzed. }
+  \item{rand.obs}{Should the tips represent observation
+  times uniform distributed within taxon ranges? This only
+  impacts the location of tip-dates, i.e. the 'times of
+  observation' for taxa, and does not impact the dates used
+  to determine node ages. Thus, this is an alternative to
+  using only the LADs or only the FADs as the per-taxon
+  times of observation. For these functions,rand.obs is
+  TRUE can only impact the result when add.term is FALSE
+  (otherwise the time of observation can only be the FADs)
+  and so the function fails and a warning is issued. If
+  rand.obs is TRUE, then it is assumed that users wish the
+  tips to represent observations made with some temporal
+  uncertainty, such that they might have come from any
+  point within a taxon's known range.  This might be the
+  case, for example, if a user is interested in applying
+  phylogeny-based approaches to studying trait evolution,
+  but have per-taxon measurements of traits that come from
+  museum specimens with uncertain temporal placement. When
+  rand.obs is TRUE, the tips are placed randomly within
+  taxon ranges, as if uniformly distributed, and thus
+  multiple trees should be created and analyzed.}
 
-  \item{node.mins}{Minimum ages of nodes on the tree. The minimum dates of nodes can be set using node.mins; this argument takes a vector of the same length as the number of nodes, with dates given in the same order as nodes are they are numbered in the tree$edge matrix (note that in tree$edge, the tips are given first Ntip numbers and these are ignored here). Not all nodes need be set; those without minimum dates can be given as NA in node.mins.}
+  \item{node.mins}{Minimum ages of nodes on the tree. The
+  minimum dates of nodes can be set using node.mins; this
+  argument takes a vector of the same length as the number
+  of nodes, with dates given in the same order as nodes are
+  they are numbered in the tree$edge matrix (note that in
+  tree$edge, the tips are given first Ntip numbers and
+  these are ignored here). Not all nodes need be set; those
+  without minimum dates can be given as NA in node.mins.}
 
-  \item{plot}{If true, plots the input and output phylogenies}
+  \item{noisyDrop}{If TRUE (the default), any taxa dropped
+  from tree due to not having a matching entry in the time
+  data will be listed in a system message.}
 
-  \item{timeList}{A list composed of two matrices giving interval times and taxon appearance datums, as would be output by binTimeData. The rownames of the second matrix should be the taxon IDs}
+  \item{plot}{If true, plots the input and output
+  phylogenies.}
 
-  \item{nonstoch.bin}{If true, dates are not stochastically pulled from uniform distributions. See below for more details.}
+  \item{timeList}{A list composed of two matrices giving
+  interval times and taxon appearance dates. The rownames
+  of the second matrix should be the taxon IDs, identical
+  to the tip.labels for tree. See details.}
 
-  \item{sites}{Optional two column matrix, composed of site IDs for taxon FADs and LADs. The sites argument allows users to constrain the placement of dates by restricting multiple fossil taxa whose FADs or LADs are from the same very temporally restricted sites (such as fossil-rich Lagerstatten) to always have the same date, across many iterations of time-scaled trees. To do this, simply give a matrix where the "site" of each FAD and LAD for every taxon is listed, as corresponding to the second matrix in timeList. If no sites matrix is given (the default), then it is assumed all fossil come from different "sites" and there is no shared temporal structure among the events.}
+  \item{nonstoch.bin}{If true, dates are not stochastically
+  pulled from uniform distributions. See below for more
+  details.}
 
-  \item{point.occur}{If true, will automatically produce a 'sites' matrix which forces all FADs and LADs to equal each other. This should be used when all taxa are only known from single 'point occurances', i.e. each is only recovered from a single bed/horizon, such as a Lagerstatten.}
-}
-\details{
-This function is an attempt to unify and collect previously used and discussed methods for time-scaling phylogenies of fossil taxa. Unfortunately, it is difficult to attribute some time-scaling methods to specific references in the literature. A review of these time-scaling methods is forthcoming (Bapst, in prep).
+  \item{sites}{Optional two column matrix, composed of site
+  IDs for taxon FADs and LADs. The sites argument allows
+  users to constrain the placement of dates by restricting
+  multiple fossil taxa whose FADs or LADs are from the same
+  very temporally restricted sites (such as fossil-rich
+  Lagerstatten) to always have the same date, across many
+  iterations of time-scaled trees. To do this, simply give
+  a matrix where the "site" of each FAD and LAD for every
+  taxon is listed, as corresponding to the second matrix in
+  timeList. If no sites matrix is given (the default), then
+  it is assumed all fossil come from different "sites" and
+  there is no shared temporal structure among the events.}
 
-There are five method types that can be used by timePaleoPhy. Four of these use some value of absolute time, chosen a priori, to time-scale the tree. This is handled by the argument vartime, which is NULL by default and unused for type "basic".
-
-\describe{
-\item{"basic"}{This most simple of methods ignores vartime and scales nodes so they are as old as the first appearance of their oldest descendant. This method produces many zero-length branches (Smith, 1994).}
-\item{"equal"}{The 'equal' method defined by G. Lloyd and used in Brusatte et al. (2008) and Lloyd et al. (2012). Originally usable in code supplied by G. Lloyd, it is recreated here. This method works by increasing the time of the root divergence by some amount (here set by vartime) and then adjusting zero-length branches so that time on early branches is re-apportioned out along those later branches equally.}
-\item{"aba"}{All branches additive. This method takes the "basic" tree and adds vartime to all branches.}
-\item{"zlba"}{Zero-length branches additive. This method adds vartime to all zero-length branches in the "basic" tree. Discussed by Hunt and Carrano, 2010.}
-\item{"mbl"}{Minimum branch length. Scales all branches so they are greater than or equal to vartime, and subtract time added to later branches from earlier branches in order to maintain the temporal structure of events. A version of this was first introduced by Laurin (2004).}
-}
-
-These functions cannot time-scale branches relative to reconstructed character changes along branches, as used by Lloyd et al. (2012).
-
-These functions will intuitively drop taxa from the tree with NA for range or are missing from timeData or timeList.
-
-As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
-
-timePaleoPhy can only be applied to datasets where taxon appearances are in continuous time. bin_timePaleoPhy is a wrapper of timePaleoPhy which produces timescaled trees for datasets which only have interval data available. For each output tree, taxon FADs and LADs are placed within their listed intervals under a uniform distribution. Thus, a large sample of time-scaled trees will approximate the uncertainty in the actual timing of the FADs and LADs. 
-
-By setting the argument nonstoch.bin to TRUE, the dates are NOT stochastically pulled from uniform bins but instead FADs are assigned to the earliest time of whichever interval they were placed in and LADs are placed at the most recent time in their placed interval. This option may be useful for plotting. The sites argument becomes arbitrary if nonstoch.bin is TRUE.
-
-If timeData or the elements of timeList are actually data.frames (as output by read.csv or read.table), these will be coerced to a matrix.
-
-A tutorial for applying the time-scaling functions in paleotree, along with an example using real (graptolite) data, can be found here:
-http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
+  \item{point.occur}{If true, will automatically produce a
+  'sites' matrix which forces all FADs and LADs to equal
+  each other. This should be used when all taxa are only
+  known from single 'point occurrences', i.e. each is only
+  recovered from a single bed/horizon, such as a
+  Lagerstatten.}
 }
 \value{
-The output of these functions is a time-scaled tree or set of time-scaled trees, of either class phylo or multiphylo, depending on the argument ntrees. All trees are output with an element $root.time. This is the time of the root on the tree and is important for comparing patterns across trees.
+The output of these functions is a time-scaled tree or set
+of time-scaled trees, of either class phylo or multiphylo,
+depending on the argument ntrees. All trees are output with
+an element $root.time. This is the time of the root on the
+tree and is important for comparing patterns across trees.
 
-Trees created with bin_timePaleoPhy will output with some additional elements, in particular $ranges.used, a matrix which records the continuous-time ranges generated for time-scaling each tree. (Essentially a pseudo-timeData matrix.)
+Trees created with bin_timePaleoPhy will output with some
+additional elements, in particular $ranges.used, a matrix
+which records the continuous-time ranges generated for
+time-scaling each tree. (Essentially a pseudo-timeData
+matrix.)
 }
-\references{
-Bapst, in prep. Time-scaling Trees of Fossil Taxa. To be submitted to \emph{Paleobiology}
-
-Brusatte, S. L., M. J. Benton, M. Ruta, and G. T. Lloyd. 2008 Superiority, Competition, and Opportunism in the Evolutionary Radiation of Dinosaurs. \emph{Science} \bold{321}(5895):1485-91488.
-
-Hunt, G., and M. T. Carrano. 2010 Models and methods for analyzing phenotypic evolution in lineages and clades. In J. Alroy, and G. Hunt, eds. Short Course on Quantitative Methods in Paleobiology. Paleontological Society.
-
-Laurin, M. 2004. The Evolution of Body Size, Cope's Rule and the Origin of Amniotes. \emph{Systematic Biology} 53(4):594-622.
-
-Lloyd, G. T., S. C. Wang, and S. L. Brusatte. 2012 Identifying Heterogeneity in Rates of Morphological Evolutio: Discrete Character Change in the Evolution of Lungfish(Sarcopterygii, Dipnoi). \emph{Evolution} \bold{66}(2):330--348.
-
-Smith, A. B. 1994 Systematics and the fossil record: documenting evolutionary patterns. Blackwell Scientific, Oxford.
+\description{
+Timescales an unscaled cladogram of fossil taxa using
+information on their temporal ranges, using various
+methods. Also can resolve polytomies randomly and output
+samples of randomly-resolved trees.
 }
-\author{David W. Bapst, heavily inspired by code supplied by Graeme Lloyd and Gene Hunt.}
+\details{
+These functions are an attempt to unify and collect
+previously used and discussed methods for time-scaling
+phylogenies of fossil taxa. Unfortunately, it is occasional
+difficult to attribute some time-scaling methods to
+specific references in the literature.
 
-\seealso{
-\code{\link{cal3TimePaleoPhy}}, \code{\link{binTimeData}}, \code{\link{multi2di}}
+There are five method types that can be used by
+timePaleoPhy. Four of these use some value of absolute
+time, chosen a priori, to time-scale the tree. This is
+handled by the argument vartime, which is NULL by default
+and unused for type "basic".
+
+\describe{ \item{"basic"}{This most simple of methods
+ignores vartime and scales nodes so they are as old as the
+first appearance of their oldest descendant (Smith, 1994).
+This method produces many zero-length branches (Hunt and
+Carrano, 2010).} \item{"equal"}{The 'equal' method defined
+by G. Lloyd and used in Brusatte et al. (2008) and Lloyd et
+al. (2012). Originally usable in code supplied by G. Lloyd,
+it is recreated here. This method works by increasing the
+time of the root divergence by some amount (here set by
+vartime) and then adjusting zero-length branches so that
+time on early branches is re-apportioned out along those
+later branches equally.} \item{"aba"}{All branches
+additive. This method takes the "basic" tree and adds
+vartime to all branches.} \item{"zlba"}{Zero-length
+branches additive. This method adds vartime to all
+zero-length branches in the "basic" tree. Discussed
+(possibly?) by Hunt and Carrano, 2010.}
+\item{"mbl"}{Minimum branch length. Scales all branches so
+they are greater than or equal to vartime, and subtract
+time added to later branches from earlier branches in order
+to maintain the temporal structure of events. A version of
+this was first introduced by Laurin (2004).} }
+
+These functions cannot time-scale branches relative to
+reconstructed character changes along branches, as used by
+Lloyd et al. (2012).
+
+These functions will intuitively drop taxa from the tree
+with NA for range or are missing from timeData or timeList.
+Taxa dropped from the tree will be will be listed in a
+
+As with many functions in the paleotree library, absolute
+time is always decreasing, i.e. the present day is zero.
+
+timePaleoPhy is designed for direct application to datasets
+where taxon first and last appearances are precisely known
+in continuous time, with no stratigraphic uncertainty. This
+is an uncommon form of data to have from the fossil record,
+although not an impossible form (micropaleontologists often
+have very precise range charts, for example). This means
+that most users SHOULD NOT use timePaleoPhy directly,
+unless they have written their own code to deal with
+stratigraphic uncertainty. For some groups, the more
+typical 'first' and 'last' dates represent the minimum and
+maximum absolute ages for the fossil collections that a
+taxon is known is known from. Presumably, the first and
+last appearances of that taxon in the fossil record is at
+unknown dates within these bounds. These should not be
+mistaken as the FADs and LADs desired by timePaleoPhy, as
+timePaleoPhy will use the earliest dates provided to
+calibrate node ages, which is either an overly conservative
+approach to time-scaling or fairly nonsensical.
+
+Alternatively to using timePaleoPhy, bin_timePaleoPhy is a
+wrapper of timePaleoPhy which produces timescaled trees for
+datasets which only have interval data available. For each
+output tree, taxon first and last appearance dates are
+placed within their listed intervals under a uniform
+distribution. Thus, a large sample of time-scaled trees
+will approximate the uncertainty in the actual timing of
+the FADs and LADs.
+
+The input timeList object can have overlapping (i.e.
+non-sequential) intervals, and intervals of uneven size.
+Taxa alive in the modern should be listed as last occurring
+in a time interval that begins at time 0 and ends at time
+0. If taxa occur only in single collections (i.e. their
+first and last appearance in the fossil record is
+synchronous, the argument point.occur will force all taxa
+to have instantaneous durations in the fossil record.
+Otherwise, by default, taxa are assumed to first and last
+appear in the fossil record at different points in time,
+with some positive duration. The sites matrix can be used
+to force only a portion of taxa to have simultaneous first
+and last appearances.
+
+By setting the argument nonstoch.bin to TRUE for
+bin_timePaleoPhy, the dates are NOT stochastically pulled
+from uniform bins but instead FADs are assigned to the
+earliest time of whichever interval they were placed in and
+LADs are placed at the most recent time in their placed
+interval. This option may be useful for plotting. The sites
+argument becomes arbitrary if nonstoch.bin is TRUE.
+
+If timeData or the elements of timeList are actually
+data.frames (as output by read.csv or read.table), these
+will be coerced to a matrix.
+
+A tutorial for applying the time-scaling functions in
+paleotree, along with an example using real (graptolite)
+data, can be found here:
+http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
+}
+\note{
+Please account for stratigraphic uncertainty in your
+analysis. Unless you have exceptionally resolved data, use
+a wrapper with timePaleoPhy, either the provided
+bin_timePaleoPhy or code a wrapper function of your own
+that accounts for stratigraphic uncertainty in your
+dataset. Remember that the FADs (earliest dates) given to
+timePaleoPhy will *always* be used to calibrate node ages!
 }
 \examples{
 #Simulate some fossil ranges with simFossilTaxa
@@ -108,13 +296,13 @@ rangesCont <- sampleRanges(taxa,r=0.5)
 cladogram <- taxa2cladogram(taxa,plot=TRUE)
 #Now let's try timePaleoPhy using the continuous range data
 ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",plot=TRUE)
-#plot diversity curve 
+#plot diversity curve
 phyloDiv(ttree)
 
 #that tree lacked the terminal parts of ranges (tips stops at the taxon FADs)
 #let's add those terminal ranges back on with add.term
 ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",add.term=TRUE,plot=TRUE)
-#plot diversity curve 
+#plot diversity curve
 phyloDiv(ttree)
 
 #that tree didn't look very resolved, does it? (See Wagner and Erwin 1995 to see why)
@@ -194,5 +382,42 @@ ttree2$root.time;plot(ttree2);axisPhylo()
 ttree3$root.time;plot(ttree3);axisPhylo()
 -apply(ranges1,1,diff)
 }
-
 }
+\author{
+David W. Bapst, heavily inspired by code supplied by Graeme
+Lloyd and Gene Hunt.
+}
+\references{
+Bapst, D. W. 2013. A stochastic rate-calibrated method for
+time-scaling phylogenies of fossil taxa. \emph{Methods in
+Ecology and Evolution}. 4(8):724-733.
+
+Brusatte, S. L., M. J. Benton, M. Ruta, and G. T. Lloyd.
+2008 Superiority, Competition, and Opportunism in the
+Evolutionary Radiation of Dinosaurs. \emph{Science}
+\bold{321}(5895):1485-91488.
+
+Hunt, G., and M. T. Carrano. 2010 Models and methods for
+analyzing phenotypic evolution in lineages and clades. In
+J. Alroy, and G. Hunt, eds. Short Course on Quantitative
+Methods in Paleobiology. Paleontological Society.
+
+Laurin, M. 2004. The Evolution of Body Size, Cope's Rule
+and the Origin of Amniotes. \emph{Systematic Biology}
+53(4):594-622.
+
+Lloyd, G. T., S. C. Wang, and S. L. Brusatte. 2012
+Identifying Heterogeneity in Rates of Morphological
+Evolutio: Discrete Character Change in the Evolution of
+Lungfish(Sarcopterygii, Dipnoi). \emph{Evolution}
+\bold{66}(2):330--348.
+
+Smith, A. B. 1994 Systematics and the fossil record:
+documenting evolutionary patterns. Blackwell Scientific,
+Oxford.
+}
+\seealso{
+\code{\link{cal3TimePaleoPhy}}, \code{\link{binTimeData}},
+\code{\link{multi2di}}
+}
+

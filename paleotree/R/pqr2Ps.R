@@ -38,7 +38,7 @@
 #'
 #' \eqn{Ps = 1-(((p+q+r)-(sqrt(((p+q+r)^2)-(4*p*q))))/(2*p))}
 
-#' @inheritParam SamplingConv
+#' @inheritParams SamplingConv
 
 #' @param useExact If TRUE, an exact solution developed by Emily King is
 #' used; if FALSE, an iterative, inexact solution is used, which is somewhat slower

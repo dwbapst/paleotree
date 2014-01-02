@@ -1,9 +1,8 @@
 \name{compareTimescaling}
-\alias{compareTimescaling}
 \alias{compareNodeAges}
 \alias{compareTermBranches}
+\alias{compareTimescaling}
 \title{Comparing the Time-Scaling of Trees}
-\description{These functions take two trees and calculate the changes in node ages (for compareNodeAges) for shared clades or terminal branch lengths leading to shared tip taxa (for compareTermBranches).}
 \usage{
 compareNodeAges(tree1, tree2, dropUnshared = FALSE)
 
@@ -11,28 +10,82 @@ compareTermBranches(tree1, tree2)
 }
 \arguments{
   \item{tree1}{A time-scaled phylogeny of class 'phylo'}
-  \item{tree2}{A time-scaled phylogeny of class 'phylo'; for compareNodeAges, tree2 can also be an object of class 'multiPhylo' composed of multiple phylogenies. See below.}
-  \item{dropUnshared}{If TRUE, nodes not shared across all input trees are dropped from the final output for compareNodeAge. This argument has no effect if tree2 is a single phylogeny (a 'phylo'-class object).}
-}
-\details{
-For their most basic usage, these functions compare the time-scaling of two trees. Any taxa not-shared on both trees are dropped before analysis, based on tip labels. 
 
-As with many paleotree functions, calculations relating to time on trees are done with respect to any included $root.time elements. If these are not present, the latest tip is assumed to be at the present day (time=0).
+  \item{tree2}{A time-scaled phylogeny of class 'phylo';
+  for compareNodeAges, tree2 can also be an object of class
+  'multiPhylo' composed of multiple phylogenies. See
+  below.}
 
-compareNodeAges calculates the changes in the clade ages among those clades shared by the two trees, relative to the first tree in absolute time. For example, a shift of +5 means the clade originates 5 time-units later in absolute time on the second tree, while a shift of -5 means the clade originated 5 time-units prior on the second tree. 
-
-For compareNodeAges, if tree2 is actually a multiPhylo object composed of multiple phylogenies, the output will be a matrix, with each row representing a different tree and each column a different clade shared between at least some subset of the trees in tree2 and the tree in tree1. values in the matrix are the changes in clade ages between from tree1 (as baseline) to tree2, with NA values representing a clade that isn't contained in the tree represented by that row (but is contained in tree1 and at least one other tree in tree2). The matrix can be reduced to only those clades shared by all trees input via the argument dropUnshared. Note that this function distinguishes clades based on their shared taxa, and cannot infere that two clades might be identical if it were not for single taxon within the crown of one considered clade, despite that such a difference should probably have no effect on compare a node divergence date. Users should consider their dataset for such scenarios prior to application of compareNodeAges, perhaps by dropping all taxa not included in all other trees to be considered (this is NOT done by this function).
-
-compareTermBranches calculates the changes in the terminal branch lengths attached to tip taxa shared by the two trees, relative to the first tree. Thus, a shift of +5 means that this particular terminal taxon is connected to a terminal branch which is five time-units longer.
+  \item{dropUnshared}{If TRUE, nodes not shared across all
+  input trees are dropped from the final output for
+  compareNodeAge. This argument has no effect if tree2 is a
+  single phylogeny (a 'phylo'-class object).}
 }
 \value{
-compareTermBranches returns a vector of temporal shifts for terminal branches with the shared tip names as labels.
+compareTermBranches returns a vector of temporal shifts for
+terminal branches with the shared tip names as labels.
 
-compareNodeAges, if both tree1 and tree2 are single trees, outputs a vector of temporal shifts for nodes on tree2 with respect to tree1. If tree2 is multiple trees, then a matrix is output, with each row representing each tree in tree2 (and carrying the name of each tree, if any is given). The values are temporal shifts for each tree in tree2 with respect to tree1. For either case, the column names or element names (for a vector) are the sorted taxon names of the particular clade, the dates of which are given in that column. See above for more details. These names can be very long when large trees are considered.
+compareNodeAges, if both tree1 and tree2 are single trees,
+outputs a vector of temporal shifts for nodes on tree2 with
+respect to tree1. If tree2 is multiple trees, then a matrix
+is output, with each row representing each tree in tree2
+(and carrying the name of each tree, if any is given). The
+values are temporal shifts for each tree in tree2 with
+respect to tree1. For either case, the column names or
+element names (for a vector) are the sorted taxon names of
+the particular clade, the dates of which are given in that
+column. See above for more details. These names can be very
+long when large trees are considered.
 }
-\author{David W. Bapst}
-\seealso{
-\code{\link{taxa2phylo}}, \code{\link{phyloDiv}}
+\description{
+These functions take two trees and calculate the changes in
+node ages (for compareNodeAges) for shared clades or
+terminal branch lengths leading to shared tip taxa (for
+compareTermBranches).
+}
+\details{
+For their most basic usage, these functions compare the
+time-scaling of two trees. Any taxa not-shared on both
+trees are dropped before analysis, based on tip labels.
+
+As with many paleotree functions, calculations relating to
+time on trees are done with respect to any included
+$root.time elements. If these are not present, the latest
+tip is assumed to be at the present day (time=0).
+
+compareNodeAges calculates the changes in the clade ages
+among those clades shared by the two trees, relative to the
+first tree in absolute time. For example, a shift of +5
+means the clade originates 5 time-units later in absolute
+time on the second tree, while a shift of -5 means the
+clade originated 5 time-units prior on the second tree.
+
+For compareNodeAges, if tree2 is actually a multiPhylo
+object composed of multiple phylogenies, the output will be
+a matrix, with each row representing a different tree and
+each column a different clade shared between at least some
+subset of the trees in tree2 and the tree in tree1. values
+in the matrix are the changes in clade ages between from
+tree1 (as baseline) to tree2, with NA values representing a
+clade that isn't contained in the tree represented by that
+row (but is contained in tree1 and at least one other tree
+in tree2). The matrix can be reduced to only those clades
+shared by all trees input via the argument dropUnshared.
+Note that this function distinguishes clades based on their
+shared taxa, and cannot infere that two clades might be
+identical if it were not for single taxon within the crown
+of one considered clade, despite that such a difference
+should probably have no effect on compare a node divergence
+date. Users should consider their dataset for such
+scenarios prior to application of compareNodeAges, perhaps
+by dropping all taxa not included in all other trees to be
+considered (this is NOT done by this function).
+
+compareTermBranches calculates the changes in the terminal
+branch lengths attached to tip taxa shared by the two
+trees, relative to the first tree. Thus, a shift of +5
+means that this particular terminal taxon is connected to a
+terminal branch which is five time-units longer.
 }
 \examples{
 set.seed(444)
@@ -67,3 +120,10 @@ tree1$root.time <- 10
 compareNodeAges(tree1,tree2)
 compareTermBranches(tree1,tree2)
 }
+\author{
+David W. Bapst
+}
+\seealso{
+\code{\link{taxa2phylo}}, \code{\link{phyloDiv}}
+}
+

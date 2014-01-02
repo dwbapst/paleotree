@@ -1,49 +1,102 @@
 \name{perCapitaRates}
 \alias{perCapitaRates}
 \title{perCapitaRates}
-\description{Calculates and plots per-capita origination and extinction rates from sequential discrete-time taxon ranges, following Foote (2000).}
 \usage{
-
-perCapitaRates(
-
-
-timeList, int.times = NULL, plot = TRUE, plotLogRich = FALSE, 
-    timelims = NULL, extant.adjust = 0.01, split.int = TRUE)
-
-
-
+perCapitaRates(timeList, plot = TRUE, plotLogRates = FALSE,
+  drop.extant = FALSE, isExtant = NULL, legendPosition = "topleft")
 }
 \arguments{
-  \item{timeList}{A list giving interval data. See details below.}
+  \item{plot}{If true, the per-capita origination and
+  extinctions rates are plotted for each interval. Rates
+  which cannot be calculated for an interval will not be
+  plotted, thus appearing as a gap in the plotted graph.
+  The author takes no responsibility for the aesthetics of
+  this plot.}
 
+  \item{plotLogRates}{If true, rates plotted on log scale.}
 
-  \item{plot}{If true, diversity curve is plotted}
-  \item{plotLogRich}{If true, taxic diversity plotted on log scale}
+  \item{drop.extant}{Drops all extant taxa from a dataset
+  before calculating per-capita originatio and extinction
+  rates.}
 
-}
-\details{
-Background: Diversity curves are plots of species/taxon/lineage richness over time for a particular group of organisms. For paleontological studies, these are generally based on per-taxon range data while more recently in evolutionary biology, molecular phylogenies have been used to calculate lineage-through-time plots (LTTs). Neither of these approaches are without their particular weaknesses; reconstructing the true history of biodiversity is a difficult task no matter what data is available.
+  \item{isExtant}{A vector of TRUE and FALSE values, same
+  length as the number of taxa in the second matrix of
+  timeList, where TRUE values indicate taxa that are alive
+  in the modern day (and thus are boundary crossers which
+  leave the most recent interval). By default, this
+  argument is NULL and instead which taxa are extant is
+  inferred based on which taxa occur in an interval with
+  start and end times both equal to zero. See details.}
 
-The diversity curves produced by these functions will always measure diversity within binned time intervals (and plot them as rectangular bins). For continuous-time data or phylogenies, one could decrease the int.length used to get what is essentially an 'instantaneous' estimate of diversity. This is warned against, however, as most historical diversity data will have some time-averaging or uncertain temporal resolution and thus is probably not finely-resolved enough to calculate instantaneous estimates of diversity.
+  \item{legendPosition}{The position of a legend indicating
+  which line is origination rate and which is extinction
+  rate on the resulting plot. This is given as the possible
+  positions for argument 'x' of the function
+  \code{\link{legend}}, and by default is "topleft", which
+  will be generally useful if origination and extinction
+  rates are initially low. If legendPosition is NA, then a
+  legend will not be plotted.}
 
-As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
-
-As diversity is counted within binned intervals, the true standing diversity may be somewhat lower than the measured (observed) quantity, particularly if intervals are longer than the mean duration of taxa is used. This will be an issue with all diversity curve functions, but particularly the discrete-time variant. For diversity data in particularly large discrete time intervals, plotting this data in smaller bins which do not line up completely with the original intervals will create a 'spiky' diversity curve, as these smaller intersecting bins will have a large number of taxa which may have been present in either of the neighboring intervals. This will give these small bins an apparently high estimated standing diversity. This artifact is avoided with the default setting split.int=TRUE, which will split any input or calculated intervals so that they start and end at the boundaries of the discrete-time range bins.
-
-The timeList object should be a list composed of two matrices, the first matrix giving by-interval start and end times (in absolute time), the secont matrix giving the by-taxon first and last appearances in the intervals defined in the first matrix, numbered as the rows. Absolute time should be decreasing, while the intervals should be numbered so that the number increases with time. Unlike getSampProbDisc, the intervals can be overlapping. See the documentation for binTimeData for more information.
-
-phyloDiv will resolve polytomies to be dichotomous nodes seperated by zero-length branches prior to calculating the diversity curve. There is no option to alter this behavior, but it should not affect the use of the function because the addition of the zero-length branches should produce an identical diveristy history as a polytomy. phyloDiv will also drop zero-length terminal branches, as with the function dropZLB. This the default behavior for the function but can be turned off by setting the argument drop.zlb to FALSE.
+  \item{timeList}{A list composed of two matrices, giving
+  interval start and end dates and taxon first and last
+  occurrences within those intervals. See details.}
 }
 \value{
-These functions will invisibly return a three-column matrix, where the first two columns are interval start and end times and the third column is the number of taxa/lineages counted in that interval.
+This function will invisibly return a ten column matrix,
+where the number of rows is equal to the number of
+intervals. The first two columns are interval start and end
+times and the third column is interval length. The fourth
+through eighth column is the four fundamental classes of
+taxa from Foote (2001): Nbt, NbL, NFt, NFL and their sum,
+N. The final two columns are the per-capita rates estimated
+for each interval in units of lineage time-units; the ninth
+column is the origination rate ('pRate') and the tenth
+column is the extinction rate ('qRate').
 }
-\author{David W. Bapst}
-\seealso{
-\code{\link{DiversityCurves}}, \code{\link{binTimeData}}
+\description{
+Calculates and plots per-capita origination and extinction
+rates from sequential discrete-time taxon ranges, following
+Foote (2000).
+}
+\details{
+This function calculates the per-capita rates of taxonomic
+origination and extinction from paleontological range data,
+as described by Foote (2000). These values are the
+instantaneous rate of either type of event occurring per
+lineage time-units. Although Foote (2001) also presents a
+number of alternative rates collected from the prior
+literature such as the VanValen rate metrics, these are not
+implemented here, but could be estimated using the matrix
+invisibly output by this function.
 
-There are several different functions for traditional LTT plots (phylogenetic diversity curves), such as the function ,\code{\link{ltt.plot}} in the package ape, the function \code{ltt} in the package phytools, the function \code{plotLtt} in the package laser and the function \code{LTT.average.root} in the package TreeSim.
+The timeList object should be a list composed of two
+matrices, the first matrix giving by-interval start and end
+times (in absolute time), the second matrix giving the
+by-taxon first and last appearances in the intervals
+defined in the first matrix, numbered as the rows. Absolute
+time should be decreasing, while the intervals should be
+numbered so that the number increases with time. Taxa alive
+in the modern should be either (a) listed in isExtant or
+(b) listed as last occurring in a time interval that begins
+at time 0 and ends at time 0. See the documentation for the
+time-scaling function \code{\link{bin_timePaleoPhy}} and
+the simulation function \code{\link{binTimeData}} for more
+information on formatting.
+
+Unlike some functions in paleotree, such as the diversity
+curve functions, intervals must be both sequential and
+non-overlapping. The diversity curve functions deal with
+such issues by assuming taxa occur from the base of the
+interval they are first found in until the end of the last
+interval they are occur in. This inflation of boundary
+crossers could badly bias estimates of per-capita
+diversification rates.
 }
 \examples{
+#with the retiolinae dataset
+data(retiolitinae)
+perCapitaRates(retioRanges)
+
 #Simulate some fossil ranges with simFossilTaxa
 set.seed(444)
 taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=80,maxtaxa=100,maxtime=1000,maxExtant=0)
@@ -71,3 +124,13 @@ rangesDisc <- binTimeData(rangesCont,int.length=5)
 #and now get per-capita rates
 perCapitaRates(rangesDisc)
 }
+\references{
+Foote, M. 2000 Origination and extinction components of
+taxonomic diversity: general problems. Pp. 74--102. In D.
+H. Erwin, and S. L. Wing, eds. Deep Time: Paleobiology's
+Perspective. The Paleontological Society, Lawrence, Kansas.
+}
+\seealso{
+\code{\link{DiversityCurves}}, \code{\link{SamplingConv}}
+}
+

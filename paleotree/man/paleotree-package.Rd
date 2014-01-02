@@ -1,35 +1,22 @@
-\name{paleotree-package}
-\alias{paleotree-package}
-\alias{paleotree}
 \docType{package}
+\name{paleotree-package}
+\alias{paleotree}
+\alias{paleotree-package}
 \title{paleotree: Paleontological and Phylogenetic Analyses of Evolution}
 \description{
-Analyzes, time-scales and simulates phylogenies of extinct/fossil lineages, along with calculation of diversity curves. Also fits likelihood models to estimate sampling rates from stratigraphic ranges.
+Analyzes, time-scales and simulates phylogenies of
+extinct/fossil lineages, along with calculation of
+diversity curves. Also fits likelihood models to estimate
+sampling rates from stratigraphic ranges.
 }
 \details{
-\tabular{ll}{
-Package: \tab paleotree\cr
-Type: \tab Package\cr
-Version: \tab 1.8.2\cr
-Date: \tab 09-03-13\cr
-License: \tab  GPL (>= 2)\cr
-}
-This package contains functions for analyzing sampling rates given ranges of fossil taxa, in both continuous and discrete time, functions for time-scaling phylogenies of fossil taxa and functions for simulating the fossil record in both taxic and phylogenetic varieties.
-}
-\author{
-David W. Bapst
-
-Maintainer: David W. Bapst <dwbapst@gmail.com>
-}
-\references{
-Bapst, D.W. 2012. paleotree: an R package for paleontological and phylogenetic analyses of evolution. \emph{Methods in Ecology and Evolution}. 3: 803-807. doi: 10.1111/j.2041-210X.2012.00223.x
-
-Bapst, D. W. 2013. A stochastic rate-calibrated method for time-scaling phylogenies of fossil taxa. \emph{Methods in Ecology and Evolution}. 4(8):724-733.
-
-Bapst, D. W. 2013. When Can Clades Be Potentially Resolved with Morphology? \emph{PLoS ONE}. 8(4):e62312.
-}
-\seealso{
-This package relies extensively on the phylogenetic toolkit and standards offered by the \code{\link[ape:ape-package]{ape}} package.
+\tabular{ll}{ Package: \tab paleotree\cr Type: \tab
+Package\cr License: \tab GPL (>= 2)\cr } This package
+contains functions for analyzing sampling rates given
+ranges of fossil taxa, in both continuous and discrete
+time, functions for time-scaling phylogenies of fossil taxa
+and functions for simulating the fossil record in both
+taxic and phylogenetic varieties.
 }
 \examples{
 ##Simulate some fossil ranges with simFossilTaxa
@@ -61,6 +48,31 @@ phyloDiv(ttree,drop.ZLB=TRUE)
 #that tree lacked the terminal parts of ranges (tips stops at the taxon FADs)
 #let's add those terminal ranges back on with add.term
 ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",add.term=TRUE,plot=TRUE)
-#plot diversity curve 
+#plot diversity curve
 phyloDiv(ttree)
 }
+\author{
+David W. Bapst
+
+Maintainer: David W. Bapst <dwbapst@gmail.com>
+}
+\references{
+Bapst, D.W. 2012. paleotree: an R package for
+paleontological and phylogenetic analyses of evolution.
+\emph{Methods in Ecology and Evolution}. 3: 803-807. doi:
+10.1111/j.2041-210X.2012.00223.x
+
+Bapst, D. W. 2013. A stochastic rate-calibrated method for
+time-scaling phylogenies of fossil taxa. \emph{Methods in
+Ecology and Evolution}. 4(8):724-733.
+
+Bapst, D. W. 2013. When Can Clades Be Potentially Resolved
+with Morphology? \emph{PLoS ONE}. 8(4):e62312.
+}
+\seealso{
+This package relies extensively on the phylogenetic toolkit
+and standards offered by the
+\code{\link[ape:ape-package]{ape}} package, and hence lists
+this package as a depends, so it is loaded simultaneously.
+}
+

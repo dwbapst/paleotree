@@ -1,64 +1,133 @@
 \name{SamplingConv}
-\alias{sProb2sRate}
-\alias{sRate2sProb}
+\alias{SamplingConv}
 \alias{pqsRate2sProb}
 \alias{qsProb2Comp}
 \alias{qsRate2Comp}
-\alias{probAnc}
+\alias{sProb2sRate}
+\alias{sRate2sProb}
 \title{Converting Sampling Estimates}
-\description{Various functions for converting between estimates of sampling in the fossil record.}
 \usage{
 sProb2sRate(R, int.length = 1)
+
 sRate2sProb(r, int.length = 1)
+
 pqsRate2sProb(r, p, q, int.length = 1)
-qsProb2Comp(R, q)
+
+qsProb2Comp(R, q, p = NULL, mode = "budding", nrep = 10000)
+
 qsRate2Comp(r, q)
-probAnc(p, q, R)
 }
 \arguments{
-  \item{R}{Per-interval probability of sampling a taxon at least once}
+  \item{R}{Per-interval probability of sampling a taxon at
+  least once}
+
   \item{r}{Instantaneous rate of sampling}
-  \item{p}{Instantaneous rate of speciation (lambda)}
+
+  \item{p}{Instantaneous rate of speciation (lambda). If
+  the underlying model assumed is anagenetic (e.g.
+  taxonomic change within a single lineage, 'phyletic
+  evolution') with no branching of lineages, then p will be
+  used as the rate of anagenetic differentiation.}
+
   \item{q}{Instantaneous rate of extinction (mu)}
+
   \item{int.length}{Length of Time Intervals}
-}
 
-\details{
-This is a family of functions which all convert from some estimate of sampling to another estimate of sampling. Some of these also require estimates of an rate associated with taxonomic diversification, such as the speciation/origination rate or extinction rate. Diversification rates used in these functions should always be the instantaneous rates, often called the per-capita rates by paleontologists (Foote, 2000).
+  \item{nrep}{Number of repetitions to run in functions
+  which are meant to sum over infinity. Default is
+  arbitrarily high.}
 
-As with many models used in the paleotree library, it is generally assumed that the fossil record of interest is composed of discrete relatively-static taxonomic units which diversify mainly by budding cladogenesis, and that sampling events are rare and approximated by a Poisson model of exponentially-distributed waiting times between sampling events. The veracity of those assumptions is difficult to test and the senstivity of these analyses to relaxing those assumptions probably varies.
-
-sProb2sRate and sRate2sProb give rough conversions for the probability of sampling once per time interval (R or "sProb" in this package as used in the references below) and the instantaneous rate of sampling per lineage/time unit ("sRate" or r). If you have estimates of the speciation and extinction rate, use pqsRate2sProb instead for a more accurate estimate of R.
-
-qsProb2Comp and qsRate2Comp are different calculations for "Pp" or the probability/proportion of taxa sampled in a clade. Theoretically, one could use it to extrapolate out the 'true' diversity, assuming the sampling rate model was correct. (See Foote and Raup, 1996.)
-
-probAnc obtains the probability of sampling indirect ancestors for a group as given by Foote (1996), assuming only budding cladogenesis, given the sampling probability and estimates of the diversification rates.
-
-See the references below for a more detailed explanation of the methods and formulae used. The relevant equations are generally found in the appendices of those papers.
+  \item{mode}{Mode of morphotaxon differentiation, based on
+  definitions in Foote, 1996. Can be pure cladogenetic
+  budding ("budding"), pure cladogenetic bifurcating
+  ("bifurcating") or pure anagenetic within-lineage change
+  ("anagenesis"; i.e. Foote's 'phyletic change'). Default
+  mode is "budding".}
 }
 \value{
-The converted sampling estimate, depending on the function used. See details above.
+The converted sampling estimate, depending on the function
+used. See details above.
 }
-\references{
-Foote, M. 1996 On the Probability of Ancestors in the Fossil Record. \emph{Paleobiology} \bold{22}(2):141--151.
-
-Foote, M. 1997 Estimating Taxonomic Durations and Preservation Probability. \emph{Paleobiology} \bold{23}(3):278--300.
-
-Foote, M. 2000 Origination and extinction components of taxonomic diversity: general problems. Pp. 74--102. In D. H. Erwin, and S. L. Wing, eds. Deep Time: Paleobiology's Perspective. The Paleontological Society, Lawrence, Kansas.
-
-Foote, M., and D. M. Raup. 1996 Fossil preservation and the stratigraphic ranges of taxa. \emph{Paleobiology} \bold{22}(2):121--140.
-
-Solow, A. R., and W. Smith. 1997 On Fossil Preservation and the Stratigraphic Ranges of Taxa. \emph{Paleobiology} \bold{23}(3):271--277.
+\description{
+Various functions for converting between estimates of
+sampling in the fossil record.
 }
-\author{David W. Bapst, with advice from Michael Foote}
-\seealso{
-\code{\link{sampleRanges}}, \code{\link{getSampRateCont}}, \code{\link{getSampProbDisc}}
+\details{
+This is a family of functions which all convert from some
+estimate of sampling to another estimate of sampling. Some
+of these also require estimates of an rate associated with
+taxonomic diversification, such as the
+speciation/origination rate or extinction rate.
+Diversification rates used in these functions should always
+be the instantaneous rates, often called the per-capita
+rates by paleontologists (Foote, 2000).
+
+As with many models used in the paleotree library, it is
+generally assumed that the fossil record of interest is
+composed of discrete relatively-static taxonomic units
+which diversify mainly by budding cladogenesis, and that
+sampling events are rare and approximated by a Poisson
+model of exponentially-distributed waiting times between
+sampling events. The veracity of those assumptions is
+difficult to test and the sensitivity of these analyses to
+relaxing those assumptions probably varies.
+
+sProb2sRate and sRate2sProb give rough conversions for the
+probability of sampling once per time interval (R or
+"sProb" in this package as used in the references below)
+and the instantaneous rate of sampling per lineage/time
+unit ("sRate" or r). If you have estimates of the
+speciation and extinction rate, use pqsRate2sProb instead
+for a more accurate estimate of R.
+
+qsProb2Comp and qsRate2Comp are different calculations for
+"Pp" or the probability/proportion of taxa sampled in a
+clade. Theoretically, one could use it to extrapolate out
+the 'true' diversity, assuming the sampling rate model was
+correct. (See Foote and Raup, 1996.)
+
+See the references below for a more detailed explanation of
+the methods and formulae used. The relevant equations are
+generally found in the appendices of those papers.
 }
 \examples{
 sRate2sProb(r=0.5)
 sProb2sRate(R=0.1)
 pqsRate2sProb(r=0.5,p=0.1,q=0.1)
-qsProb2Comp(R=0.1,q=0.1)
+
+# different modes can be tried
+qsProb2Comp(R=0.1,q=0.1,mode="budding")
+qsProb2Comp(R=0.1,q=0.1,mode="bifurcating")
+
 qsRate2Comp(r=0.1,q=0.1)
-probAnc(p=0.1,q=0.1,R=0.5)
 }
+\author{
+David W. Bapst, with advice from Michael Foote.
+}
+\references{
+Foote, M. 1996 On the Probability of Ancestors in the
+Fossil Record. \emph{Paleobiology} \bold{22}(2):141--151.
+
+Foote, M. 1997 Estimating Taxonomic Durations and
+Preservation Probability. \emph{Paleobiology}
+\bold{23}(3):278--300.
+
+Foote, M. 2000 Origination and extinction components of
+taxonomic diversity: general problems. Pp. 74--102. In D.
+H. Erwin, and S. L. Wing, eds. Deep Time: Paleobiology's
+Perspective. The Paleontological Society, Lawrence, Kansas.
+
+Foote, M., and D. M. Raup. 1996 Fossil preservation and the
+stratigraphic ranges of taxa. \emph{Paleobiology}
+\bold{22}(2):121--140.
+
+Solow, A. R., and W. Smith. 1997 On Fossil Preservation and
+the Stratigraphic Ranges of Taxa. \emph{Paleobiology}
+\bold{23}(3):271--277.
+}
+\seealso{
+\code{\link{sampleRanges}}, \code{\link{getSampRateCont}},
+\code{\link{getSampProbDisc}} \code{\link{probAnc}},
+\code{\link{pqr2Ps}}
+}
+

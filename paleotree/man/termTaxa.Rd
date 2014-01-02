@@ -1,73 +1,184 @@
 \name{termTaxa}
-\alias{termTaxa}
 \alias{candleTaxa}
+\alias{deadTree}
 \alias{simCandleTaxa}
-\alias{trueCandle}
 \alias{simTermTaxa}
 \alias{simTermTaxaAdvanced}
+\alias{termTaxa}
+\alias{trueCandle}
 \alias{trueTermTaxaTree}
-\alias{deadTree}
 \title{Simulating Extinct Clades of Monophyletic Taxa}
-\description{
-This function simulates the diversification of clades composed of monophyletic termin taxa, which are distinguished in a fashion completely alternative to way taxa are defined in the simulation functions simFossilTaxa, taxa2cladogram and taxa2phylo.
-}
 \usage{
-deadTree(ntaxa, sumRate = 0.2)
 simTermTaxa(ntaxa, sumRate = 0.2)
+
 simTermTaxaAdvanced(p = 0.1, q = 0.1, mintaxa = 1, maxtaxa = 1000,
-    mintime = 1, maxtime = 1000, minExtant = 0, maxExtant = NULL,
-    min.cond = TRUE)
+  mintime = 1, maxtime = 1000, minExtant = 0, maxExtant = NULL,
+  min.cond = TRUE)
+
 trueTermTaxaTree(TermTaxaRes, time.obs)
+
+deadTree(ntaxa, sumRate = 0.2)
 }
 \arguments{
-  \item{ntaxa}{Number of monophyletic 'terminal' taxa (tip terminals) to be included on the simulated tree}
-  \item{sumRate}{The sum of the instantaneous branching and extinction rates; see below.}
+  \item{ntaxa}{Number of monophyletic 'terminal' taxa (tip
+  terminals) to be included on the simulated tree}
+
+  \item{sumRate}{The sum of the instantaneous branching and
+  extinction rates; see below.}
+
   \item{p}{Instantaneous rate of speciation/branching.}
+
   \item{q}{Instantaneous rate of extinction.}
-  \item{mintaxa}{Minimum number of total taxa over the entire history of a clade necessary for a dataset to be accepted.}
-  \item{maxtaxa}{Maximum number of total taxa over the entire history of a clade necessary for a dataset to be accepted.}
-  \item{mintime}{Minimum time units to run any given simulation before stopping.}
-  \item{maxtime}{Maximum time units to run any given simulation before stopping.}
-  \item{minExtant}{Minimum number of living taxa allowed at end of simulations.}
-  \item{maxExtant}{Maximum number of living taxa allowed at end of simulations.}
-  \item{min.cond}{If TRUE, the default, simulations are stopped when they meet all minimum conditions. If FALSE, simulations will continue until they hit maximum conditions, but are only accepted as long as they still meet all minimum conditions in addition.}
-  \item{TermTaxaRes}{The list output produced by simTermTaxa}
-  \item{time.obs}{A per-taxon vector of times of observation for the taxa in TermTaxaRes}
-}
-\details{
-deadTree generates a time-scaled topology for an entirely extinct clade of a specific number of tip taxa. Because the clade is extinct and assumed to have gone extinct in the distant past, many details of typical birth-death simulators can be ignored. If a generated clade is already conditioned upon the (a) that some number of taxa was reached and (b) then the clade went extinct, the topology (i.e. the distribution of branching and extinction events) among the branches should be independent of the actual generating rate. The frequency of nodes is a simple mathematical function of the number of taxa (i.e. number of nodes is the number of taxa -1) and their placement should completely random, given that we generally treat birth-death processes as independent Poisson processes. Thus, in terms of generating the topology, this function is nothing but a simple wrapper for the ape function rtree, which randomly places splits among a set of taxa using a simple algorithm (see Paradis, 2012). To match the expectation of a birth-death process, new branch lengths are calculated as an exponential distribution with mean 1/sumRate, where sumRate represents the sum of the branching and extinction rates. Although as long as both the branching rate and extinction rates are more than zero, any non-ultrametric tree is possible, only when the two rates are non-zer and equal to each other will there be a high chance of getting an extinct clade with many tips. Any analyses one could do on a tree such as this will almost certainly give estimates of equal branching and extinction rates, just because all taxa are extinct.
 
-simTermTaxa produces 'terminal-taxon' datasets; datasets of clades where the set of distinguishable taxa are defined as intrinsically monophyletic. (In version 1.6, I refered to this as the 'candle' mode, so named from the 'candling' horticultural practice and the visual conceptualization of the model.) On theoretical terms, terminal-taxa datasets are what would occur if (a) only descendant lineages can be sample and (b) all taxa are immediately differentiated as of the last speciation event and continue to be so differentiated until they go extinct. In practice, this means the taxa on such a tree would represent a sample of all the terminal branches, which start with some speciation event and end in an extinction event. These are taken to be the true original ranges of these taxa. No further taxa can be sampled than this set, whatsoever. Note that the differentiation here is a result of a posteriori consideration of the phylogeny: one can't even know what lineages could be sampled or the actual start points of such taxa until after the entire phylogeny of a group of organisms is generated.
+  \item{mintaxa}{Minimum number of total taxa over the
+  entire history of a clade necessary for a dataset to be
+  accepted.}
 
-Because all evolutionary history prior to any branching events is unsampled, this model is somewhat agnostic about the general model of differentiation among lineages. The only thing that can be said is that synapomorphies are assumed to be potentially present along every single branch, such that in an ideal scenario every clade could be defined. This would suggest very high anagenesis or bifurcation.
+  \item{maxtaxa}{Maximum number of total taxa over the
+  entire history of a clade necessary for a dataset to be
+  accepted.}
 
-Because the set of observable taxa is a limited subset of the true evolution history, the true taxon ranges are not a faithful reproduction of the true diversity curve. See an example below.
+  \item{mintime}{Minimum time units to run any given
+  simulation before stopping.}
 
-simTermTaxa uses deadTree to make a phylogeny, so the only datasets produced are of extinct clades.simTermTaxaAdvanced is an alternative to simTermTaxa which uses simFossilTaxa to generate the underlying pattern of evolutionary relationships and not deadTree. The arguments are thus extremely similar to simFossilTaxa. In particular, simTermTaxaAdvanced can be used to produce simulated datasets which have extant taxa. In particular for these datasets, if 
+  \item{maxtime}{Maximum time units to run any given
+  simulation before stopping.}
 
-trueTermTaxaTree is analagous to the function of taxa2phylo, in that it outputs the time-scaled-phylogeny for a terminal-taxon dataset for some times of observations. Unlike with the use of taxa2phylo on the output on simFossilTaxa, there is no need to use trueTermTaxaTree to obtain the true phylogeny when times of extinction are the times of observation; just get the $tree element from the result output by simTermTaxa. 
+  \item{minExtant}{Minimum number of living taxa allowed at
+  end of simulations.}
 
-Also unlike with taxa2phylo, the cladistic topology of relationships among morphotaxa never changes as a function of time of observation. For obtaining the 'ideal cladogram' of relationships among the terminal taxa, merely take the $tree element of the output from simtermTaxaData and remove the branch lengths (see below for an example).
+  \item{maxExtant}{Maximum number of living taxa allowed at
+  end of simulations.}
 
-As with many functions in the paleotree library, absolute time is always decreasing, i.e. the present day is zero.
+  \item{min.cond}{If TRUE, the default, simulations are
+  stopped when they meet all minimum conditions. If FALSE,
+  simulations will continue until they hit maximum
+  conditions, but are only accepted as long as they still
+  meet all minimum conditions in addition.}
+
+  \item{TermTaxaRes}{The list output produced by
+  simTermTaxa}
+
+  \item{time.obs}{A per-taxon vector of times of
+  observation for the taxa in TermTaxaRes}
 }
 \value{
-deadTree gives time-scaled phylo object, with a $root.time element. As discussed above, the result is always an extinct phylogeny of exactly ntaxa.
+deadTree gives time-scaled phylo object, with a $root.time
+element. As discussed above, the result is always an
+extinct phylogeny of exactly ntaxa.
 
-simTermTaxa and simTermTaxaAdvanced both produce a list with two components: $taxonRanges which is a two-column matrix where each row gives the true first and last appearance of observable taxa and $tree which is a time-scaled phylogeny with end-points at the true last appearance time of taxa.
+simTermTaxa and simTermTaxaAdvanced both produce a list
+with two components: $taxonRanges which is a two-column
+matrix where each row gives the true first and last
+appearance of observable taxa and $tree which is a
+time-scaled phylogeny with end-points at the true last
+appearance time of taxa.
 
-trueTermTaxaTree produces a time-scaled tree as a phylo object, which describes the relationships of populations at the times of observation given in the time.obs argument.
+trueTermTaxaTree produces a time-scaled tree as a phylo
+object, which describes the relationships of populations at
+the times of observation given in the time.obs argument.
 }
-\references{
-Paradis, E. (2012) \emph{Analysis of Phylogenetics and Evolution with R (Second Edition).} New York: Springer.
+\description{
+This function simulates the diversification of clades
+composed of monophyletic terminal taxa, which are
+distinguished in a fashion completely alternative to way
+taxa are defined in the simulation functions simFossilTaxa,
+taxa2cladogram and taxa2phylo.
 }
-\author{
-David W. Bapst
-}
-\seealso{
-deadtree is simply a wraper of the function \code{rtree} in ape.
+\details{
+deadTree generates a time-scaled topology for an entirely
+extinct clade of a specific number of tip taxa. Because the
+clade is extinct and assumed to have gone extinct in the
+distant past, many details of typical birth-death
+simulators can be ignored. If a generated clade is already
+conditioned upon the (a) that some number of taxa was
+reached and (b) then the clade went extinct, the topology
+(i.e. the distribution of branching and extinction events)
+among the branches should be independent of the actual
+generating rate. The frequency of nodes is a simple
+mathematical function of the number of taxa (i.e. number of
+nodes is the number of taxa -1) and their placement should
+completely random, given that we generally treat
+birth-death processes as independent Poisson processes.
+Thus, in terms of generating the topology, this function is
+nothing but a simple wrapper for the ape function rtree,
+which randomly places splits among a set of taxa using a
+simple algorithm (see Paradis, 2012). To match the
+expectation of a birth-death process, new branch lengths
+are calculated as an exponential distribution with mean
+1/sumRate, where sumRate represents the sum of the
+branching and extinction rates. Although as long as both
+the branching rate and extinction rates are more than zero,
+any non-ultrametric tree is possible, only when the two
+rates are non-zer and equal to each other will there be a
+high chance of getting an extinct clade with many tips. Any
+analyses one could do on a tree such as this will almost
+certainly give estimates of equal branching and extinction
+rates, just because all taxa are extinct.
 
-For a very different way of simulating diversification in the fossil record, see \code{\link{simFossilTaxa}}, \code{\link{taxa2phylo}} and \code{\link{taxa2cladogram}}.
+simTermTaxa produces 'terminal-taxon' datasets; datasets of
+clades where the set of distinguishable taxa are defined as
+intrinsically monophyletic. (In version 1.6, I referred to
+this as the 'candle' mode, so named from the 'candling'
+horticultural practice and the visual conceptualization of
+the model.) On theoretical terms, terminal-taxa datasets
+are what would occur if (a) only descendant lineages can be
+sample and (b) all taxa are immediately differentiated as
+of the last speciation event and continue to be so
+differentiated until they go extinct. In practice, this
+means the taxa on such a tree would represent a sample of
+all the terminal branches, which start with some speciation
+event and end in an extinction event. These are taken to be
+the true original ranges of these taxa. No further taxa can
+be sampled than this set, whatsoever. Note that the
+differentiation here is a result of a posteriori
+consideration of the phylogeny: one can't even know what
+lineages could be sampled or the actual start points of
+such taxa until after the entire phylogeny of a group of
+organisms is generated.
+
+Because all evolutionary history prior to any branching
+events is unsampled, this model is somewhat agnostic about
+the general model of differentiation among lineages. The
+only thing that can be said is that synapomorphies are
+assumed to be potentially present along every single
+branch, such that in an ideal scenario every clade could be
+defined. This would suggest very high anagenesis or
+bifurcation.
+
+Because the set of observable taxa is a limited subset of
+the true evolution history, the true taxon ranges are not a
+faithful reproduction of the true diversity curve. See an
+example below.
+
+simTermTaxa uses deadTree to make a phylogeny, so the only
+datasets produced are of extinct clades.simTermTaxaAdvanced
+is an alternative to simTermTaxa which uses simFossilTaxa
+to generate the underlying pattern of evolutionary
+relationships and not deadTree. The arguments are thus
+extremely similar to simFossilTaxa. In particular,
+simTermTaxaAdvanced can be used to produce simulated
+datasets which have extant taxa. In particular for these
+datasets, if
+
+trueTermTaxaTree is analagous to the function of
+taxa2phylo, in that it outputs the time-scaled-phylogeny
+for a terminal-taxon dataset for some times of
+observations. Unlike with the use of taxa2phylo on the
+output on simFossilTaxa, there is no need to use
+trueTermTaxaTree to obtain the true phylogeny when times of
+extinction are the times of observation; just get the $tree
+element from the result output by simTermTaxa.
+
+Also unlike with taxa2phylo, the cladistic topology of
+relationships among morphotaxa never changes as a function
+of time of observation. For obtaining the 'ideal cladogram'
+of relationships among the terminal taxa, merely take the
+$tree element of the output from simtermTaxaData and remove
+the branch lengths (see below for an example).
+
+As with many functions in the paleotree library, absolute
+time is always decreasing, i.e. the present day is zero.
 }
 \examples{
 set.seed(444)
@@ -84,7 +195,7 @@ taxicDivCont(taxa)
 #the tree should give a better idea
 tree<-termTaxaRes$tree
 phyloDiv(tree)
-#well, okay, its a tree. 
+#well, okay, its a tree.
 
 #get the 'ideal cladogram' ala taxa2cladogram
     #much easier with terminal-taxa simulations as no paraphyletic taxa
@@ -117,7 +228,7 @@ r<-0.1
 avgtaxa<-50
 sumRate<-0.2
 #avg number necc for an avg number sampled
-ntaxa_orig<-avgtaxa/(r/(r+sumRate))	
+ntaxa_orig<-avgtaxa/(r/(r+sumRate))
 termTaxaRes<-simTermTaxa(ntaxa=ntaxa_orig,sumRate=sumRate)
 #note that conditioning must be conducted using full sumRate
 #this is because durations are functions of both rates
@@ -141,3 +252,19 @@ Ntip(termTaxaRes$tree)
 
 layout(1)
 }
+\author{
+David W. Bapst
+}
+\references{
+Paradis, E. (2012) \emph{Analysis of Phylogenetics and
+Evolution with R (Second Edition).} New York: Springer.
+}
+\seealso{
+deadtree is simply a wraper of the function \code{rtree} in
+ape.
+
+For a very different way of simulating diversification in
+the fossil record, see \code{\link{simFossilTaxa}},
+\code{\link{taxa2phylo}} and \code{\link{taxa2cladogram}}.
+}
+

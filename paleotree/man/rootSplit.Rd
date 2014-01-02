@@ -1,25 +1,31 @@
 \name{rootSplit}
 \alias{rootSplit}
 \title{Split Tip Taxa by Root Divergence}
-\description{
-Sorts terminal taxa into groups descended from each lineage splitting off of the root node.
-}
 \usage{
 rootSplit(tree)
 }
 \arguments{
   \item{tree}{A phylo object}
 }
-\details{
-This function can be useful for studying the descended from the first bifurcation.
-}
 \value{
-Returns a list with each element a character vector containing the names of terminal taxa descended from each lineage splitting off of the root node.
+Returns a list with each element a character vector
+containing the names of terminal taxa descended from each
+lineage splitting off of the root node.
 }
-\author{
-David W. Bapst
+\description{
+Sorts terminal taxa into groups descended from each lineage
+splitting off of the root node.
+}
+\details{
+This function can be useful for studying the timing in the
+order of appearance of descended from different lineages
+descended from the first bifurcation.
 }
 \examples{
 tree<-rtree(100)
 rootSplit(tree)
 }
+\author{
+David W. Bapst
+}
+

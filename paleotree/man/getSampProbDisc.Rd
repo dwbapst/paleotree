@@ -1,59 +1,181 @@
 \name{getSampProbDisc}
 \alias{getSampProbDisc}
 \title{Fit Models of Sampling Probability to Discrete-Interval Taxon Ranges}
-\description{Uses maximum likelihood to estimate per-interval sampling probability and extinction rate, given a set of discrete-interval taxon ranges from the fossil record. This function can fit models where there are different groupings of taxa with different parameters and different free-floating time intervals with different parameters.}
 \usage{
-getSampProbDisc(timeData, n_tbins = 1, grp1 = NA, grp2 = NA, est_only = FALSE, 
-    iterations = 10000, initial = 0.5)
+getSampProbDisc(timeData, n_tbins = 1, grp1 = NA, grp2 = NA,
+  est_only = FALSE, iterations = 10000, initial = 0.5)
 }
 \arguments{
-  \item{timeData}{A 2 column matrix with the first and last occurances of taxa given in relative time intervals. If a list of length two is given for timeData, such as would be expected if the output of binTimeData was directly input, the second element is used.}
-  \item{n_tbins}{Number of time bins with different sampling/extinction parameters}
-  \item{grp1}{A vector of integers or characters, the same length as the number of taxa in timeData, where each taxon-wise element gives the group ID of the taxon for the respective row of timeData}
-  \item{grp2}{A vector of integers or characters, the same length as the number of taxa in timeData, where each taxon-wise element gives the group ID of the taxon for the respective row of timeData}
-  \item{est_only}{If true, function will give back a matrix of ML extinction rates and sampling probabilities per species rather than usual output (see below)}
-  \item{iterations}{Maximum number of iterations the optimizer is run for}
-  \item{initial}{Values used as initial parameter value to initiate the optimizing function. The same starting value is used for all parameters}
-}
-\details{
-This function uses maximum-likelihood solutions obtained by Foote (1997). These analyses are ideally applied to data from single stratigraphic section but potentially are applicable to regional or global datasets, although the behavior of those datasets is less well understood.
+  \item{timeData}{A 2 column matrix with the first and last
+  occurrences of taxa given in relative time intervals
+  (i.e. ordered from first to last). If a list of length
+  two is given for timeData, such as would be expected if
+  the output of binTimeData was directly input, the second
+  element is used.}
 
-getSampProbDisc allows for a considerable level of versatility in terms of the variation allowed among taxa in model parameters (extinction rate and sampling probability/rate). Essentially, taxa are divided into different (possibly overlapping) classes which have 'average' parameter values. These average parameters are multiplicatively-combined to calculate per-taxon parameters. For example, perhaps a user hypotheses that taxa which live in a particular environment have different characteristic sampling probabilities, that taxa of several different major clades have different characteristic sampling probabilities and that there may be several temporal shifts in the characteristic extinction rate. The classification IDs for the first two can be included  as per-taxon vectors (of either character or integers) as the arguments 'grp1' and 'grp2' and the hypothesized number of temporal breaks included as the n_tbins argument. A model where taxa differ in parameters across time, clades and environments will thus be fit and the AIC calculated, such that this model's fit can be compared to other (probably simpler) models. 
+  \item{n_tbins}{Number of time bins with different
+  sampling/extinction parameters}
 
-By default, a simple model is fit to the range data where all taxa belong to a single class, with a single characteristic extinction rate and a single characteristic sampling probability.
+  \item{grp1}{A vector of integers or characters, the same
+  length as the number of taxa in timeData, where each
+  taxon-wise element gives the group ID of the taxon for
+  the respective row of timeData}
 
-The timebins option allows for time intervals with different characteristic model parameters which are not defined a priori. The boundaries between time intervals with different characteristic parameters will thus be additional free-floating parameters included in the AIC calculation. If you have the prior inclination that sampling/extinction changed at a specific point in time, then seperate the taxa that originated before and after that point as two different groups and include those classifications as a group in the arguments.
+  \item{grp2}{A vector of integers or characters, the same
+  length as the number of taxa in timeData, where each
+  taxon-wise element gives the group ID of the taxon for
+  the respective row of timeData}
 
-This function does not implement the finite window of observation modification for dealing with range data containing extant taxa and thus that continues up to the recent (Foote, 1997). This is planned for a future update, however. For now, data input into this function should be for taxa that have already gone extinct by the modern and are not presently extant.
+  \item{est_only}{If true, function will give back a matrix
+  of ML extinction rates and sampling probabilities per
+  species rather than usual output (see below)}
 
-The intervals in timeData should be non-overlapping sequential intervals of roughly equal length. These should be in relative time, so the earliest interval should be 1 and it should increase as the intervals go up with age. This is so differences in interval numbers represents the same rough difference in interval timing. For example, a dataset where all taxa are listed from a set of sequential intervals of similar length, such as North American Mammal assemblage zones, microfossil faunal zones or graptolite biozones can be given as long as they are correctly numbered in sequential order in the input. As a counter example, a dataset which includes taxa resolved only to intervals as wide as the whole Jurassic and taxa resolved to biozones within the Jurassic should not be included in the same input. Drop the taxa from less poorly resolved intervals from such datasets if you want to apply this function, as long as this retains a large enough sample of taxa from the sequential intervals. Note that taxicDivDisc and the "bin_" timescaling methods do not require that intervals be truly sequential (they can be overlapping; see their helpfiles). The output from binTimeData is always sequential, at least by default.
+  \item{iterations}{Maximum number of iterations the
+  optimizer is run for}
 
-Please check the $message and $convergence elements of the output to make sure that convergence occurred. The likelihood surface can be very flat in some cases, particularly for small datasets (<100 taxa). If convergence was not reached, a warning message is communicated. If the optimizer does not converge, consider increasing iterations or changing the starting values.
+  \item{initial}{Values used as initial parameter value to
+  initiate the optimizing function. The same starting value
+  is used for all parameters}
 }
 \value{
-If est_only = TRUE, a matrix of per-taxon sampling and extinction parameters is output.
+If est_only = TRUE, a matrix of per-taxon sampling and
+extinction parameters is output.
 
 If est_only = FALSE (default), then the output is a list:
 
-\item{Title}{Gives details of the analysis, such as the number and type of parameters included and the number of taxa analyzed}
-\item{parameters}{Maximum-likelihood parameters of the sampling model}
-\item{log.likelihood}{The maximum support (log-likelihood) value}
-\item{AICc}{The second-order Akaike's Information Criterion, corrected for small sample sizes}
-\item{convergence}{A number indicating status of convergence; if 0 then convergence was reached; see help file for optim for the respective error list}
-\item{message}{Messages output by optim; check to make sure that model convergence occurred}
+\item{Title}{Gives details of the analysis, such as the
+number and type of parameters included and the number of
+taxa analyzed} \item{parameters}{Maximum-likelihood
+parameters of the sampling model} \item{log.likelihood}{The
+maximum support (log-likelihood) value} \item{AICc}{The
+second-order Akaike's Information Criterion, corrected for
+small sample sizes} \item{convergence}{A number indicating
+status of convergence; if 0 then convergence was reached;
+see help file for optim for the respective error list}
+\item{message}{Messages output by optim; check to make sure
+that model convergence occurred}
 
-If multi-class models are fit, the element $parameters will not be present, instead there will be several different elements that describe the characteristic parameter 'components' for each class, rather than representing the parameters of actual taxa in that class. As noted in the $Title, these should not be interpreted as the actual rates/probabilities associated with any real taxa but rather as factors which must be multiplied in combination with the estimates for other classes to be meaningful. For example, for taxa of a given group in a given time bin, their extinction rate is the extinction rate component of that time bin times the extinction rate component of their group. Completeness estimates will be output with these parameters as long as classes are not overlapping, as those estimates would not otherwise refer to meaningful groups of taxa.
+If multi-class models are fit, the element $parameters will
+not be present, instead there will be several different
+elements that describe the characteristic parameter
+'components' for each class, rather than representing the
+parameters of actual taxa in that class. As noted in the
+$Title, these should not be interpreted as the actual
+rates/probabilities associated with any real taxa but
+rather as factors which must be multiplied in combination
+with the estimates for other classes to be meaningful. For
+example, for taxa of a given group in a given time bin,
+their extinction rate is the extinction rate component of
+that time bin times the extinction rate component of their
+group. Completeness estimates will be output with these
+parameters as long as classes are not overlapping, as those
+estimates would not otherwise refer to meaningful groups of
+taxa.
 
-As the limited time-window option of Foote (1997) is not implemented, any taxa listed as being in a bin with start time 0 and end time 0 (and thus being extant without question) are dropped before the model fitting it performed.
+As the limited time-window option of Foote (1997) is not
+implemented, any taxa listed as being in a bin with start
+time 0 and end time 0 (and thus being extant without
+question) are dropped before the model fitting it
+performed.
 }
-\references{
-Foote, M. 1997 Estimating Taxonomic Durations and Preservation Probability. \emph{Paleobiology} \bold{23}(3):278--300.
-
-Foote, M., and D. M. Raup. 1996 Fossil preservation and the stratigraphic ranges of taxa. \emph{Paleobiology} \bold{22}(2):121--140.
+\description{
+Uses maximum likelihood to estimate per-interval sampling
+probability and extinction rate, given a set of
+discrete-interval taxon ranges from the fossil record. This
+function can fit models where there are different groupings
+of taxa with different parameters and different
+free-floating time intervals with different parameters.
 }
-\author{David W. Bapst, with considerable advice from Michael Foote.}
-\seealso{
- \code{\link{freqRat}},  \code{\link{getSampRateCont}}, \code{\link{sProb2sRate}}, \code{\link{qsProb2Comp}}
+\details{
+As of version 1.9 of paleotree, this function is retained
+for historical purposes and users should instead apply the
+functions listed at \code{\link{durationFreq}}. The new
+functions do not offer as many options as this function,
+but are much simpler and (in a sense) offer very different
+options for constraining parameter space.
+
+This function uses maximum-likelihood solutions obtained by
+Foote (1997). These analyses are ideally applied to data
+from single stratigraphic section but potentially are
+applicable to regional or global datasets, although the
+behavior of those datasets is less well understood.
+
+getSampProbDisc allows for a considerable level of
+versatility in terms of the variation allowed among taxa in
+model parameters (extinction rate and sampling
+probability/rate). Essentially, taxa are divided into
+different (possibly overlapping) classes which have
+'average' parameter values. These average parameters are
+multiplicatively-combined to calculate per-taxon
+parameters. For example, perhaps a user hypotheses that
+taxa which live in a particular environment have different
+characteristic sampling probabilities, that taxa of several
+different major clades have different characteristic
+sampling probabilities and that there may be several
+temporal shifts in the characteristic extinction rate. The
+classification IDs for the first two can be included as
+per-taxon vectors (of either character or integers) as the
+arguments 'grp1' and 'grp2' and the hypothesized number of
+temporal breaks included as the n_tbins argument. A model
+where taxa differ in parameters across time, clades and
+environments will thus be fit and the AIC calculated, such
+that this model's fit can be compared to other (probably
+simpler) models.
+
+By default, a simple model is fit to the range data where
+all taxa belong to a single class, with a single
+characteristic extinction rate and a single characteristic
+sampling probability.
+
+The timebins option allows for time intervals with
+different characteristic model parameters which are not
+defined a priori. The boundaries between time intervals
+with different characteristic parameters will thus be
+additional free-floating parameters included in the AIC
+calculation. If you have the prior inclination that
+sampling/extinction changed at a specific point in time,
+then seperate the taxa that originated before and after
+that point as two different groups and include those
+classifications as a group in the arguments.
+
+This function does not implement the finite window of
+observation modification for dealing with range data
+containing extant taxa and thus that continues up to the
+recent (Foote, 1997). This is planned for a future update,
+however. For now, data input into this function should be
+for taxa that have already gone extinct by the modern and
+are not presently extant.
+
+The intervals in timeData should be non-overlapping
+sequential intervals of roughly equal length. These should
+be in relative time, so the earliest interval should be 1
+and it should increase as the intervals go up with age.
+This is so differences in interval numbers represents the
+same rough difference in interval timing. For example, a
+dataset where all taxa are listed from a set of sequential
+intervals of similar length, such as North American Mammal
+assemblage zones, microfossil faunal zones or graptolite
+biozones can be given as long as they are correctly
+numbered in sequential order in the input. As a counter
+example, a dataset which includes taxa resolved only to
+intervals as wide as the whole Jurassic and taxa resolved
+to biozones within the Jurassic should not be included in
+the same input. Drop the taxa from less poorly resolved
+intervals from such datasets if you want to apply this
+function, as long as this retains a large enough sample of
+taxa from the sequential intervals. Note that taxicDivDisc
+and the "bin_" timescaling methods do not require that
+intervals be truly sequential (they can be overlapping; see
+their helpfiles). The output from binTimeData is always
+sequential, at least by default.
+
+Please check the $message and $convergence elements of the
+output to make sure that convergence occurred. The
+likelihood surface can be very flat in some cases,
+particularly for small datasets (<100 taxa). If convergence
+was not reached, a warning message is communicated. If the
+optimizer does not converge, consider increasing iterations
+or changing the starting values.
 }
 \examples{
 #Simulate some fossil ranges with simFossilTaxa
@@ -113,9 +235,31 @@ SPres2 <- getSampProbDisc(rangesDisc,n_tbins=2)
 print(c(SPres1$AICc,SPres2$AICc)) #model 2 looks pretty good
 #when does it find the break in time intervals?
 print(rangesDisc[[1]][SPres2$interval.boundaries[2],1])
-#not so great: estimates 940, not 850 
+#not so great: estimates 940, not 850
     #but look at the diversity curve: most richness in bin 1 is before 940
     #might have found the right break time otherwise...
-    #the parameter values it found are less great. Finds variation in q	
+    #the parameter values it found are less great. Finds variation in q
 }
 }
+\author{
+David W. Bapst, with considerable advice from Michael
+Foote.
+}
+\references{
+Foote, M. 1997 Estimating Taxonomic Durations and
+Preservation Probability. \emph{Paleobiology}
+\bold{23}(3):278--300.
+
+Foote, M., and D. M. Raup. 1996 Fossil preservation and the
+stratigraphic ranges of taxa. \emph{Paleobiology}
+\bold{22}(2):121--140.
+}
+\seealso{
+See the newer version of this method at
+\code{\link{durationFreq}}.
+
+Also see \code{\link{freqRat}},
+\code{\link{getSampRateCont}}, \code{\link{sProb2sRate}},
+\code{\link{qsProb2Comp}}
+}
+

@@ -95,7 +95,7 @@ expandConstrainForm<-function(formula,breakNames,nparcat){
 	lhs<-expand.grid(lapply(1:nparcat,function(x) if(lhsAll[x]){unique(breakNames[,x])}else{lhs[x]}))
 	rhs<-expand.grid(lapply(1:nparcat,function(x) if(rhsAll[x]){unique(breakNames[,x])}else{rhs[x]}))
 	#and like that, we no longer need both lhs and rhs
-	lhs<-list(rbind(lhs,rhs))
+	lhs<-list(rbind(rhs,lhs))
 	#expand all match statements
 	if(any(lhsMatch) | any(rhsMatch)){
 		#first, test that the matches are symmetric
@@ -114,7 +114,7 @@ expandConstrainForm<-function(formula,breakNames,nparcat){
 		lhs<-replaceList
 		}
 	#EXPANSION DONE
-	#get rid of any double entries within each set of equivalencies
+	#get rid of any double entries within each set of equivalancies
 	lhs<-lapply(lhs,unique)
 	#OKAY now to turn these into formulas, first make strings
 	#turning these freaking data.frames back into strings is more of a nightmare than expected

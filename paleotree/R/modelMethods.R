@@ -9,6 +9,8 @@
 #' starting values.
 
 #' @details
+#' Parameter names cannot be changed for a constrained function.
+#'
 #' The parInit function calls the bounds for each parameter and gives the midway
 #' value for each, giving a users a shorthand to quickly generate initial
 #' parameter values which are within the set bounds, for use in functions
@@ -54,9 +56,43 @@
 #' the functions presented here are derviations written by David Bapst.
 
 #' @examples
-#'
-#'
+#' #example with make_durationFreqCont
+#' set.seed(444)
+#' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+#' rangesCont <- sampleRanges(taxa,r=0.5)
+#' likFun <- make_durationFreqCont(rangesCont)
+#' 
+#' #get parameter names
+#' parnames(likFun)
+#' 
+#' #get the bounds for those parameters
+#' parbounds(likFun)
+#' 
+#' #can also get these seperately
+#' parLower(likFun)
+#' parUpper(likFun)
+#' 
+#' #initial parameter values
+#' parInit(likFun)   #arbitrary midway value between par bounds
+#' 
+#' #can then use these in optimizers, such as optim with L-BFGS-B
+#' #see the example for make_durationFreqCont
+#' 
+#' #renaming parameter names
+#' likFun2 <- likFun
+#' parnames(likFun2) <- c("extRate","sampRate")
+#' parnames(likFun2)
+#' #test if reset correctly
+#' parnames(likFun2)==c("extRate","sampRate")
 
+#' #also works for constrained functions
+#' constrainFun<-constrainParPaleo(likFun,q.1~r.1)
+#' parnames(constrainFun)
+#' #also modified the parameter bounds, see!
+#' parbounds(constrainFun)
+#' parInit(constrainFun)
+#' #but cannot rename parameter for constrained function!
+#'
 
 #parnames
 

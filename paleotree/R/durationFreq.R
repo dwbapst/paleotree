@@ -51,12 +51,17 @@
 
 #' @param timeData Two-column matrix of per-taxon first and last occurrence
 #' given in continuous time, relative to the modern (i.e. older dates are also
-#' the 'larger' dates).
+#' the 'larger' dates). Unsampled taxa (e.g. from a simulation of sampling 
+#' in the fossil record, listed as NAs the supplied matrix) are automatically
+#' dropped from the matrix and from groups simultaneously.
 
 #' @param timeList A 2 column matrix with the first and last occurrences of taxa
 #' given in relative time intervals (i.e. ordered from first to last). If a list
 #' of length two is given for timeData, such as would be expected if the output 
 #' of binTimeData was directly input, the second element is used. See details.
+#' Unsampled taxa (e.g. from a simulation of sampling in the fossil record,
+#' listed as NAs in the second matrix) are automatically dropped from the
+#' timeList and from groups simultaneously.
 
 #' @param groups Either NULL (the default) or matrix with the number of rows equal
 #' to the number of taxa and the number of columns equal to the number of 'systems'
@@ -70,7 +75,10 @@
 #' separate parameters from thinly-shelled coastal species. Grouping systems could
 #' also represent temporal heterogeneity, for example, categorizing Paleozoic versus
 #' Mesozoic taxa. If groups are NULL (the default), all taxa are assumed to be of
-#' the same group with the same parameters.
+#' the same group with the same parameters. Unsampled taxa (e.g. from a simulation
+#' of sampling in the fossil record, listed as NAs in timeData or timeList)
+#' are automatically dropped from groupings and the time dataset (either timeData
+#' or timeList) and from groups simultaneously.
 
 #' @param drop.extant Drops all extant taxa from a dataset.
 
@@ -82,7 +90,18 @@
 #' A function of class "paleotreeFunc", which takes vector equal to the number
 #' of parameters and returns the *negative* log likelihood (for use with optim and
 #' similar optimizing functions, which attempt to minimize support values). See the
-#' functions listed at 
+#' functions listed at \code{\link{modelMethods}} for manipulating and examining
+#' such functions and \code{\link{constrainParPaleo}} for constraining parameters.
+#'
+#' Parameters in the output functions are named 'q' for the instantaneous per-capita
+#' extinction rate, 'r' for the instantaneous per-capita sampling rate and 'R' for
+#' the per-interval taxonomic sampling probability. Groupings follow the parameter
+#' names, seperated by periods; by default, the parameters will be placed in at
+#' least group 1 (of a grouping with a single group), such that make_durationFreqCont
+#' by default creates a function with parameters named 'q.1' and 'r.1', while
+#' make_durationFreqDisc creates a function with parameters named 'q.1' and 'R.1'.
+#' For translating these sampling probabilities and sampling rates, see
+#' \code{\link{SamplingConv}}.
 
 #' @aliases make_durationFreqCont make_durationFreqDisc
 
@@ -103,7 +122,43 @@
 #' ranges of taxa. \emph{Paleobiology} \bold{22}(2):121--140.
 
 #' @examples
+#' #let's simulate some taxon ranges from an imperfectly sampled fossil record
+#' set.seed(444)
+#' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+#' rangesCont <- sampleRanges(taxa,r=0.5)
+#' #bin the ranges into discrete time intervals
+#' rangesDisc <- binTimeData(rangesCont,int.length=1)
 #' 
+#' #old ways of doing it
+#' getSampRateCont(rangesCont)
+#' getSampProbDisc(rangesDisc)
+#' 
+#' #new ways of doing it
+#'     # we can constrain our functions
+#'     # we can use parInit, parLower and parUpper to control parameter bounds
+#' 
+#' #as opposed to getSampRateCont, we can do:
+#' likFun<-make_durationFreqCont(rangesCont)
+#' optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
+#'       method="L-BFGS-B",control=list(maxit=1000000))
+#' 
+#' #as opposed to getSampProbDisc, we can do:
+#' likFun<-make_durationFreqDisc(rangesDisc)
+#' optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
+#'      method="L-BFGS-B",control=list(maxit=1000000))
+#' 
+#' #these give the same answers (as we'd expect them to!)
+#' 
+#' #with newer functions we can constrain our functions easily
+#'     # what if we knew the extinction rate = 0.1 a priori?
+#' likFun<-make_durationFreqCont(rangesCont)
+#' likFun<-constrainParPaleo(likFun,q.1~0.1)
+#' optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
+#' 	    method="L-BFGS-B",control=list(maxit=1000000))
+#' 
+#' #actually decreases our sampling rate estimate
+#'    # gets further away from true generating value, r = 0.5 (geesh!)
+#'    # but this *is* a small dataset...
 
 #' @name durationFreq
 #' @rdname durationFreq
@@ -119,13 +174,24 @@ make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=
 	#drop.extant drops ALL taxa that survive to the modern (i.e. truncated ranges)
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
 		}else{stop("Error: timeData not of matrix or data.frame format")}}
-	timeData<-timeData[!is.na(timeData[,1]) & !is.na(timeData[,2]),]
+	#drop unsampled taxa (i.e. NAs)
+	naDroppers<-is.na(timeData[,1]) | is.na(timeData[,2])
+	if(any(naDroppers)){
+		timeData<-timeData[!naDroppers,]
+		if(!is.null(groups)){
+			groups<-groups[!naDroppers,,drop=FALSE]
+			if(nrow(timeData)!=nrow(groups)){
+				stop(paste("number of rows in groups isn't equal to number of taxa in timeData",
+					if(drop.extant){"after taxa listed with NA in timeData are dropped in both"}))}
+			}
+		}
+	#take care of modern taxa
 	modernTest<-apply(timeData,1,function(x) all(x==0))
 	if(any(modernTest)){	#if modern present
 		#modify the taxon occurrence matrix
 		if(drop.extant){
 			modDroppers<-timeData[,2]==0
-			timeData<-timeData[-modDroppers,]
+			timeData<-timeData[-modDroppers,,drop=FALSE]
 			if(!is.null(groups)){
 				if(drop.extant & any(modernTest)){groups<-groups[-modDroppers,]}
 				if(nrow(timeData)!=nrow(groups)){
@@ -135,6 +201,7 @@ make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=
 			}
 		}
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
+	if(nrow(timeData)!=nrow(groups)){stop("Number of rows in groups isn't equal to number of taxa in timeData!")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
 	if(any(timeData[,2]<0)){stop("Error: Some dates in timeData <0 ?")}
 	#get the dataset
@@ -195,18 +262,18 @@ make_durationFreqDisc<-function(timeList,groups=NULL,drop.extant=TRUE){
 		timeList<-timeData
 		modernTest<-apply(timeList[[1]],1,function(x) all(x==0))
 		if(any(modernTest)){	#if modern present
-			if(sum(modernTest)>1){stop("More than one modern interval in timeData??!")}
+			if(sum(modernTest)>1){stop("More than one modern interval in timeList??!")}
 			#modify the taxon occurrence matrix
 			modInt<-which(modernTest)
 			newInt<-which(apply(timeList[[1]],1,function(x) x[1]!=0 & x[2]==0))
-			if(length(newInt)>1){stop("More than one interval stretching to the modern in timeData??!")}
+			if(length(newInt)>1){stop("More than one interval stretching to the modern in timeList??!")}
 			if(drop.extant){
 				modDroppers<-apply(timeList[[2]],1,function(x) x[1]==modInt)
 				timeList[[2]]<-timeList[[2]][-modDroppers,]
 				if(!is.null(groups)){
-					if(drop.extant & any(modernTest)){groups<-groups[-modDroppers,]}
+					if(drop.extant & any(modernTest)){groups<-groups[-modDroppers,,drop=FALSE]}
 					if(nrow(timeList[[2]])!=nrow(groups)){
-						stop(paste("number of rows in groups isn't equal to number of taxa in timeData",
+						stop(paste("number of rows in groups isn't equal to number of taxa in timeList[[2]]",
 							if(drop.extant){"after modern taxa are dropped"}))}
 					}
 				}
@@ -215,10 +282,22 @@ make_durationFreqDisc<-function(timeList,groups=NULL,drop.extant=TRUE){
 			}
 		timeData<-timeList[[2]]
 		}
+	#drop unsampled taxa (i.e. NAs)
+	naDroppers<-is.na(timeData[,1]) | is.na(timeData[,2])
+	if(any(naDroppers)){
+		timeData<-timeData[!naDroppers,]
+		if(!is.null(groups)){
+			groups<-groups[!naDroppers,,drop=FALSE]
+			if(nrow(timeData)!=nrow(groups)){
+				stop(paste("number of rows in groups isn't equal to number of taxa in timeList[[2]]",
+					if(drop.extant){"after taxa listed with NA in timeList[[2]] are dropped in both"}))}
+			}
+		}
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
+	if(nrow(timeData)!=nrow(groups)){stop("Number of rows in groups isn't equal to number of taxa in timeList[[2]]!")}
 	if(any(apply(timeData,1,diff)<0)){
 		stop("Error: timeData / timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
-	if(any(timeData[,2]<0)){stop("Error: Some dates in timeData / timeList[[2]] <0 ?")}
+	if(any(timeData[,2]<0)){stop("Error: Some dates in timeList <0 ?")}
 	if(sum(timeData%%1)>0){stop("Error: Some of these interval numbers aren't given as whole numbers! What?")}
 	#get the dataset
 	dur<-apply(timeData,1,diff)+1

@@ -70,7 +70,7 @@ expandTaxonTree<-function(taxonTree,taxaData,collapse=NULL,keepBrLen=FALSE,plot=
 	#this function takes a higher-level taxon tree and
 		#expands it to a lower level species-level tree
 		#using a species list
-	#"taxa" here represents the groups to be replaced on the taxonTree
+	# term 'taxa' here represents the groups to be replaced on the taxonTree
 	#taxonTree = tree with taxon IDs as tips
 	#taxaData = character vector of higher taxon ids for each new tip, tip labels as vector names
 	#collapse = if present, vector of taxa names to be collapsed

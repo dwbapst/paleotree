@@ -29,19 +29,19 @@
 #' For make_durationFreqDisc, the intervals in timeList should be
 #' non-overlapping sequential intervals of roughly equal length. These
 #' should be in relative time as described above, so the earliest interval
-#" should be 1 and the numbering should increase as the intervals go up with
+#' should be 1 and the numbering should increase as the intervals go up with
 #' age. If both previous statements are true, then differences in interval
 #' numbers will represent the same rough difference in the absolute timing
-#" of those intervals. For example, a dataset where all taxa are listed from
+#' of those intervals. For example, a dataset where all taxa are listed from
 #' a set of sequential intervals of similar length, such as North American
 #' Mammal assemblage zones, microfossil faunal zones or graptolite biozones
-#" can be given as long as they are correctly numbered in sequential order
-#" in the input. As a counter example, a dataset which includes taxa resolved
-#" only to intervals as wide as the whole Jurassic and taxa resolved to
-#" biozones within the Jurassic should not be included in the same input.
+#' can be given as long as they are correctly numbered in sequential order
+#' in the input. As a counter example, a dataset which includes taxa resolved
+#' only to intervals as wide as the whole Jurassic and taxa resolved to
+#' biozones within the Jurassic should not be included in the same input.
 #' Drop taxa from less poorly resolved intervals from such datasets if you
-#" want to apply this function, as long as this retains a large enough sample
-#" of taxa listed from the sequential set of intervals. 
+#' want to apply this function, as long as this retains a large enough sample
+#' of taxa listed from the sequential set of intervals. 
 #' 
 #' Please check that the optimizer function you select actually converges. The
 #' likelihood surface can be very flat in some cases, particularly for small

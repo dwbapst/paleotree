@@ -1,11 +1,21 @@
-Version - 
+Version - 1.9 - 01-02-14
 -Changed all functions to individual R script files rather than single master script. Why didn't I do this years ago??!
+-All help files converted to an roxygen2 format within function scripts
 -At suggestion of Fabricio Villalobos, added option to expandTaxonTree that allows branch lengths to be retained and the added lower-taxa are connected with zero-length branches. Only useful for very specific purposes, please use with caution.
 -Changed all lines which checked for class "phylo" of input objects to use is(obj,"phylo") instead of class(obj)=="phylo" per recommendation of Carl Boettiger
 -Added new warning line to taxicDivDisc so people who try to pass it matrices with character strings in the matrix will get more helpful warning messages
 -Upgraded probAnc and qSProb2comp based on equations in Foote (1996) for all three modes of origination, also fixed some errors in previous versions
+-Added new function pqr2Ps which uses Emily King's exact derivation for the joint probability of a clade being (a) going extinct but sampled on an infinite time scale and (b) never going extinct on an infinite time scale
 -Removed internal Ps function from cal3, now pqr2Ps which is exported directly to namespace
-
+-Converted to new way to handle likelihood functions in paleotree, moving to a function-as-an-object system like diversitree.
+-Following on last point, added new functions for fitting models of duration frequency data, replacing getSampProbDisc and getSampRateCont
+-More models to follow in future versions of paleotree
+-Modified diversitree's 'constrain' function to make a paleotree version named constrainParPaleo which is both entirely separate and fulfills needs such as constraining many similarly named parameters to a single value
+-See new functions listed in ?modelMethods for manipulating functions in the new model format
+-Added some not-exported hidden functions for use by the various model-handling functions
+-Added a 'terrible idea' function optimPaleo which simplifies using optim with new parameter bounds functions. This function is entirely for pedagogical reasons and may be removed later.
+-Added new function horizonSampRate which uses ML estimator from Solow and Smith (1997) for estimating sampling rate from precise durations in continuous time and number of sampled horizons
+-Added new function perCapitaRates which estimates the per-capita origination and extinction rates from discrete interval data, following the methods from Foote (2000)
 
 Version 1.8.2 - 09-03-13
 -Added sample retiolitid graptolite dataset, try data(retiolinae)

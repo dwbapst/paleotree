@@ -27,7 +27,7 @@
 #' As I have deliberately not exported the function which creates this class, it
 #' should be impossible for regular users to obtain such objects easily without
 #' using one of the 'make' functions, which automatically output a function of the
-#" appropriate class and attributes.
+#' appropriate class and attributes.
 
 #' @param ... 'Ignored arguments to future methods' (i.e. for diversitree). Kept here only
 #' so constrainParPaleo is kept as close to the parent method in diversitree as possible.

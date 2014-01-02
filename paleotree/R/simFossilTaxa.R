@@ -485,7 +485,7 @@ simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,min
 		results[[i]]<-taxad2
 		if(plot){
 			taxicDivCont(results[[i]],int.length=0.2)
-			if(nruns>1){title(paste("Run #",i," of ",nruns,sep=""))}
+			if(nruns>1){title(paste("Run Num.",i," of ",nruns,sep=""))}
 			}
 		}
 	if(print.runs){message(paste(nruns," runs accepted from ",ntries," total runs (",signif(nruns/ntries,2)," Acceptance Probability)",sep=""))}

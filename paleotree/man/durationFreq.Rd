@@ -89,12 +89,12 @@ frequency of taxon durations, given either in discrete
 (make_durationFreqDisc) or continuous time
 (make_durationFreqCont). These models can then be
 constrained using functions available in this package
-and/ord analyzed with commonly used optimizing functions.
+and/or analyzed with commonly used optimizing functions.
 }
 \details{
 These functions effectively replace two older functions in
 paleotree, \code{\link{getSampRateCont}} and
-\code{\link{getSampRateDisc}}, which are otherwise retained
+\code{\link{getSampProbDisc}}, which are otherwise retained
 in paleotree for historical purposes. The functions here do
 not offer the floating time interval options of their older
 siblings, but do allow for greater flexibility in defining

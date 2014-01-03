@@ -120,9 +120,6 @@ tree1$root.time <- 10
 compareNodeAges(tree1,tree2)
 compareTermBranches(tree1,tree2)
 }
-\author{
-David W. Bapst
-}
 \seealso{
 \code{\link{taxa2phylo}}, \code{\link{phyloDiv}}
 }

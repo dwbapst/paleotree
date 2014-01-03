@@ -98,12 +98,13 @@ parameters, or arbitrary expressions of free parameters."
 
 In general, formulae should be of the structure:
 
-\eqn{The Thing We Want To Constrain (aka 'LHS') ~ The Thing
-We Are Constraining the LHS To (the 'RHS')}
+\emph{LHS ~ RHS}
 
-LHS and RHS are the 'left-hand side' and 'right-hand side'
-respectively. This notation as LHS and RHS for formulae
-apparently dates back to the S language.
+...where the LHS is the 'Parameter We Want to Constrain'
+and the RHS is whatever we are constraining the LHS to,
+usually another parameter. LHS and RHS are the 'left-hand
+side' and 'right-hand side' respectively (which I
+personally find obscure).
 
 Like the original \code{constrain} function this function
 is based on, this function cannot remove constraints
@@ -114,7 +115,8 @@ issue nonsensical functions with an incorrect number/names
 of parameters if the parameters to be constrained are given
 in the wrong order in formulae.
 
-\section{Differences from diversitree's constrain}{
+\subsection{Differences from diversitree's constrain
+Function}{
 
 This forked paleotree version of constrain has two
 additional features, both introduced to aid in constraining

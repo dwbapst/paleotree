@@ -240,6 +240,7 @@ post-sampling. For more details, see the help file at
 \code{\link{simFossilTaxa_SRCond}}.
 
 More details on this function's design can be read here:
+
 http://nemagraptus.blogspot.com/2012/04/simulating-fossil-record.html
 }
 \examples{

@@ -3,12 +3,12 @@
 #' These functions construct likelihood models of the observed frequency
 #' of taxon durations, given either in discrete (make_durationFreqDisc) 
 #' or continuous time (make_durationFreqCont). These models can then be
-#' constrained using functions available in this package and/ord analyzed 
+#' constrained using functions available in this package and/or analyzed 
 #' with commonly used optimizing functions.
 #'
 #' @details
 #' These functions effectively replace two older functions in paleotree,
-#' \code{\link{getSampRateCont}} and \code{\link{getSampRateDisc}}, which
+#' \code{\link{getSampRateCont}} and \code{\link{getSampProbDisc}}, which
 #' are otherwise retained in paleotree for historical purposes. The
 #' functions here do not offer the floating time interval options of
 #' their older siblings, but do allow for greater flexibility in defining
@@ -201,8 +201,8 @@ make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=
 			}
 		}
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(nrow(timeData)!=nrow(groups)){stop("Number of rows in groups isn't equal to number of taxa in timeData!")}
-	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
+	if(any(timeData[,1]<timeData[,2])){
+		stop("Error: timeData is not in time relative to modern (decreasing to present)")}
 	if(any(timeData[,2]<0)){stop("Error: Some dates in timeData <0 ?")}
 	#get the dataset
 	dur<-(timeData[,1]-timeData[,2])
@@ -211,6 +211,8 @@ make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=
 	#define parnames
 	parnames<-c("q","r")
 	if(is.null(groups)){groups2<-matrix(1,length(dur),1)}else{groups2<-groups}
+	if(nrow(timeData)!=nrow(groups2)){
+		stop("Number of rows in groups isn't equal to number of taxa in timeData!")}
 	for(i in 1:ncol(groups2)){
 		parnames<-as.vector(sapply(parnames,function(x) paste(x,unique(groups2[,i]),sep=".")))
 		}
@@ -294,11 +296,11 @@ make_durationFreqDisc<-function(timeList,groups=NULL,drop.extant=TRUE){
 			}
 		}
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(nrow(timeData)!=nrow(groups)){stop("Number of rows in groups isn't equal to number of taxa in timeList[[2]]!")}
 	if(any(apply(timeData,1,diff)<0)){
 		stop("Error: timeData / timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
 	if(any(timeData[,2]<0)){stop("Error: Some dates in timeList <0 ?")}
-	if(sum(timeData%%1)>0){stop("Error: Some of these interval numbers aren't given as whole numbers! What?")}
+	if(sum(timeData%%1)>0){
+		stop("Error: Some of these interval numbers aren't given as whole numbers! What?")}
 	#get the dataset
 	dur<-apply(timeData,1,diff)+1
 	#timeData1<-max(timeData)-timeData+1
@@ -315,6 +317,8 @@ make_durationFreqDisc<-function(timeList,groups=NULL,drop.extant=TRUE){
 	#ngroup<-ifelse(is.null(groups),1,nrow(groupings))
 	#NEW
 	if(is.null(groups)){groups2<-matrix(1,length(dur),1)}else{groups2<-groups}
+	if(nrow(timeData)!=nrow(groups2)){
+		stop("Number of rows in groups isn't equal to number of taxa in timeList[[2]]!")}
 	for(i in 1:ncol(groups2)){
 		parnames<-as.vector(sapply(parnames,function(x) paste(x,unique(groups2[,i]),sep=".")))
 		}

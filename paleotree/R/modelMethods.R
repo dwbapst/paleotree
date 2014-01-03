@@ -105,12 +105,14 @@ parnames <- function(x, ...){
 	}
 
 #' @rdname modelMethods
+#' @export
 parnames.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parnames")
 	}
 
 #' @rdname modelMethods
+#' @export
 parnames.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parnames")
@@ -124,12 +126,14 @@ parnames.constrained <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
+#' @export
 `parnames<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parnames on a constrained function")
 	}
 	
 #' @rdname modelMethods
+#' @export
 `parnames<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
@@ -153,12 +157,14 @@ parbounds <- function(x, ...){
 	}
 
 #' @rdname modelMethods	
+#' @export
 parbounds.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parbounds")
 	}
 	
 #' @rdname modelMethods
+#' @export
 parbounds.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parbounds")
@@ -172,17 +178,19 @@ parbounds.constrained <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
+#' @export
 `parbounds<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parbounds on a constrained function")
 	}
 	
 #' @rdname modelMethods
+#' @export
 `parbounds<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
 	#original uses base, not current number of params? I'm not following why...
-	if(!is.list(values) | !length(value)==2){stop("parbounds needs to be a list composed of two vectors")}
+	if(!is.list(value) | !length(value)==2){stop("parbounds needs to be a list composed of two vectors")}
 	lower<-as.numeric(value[[1]])
 	if(length(lower)!=np){stop("length of new lower parbounds not equal to number of parameters")}
 	if(any(is.na(lower))){stop("NA values in lower parbounds replacement")}
@@ -204,12 +212,14 @@ parLower <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
+#' @export
 parLower.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parbounds")[[1]]
 	}
 	
 #' @rdname modelMethods
+#' @export
 parLower.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parbounds")[[1]]
@@ -223,12 +233,14 @@ parLower.paleotreeFunc <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
+#' @export
 `parLower<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parLower on a constrained function")
 	}
 	
 #' @rdname modelMethods
+#' @export
 `parLower<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
@@ -248,12 +260,14 @@ parUpper <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
+#' @export
 parUpper.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	attr(x, "parbounds")[[2]]
 	}
 	
 #' @rdname modelMethods
+#' @export
 parUpper.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
   	attr(x,"parbounds")[[2]]
@@ -267,12 +281,14 @@ parUpper.paleotreeFunc <- function(x, ...){
 	}
 	
 #' @rdname modelMethods
+#' @export
 `parUpper<-.constrained` <- function(x, value){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	stop("Cannot set parUpper on a constrained function")
 	}
 	
 #' @rdname modelMethods
+#' @export
 `parUpper<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
@@ -294,6 +310,7 @@ parInit <- function(x, ...){
 	}
 
 #' @rdname modelMethods
+#' @export
 parInit.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	res<-(attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2
@@ -303,6 +320,7 @@ parInit.constrained <- function(x, ...){
 	}
 
 #' @rdname modelMethods	
+#' @export
 parInit.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	res<-(attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2

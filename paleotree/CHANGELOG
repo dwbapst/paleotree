@@ -9,7 +9,7 @@ Version - 1.9 - 01-02-14
 -Removed internal Ps function from cal3, now pqr2Ps which is exported directly to namespace
 -Converted to new way to handle likelihood functions in paleotree, moving to a function-as-an-object system like diversitree.
 -Following on last point, added new functions for fitting models of duration frequency data, replacing getSampProbDisc and getSampRateCont
--More models to follow in future versions of paleotree
+-More models to follow in future versions of paleotree: added new function footeValues which will (eventually) support a release of a function that implements Foote's (2001, 2003, 2005) inverse survivorship models
 -Modified diversitree's 'constrain' function to make a paleotree version named constrainParPaleo which is both entirely separate and fulfills needs such as constraining many similarly named parameters to a single value
 -See new functions listed in ?modelMethods for manipulating functions in the new model format
 -Added some not-exported hidden functions for use by the various model-handling functions

@@ -99,6 +99,7 @@
 #' file at \code{\link{simFossilTaxa_SRCond}}.
 #' 
 #' More details on this function's design can be read here:
+#'
 #' http://nemagraptus.blogspot.com/2012/04/simulating-fossil-record.html
 
 #' @param p Instantaneous rate of origination/branching per lineage-time units.

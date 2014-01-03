@@ -3,7 +3,7 @@
 #' This function is a deliberately simplistic automater for the function
 #' \code{\link{optim}} and the use of the "L-BFGS-B" optimizing method,
 #' with initial parameter values and bounds provided with \code{\link{parInit}},
-#' \code{\link{parLower}} and \code{\link{parUpper}. It is mainly provided here
+#' \code{\link{parLower}} and \code{\link{parUpper}}. It is mainly provided here
 #' as a shorthand to be used in educational demonstrations where model-fitting
 #' is not the primary focus, and use in actual analyses should be avoided.
 #'

@@ -78,7 +78,7 @@
 #' footeValues(rate,rate,rate,q_cont=FALSE) #extinction pulsed
 #' footeValues(rate,rate,rate,p_cont=FALSE,q_cont=FALSE) #all pulsed
 
-#' export
+#' @export
 footeValues<-function(p,q,r,PA_n=0,PB_1=0,p_cont=TRUE,q_cont=TRUE,Nb=1){
 	#set '03 Table Values
 	# TEST p, q, r

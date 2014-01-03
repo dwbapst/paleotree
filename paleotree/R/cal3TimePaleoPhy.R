@@ -291,7 +291,8 @@
 #' #to use these, we need an estimate of the sampling rate (we set it to 0.5 above)
 #' SRres <- getSampRateCont(rangesCont)
 #' sRate <- SRres[[2]][2]
-#' #we also need extinction rate and branching rate; we can get extRate from getSampRateCont too
+#' # we also need extinction rate and branching rate
+#'    # we can get extRate from getSampRateCont too
 #' #we'll assume extRate=brRate (ala Foote et al., 1999); may not always be a good assumption
 #' divRate<-SRres[[2]][1]
 #' #now let's try cal3TimePaleoPhy, which timescales using a sampling rate to calibrate
@@ -414,7 +415,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
 	if(length(droppers)>0){
 		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
-		if(noisyDrop){message(paste("Warning: Following taxa dropped from tree:",droppers))}
+		if(noisyDrop){message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))}
 		tree<-drop.tip(tree,droppers)
 		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data!")}
 		timeData[which(!sapply(rownames(timeData),function(x) any(x==tree$tip.label))),1]<-NA
@@ -769,7 +770,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
 		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
-		message(paste("Warning: Following taxa dropped from tree:",droppers))
+		message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))
 		tree<-drop.tip(tree,droppers)
 		if(is.null(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
 		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data!")}

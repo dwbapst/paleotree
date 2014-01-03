@@ -46,17 +46,19 @@
 #' Record. \emph{Paleobiology} \bold{22}(2):141--151.
 
 #' @examples
+#' #examples, run at very low nrep for sake of speed (examples need to be fast)
+#'
 #' #default: probability of sampling a direct descendant
-#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis="directDesc")
+#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis="directDesc",nrep=100)
 #' 
 #' #other modes
-#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis="directDesc")
-#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="directDesc")
+#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis="directDesc",nrep=100)
+#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="directDesc",nrep=100)
 #'
 #' #probability of having sampled indirect descendants of a taxon
-#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis="directDesc")	#default
-#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis="directDesc")
-#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="directDesc")
+#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis="directDesc",nrep=100)	#default
+#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis="directDesc",nrep=100)
+#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="directDesc",nrep=100)
 #'
 #'@export
 probAnc<-function(p,q,R,mode="budding",analysis="directDesc",Mmax=85,nrep=10000){

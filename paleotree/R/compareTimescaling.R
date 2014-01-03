@@ -39,15 +39,20 @@
 #' attached to tip taxa shared by the two trees, relative to the first tree.
 #' Thus, a shift of +5 means that this particular terminal taxon is connected
 #' to a terminal branch which is five time-units longer.
-#' 
+
+
 #' @aliases compareTimescaling compareNodeAges compareTermBranches
+
 #' @param tree1 A time-scaled phylogeny of class 'phylo'
+
 #' @param tree2 A time-scaled phylogeny of class 'phylo'; for compareNodeAges,
 #' tree2 can also be an object of class 'multiPhylo' composed of multiple
 #' phylogenies. See below.
+
 #' @param dropUnshared If TRUE, nodes not shared across all input trees are
 #' dropped from the final output for compareNodeAge. This argument has no
 #' effect if tree2 is a single phylogeny (a 'phylo'-class object).
+
 #' @return compareTermBranches returns a vector of temporal shifts for terminal
 #' branches with the shared tip names as labels.
 #' 
@@ -60,7 +65,8 @@
 #' taxon names of the particular clade, the dates of which are given in that
 #' column. See above for more details. These names can be very long when large
 #' trees are considered.
-#' @author David W. Bapst
+
+
 #' @seealso \code{\link{taxa2phylo}}, \code{\link{phyloDiv}}
 #' @examples
 #' 
@@ -104,10 +110,10 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 		#08-02-12: Allows multiple trees2 to be multiple trees
 			#will produce a matrix, each row is a tree in tree2, each column a different but commonly shared clade
 	#require(ape)
-	if(!is(tree2, "phylo")){stop("Error: tree1 is not of class phylo")}
+	if(!is(tree1, "phylo")){stop("Error: tree1 is not of class phylo")}
 	tree1orig<-tree1
 	if(!is(tree2, "phylo")){
-		if(!is(tree, "multiPhylo")){stop("Error: tree2 is not of class phylo or multiphylo")}
+		if(!is(tree2, "multiPhylo")){stop("Error: tree2 is not of class phylo or multiphylo")}
 		trees2<-tree2
 	}else{		#if it isn't multiphylo, make it into one!
 		trees2<-list(tree2)

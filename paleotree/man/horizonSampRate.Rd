@@ -5,7 +5,7 @@
 horizonSampRate(sampOcc = NULL, durations = NULL, nCollections = NULL)
 }
 \arguments{
-  \item{SampOcc}{A list with the number of elements equal
+  \item{sampOcc}{A list with the number of elements equal
   to the number of taxa, and each element of the list being
   a numerical vector with the length equal to the number of
   collections for each taxon, and each value equal to the
@@ -62,7 +62,8 @@ that matters.
     # just set ranges.only = FALSE
 #let's try a simulation example:
 set.seed(444)
-taxa <- simFossilTaxa(p = 0.1,q = 0.1,nruns = 1,mintaxa = 20,maxtaxa = 30,maxtime = 1000,maxExtant = 0)
+taxa <- simFossilTaxa(p = 0.1,q = 0.1,nruns = 1,mintaxa = 20,
+    maxtaxa = 30, maxtime = 1000, maxExtant = 0)
 sampledOccurrences <- sampleRanges(taxa,r = 0.5,ranges.only = FALSE)
 
 # now try with horizonSampRate

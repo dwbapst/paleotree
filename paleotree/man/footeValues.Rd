@@ -81,7 +81,6 @@ footeValues(rate,rate,rate)	#all continuous
 footeValues(rate,rate,rate,p_cont=FALSE)	#origination pulsed
 footeValues(rate,rate,rate,q_cont=FALSE) #extinction pulsed
 footeValues(rate,rate,rate,p_cont=FALSE,q_cont=FALSE) #all pulsed
-export
 }
 \author{
 David W. Bapst, with advice from Michael Foote.

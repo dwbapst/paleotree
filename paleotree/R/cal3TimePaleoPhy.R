@@ -423,7 +423,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 		}
 	if(!is.null(node.mins)){
 		if(Nnode(originalInputTree)!=length(node.mins)){
-					stop("node.mins must be same length as number of nodes in the input tree!")}
+			stop("node.mins must be same length as number of nodes in the input tree!")}
 		if(length(droppers)>0){	#then... the tree has changed, need to recalculate node.mins
 			node_changes<-match(prop.part(originalInputTree),prop.part(tree))
 			node.mins1<-rep(NA,Nnode(tree))

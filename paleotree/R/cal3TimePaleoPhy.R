@@ -336,9 +336,14 @@
 #' 
 #' #using node.mins
 #' #let's say we have (molecular??) evidence that node #5 is at least 1200 time-units ago
-#' nodeDates <- rep(NA,(Nnode(cladogram)))
+#' #to use node.mins, first need to drop any unshared taxa
+#' droppers <- cladogram$tip.label[is.na(
+#'       match(cladogram$tip.label,names(which(!is.na(rangesCont[,1])))))]
+#' cladoDrop <- drop.tip(cladogram, droppers)
+#' # now make vector same length as number of nodes
+#' nodeDates <- rep(NA, Nnode(cladoDrop))
 #' nodeDates[5]<-1200
-#' ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
+#' ttree <- cal3TimePaleoPhy(cladoDrop,rangesCont,brRate=divRate,extRate=divRate,
 #'     sampRate=sRate,ntrees=1,node.mins=nodeDates,plot=TRUE)
 #' 
 #' #example with time in discrete intervals
@@ -422,14 +427,10 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 		timeData[which(!sapply(rownames(timeData),function(x) any(x==tree$tip.label))),1]<-NA
 		}
 	if(!is.null(node.mins)){
-		if(Nnode(originalInputTree)!=length(node.mins)){
-			stop("node.mins must be same length as number of nodes in the input tree!")}
-		if(length(droppers)>0){	#then... the tree has changed, need to recalculate node.mins
-			node_changes<-match(prop.part(originalInputTree),prop.part(tree))
-			node.mins1<-rep(NA,Nnode(tree))
-			node.mins1[node_changes]<-node.mins
-			node.mins<-node.mins1
-			}
+		if(length(droppers)>0){	#then... the tree has changed unpredictably, node.mins unusable
+			stop("node.mins not compatible with datasets where some taxa are dropped; drop before analysis instead")}
+		if(Nnode(tree)!=length(node.mins)){
+					stop("node.mins must be same length as number of nodes in the input tree!")}
 		}
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
@@ -777,7 +778,6 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		message("Warning: Do not interpret a single tree; dates are stochastically pulled from uniform distributions")}
 	if(rand.obs & FAD.only){stop("Error: rand.obs and FAD.only cannot both be true")}
 	if(!is.null(sites) & point.occur){stop("Error: Inconsistent arguments, point.occur=TRUE will replace input 'sites' matrix")}
-	originalInputTree<-tree
 	#clean out all taxa which are NA or missing for timeData
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
@@ -789,14 +789,10 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x==tree$tip.label))),1]<-NA
 		}
 	if(!is.null(node.mins)){
-		if(Nnode(originalInputTree)!=length(node.mins)){
+		if(length(droppers)>0){	#then... the tree has changed unpredictably, node.mins unusable
+			stop("node.mins not compatible with datasets where some taxa are drop; drop before analysis instead")}
+		if(Nnode(tree)!=length(node.mins)){
 					stop("node.mins must be same length as number of nodes in the input tree!")}
-		if(length(droppers)>0){	#then... the tree has changed, need to recalculate node.mins
-			node_changes<-match(prop.part(originalInputTree),prop.part(tree))
-			node.mins1<-rep(NA,Nnode(tree))
-			node.mins1[node_changes]<-node.mins
-			node.mins<-node.mins1
-			}
 		}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}

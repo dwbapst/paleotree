@@ -336,7 +336,7 @@
 #' 
 #' #using node.mins
 #' #let's say we have (molecular??) evidence that node #5 is at least 1200 time-units ago
-#' nodeDates <- rep(NA,(Nnode(cladogram)-1))
+#' nodeDates <- rep(NA,(Nnode(cladogram)))
 #' nodeDates[5]<-1200
 #' ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
 #'     sampRate=sRate,ntrees=1,node.mins=nodeDates,plot=TRUE)
@@ -412,6 +412,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	#first clean out all taxa which are NA or missing in timeData
 	if(ntrees==1){message("Warning: Do not interpret a single cal3 time-scaled tree")}
 	if(ntrees<1){stop("Error: ntrees<1")}
+	originalInputTree<-tree
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
 	if(length(droppers)>0){
 		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
@@ -419,6 +420,16 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 		tree<-drop.tip(tree,droppers)
 		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data!")}
 		timeData[which(!sapply(rownames(timeData),function(x) any(x==tree$tip.label))),1]<-NA
+		}
+	if(!is.null(node.mins)){
+		if(Nnode(originalInputTree)!=length(node.mins)){
+					stop("node.mins must be same length as number of nodes in the input tree!")}
+		if(length(droppers)>0){	#then... the tree has changed, need to recalculate node.mins
+			node_changes<-match(prop.part(originalInputTree),prop.part(tree))
+			node.mins1<-rep(NA,Nnode(tree))
+			node.mins1[node_changes]<-node.mins
+			node.mins<-node.mins1
+			}
 		}
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
@@ -443,8 +454,8 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 			stop("Ancestral Weights Not Given For All Taxa on Tree!")}}
 	Ps<-sapply(tree$tip.label,function(x) pqr2Ps(brRate[x],extRate[x],sampRate[x]))
 	names(Ps)<-tree$tip.label
-	if(length(node.mins)!=Nnode(tree) & !is.null(node.mins)){stop("node.mins length != Nnode!")}
-	ttree1<-timePaleoPhy(tree,timeData,type="basic",node.mins=node.mins,add.term=FALSE,inc.term.adj=FALSE)
+
+		ttree1<-timePaleoPhy(tree,timeData,type="basic",node.mins=node.mins,add.term=FALSE,inc.term.adj=FALSE)
 	#identify which nodes are min-locked; make sure to update when resolving polytomies
 	if(length(node.mins)>0){locked_nodes<-which(!is.na(node.mins))++Ntip(tree)}else{locked_nodes<-NA}
 	ttree1<-collapse.singles(ttree1)
@@ -766,6 +777,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		message("Warning: Do not interpret a single tree; dates are stochastically pulled from uniform distributions")}
 	if(rand.obs & FAD.only){stop("Error: rand.obs and FAD.only cannot both be true")}
 	if(!is.null(sites) & point.occur){stop("Error: Inconsistent arguments, point.occur=TRUE will replace input 'sites' matrix")}
+	originalInputTree<-tree
 	#clean out all taxa which are NA or missing for timeData
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
@@ -775,6 +787,16 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		if(is.null(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
 		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data!")}
 		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x==tree$tip.label))),1]<-NA
+		}
+	if(!is.null(node.mins)){
+		if(Nnode(originalInputTree)!=length(node.mins)){
+					stop("node.mins must be same length as number of nodes in the input tree!")}
+		if(length(droppers)>0){	#then... the tree has changed, need to recalculate node.mins
+			node_changes<-match(prop.part(originalInputTree),prop.part(tree))
+			node.mins1<-rep(NA,Nnode(tree))
+			node.mins1[node_changes]<-node.mins
+			node.mins<-node.mins1
+			}
 		}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}

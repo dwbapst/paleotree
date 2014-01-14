@@ -10,45 +10,44 @@
 #' corrections for Prob(D|FL) made as part of a personal communication in 2013
 #' between the package author and Michael Foote.
 
-#' @param p Instantaneous origination/branching rate of taxa under 
-#' a continuous model; under a pulsed mode (p_cont=FALSE), a 
-#' per-interval probability instead. Given as a vector with length
+#' @inheritParams inverseSurv
+
+#' @param p Instantaneous origination/branching rate of taxa. Under 
+#' a continuous model, assumed to be \emph{per interval}, or equal
+#' to the product of interval lengths and the rates per lineage time
+#' units for each interval. Under a pulsed mode (p_cont=FALSE), p is a 
+#' per-interval 'rate' which can exceed 1 (because diversity can
+#' more than double; Foote, 2003a). Given as a vector with length
 #' equal to the number of intervals, so a different value may be
 #' given for each separate interval. Must be the same length as
 #' q and r. 
 
-#' @param q Instantaneous extinction rate of taxa under 
-#' a continuous model; under a pulsed mode (q_cont=FALSE), a 
-#' per-interval 'rate' instead, which cannot exceed 1. Given as
+#' @param q Instantaneous extinction rate of taxa. Under 
+#' a continuous model, assumed to be \emph{per interval}, or
+#' equal to the product of interval lengths and the rates per lineage
+#' time units for each interval. Under a pulsed mode (q_cont=FALSE), q is a  
+#' per-interval 'rate' but which cannot be observed to exceed 1
+#' (because you can't have more taxa go extinct than exist). Given as
 #' a vector with length equal to the number of intervals, so a 
 #' different value may be given for each separate interval. 
 #' Must be the same length as p and r. 
 
-#' @param r Instantaneous sampling rate of taxa. Given as
+#' @param r Instantaneous sampling rate of taxa, assumed to be
+#' \emph{per interval}, or equal to the product of interval lengths
+#' and the rates per lineage time units for each interval. Given as
 #' a vector with length equal to the number of intervals, so a 
 #' different value may be given for each separate interval. 
 #' Must be the same length as p and q. 
 
-#' @param PA_n The probability of sampling a taxon before the first interval 
-#' included in a survivorship study. Usually zero.
-
-#' @param PB_1 The probability of sampling a taxon after the last interval 
+#' @param PA_n The probability of sampling a taxon after the last interval 
 #' included in a survivorship study. Usually zero for extinct groups, 
 #' although more logically has the value of 1 when there are still extant
 #' taxa (i.e., if the last interval is the Holocene and the group is
 #' still alive, the probability of sampling them later is probably 1...).
+#' Should be a value of 0 to 1.
 
-#' @param p_cont If TRUE (the default), then origination is assumed to be a 
-#' continuous time process with an instantaneous rate. If FALSE, the origination
-#' is treated as a pulsed discrete-time process with a probability.
-
-#' @param q_cont If TRUE (the default), then extinction is assumed to be a 
-#' continuous time process with an instantaneous rate. If FALSE, the extinction
-#' is treated as a pulsed discrete-time process with a probability.
-
-#' @param Nb The number of taxa that enter an interval (b is for 'bottom'). This
-#' is an arbitrary constant used to scale other values in these calculations and
-#' can be safely set to 1.
+#' @param PB_1 The probability of sampling a taxon before the first interval 
+#' included in a survivorship study. Should be a value of 0 to 1.
 
 #' @return Returns a matrix with number of rows equal to the number of intervals 
 #' (i.e. the length of p, q and r) and named columns representing the different
@@ -61,10 +60,10 @@
 #' Foote, M. 2001. Inferring temporal patterns of preservation, origination, and 
 #' extinction from taxonomic survivorship analysis. \emph{Paleobiology} 27(4):602-630.
 #'
-#' Foote, M. 2003. Origination and Extinction through the Phanerozoic: A New
+#' Foote, M. 2003a. Origination and Extinction through the Phanerozoic: A New
 #' Approach. \emph{The Journal of Geology} 111(2):125-148.
 #'
-#' Foote, M. 2003. Erratum: Origination and Extinction through the Phanerozoic:
+#' Foote, M. 2003b. Erratum: Origination and Extinction through the Phanerozoic:
 #' a New Approach. \emph{The Journal of Geology} 111(6):752-753.
 #'
 #' Foote, M. 2005. Pulsed origination and extinction in the marine realm.
@@ -72,10 +71,10 @@
 
 #' @examples
 #' #very simple example with three intervals, same value for all parameters
-#' rate<-rep(0.1,3) 			#example rates (for the most part)
-#' footeValues(rate,rate,rate)	#all continuous
-#' footeValues(rate,rate,rate,p_cont=FALSE)	#origination pulsed
-#' footeValues(rate,rate,rate,q_cont=FALSE) #extinction pulsed
+#' rate<-rep(0.1,3) 									 #example rates (for the most part)
+#' footeValues(rate,rate,rate)							 #all continuous
+#' footeValues(rate,rate,rate,p_cont=FALSE)				 #origination pulsed
+#' footeValues(rate,rate,rate,q_cont=FALSE) 			 #extinction pulsed
 #' footeValues(rate,rate,rate,p_cont=FALSE,q_cont=FALSE) #all pulsed
 
 #' @export
@@ -85,7 +84,7 @@ footeValues<-function(p,q,r,PA_n=0,PB_1=0,p_cont=TRUE,q_cont=TRUE,Nb=1){
 	if (length(p)!=length(q)){stop("Error: p is not same length as q!")}
 	if (length(p)!=length(r)){stop("Error: p is not same length as r!")}
 	if (length(r)!=length(q)){stop("Error: q is not same length as r!")}
-	#following relies on seperate p, q, r of all intervals
+	#following relies on separate p, q, r of all intervals
 	#assumes interval length is 1; i.e. the rates have been rescaled accordingly
 	n<-length(p)
 	#Nbt
@@ -150,6 +149,8 @@ footeValues<-function(p,q,r,PA_n=0,PB_1=0,p_cont=TRUE,q_cont=TRUE,Nb=1){
 		PD_Ft<-1-exp(-r)
 		}
 	#PD_FL
+	#these are corrected equations which do not agree with the erratum from Foote (2003b)
+		#mostly, but not entirely, from personal communications with Mike Foote
 	if(p_cont){
 		if(q_cont){
 			PD_FL<-numeric()

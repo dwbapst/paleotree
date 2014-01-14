@@ -61,7 +61,10 @@
 #' of binTimeData was directly input, the second element is used. See details.
 #' Unsampled taxa (e.g. from a simulation of sampling in the fossil record,
 #' listed as NAs in the second matrix) are automatically dropped from the
-#' timeList and from groups simultaneously.
+#' timeList and from groups simultaneously. Living taxa observed in the modern day
+#' are expected to be listed as last observed in a special interval (0,0), i.e.
+#' begins and ends at 0 time. This interval is always automatically removed prior
+#' to the calculation intermediary data for fitting likelihood functions.
 
 #' @param groups Either NULL (the default) or matrix with the number of rows equal
 #' to the number of taxa and the number of columns equal to the number of 'systems'
@@ -80,11 +83,21 @@
 #' are automatically dropped from groupings and the time dataset (either timeData
 #' or timeList) and from groups simultaneously.
 
-#' @param drop.extant Drops all extant taxa from a dataset.
+#' @param infTimeWindow Whether to use the infinite time window approach (TRUE) or
+#' the finite time window approach (FALSE). The finite time window is the default for
+#' both functions, calculated based on the time ranges included in the input. If only
+#' a 2 column matrix of per-taxon first and last intervals is given for timeList for
+#' \link{make_durationFreqDisc}, the infinite time window will be used.
+
+#' @param drop.extant Drops all extant taxa from a dataset, w
 
 #' @param threshold The smallest allowable duration (i.e. the measured difference in
 #' the first and last occurrence dates for a given taxon). Durations below this size 
 #' will be treated as "one-hit" sampling events.
+
+#' @param tol Tolerance level for determining whether a taxon from a continuous-time
+#' analysis is extant or not. Taxa which occur at a date less than tol are treated as
+#' occurring at the modern day (i.e. being functionally identical as occurring at 0 time).
 
 #' @return 
 #' A function of class "paleotreeFunc", which takes vector equal to the number
@@ -96,14 +109,21 @@
 #' Parameters in the output functions are named 'q' for the instantaneous per-capita
 #' extinction rate, 'r' for the instantaneous per-capita sampling rate and 'R' for
 #' the per-interval taxonomic sampling probability. Groupings follow the parameter
-#' names, seperated by periods; by default, the parameters will be placed in at
+#' names, separated by periods; by default, the parameters will be placed in at
 #' least group 1 (of a grouping with a single group), such that make_durationFreqCont
 #' by default creates a function with parameters named 'q.1' and 'r.1', while
 #' make_durationFreqDisc creates a function with parameters named 'q.1' and 'R.1'.
+#'
+#' Note that the 'q' parameters estimated by make_durationFreqDisc is scaled to 
+#' per lineage intervals and not to per lineage time-units. If intervals are the same length, this
+#' can be easily corrected by multiplying 1 by the interval length. It is unclear
+#' how to treat uneven intervals and I urge workers to consider multiple strategies.
+#'
 #' For translating these sampling probabilities and sampling rates, see
 #' \code{\link{SamplingConv}}.
 
-#' @aliases make_durationFreqCont make_durationFreqDisc
+
+#' @aliases make_durationFreqCont make_durationFreqDisc durFreq
 
 #' @author David W. Bapst
 
@@ -128,6 +148,8 @@
 #' rangesCont <- sampleRanges(taxa,r=0.5)
 #' #bin the ranges into discrete time intervals
 #' rangesDisc <- binTimeData(rangesCont,int.length=1)
+#' #note that we made interval lengths = 1: 
+#'  	# thus q (per int) = q (per time) for make_durationFreqDisc
 #' 
 #' #old ways of doing it
 #' getSampRateCont(rangesCont)
@@ -163,7 +185,7 @@
 #' @name durationFreq
 #' @rdname durationFreq
 #' @export
-make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=0.01){
+make_durationFreqCont<-function(timeData,groups=NULL,infTimeWindow=FALSE,drop.extant=TRUE,threshold=0.01,tol=0.0001){
 	#this is the multi-parameter maximum likelihood analysis of binned timeData
 		#uses a set of binned-interval timeData (just the by-species first and last intervals matrix) 
 			#to fit models of different samp probs and ext rates
@@ -186,11 +208,11 @@ make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=
 			}
 		}
 	#take care of modern taxa
-	modernTest<-apply(timeData,1,function(x) all(x==0))
+	modernTest<-any(timeData<tol)
 	if(any(modernTest)){	#if modern present
 		#modify the taxon occurrence matrix
 		if(drop.extant){
-			modDroppers<-timeData[,2]==0
+			modDroppers<-timeData[,2]<tol
 			timeData<-timeData[-modDroppers,,drop=FALSE]
 			if(!is.null(groups)){
 				if(drop.extant & any(modernTest)){groups<-groups[-modDroppers,]}
@@ -250,7 +272,7 @@ make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=
 
 #' @rdname durationFreq
 #' @export	
-make_durationFreqDisc<-function(timeList,groups=NULL,drop.extant=TRUE){
+make_durationFreqDisc<-function(timeList,groups=NULL,infTimeWindow=FALSE,drop.extant=TRUE){
 	#this is the multi-parameter maximum likelihood analysis of binned timeData
 		#uses a set of binned-interval timeData (just the by-species first and last intervals matrix) 
 			#to fit models of different samp probs and ext rates
@@ -282,7 +304,14 @@ make_durationFreqDisc<-function(timeList,groups=NULL,drop.extant=TRUE){
 			#change all modInt references to the prior int in the taxon appearance matrix
 			timeList[[2]]<-apply(timeList[[2]],2,sapply,function(x) if(x==modInt){newInt}else{x})
 			}
+		#now need to get information for finite time window
+		
 		timeData<-timeList[[2]]
+	}else{
+		if(infTimeWindow==FALSE){
+			message("No information on time interval dates given, so infinite time window approach applied.")
+			infTimeWindow<-TRUE
+			}
 		}
 	#drop unsampled taxa (i.e. NAs)
 	naDroppers<-is.na(timeData[,1]) | is.na(timeData[,2])

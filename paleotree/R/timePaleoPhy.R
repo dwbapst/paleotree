@@ -314,7 +314,7 @@
 #' 
 #' #using node.mins
 #' #let's say we have (molecular??) evidence that node #5 is at least 1200 time-units ago
-#' nodeDates <- rep(NA,(Nnode(cladogram)-1))
+#' nodeDates <- rep(NA,(Nnode(cladogram)))
 #' nodeDates[5] <- 1200
 #' ttree1 <- timePaleoPhy(cladogram,rangesCont,type="basic",
 #' 	randres=FALSE,node.mins=nodeDates,plot=TRUE)
@@ -401,6 +401,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 		"Error: Inconsistent arguments: Terminal ranges cannot be used in adjustment of branch lengths if not added to tree!")}
 	if(type=="basic" & inc.term.adj){stop(
 		"Error: Inconsistent arguments: Terminal range adjustment of branch lengths does not affect basic time-scaling method!")}
+	originalInputTree<-tree
 	#remove taxa that are NA or missing in timeData
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
 	if(length(droppers)>0){
@@ -427,11 +428,14 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 		ntime<-sapply(1:Nnode(tree),function(x) 
 			max(timeData[tree$tip.label[unlist(prop.part(tree)[x])],1]))	#first, get node times
 		ntime<-c(timeData[tree$tip.label,1],ntime)
-		if(length(node.mins)>0){	#if there are node.mins, alter ntime as necessary
-			#of course, node.mins is referring to nodes in unresolved savetree
+		if(!is.null(node.mins)){	#if there are node.mins, alter ntime as necessary
+			#needs to be same length as nodes in originalInputTree
+			if(Nnode(originalInputTree)!=length(node.mins)){
+				stop("node.mins must be same length as number of nodes in the input tree!")}
+			#of course, node.mins is referring to nodes in unresolved originalInputTree
 			#need to figure out which nodes are which now if randres; remake node.mins
-			if(!is.binary.tree(savetree) & randres){
-				node_changes<-match(prop.part(savetree),prop.part(tree))
+			if((!is.binary.tree(originalInputTree) & randres) | length(droppers)>0){
+				node_changes<-match(prop.part(originalInputTree),prop.part(tree))
 				node.mins1<-rep(NA,Nnode(tree))
 				node.mins1[node_changes]<-node.mins
 			}else{
@@ -577,6 +581,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 	if(randres & timeres){stop(
 		"Error: Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!")}
 	if(!is.null(sites) & point.occur){stop("Error: Inconsistent arguments, point.occur=TRUE will replace input 'sites' matrix")}
+	originalInputTree<-tree
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
 		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
@@ -584,6 +589,16 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 		tree<-drop.tip(tree,droppers)
 		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data!")}
 		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x==tree$tip.label))),1]<-NA
+		}
+	if(!is.null(node.mins)){
+		if(Nnode(originalInputTree)!=length(node.mins)){
+					stop("node.mins must be same length as number of nodes in the input tree!")}
+		if(length(droppers)>0){	#then... the tree has changed, need to recalculate node.mins
+			node_changes<-match(prop.part(originalInputTree),prop.part(tree))
+			node.mins1<-rep(NA,Nnode(tree))
+			node.mins1[node_changes]<-node.mins
+			node.mins<-node.mins1
+			}
 		}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}

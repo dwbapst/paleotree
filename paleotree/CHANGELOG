@@ -1,3 +1,6 @@
+Version - 
+-Changed parInit to use uniform distribution to randomly draw initial parameter values between bounds, rather than take mid value between bounds
+
 Version - 1.9 - 01-02-14
 -Changed all functions to individual R script files rather than single master script. Why didn't I do this years ago??!
 -All help files converted to an roxygen2 format within function scripts

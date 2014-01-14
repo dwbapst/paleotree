@@ -37,7 +37,7 @@
 #' will not be plotted, thus appearing as a gap in the plotted graph. The
 #' author takes no responsibility for the aesthetics of this plot.
 
-#' @param plotLogRates If true, rates plotted on log scale.
+#' @param logRates If true, rates plotted on log scale.
 
 #' @param drop.extant Drops all extant taxa from a dataset before
 #' calculating per-capita originatio and extinction rates.
@@ -48,6 +48,9 @@
 #' leave the most recent interval). By default, this argument is NULL and instead
 #' which taxa are extant is inferred based on which taxa occur in an interval
 #' with start and end times both equal to zero. See details.
+
+#' @param jitter If TRUE (default) the extinction rate will be plotted slightly
+#' ahead of the origination rate on the time axis, so the two can be differentiated.
 
 #' @param legendPosition The position of a legend indicating which line is
 #' origination rate and which is extinction rate on the resulting plot. This
@@ -62,7 +65,7 @@
 #' column is interval length. The fourth through eighth column is the
 #' four fundamental classes of taxa from Foote (2001): Nbt, NbL, NFt,
 #' NFL and their sum, N. The final two columns are the per-capita
-#' rates estimated for each interval in units of lineage time-units;
+#' rates estimated for each interval in units per lineage time-units;
 #' the ninth column is the origination rate ('pRate') and the tenth
 #' column is the extinction rate ('qRate').
 
@@ -108,7 +111,7 @@
 #' perCapitaRates(rangesDisc)
 #'
 #' @export
-perCapitaRates<-function(timeList,plot=TRUE,plotLogRates=FALSE,drop.extant=FALSE,isExtant=NULL,legendPosition="topleft"){
+perCapitaRates<-function(timeList,plot=TRUE,logRates=FALSE,drop.extant=FALSE,isExtant=NULL,jigger=TRUE,legendPosition="topleft"){
 	#
 	#this function estimates per-capita rates for binned intervals from discrete interval range data
 		#based on Foote, 2000
@@ -172,26 +175,30 @@ perCapitaRates<-function(timeList,plot=TRUE,plotLogRates=FALSE,drop.extant=FALSE
 	if(plot){
 		int.start<-intMat[,1];int.end<-intMat[,2]
 		times1<-c(int.start,(int.end+((int.start-int.end)/100)))
+		#add a jigger so rates don't overlap
+		jigger<-min(diff(times1))/10
 		p1<-c(pRate,pRate)[order(times1)]
 		q1<-c(qRate,qRate)[order(times1)]
 		times1<-sort(times1)
-		if(plotLogRates){
+		if(logRates){
 			p1[!(p1>0)]<-NA
 			q1[!(q1>0)]<-NA
 			ylims<-c(min(c(p1,q1),na.rm=TRUE),(max(c(p1,q1),na.rm=TRUE))*1.5)
 			plot(times1,p1,type="l",log="y",col=4,lwd=2,lty=5,
 				xlim=c(max(times1),max(0,min(times1))),ylim=ylims,
 				xlab="Time (Before Present)",ylab="Instantaneous Per-Capita Rate (per Ltu)")
-			lines(times1,q1,col=2,lwd=2,lty=2)
-			if(!is.na(legendPosition)){legend(x=legendPosition,legend=c("Origination","Extinction"),lty=c(5,2),lwd=2,col=c(4,2))}
 		}else{
 			ylims<-c(min(c(p1,q1),na.rm=TRUE),(max(c(p1,q1),na.rm=TRUE))*1.2)
 			plot(times1,p1,type="l",col=4,lwd=2,lty=5,
 				xlim=c(max(times1),max(0,min(times1))),ylim=ylims,
 				xlab="Time (Before Present)",ylab="Instantaneous Per-Capita Rate (per Ltu)")
-			lines(times1,q1,col=2,lwd=2,lty=2)		
-			if(!is.na(legendPosition)){legend(x=legendPosition,legend=c("Origination","Extinction"),lty=c(5,2),lwd=2,col=c(4,2))}
 			}
+		if(jitter){
+			lines(times1+jigger,q1,col=2,lwd=2,lty=2)
+		}else{
+			lines(times1,q1,col=2,lwd=2,lty=2)
+			}
+		if(!is.na(legendPosition)){legend(x=legendPosition,legend=c("Origination","Extinction"),lty=c(5,2),lwd=2,col=c(4,2))}
 		}
 	res<-cbind(intMat,intlen,Nbt,NbL,NFt,NFL,N,pRate,qRate)
 	return(invisible(res))

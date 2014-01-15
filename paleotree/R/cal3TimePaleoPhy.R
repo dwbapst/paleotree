@@ -430,7 +430,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 		if(length(droppers)>0){	#then... the tree has changed unpredictably, node.mins unusable
 			stop("node.mins not compatible with datasets where some taxa are dropped; drop before analysis instead")}
 		if(Nnode(tree)!=length(node.mins)){
-					stop("node.mins must be same length as number of nodes in the input tree!")}
+			stop("node.mins must be same length as number of nodes in the input tree!")}
 		}
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
@@ -455,8 +455,8 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 			stop("Ancestral Weights Not Given For All Taxa on Tree!")}}
 	Ps<-sapply(tree$tip.label,function(x) pqr2Ps(brRate[x],extRate[x],sampRate[x]))
 	names(Ps)<-tree$tip.label
-
-		ttree1<-timePaleoPhy(tree,timeData,type="basic",node.mins=node.mins,add.term=FALSE,inc.term.adj=FALSE)
+	#timescale with timePaleoPhy to get "basic" timetree
+	ttree1<-timePaleoPhy(tree,timeData,type="basic",node.mins=node.mins,add.term=FALSE,inc.term.adj=FALSE)
 	#identify which nodes are min-locked; make sure to update when resolving polytomies
 	if(length(node.mins)>0){locked_nodes<-which(!is.na(node.mins))++Ntip(tree)}else{locked_nodes<-NA}
 	ttree1<-collapse.singles(ttree1)
@@ -792,7 +792,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		if(length(droppers)>0){	#then... the tree has changed unpredictably, node.mins unusable
 			stop("node.mins not compatible with datasets where some taxa are drop; drop before analysis instead")}
 		if(Nnode(tree)!=length(node.mins)){
-					stop("node.mins must be same length as number of nodes in the input tree!")}
+			stop("node.mins must be same length as number of nodes in the input tree!")}
 		}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}

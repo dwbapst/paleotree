@@ -425,7 +425,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	for(ntr in 1:ntrees){
 		#resolve nodes, if tree is not binary
 		tree<-savetree
-		if(!is.binary.tree(savetree)){
+		if(!is.binary.tree(savetree)  | !is.rooted(savetree)){
 			if(randres){tree<-multi2di(savetree)}
 			if(timeres){tree<-timeLadderTree(savetree,timeData)}
 			}
@@ -441,7 +441,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 			#need to figure out which nodes are which now if randres; remake node.mins
 			if(length(droppers)>0){
 				stop("node.mins not compatible with datasets where some taxa are dropped; drop before analysis instead")}
-			if(!is.binary.tree(originalInputTree) & randres){
+			if((!is.binary.tree(originalInputTree) | !is.rooted(tree)) & randres){
 				node_changes<-match(prop.part(originalInputTree),prop.part(tree))
 				node.mins1<-rep(NA,Nnode(tree))
 				node.mins1[node_changes]<-node.mins
@@ -600,7 +600,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 		if(length(droppers)>0){	#then... the tree has changed unpredictably, node.mins unusable
 			stop("node.mins not compatible with datasets where some taxa are drop; drop before analysis instead")}
 		if(Nnode(tree)!=length(node.mins)){
-					stop("node.mins must be same length as number of nodes in the input tree!")}
+			stop("node.mins must be same length as number of nodes in the input tree!")}
 		}
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}
@@ -642,7 +642,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 		rownames(timeData)<-rownames(timeList[[2]])
 		#if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
 		tree1<-tree
-		if(!is.binary.tree(tree)){
+		if(!is.binary.tree(tree) | !is.rooted(tree)){
 			if(randres){tree1<-multi2di(tree)}
 			if(timeres){tree1<-timeLadderTree(tree,timeData)}	
 			}

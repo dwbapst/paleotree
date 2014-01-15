@@ -344,7 +344,7 @@ phyloDiv<-function(tree,int.length=1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,
 	tblen<-int.length
 	if(drop.ZLB){ttree<-dropZLB(ttree)}
 	savetree<-ttree
-	if(!is.binary.tree(ttree)){ttree<-multi2di(ttree)}
+	if(!is.binary.tree(ttree) | !is.rooted(tree)){ttree<-multi2di(ttree)}
 	if(is.null(ttree$root.time)){
 		ntime<-dist.nodes(ttree)[,Ntip(ttree)+1]
 		ntime<-max(ntime)-ntime

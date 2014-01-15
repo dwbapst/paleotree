@@ -1,5 +1,10 @@
 Version - 
 -Changed parInit to use uniform distribution to randomly draw initial parameter values between bounds, rather than take mid value between bounds
+-Changed how time-scaling functions dealt with node.mins argument; can no longer use node.mins with a dataset that has unshared taxa that are to be dropped
+-Altered example for use of node.mins in help files for time-scaling functions; thanks John Clarke of Oxford for the heads up!
+-Added new function collapseNodes that collapses specific user-defined nodes, either forward or backward
+-Made all lines checking for dichotomous trees check both with is.binary.tree() *and* is.rooted()
+-
 
 Version - 1.9 - 01-02-14
 -Changed all functions to individual R script files rather than single master script. Why didn't I do this years ago??!

@@ -24,9 +24,13 @@
 #'  \item{"equal"}{The 'equal' method defined by G. Lloyd and used in Brusatte
 #' et al. (2008) and Lloyd et al. (2012). Originally usable in code supplied by
 #' G. Lloyd, it is recreated here. This method works by increasing the time of
-#' the root divergence by some amount (here set by vartime) and then adjusting
+#' the root divergence by some amount and then adjusting
 #' zero-length branches so that time on early branches is re-apportioned out
-#' along those later branches equally.}
+#' along those later branches equally. The root age can be adjusted backwards
+#' in time by either increasing by an arbitrary amount (via the \code{vartime}
+#' argument) or by setting the root age directly (via the \code{node.mins}
+#' argument); conversely, the function will also allow a user to opt to not
+#' alter the root age at all.}
 
 #' \item{"aba"}{All branches additive. This method takes the "basic" tree and
 #' adds vartime to all branches.}
@@ -169,12 +173,22 @@
 #' within taxon ranges, as if uniformly distributed, and thus multiple trees should be 
 #' created and analyzed.
 
-#' @param node.mins Minimum ages of nodes on the tree. The minimum dates of
-#' nodes can be set using node.mins; this argument takes a vector of the same
-#' length as the number of nodes, with dates given in the same order as nodes
-#' are they are numbered in the tree$edge matrix (note that in tree$edge, the
-#' tips are given first Ntip numbers and these are ignored here). Not all nodes
-#' need be set; those without minimum dates can be given as NA in node.mins.
+#' @param node.mins The minimum dates of internal nodes (clades) on a phylogeny can be set
+#' using node.mins. This argument takes a vector of the same length as the number of nodes,
+#' with dates given in the same order as nodes are ordered in the /code{tree$edge} matrix.
+#' Note that in /code{tree$edge}, terminal tips are given the first set of numbers
+#' (\code{1:Ntip(tree)}), so the first element of \{node.mins} is the first internal node
+#' (the node numbered \code{Ntip(tree)+1}, which is generally the root for most \code{phylo}
+#' objects read by \code{read.tree}). Not all nodes need be given minimum dates; those without
+#' minimum dates can be given as NA in \code{node.mins}, but the vector must be the same length
+#' as the number of internal nodes in \code{tree}. These are minimum date constraints, such that
+#' a node will be forced to be \emph{at least as old as this date}, but the final date may be even
+#' older depending on the taxon dates used, the time-scaling method applied, the \code{vartime}
+#' used and any other minimum node dates given (e.g. if a clade is given a very old minimum date,
+#' this will (of course) over-ride any minimum dates given for clades that that node is nested
+#' within). Although \code{vartime} does adjust the node age downwards when the equal method
+#' is used, if a user has a specific date they'd like to contrain the root to, they should use
+#' \code{node.mins} instead because the result is more predictable. 
 
 #' @param noisyDrop If TRUE (the default), any taxa dropped from tree due to not
 #' having a matching entry in the time data will be listed in a system message.
@@ -512,6 +526,9 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 			zbr<-cbind(1:Nedge(ttree),node.depth(ttree)[ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = depth
 			zbr<-zbr[ttree$edge.length==0,]						#Parses zbr to just zero-length branches
 			zbr<-zbr[order(zbr[,2]),1]							#order zbr by depth
+			#if the edge lengths leading away from the root are somehow ZERO issue a warning
+			if(is.null(vartime) & any(ttree$edge.length[ttree$edge[,1]==(Ntip(ttree)+1)]==0)){
+				stop("The equal method requires the edges leading away from the root to have non-zero length to begin with, perhaps increase vartime?")}
 			for(i in zbr){if (ttree$edge.length[i] == 0) {			#starting with most shallow zlb, is this branch a zlb?
 				#if zlb, make a vector of mom-zlbs, going down the tree
 				brs<-ttree$edge[i,2] 						#branches to rescale, starting with picked branch
@@ -537,10 +554,12 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 		#now add root.time: 
 		if(add.term){
 			#should be time of earliest LAD + distance of root from earliest tip
-			ttree$root.time<-max(timeData[ttree$tip.label,2])+min(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])	
+			latestAge<-max(timeData[ttree$tip.label,2])
+			ttree$root.time<-latestAge+min(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])	
 		}else{
 			#should be time of earliest FAD + distance of root from earliest tip
-			ttree$root.time<-max(timeData[ttree$tip.label,1])+min(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])	
+			latestAge<-max(timeData[ttree$tip.label,1])
+			ttree$root.time<-latestAge+min(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])	
 			}
 		if(plot){
 			parOrig<-par(mar=c(2.5,1,1,0.5));layout(1:2)

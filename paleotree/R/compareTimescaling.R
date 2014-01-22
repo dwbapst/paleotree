@@ -67,7 +67,8 @@
 #' trees are considered.
 
 
-#' @seealso \code{\link{taxa2phylo}}, \code{\link{phyloDiv}}
+#' @seealso \code{\link{dateNodes}}, \code{\link{taxa2phylo}}, \code{\link{phyloDiv}}
+
 #' @examples
 #' 
 #' set.seed(444)

@@ -186,15 +186,23 @@
 #' within taxon ranges, as if uniformly distributed, and thus multiple trees should be 
 #' created and analysed.
 
-#' @param node.mins Minimum ages of nodes on the tree. The minimum dates of
-#' nodes can be set using node.mins; this argument takes a vector of the same
-#' length as the number of nodes, with dates given in the same order as nodes
-#' are they are numbered in the tree$edge matrix (note that in tree$edge, the
-#' tips are given first Ntip numbers and these are ignored here). Not all nodes
-#' need be set; those without minimum dates can be given as NA in node.mins.
-#' These nodes will be frozen and will not be shifted by the cal3 algorithm. If
-#' the dates refer to a polytomy, then the first divergence will be frozen with
-#' additional divergence able to occur after the minimum date.
+#' @param node.mins The minimum dates of internal nodes (clades) on a phylogeny can be set
+#' using node.mins. This argument takes a vector of the same length as the number of nodes,
+#' with dates given in the same order as nodes are ordered in the /code{tree$edge} matrix.
+#' Note that in /code{tree$edge}, terminal tips are given the first set of numbers
+#' (\code{1:Ntip(tree)}), so the first element of \{node.mins} is the first internal node
+#' (the node numbered \code{Ntip(tree)+1}, which is generally the root for most \code{phylo}
+#' objects read by \code{read.tree}). Not all nodes need be given minimum dates; those without
+#' minimum dates can be given as NA in \code{node.mins}, but the vector must be the same length
+#' as the number of internal nodes in \code{tree}. These are minimum date constraints, such that
+#' a node will be 'frozen' by the cal3 algorithm so that constrained nodes will always be
+#' \emph{at least as old as this date}, but the final date may be even older depending on the
+#' taxon dates used, the parameters input for the cal3 algorithm and any other minimum node dates
+#' given (e.g. if a clade is given a very old minimum date, this will (of course) over-ride any
+#' minimum dates given for clades that that node is nested within). if the constrained nodes include
+#' a polytomy, this polytomy will still be resolved with respect to the cal3 algorithm, but the first
+#' divergence will be 'frozen' so that it is at least as old as the minimum age, while any additional
+#' divergences will be allowed to occur after this minimum age.
 
 #' @param FAD.only Should the tips represent observation times at the start of
 #' the taxon ranges? If TRUE, result is similar to when terminal ranges are no

@@ -46,6 +46,13 @@
 plotTraitgram<-function(trait,tree,trait.name="'trait'",conf.int=TRUE,lwd=1.5){
 	#traitgram plotted using ML ASR from geiger (or ace() from ape if ci=TRUE)
 	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
+	#sort trait, if not sorted already
+	if(is.null(names(trait))){
+		message("No names for trait data, assuming in same order as tree$tip.label")
+	}else{
+		trait<-trait[tree$tip.label]
+		}
+	#get root time
 	if(is.null(tree$root.time)){tree$root.time<-max(dist.nodes(tree)[Ntip(tree)+1,1:Ntip(tree)])}
 	times<-tree$root.time-dist.nodes(tree)[Ntip(tree)+1,]
 	if(conf.int){

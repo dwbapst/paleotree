@@ -83,11 +83,11 @@
 #' are automatically dropped from groupings and the time dataset (either timeData
 #' or timeList) and from groups simultaneously.
 
-#' @param infTimeWindow Whether to use the infinite time window approach (TRUE) or
-#' the finite time window approach (FALSE). The finite time window is the default for
-#' both functions, calculated based on the time ranges included in the input. If only
-#' a 2 column matrix of per-taxon first and last intervals is given for timeList for
-#' \link{make_durationFreqDisc}, the infinite time window will be used.
+# @param infTimeWindow Whether to use the infinite time window approach (TRUE) or
+# the finite time window approach (FALSE). The finite time window is the default for
+# both functions, calculated based on the time ranges included in the input. If only
+# a 2 column matrix of per-taxon first and last intervals is given for timeList for
+# \link{make_durationFreqDisc}, the infinite time window will be used.
 
 #' @param drop.extant Drops all extant taxa from a dataset, w
 
@@ -185,7 +185,7 @@
 #' @name durationFreq
 #' @rdname durationFreq
 #' @export
-make_durationFreqCont<-function(timeData,groups=NULL,infTimeWindow=FALSE,drop.extant=TRUE,threshold=0.01,tol=0.0001){
+make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=0.01,tol=0.0001){		# infTimeWindow=FALSE,
 	#this is the multi-parameter maximum likelihood analysis of binned timeData
 		#uses a set of binned-interval timeData (just the by-species first and last intervals matrix) 
 			#to fit models of different samp probs and ext rates
@@ -272,7 +272,7 @@ make_durationFreqCont<-function(timeData,groups=NULL,infTimeWindow=FALSE,drop.ex
 
 #' @rdname durationFreq
 #' @export	
-make_durationFreqDisc<-function(timeList,groups=NULL,infTimeWindow=FALSE,drop.extant=TRUE){
+make_durationFreqDisc<-function(timeList,groups=NULL,drop.extant=TRUE){				# ,infTimeWindow=FALSE
 	#this is the multi-parameter maximum likelihood analysis of binned timeData
 		#uses a set of binned-interval timeData (just the by-species first and last intervals matrix) 
 			#to fit models of different samp probs and ext rates
@@ -304,14 +304,13 @@ make_durationFreqDisc<-function(timeList,groups=NULL,infTimeWindow=FALSE,drop.ex
 			#change all modInt references to the prior int in the taxon appearance matrix
 			timeList[[2]]<-apply(timeList[[2]],2,sapply,function(x) if(x==modInt){newInt}else{x})
 			}
-		#now need to get information for finite time window
-		
+		#now need to get information for finite time window if infTimeWindow=FALSE...
 		timeData<-timeList[[2]]
-	}else{
-		if(infTimeWindow==FALSE){
-			message("No information on time interval dates given, so infinite time window approach applied.")
-			infTimeWindow<-TRUE
-			}
+	#}else{
+	#	if(infTimeWindow==FALSE){
+	#		message("No information on time interval dates given, so infinite time window approach applied.")
+	#		infTimeWindow<-TRUE
+	#		}
 		}
 	#drop unsampled taxa (i.e. NAs)
 	naDroppers<-is.na(timeData[,1]) | is.na(timeData[,2])

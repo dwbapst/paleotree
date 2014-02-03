@@ -1,4 +1,4 @@
-Version - 
+Version - 2.0
 -Changed parInit to use uniform distribution to randomly draw initial parameter values between bounds, rather than take mid value between bounds
 -Changed how time-scaling functions dealt with node.mins argument; can no longer use node.mins with a dataset that has unshared taxa that are to be dropped
 -Altered example for use of node.mins in help files for time-scaling functions; thanks John Clarke of Oxford for the heads up! Also other modifications were made to the help descriptions, clarifying that node.mins can be used to constrain the minimum age for the root node.
@@ -7,6 +7,11 @@ Version -
 -Made all lines checking for dichotomous trees check both with is.binary.tree() *and* is.rooted()
 -Added new function dateNodes which returns the dates of the internal and tip nodes of a phylogeny on an absolute time-scale, with respect to the $root.time element if one exists
 -On a trial basis, I have added new function inverseSurv which attempts to replicate the forward and inverse survivorship modeling applied by Foote (2001, 2003, 2005) and is useable with the newly implemented constrainParPaleo framework implemented in the previous version of paleotree. I am not yet convinced this function is a 100% faithful replicate of the original method.
+-fixed error in plotTraitgram where if trait data was entered in same order as tree$tip.label, trait data was not resorted prior to running ace
+-'equal' method in timePaleoPhy wasn't returning same result as 'equal' method in DatePhylo from Graeme Lloyd's original code. This turned out to be a result of differences in how we ordered nodes: Graeme ordered them by time or distance-from-the-root (using dist.nodes) and I was using node.depth, which counts number of branching events. This choice shouldn't make a considerable difference on the performance of the algorithm, but does produce some differences in the resulting time-scaled trees. For consistency, I have change timePaleoPhy to match Graeme's algorithm.
+-altered timePaleoPhy and cal3timePaleoPhy to allow the point date occurrences with the first and second column of timeData interpreted as bounds instead, using the argument dateTreatment="minMax"
+-related to above change, the argument rand.obs was removed from timePaleoPhy and cal3TimePaleoPhy as no longer necessary, this functionality is now available via dateTreatment="randObs"
+-Although it may be strange to not report a lack of a change, but still have not added the finite time window approach for durationFreq
 
 Version - 1.9 - 01-02-14
 -Changed all functions to individual R script files rather than single master script. Why didn't I do this years ago??!

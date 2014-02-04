@@ -5,13 +5,13 @@
 \usage{
 timePaleoPhy(tree, timeData, type = "basic", vartime = NULL, ntrees = 1,
   randres = FALSE, timeres = FALSE, add.term = FALSE,
-  inc.term.adj = FALSE, rand.obs = FALSE, node.mins = NULL,
+  inc.term.adj = FALSE, dateTreatment = "firstLast", node.mins = NULL,
   noisyDrop = TRUE, plot = FALSE)
 
 bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL,
   ntrees = 1, nonstoch.bin = FALSE, randres = FALSE, timeres = FALSE,
   sites = NULL, point.occur = FALSE, add.term = FALSE,
-  inc.term.adj = FALSE, rand.obs = FALSE, node.mins = NULL,
+  inc.term.adj = FALSE, dateTreatment = "firstLast", node.mins = NULL,
   noisyDrop = TRUE, plot = FALSE)
 }
 \arguments{
@@ -37,10 +37,11 @@ bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL,
   'type' argument. Ignored if type = "basic"}
 
   \item{ntrees}{Number of time-scaled trees to output. If
-  ntrees is greater than one and both randres and rand.obs
-  are false, the function will fail and a warning is
-  issued, as these arguments would simply produce multiple
-  identical time-scaled trees.}
+  ntrees is greater than one and both randres is false and
+  dateTreatment is either 'minMax' or 'randObs', the
+  function will fail and a warning is issued, as these
+  arguments would simply produce multiple identical
+  time-scaled trees.}
 
   \item{randres}{Should polytomies be randomly resolved? By
   default, timePaleoPhy does not resolve polytomies,
@@ -85,36 +86,69 @@ bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL,
   type="basic" or add.term=FALSE, as this argument is
   inconsistent with those argument options.}
 
-  \item{rand.obs}{Should the tips represent observation
-  times uniform distributed within taxon ranges? This only
-  impacts the location of tip-dates, i.e. the 'times of
-  observation' for taxa, and does not impact the dates used
-  to determine node ages. Thus, this is an alternative to
-  using only the LADs or only the FADs as the per-taxon
-  times of observation. For these functions,rand.obs is
-  TRUE can only impact the result when add.term is FALSE
-  (otherwise the time of observation can only be the FADs)
-  and so the function fails and a warning is issued. If
-  rand.obs is TRUE, then it is assumed that users wish the
-  tips to represent observations made with some temporal
-  uncertainty, such that they might have come from any
-  point within a taxon's known range.  This might be the
-  case, for example, if a user is interested in applying
+  \item{dateTreatment}{This argument controls the
+  interpretation of timeData. The default setting
+  'firstLast' treats the dates in timeData as a column of
+  precise first and last appearances, such that first
+  appearances will be used to date nodes and last
+  appearances will only be called on if
+  \code{add.term=TRUE}. A second option, added by great
+  demand, is 'minMax' which treats these dates as minimum
+  and maximum bounds on single point dates. Under this
+  option, all taxa in the analysis will be treated as being
+  point dates, such that the first appearance is also the
+  last. These dates will be pulled under a uniform
+  distribution. If 'minMax' is used, add.term becomes
+  meaningless, and the use of it will return an error
+  message. A third option is 'randObs'. This assumes that
+  the dates in the matrix are first and last appearance
+  times, but that the desired time of observation is
+  unknown. Thus, this is much like 'firstLast' except the
+  effective time of observation (the taxon's LAD under
+  'firstLast') is treated an uncertain date, and is
+  randomly sampled between the first and last appearance
+  times. The FAD still is treated as a fixed number, used
+  for dating the nodes. In previous versions of paleotree,
+  this was called in \code{timePaleoPhy} using the argument
+  rand.obs, which has been removed for clarity. This
+  temporal uncertainty in times of observation might be
+  useful if a user is interested in applying
   phylogeny-based approaches to studying trait evolution,
   but have per-taxon measurements of traits that come from
-  museum specimens with uncertain temporal placement. When
-  rand.obs is TRUE, the tips are placed randomly within
-  taxon ranges, as if uniformly distributed, and thus
-  multiple trees should be created and analyzed.}
+  museum specimens with uncertain temporal placement. With
+  both arguments 'minMax' and 'randObs', the sampling of
+  dates from random distributions should compel users to
+  produce many time-scaled trees for any given analytical
+  purpose. Note that 'minMax' returns an error in 'bin'
+  time-scaling functions; please use 'points.occur'
+  instead.}
 
-  \item{node.mins}{Minimum ages of nodes on the tree. The
-  minimum dates of nodes can be set using node.mins; this
+  \item{node.mins}{The minimum dates of internal nodes
+  (clades) on a phylogeny can be set using node.mins. This
   argument takes a vector of the same length as the number
   of nodes, with dates given in the same order as nodes are
-  they are numbered in the tree$edge matrix (note that in
-  tree$edge, the tips are given first Ntip numbers and
-  these are ignored here). Not all nodes need be set; those
-  without minimum dates can be given as NA in node.mins.}
+  ordered in the \code{tree$edge} matrix. Note that in
+  \code{tree$edge}, terminal tips are given the first set
+  of numbers (\code{1:Ntip(tree)}), so the first element of
+  \code{node.mins} is the first internal node (the node
+  numbered \code{Ntip(tree)+1}, which is generally the root
+  for most \code{phylo} objects read by \code{read.tree}).
+  Not all nodes need be given minimum dates; those without
+  minimum dates can be given as NA in \code{node.mins}, but
+  the vector must be the same length as the number of
+  internal nodes in \code{tree}. These are minimum date
+  constraints, such that a node will be forced to be
+  \emph{at least as old as this date}, but the final date
+  may be even older depending on the taxon dates used, the
+  time-scaling method applied, the \code{vartime} used and
+  any other minimum node dates given (e.g. if a clade is
+  given a very old minimum date, this will (of course)
+  over-ride any minimum dates given for clades that that
+  node is nested within). Although \code{vartime} does
+  adjust the node age downwards when the equal method is
+  used, if a user has a specific date they'd like to
+  constrain the root to, they should use \code{node.mins}
+  instead because the result is more predictable.}
 
   \item{noisyDrop}{If TRUE (the default), any taxa dropped
   from tree due to not having a matching entry in the time
@@ -179,10 +213,10 @@ difficult to attribute some time-scaling methods to
 specific references in the literature.
 
 There are five method types that can be used by
-timePaleoPhy. Four of these use some value of absolute
-time, chosen a priori, to time-scale the tree. This is
-handled by the argument vartime, which is NULL by default
-and unused for type "basic".
+\code{timePaleoPhy}. Four of these use some value of
+absolute time, chosen a priori, to time-scale the tree.
+This is handled by the argument vartime, which is NULL by
+default and unused for type "basic".
 
 \describe{ \item{"basic"}{This most simple of methods
 ignores vartime and scales nodes so they are as old as the
@@ -192,20 +226,24 @@ Carrano, 2010).} \item{"equal"}{The 'equal' method defined
 by G. Lloyd and used in Brusatte et al. (2008) and Lloyd et
 al. (2012). Originally usable in code supplied by G. Lloyd,
 it is recreated here. This method works by increasing the
-time of the root divergence by some amount (here set by
-vartime) and then adjusting zero-length branches so that
-time on early branches is re-apportioned out along those
-later branches equally.} \item{"aba"}{All branches
-additive. This method takes the "basic" tree and adds
-vartime to all branches.} \item{"zlba"}{Zero-length
-branches additive. This method adds vartime to all
-zero-length branches in the "basic" tree. Discussed
-(possibly?) by Hunt and Carrano, 2010.}
-\item{"mbl"}{Minimum branch length. Scales all branches so
-they are greater than or equal to vartime, and subtract
-time added to later branches from earlier branches in order
-to maintain the temporal structure of events. A version of
-this was first introduced by Laurin (2004).} }
+time of the root divergence by some amount and then
+adjusting zero-length branches so that time on early
+branches is re-apportioned out along those later branches
+equally. The root age can be adjusted backwards in time by
+either increasing by an arbitrary amount (via the
+\code{vartime} argument) or by setting the root age
+directly (via the \code{node.mins} argument); conversely,
+the function will also allow a user to opt to not alter the
+root age at all.} \item{"aba"}{All branches additive. This
+method takes the "basic" tree and adds vartime to all
+branches.} \item{"zlba"}{Zero-length branches additive.
+This method adds vartime to all zero-length branches in the
+"basic" tree. Discussed (possibly?) by Hunt and Carrano,
+2010.} \item{"mbl"}{Minimum branch length. Scales all
+branches so they are greater than or equal to vartime, and
+subtract time added to later branches from earlier branches
+in order to maintain the temporal structure of events. A
+version of this was first introduced by Laurin (2004).} }
 
 These functions cannot time-scale branches relative to
 reconstructed character changes along branches, as used by
@@ -218,35 +256,58 @@ Taxa dropped from the tree will be will be listed in a
 As with many functions in the paleotree library, absolute
 time is always decreasing, i.e. the present day is zero.
 
-timePaleoPhy is designed for direct application to datasets
-where taxon first and last appearances are precisely known
-in continuous time, with no stratigraphic uncertainty. This
-is an uncommon form of data to have from the fossil record,
-although not an impossible form (micropaleontologists often
-have very precise range charts, for example). This means
-that most users SHOULD NOT use timePaleoPhy directly,
-unless they have written their own code to deal with
-stratigraphic uncertainty. For some groups, the more
-typical 'first' and 'last' dates represent the minimum and
-maximum absolute ages for the fossil collections that a
+\code{timePaleoPhy} is mainly designed for direct
+application to datasets where taxon first and last
+appearances are precisely known in continuous time, with no
+stratigraphic uncertainty. This is an uncommon form of data
+to have from the fossil record, although not an impossible
+form (micropaleontologists often have very precise range
+charts, for example).
+
+Instead, most data has some form of stratigraphic
+uncertainty. \code{timePaleoPhy} is not designed to handle
+such uncertainty by default. For example, some groups, the
+more typical 'first' and 'last' dates represent the minimum
+and maximum absolute ages for the fossil collections that a
 taxon is known is known from. Presumably, the first and
 last appearances of that taxon in the fossil record is at
 unknown dates within these bounds. These should not be
-mistaken as the FADs and LADs desired by timePaleoPhy, as
-timePaleoPhy will use the earliest dates provided to
-calibrate node ages, which is either an overly conservative
-approach to time-scaling or fairly nonsensical.
+mistaken as the FADs and LADs desired by
+\code{timePaleoPhy}, as \code{timePaleoPhy} will use the
+earliest dates provided to calibrate node ages, which is
+either an overly conservative approach to time-scaling or
+fairly nonsensical.
 
-Alternatively to using timePaleoPhy, bin_timePaleoPhy is a
-wrapper of timePaleoPhy which produces timescaled trees for
-datasets which only have interval data available. For each
-output tree, taxon first and last appearance dates are
-placed within their listed intervals under a uniform
-distribution. Thus, a large sample of time-scaled trees
-will approximate the uncertainty in the actual timing of
-the FADs and LADs.
+As of version 2.0, \code{timePaleoPhy} provides an argument
+to handle uncertainty in dating. This argument,
+dateTreatment handles whether dates are treated as first
+and last appearance dates or minimum and maximum bounds on
+a single point date. These point dates, if the minimum and
+maximum bounds option is selected, are chose under a
+uniform distribution. Many time-scaled trees should be
+created to approximate the uncertainty in the dates.
+Additionally, there is a third option: users may also make
+it so that the 'times of observation' of trees are
+uncertain, such that the tips of the tree (with terminal
+ranges added) should be randomly selected from a uniform
+distribution. Essentially, this third option treats the
+dates as first and last appearances, but treats the first
+appearance dates as known and fixed, but the 'last
+appearance' dates as unknown. In previous versions of
+paleotree, this third option was enacted with the argument
+rand.obs, which has been removed for clarity.
 
-The input timeList object can have overlapping (i.e.
+As an alternative to using \code{timePaleoPhy},
+\code{bin_timePaleoPhy} is a wrapper of \code{timePaleoPhy}
+which produces timescaled trees for datasets which only
+have interval data available. For each output tree, taxon
+first and last appearance dates are placed within their
+listed intervals under a uniform distribution. Thus, a
+large sample of time-scaled trees will approximate the
+uncertainty in the actual timing of the FADs and LADs.
+
+The input \code{timeList} object for
+\code{bin_timePaleoPhy} can have overlapping (i.e.
 non-sequential) intervals, and intervals of uneven size.
 Taxa alive in the modern should be listed as last occurring
 in a time interval that begins at time 0 and ends at time
@@ -261,10 +322,10 @@ to force only a portion of taxa to have simultaneous first
 and last appearances.
 
 By setting the argument nonstoch.bin to TRUE for
-bin_timePaleoPhy, the dates are NOT stochastically pulled
-from uniform bins but instead FADs are assigned to the
-earliest time of whichever interval they were placed in and
-LADs are placed at the most recent time in their placed
+\code{bin_timePaleoPhy}, the dates are NOT stochastically
+pulled from uniform bins but instead FADs are assigned to
+the earliest time of whichever interval they were placed in
+and LADs are placed at the most recent time in their placed
 interval. This option may be useful for plotting. The sites
 argument becomes arbitrary if nonstoch.bin is TRUE.
 
@@ -346,12 +407,17 @@ layout(1);par(parOrig)
 
 #using node.mins
 #let's say we have (molecular??) evidence that node #5 is at least 1200 time-units ago
-nodeDates <- rep(NA,(Nnode(cladogram)-1))
+#to use node.mins, first need to drop any unshared taxa
+droppers <- cladogram$tip.label[is.na(
+      match(cladogram$tip.label,names(which(!is.na(rangesCont[,1])))))]
+cladoDrop <- drop.tip(cladogram, droppers)
+# now make vector same length as number of nodes
+nodeDates <- rep(NA, Nnode(cladoDrop))
 nodeDates[5] <- 1200
-ttree1 <- timePaleoPhy(cladogram,rangesCont,type="basic",
-	randres=FALSE,node.mins=nodeDates,plot=TRUE)
-ttree2 <- timePaleoPhy(cladogram,rangesCont,type="basic",
-	randres=TRUE,node.mins=nodeDates,plot=TRUE)
+ttree1 <- timePaleoPhy(cladoDrop,rangesCont,type="basic",
+  	randres=FALSE,node.mins=nodeDates,plot=TRUE)
+ttree2 <- timePaleoPhy(cladoDrop,rangesCont,type="basic",
+   	randres=TRUE,node.mins=nodeDates,plot=TRUE)
 
 #Using bin_timePaleoPhy to timescale with discrete interval data
 #first let's use binTimeData() to bin in intervals of 1 time unit

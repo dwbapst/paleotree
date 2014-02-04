@@ -1,11 +1,12 @@
 \name{durationFreq}
+\alias{durFreq}
 \alias{durationFreq}
 \alias{make_durationFreqCont}
 \alias{make_durationFreqDisc}
 \title{Models of Sampling and Extinction for Taxonomic Duration Datasets}
 \usage{
 make_durationFreqCont(timeData, groups = NULL, drop.extant = TRUE,
-  threshold = 0.01)
+  threshold = 0.01, tol = 1e-04)
 
 make_durationFreqDisc(timeList, groups = NULL, drop.extant = TRUE)
 }
@@ -26,7 +27,12 @@ make_durationFreqDisc(timeList, groups = NULL, drop.extant = TRUE)
   element is used. See details. Unsampled taxa (e.g. from a
   simulation of sampling in the fossil record, listed as
   NAs in the second matrix) are automatically dropped from
-  the timeList and from groups simultaneously.}
+  the timeList and from groups simultaneously. Living taxa
+  observed in the modern day are expected to be listed as
+  last observed in a special interval (0,0), i.e. begins
+  and ends at 0 time. This interval is always automatically
+  removed prior to the calculation intermediary data for
+  fitting likelihood functions.}
 
   \item{groups}{Either NULL (the default) or matrix with
   the number of rows equal to the number of taxa and the
@@ -52,12 +58,19 @@ make_durationFreqDisc(timeList, groups = NULL, drop.extant = TRUE)
   the time dataset (either timeData or timeList) and from
   groups simultaneously.}
 
-  \item{drop.extant}{Drops all extant taxa from a dataset.}
+  \item{drop.extant}{Drops all extant taxa from a dataset,
+  w}
 
   \item{threshold}{The smallest allowable duration (i.e.
   the measured difference in the first and last occurrence
   dates for a given taxon). Durations below this size will
   be treated as "one-hit" sampling events.}
+
+  \item{tol}{Tolerance level for determining whether a
+  taxon from a continuous-time analysis is extant or not.
+  Taxa which occur at a date less than tol are treated as
+  occurring at the modern day (i.e. being functionally
+  identical as occurring at 0 time).}
 }
 \value{
 A function of class "paleotreeFunc", which takes vector
@@ -73,15 +86,24 @@ Parameters in the output functions are named 'q' for the
 instantaneous per-capita extinction rate, 'r' for the
 instantaneous per-capita sampling rate and 'R' for the
 per-interval taxonomic sampling probability. Groupings
-follow the parameter names, seperated by periods; by
+follow the parameter names, separated by periods; by
 default, the parameters will be placed in at least group 1
 (of a grouping with a single group), such that
 make_durationFreqCont by default creates a function with
 parameters named 'q.1' and 'r.1', while
 make_durationFreqDisc creates a function with parameters
-named 'q.1' and 'R.1'. For translating these sampling
-probabilities and sampling rates, see
-\code{\link{SamplingConv}}.
+named 'q.1' and 'R.1'.
+
+Note that the 'q' parameters estimated by
+make_durationFreqDisc is scaled to per lineage intervals
+and not to per lineage time-units. If intervals are the
+same length, this can be easily corrected by multiplying 1
+by the interval length. It is unclear how to treat uneven
+intervals and I urge workers to consider multiple
+strategies.
+
+For translating these sampling probabilities and sampling
+rates, see \code{\link{SamplingConv}}.
 }
 \description{
 These functions construct likelihood models of the observed
@@ -149,6 +171,8 @@ taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,max
 rangesCont <- sampleRanges(taxa,r=0.5)
 #bin the ranges into discrete time intervals
 rangesDisc <- binTimeData(rangesCont,int.length=1)
+#note that we made interval lengths = 1:
+ 	# thus q (per int) = q (per time) for make_durationFreqDisc
 
 #old ways of doing it
 getSampRateCont(rangesCont)

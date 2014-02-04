@@ -123,14 +123,23 @@ Parameter names cannot be changed for a constrained
 function.
 
 The parInit function calls the bounds for each parameter
-and gives the midway value for each, giving a users a
+and gives a randomly selected value selected from a uniform
+distribution, using the parameter bounds for each parameter
+as the bounds on the uniform distribution. This users a
 shorthand to quickly generate initial parameter values
 which are within the set bounds, for use in functions such
-as \code{\link{optim}}. These values may be too high (due
-to the liberal upper bounds I set for parameters in many of
-the likelihood functions) and thus users should always try
-slightly different values to see if the resulting maximum
-likelihood parameter values change.
+as \code{\link{optim}}. The random sampling of initial
+values allows a user to quickly assess if initial parameter
+values affect the optimization by simply rerunning the
+function on new values. Infinite initial parameter values
+(resulting from infinite bounds) are discarded, and
+replaced with the lower bound value (assuming only upper
+bounds are infinite...). Some randomly selected initial
+parameter values may be too high (due to the liberal upper
+bounds I set for parameters in many of the likelihood
+functions) and thus users should always try slightly
+different values to see if the resulting maximum likelihood
+parameter values change.
 
 As parInit depends on the upper and lower bounds attribute,
 no function is offered to allow it to be replaced (as there

@@ -1,9 +1,12 @@
 \name{degradeTree}
+\alias{collapseNodes}
 \alias{degradeTree}
 \title{Randomly Collapse a Portion of Nodes on a Phylogeny}
 \usage{
 degradeTree(tree, prop_collapse, nCollapse = NULL, node.depth = NA,
   leave.zlb = FALSE)
+
+collapseNodes(tree, nodeID, collapseDir, leave.zlb = FALSE)
 }
 \arguments{
   \item{tree}{A phylogeny of class 'phylo'}
@@ -24,19 +27,35 @@ degradeTree(tree, prop_collapse, nCollapse = NULL, node.depth = NA,
   kept for unmodified edges, and modified edges are changed
   to zero length, and are not collapsed into polytomies.
   The removed branch length is not shifted to other edges.}
+
+  \item{nodeID}{The node ID number(s) to be collapsed into
+  a polytomy, as identified in the \code{$edge} matrix of
+  the'phylo' object. Must be a vector of one or more ID
+  numbers.}
+
+  \item{collapseDir}{Whether to collapse the edge leading
+  the listed node (if "forward"), or to collapse the child
+  edges leading away from the node (if "backward").
+  Collapsing a node into a polytomy conceptually could be
+  either and users should heed this option carefully.}
 }
 \value{
 Returns the modified tree as an object of class phylo, with
 no edge lengths by default.
 }
 \description{
-This function removes a proportion of the total nodes in a
-tree, chosen randomly, collapsing the nodes to produce a
-less-resolved tree.
+\code{degradeTree} removes a proportion of the total nodes
+in a tree, chosen randomly, collapsing the nodes to produce
+a less-resolved tree.
 }
 \details{
-The nodes are removed at random using the basic function
-sample. degradeTree can be conditioned to remove nodes of a
+The related function \code{collapseNodes} given a tree and
+a vector of nodes to collapse, removes those nodes from a
+tree, creating a polytomy.
+
+In the function \code{degradeTree}, the nodes are removed
+at random using the basic R function \code{sample}.
+\code{degradeTree} can be conditioned to remove nodes of a
 particular depth with greater probability/frequency by
 setting node.depth to a value between zero (favoring the
 removal of deep nodes close to the root) or one (shallow
@@ -61,6 +80,20 @@ tree1 <- degradeTree(tree,0.5)
 layout(matrix(1:2,,2))
 plot(tree,show.tip.label=FALSE,use.edge.length=FALSE)
 plot(tree1,show.tip.label=FALSE,use.edge.length=FALSE)
+
+#now with collapseNodes
+tree <- rtree(10)
+#collapse nodes backwards
+   #let's collapse lucky node number 13!
+tree1 <- collapseNodes(nodeID=13,tree=tree,collapseDir="backward")
+#collapse nodes forwards
+tree2 <- collapseNodes(nodeID=13,tree=tree,collapseDir="forward")
+
+#let's compare
+layout(1:3)
+plot(tree,use.edge.length=FALSE,main="original")
+plot(tree1,use.edge.length=FALSE,main="backward collapse")
+plot(tree2,use.edge.length=FALSE,main="forward collapse")
 
 layout(1)
 }

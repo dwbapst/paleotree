@@ -2,8 +2,9 @@
 \alias{perCapitaRates}
 \title{perCapitaRates}
 \usage{
-perCapitaRates(timeList, plot = TRUE, plotLogRates = FALSE,
-  drop.extant = FALSE, isExtant = NULL, legendPosition = "topleft")
+perCapitaRates(timeList, plot = TRUE, logRates = FALSE,
+  drop.extant = FALSE, isExtant = NULL, jitter = TRUE,
+  legendPosition = "topleft")
 }
 \arguments{
   \item{plot}{If true, the per-capita origination and
@@ -13,7 +14,7 @@ perCapitaRates(timeList, plot = TRUE, plotLogRates = FALSE,
   The author takes no responsibility for the aesthetics of
   this plot.}
 
-  \item{plotLogRates}{If true, rates plotted on log scale.}
+  \item{logRates}{If true, rates plotted on log scale.}
 
   \item{drop.extant}{Drops all extant taxa from a dataset
   before calculating per-capita originatio and extinction
@@ -27,6 +28,10 @@ perCapitaRates(timeList, plot = TRUE, plotLogRates = FALSE,
   argument is NULL and instead which taxa are extant is
   inferred based on which taxa occur in an interval with
   start and end times both equal to zero. See details.}
+
+  \item{jitter}{If TRUE (default) the extinction rate will
+  be plotted slightly ahead of the origination rate on the
+  time axis, so the two can be differentiated.}
 
   \item{legendPosition}{The position of a legend indicating
   which line is origination rate and which is extinction
@@ -49,9 +54,9 @@ times and the third column is interval length. The fourth
 through eighth column is the four fundamental classes of
 taxa from Foote (2001): Nbt, NbL, NFt, NFL and their sum,
 N. The final two columns are the per-capita rates estimated
-for each interval in units of lineage time-units; the ninth
-column is the origination rate ('pRate') and the tenth
-column is the extinction rate ('qRate').
+for each interval in units per lineage time-units; the
+ninth column is the origination rate ('pRate') and the
+tenth column is the extinction rate ('qRate').
 }
 \description{
 Calculates and plots per-capita origination and extinction

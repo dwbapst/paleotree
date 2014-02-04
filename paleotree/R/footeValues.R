@@ -71,11 +71,17 @@
 
 #' @examples
 #' #very simple example with three intervals, same value for all parameters
-#' rate<-rep(0.1,3) 									 #example rates (for the most part)
-#' footeValues(rate,rate,rate)							 #all continuous
-#' footeValues(rate,rate,rate,p_cont=FALSE)				 #origination pulsed
-#' footeValues(rate,rate,rate,q_cont=FALSE) 			 #extinction pulsed
-#' footeValues(rate,rate,rate,p_cont=FALSE,q_cont=FALSE) #all pulsed
+#' 
+#' #example rates (for the most part)
+#' rate<-rep(0.1,3)                  
+#' #all continuous
+#' footeValues(rate,rate,rate)	
+#' #origination pulsed
+#' footeValues(rate,rate,rate,p_cont=FALSE)		 
+#' #extinction pulsed
+#' footeValues(rate,rate,rate,q_cont=FALSE) 	 
+#' #all pulsed
+#' footeValues(rate,rate,rate,p_cont=FALSE,q_cont=FALSE) 
 
 #' @export
 footeValues<-function(p,q,r,PA_n=0,PB_1=0,p_cont=TRUE,q_cont=TRUE,Nb=1){

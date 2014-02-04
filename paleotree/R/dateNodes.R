@@ -32,7 +32,7 @@
 #' time = 0 units before present, this function may (confusingly) return negative dates and a 
 #' warning message will be issued.
 
-#' @seealso \code{\link{compareTimeScaling}}
+#' @seealso \code{\link{compareTimescaling}}
 
 #' @author 
 #' David W. Bapst, based on a function originally written by Graeme Lloyd.

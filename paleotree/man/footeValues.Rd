@@ -6,36 +6,47 @@ footeValues(p, q, r, PA_n = 0, PB_1 = 0, p_cont = TRUE, q_cont = TRUE,
   Nb = 1)
 }
 \arguments{
-  \item{p}{Instantaneous origination/branching rate of taxa
-  under a continuous model; under a pulsed mode
-  (p_cont=FALSE), a per-interval probability instead. Given
-  as a vector with length equal to the number of intervals,
-  so a different value may be given for each separate
-  interval. Must be the same length as q and r.}
+  \item{p}{Instantaneous origination/branching rate of
+  taxa. Under a continuous model, assumed to be \emph{per
+  interval}, or equal to the product of interval lengths
+  and the rates per lineage time units for each interval.
+  Under a pulsed mode (p_cont=FALSE), p is a per-interval
+  'rate' which can exceed 1 (because diversity can more
+  than double; Foote, 2003a). Given as a vector with length
+  equal to the number of intervals, so a different value
+  may be given for each separate interval. Must be the same
+  length as q and r.}
 
-  \item{q}{Instantaneous extinction rate of taxa under a
-  continuous model; under a pulsed mode (q_cont=FALSE), a
-  per-interval 'rate' instead, which cannot exceed 1. Given
-  as a vector with length equal to the number of intervals,
-  so a different value may be given for each separate
-  interval. Must be the same length as p and r.}
+  \item{q}{Instantaneous extinction rate of taxa. Under a
+  continuous model, assumed to be \emph{per interval}, or
+  equal to the product of interval lengths and the rates
+  per lineage time units for each interval. Under a pulsed
+  mode (q_cont=FALSE), q is a per-interval 'rate' but which
+  cannot be observed to exceed 1 (because you can't have
+  more taxa go extinct than exist). Given as a vector with
+  length equal to the number of intervals, so a different
+  value may be given for each separate interval. Must be
+  the same length as p and r.}
 
-  \item{r}{Instantaneous sampling rate of taxa. Given as a
-  vector with length equal to the number of intervals, so a
-  different value may be given for each separate interval.
-  Must be the same length as p and q.}
+  \item{r}{Instantaneous sampling rate of taxa, assumed to
+  be \emph{per interval}, or equal to the product of
+  interval lengths and the rates per lineage time units for
+  each interval. Given as a vector with length equal to the
+  number of intervals, so a different value may be given
+  for each separate interval. Must be the same length as p
+  and q.}
 
-  \item{PA_n}{The probability of sampling a taxon before
-  the first interval included in a survivorship study.
-  Usually zero.}
-
-  \item{PB_1}{The probability of sampling a taxon after the
+  \item{PA_n}{The probability of sampling a taxon after the
   last interval included in a survivorship study. Usually
   zero for extinct groups, although more logically has the
   value of 1 when there are still extant taxa (i.e., if the
   last interval is the Holocene and the group is still
   alive, the probability of sampling them later is probably
-  1...).}
+  1...). Should be a value of 0 to 1.}
+
+  \item{PB_1}{The probability of sampling a taxon before
+  the first interval included in a survivorship study.
+  Should be a value of 0 to 1.}
 
   \item{p_cont}{If TRUE (the default), then origination is
   assumed to be a continuous time process with an
@@ -76,11 +87,17 @@ and Michael Foote.
 }
 \examples{
 #very simple example with three intervals, same value for all parameters
-rate<-rep(0.1,3) 			#example rates (for the most part)
-footeValues(rate,rate,rate)	#all continuous
-footeValues(rate,rate,rate,p_cont=FALSE)	#origination pulsed
-footeValues(rate,rate,rate,q_cont=FALSE) #extinction pulsed
-footeValues(rate,rate,rate,p_cont=FALSE,q_cont=FALSE) #all pulsed
+
+#example rates (for the most part)
+rate<-rep(0.1,3)
+#all continuous
+footeValues(rate,rate,rate)
+#origination pulsed
+footeValues(rate,rate,rate,p_cont=FALSE)
+#extinction pulsed
+footeValues(rate,rate,rate,q_cont=FALSE)
+#all pulsed
+footeValues(rate,rate,rate,p_cont=FALSE,q_cont=FALSE)
 }
 \author{
 David W. Bapst, with advice from Michael Foote.
@@ -90,13 +107,13 @@ Foote, M. 2001. Inferring temporal patterns of
 preservation, origination, and extinction from taxonomic
 survivorship analysis. \emph{Paleobiology} 27(4):602-630.
 
-Foote, M. 2003. Origination and Extinction through the
+Foote, M. 2003a. Origination and Extinction through the
 Phanerozoic: A New Approach. \emph{The Journal of Geology}
 111(2):125-148.
 
-Foote, M. 2003. Erratum: Origination and Extinction through
-the Phanerozoic: a New Approach. \emph{The Journal of
-Geology} 111(6):752-753.
+Foote, M. 2003b. Erratum: Origination and Extinction
+through the Phanerozoic: a New Approach. \emph{The Journal
+of Geology} 111(6):752-753.
 
 Foote, M. 2005. Pulsed origination and extinction in the
 marine realm. \emph{Paleobiology} 31(1):6-20.

@@ -36,8 +36,9 @@
 #' edges.
 #' @param nodeID The node ID number(s) to be collapsed into a polytomy, as identified in
 #' the \code{$edge} matrix of the'phylo' object. Must be a vector of one or more ID numbers.
-#' @param collapseBack Whether to collapse the edge leading the listed node (if TRUE), or to
-#' collapse the child edges leading away from the node (if FALSE). Collapsing a node into a
+
+#' @param collapseDir Whether to collapse the edge leading the listed node (if "forward"), or to
+#' collapse the child edges leading away from the node (if "backward"). Collapsing a node into a
 #' polytomy conceptually could be either and users should heed this option carefully. 
 
 #' @return Returns the modified tree as an object of class phylo, with no edge
@@ -109,7 +110,7 @@ collapseNodes<-function(tree,nodeID,collapseDir,leave.zlb=FALSE){
 		stop("Error: some nodeID values outside the range of tip and node IDs")}
 	if(!all(nodeID>Ntip(tree))){
 		message("Warning: Some nodeID values indicate terminal tips; collapsing these generally doesn't do anything")}
-	if(length(collapseDir)!=1){stop("collapseDir is not = length 1??")}
+	if(!any(collapseDir==c("forward","backward"))){stop("collapseDir must be either 'forward' or 'backward'")}
 	if(collapseDir=="backward" | collapseDir=="forward"){
 		if(collapseDir=="backward"){
 			# 01-15-14 if the edge is collapsed backward, then its the edges who have that node as a descendant!!!

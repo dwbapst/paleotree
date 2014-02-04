@@ -4,13 +4,13 @@
 \title{Three Rate Calibrated Timescaling of Paleo-Phylogenies}
 \usage{
 cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1,
-  anc.wt = 1, node.mins = NULL, rand.obs = FALSE, FAD.only = FALSE,
-  adj.obs.wt = TRUE, root.max = 200, step.size = 0.1, randres = FALSE,
-  noisyDrop = TRUE, plot = FALSE)
+  anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
+  FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200, step.size = 0.1,
+  randres = FALSE, noisyDrop = TRUE, plot = FALSE)
 
 bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
   nonstoch.bin = FALSE, sites = NULL, point.occur = FALSE, anc.wt = 1,
-  node.mins = NULL, rand.obs = FALSE, FAD.only = FALSE,
+  node.mins = NULL, dateTreatment = "firstLast", FAD.only = FALSE,
   adj.obs.wt = TRUE, root.max = 200, step.size = 0.1, randres = FALSE,
   plot = FALSE)
 }
@@ -46,45 +46,76 @@ bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
   such as if a user wants to only allow plesiomorphic taxa
   to be ancestors.}
 
-  \item{rand.obs}{Should the tips represent observation
-  times uniform distributed within taxon ranges? This only
-  impacts the location of tip-dates, i.e. the 'times of
-  observation' for taxa, and does not impact the dates used
-  to determine node ages. Thus, this is an alternative to
-  using only the LADs or only the FADs as the per-taxon
-  times of observation. If rand.obs is TRUE, then it is
-  assumed that users wish the tips to represent
-  observations made with some temporal uncertainty, such
-  that they might have come from any point within a taxon's
-  known range.  This might be the case, for example, if a
-  user is interested in applying phylogeny-based approaches
-  to studying trait evolution, but have per-taxon
-  measurements of traits that come from museum specimens
-  with uncertain temporal placement. When rand.obs is TRUE,
-  the tips are placed randomly within taxon ranges, as if
-  uniformly distributed, and thus multiple trees should be
-  created and analysed.}
+  \item{dateTreatment}{This argument controls the
+  interpretation of timeData. The default setting
+  'firstLast' treats the dates in timeData as a column of
+  precise first and last appearances. A second option,
+  added by great demand, is 'minMax' which treats these
+  dates as minimum and maximum bounds on single point
+  dates. Under this option, all taxa in the analysis will
+  be treated as being point dates, such that the first
+  appearance is also the last. These dates will be pulled
+  under a uniform distribution. If 'minMax' is used,
+  add.term becomes meaningless, and the use of it will
+  return an error message. A third option is 'randObs'.
+  This assumes that the dates in the matrix are first and
+  last appearance times, but that the desired time of
+  observation is unknown. Thus, this is much like
+  'firstLast' except the effective time of observation (the
+  taxon's LAD under 'firstLast') is treated an uncertain
+  date, and is randomly sampled between the first and last
+  appearance times. The FAD still is treated as a fixed
+  number, used for dating the nodes. In previous versions
+  of paleotree, this was called in \code{cal3timePaleoPhy}
+  using the argument rand.obs, which has been removed for
+  clarity. This temporal uncertainty in times of
+  observation might be useful if a user is interested in
+  applying phylogeny-based approaches to studying trait
+  evolution, but have per-taxon measurements of traits that
+  come from museum specimens with uncertain temporal
+  placement. With both arguments 'minMax' and 'randObs',
+  the sampling of dates from random distributions should
+  compel users to produce many time-scaled trees for any
+  given analytical purpose. Note that 'minMax' returns an
+  error in 'bin' time-scaling functions; please use
+  'points.occur' instead.}
 
-  \item{node.mins}{Minimum ages of nodes on the tree. The
-  minimum dates of nodes can be set using node.mins; this
+  \item{node.mins}{The minimum dates of internal nodes
+  (clades) on a phylogeny can be set using node.mins. This
   argument takes a vector of the same length as the number
   of nodes, with dates given in the same order as nodes are
-  they are numbered in the tree$edge matrix (note that in
-  tree$edge, the tips are given first Ntip numbers and
-  these are ignored here). Not all nodes need be set; those
-  without minimum dates can be given as NA in node.mins.
-  These nodes will be frozen and will not be shifted by the
-  cal3 algorithm. If the dates refer to a polytomy, then
-  the first divergence will be frozen with additional
-  divergence able to occur after the minimum date.}
+  ordered in the \code{tree$edge} matrix. Note that in
+  \code{tree$edge}, terminal tips are given the first set
+  of numbers (\code{1:Ntip(tree)}), so the first element of
+  \code{node.mins} is the first internal node (the node
+  numbered \code{Ntip(tree)+1}, which is generally the root
+  for most \code{phylo} objects read by \code{read.tree}).
+  Not all nodes need be given minimum dates; those without
+  minimum dates can be given as NA in \code{node.mins}, but
+  the vector must be the same length as the number of
+  internal nodes in \code{tree}. These are minimum date
+  constraints, such that a node will be 'frozen' by the
+  cal3 algorithm so that constrained nodes will always be
+  \emph{at least as old as this date}, but the final date
+  may be even older depending on the taxon dates used, the
+  parameters input for the cal3 algorithm and any other
+  minimum node dates given (e.g. if a clade is given a very
+  old minimum date, this will (of course) over-ride any
+  minimum dates given for clades that that node is nested
+  within). if the constrained nodes include a polytomy,
+  this polytomy will still be resolved with respect to the
+  cal3 algorithm, but the first divergence will be 'frozen'
+  so that it is at least as old as the minimum age, while
+  any additional divergences will be allowed to occur after
+  this minimum age.}
 
   \item{FAD.only}{Should the tips represent observation
   times at the start of the taxon ranges? If TRUE, result
   is similar to when terminal ranges are no added on with
-  timePaleoPhy. If FAD.only and rand.obs are both TRUE, the
-  function will stop and a warning will be produced, as
-  these suggest two contradictory sets of times of
-  observation.}
+  timePaleoPhy. If FAD.only is TRUE and dateTreatment is
+  'minMax' or 'randObs', the function will stop and a
+  warning will be produced, as these combinations imply
+  contradictory sets of times of observation.}
 
   \item{adj.obs.wt}{If the time of observation are before
   the LAD of a taxon, should the weight of the time of
@@ -408,12 +439,12 @@ ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
 \dontrun{
 #let's look at how three trees generated with very different time of obs. look
 ttreeFAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
-    FAD.only=TRUE,rand.obs=FALSE,sampRate=sRate,ntrees=1,plot=TRUE)
+    FAD.only=TRUE,dateTreatment="firstLast",sampRate=sRate,ntrees=1,plot=TRUE)
 ttreeRand <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
-    FAD.only=FALSE,rand.obs=TRUE,sampRate=sRate,ntrees=1,plot=TRUE)
+    FAD.only=FALSE,dateTreatment="randObs",sampRate=sRate,ntrees=1,plot=TRUE)
 #by default the time of observations are the LADs
 ttreeLAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
-    FAD.only=FALSE,rand.obs=FALSE,sampRate=sRate,ntrees=1,plot=TRUE)
+    FAD.only=FALSE,dateTreatment="randObs",sampRate=sRate,ntrees=1,plot=TRUE)
 layout(1:3);parOrig<-par(mar=c(0,0,0,0))
 plot(ladderize(ttreeFAD));text(5,5,"time.obs=FAD",cex=1.5,pos=4)
 plot(ladderize(ttreeRand));text(5,5,"time.obs=Random",cex=1.5,pos=4)
@@ -434,9 +465,14 @@ multiDiv(ttrees)
 
 #using node.mins
 #let's say we have (molecular??) evidence that node #5 is at least 1200 time-units ago
-nodeDates <- rep(NA,(Nnode(cladogram)-1))
+#to use node.mins, first need to drop any unshared taxa
+droppers <- cladogram$tip.label[is.na(
+      match(cladogram$tip.label,names(which(!is.na(rangesCont[,1])))))]
+cladoDrop <- drop.tip(cladogram, droppers)
+# now make vector same length as number of nodes
+nodeDates <- rep(NA, Nnode(cladoDrop))
 nodeDates[5]<-1200
-ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
+ttree <- cal3TimePaleoPhy(cladoDrop,rangesCont,brRate=divRate,extRate=divRate,
     sampRate=sRate,ntrees=1,node.mins=nodeDates,plot=TRUE)
 
 #example with time in discrete intervals

@@ -214,9 +214,9 @@
 
 #' @param node.mins The minimum dates of internal nodes (clades) on a phylogeny can be set
 #' using node.mins. This argument takes a vector of the same length as the number of nodes,
-#' with dates given in the same order as nodes are ordered in the /code{tree$edge} matrix.
-#' Note that in /code{tree$edge}, terminal tips are given the first set of numbers
-#' (\code{1:Ntip(tree)}), so the first element of \{node.mins} is the first internal node
+#' with dates given in the same order as nodes are ordered in the \code{tree$edge} matrix.
+#' Note that in \code{tree$edge}, terminal tips are given the first set of numbers
+#' (\code{1:Ntip(tree)}), so the first element of \code{node.mins} is the first internal node
 #' (the node numbered \code{Ntip(tree)+1}, which is generally the root for most \code{phylo}
 #' objects read by \code{read.tree}). Not all nodes need be given minimum dates; those without
 #' minimum dates can be given as NA in \code{node.mins}, but the vector must be the same length
@@ -226,8 +226,8 @@
 #' used and any other minimum node dates given (e.g. if a clade is given a very old minimum date,
 #' this will (of course) over-ride any minimum dates given for clades that that node is nested
 #' within). Although \code{vartime} does adjust the node age downwards when the equal method
-#' is used, if a user has a specific date they'd like to contrain the root to, they should use
-#' \code{node.mins} instead because the result is more predictable. 
+#' is used, if a user has a specific date they'd like to constrain the root to, they should use
+#' \code{node.mins} instead because the result is more predictable.
 
 #' @param noisyDrop If TRUE (the default), any taxa dropped from tree due to not
 #' having a matching entry in the time data will be listed in a system message.

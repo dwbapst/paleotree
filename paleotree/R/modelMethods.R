@@ -320,7 +320,7 @@ parInit <- function(x, ...){
 parInit.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	#res<-(attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2
-	res<-runif(1,attr(x, "parbounds")[[1]],attr(x, "parbounds")[[2]])
+	res<-runif(length(attr(x,"parnames")),attr(x, "parbounds")[[1]],attr(x, "parbounds")[[2]])
 	#infinite bounds probably too far from actual param value; use lower bound instead
 	if(any(is.infinite(res))){res<-attr(x, "parbounds")[[1]]}
 	return(res)
@@ -331,7 +331,7 @@ parInit.constrained <- function(x, ...){
 parInit.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	#res<-(attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2
-	res<-runif(1,attr(x, "parbounds")[[1]],attr(x, "parbounds")[[2]])
+	res<-runif(length(attr(x,"parnames")),attr(x, "parbounds")[[1]],attr(x, "parbounds")[[2]])
 	#infinite bounds probably too far from actual param value; use lower bound instead
 	if(any(is.infinite(res))){res<-attr(x, "parbounds")[[1]]}
 	return(res)

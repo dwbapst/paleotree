@@ -1,0 +1,79 @@
+\name{dateNodes}
+\alias{dateNodes}
+\title{Absolute Dates for Nodes of a Time-Scaled Phylogeny}
+\usage{
+dateNodes(tree, rootAge = tree$root.time, labelDates = FALSE)
+}
+\arguments{
+  \item{tree}{A phylogeny object of class 'phylo'. Must
+  have edge.lengths!}
+
+  \item{rootAge}{The root age of the tree, assumed by
+  default to be equal to the element tree$root.time, which
+  is a standard element for trees time-scaled by the
+  paleotree package. If not given by the user and if the
+  $root.time element does not exist, then the maximum depth
+  of the tree will be taken as the root age, which
+  implicitly assumes the latest most terminal tip is an
+  extant taxon at the modern day (time = 0). If rootAge is
+  so defined that some nodes may occur later than time = 0,
+  this function may return negative dates.}
+
+  \item{labelDates}{If FALSE (the default), the dates
+  returned are labeled with the tip/node numbers as in
+  \code{tree$edge}. If TRUE, they are labeled with the tip
+  labels of every descendant tip, which for terminal tips
+  means a single taxon label, and for internal tips a label
+  that might be very long, composed of multiple tip labels
+  pasted together. Thus, by default, this argument is
+  FALSE.}
+}
+\value{
+Returns a vector of length \code{Ntip(tree) + Nnode(tree)}
+which contains the dates for all terminal tip nodes and
+internal nodes for the tree, in that order, as numbered in
+the \code{tree$edge} matrix. These dates are always on a
+descending scale (i.e. time before present); see rootAge
+for how the present time is determined. If rootAge is so
+defined that some nodes may occur later than time = 0 units
+before present, this function may (confusingly) return
+negative dates and a warning message will be issued.
+}
+\description{
+This function returns the ages of nodes (both internal and
+terminal tips) for a given phylogeny of class 'phylo'.
+Specialized for use with time-scaled trees from paleotree,
+see Details.
+}
+\details{
+This function is specialized for phylo objects time-scaled
+or simulated with functions from paleotree, and thus have a
+$root.time element. This function will still work without
+such, but users should see the details for the
+\code{rootAge} argument.
+}
+\examples{
+#let's simulate some example data
+set.seed(444)
+taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+#get the true time-sclaed tree
+tree1 <- taxa2phylo(taxa)
+
+#now let's try dateNodes
+dateNodes(tree1)
+
+#let's ignore $root.time
+dateNodes(tree1,rootAge=NULL)
+
+#with the lengthy tip-label based labels
+   #some of these will be hideously long
+dateNodes(tree1,labelDates=TRUE)
+}
+\author{
+David W. Bapst, based on a function originally written by
+Graeme Lloyd.
+}
+\seealso{
+\code{\link{compareTimescaling}}
+}
+

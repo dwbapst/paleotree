@@ -40,9 +40,9 @@ constrainParPaleo(f, ..., formulae = NULL, names = parnames(f),
   later).}
 }
 \value{
-(Modified from the diversitree manual: This function
-returns a constrained function that can be passed through
-to the optimization functions of a user's choice, such as
+Modified from the diversitree manual: This function returns
+a constrained function that can be passed through to the
+optimization functions of a user's choice, such as
 \code{\link{optim}}, \code{find.mle} in diversitree or
 \code{mcmc}. It will behave like any other function.
 However, it has a modified \code{class} attribute so that
@@ -57,11 +57,11 @@ function \code{f}.
 Additional useful information from the diversitree manual
 (11/01/13):
 
-"For help in designing constrained models, the returned
+For help in designing constrained models, the returned
 function has an additional argument \code{pars.only}, when
 this is \code{TRUE} the function will return a named vector
 of arguments rather than evaluate the function (see
-Examples)."
+Examples).
 }
 \description{
 This function constrains a model to make submodels with

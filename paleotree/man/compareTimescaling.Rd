@@ -121,6 +121,7 @@ compareNodeAges(tree1,tree2)
 compareTermBranches(tree1,tree2)
 }
 \seealso{
-\code{\link{taxa2phylo}}, \code{\link{phyloDiv}}
+\code{\link{dateNodes}}, \code{\link{taxa2phylo}},
+\code{\link{phyloDiv}}
 }
 

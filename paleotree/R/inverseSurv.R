@@ -137,9 +137,9 @@
 #' be in units per lineage-time units, if those rates were being treated as rates for a
 #' continuous-time process (i.e. p_cont=TRUE and q_cont=TRUE for p and q, respectively,
 #' while r is always per lineage-time units). Otherwise, the respective rate will be in
-#" units per lineage-interval. If ratesPerInt is TRUE instead, then \emph{all} rates, even
-#' rates modeled as continuous-time process, will be returned as per lineage-interval rates,
-#" even the sampling rate r.}
+#' units per lineage-interval. If ratesPerInt is TRUE instead, then \emph{all} rates, even
+#' rates modelled as continuous-time process, will be returned as per lineage-interval rates,
+#' even the sampling rate r.}
 
 #'  \item{logRates}{If FALSE (the default) rates are plotted on a linear scale. If TRUE,
 #' rates are plotted on a vertical log axis.}
@@ -151,11 +151,11 @@
 #'  \item{legendPoisition}{The position of a legend indicating which line is
 #' which of the three rates on the resulting plot. This
 #' is given as the possible positions for argument 'x' of the function 
-#'\code{\link{legend}}, and by default is "topleft", which will be generally
+#' \code{\link{legend}}, and by default is "topleft", which will be generally
 #' useful if origination and extinction rates are initially low. If 
 #' legendPosition is NA, then a legend will not be plotted.}
-#'}
-#'}
+#' }
+#' }
 
 #' @note This function is an entirely new rewrite of the methodology derived and presented by Foote in
 #' his studies. Thus, whether it would give identical results cannot be assumed nor is it easy to test
@@ -226,8 +226,8 @@
 #'       method="L-BFGS-B",control=list(maxit=1000000))
 #' }
 
-#' name inverseSurv
-#' rdname inverseSurv
+#' @name inverseSurv
+#' @rdname inverseSurv
 #' @export
 make_inverseSurv<-function(timeList,groups=NULL,p_cont=TRUE,q_cont=TRUE,
 	PA_n="fixed",PB_1=0,Nb=1,drop.extant=TRUE){
@@ -278,10 +278,10 @@ make_inverseSurv<-function(timeList,groups=NULL,p_cont=TRUE,q_cont=TRUE,
 	if(is.null(PB_1)){parNames<-c(parNames,c("PB_1.0"))}
 	if(is.null(PA_n)){parNames<-c(parNames,c("PA_n.0"))}
 	if(!is.null(groups)){
-		if(dropModern & any(modernTest)){groups<-groups[-modDroppers,]}
+		if(drop.extant & any(modernTest)){groups<-groups[-modDroppers,]}
 		if(nrow(timeList[[2]])!=nrow(groups)){
 			stop(paste("number of rows in groups isn't equal to number of taxa in timeList",
-				if(dropModern){"after modern taxa are dropped"}))}
+				if(drop.extant){"after modern taxa are dropped"}))}
 		for(i in 1:ncol(groups)){
 			parNames<-as.vector(sapply(parNames,function(x) paste(x,unique(groups[,i]),sep=".")))
 			}
@@ -390,12 +390,15 @@ make_inverseSurv<-function(timeList,groups=NULL,p_cont=TRUE,q_cont=TRUE,
 				}else{
 					message("Number of groups greater than 5, not plotting the resulting rates.")
 					plotPar<-FALSE
+					}
 				}
 			#
 			results<-list()
 			for(z in 1:ngroup){
-				if(is.null(groups)){selector<-rep(TRUE,length(par))
-					}else{selector<-apply(breakNames,1,function(x) x[-(1:2)]==groupings[z,])}
+				if(is.null(groups)){
+					selector<-rep(TRUE,length(par))
+				}else{
+					selector<-apply(breakNames,1,function(x) x[-(1:2)]==groupings[z,])}
 				parnew<-par[selector]
 				breaknew<-breakNames[selector,]
 				#get pars and order according to interval
@@ -442,10 +445,13 @@ make_inverseSurv<-function(timeList,groups=NULL,p_cont=TRUE,q_cont=TRUE,
 						lines(times1,q1,col=2,lwd=2,lty=2)
 						lines(times1,r1,col=3,lwd=2,lty=6)
 						}
-					if(!is.na(legendPosition)){legend(x=legendPosition,
-						legend=c("Origination","Extinction","Sampling"),
-						lty=c(5,2,6),lwd=2,col=c(4,2,3))}
+					if(!is.na(legendPosition)){
+						legend(x=legendPosition,
+							legend=c("Origination","Extinction","Sampling"),
+							lty=c(5,2,6),lwd=2,col=c(4,2,3))
+						}
 					}
+				}
 			if(ngroup==1){results<-results[[1]]}
 			#return the table of broken recalculated rates
 			if(plotPar){
@@ -459,3 +465,4 @@ make_inverseSurv<-function(timeList,groups=NULL,p_cont=TRUE,q_cont=TRUE,
 	logL_invSurv<-make_paleotreeFunc(logL_invSurv,parNames,parbounds)
 	return(logL_invSurv)
 	}
+	

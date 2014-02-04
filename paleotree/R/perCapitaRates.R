@@ -111,7 +111,7 @@
 #' perCapitaRates(rangesDisc)
 #'
 #' @export
-perCapitaRates<-function(timeList,plot=TRUE,logRates=FALSE,drop.extant=FALSE,isExtant=NULL,jigger=TRUE,legendPosition="topleft"){
+perCapitaRates<-function(timeList,plot=TRUE,logRates=FALSE,drop.extant=FALSE,isExtant=NULL,jitter=TRUE,legendPosition="topleft"){
 	#
 	#this function estimates per-capita rates for binned intervals from discrete interval range data
 		#based on Foote, 2000

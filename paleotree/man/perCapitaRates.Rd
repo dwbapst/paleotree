@@ -112,7 +112,7 @@ rangesDisc <- binTimeData(rangesCont,int.length=5)
 #and get the per-capita rates
 perCapitaRates(rangesDisc)
 #on a log scale
-perCapitaRates(rangesDisc,plotLogRates=TRUE)
+perCapitaRates(rangesDisc,logRates=TRUE)
 
 #get mean and median per-capita rates
 res<-perCapitaRates(rangesDisc,plot=FALSE)

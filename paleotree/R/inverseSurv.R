@@ -210,16 +210,17 @@
 #' #apply make_inverseSurv
 #' likFun<-make_inverseSurv(rangesDisc)
 #' #use constrainParPaleo to make the model time-homogenous
-#'   	#match.all~match.all will match parameters so only 3 pars: p,q,r
+#'   	#match.all~match.all will match parameters so only 2 pars: p=q and r
 #' constrFun<-constrainParPaleo(likFun,match.all~match.all)
-#' results <- optim(parInit(conFun),conFun,lower=parLower(conFun),upper=parUpper(likFun),
+#' constrFun<-constrainParPaleo(constrFun,q.all~p.all)
+#' results <- optim(parInit(constrFun),constrFun,lower=parLower(constrFun),upper=parUpper(constrFun),
 #'       method="L-BFGS-B",control=list(maxit=1000000))
 #' results
 #'
 #' #plot the results
-#' constrFun(results$pars, altMode=TRUE)
+#' constrFun(results$par, altMode=TRUE)
 #'
-#' \donotrun{
+#' \dontrun{
 #' #unconstrained function with ALL of 225 parameters!!!
 #'     # this will take forever to converge, so it isn't run
 #' optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
@@ -454,11 +455,11 @@ make_inverseSurv<-function(timeList,groups=NULL,p_cont=TRUE,q_cont=TRUE,
 				}
 			if(ngroup==1){results<-results[[1]]}
 			#return the table of broken recalculated rates
-			if(plotPar){
-				return(invisible(results))
-			}else{
-				return(results)
-				}
+			#if(plotPar){
+			#return(invisible(results))
+			#}else{
+			return(results)
+			#}
 			}
 		}
 	#make into a paleoFunc

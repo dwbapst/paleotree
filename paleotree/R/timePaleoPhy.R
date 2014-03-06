@@ -629,8 +629,10 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 
 #' @rdname timePaleoPhy
 #' @export
-bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nonstoch.bin=FALSE,randres=FALSE,timeres=FALSE,
-	sites=NULL,point.occur=FALSE,add.term=FALSE,inc.term.adj=FALSE,dateTreatment="firstLast",node.mins=NULL,noisyDrop=TRUE,plot=FALSE){
+bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,
+	nonstoch.bin=FALSE,randres=FALSE,timeres=FALSE,
+	sites=NULL,point.occur=FALSE,add.term=FALSE,inc.term.adj=FALSE,
+	dateTreatment="firstLast",node.mins=NULL,noisyDrop=TRUE,plot=FALSE){
 	#wrapper for applying non-SRC time-scaling to timeData where FADs and LADs are given as bins 
 		#see timePaleoPhy function for more details
 	#input is a list with (1) interval times matrix and (2) species FOs and LOs
@@ -666,7 +668,8 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
 		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
-		if(noisyDrop){message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))}
+		if(noisyDrop){
+			message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))}
 		tree<-drop.tip(tree,droppers)
 		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data!")}
 		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x==tree$tip.label))),1]<-NA
@@ -677,6 +680,17 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,nons
 		if(Nnode(tree)!=length(node.mins)){
 			stop("node.mins must be same length as number of nodes in the input tree!")}
 		}
+	#best to drop taxa from timeList that aren't represented on the tree
+	notTree<-rownames(timeList[[2]])[is.na(match(rownames(timeList[[2]]),tree$tip.label))]
+	if(length(notTree)>0){
+		if(is.null(sites)){
+			if(noisyDrop){
+				message(paste("Warning: Following taxa dropped from timeList:",paste0(notTree,collapse=", ")))}
+			timeList[[2]]<-timeList[[2]][!is.na(match(rownames(timeList[[2]]),tree$tip.label)),]
+		}else{
+			stop("Some taxa in timeList not included on tree: not automatic taxon drop if 'sites' are given. Please remove from both sites and timeList and try again.")
+			}
+		}	
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}
 	if(any(apply(timeList[[1]],1,diff)>0)){stop("Error: timeList[[1]] not in intervals in time relative to modern")}

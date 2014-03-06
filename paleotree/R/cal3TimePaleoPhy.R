@@ -801,7 +801,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 #' @export
 bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,nonstoch.bin=FALSE,
 		sites=NULL,point.occur=FALSE,anc.wt=1,node.mins=NULL,dateTreatment="firstLast",FAD.only=FALSE,
-		adj.obs.wt=TRUE,root.max=200,step.size=0.1,randres=FALSE,plot=FALSE){
+		adj.obs.wt=TRUE,root.max=200,step.size=0.1,randres=FALSE,noisyDrop=TRUE,plot=FALSE){
 	#see the bin_cal3 function for more notation...
 	#require(ape)
 	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
@@ -824,7 +824,9 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
 		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
-		message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))
+		if(noisyDrop){
+			message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))
+			}
 		tree<-drop.tip(tree,droppers)
 		if(is.null(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
 		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data!")}
@@ -832,10 +834,21 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		}
 	if(!is.null(node.mins)){
 		if(length(droppers)>0){	#then... the tree has changed unpredictably, node.mins unusable
-			stop("node.mins not compatible with datasets where some taxa are drop; drop before analysis instead")}
+			stop("node.mins not compatible with datasets where some taxa are dropped; drop before analysis instead")}
 		if(Nnode(tree)!=length(node.mins)){
 			stop("node.mins must be same length as number of nodes in the input tree!")}
 		}
+	#best to drop taxa from timeList that aren't represented on the tree
+	notTree<-rownames(timeList[[2]])[is.na(match(rownames(timeList[[2]]),tree$tip.label))]
+	if(length(notTree)>0){
+		if(is.null(sites)){
+			if(noisyDrop){
+				message(paste("Warning: Following taxa dropped from timeList:",paste0(notTree,collapse=", ")))}
+			timeList[[2]]<-timeList[[2]][!is.na(match(rownames(timeList[[2]]),tree$tip.label)),]
+		}else{
+			stop("Some taxa in timeList not included on tree: not automatic taxon drop if 'sites' are given. Please remove from both sites and timeList and try again.")
+			}
+		}	
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}
 	if(any(apply(timeList[[1]],1,diff)>0)){stop("Error: timeList[[1]] not in intervals in time relative to modern")}
@@ -848,7 +861,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 				stop("Error: point.occur=TRUE but some taxa have FADs and LADs listed in different intervals?!")}
 			sites<-matrix(c(1:Ntip(tree),1:Ntip(tree)),Ntip(tree),2)
 		}else{
-			sites<-matrix(1:(Ntip(tree)*2),,2)
+			sites<-matrix(1:(nrow(timeList[[2]])*2),,2)
 			}
 	}else{	#make sites a bunch of nicely behaved sorted integers
 		sites[,1]<-sapply(sites[,1],function(x) which(x==sort(unique(as.vector(sites)))))
@@ -867,6 +880,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 			while(length(bad_sites)>0){
 				siteDates[bad_sites]<-apply(siteTime[bad_sites,],1,function(x) runif(1,x[2],x[1]))
 				bad_sites<-unique(as.vector(sites[(siteDates[sites[,1]]-siteDates[sites[,2]])<0,]))
+				#message(length(bad_sites))
 				}
 			timeData<-cbind(siteDates[sites[,1]],siteDates[sites[,2]])
 		}else{

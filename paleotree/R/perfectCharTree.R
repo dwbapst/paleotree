@@ -13,8 +13,9 @@ perfectCharTree<-function(tree,nchar){
 				}
 			}
 		if((nchar%%length(desc)) != 0){
-			desc[(length(desc)+1):nchar]<-desc[sample(1:nnode,nchar-length(desc),replace=TRUE)]
-			message("Randomly sampling nodes for extra character changes")
+			nrand<-nchar-length(desc)
+			desc[(length(desc)+1):nchar]<-desc[sample(1:nnode,nrand,replace=TRUE)]
+			message(paste("Randomly sampling nodes for",nrand,"extra characters"))
 			}
 	}else{
 		if(nnode>nchar){stop("nchar needs to be larger than the number of nodes")}

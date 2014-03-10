@@ -49,7 +49,8 @@
 #' 
 #' These functions will intuitively drop taxa from the tree with NA for range
 #' or are missing from timeData or timeList. Taxa dropped from the tree will be
-#' will be listed in a 
+#' will be listed in a message output to the user. The same is done for taxa in
+#' the timeList object not listed in the tree..
 #' 
 #' As with many functions in the paleotree library, absolute time is always
 #' decreasing, i.e. the present day is zero.
@@ -449,6 +450,8 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	if(ntrees<1){stop("Error: ntrees<1")}
 	if(!any(dateTreatment==c("firstLast","minMax","randObs"))){
 		stop("dateTreatment must be one of 'firstLast', 'minMax' or 'randObs'!")}
+	if(!any(type==c("basic","mbl","equal","aba","zlba"))){
+		stop("type must be one of the types listed in the help file for timePaleoPhy")}
 	if(!add.term & dateTreatment=="randObs"){stop(
 		"Inconsistent arguments: randomized observation times are treated as LAST appearance times, so add.term must be true for dateTreatment selection to have any effect on output!"
 		)}

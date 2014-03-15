@@ -3,6 +3,8 @@ Version - 2.1 -
 -New function perfectCharTree, for obtaining matrices of simulated parsimony informative characters on a topology
 -New function seqTimeList, which randomly searches a given timeList object with overlapping intervals for solutions which have fully sequential intervals
 -Added error message to timePaleoPhy to report an error if 'type' argument is not one of the listed options
+-Fixed error in sampleRanges when handed data with a single instantaneous taxon
+-Added option to return all sampling events in $ranges for simPaleoTrees
 
 Version - 2.0 - 02-03-14
 -Changed parInit to use uniform distribution to randomly draw initial parameter values between bounds, rather than take mid value between bounds

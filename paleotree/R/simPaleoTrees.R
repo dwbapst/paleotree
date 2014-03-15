@@ -58,6 +58,10 @@
 
 #' @param drop.zlb Should zero-length branches be dropped?
 
+#' @param ranges.only If TRUE (the default), the ranges returned in $ranges
+#' are given as taxon first and last occurrences only. If
+#' FALSE, gives the time of all sampling events as a list.
+
 #' @param plot Should data be plotted as it is simulated?
 
 #' @return Output is an object of class multiphylo containing the simulated
@@ -89,7 +93,7 @@
 #' 
 #' @export simPaleoTrees
 simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mintime=1,maxtime=100,
-	mintaxa=2,maxtaxa=500,anag.rate=0,prop.bifurc=0,prop.cryptic=0,drop.zlb=TRUE,print.runs=FALSE,
+	mintaxa=2,maxtaxa=500,anag.rate=0,prop.bifurc=0,prop.cryptic=0,drop.zlb=TRUE,print.runs=FALSE,ranges.only=TRUE,
 	plot=FALSE){
 	#this is a wrapper which will create many paleo trees with at least two observed tips
 		#uses simFossilTaxa, sampRanges,taxa2phylo, etc
@@ -111,14 +115,21 @@ simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mi
 			ntries<-ntries+1
 			taxa<-suppressMessages(simFossilTaxa(p=p,q=q,anag.rate=anag.rate,prop.bifurc=prop.bifurc,prop.cryptic=prop.cryptic,nruns=1,mintaxa=mintaxa,
 				maxtaxa=maxtaxa,maxtime=maxtime,maxExtant=ifelse(all.extinct,0,maxtaxa),min.cond=FALSE,plot=plot))
-			ranges<-sampleRanges(taxa,r,min.taxa=0,modern.samp.prob=modern.samp.prob,merge.cryptic=FALSE)
-			if(sum(!is.na(ranges[,1]))>1){
-				tree<-taxa2phylo(taxa,obs_time=ranges[,2],plot=plot)
+			ranges<-sampleRanges(taxa,r,min.taxa=0,modern.samp.prob=modern.samp.prob,merge.cryptic=FALSE,ranges.only=ranges.only)
+			if(ranges.only){
+				ranges1<-ranges
+			}else{
+				ranges1<-cbind(sapply(ranges,max),sapply(ranges,min))
+				rownames(ranges1)<-names
+				colnames(ranges1)<-c("FAD","LAD")
+				}
+			if(sum(!is.na(ranges1[,1]))>1){
+				tree<-taxa2phylo(taxa,obs_time=ranges1[,2],plot=plot)
 				if(drop.zlb){tree<-dropZLB(tree)}
 				if(all(!is.na(tree))){
-					numext<-sum(ranges[,2]==0)
+					numext<-sum(ranges1[,2]==0)
 					minta<-Ntip(tree)>mintaxa
-					minti<-(max(ranges,na.rm=TRUE)-min(ranges,na.rm=TRUE))>mintime
+					minti<-(max(ranges1,na.rm=TRUE)-min(ranges1,na.rm=TRUE))>mintime
 					if(minta & minti){
 						rerun<-FALSE
 						}

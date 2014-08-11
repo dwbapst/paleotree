@@ -7,7 +7,8 @@ Version - 2.1 -
 -Added option to return all sampling events in $ranges for simPaleoTrees
 -Modified bin_timePaleoPhy and bin_cal3TimePaleoPhy so that the $ranges.used arguments name the columns "FAD" and "LAD" respectively for ease of use with geoscalePhylo in package strap
 -Small modifications to how plotting worked in freqRat, changed calculations to work on proportions and not absolute frequencies, made it so that a warning is issued if a freqRat over 1 is calculated.
--
+-Clarifications to help file and warning statements regarding use of 'zlba' and 'aba' time-scaling methods (thanks Graeme Lloyd!)
+-Added calcExtinction argument to freqRat to give capability to get extinction rate from slope of log frequencies
 
 Version - 2.0 - 02-03-14
 -Changed parInit to use uniform distribution to randomly draw initial parameter values between bounds, rather than take mid value between bounds

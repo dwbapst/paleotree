@@ -2,7 +2,8 @@
 #' 
 #' Estimate per-interval sampling probability in the fossil record from a set
 #' of discrete-interval taxon ranges using the frequency-ratio method described
-#' by Foote and Raup (1996).
+#' by Foote and Raup (1996). Can also calculate extinction rate per interval from
+#' the same data distribution.
 #' 
 #' @details This function uses the frequency ratio ("freqRat") method of Foote and Raup
 #' (1996) to estimate the per-interval sampling rate for a set of taxa. This
@@ -42,17 +43,27 @@
 #' listed as being in a bin with start time 0 and end time 0 (and thus being
 #' extant without question) are dropped before the model fitting it performed.
 #' 
-#' @param timeData A 2 column matrix with the first and last occurances of taxa
+#' @param timeData A 2 column matrix with the first and last occurrences of taxa
 #' given in relative time intervals. If a list of length two is given for
 #' timeData, such as would be expected if the output of binTimeData was
 #' directly input, the second element is used.
+
+#' @param calcExtinction If TRUE, the per-interval, per-lineage extinction rate 
+#' is estimated as the negative slope of the log frequencies, ignoring single
+#' hits (as described in Foote and Raup, 1996.)
+
 #' @param plot If true, the histogram of observed taxon ranges is plotted, with
 #' frequencies on a linear scale
+
 #' @return This function returns the per-interval sampling probability as the
-#' "freqRat".
+#' "freqRat", and estimates 
+
 #' @author David W. Bapst
-#' @seealso \code{\link{getSampProbDisc}}, \code{\link{getSampRateCont}},
-#' \code{\link{sProb2sRate}}, \code{\link{qsProb2Comp}}
+
+#' @seealso Model fitting methods in \code{\link{durationFreq}}, which replaced
+#' methods listed in \code{\link{getSampProbDisc}}, \code{\link{getSampRateCont}}. 
+#' Also see conversion methods in \code{\link{sProb2sRate}}, \code{\link{qsProb2Comp}}
+
 #' @references Foote, M. 1997 Estimating Taxonomic Durations and Preservation
 #' Probability. \emph{Paleobiology} \bold{23}(3):278--300.
 #' 
@@ -75,11 +86,19 @@
 #' sRate2sProb(r=0.1,int.length=5)
 #' #expect R = ~0.39
 #' 
-#' #now we can use maximum likelihood to taxon ranges to get sampling probability
+#' #now we can apply freqRat to get sampling probability
 #' SampProb <- freqRat(rangesDisc,plot=TRUE)
 #' SampProb
-#' #est. R = ~0.25
-#' 
+#'
+#' #est. R = ~0.25 
+#' #Not wildly accurate, is it?
+#'
+#' #can also calculate extinction rate per interval of time
+#' freqRat(rangesDisc,calcExtinction=TRUE)
+#'
+#' #est. ext rate = ~0.44 per interval
+#' #5 time-unit intervals, so ~0.44 / 5 = ~0.08 per time-unite
+#' #That's pretty close to the generating value of 0.01, used in simFossilTaxa
 #' 
 #' \dontrun{
 #' #################
@@ -200,7 +219,7 @@
 #' }
 #' 
 #' @export freqRat
-freqRat<-function(timeData,plot=FALSE){
+freqRat<-function(timeData,calcExtinction=FALSE,plot=FALSE){
 	#timeData is discrete bin data, like from binTimeData
 	if(length(timeData)==2){	#if a timeList matrix...
 		timeData[[2]][(timeData[[1]][timeData[[2]][,2],2]==0),1]<-NA
@@ -212,15 +231,27 @@ freqRat<-function(timeData,plot=FALSE){
 		stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
 	if(any(timeData[,2]<0)){stop("Error: Some dates in timeList[[2]] <0 ?")}
 	durations<-apply(timeData,1,diff)+1
-	sumDur<-sapply(1:max(durations),function(x) sum(durations==x))
-	f1<-sum(durations==1)/length(durations)
-	f2<-sum(durations==2)/length(durations)
-	f3<-sum(durations==3)/length(durations)
+	sumDur<-sapply(1:max(durations),function(x) sum(durations==x))/length(durations)
+	#get freqRat
+	f1<-sumDur[1]
+	f2<-sumDur[2]
+	f3<-sumDur[3]
 	freqRat<-(f2^2)/(f1*f3)
 	names(freqRat)<-"freqRat"
+	if(freqRat>1){message("Warning: Frequency distribution of input range data appears to violate model assumptions, producing an impossible freqRat greater than 1")}
+	#calculate extinction rate (rate of lineages going extinct per lineage, per interval)
+	if(calcExtinction){
+		logSD<-log(sumDur[-1])
+		logSD[is.infinite(logSD)]<-NA
+		intseq<-2:max(durations)
+		reg<-lm(logSD~intseq)
+		extRate<--coefficients(reg)[2]
+		names(extRate)<-"extRate"
+		freqRat<-c(freqRat,extRate)
+		}
+	#plotting
 	if(plot){
 		hist(durations,breaks=0:max(durations),xlab="Duration (time-units)",main="")
 		}
-	if(freqRat>1){message("Warning: Frequency distribution of input range data appears to violate model assumptions, producing an impossible freqRat greater than 1")}
 	return(freqRat)
 	}

@@ -60,7 +60,8 @@
 
 #' @param ranges.only If TRUE (the default), the ranges returned in $ranges
 #' are given as taxon first and last occurrences only. If
-#' FALSE, gives the time of all sampling events as a list.
+#' FALSE, $ranges returns the times of all sampling events for each taxon
+#' as vectors within a list.
 
 #' @param plot Should data be plotted as it is simulated?
 

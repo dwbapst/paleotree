@@ -1,10 +1,13 @@
 #Paleotree improvement:
 
+#new version of simFossilTaxa that stops at precise numbers of taxa
+	#not min/max
+
 #add limited time window option to getSampProbDisc and getSampRateCont
 
 #compare make_durationFreq methods relative to getSamp methods
 
-#test if invSurv is working properly
+#ensure invSurv is working as desired
 
 #make function for finding indirect ancestors / descendants in taxa objects
 	#might be useful for improving efficiency of taxa2phylo

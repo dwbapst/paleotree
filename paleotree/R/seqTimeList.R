@@ -1,5 +1,94 @@
+#' Construct a Stochastic Sequenced Time-List from an Unsequenced Time-List
+#'
+#' This function randomly samples from a timeList object (i.e. a list composed of a matrix of interval start and end
+#' dates and a matrix of taxon first and last intervals), to find a set of taxa and intervals that do not overlap,
+#' output as a new timeList object.
 
+#' @details
+#' Many analyses of diversification and sampling in the fossil record require a dataset composed of sequential non-overlappling intervals,
+#' but the nature of the geologic record often makes this difficult, with taxa from different regions, environments and sedimentary basins
+#' having first and last appearances placed in entirely in-congruent systems of chronostratigraphic intervals. While one option is to convert
+#' such occurrences to a single, global stratigraphic system, this may still result in overlapping intervals when fossil collections are poorly
+#' constrained stratigraphically. (For example, this may often be the case in global datasets.) This function
+#' offers an approach to avoid this issue in large datasets by randomly subsampling the available taxa and intervals to produce stochastic
+#' sets of ranges composed of data drawn from non-overlapping intervals.
+#'
+#' This function is stochastic and thus should be set for many runs to produce many such solutions. Additionally,
+#' it will only produce 
 
+ If, as in this dataset, taxa sometimes are known from collections that could have been from very long intervals and often overlap with each other,
+ it is imperative to find a ‘solution’ which retains a large proportion of taxa and intervals but removes intervals that are overlapping, including
+ the taxa found in them. However, a single solution which maximizes taxa and intervals may not be a precise enough approach to estimating sampling 
+ rates, given uncertainty in the data.
+
+One issue is that when we search for solutions, we could either select intervals at random with uniform probability (which I’ll refer to as the 
+‘unweighted’ approach henceforth) or we could weight selection toward the smallest intervals, which presumably overlap the least (the ‘weighted’
+ approach). In general, these two approaches did not produce very different estimates, and though I should the results for both below, 
+ I’ll generally give preference to the ‘unweighted’ solutions as they are a simpler methodology.
+
+ Many solutions produce infinite sampling values, which in this case is due to only sampling taxa found in only single intervals, which leads
+ to a funky likelihood surface. We’ll ‘clean’ our data henceforth and ignore solutions that produced infinite sampling rates in this discussion.
+ 
+ 
+ 
+#' @param timeList 
+
+#' @param nruns Number of new timeList composed of non-overlapping intervals produced.
+
+#' @param weightSampling If TRUE, weight sampling of new intervals toward smaller intervals. FALSE by default.
+
+#' @return
+#' A list, composed of three elements: \code{nIntervals} which is a vector of the
+#' number of intervals in each solution, \code{nTaxa} which is a vector of the number of
+#' taxa in each solution and \code{timeLists} which is a list composed of each new
+#' timeList object as an element.
+
+#' @aliases
+
+#' @seealso Resulting time-lists can be analyzed with \code{\link{freqRat}}, \code{\link{}}, etc.
+#'
+#' Additionally, \code{\link{binTimeData}} can be useful for simulating interval data.
+
+#' @author David W. Bapst
+
+#' @references
+
+#' @examples
+#' #Simulate some fossil ranges with simFossilTaxa
+#' set.seed(444)
+#' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=60,maxtaxa=80,maxtime=1000,maxExtant=0)
+#' #simulate a fossil record with imperfect sampling with sampleRanges()
+#' rangesCont <- sampleRanges(taxa,r=0.1)
+#' 
+#' #Now let's use binTimeData to get ranges in discrete overlapping intervals
+#'     #via pre-set intervals input
+#' presetIntervals <- cbind(c(1000,995,990,980,970,960,950,940,930,905),
+#'     c(995,989,960,975,960,950,930,930,900,885))
+#' rangesDisc1 <- binTimeData(rangesCont,int.times=presetIntervals)
+#' 
+#' seqLists<-seqTimeList(rangesDisc1,nruns=10)
+#' seqLists$nTaxa
+#' seqLists$nIntervals
+#' 
+#' sapply(seqLists$timeLists,freqRat)
+#' 
+#' #notice the zero and infinite freqRat estimates? What's going on?
+#' 
+#' freqRat(seqLists$timeLists[[4]],plot=TRUE)
+#' 
+#' #too few taxa of two orthree interval durations for the ratio to work properly
+#'     #perhaps ignore these estimates
+#' 
+#' #with weighted selection of intervals
+#' seqLists<-seqTimeList(rangesDisc1,nruns=10,weightSampling=TRUE)
+#' 
+#' seqLists$nTaxa
+#' seqLists$nIntervals
+#' sapply(seqLists$timeLists,freqRat)
+#' 
+#' #didn't have much effect in this simulated example
+
+#' @export seqTimeList
 seqTimeList<-function(timeList,nruns=100,weightSampling=FALSE){
 	timeList[[1]]<-as.matrix(timeList[[1]])
 	timeList[[2]]<-as.matrix(timeList[[2]])

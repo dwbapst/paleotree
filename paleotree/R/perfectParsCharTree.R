@@ -1,4 +1,34 @@
-perfectCharTree<-function(tree,nchar){
+#' Simulate a Set of Parsimony-Informative Characters for a Phylogeny
+#'
+#' Creates a simulated set of parsimony-informative characters for a given rooted phylogeny,
+#' with characters shared out equally across nodes in the phylogeny, with any remaining characters
+#' assigned randomly to nodes.
+
+#' @details
+#' This function takes some given number of characters code and places them 
+#'
+#' This function assumes, like almost every function in paleotree, that the tree given is rooted, even if the
+#' most basal node is a polytomy.
+
+#' @inheritParams
+
+#' @param
+
+#' @return
+
+#' @aliases
+
+#' @seealso 
+
+#' @author David W. Bapst 
+
+#' @references
+
+#' @examples
+#' 
+
+#' @export perfectParsCharTree
+perfectParsCharTree<-function(tree,nchar){
 	#simulate a perfect character dataset (parsimony informative binary chars) for a given tree
 	charMat<-matrix(0,Ntip(tree),nchar)
 	rownames(charMat)<-tree$tip.label

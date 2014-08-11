@@ -33,11 +33,15 @@
 #' alter the root age at all.}
 
 #' \item{"aba"}{All branches additive. This method takes the "basic" tree and
-#' adds vartime to all branches.}
+#' adds vartime to all branches. Note that this time-scaling method can warp the
+#' tree structure, leading to tips to originate out of order with the appearance
+#' data used.}
 
 #' \item{"zlba"}{Zero-length branches additive. This method adds vartime to all
 #' zero-length branches in the "basic" tree. Discussed (possibly?) by Hunt and Carrano,
-#' 2010.} 
+#' 2010.Note that this time-scaling method can warp the
+#' tree structure, leading to tips to originate out of order with the appearance
+#' data used.}
 
 #' \item{"mbl"}{Minimum branch length. Scales all branches so they are
 #' greater than or equal to vartime, and subtract time added to later branches
@@ -262,7 +266,9 @@
 #' time-scaled trees, of either class phylo or multiphylo, depending on the
 #' argument ntrees. All trees are output with an element $root.time. This is
 #' the time of the root on the tree and is important for comparing patterns
-#' across trees.
+#' across trees. Note that the $root.time element is defined relative to the
+#' earliest first appearance date, and thus later tips may seem to occur in
+#' the distant future under the 'aba' and 'zbla' time-scaling methods.
 #' 
 #' Trees created with bin_timePaleoPhy will output with some additional
 #' elements, in particular $ranges.used, a matrix which records the
@@ -741,6 +747,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,
 		tree2<-suppressMessages(timePaleoPhy(tree1,timeData,type=type,vartime=vartime,ntrees=1,
 			randres=FALSE,add.term=add.term,inc.term.adj=inc.term.adj,dateTreatment=dateTreatment,
 			node.mins=node.mins,plot=plot))
+		colnames(timeData)<-c("FAD","LAD")
 		tree2$ranges.used<-timeData
 		names(tree2$edge.length)<-NULL
 		ttrees[[ntrb]]<-tree2

@@ -212,9 +212,15 @@ freqRat<-function(timeData,plot=FALSE){
 		stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
 	if(any(timeData[,2]<0)){stop("Error: Some dates in timeList[[2]] <0 ?")}
 	durations<-apply(timeData,1,diff)+1
-	f1<-sum(durations==1);f2<-sum(durations==2);f3<-sum(durations==3)
+	sumDur<-sapply(1:max(durations),function(x) sum(durations==x))
+	f1<-sum(durations==1)/length(durations)
+	f2<-sum(durations==2)/length(durations)
+	f3<-sum(durations==3)/length(durations)
 	freqRat<-(f2^2)/(f1*f3)
 	names(freqRat)<-"freqRat"
-	if(plot){hist(durations,breaks=max(durations),xlab="Duration (time-units)",main="")}
+	if(plot){
+		hist(durations,breaks=0:max(durations),xlab="Duration (time-units)",main="")
+		}
+	if(freqRat>1){message("Warning: Frequency distribution of input range data appears to violate model assumptions, producing an impossible freqRat greater than 1")}
 	return(freqRat)
 	}

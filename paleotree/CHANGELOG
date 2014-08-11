@@ -1,10 +1,13 @@
 Version - 2.1 -
--Changes to bin_timePaleoPhy and bin_cal3TimePaleoPhy so taxa not included in the tree are dropped before random dates are drawn from those intervals, which increases computation efficiency
+-Changes to bin_timePaleoPhy and bin_cal3TimePaleoPhy so taxa not included in the tree are dropped before random dates are drawn from those intervals, which increases computational efficiency.
 -New function perfectCharTree, for obtaining matrices of simulated parsimony informative characters on a topology
 -New function seqTimeList, which randomly searches a given timeList object with overlapping intervals for solutions which have fully sequential intervals
 -Added error message to timePaleoPhy to report an error if 'type' argument is not one of the listed options
 -Fixed error in sampleRanges when handed data with a single instantaneous taxon
 -Added option to return all sampling events in $ranges for simPaleoTrees
+-Modified bin_timePaleoPhy and bin_cal3TimePaleoPhy so that the $ranges.used arguments name the columns "FAD" and "LAD" respectively for ease of use with geoscalePhylo in package strap
+-Small modifications to how plotting worked in freqRat, changed calculations to work on proportions and not absolute frequencies, made it so that a warning is issued if a freqRat over 1 is calculated.
+-
 
 Version - 2.0 - 02-03-14
 -Changed parInit to use uniform distribution to randomly draw initial parameter values between bounds, rather than take mid value between bounds

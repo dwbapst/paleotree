@@ -64,7 +64,7 @@ dateNodes<-function(tree,rootAge=tree$root.time,labelDates=FALSE){
 		rootAge <- max(nodeRelTimes)
 		message("Root age not given; treating tree as if latest tip was at modern day (time=0)")}
 	res<-rootAge-nodeRelTimes
-	if(any(res<0)){message("Warning: Some dates are negative? rootAge may be incorrectly defined.")}
+	if(any(res<0)){message("Warning: Some dates are negative? rootAge may be incorrectly defined or you are using a time-scaling method that warps the tree, like aba or zbla.")}
 	if(labelDates){
 		names(res)<-sapply(Descendants(tree),function(x) paste0(tree$tip.label[x],collapse=" "))
 	}else{

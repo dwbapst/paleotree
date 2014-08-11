@@ -181,10 +181,13 @@
 #' 
 #' As with many functions in the paleotree library, absolute time is always
 #' decreasing, i.e. the present day is zero.
+
 #' @author David W. Bapst
+
 #' @seealso \code{\link{simFossilTaxa_SRCond}}, \code{\link{sampleRanges}},
 #' \code{\link{simPaleoTrees}}, \code{\link{taxa2phylo}},
 #' \code{\link{taxa2cladogram}}
+
 #' @references Foote, M. 1996 On the Probability of Ancestors in the Fossil
 #' Record. \emph{Paleobiology} \bold{22}(2):141--151.
 #' 
@@ -199,6 +202,7 @@
 #' 
 #' Solow, A. R., and W. Smith. 1997 On Fossil Preservation and the
 #' Stratigraphic Ranges of Taxa. \emph{Paleobiology} \bold{23}(3):271--277.
+
 #' @examples
 #' 
 #' set.seed(444)

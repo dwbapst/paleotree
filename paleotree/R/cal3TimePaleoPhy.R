@@ -892,6 +892,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		tree2<-suppressMessages(cal3TimePaleoPhy(tree,timeData,brRate=brRate,extRate=extRate,sampRate=sampRate,
 			ntrees=1,anc.wt=anc.wt,node.mins=node.mins,adj.obs.wt=adj.obs.wt,root.max=root.max,step.size=step.size,
 			FAD.only=FAD.only,dateTreatment=dateTreatment,randres=randres,plot=plot))
+		colnames(timeData)<-c("FAD","LAD")
 		tree2$ranges.used<-timeData
 		names(tree2$edge.length)<-NULL
 		ttrees[[ntrb]]<-tree2

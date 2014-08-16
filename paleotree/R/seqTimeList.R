@@ -45,7 +45,7 @@
 #' timeList object as an element.
 
 #' @seealso 
-#' Resulting time-lists can be analyzed with \code{\link{freqRat}}, \code{\link{durationFreq}, etc.
+#' Resulting time-lists can be analyzed with \code{\link{freqRat}}, \code{\link{durationFreq}}, etc.
 #' 
 #' Additionally, \code{\link{binTimeData}} can be useful for simulating interval data.
 

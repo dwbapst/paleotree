@@ -231,7 +231,7 @@ freqRat<-function(timeData,calcExtinction=FALSE,plot=FALSE){
 		stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
 	if(any(timeData[,2]<0)){stop("Error: Some dates in timeList[[2]] <0 ?")}
 	durations<-apply(timeData,1,diff)+1
-	sumDur<-sapply(1:max(durations),function(x) sum(durations==x))/length(durations)
+	sumDur<-sapply(1:max(c(durations,3)),function(x) sum(durations==x))/length(durations)
 	#get freqRat
 	f1<-sumDur[1]
 	f2<-sumDur[2]

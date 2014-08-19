@@ -34,6 +34,10 @@
 #' Bapst, D. W. 2013. When Can Clades Be Potentially Resolved with Morphology?
 #' \emph{PLoS ONE}. 8(4):e62312.
 #'
+#' Bapst, D. W. 2014. Assessing the effect of time-scaling methods on
+#' phylogeny-based analyses in the fossil record. \bold{Paleobiology}
+#' \bold{40}(3):331-351.
+#'
 #' @examples
 #' 
 #' ##Simulate some fossil ranges with simFossilTaxa

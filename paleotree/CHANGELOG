@@ -1,3 +1,6 @@
+Version - 2.2 -
+-
+
 Version - 2.1 - 08-15-14
 -Changes to bin_timePaleoPhy and bin_cal3TimePaleoPhy so taxa not included in the tree are dropped before random dates are drawn from those intervals, which increases computational efficiency.
 -New function perfectCharTree, for obtaining matrices of simulated parsimony informative characters on a topology

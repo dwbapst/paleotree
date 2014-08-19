@@ -2,7 +2,11 @@
 #' 
 #' Timescales an unscaled cladogram of fossil taxa using information on their
 #' temporal ranges, using various methods. Also can resolve polytomies randomly
-#' and output samples of randomly-resolved trees.
+#' and output samples of randomly-resolved trees. As simple methods of time-scaling
+#' phylogenies of fossil taxa can have biasing effects on macroevolutionary analyses
+#' (Bapst, 2014, Paleobiology), this function is largely retained for legacy purposes
+#' and plotting applications. The functions listed here are \bold{not} realistic
+#' time-scaling methods!
 #' 
 #' @details These functions are an attempt to unify and collect previously used and
 #' discussed methods for time-scaling phylogenies of fossil taxa.
@@ -23,14 +27,21 @@
 
 #'  \item{"equal"}{The 'equal' method defined by G. Lloyd and used in Brusatte
 #' et al. (2008) and Lloyd et al. (2012). Originally usable in code supplied by
-#' G. Lloyd, it is recreated here. This method works by increasing the time of
-#' the root divergence by some amount and then adjusting
-#' zero-length branches so that time on early branches is re-apportioned out
-#' along those later branches equally. The root age can be adjusted backwards
-#' in time by either increasing by an arbitrary amount (via the \code{vartime}
-#' argument) or by setting the root age directly (via the \code{node.mins}
-#' argument); conversely, the function will also allow a user to opt to not
-#' alter the root age at all.}
+#' G. Lloyd, the algorithm is recreated here as closely as possible. This method
+#' works by increasing the time of the root divergence by some amount and then
+#' adjusting zero-length branches so that time on early branches is re-apportioned
+#' out along those later branches equally. Branches are adjusted in order relative
+#' to their time (edge length) from the root following application of the 'basic'
+#' time-scaling method, exactly as in G. Lloyd's original application.
+#' The root age can be adjusted backwards in time by either increasing by
+#' an arbitrary amount (via the \code{vartime}  argument) or by setting the
+#' root age directly (via the \code{node.mins} argument); conversely, the
+#' function will also allow a user to opt to not alter the root age at all.}
+
+#' \item{"equal2"}{Exactly like 'equal' above, except that edges are ordered instead
+#' by their depth (i.e. number of nodes from the root). This minor modified version
+#' was referred to as 'equal' for this function until February 2014, and thus is
+#' included here for legacy purposes.}
 
 #' \item{"aba"}{All branches additive. This method takes the "basic" tree and
 #' adds vartime to all branches. Note that this time-scaling method can warp the
@@ -131,9 +142,8 @@
 #' in time when taxa first and last appear. If there is stratigraphic uncertainty in
 #' when taxa appear in the fossil record, please use the 'bin' time-scaling functions. 
 
-#' @param type Type of time-scaling method used. Can be "basic", "equal",
-#' "aba", "zbla" or "mbl". Type="basic" by default. See the note below for more
-#' details
+#' @param type Type of time-scaling method used. Can be "basic", "equal", "equal2"
+#' "aba", "zbla" or "mbl". Type="basic" by default. See details below.
 
 #' @param vartime Time variable; usage depends on the method 'type' argument.
 #' Ignored if type = "basic"
@@ -292,6 +302,10 @@
 #' Bapst, D. W. 2013. A stochastic rate-calibrated method for time-scaling
 #' phylogenies of fossil taxa. \emph{Methods in Ecology and Evolution}.
 #' 4(8):724-733.
+#'
+#' Bapst, D. W. 2014. Assessing the effect of time-scaling methods on
+#' phylogeny-based analyses in the fossil record. \bold{Paleobiology}
+#' \bold{40}(3):331-351.
 #' 
 #' Brusatte, S. L., M. J. Benton, M. Ruta, and G. T. Lloyd. 2008 Superiority,
 #' Competition, and Opportunism in the Evolutionary Radiation of Dinosaurs.
@@ -456,7 +470,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	if(ntrees<1){stop("Error: ntrees<1")}
 	if(!any(dateTreatment==c("firstLast","minMax","randObs"))){
 		stop("dateTreatment must be one of 'firstLast', 'minMax' or 'randObs'!")}
-	if(!any(type==c("basic","mbl","equal","aba","zlba"))){
+	if(!any(type==c("basic","mbl","equal","equal2","aba","zlba"))){
 		stop("type must be one of the types listed in the help file for timePaleoPhy")}
 	if(!add.term & dateTreatment=="randObs"){stop(
 		"Inconsistent arguments: randomized observation times are treated as LAST appearance times, so add.term must be true for dateTreatment selection to have any effect on output!"
@@ -525,7 +539,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 				ntime[i]<-max(ntime[i],node_times[!is.na(node_times)])
 				}
 			}
-		if(type=="equal" & !is.null(vartime)){				#add to root, if method="equal"
+		if((type=="equal"|type=="equal2") & !is.null(vartime)){				#add to root, if method="equal"
 			ntime[Ntip(tree)+1]<-vartime+ntime[Ntip(tree)+1]
 			#anchor_adjust<-vartime+anchor_adjust
 			}	
@@ -576,18 +590,21 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 					}}
 				}
 			}
-		if(type=="equal"){	#G. Lloyd's "equal" method
-			#OLD
-			#get a depth-ordered vector that identifies zero-length branches
-			#zbr<-cbind(1:Nedge(ttree),node.depth(ttree)[ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = depth
-			#zbr<-zbr[ttree$edge.length==0,]						#Parses zbr to just zero-length branches
-			#zbr<-zbr[order(zbr[,2]),1]							#order zbr by depth
-			#
-			#NEW 02-03-04 
-			#get a TIME-TO-ROOT-ordered vector that identifies zero-length branches, as Graeme's DatePhylo
-			zbr<-cbind(1:Nedge(ttree),dist.nodes(ttree)[Ntip(ttree)+1,ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = abs distance (time) from root
-			zbr<-zbr[ttree$edge.length==0,]								#Parses zbr to just zero-length branches
-			zbr<-zbr[order(-zbr[,2]),1]									#order zbr by time-to-root
+		if(type=="equal"|type=="equal2"){	#G. Lloyd's "equal" method
+			if(type=="equal2"){
+				#OLD
+				#get a depth-ordered vector that identifies zero-length branches
+				zbr<-cbind(1:Nedge(ttree),node.depth(ttree)[ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = depth
+				zbr<-zbr[ttree$edge.length==0,]						#Parses zbr to just zero-length branches
+				zbr<-zbr[order(zbr[,2]),1]							#order zbr by depth
+				}
+			if(type=="equal"){
+				#NEW 02-03-04 
+				#get a TIME-TO-ROOT-ordered vector that identifies zero-length branches, as Graeme's DatePhylo
+				zbr<-cbind(1:Nedge(ttree),dist.nodes(ttree)[Ntip(ttree)+1,ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = abs distance (time) from root
+				zbr<-zbr[ttree$edge.length==0,]								#Parses zbr to just zero-length branches
+				zbr<-zbr[order(-zbr[,2]),1]									#order zbr by time-to-root
+				}
 			#if the edge lengths leading away from the root are somehow ZERO issue a warning
 			if(is.null(vartime) & any(ttree$edge.length[ttree$edge[,1]==(Ntip(ttree)+1)]==0)){
 				stop("The equal method requires the edges leading away from the root to have non-zero length to begin with, perhaps increase vartime?")}

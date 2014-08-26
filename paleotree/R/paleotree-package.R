@@ -58,6 +58,8 @@
 #' taxicDivDisc(rangesDisc)
 #' #compare to the continuous time diversity curve
 #' 
+#' layout(1)
+#'
 #' #taxa2phylo assumes we know speciation events perfectly... what if we don't?
 #' #first, let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
 #' cladogram <- taxa2cladogram(taxa,plot=TRUE)

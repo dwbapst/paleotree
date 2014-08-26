@@ -91,6 +91,14 @@
 #'     modern.samp.prob=TRUE,print.runs=TRUE,plot=TRUE)
 #' #number of tips
 #' sapply(trees,Ntip)
+#'
+#' #simulate trees with no living descendants and return sampling events, not ranges
+#' trees <- simPaleoTrees(p=0.1,q=0.1,r=0.5,ntrees=10,all.extinct=TRUE,maxtime=100,
+#'     print.runs=TRUE,plot=TRUE,ranges.only=FALSE)
+#' #number of sampling events
+#' sapply(trees,function(x) sum(sapply(x$ranges[!is.na(x$ranges)],length)))
+#' #remove any sampling events at t=0; shouldn't be any, so should be identical
+#' sapply(trees,function(x) sum(sapply(x$ranges[!is.na(x$ranges)],function(y) sum(y>0))))
 #' 
 #' @export simPaleoTrees
 simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mintime=1,maxtime=100,
@@ -121,7 +129,7 @@ simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mi
 				ranges1<-ranges
 			}else{
 				ranges1<-cbind(sapply(ranges,max),sapply(ranges,min))
-				rownames(ranges1)<-names
+				rownames(ranges1)<-names(ranges)
 				colnames(ranges1)<-c("FAD","LAD")
 				}
 			if(sum(!is.na(ranges1[,1]))>1){

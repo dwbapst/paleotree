@@ -52,7 +52,8 @@
 #' tree2<-bin_timePaleoPhy(tree,timeList=rangeData,timeres=TRUE)
 #' plot(ladderize(tree),show.tip.label=FALSE)
 #' plot(ladderize(tree2),show.tip.label=FALSE)
-#' 
+#' axisPhylo() 
+#'
 #' layout(1)
 #' 
 #' @export timeLadderTree

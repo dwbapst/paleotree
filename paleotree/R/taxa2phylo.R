@@ -78,6 +78,7 @@
 #' treeCrypt<-taxa2phylo(taxaCrypt)
 #' layout(1)
 #' plot(treeCrypt)
+#' axisPhylo()
 #' 
 #' @export taxa2phylo
 taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){

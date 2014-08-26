@@ -31,17 +31,36 @@
 #' works by increasing the time of the root divergence by some amount and then
 #' adjusting zero-length branches so that time on early branches is re-apportioned
 #' out along those later branches equally. Branches are adjusted in order relative
-#' to their time (edge length) from the root following application of the 'basic'
-#' time-scaling method, exactly as in G. Lloyd's original application.
+#' to the number of nodes separating the edge from the root, going from the furthest
+#' (most shallow) edges to the deepest edges. The choice of ordering algorithm can have
+#' an unanticipated large effect on the resulting time-scaled trees created using "equal"
+#' and it appears that paleotree and functions written by G. Lloyd were not always consistent.
+#' The default option described here was only introduced into either software sources in
+#' August 2014. Thus, two legacy 'equal' methods are included in this function, so users can
+#' emulate older ordering algorithms for 'equal' which are now deprecated, as they do not
+#' match the underlying logic of the original 'equal' algorithm and do not minimize down-passes
+#' when adjusting branch lengths on the time-scaled tree.
+#'
 #' The root age can be adjusted backwards in time by either increasing by
 #' an arbitrary amount (via the \code{vartime}  argument) or by setting the
 #' root age directly (via the \code{node.mins} argument); conversely, the
 #' function will also allow a user to opt to not alter the root age at all.}
 
-#' \item{"equal2"}{Exactly like 'equal' above, except that edges are ordered instead
+#' \item{"equal_paleotree_legacy"}{Exactly like 'equal' above, except that edges are ordered instead
 #' by their depth (i.e. number of nodes from the root). This minor modified version
-#' was referred to as 'equal' for this function until February 2014, and thus is
-#' included here for legacy purposes.}
+#' was referred to as 'equal' for this \code{timePaleoPhy} function in \code{paleotree} until February 2014, and thus is
+#' included here solely for legacy purposes. This ordering algorithm does not minimize branch adjustment cycles,
+#' like the newer default offered under currently 'equal'.}
+
+#' \item{"equal_date.phylo_legacy"}{Exactly like 'equal' above, except that edges are ordered relative
+#' to their time (ie. total edge length) from the root following the application of the 'basic'
+#' time-scaling method, exactly as in G. Lloyd's original application. This was the method for sorting
+#' edges in the "equal" algorithm in G. Lloyd's \code{date.phylo} script and \code{DatePhylo} in
+#' package \code{strap} until August 2014, and was the default "equal" algorithm in \code{paleotree}'s \code{timePaleoPhy}
+#' function from February 2014 until August 2014.  This ordering algorithm does not minimize branch adjustment cycles,
+#' like the newer default offered under currently 'equal'. Due to how the presence of zero-length
+#' branches can make ordering branches based on time to be very unpredictable, this version of the 'equal'
+#' algorithm is \bold{highly not recommended}.}
 
 #' \item{"aba"}{All branches additive. This method takes the "basic" tree and
 #' adds vartime to all branches. Note that this time-scaling method can warp the
@@ -60,7 +79,8 @@
 #' A version of this was first introduced by Laurin (2004).} }
 #' 
 #' These functions cannot time-scale branches relative to reconstructed
-#' character changes along branches, as used by Lloyd et al. (2012).
+#' character changes along branches, as used by Lloyd et al. (2012). Please
+#' see \code{DatePhylo} in R package {strap} for this functionality.
 #' 
 #' These functions will intuitively drop taxa from the tree with NA for range
 #' or are missing from timeData or timeList. Taxa dropped from the tree will be
@@ -69,6 +89,11 @@
 #' 
 #' As with many functions in the paleotree library, absolute time is always
 #' decreasing, i.e. the present day is zero.
+#'
+#' As of August 2014, please note that the branch-ordering algorithm used in 'equal' has changed
+#' to match the current algorithm used by \code{DatePhylo} in package \code{strap}, and that two legacy
+#' versions of 'equal' have been added to this function, respectively representing how \code{timePaleoPhy}
+#' and \code{DatePhylo} (and its predecessor \code{date.phylo}) applied the 'equal' time-scaling method.
 #' 
 #' \code{timePaleoPhy} is mainly designed for direct application to datasets where taxon first 
 #' and last appearances are precisely known in continuous time, with no stratigraphic
@@ -142,7 +167,7 @@
 #' in time when taxa first and last appear. If there is stratigraphic uncertainty in
 #' when taxa appear in the fossil record, please use the 'bin' time-scaling functions. 
 
-#' @param type Type of time-scaling method used. Can be "basic", "equal", "equal2"
+#' @param type Type of time-scaling method used. Can be "basic", "equal", "equal_paleotree_legacy", "equal_date.phylo_legacy"
 #' "aba", "zbla" or "mbl". Type="basic" by default. See details below.
 
 #' @param vartime Time variable; usage depends on the method 'type' argument.
@@ -211,6 +236,7 @@
 #' Note that 'minMax' returns an error in 'bin' time-scaling functions; please use
 #' 'points.occur' instead.
 
+#DEPRECATED HELP TEXT
 # @param rand.obs Should the tips represent observation times uniform
 # distributed within taxon ranges? This only impacts the location of tip-dates, 
 # i.e. the 'times of observation' for taxa, and does not impact the dates used to 
@@ -297,6 +323,11 @@
 
 #' @seealso \code{\link{cal3TimePaleoPhy}}, \code{\link{binTimeData}},
 #' \code{\link{multi2di}}
+#'
+#' For an alternative time-scaling function, which includes the 'ruta' method
+#' that weights the time-scaling of branches by estimates of character change
+#' along with implementations of the 'basic' and 'equal' methods described here,
+#' please see function code/{DatePhylo} in package code/{strap}.
 
 #' @references 
 #' Bapst, D. W. 2013. A stochastic rate-calibrated method for time-scaling
@@ -470,7 +501,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	if(ntrees<1){stop("Error: ntrees<1")}
 	if(!any(dateTreatment==c("firstLast","minMax","randObs"))){
 		stop("dateTreatment must be one of 'firstLast', 'minMax' or 'randObs'!")}
-	if(!any(type==c("basic","mbl","equal","equal2","aba","zlba"))){
+	if(!any(type==c("basic","mbl","equal","equal_paleotree_legacy","equal_date.phylo_legacy","aba","zlba"))){
 		stop("type must be one of the types listed in the help file for timePaleoPhy")}
 	if(!add.term & dateTreatment=="randObs"){stop(
 		"Inconsistent arguments: randomized observation times are treated as LAST appearance times, so add.term must be true for dateTreatment selection to have any effect on output!"
@@ -539,7 +570,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 				ntime[i]<-max(ntime[i],node_times[!is.na(node_times)])
 				}
 			}
-		if((type=="equal"|type=="equal2") & !is.null(vartime)){				#add to root, if method="equal"
+		if((type=="equal"|type=="equal_paleotree_legacy") & !is.null(vartime)){				#add to root, if method="equal"
 			ntime[Ntip(tree)+1]<-vartime+ntime[Ntip(tree)+1]
 			#anchor_adjust<-vartime+anchor_adjust
 			}	
@@ -590,21 +621,24 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 					}}
 				}
 			}
-		if(type=="equal"|type=="equal2"){	#G. Lloyd's "equal" method
-			if(type=="equal2"){
+		if(type=="equal"|type=="equal_paleotree_legacy"|type=="equal_date.phylo_legacy"){	#G. Lloyd's "equal" method(s)
+			if(type=="equal"){
+				#Newest of the NEW 08-19-14 - the most logical choice
+                #get a vector of zero-length branches ordered by the number of nodes separating the edge from the root
+				zbr<-cbind(1:Nedge(ttree),-dist.nodes(unitLengthTree(ttree))[Ntip(ttree)+1,ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = # of nodes from root
+				}
+			if(type=="equal_paleotree_legacy"){
 				#OLD
 				#get a depth-ordered vector that identifies zero-length branches
 				zbr<-cbind(1:Nedge(ttree),node.depth(ttree)[ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = depth
-				zbr<-zbr[ttree$edge.length==0,]						#Parses zbr to just zero-length branches
-				zbr<-zbr[order(zbr[,2]),1]							#order zbr by depth
 				}
-			if(type=="equal"){
+			if(type=="equal_date.phylo_legacy"){
 				#NEW 02-03-04 
-				#get a TIME-TO-ROOT-ordered vector that identifies zero-length branches, as Graeme's DatePhylo
+				#get a TIME-TO-ROOT-ordered vector that identifies zero-length branches, as Graeme's DatePhylo originally worked prior to August 2014
 				zbr<-cbind(1:Nedge(ttree),dist.nodes(ttree)[Ntip(ttree)+1,ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = abs distance (time) from root
-				zbr<-zbr[ttree$edge.length==0,]								#Parses zbr to just zero-length branches
-				zbr<-zbr[order(-zbr[,2]),1]									#order zbr by time-to-root
 				}
+			zbr<-zbr[ttree$edge.length==0,]						#Parses zbr to just zero-length branches
+			zbr<-zbr[order(zbr[,2]),1]							#order zbr by depth
 			#if the edge lengths leading away from the root are somehow ZERO issue a warning
 			if(is.null(vartime) & any(ttree$edge.length[ttree$edge[,1]==(Ntip(ttree)+1)]==0)){
 				stop("The equal method requires the edges leading away from the root to have non-zero length to begin with, perhaps increase vartime?")}

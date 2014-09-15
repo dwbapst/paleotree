@@ -1,6 +1,7 @@
 Version - 2.2 -
 -Added a new time-scaling method to timePaleoPhy, "equal2" which is otherwise identical to "equal" but replicates the old branch-ordering routine used for 'equal' prior to version 2.0
 -Fixed bug in simPaleoTrees when ranges.only=FALSE, modified examples to catch error in the future
+-Altered several parts of the timePaleoPhy help file to clarify use of timePaleoPhy (not bin_timePaleoPhy) when there is stratigraphic age uncertainty for taxa, including dropping a harshly worded Note. (Thanks Gene Hunt for pointing out some contradictions in the text!)
 
 Version - 2.1 - 08-15-14
 -Changes to bin_timePaleoPhy and bin_cal3TimePaleoPhy so taxa not included in the tree are dropped before random dates are drawn from those intervals, which increases computational efficiency.

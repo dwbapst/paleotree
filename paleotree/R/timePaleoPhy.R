@@ -8,19 +8,22 @@
 #' and plotting applications. The functions listed here are \bold{not} realistic
 #' time-scaling methods!
 #' 
-#' @details These functions are an attempt to unify and collect previously used and
+#' @details 
+#' \emph{Time-Scaling Methods}
+#'
+#' These functions are an attempt to unify and collect previously used and
 #' discussed methods for time-scaling phylogenies of fossil taxa.
-#' Unfortunately, it is occasional difficult to attribute some time-scaling methods to
+#' Unfortunately, it can be difficult to attribute some time-scaling methods to
 #' specific references in the literature.
 #' 
-#' There are five method types that can be used by \code{timePaleoPhy}. Four of these
-#' use some value of absolute time, chosen a priori, to time-scale the tree.
-#' This is handled by the argument vartime, which is NULL by default and unused
+#' There are five main method types that can be used by \code{timePaleoPhy}. Four of these
+#' main types use some value of absolute time, chosen a priori, to time-scale the tree.
+#' This is handled by the argument \code{vartime}, which is NULL by default and unused
 #' for type "basic".
 #' 
 #' \describe{
 
-#'  \item{"basic"}{This most simple of methods ignores vartime and
+#'  \item{"basic"}{This most simple of time-scaling methods ignores \code{vartime} and
 #' scales nodes so they are as old as the first appearance of their oldest
 #' descendant (Smith, 1994). This method produces many zero-length branches
 #' (Hunt and Carrano, 2010).}
@@ -95,42 +98,46 @@
 #' versions of 'equal' have been added to this function, respectively representing how \code{timePaleoPhy}
 #' and \code{DatePhylo} (and its predecessor \code{date.phylo}) applied the 'equal' time-scaling method.
 #' 
-#' \code{timePaleoPhy} is mainly designed for direct application to datasets where taxon first 
+#' \emph{Interpretation of Taxon Ages in timePaleoPhy}
+#'
+#' \code{timePaleoPhy} is \emph{primarily} designed for direct application to datasets where taxon first 
 #' and last appearances are precisely known in continuous time, with no stratigraphic
 #' uncertainty. This is an uncommon form of data to have from the fossil record, 
 #' although not an impossible form (micropaleontologists often have very precise 
-#' range charts, for example). 
-#'
-#' Instead, most data has some form of stratigraphic uncertainty. \code{timePaleoPhy} is not
-#' designed to handle such uncertainty by default. For example, some groups,
-#' the more typical 'first' and 'last' dates represent the minimum
+#' range charts, for example). Instead, most data has some form of stratigraphic uncertainty. However, for some groups,
+#' the more typical 'first' and 'last' dates found in the literature or in databases represent the minimum
 #' and maximum absolute ages for the fossil collections that a taxon is known
 #' is known from. Presumably, the first and last appearances of that taxon in
-#' the fossil record is at unknown dates within these bounds. These should not
-#' be mistaken as the FADs and LADs desired by \code{timePaleoPhy}, as \code{timePaleoPhy} 
-#' will use the earliest dates provided to calibrate node ages, which is either
-#' an overly conservative approach to time-scaling or fairly nonsensical.
+#' the fossil record is at unknown dates within these bounds. 
 #'
-#' As of version 2.0, \code{timePaleoPhy} provides an argument to handle uncertainty in dating.
-#' This argument, dateTreatment handles whether dates are treated as first and last
-#' appearance dates or minimum and maximum bounds on a single point
-#' date. These point dates, if the minimum and maximum bounds option is selected,
+#' As of paleotree version 2.0. the treatment of taxon ages in \code{timePaleoPhy} is handled by the argument \code{dateTreatment}.
+#'\emph{By default,} this argument is set to 'firstLast' which means the matrix of ages are treated
+#' as precise first and last appearance dates (i.e. FADs and LADs). The earlier FADs will be used
+#' to calibrate the node ages, which could produce fairly nonsensical results if these are 'minimum'
+#' ages instead and reflect age uncertainty. Alternatively, \code{dateTreatment} can be set to 'minMax'
+#' which instead treats taxon age data as minimum and maximum bounds on a single point date. 
+#' These point dates, if the minimum and maximum bounds option is selected,
 #' are chose under a uniform distribution. Many time-scaled trees should be created to approximate
-#' the uncertainty in the dates. Additionally, there is a third option:
+#' the uncertainty in the dates. Additionally, there is a third option for \code{dateTreatment}:
 #' users may also make it so that the 'times of observation'
 #' of trees are uncertain, such that the tips of the tree (with terminal ranges added) should
 #' be randomly selected from a uniform distribution. Essentially, this third option treats the
 #' dates as first and last appearances, but treats the first appearance dates as known and
 #' fixed, but the 'last appearance' dates as unknown. In previous versions of paleotree,
-#' this third option was enacted with the argument rand.obs, which has been removed for
+#' this third option was enacted with the argument \code{rand.obs}, which has been removed for
 #' clarity.
+#'
+#' \emph{Interpretation of Taxon Ages in bin_timePaleoPhy}
 #'
 #' As an alternative to using \code{timePaleoPhy}, \code{bin_timePaleoPhy} is a wrapper of 
 #' \code{timePaleoPhy} which produces timescaled trees for datasets which only have 
 #' interval data available. For each output tree, taxon first and last appearance 
 #' dates are placed within their listed intervals under a uniform distribution. 
 #' Thus, a large sample of time-scaled trees will approximate the uncertainty in 
-#' the actual timing of the FADs and LADs. 
+#' the actual timing of the FADs and LADs. In some ways, treating taxonomic age uncertainty
+#' may be more logical via \code{bin_timePaleoPhy}, as it is tied to specific interval bounds,
+#' and there are more options available for certain types of age uncertainty, such as for cases
+#' where specimens come from the same fossil site.
 #'
 #' The input \code{timeList} object for \code{bin_timePaleoPhy} can have overlapping
 #' (i.e. non-sequential) intervals, and intervals of uneven size. Taxa alive in the modern should be listed as last 
@@ -150,28 +157,32 @@
 #' 
 #' If timeData or the elements of timeList are actually data.frames (as output
 #' by read.csv or read.table), these will be coerced to a matrix.
-#' 
+#'
+#' \emph{Tutorial} 
+#'
 #' A tutorial for applying the time-scaling functions in paleotree, along with
 #' an example using real (graptolite) data, can be found here:
 #' http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
 #' 
+
 #' @aliases timePaleoPhy bin_timePaleoPhy
 
 #' @param tree An unscaled cladogram of fossil taxa, of class 'phylo'. Tip labels
 #' must match the taxon labels in the respective temporal data.
 
 #' @param timeData Two-column matrix of first and last occurrences in absolute
-#' continous time, with row names as the taxon IDs used on the tree. This means the
+#' continuous time, with row names as the taxon IDs used on the tree. This means the
 #' first column is very precise FADs (first appearance dates) and the second 
 #' column is very precise LADs (last appearance dates), reflect the precise points
 #' in time when taxa first and last appear. If there is stratigraphic uncertainty in
-#' when taxa appear in the fossil record, please use the 'bin' time-scaling functions. 
+#' when taxa appear in the fossil record, it is preferable to use the 'bin'
+#' time-scaling functions; however, see the argument \code{dateTreatment}.
 
 #' @param type Type of time-scaling method used. Can be "basic", "equal", "equal_paleotree_legacy", "equal_date.phylo_legacy"
 #' "aba", "zbla" or "mbl". Type="basic" by default. See details below.
 
 #' @param vartime Time variable; usage depends on the method 'type' argument.
-#' Ignored if type = "basic"
+#' Ignored if type = "basic".
 
 #' @param ntrees Number of time-scaled trees to output. If ntrees is greater
 #' than one and both randres is false and dateTreatment is either
@@ -194,7 +205,7 @@
 #' respect to time using the paleotree function \code{\link{timeLadderTree}}.
 #' See that functions help page for more information; the result of time-order
 #' resolving of polytomies generally does not differ across multiple uses,
-#' unlike use of multi2di.
+#' unlike use of \code{multi2di}.
 
 #' @param add.term If true, adds terminal ranges.By default, this function will
 #' not add the ranges of taxa when time-scaling a tree, so that the tips
@@ -311,12 +322,12 @@
 #' continuous-time ranges generated for time-scaling each tree. (Essentially a
 #' pseudo-timeData matrix.)
 
-#' @note Please account for stratigraphic uncertainty in your analysis.
-#' Unless you have exceptionally resolved data, use a wrapper with timePaleoPhy,
-#' either the provided bin_timePaleoPhy or code a wrapper function of your
-#' own that accounts for stratigraphic uncertainty in your dataset. Remember that
-#' the FADs (earliest dates) given to timePaleoPhy will *always* be used to 
-#' calibrate node ages!
+# @note Please account for stratigraphic uncertainty in your analysis.
+# Unless you have exceptionally resolved data, use a wrapper with timePaleoPhy,
+# either the provided bin_timePaleoPhy or code a wrapper function of your
+# own that accounts for stratigraphic uncertainty in your dataset. Remember that
+# the FADs (earliest dates) given to timePaleoPhy will *always* be used to 
+# calibrate node ages!
 
 #' @author David W. Bapst, heavily inspired by code supplied by Graeme Lloyd
 #' and Gene Hunt.

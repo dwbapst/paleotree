@@ -43,7 +43,7 @@
 #'
 #' \item{graptDistMat}{A 183x183 matrix of pair-wise distances (dissimilarities)
 #' for the 183 graptolite species, using the algorithm for discrete characters
-#' and min-max range values described in Bapst et al.}
+#' and min-max range values described in Bapst et al.}}
 #'
 
 #' @source 

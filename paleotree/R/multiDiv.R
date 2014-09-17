@@ -227,7 +227,7 @@ plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FA
 	#plots the median diversity curve for a multiDiv() result
 	int.start<-results[[1]][,1]
 	int.end<-results[[1]][,2]
-	times1<-c(int.start,(int.end+((int.start-int.end)/100)))
+	times1<-c(int.start,(int.end+((int.start-int.end)/10000)))
 	if(plotMultCurves){
 		divs<-results[[2]]	#here's my div information
 		divs1<-rbind(divs,divs)[order(times1),]
@@ -236,13 +236,15 @@ plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FA
 		if(plotLogRich){
 			y_lim<-c(min(divs1[divs1>=1]),max(divs1[divs1>=1]))
 			plot(times1[divs1[,1]>0],divs1[divs1[,1]>0,1],type="n",ylim=y_lim,log="y",
-					xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Log Lineage/Taxic Richness",
 				main=paste("Multiple Diversity Curves"))
 		}else{
 			y_lim<-c(min(divs1),max(divs1))
 			plot(times1,divs1[,1],type="n",ylim=y_lim,
-					xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Lineage/Taxic Richness",
 				main=paste("Multiple Diversity Curves"))
 			}
@@ -261,13 +263,15 @@ plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FA
 			mdiv1[mdiv1[,2]<1,2]<-1;mdiv1[mdiv1[,3]<1,3]<-1
 			y_lim<-c(min(mdiv1[mdiv1>=1]),max(mdiv1[mdiv1>=1]))
 			plot(times1[mdiv1[,3]>0],mdiv1[mdiv1[,3]>0,3],type="n",ylim=y_lim,log="y",
-					xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Log Lineage/Taxic Richness",
 				main=paste("Median Diversity Curve"))
 		}else{
 			y_lim<-c(min(mdiv1),max(mdiv1))
 			plot(times1,mdiv1[,3],type="n",ylim=y_lim,
-					xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Lineage/Taxic Richness",
 				main=paste("Median Diversity Curve"))
 			}

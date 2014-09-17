@@ -100,7 +100,8 @@
 
 #' @param timelims Limits for the x (time) axis for diversity curve plots. Only
 #' affects plotting. Given as either NULL (the default) or as a vector of
-#' length two as for 'xlim' in the basic R function plot.
+#' length two as for 'xlim' in the basic R function plot. Time axes will be plotted
+#' \emph{exactly} to these values.
 
 #' @param extant.adjust Amount of time to be added to extend start time for
 #' (0,0) bins for extant taxa, so that the that 'time interval' doesn't appear 
@@ -231,16 +232,18 @@ taxicDivCont<-function(timeData,int.length=1,int.times=NULL,plot=TRUE,plotLogRic
 		}
 	div<-sapply(1:length(midtimes),function(x) sum(FAD>=int.end[x])-sum(LAD>int.start[x]))
 	if(plot){
-		times1<-c(int.start,(int.end+((int.start-int.end)/100)))
+		times1<-c(int.start,(int.end+((int.start-int.end)/10000)))
 		div1<-c(div,div)[order(times1)]
 		times1<-sort(times1)
 		if(plotLogRich){
 			plot(times1[div1>0],div1[div1>0],type="l",log="y",
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="taxic Richness (Log Scale)")		
 		}else{
 			plot(times1,div1,type="l",
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Taxic Richness")
 			}
 		}
@@ -304,16 +307,18 @@ taxicDivDisc<-function(timeList,int.times=NULL,drop.singletons=FALSE,plot=TRUE,p
 	div<-sapply(1:length(midtimes),function(x) sum(FAD>int.end[x])-sum(LAD>=int.start[x]))
 	#div<-sapply(min(timeData):max(timeData),function(x) 	sum(FAD<=x & LAD>=x))
 	if(plot){
-		times1<-c(int.start,(int.end+((int.start-int.end)/100)))
+		times1<-c(int.start,(int.end+((int.start-int.end)/10000)))
 		div1<-c(div,div)[order(times1)]
 		times1<-sort(times1)
 		if(plotLogRich){
 			plot(times1[div1>0],div1[div1>0],type="l",log="y",
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Taxic Richness (Log Scale)")		
 		}else{
 			plot(times1,div1,type="l",
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Taxic Richness")
 			}
 		}
@@ -323,7 +328,7 @@ taxicDivDisc<-function(timeList,int.times=NULL,drop.singletons=FALSE,plot=TRUE,p
 
 #' @rdname DiversityCurves
 #' @export
-phyloDiv<-function(tree,int.length=1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,
+phyloDiv<-function(tree,int.length=0.1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,
 		drop.ZLB=TRUE,timelims=NULL){
 	#function that computes a diversity curve from a tree file
 		#aka lineage-through-time plot
@@ -367,20 +372,23 @@ phyloDiv<-function(tree,int.length=1,int.times=NULL,plot=TRUE,plotLogRich=FALSE,
 	FAD<-ntime[(Ntip(ttree)+1):length(ntime)]		#birth
 	div<-sapply(1:length(midtimes),function(x) 1+sum(FAD>=int.end[x])-sum(LAD>int.start[x]))
 	if(plot){
-		times1<-c(int.start,(int.end+((int.start-int.end)/100)))
+		times1<-c(int.start,(int.end+((int.start-int.end)/10000)))
 		div1<-c(div,div)[order(times1)]
 		times1<-sort(times1)
 		layout(matrix(1:2,2,1))
 		parOrig<-par(mar=c(1,4,1,1))
 		plot(ladderize(savetree),show.tip.label=FALSE)
+		axisPhylo()    #anticipating that ape will recognize root.time soon
 		par(mar=c(5,4,2,2))
 		if(plotLogRich){
 			plot(times1[div1>0],div1[div1>0],type="l",log="y",
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Lineage Richness (Log Scale)")		
 		}else{
 			plot(times1,div1,type="l",
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				ylim=c(0,max(div1)+1),
 				xlab="Time (Before Present)",ylab="Lineage Richness")
 			}

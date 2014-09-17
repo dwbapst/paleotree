@@ -27,7 +27,9 @@
 #' label for the earliest appearing tip descendant of that branch. This is
 #' somewhat arbitrary; the actual morphotaxon present at that time might have
 #' been a different taxon. For simulated datasets, use taxa2phylo.
+
 #' @author David W. Bapst
+
 #' @seealso \code{\link{phyloDiv}}, \code{\link{dropExtinct}},
 #' \code{\link{dropExtant}}
 #' 
@@ -94,6 +96,6 @@ timeSliceTree<-function(ttree,sliceTime,drop.extinct=FALSE,plot=TRUE){
 		stree1<-dropExtinct(stree,ignore.root.time=TRUE)
 	}else{stree1<-stree}
 	if(plot){layout(1:2);plot(ladderize(ttree),show.tip.label=FALSE);axisPhylo();
-		plot(ladderize(stree1),show.tip.label=FALSE);layout(1)}
+		plot(ladderize(stree1),show.tip.label=FALSE);layout(1)};axisPhylo();
 	return(stree1)
 	}

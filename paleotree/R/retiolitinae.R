@@ -16,24 +16,27 @@
 
 #' @docType data
 
-#' @format This dataset is composed of two objects, retioTree (an ape 'phylo'
-#' object containing the consensus cladogram) and retioRanges, a list
+#' @format This dataset is composed of two objects, \code{retioTree} (an ape 'phylo'
+#' object containing the consensus cladogram) and \code{retioRanges}, a list
 #' containing two matrices. The first matrix describes the first and last
 #' interval times for 20 Silurian graptolite zones and the second matrix
 #' describes when the various genera on the cladogram first and last appear in
-#' those graptolite zones. (In other words, retioRanges has the 'timeList'
+#' those graptolite zones. (In other words, \code{retioRanges} has the 'timeList'
 #' format called by some paleotree functions).
 
 #' @source 
 
-#' Source for cladogram and zonal ranges for genera: Bates, D. E. B.,
-#' A. Kozlowska, and A. C. Lenz. 2005. Silurian retiolitid graptolites:
-#' Morphology and evolution. \emph{Acta Palaeontologica Polonica}
-#' 50(4):705-720.
+#' Source for cladogram and zonal ranges for genera: 
+#'
+#' Bates, D. E. B., A. Kozlowska, and A. C. Lenz. 2005. Silurian retiolitid graptolites:
+#' Morphology and evolution. \emph{Acta Palaeontologica Polonica} 50(4):705-720.
 #' 
-#' Source for interval dates for graptolite zones: Sadler, P. M., R. A. Cooper,
-#' and M. Melchin. 2009. High-resolution, early Paleozoic (Ordovician-Silurian)
+#' Source for interval dates for graptolite zones: 
+#'
+#' Sadler, P. M., R. A. Cooper, and M. Melchin. 2009. High-resolution, early Paleozoic (Ordovician-Silurian)
 #' time scales. \emph{Geological Society of America Bulletin} 121(5-6):887-906.
+
+#' @seealso For more example graptolite datasets, see \code{\link{graptDisparity}}
 
 #' @keywords datasets
 

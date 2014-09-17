@@ -1,7 +1,12 @@
-Version - 2.2 -
+Version - 2.2 - 09-17-14
 -Added a new time-scaling method to timePaleoPhy, "equal2" which is otherwise identical to "equal" but replicates the old branch-ordering routine used for 'equal' prior to version 2.0
 -Fixed bug in simPaleoTrees when ranges.only=FALSE, modified examples to catch error in the future
 -Altered several parts of the timePaleoPhy help file to clarify use of timePaleoPhy (not bin_timePaleoPhy) when there is stratigraphic age uncertainty for taxa, including dropping a harshly worded Note. (Thanks Gene Hunt for pointing out some contradictions in the text!)
+-Altered diversity curve functions (including multiDiv) to plot *exactly* to given timelims arguments using xaxs="i" argument in plot
+-Slight modification to how plotting works in diversity curve functions (including multiDiv) to decrease interval boundary line overlap from 100th to 10000th of the total plotted area.
+-Added axisPhylo() to more functions that have secondary plotting in anticipation of ape referring to $root.time when calculating axis labels. (crosses fingers, thanks E. Paradis!)
+-Added a new example dataset, 'graptDisparity' which is the temporal ranges and character data from 183 Ordovician-Silurian graptoloid species taken from Bapst et al. (2012, PNAS), including a dissimilarity matrix calculated from the aforementioned character data.
+-Added a new function 'nearestNeighborDist' which calculated nearest neighbor distance for each unit in a pair-wise distance matrix. This function is added mainly for a minor pedagogical purpose, as NND is easily calculated without a specialized function.
 
 Version - 2.1 - 08-15-14
 -Changes to bin_timePaleoPhy and bin_cal3TimePaleoPhy so taxa not included in the tree are dropped before random dates are drawn from those intervals, which increases computational efficiency.

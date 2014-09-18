@@ -111,7 +111,7 @@ plot.phylo(as.phylo(clustRes),show.tip.label=FALSE,no.margin=TRUE,direction="upw
 tiplabels(pch=16,col=grpColor[groupID+1])
 legend("bottomright",legend=grpLabel,col=grpColor,pch=16)
 
-close.dev()
+dev.off()
 
 #can apply PCO (use lingoes correction to account for negative values
    #resulting from non-euclidean matrix
@@ -179,9 +179,11 @@ distMat<-matrix(,nspec,nspec)
 rownames(distMat)<-colnames(distMat)<-rownames(graptCharMatrix)
 for(i in 1:(nspec-1)){ for(j in (i+1):nspec){    #calculate for each pair of species
    #now calculate pair-wise differences for non-missing characters
-   discDiff <- (discChar[i,]!=discChar[j,])[!is.na(discChar[i,])&!is.na(discChar[j,])] #logical vector
+   discDiff <- (discChar[i,]!=discChar[j,])[
+      !is.na(discChar[i,])&!is.na(discChar[j,])] #logical vector
    #continuous characters: if they do not overlap, a min must be greater than a max value
-      contDiff<-sapply(1:4,function(ct) cMinChar[i,ct]>cMaxChar[j,ct] | cMinChar[j,ct]>cMaxChar[i,ct])
+      contDiff<-sapply(1:4,function(ct)
+            cMinChar[i,ct]>cMaxChar[j,ct] | cMinChar[j,ct]>cMaxChar[i,ct])
    #remove NAs, combine, divide total difference
    distMat[i,j] <- distMat[j,i] <- sum(c(discDiff,contDiff[!is.na(contDiff)]))/length(
         c(discDiff,contDiff[!is.na(contDiff)]))

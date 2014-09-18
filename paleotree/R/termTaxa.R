@@ -159,6 +159,8 @@
 #' plot(tree)
 #' plot(tree1)
 #' 
+#' layout(1)
+#' 
 #' #let's look at the change in the terminal branches
 #' plot(tree$edge.length,tree1$edge.length)
 #' #can see some edges are shorter on the new tree, cool

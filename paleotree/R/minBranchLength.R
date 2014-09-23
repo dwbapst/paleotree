@@ -1,16 +1,28 @@
+#' Scales Edge Lengths of a Phylogeny to a Minimum Branch Length
+#' 
+#' Rescales a tree with edge lengths so that all edge lengths are at least some minimum branch length (mbl),
+#' without changing the relative distance of the tips from the root node. Edge lengths are transformed so they are
+#' greater than or equal to the input minimum branch length, by subtracting edge length from more rootward edges
+#' and added to later branches. 
+
 #' @details
+#' This function was formally an internal segment in \code{\link{timePaleoPhy}}, and now is called by \code{timePaleoPhy}
+#' instead, allowing users to apply \code{minBranchLength} to trees that already have edge lengths.
 
-#' @inheritParams
+#' @param tree A phylogeny with edge lengths of class 'phylo'.
 
-#' @param
+#' @param mbl The minimum branch length 
 
 #' @return
-
-#' @aliases
+#' A phylogeny with edge lengths of class 'phylo'.
 
 #' @seealso
+#' This function was originally an internal piece of \code{\link{timePaleoPhy}}, which implements the minimum branch
+#' length time-scaling method along with others, which may be what you're looking for
+#' (instead of this miscellaneous function).
 
 #' @author 
+#' David W. Bapst
 
 #' @examples
 #' 
@@ -81,3 +93,5 @@ minBranchLength<-function(tree, mbl){
 		}
 	return(timetree)
 	}
+
+	

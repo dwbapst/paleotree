@@ -95,7 +95,13 @@ timeSliceTree<-function(ttree,sliceTime,drop.extinct=FALSE,plot=TRUE){
 	if(drop.extinct){
 		stree1<-dropExtinct(stree,ignore.root.time=TRUE)
 	}else{stree1<-stree}
-	if(plot){layout(1:2);plot(ladderize(ttree),show.tip.label=FALSE);axisPhylo();
-		plot(ladderize(stree1),show.tip.label=FALSE);layout(1)};axisPhylo();
+	if(plot){
+		layout(1:2)
+		plot(ladderize(ttree),show.tip.label=FALSE)
+			axisPhylo()
+		plot(ladderize(stree1),show.tip.label=FALSE)
+			axisPhylo()
+		layout(1)
+		}
 	return(stree1)
 	}

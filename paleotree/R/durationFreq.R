@@ -123,7 +123,7 @@
 #' \code{\link{SamplingConv}}.
 
 
-#' @aliases make_durationFreqCont make_durationFreqDisc durFreq
+#' @aliases make_durationFreqCont make_durationFreqDisc
 
 #' @author David W. Bapst
 

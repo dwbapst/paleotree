@@ -97,8 +97,9 @@
 #'
 #' #plot diversity curve of taxa
 #' taxicDivDisc(graptRanges)
+#'
 #' #but the actual study interval for the data is much smaller
-#' abline(v=448.57,lwd=3); abline(v=448.57,lwd=3)
+#' abline(v=448.57,lwd=3) abline(v=439.37,lwd=3)
 #'
 #' #plot diversity curve just for study interval
 #' taxicDivDisc(graptRanges, timelims=c(448.57,439.37))
@@ -124,7 +125,7 @@
 #' tiplabels(pch=16,col=grpColor[groupID+1])
 #' legend("bottomright",legend=grpLabel,col=grpColor,pch=16)
 #' 
-#' dev.off()
+#' dev.new()
 #' 
 #' #can apply PCO (use lingoes correction to account for negative values
 #'    #resulting from non-euclidean matrix
@@ -150,7 +151,7 @@
 #' legend("bottomright",legend=grpLabel,col=grpColor,pch=16,ncol=2,cex=0.8)
 #' 
 #' 
-#' ########################
+#' ##########m##############
 #'
 #' \dontrun{ 
 #'

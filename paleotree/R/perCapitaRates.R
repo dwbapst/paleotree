@@ -40,7 +40,7 @@
 #' @param logRates If true, rates plotted on log scale.
 
 #' @param drop.extant Drops all extant taxa from a dataset before
-#' calculating per-capita originatio and extinction rates.
+#' calculating per-capita origination and extinction rates.
 
 #' @param isExtant A vector of TRUE and FALSE values, same length as the
 #' number of taxa in the second matrix of timeList, where TRUE values indicate

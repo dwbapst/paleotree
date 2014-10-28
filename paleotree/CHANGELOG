@@ -1,5 +1,5 @@
 Version - 2.3 - 
-
+-Added checks for duplicate taxa in input time or tree data for time-scaling functions (Thanks Tim Astrop for pointing this out!)
 
 Version - 2.2 - 09-18-14
 -Added a new time-scaling method to timePaleoPhy, "equal2" which is otherwise identical to "equal" but replicates the old branch-ordering routine used for 'equal' prior to version 2.0

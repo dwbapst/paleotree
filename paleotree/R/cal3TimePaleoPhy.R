@@ -468,6 +468,10 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
+	if(length(unique(rownames(timeData)))!=length(rownames(timeData))){stop("Error: Duplicate taxa in timeList[[2]]")}
+	if(length(unique(tree$tip.label))!=length(tree$tip.label)){stop("Error: Duplicate tip taxon names in tree$tip.label")}
+	if(length(rownames(timeData))!=length(tree$tip.label)){
+		stop("Error: Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
 	#make sure all taxa have a sampRate, brRate and exRate
 	if(length(sampRate)==1){sampRate<-rep(sampRate,Ntip(tree));names(sampRate)<-tree$tip.label
 		#if it is a species-named vector, all the species better be there1
@@ -855,6 +859,10 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 	if(any(timeList[[1]][,2]<0)){stop("Error: Some dates in timeList[[1]] <0 ?")}
 	if(any(apply(timeList[[2]],1,diff)<0)){stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
 	if(any(timeList[[2]][,2]<0)){stop("Error: Some dates in timeList[[2]] <0 ?")}
+	if(length(unique(rownames(timeList[[2]])))!=length(rownames(timeList[[2]]))){stop("Error: Duplicate taxa in timeList[[2]]")}
+	if(length(unique(tree$tip.label))!=length(tree$tip.label)){stop("Error: Duplicate tip taxon names in tree$tip.label")}
+	if(length(rownames(timeList[[2]]))!=length(tree$tip.label)){
+		stop("Error: Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
 	if(is.null(sites)){
 		if(point.occur){
 			if(any(timeList[[2]][,1]!=timeList[[2]][,2])){

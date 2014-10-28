@@ -543,6 +543,10 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
+	if(length(unique(rownames(timeData)))!=length(rownames(timeData))){stop("Error: Duplicate taxa in timeList[[2]]")}
+	if(length(unique(tree$tip.label))!=length(tree$tip.label)){stop("Error: Duplicate tip taxon names in tree$tip.label")}
+	if(length(rownames(timeData))!=length(tree$tip.label)){
+		stop("Error: Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
 	ttrees<-rmtree(ntrees,2)
 	savetree<-tree			#save tree now so can replace with each loop for multi2di()
 	saveTD<-timeData
@@ -747,6 +751,10 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,
 	if(any(timeList[[1]][,2]<0)){stop("Error: Some dates in timeList[[1]] <0 ?")}
 	if(any(apply(timeList[[2]],1,diff)<0)){stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
 	if(any(timeList[[2]][,2]<0)){stop("Error: Some dates in timeList[[2]] <0 ?")}
+	if(length(unique(rownames(timeList[[2]])))!=length(rownames(timeList[[2]]))){stop("Error: Duplicate taxa in timeList[[2]]")}
+	if(length(unique(tree$tip.label))!=length(tree$tip.label)){stop("Error: Duplicate tip taxon names in tree$tip.label")}
+	if(length(rownames(timeList[[2]]))!=length(tree$tip.label)){
+		stop("Error: Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
 	if(is.null(sites)){
 		if(point.occur){
 			if(any(timeList[[2]][,1]!=timeList[[2]][,2])){
@@ -760,11 +768,13 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,
 		sites[,2]<-sapply(sites[,2],function(x) which(x==sort(unique(as.vector(sites)))))
 		}
 	ttrees<-rmtree(ntrees,3)
+	#get time ranges for sites
 	siteTime<-matrix(,max(sites),2)
 	for (i in unique(as.vector(sites))){		#build two-col matrix of site's FADs and LADs
 		go<-timeList[[2]][which(sites==i)[1]]	#find an interval for this site
 		siteTime[i,]<-timeList[[1]][go,]
 		}
+	#now let's stochastically draw new dates from the site times
 	for(ntrb in 1:ntrees){
 		if(!nonstoch.bin){
 			bad_sites<-unique(as.vector(sites))

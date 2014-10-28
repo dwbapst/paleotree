@@ -1,4 +1,5 @@
 Version - 2.3 - 
+-Added a function minBranchLength which mirrors the 'mbl' time-scaling approach, in taking a tree that already has edge lengths and adjusting branches so all are above some given minimum branch length. timePaleoPhy was modified to use this function rather than doing this algorithm internally.
 -Added checks for duplicate taxa in input time or tree data for time-scaling functions (Thanks Tim Astrop for pointing this out!)
 
 Version - 2.2 - 09-18-14

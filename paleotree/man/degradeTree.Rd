@@ -40,12 +40,10 @@ lengths by default.
 }
 \description{
 \code{degradeTree} removes a proportion of the total nodes in a tree, chosen
-randomly, collapsing the nodes to produce a less-resolved tree.
+randomly, collapsing the nodes to produce a less-resolved tree. The related function \code{collapseNodes}
+given a tree and a vector of nodes to collapse, removes those nodes from a tree, creating a polytomy.
 }
 \details{
-The related function \code{collapseNodes} given a tree and a vector of nodes to collapse,
-removes those nodes from a tree, creating a polytomy.
-
 In the function \code{degradeTree}, the nodes are removed at random
 using the basic R function \code{sample}. \code{degradeTree}
 can be conditioned to remove nodes of a particular depth with greater

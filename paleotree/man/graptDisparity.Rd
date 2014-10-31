@@ -84,8 +84,9 @@ grpColor <- c("red","purple",colors()[257],colors()[614],colors()[124],"blue",co
 
 #plot diversity curve of taxa
 taxicDivDisc(graptRanges)
+
 #but the actual study interval for the data is much smaller
-abline(v=448.57,lwd=3); abline(v=448.57,lwd=3)
+abline(v=448.57,lwd=3) abline(v=439.37,lwd=3)
 
 #plot diversity curve just for study interval
 taxicDivDisc(graptRanges, timelims=c(448.57,439.37))
@@ -111,7 +112,7 @@ plot.phylo(as.phylo(clustRes),show.tip.label=FALSE,no.margin=TRUE,direction="upw
 tiplabels(pch=16,col=grpColor[groupID+1])
 legend("bottomright",legend=grpLabel,col=grpColor,pch=16)
 
-dev.off()
+dev.new()
 
 #can apply PCO (use lingoes correction to account for negative values
    #resulting from non-euclidean matrix
@@ -137,7 +138,7 @@ plot(pco_axes[,1],pco_axes[,2],pch=16,col=grpColor[groupID+1],
 legend("bottomright",legend=grpLabel,col=grpColor,pch=16,ncol=2,cex=0.8)
 
 
-########################
+##########m##############
 
 \dontrun{
 

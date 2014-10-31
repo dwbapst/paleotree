@@ -29,7 +29,8 @@
 #' #simulation with an example non-ultrametric tree
 #' 
 #' tree<-rtree(20)
-#' tree<-degradeTree(tree,0.3,leave.zlb=TRUE) 	#randomly replaces edges with ZLBs, similar to multi2di output
+#' # randomly replace edges with ZLBs, similar to multi2di output
+#' tree<-degradeTree(tree,0.3,leave.zlb=TRUE) 	
 #' 
 #' tree2<-minBranchLength(tree,0.1)
 #' 
@@ -39,12 +40,16 @@
 #' 
 #' #now let's try it with an ultrametric case
 #' 
+#' # get a random tree
 #' tree<-rtree(30)
-#' tree<-degradeTree(tree,0.5,leave.zlb=TRUE) 	#randomly replaces edges with ZLBs, similar to multi2di output
+#' # randomly replace edges with ZLBs, similar to multi2di output
+#' tree<-degradeTree(tree,0.5,leave.zlb=TRUE) 
+#' # now randomly resolve	
 #' tree<-di2multi(tree)
+#' # give branch lengths so its ultrametric
 #' tree<-compute.brlen(tree)
 #' 
-#' plot(tree) #ultrametric tree with polytomies, yay
+#' plot(tree) #and we have an ultrametric tree with polytomies, yay!
 #' 
 #' #now randomly resolve, get new branch lengths as would with real data
 #' tree2<-multi2di(tree)

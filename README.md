@@ -2,7 +2,7 @@ paleotree is an R library for analyzing, time-scaling and simulating phylogenies
 
 http://cran.r-project.org/web/packages/paleotree/index.html
 
-You can install the most recent version on github using the R function install_github in the package 'devtools':
+You can install the latest up-to-date development version on github using the R function install_github in the package 'devtools':
 
 ```{r}
 library(devtools)

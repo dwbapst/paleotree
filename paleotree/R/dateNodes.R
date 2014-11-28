@@ -66,7 +66,7 @@ dateNodes<-function(tree,rootAge=tree$root.time,labelDates=FALSE){
 	res<-rootAge-nodeRelTimes
 	if(any(res<0)){message("Warning: Some dates are negative? rootAge may be incorrectly defined or you are using a time-scaling method that warps the tree, like aba or zbla.")}
 	if(labelDates){
-		names(res)<-sapply(Descendants(tree),function(x) paste0(tree$tip.label[x],collapse=" "))
+		names(res)<-sapply(Descendants(tree),function(x) paste0(sort(tree$tip.label[x]),collapse=" "))
 	}else{
 		names(res)<-1:(Ntip(tree)+Nnode(tree))
 		}

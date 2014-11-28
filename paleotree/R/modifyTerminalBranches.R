@@ -34,6 +34,9 @@
 #' When a tree is modified, such as having tips dropped or branches extended,
 #' fixRootTime can be used to find the new $root.time. It is mainly used as a
 #' utility function called by the other functions discussed in this help file.
+#'
+#' dropPaleoTip is a wrapper for ape's \code{drop.tip} which also modifies the
+#' $root.time element if necessary, using fixRootTime.
 #' 
 #' @aliases dropZLB dropExtinct dropExtant addTermBranchLength fixRootTime
 #' @param tree A phylogeny as a phylo object
@@ -181,3 +184,6 @@ fixRootTime<-function(treeOrig,treeNew){
 		stop("Error: fixRootTime isn't fixing correctly, root.time less than max tip-to-root length!")}
 	return(treeNew)
 	}
+	
+#' @rdname modifyTerminalBranches
+#' @export

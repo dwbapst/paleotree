@@ -1,6 +1,9 @@
 Version - 2.3 - 
+-
+-Modified dateNodes so that tip labels given to label node dates when the argument labelDates is TRUE are sorted alphabetically
 -Added a function minBranchLength which mirrors the 'mbl' time-scaling approach, in taking a tree that already has edge lengths and adjusting branches so all are above some given minimum branch length. timePaleoPhy was modified to use this function rather than doing this algorithm internally.
 -Added checks for duplicate taxa in input time or tree data for time-scaling functions (Thanks Tim Astrop for pointing this out!)
+-Fixed bug in timeSliceTree where an error was produced if plot=FALSE was given (Thanks to Min Wang, Tyler Smith and Manabu Sakamoto!)
 
 Version - 2.2 - 09-18-14
 -Added a new time-scaling method to timePaleoPhy, "equal2" which is otherwise identical to "equal" but replicates the old branch-ordering routine used for 'equal' prior to version 2.0

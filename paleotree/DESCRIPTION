@@ -15,4 +15,4 @@ Description: Analyzes, time-scales and simulates phylogenies of extinct/fossil
     lineages, along with calculation of diversity curves. Also fits likelihood
     models to estimate sampling rates from stratigraphic ranges.
 License: GPL (>= 2)
-URL: http://webpages.sdsmt.edu/~dbapst/
+URL: https://github.com/dwbapst/paleotree , http://webpages.sdsmt.edu/~dbapst/

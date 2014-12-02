@@ -217,16 +217,22 @@ fixRootTime<-function(treeOrig,treeNew,consistentDepth=TRUE,nodeAgeTransfer=TRUE
 			#(\emph{1}) the treeOrig clade that contains *all* taxa present in treeNew and, if the set of (1)
 			#contains multiple clades, (\emph{2}) the clade in the (1) set that contains the fewest taxa not in
 			#treeNew.
-		dates<-dateNodes(treeOrig,labelDates=TRUE)
+		dates<-dateNodes(treeOrig,labelDates=FALSE)
 		treeDesc<-lapply(Descendants(treeOrig),function(x) sort(treeOrig$tip.label[x]))
-		#treeRootNew<-sort(treeNew$tip.label[Descendants(treeNew)[[Ntip(treeNew)+1]]])
-		#the descendants of 
-		#which ones contain ALL taxa in  
-		nRootNew<-sapply(treeDesc,function(x) sum(sapply(x,function(y) any(y==treeRootNew))))
-		matchRootNew<-which(nRootNew==length(treeRootNew))
+		#treeRootNew<-sort(treeNew$tip.label[Descendants(treeNew)[[Ntip(treeNew)+1]]]) #no
+		#the descendants of treeNew's root are ALL the taxa in treeNEW
+		#So which treeOrig clades contain ALL taxa in treeNew?
+		allNewTaxa<-sapply(treeDesc,function(x) all(sapply(treeNew$tip.label,function(y) any(y==x)))) #logical vector
+		#now, if more than one contains all-new-taxa, which of these treeOrig clades minimizes not-shared taxa?
+		if(sum(allNewTaxa)>1){
+			nUnshared<-sapply(treeDesc,function(x) sum(sapply(x,function(y) all(y!=treeNew$tip.label)))) #numeric
+			matchRootNew<-which(allNewTaxa & nUnshared==min(nUnshared[allNewTaxa]))
+		}else{
+			matchRootNew<-which(allNewTaxa)
+			}
 		if(length(matchRootNew)>1){stop("More than one node contains these taxa")} #maybe sort by age
 		if(length(matchRootNew)<1){stop("No nodes match the new tree's root, a root age can not be obtained")}
-		treeNew$root.time<-dates[matchRootNew]
+		treeNew$root.time<-unname(dates[matchRootNew])
 	}else{
 		##OLD WAY
 			#If FALSE, the root.time assigned to treeNew is the root.time of treeOrig, adjusted

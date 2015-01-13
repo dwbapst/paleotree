@@ -11,8 +11,8 @@ You can install the most recent public release version of paleotree in R using:
 
 The latest pre-release version of paleotree can be found at github:
 	https://github.com/dwbapst/paleotree
-The status of the current git commit on github, using Travis CI to auto-check the code:
- +Linux: ![travis](https://travis-ci.org/dwbapst/paleotree.png) 
+	
+The most recent commit on github, using Travis CI to auto-check, is currently ![travis](https://travis-ci.org/dwbapst/paleotree.svg?branch=master) 
 	
 You can install this latest development version using the R function install_github in the package 'devtools':
 ```{r}

@@ -19,10 +19,10 @@ The latest pre-release version of paleotree can be found at github:
 The most recent commit is currently: ![travis](https://travis-ci.org/dwbapst/paleotree.svg?branch=master) (Travis CI)
 	
 You can install this latest development version using the R function install_github in the package 'devtools':
-```{r}
-library(devtools)
-install_github("dwbapst/paleotree/paleotree")
-```
+
+	library(devtools)
+	install_github("dwbapst/paleotree/paleotree")
+
 Once installed, you can check the version number of your paleotree install using the R function packageVersion:
 
 	packageVersion(“paleotree”)

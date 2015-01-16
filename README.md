@@ -21,7 +21,7 @@ The most recent commit is currently: ![travis](https://travis-ci.org/dwbapst/pal
 You can install this latest development version using the R function install_github in the package 'devtools':
 
 	library(devtools)
-	install_github("dwbapst/paleotree/paleotree")
+	install_github("dwbapst/paleotree")
 
 Once installed, you can check the version number of your paleotree install using the R function packageVersion:
 

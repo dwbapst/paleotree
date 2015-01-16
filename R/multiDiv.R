@@ -73,20 +73,22 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
-#' rangesCont <- sampleRanges(taxa,r=0.5)
-#' rangesDisc <- binTimeData(rangesCont,int.length=1)
-#' cladogram<-taxa2cladogram(taxa,plot=TRUE)
+#' taxa <- simFossilTaxa(p=0.1,q=0.1, nruns=1, mintaxa=20,
+#'        maxtaxa=30, maxtime=1000, maxExtant=0)
+#' rangesCont <- sampleRanges(taxa, r=0.5)
+#' rangesDisc <- binTimeData(rangesCont, int.length=1)
+#' cladogram<-taxa2cladogram(taxa, plot=TRUE)
 #' #using multiDiv with very different data types
-#' ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",add.term=TRUE,plot=FALSE)
-#' input <- list(rangesCont,rangesDisc,ttree)
-#' multiDiv(input,plot=TRUE)
+#' ttree <- timePaleoPhy(cladogram, rangesCont, type="basic", add.term=TRUE, plot=FALSE)
+#' input <- list(rangesCont, rangesDisc, ttree)
+#' multiDiv(input, plot=TRUE)
 #' 
 #' #using fixed interval times
-#' multiDiv(input,int.times=rangesDisc[[1]],plot=TRUE)
+#' multiDiv(input, int.times=rangesDisc[[1]], plot=TRUE)
 #' 
 #' #using multiDiv with samples of trees
-#' ttrees <- timePaleoPhy(cladogram,rangesCont,type="basic",randres=TRUE,ntrees=10,add.term=TRUE)
+#' ttrees <- timePaleoPhy(cladogram, rangesCont, type="basic",
+#'     randres=TRUE, ntrees=10, add.term=TRUE)
 #' multiDiv(ttrees)
 #' #uncertainty in diversity history is solely due to 
 #'    #the random resolution of polytomies
@@ -94,22 +96,24 @@
 #' #multiDiv can also take output from simFossilTaxa
 #' #what do many simulations run under some conditions 'look' like on average?
 #' set.seed(444)
-#' taxa <- simFossilTaxa(p=0.3,q=0.1,nruns=20,maxtime=20,maxtaxa=100,plot=TRUE,min.cond=FALSE)
+#' taxa <- simFossilTaxa(p=0.3, q=0.1, nruns=20, maxtime=20, maxtaxa=100,
+#'      plot=TRUE, min.cond=FALSE)
 #' multiDiv(taxa)
 #' #increasing cone of diversity! 
 #' #Even better on a log scale:
-#' multiDiv(taxa,plotLogRich=TRUE)
+#' multiDiv(taxa, plotLogRich=TRUE)
 #' 
 #' #pure-birth example with simFossilTaxa
 #' #note that conditioning is tricky
-#' taxa <- simFossilTaxa(p=0.1,q=0,mintime=10,mintaxa=10,maxtime=50,maxtaxa=50,
-#'     nruns=10,plot=TRUE)
+#' taxa <- simFossilTaxa(p=0.1, q=0, mintime=10, mintaxa=10, maxtime=50, maxtaxa=50,
+#'     nruns=10, plot=TRUE)
 #' multiDiv(taxa,plotLogRich=TRUE)
 #' 
 #' #compare many discrete diversity curves
 #' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=20,maxtime=20,
 #'     mintaxa=10,maxtaxa=100,plot=FALSE,min.cond=FALSE)
-#' multiDiv(lapply(taxa,function(x) binTimeData(sampleRanges(x,r=0.5,min.taxa=1),int.length=1)))
+#' multiDiv(lapply(taxa,function(x) binTimeData(sampleRanges(x, r=0.5,
+#'     min.taxa=1), int.length=1)))
 #' 
 #' layout(1)
 #' 

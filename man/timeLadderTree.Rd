@@ -38,6 +38,7 @@ having a FAD or LAD of NA in timeData will be dropped and will not be
 included in the output tree.
 
 See this blog post for more information:
+
 http://nemagraptus.blogspot.com/2012/07/resolving-polytomies-according-to.html
 }
 \examples{

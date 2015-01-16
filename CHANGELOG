@@ -1,3 +1,6 @@
+Version - 2.4 -
+-
+
 Version - 2.3 - 01-16-15
 -New function dropPaleoTip which is a simple wrapper for drop.tip in ape but uses fixRootTime to adjust the $root.time element in the resulting tree, after tips are dropped (Thanks to a conversation with Graeme Lloyd)
 -Modified how fixRootTime worked so that (by default) it drew the root age based on shared taxon membership of treeNew between the clades in treeOrig, see the description of argument nodeAgeTransfer for complete details. The original method, based on modifying the root-time based on changes in tree-depth (which is less robust to changes in taxon membership) can be executed by setting the argument nodeAgeTransfer to FALSE.

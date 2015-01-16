@@ -300,7 +300,8 @@ by read.csv or read.table), these will be coerced to a matrix.
 
 A tutorial for applying the time-scaling functions in paleotree,
 particularly the cal3 method, along with an example using real (graptolite)
-data, can be found here:
+data, can be found at the following link:
+
 http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
 }
 \note{

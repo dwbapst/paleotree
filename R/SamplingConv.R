@@ -60,8 +60,8 @@
 
 #' @author David W. Bapst, with advice from Michael Foote.
 
-#' @seealso \code{\link{sampleRanges}}, \code{\link{getSampRateCont}},
-#' \code{\link{getSampProbDisc}} \code{\link{probAnc}}, \code{\link{pqr2Ps}} 
+#' @seealso \code{\link{sampleRanges}},  \code{\link{getSampRateCont}},
+#' \code{\link{getSampProbDisc}},  \code{\link{probAnc}},  \code{\link{pqr2Ps}} 
 
 #' @references 
 #' Foote, M. 1996 On the Probability of Ancestors in the Fossil

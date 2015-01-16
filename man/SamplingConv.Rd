@@ -112,7 +112,7 @@ Solow, A. R., and W. Smith. 1997 On Fossil Preservation and the
 Stratigraphic Ranges of Taxa. \emph{Paleobiology} \bold{23}(3):271--277.
 }
 \seealso{
-\code{\link{sampleRanges}}, \code{\link{getSampRateCont}},
-\code{\link{getSampProbDisc}} \code{\link{probAnc}}, \code{\link{pqr2Ps}}
+\code{\link{sampleRanges}},  \code{\link{getSampRateCont}},
+\code{\link{getSampProbDisc}},  \code{\link{probAnc}},  \code{\link{pqr2Ps}}
 }
 

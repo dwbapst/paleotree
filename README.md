@@ -10,7 +10,7 @@ This code is authored by David Bapst and offered under GPL >2.0. The most recent
 
 You can install the most recent public release version of paleotree in R using:
 
-	install.packages(“paleotree”)
+	install.packages("paleotree")
 
 The latest pre-release version of paleotree can be found at github:
 
@@ -25,7 +25,7 @@ You can install this latest development version using the R function install_git
 
 Once installed, you can check the version number of your paleotree install using the R function packageVersion:
 
-	packageVersion(“paleotree”)
+	packageVersion("paleotree")
 
 As of 01/13/15, the paleotree repository was restructured so the package no longer sat within a subdirectory. An old directory composed of deprecated, previously public functions (more than a year old) was removed.
 

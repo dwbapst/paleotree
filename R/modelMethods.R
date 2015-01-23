@@ -323,6 +323,7 @@ parInit.constrained <- function(x, ...){
 	res<-runif(length(attr(x,"parnames")),attr(x, "parbounds")[[1]],attr(x, "parbounds")[[2]])
 	#infinite bounds probably too far from actual param value; use lower bound instead
 	if(any(is.infinite(res))){res<-attr(x, "parbounds")[[1]]}
+	names(res)<-attr(x,"parnames")
 	return(res)
 	}
 
@@ -334,5 +335,6 @@ parInit.paleotreeFunc <- function(x, ...){
 	res<-runif(length(attr(x,"parnames")),attr(x, "parbounds")[[1]],attr(x, "parbounds")[[2]])
 	#infinite bounds probably too far from actual param value; use lower bound instead
 	if(any(is.infinite(res))){res<-attr(x, "parbounds")[[1]]}
+	names(res)<-attr(x,"parnames")
 	return(res)
 	}

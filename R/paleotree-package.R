@@ -5,7 +5,7 @@
 #' estimate sampling rates from stratigraphic ranges.
 #' 
 #' \tabular{ll}{ Package: \tab paleotree\cr Type: \tab Package\cr
-#' License: \tab GPL (>= 2)\cr } This package
+#' License: \tab CC0\cr } This package
 #' contains functions for analyzing sampling rates given ranges of fossil taxa,
 #' in both continuous and discrete time, functions for time-scaling phylogenies
 #' of fossil taxa and functions for simulating the fossil record in both taxic

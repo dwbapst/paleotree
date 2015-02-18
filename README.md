@@ -4,7 +4,7 @@ paleotree is an R library for analysing, time-scaling and simulating phylogenies
 
 This package also contains a large number of functions associated with simulating diversification in incompletely sampled fossil records, under various models of morphological differentiation, and translating such simulated fossil records into their respective phylogenies. There are also likelihood functions offered for estimating sampling rates from different types of observables available from fossil record data.
 
-This code is authored by David Bapst and offered under GPL >2.0. The most recent public release of the code is on CRAN at:
+This code is authored by David Bapst and offered under CC0. The most recent public release of the code is on CRAN at:
 
 	http://cran.r-project.org/web/packages/paleotree/index.html
 

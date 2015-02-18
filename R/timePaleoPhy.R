@@ -5,8 +5,9 @@
 #' and output samples of randomly-resolved trees. As simple methods of time-scaling
 #' phylogenies of fossil taxa can have biasing effects on macroevolutionary analyses
 #' (Bapst, 2014, Paleobiology), this function is largely retained for legacy purposes
-#' and plotting applications. The functions listed here are \bold{not} realistic
-#' time-scaling methods!
+#' and plotting applications. The time-scaling methods implemented
+#' by the functions listed here do \bold{not} return realistic estimates of 
+#' divergence dates, users should investigate other time-scaling methods such as \code{\link{cal3TimePaleoPhy}}.
 #' 
 #' @details 
 #' \emph{Time-Scaling Methods}
@@ -322,12 +323,11 @@
 #' continuous-time ranges generated for time-scaling each tree. (Essentially a
 #' pseudo-timeData matrix.)
 
-# @note Please account for stratigraphic uncertainty in your analysis.
-# Unless you have exceptionally resolved data, use a wrapper with timePaleoPhy,
-# either the provided bin_timePaleoPhy or code a wrapper function of your
-# own that accounts for stratigraphic uncertainty in your dataset. Remember that
-# the FADs (earliest dates) given to timePaleoPhy will *always* be used to 
-# calibrate node ages!
+#' @note Please account for stratigraphic uncertainty in your analysis.
+#' Unless you have exceptionally resolved data, select an appropriate option in
+#' \code{dateTreatment} within \code{timePaleoPhy}, use the more sophisticated
+#' \code{bin_timePaleoPhy} or code your own wrapper function of \code{timePaleoPhy}
+#' that accounts for stratigraphic uncertainty in your dataset.
 
 #' @author David W. Bapst, heavily inspired by code supplied by Graeme Lloyd
 #' and Gene Hunt.
@@ -711,7 +711,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,
 	if(ntrees==1 & !nonstoch.bin){
 		message("Warning: Do not interpret a single tree; dates are stochastically pulled from uniform distributions")}
 	if(ntrees<1){stop("Error: ntrees<1")}
-	if(dateTreatment=="minMax"){stop("Instead of dateTreatment='minMax', please use argument points.occur instead in bin functions")}
+	if(!is.null(sites) & point.occur){stop("Error: Inconsistent arguments, point.occur=TRUE would replace input 'sites' matrix\n Why not just make site assignments for first and last appearance the same in your input site matrix?")}
 	if(!any(dateTreatment==c("firstLast","randObs"))){
 		stop("dateTreatment must be one of 'firstLast' or 'randObs'!")}
 	#clean out all taxa which are NA or missing for timeData
@@ -742,7 +742,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,
 				message(paste("Warning: Following taxa dropped from timeList:",paste0(notTree,collapse=", ")))}
 			timeList[[2]]<-timeList[[2]][!is.na(match(rownames(timeList[[2]]),tree$tip.label)),]
 		}else{
-			stop("Some taxa in timeList not included on tree: not automatic taxon drop if 'sites' are given. Please remove from both sites and timeList and try again.")
+			stop("Some taxa in timeList not included on tree: no automatic taxon drop if 'sites' are given. Please remove from both sites and timeList and try again.")
 			}
 		}	
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]

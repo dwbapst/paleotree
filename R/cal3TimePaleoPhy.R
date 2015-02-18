@@ -814,7 +814,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		}else{stop("Error: timeList[[1]] not of matrix or data.frame format")}}
 	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])
 		}else{stop("Error: timeList[[2]] not of matrix or data.frame format")}}
-	if(dateTreatment=="minMax"){stop("Instead of dateTreatment='minMax', please use argument points.occur instead in bin functions")}
+	if(dateTreatment=="minMax"){stop("Instead of dateTreatment='minMax', please use argument point.occur instead in bin_ functions or use sites argument")}
 	if(!any(dateTreatment==c("firstLast","randObs"))){
 		stop("dateTreatment must be one of 'firstLast' or 'randObs'!")}
 	if(ntrees<1){stop("Error: ntrees<1")}
@@ -824,7 +824,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 	if(dateTreatment=="randObs" & FAD.only){stop("Error: FAD.only=TRUE and dateTreatment='randObs' are conflicting arguments")}
 	if(dateTreatment=="minMax" & FAD.only){
 		stop("Error: FAD.only=TRUE and dateTreatment='minMax' are conflicting, as there are no FADs, as dates are simply point occurrences")}
-	if(!is.null(sites) & point.occur){stop("Error: Inconsistent arguments, point.occur=TRUE will replace input 'sites' matrix")}
+	if(!is.null(sites) & point.occur){stop("Error: Inconsistent arguments, point.occur=TRUE would replace input 'sites' matrix\n Why not just make site assignments for first and last appearance the same in your input site matrix?")}
 	#clean out all taxa which are NA or missing for timeData
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
@@ -851,7 +851,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 				message(paste("Warning: Following taxa dropped from timeList:",paste0(notTree,collapse=", ")))}
 			timeList[[2]]<-timeList[[2]][!is.na(match(rownames(timeList[[2]]),tree$tip.label)),]
 		}else{
-			stop("Some taxa in timeList not included on tree: not automatic taxon drop if 'sites' are given. Please remove from both sites and timeList and try again.")
+			stop("Some taxa in timeList not included on tree: no automatic taxon drop if 'sites' are given. Please remove from both sites and timeList and try again.")
 			}
 		}	
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]

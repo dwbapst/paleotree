@@ -186,7 +186,7 @@
 #' Ignored if type = "basic".
 
 #' @param ntrees Number of time-scaled trees to output. If ntrees is greater
-#' than one and both randres is false and dateTreatment is either
+#' than one and both randres is false and dateTreatment is neither
 #' 'minMax' or 'randObs', the function will fail and
 #' a warning is issued, as these arguments would simply produce multiple
 #' identical time-scaled trees.

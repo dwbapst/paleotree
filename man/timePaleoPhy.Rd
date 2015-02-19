@@ -35,7 +35,7 @@ time-scaling functions; however, see the argument \code{dateTreatment}.}
 Ignored if type = "basic".}
 
 \item{ntrees}{Number of time-scaled trees to output. If ntrees is greater
-than one and both randres is false and dateTreatment is either
+than one and both randres is false and dateTreatment is neither
 'minMax' or 'randObs', the function will fail and
 a warning is issued, as these arguments would simply produce multiple
 identical time-scaled trees.}
@@ -162,8 +162,9 @@ temporal ranges, using various methods. Also can resolve polytomies randomly
 and output samples of randomly-resolved trees. As simple methods of time-scaling
 phylogenies of fossil taxa can have biasing effects on macroevolutionary analyses
 (Bapst, 2014, Paleobiology), this function is largely retained for legacy purposes
-and plotting applications. The functions listed here are \bold{not} realistic
-time-scaling methods!
+and plotting applications. The time-scaling methods implemented
+by the functions listed here do \bold{not} return realistic estimates of
+divergence dates, users should investigate other time-scaling methods such as \code{\link{cal3TimePaleoPhy}}.
 }
 \details{
 \emph{Time-Scaling Methods}
@@ -313,6 +314,13 @@ by read.csv or read.table), these will be coerced to a matrix.
 A tutorial for applying the time-scaling functions in paleotree, along with
 an example using real (graptolite) data, can be found here:
 http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
+}
+\note{
+Please account for stratigraphic uncertainty in your analysis.
+Unless you have exceptionally resolved data, select an appropriate option in
+\code{dateTreatment} within \code{timePaleoPhy}, use the more sophisticated
+\code{bin_timePaleoPhy} or code your own wrapper function of \code{timePaleoPhy}
+that accounts for stratigraphic uncertainty in your dataset.
 }
 \examples{
 #Simulate some fossil ranges with simFossilTaxa

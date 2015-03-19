@@ -77,7 +77,7 @@
 
 # NAMESPACE IMPORTING
 
-#' @importFrom phangorn Descendants Ancestors
+#' @importFrom phangorn Descendants Ancestors phyDat ancestral.pars
 #' @import ape
 
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/graptPBDB.R
 \docType{data}
 \name{graptPBDB}
-\alias{graptOccPBDD}
+\alias{graptOccPBDB}
 \alias{graptPBDB}
 \title{Example Occurrence Dataset of the Graptolithina from the Paleobiology Database
 An example dataset consisting of occurrence data downloaded from the Paleobiology Database API
@@ -15,6 +15,8 @@ using the API version 1.1, using the following API command:
 
 \code{http://paleobiodb.org/data1.1/occs/list.txt?base_name=Graptolithina&show=ident,phylo,entname&limit=all}
 And was read into R using the command \code{read.csv}.
+
+You can find the Paleobiology Database at http://paleobiodb.org
 
 This data was entered by (in order of relative portion) P. Novack-Gottshall, M. Krause, M. Foote,
 A. Hendy, T. Hanson, M. Sommers and others. This data was authorized mainly by A. Miller,
@@ -35,8 +37,9 @@ in \code{paleotree}.
 \dontrun{
 
 #original code used to obtain this dataset on March 19th, 2015
-graptOccPBDB<-read.csv(
-	"http://paleobiodb.org/data1.1/occs/list.txt?base_name=Graptolithina&show=ident,phylo,entname&limit=all")
+graptOccPBDB<-read.csv(paste0(
+	"http://paleobiodb.org/data1.1/occs/list.txt?",
+		"base_name=Graptolithina&show=ident,phylo,entname&limit=all"))
 save(graptOccPBDB,file="graptPBDB.Rdata")
 
 }
@@ -49,6 +52,10 @@ pie(sort(table(graptOccPBDB$authorizer)))
 # and now who authorized it
 pie(sort(table(graptOccPBDB$enterer)))
 # I apologize for using pie charts.
+
+# Let's look at age resolution of these occurrences
+hist(graptOccPBDB$early_age-graptOccPBDB$late_age,
+		main="Age Resolution of Occurrences", xlab="Ma")
 }
 \keyword{datasets}
 

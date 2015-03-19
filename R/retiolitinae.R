@@ -25,7 +25,6 @@
 #' format called by some paleotree functions).
 
 #' @source 
-
 #' Source for cladogram and zonal ranges for genera: 
 #'
 #' Bates, D. E. B., A. Kozlowska, and A. C. Lenz. 2005. Silurian retiolitid graptolites:

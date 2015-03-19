@@ -2,7 +2,7 @@
 #' 
 #' \code{degradeTree} removes a proportion of the total nodes in a tree, chosen
 #' randomly, collapsing the nodes to produce a less-resolved tree. The related function \code{collapseNodes} 
-#'given a tree and a vector of nodes to collapse, removes those nodes from a tree, creating a polytomy.
+#' given a tree and a vector of nodes to collapse, removes those nodes from a tree, creating a polytomy.
 
 #' @details In the function \code{degradeTree}, the nodes are removed at random
 #' using the basic R function \code{sample}. \code{degradeTree}
@@ -21,27 +21,37 @@
 #' argument leave.zlb is TRUE.
 #' 
 #' @param tree A phylogeny of class 'phylo'
+
 #' @param prop_collapse Proportion of nodes to collapse
+
 #' @param nCollapse Number of nodes to collapse, can be supplied as an
 #' alternative to prop_collapse
+
 #' @param node.depth A number between 0 to 1, which conditions the depth of
 #' nodes removed. If NA, no conditioning (this is the default).
+
 #' @param leave.zlb If FALSE, the default option, the original branch length
 #' distribution is destroyed and branches set to zero by this function will
 #' return polytomies. If TRUE, then the original edge lengths are kept for
 #' unmodified edges, and modified edges are changed to zero length, and are not
 #' collapsed into polytomies. The removed branch length is not shifted to other
 #' edges.
+
 #' @param nodeID The node ID number(s) to be collapsed into a polytomy, as identified in
 #' the \code{$edge} matrix of the'phylo' object. Must be a vector of one or more ID numbers.
 
-#' @param collapseDir Whether to collapse the edge leading the listed node (if "forward"), or to
-#' collapse the child edges leading away from the node (if "backward"). Collapsing a node into a
-#' polytomy conceptually could be either and users should heed this option carefully. 
+#' @param collapseType Whether to collapse the edge leading the listed node (if "forward"), or to
+#' collapse the child edges leading away from the node (if "backward"). Collapsing a node 'into' a
+#' polytomy conceptually could be either and users should heed this option carefully. A third option,
+#' if "collapseType=clade" is to collapse the entire clade that is descended from a node (i.e. forward).
 
 #' @return Returns the modified tree as an object of class phylo, with no edge
 #' lengths by default.
-#' @seealso \code{\link{di2multi}},\code{\link{timeLadderTree}},
+
+#' @seealso \code{\link{di2multi}},\code{\link{timeLadderTree}}
+
+#' @author David W. Bapst
+
 #' @examples
 #' 
 #' set.seed(444)
@@ -57,19 +67,23 @@
 #' tree <- rtree(10)
 #' #collapse nodes backwards
 #'    #let's collapse lucky node number 13!
-#' tree1 <- collapseNodes(nodeID=13,tree=tree,collapseDir="backward")  
+#' tree1 <- collapseNodes(nodeID=13,tree=tree,collapseType="backward")  
 #' #collapse nodes forwards 
-#' tree2 <- collapseNodes(nodeID=13,tree=tree,collapseDir="forward")
+#' tree2 <- collapseNodes(nodeID=13,tree=tree,collapseType="forward")
+#' #collapse entire clade
+#' tree3 <- collapseNodes(nodeID=13,tree=tree,collapseType="clade")
 #' 
 #' #let's compare
-#' layout(1:3)
+#' layout(1:4)
 #' plot(tree,use.edge.length=FALSE,main="original")
 #' plot(tree1,use.edge.length=FALSE,main="backward collapse")
 #' plot(tree2,use.edge.length=FALSE,main="forward collapse")
+#' plot(tree3,use.edge.length=FALSE,main="entire clade")
 #' 
 #' layout(1)
 #' 
 #' @name degradeTree
+#' @rdname degradeTree
 #' @export degradeTree
 degradeTree<-function(tree,prop_collapse,nCollapse=NULL,node.depth=NA,leave.zlb=FALSE){
 	#collapses a given proportion of internal edges, creating polytomies
@@ -102,24 +116,26 @@ degradeTree<-function(tree,prop_collapse,nCollapse=NULL,node.depth=NA,leave.zlb=
 
 #' @rdname degradeTree
 #' @export 
-collapseNodes<-function(tree,nodeID,collapseDir,leave.zlb=FALSE){
+collapseNodes<-function(tree,nodeID,collapseType,leave.zlb=FALSE){
 	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
 	if(!all(nodeID>0) | !all(nodeID<(Ntip(tree)+Nnode(tree)+1))){
 		stop("Error: some nodeID values outside the range of tip and node IDs")}
 	if(!all(nodeID>Ntip(tree))){
 		message("Warning: Some nodeID values indicate terminal tips; collapsing these generally doesn't do anything")}
-	if(!any(collapseDir==c("forward","backward"))){stop("collapseDir must be either 'forward' or 'backward'")}
-	if(collapseDir=="backward" | collapseDir=="forward"){
-		if(collapseDir=="backward"){
-			# 01-15-14 if the edge is collapsed backward, then its the edges who have that node as a descendant!!!
-			cedge<-which(sapply(tree$edge[,2],function(x) any(x==nodeID)))
-			}
-		if(collapseDir=="forward"){
-			cedge<-which(sapply(tree$edge[,1],function(x) any(x==nodeID)))
-			}
-	}else{
-			stop("collapseDir is not either 'backward' or 'forward' ??")
-			}
+	if(length(collapseType)!=1){stop("collapseType must be a single selected option (length=1)")}
+	if(!any(collapseType==c("forward","backward","clade"))){
+		stop("collapseType must be either 'forward', 'backward' or 'clade'")}
+	if(collapseType=="backward"){
+		# 01-15-14 if the edge is collapsed backward, then its the edges who have that node as a descendant!!!
+		cedge<-which(sapply(tree$edge[,2],function(x) any(x==nodeID)))
+		}
+	if(collapseType=="forward"){
+		cedge<-which(sapply(tree$edge[,1],function(x) any(x==nodeID)))
+		}
+	if(collapseType=="clade"){
+		descNodes<-unique(sapply(nodeID,function(x) Descendants(tree,x,"all")))
+		cedge<-which(sapply(tree$edge[,2],function(x) any(x==descNodes)))
+		}
 	if(leave.zlb){
 		tree$edge.length[cedge]<-0
 	}else{

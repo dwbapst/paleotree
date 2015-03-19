@@ -8,7 +8,7 @@
 degradeTree(tree, prop_collapse, nCollapse = NULL, node.depth = NA,
   leave.zlb = FALSE)
 
-collapseNodes(tree, nodeID, collapseDir, leave.zlb = FALSE)
+collapseNodes(tree, nodeID, collapseType, leave.zlb = FALSE)
 }
 \arguments{
 \item{tree}{A phylogeny of class 'phylo'}
@@ -31,9 +31,10 @@ edges.}
 \item{nodeID}{The node ID number(s) to be collapsed into a polytomy, as identified in
 the \code{$edge} matrix of the'phylo' object. Must be a vector of one or more ID numbers.}
 
-\item{collapseDir}{Whether to collapse the edge leading the listed node (if "forward"), or to
-collapse the child edges leading away from the node (if "backward"). Collapsing a node into a
-polytomy conceptually could be either and users should heed this option carefully.}
+\item{collapseType}{Whether to collapse the edge leading the listed node (if "forward"), or to
+collapse the child edges leading away from the node (if "backward"). Collapsing a node 'into' a
+polytomy conceptually could be either and users should heed this option carefully. A third option,
+if "collapseType=clade" is to collapse the entire clade that is descended from a node (i.e. forward).}
 }
 \value{
 Returns the modified tree as an object of class phylo, with no edge
@@ -75,19 +76,25 @@ plot(tree1,show.tip.label=FALSE,use.edge.length=FALSE)
 tree <- rtree(10)
 #collapse nodes backwards
    #let's collapse lucky node number 13!
-tree1 <- collapseNodes(nodeID=13,tree=tree,collapseDir="backward")
+tree1 <- collapseNodes(nodeID=13,tree=tree,collapseType="backward")
 #collapse nodes forwards
-tree2 <- collapseNodes(nodeID=13,tree=tree,collapseDir="forward")
+tree2 <- collapseNodes(nodeID=13,tree=tree,collapseType="forward")
+#collapse entire clade
+tree3 <- collapseNodes(nodeID=13,tree=tree,collapseType="clade")
 
 #let's compare
-layout(1:3)
+layout(1:4)
 plot(tree,use.edge.length=FALSE,main="original")
 plot(tree1,use.edge.length=FALSE,main="backward collapse")
 plot(tree2,use.edge.length=FALSE,main="forward collapse")
+plot(tree3,use.edge.length=FALSE,main="entire clade")
 
 layout(1)
 }
+\author{
+David W. Bapst
+}
 \seealso{
-\code{\link{di2multi}},\code{\link{timeLadderTree}},
+\code{\link{di2multi}},\code{\link{timeLadderTree}}
 }
 

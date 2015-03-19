@@ -2,7 +2,7 @@ Version - 2.4 -
 -Modified timePaleoPhy help file to clarify 'these are not realistic time-scaling functions' statement and correcting an 'either' to 'neither in the description of argument 'ntrees'
 -Modified bin_timePaleoPhy and bin_cal3TimePaleoPhy to clarify that dateTreatment=minMax should be replaced be *either* the point.occur argument *or* a sites matrix
 -Changed license from GPL ver 2 or higher to Creative Common zero, as I finally realized that CC0 is supported by CRAN (apparently I missed this change years ago)
-
+-Added 'clade' option to collapseNodes to collapse *all* descendant edges of a selected node
 
 Version - 2.3 - 01-16-15
 -New function dropPaleoTip which is a simple wrapper for drop.tip in ape but uses fixRootTime to adjust the $root.time element in the resulting tree, after tips are dropped (Thanks to a conversation with Graeme Lloyd)

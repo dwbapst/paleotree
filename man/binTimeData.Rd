@@ -97,6 +97,9 @@ presetIntervals <- cbind(c(40,30,20,10),c(30,20,10,0))
 rangesDisc1 <- binTimeData(rangesCont,int.times=presetIntervals)
 taxicDivDisc(rangesDisc1)
 }
+\author{
+David W. Bapst
+}
 \seealso{
 \code{\link{simFossilTaxa}}, \code{\link{sampleRanges}},
 \code{\link{taxicDivCont}}

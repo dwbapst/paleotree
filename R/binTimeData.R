@@ -57,6 +57,8 @@
 #' @seealso \code{\link{simFossilTaxa}}, \code{\link{sampleRanges}},
 #' \code{\link{taxicDivCont}}
 
+#' @author David W. Bapst
+
 #' @examples
 #' 
 #' #Simulate some fossil ranges with simFossilTaxa

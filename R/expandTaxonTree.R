@@ -100,7 +100,10 @@ expandTaxonTree<-function(taxonTree,taxaData,collapse=NULL,keepBrLen=FALSE,plot=
 		}
 		#now collapse non-monophyletic groupings
 	if(!keepBrLen){
-		tree1<-di2multi(tree);tree1$edge.length<-NULL;tree1<-collapse.singles(tree1)
+		tree1<-di2multi(tree)
+		tree1$edge.length<-NULL
+		tree1<-collapse.singles(tree1)
+		if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
 		tree1<-read.tree(text=write.tree(tree1))
 		}else{tree1<-tree}
 	if(plot==TRUE){layout(1:2);plot(taxonTree);plot(tree1);layout(1)}

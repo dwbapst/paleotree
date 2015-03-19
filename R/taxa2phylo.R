@@ -169,6 +169,8 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	tree1<-list(edge=edgf,tip.label=tlabs,edge.length=edgeD[,3],Nnode=length(unique(edgf[,1])))
 	class(tree1)<-"phylo"						#ITS A TREE!
 	tree<-reorder(collapse.singles(tree1),"cladewise") 	#REORDER IT
+	if(!testEdgeMat(tree)){stop("Edge matrix has inconsistencies")}
+	tree<-read.tree(text=write.tree(tree))
 	if(plot){plot(ladderize(tree),show.tip.label=FALSE);axisPhylo()}
 	#now, root.time should be the time of the first obs PLUS the distance from the earliest tip to the root
 	first_obs_time<-max(taxad[,3:4])-min(obs,na.rm=TRUE)

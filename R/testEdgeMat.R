@@ -29,7 +29,9 @@ testEdgeMat<-function(tree){
 	#test edge matrix
 	if(length(tree$edge[,2])!=length(unique(tree$edge[,2]))){
 		stop("Some nodes are listed as a descendant twice in the edge matrix")}
-	if(Nnode(tree)!=(max(tree$edge[,2])-Ntip(tree))){stop("Number of nodes is incorrect based on edge[,2]?")}
+	if(Ntip(tree)>2){
+		if(Nnode(tree)!=(max(tree$edge[,2])-Ntip(tree))){stop("Number of nodes is incorrect based on edge[,2]?")}
+		}
 	if(Nnode(tree)!=(max(tree$edge[,1])-Ntip(tree))){stop("Number of nodes is incorrect based on edge[,1]?")}
 	#is every internal node listed as a descendant and ancestor, in edge[,2] and edge[,1]?
 	if(!all(sapply((2:Nnode(tree))+Ntip(tree),function(x) any(x==tree$edge[,1])))){

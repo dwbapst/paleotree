@@ -104,6 +104,11 @@
 simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mintime=1,maxtime=100,
 	mintaxa=2,maxtaxa=500,anag.rate=0,prop.bifurc=0,prop.cryptic=0,drop.zlb=TRUE,print.runs=FALSE,ranges.only=TRUE,
 	plot=FALSE){
+	#
+	#	p = 0.1; q = 0.1; r = 0.5; ntrees = 10; all.extinct = TRUE;
+      # 	maxtime = 100; print.runs = TRUE; plot = TRUE;modern.samp.prob=1.0;mintime=1;
+	#	mintaxa=2;maxtaxa=500;anag.rate=0;prop.bifurc=0;prop.cryptic=0;drop.zlb=TRUE;ranges.only=TRUE;
+	#
 	#this is a wrapper which will create many paleo trees with at least two observed tips
 		#uses simFossilTaxa, sampRanges,taxa2phylo, etc
 		#good if you want to simulate many many trees with extinct taxa

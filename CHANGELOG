@@ -5,6 +5,7 @@ Version - 2.4 -
 -Added 'clade' option to collapseNodes to collapse *all* descendant edges of a selected node
 -Added function testEdgeMat which is a simple checker of the $edge matrix of phylo objects for inconsistencies
 -Added function taxonSortPBDBocc which sorts unique taxa out of PBDB occurrence datasets
+-Added function occData2timeList which converts taxon-sorted occurrence data lists to the two-matrix timeList object useable by many other paleotree functions
 
 Version - 2.3 - 01-16-15
 -New function dropPaleoTip which is a simple wrapper for drop.tip in ape but uses fixRootTime to adjust the $root.time element in the resulting tree, after tips are dropped (Thanks to a conversation with Graeme Lloyd)

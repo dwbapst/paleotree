@@ -40,6 +40,9 @@
 #'
 #' @examples
 #' 
+#' # get the package version of paleotree
+#' packageVersion("paleotree")
+#'
 #' ##Simulate some fossil ranges with simFossilTaxa
 #' set.seed(444);
 #' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)

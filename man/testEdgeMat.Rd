@@ -28,6 +28,9 @@ set.seed(444)
 tree<-rtree(10)
 # should return TRUE
 testEdgeMat(tree)
+
+# should also work on trees with two taxa
+testEdgeMat(rtree(2))
 }
 \author{
 David W. Bapst

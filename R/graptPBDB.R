@@ -56,9 +56,9 @@
 #' data(graptPBDB)
 #'
 #' # let's visualize who entered the majority of this data
-#' pie(sort(table(graptOccPBDB$authorizer)))
-#' # and now who authorized it
 #' pie(sort(table(graptOccPBDB$enterer)))
+#' # and now who authorized it
+#' pie(sort(table(graptOccPBDB$authorizer)))
 #' # I apologize for using pie charts.
 #' 
 #' # Let's look at age resolution of these occurrences

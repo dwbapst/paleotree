@@ -17,9 +17,11 @@
 #' 
 #' @param list A list composed of multiple elements, with each element a vector
 #' or list of equal length
+
 #' @param simplify Should the result be simplified, as the argument in sapply
 #' @return Returns a list with a reversed structure relative to the input, see
 #' above.
+
 #' @author David W. Bapst
 #' @examples
 #' 

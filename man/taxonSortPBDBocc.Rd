@@ -19,7 +19,7 @@ taxonSortPBDBocc(data, rank, onlyFormal = TRUE, cleanUncertain = TRUE,
 
 \item{cleanUncertain}{If TRUE (the default) any occurrences with an entry in the respective 'resolution' field that is *not* found in the argument cleanResoValue will be removed from the dataset. These are assumed to be values indicating taxonomic uncertainty, i.e. 'cf.' or '?'.}
 
-\item{cleanResoValue}{The set of values that can be found in a 'resolution' field that do not cause a taxon to be removed, as they do not seem to indicate taxonomic uncertainty.}
+\item{cleanResoValues}{The set of values that can be found in a 'resolution' field that do not cause a taxon to be removed, as they do not seem to indicate taxonomic uncertainty.}
 }
 \value{
 Returns a list where each element is different unique taxon obtained by the sorting function, and named with that taxon name. Each element is composed of a table containing all the same occurrence data fields as the input (potentially with some fields renamed and some field contents change, due to vocabulary translation).
@@ -64,7 +64,7 @@ occSpeciesEverything<-taxonSortPBDBocc(graptOccPBDB, rank="species",
 		onlyFormal=FALSE, cleanUncertain=FALSE)
 length(occSpeciesEverything)
 
-donotrun{
+\dontrun{
 
 #try a PBDB API download with lots of synonymization
 	#this should have only 1 species

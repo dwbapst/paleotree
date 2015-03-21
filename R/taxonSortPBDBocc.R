@@ -36,6 +36,16 @@
 #' which attempts to correct any necessary field names and field contents used by
 #' \code{taxonSortPBDBocc}.
 
+#' @param data A table of occurrence data collected from the Paleobiology Database. 
+
+#' @param rank The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.
+
+#' @param onlyFormal If TRUE (the default) only taxa formally accepted by the Paleobiology Database are returned. If FALSE, then the identified name fields are searched for any additional 'informal' taxa with the proper taxon. If their taxon name happens to match any formal taxa, their occurrences are merged onto the formal taxa. This argument generally has any appreciable effect when rank=species.
+
+#' @param cleanUncertain If TRUE (the default) any occurrences with an entry in the respective 'resolution' field that is *not* found in the argument cleanResoValue will be removed from the dataset. These are assumed to be values indicating taxonomic uncertainty, i.e. 'cf.' or '?'.
+
+#' @param cleanResoValues The set of values that can be found in a 'resolution' field that do not cause a taxon to be removed, as they do not seem to indicate taxonomic uncertainty.
+
 #' @return
 #' Returns a list where each element is different unique taxon obtained by the sorting function, and named with that taxon name. Each element is composed of a table containing all the same occurrence data fields as the input (potentially with some fields renamed and some field contents change, due to vocabulary translation).
 	
@@ -73,7 +83,7 @@
 #' 		onlyFormal=FALSE, cleanUncertain=FALSE)
 #' length(occSpeciesEverything)
 #' 
-#' donotrun{
+#' \dontrun{
 #' 
 #' #try a PBDB API download with lots of synonymization
 #' 	#this should have only 1 species
@@ -109,18 +119,6 @@
 #' }
 #' 
 #' 
-
-#' @param data A table of occurrence data collected from the Paleobiology Database. 
-
-
-#' @param rank The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.
-
-#' @param onlyFormal If TRUE (the default) only taxa formally accepted by the Paleobiology Database are returned. If FALSE, then the identified name fields are searched for any additional 'informal' taxa with the proper taxon. If their taxon name happens to match any formal taxa, their occurrences are merged onto the formal taxa. This argument generally has any appreciable effect when rank=species.
-
-#' @param cleanUncertain If TRUE (the default) any occurrences with an entry in the respective 'resolution' field that is *not* found in the argument cleanResoValue will be removed from the dataset. These are assumed to be values indicating taxonomic uncertainty, i.e. 'cf.' or '?'.
-
-#' @param cleanResoValue The set of values that can be found in a 'resolution' field that do not cause a taxon to be removed, as they do not seem to indicate taxonomic uncertainty.
-
 
 
 #' @name taxonSortPBDBocc

@@ -183,7 +183,7 @@ taxonSortPBDBocc<-function(data,rank, onlyFormal=TRUE, cleanUncertain=TRUE,
 		#and for shared names
 		if(sum(share1)>0){
 			shared<-lapply(taxaNames[share1],function(x) 
-				cbind(sharedOcc[[taxaNames==x]],sharedOcc2[[taxaNames2==x]]))
+				cbind(sortedOcc[[taxaNames==x]],sortedOcc2[[taxaNames2==x]]))
 			names(shared)<-names(taxaNames[share1])
 		}else{shared<-list()}
 		sortedOcc<-c(sortedOccU,sortedOcc2U,shared)
@@ -215,7 +215,7 @@ taxonSortPBDBocc<-function(data,rank, onlyFormal=TRUE, cleanUncertain=TRUE,
 			#and for shared names
 			if(sum(share1)>0){
 				shared<-lapply(taxaNames[share1],function(x)
-					cbind(sharedOcc[[taxaNames==x]],sharedOcc2[[taxaNames2==x]]))
+					cbind(sortedOcc[[taxaNames==x]],sortedOcc2[[taxaNames2==x]]))
 				names(shared)<-names(taxaNames[share1])
 			}else{shared<-list()}
 			sortedOcc<-c(sortedOccU,sortedOcc2U,shared)

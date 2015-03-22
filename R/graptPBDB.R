@@ -5,15 +5,15 @@
 
 #' @name graptPBDB
 #' @rdname graptPBDB
-#' @aliases graptPBDB graptOccPBDB
+#' @aliases graptPBDB graptOccPBDB graptTaxaPBDB
 
 #' @details
 #' This example PBDB data is included here for testing functions involving occurrence data and taxonomy
 #' in \code{paleotree}.
 
 #' @format 
-#' The example occurrence dataset is a data.frame consisting of 5900 occurrences (rows) and 35 variables (columns).
-#' The example taxonomy dataset is a data.frame consisting of 364 formal taxa (rows) and 53 variables (columns).
+#' The example occurrence dataset (\code{graptOccPBDB}) is a data.frame consisting of 5900 occurrences (rows) and 35 variables (columns).
+#' The example taxonomy dataset (\code{graptTaxaPBDB}) is a data.frame consisting of 364 formal taxa (rows) and 53 variables (columns).
 #' Variables are coded in the 'pbdb' vocabulary of the PBDB API v1.2.
 
 #' @seealso

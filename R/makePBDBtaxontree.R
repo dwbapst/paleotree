@@ -74,7 +74,7 @@
 #' 
 #' #let's time-scale this tree with paleotree
 #' timeTree<-bin_timePaleoPhy(graptTree,timeList=graptTimeGenus,
-#' 	nonstoch.bin=TRUE)
+#' 	nonstoch.bin=TRUE,type="mbl",vartime=3)
 #' 
 #' #drops a lot of taxa; some of this is due to mispellings, etc
 #' 

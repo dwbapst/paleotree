@@ -4,30 +4,24 @@
 \name{graptPBDB}
 \alias{graptOccPBDB}
 \alias{graptPBDB}
-\title{Example Occurrence Dataset of the Graptolithina from the Paleobiology Database
-An example dataset consisting of occurrence data downloaded from the Paleobiology Database API
-for the Graptolithina.}
-\format{The example dataset is a data.frame consisting of 5900 occurrences (rows) and 35 variables (columns). Variables are
-coded in the 'pbdb' vocabulary of the PBDB API v1.1.}
+\title{Example Occurrence and Taxonomic Datasets of the Graptolithina from the Paleobiology Database
+Example datasets consisting of (a) occurrence data and (b) taxonomic data
+downloaded from the Paleobiology Database API for the Graptolithina.}
+\format{The example occurrence dataset is a data.frame consisting of 5900 occurrences (rows) and 35 variables (columns).
+The example taxonomy dataset is a data.frame consisting of 364 formal taxa (rows) and 53 variables (columns).
+Variables are coded in the 'pbdb' vocabulary of the PBDB API v1.2.}
 \source{
-This dataset was downloaded on March 19th, 2015, from the Paleobiology Database
-using the API version 1.1, using the following API command:
-
-\code{http://paleobiodb.org/data1.1/occs/list.txt?base_name=Graptolithina&show=ident,phylo,entname&limit=all}
-And was read into R using the command \code{read.csv}.
-
+See examples for the full R code used to obtain the data from the API.
 You can find the Paleobiology Database at http://paleobiodb.org
 
-This data was entered by (in order of relative portion) P. Novack-Gottshall, M. Krause, M. Foote,
-A. Hendy, T. Hanson, M. Sommers and others. This data was authorized mainly by A. Miller,
+The occurrence data was entered by (in order of relative portion) P. Novack-Gottshall, M. Krause, M. Foote,
+A. Hendy, T. Hanson, M. Sommers and others. This same data was authorized mainly by A. Miller,
 W. Kiessling, M. Foote, A. Hendy, S. Holland, J. Sepkoski and others.
-
-See examples for the full R code used.
 }
 \description{
-Example Occurrence Dataset of the Graptolithina from the Paleobiology Database
-An example dataset consisting of occurrence data downloaded from the Paleobiology Database API
-for the Graptolithina.
+Example Occurrence and Taxonomic Datasets of the Graptolithina from the Paleobiology Database
+Example datasets consisting of (a) occurrence data and (b) taxonomic data
+downloaded from the Paleobiology Database API for the Graptolithina.
 }
 \details{
 This example PBDB data is included here for testing functions involving occurrence data and taxonomy
@@ -36,18 +30,24 @@ in \code{paleotree}.
 \examples{
 \dontrun{
 
-#original code used to obtain this dataset on March 19th, 2015
+#original code used to obtain this dataset on March 21st, 2015
+
 graptOccPBDB<-read.csv(paste0(
-	"http://paleobiodb.org/data1.1/occs/list.txt?",
-		"base_name=Graptolithina&show=ident,phylo,entname&limit=all"))
-save(graptOccPBDB,file="graptPBDB.Rdata")
+	"http://testpaleodb.geology.wisc.edu/data1.2/occs/list.txt?",
+	"base_name=Graptolithina&show=ident,phylo,entname&limit=all"))
+#'
+graptTaxaPBDB<-read.csv(paste0("http://testpaleodb.geology.wisc.edu/",
+		"data1.2/taxa/list.txt?base_name=Graptolithina",
+		"&rel=all_children&show=phylo,img,nav&status=senior"))
+
+save(graptOccPBDB,graptTaxaPBDB,file="graptPBDB.rdata")
 
 }
 
 # load archived example data
 data(graptPBDB)
 
-# let's visualize who entered the majority of this data
+# let's visualize who entered the majority of the occurrence data
 pie(sort(table(graptOccPBDB$enterer)))
 # and now who authorized it
 pie(sort(table(graptOccPBDB$authorizer)))
@@ -56,6 +56,13 @@ pie(sort(table(graptOccPBDB$authorizer)))
 # Let's look at age resolution of these occurrences
 hist(graptOccPBDB$early_age-graptOccPBDB$late_age,
 		main="Age Resolution of Occurrences", xlab="Ma")
+
+#distribution of taxa among taxonomic ranks
+table(graptTaxaPBDB$taxon_rank)
+barplot(table(graptTaxaPBDB$taxon_rank))
+}
+\seealso{
+\code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}}, \code{\link{makePBDBtaxontree}}
 }
 \keyword{datasets}
 

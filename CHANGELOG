@@ -6,6 +6,8 @@ Version - 2.4 -
 -Added function testEdgeMat which is a simple checker of the $edge matrix of phylo objects for inconsistencies
 -Added function taxonSortPBDBocc which sorts unique taxa out of PBDB occurrence datasets
 -Added function occData2timeList which converts taxon-sorted occurrence data lists to the two-matrix timeList object useable by many other paleotree functions
+-Added example data downloads from the Paleobiology Database of occurrence data and taxonomic data, available under 'graptPBDB'
+-Added function makePBDBtaxonTree which takes taxon data from the PBDB and constructs a very informal taxon tree from the taxonomic hierarchy
 
 Version - 2.3 - 01-16-15
 -New function dropPaleoTip which is a simple wrapper for drop.tip in ape but uses fixRootTime to adjust the $root.time element in the resulting tree, after tips are dropped (Thanks to a conversation with Graeme Lloyd)

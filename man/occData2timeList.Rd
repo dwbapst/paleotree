@@ -103,6 +103,8 @@ dateChange<-timeList2fourDate(graptTimeSpecies)-timeList2fourDate(graptOccRange)
 apply(dateChange,2,sum)
 #total amount of uncertainty removed by dateRange algorithm
 sum(abs(dateChange))
+
+layout(1)
 }
 \author{
 David W. Bapst, with the 'dateRange' algorithm suggested by Jon Marcot.

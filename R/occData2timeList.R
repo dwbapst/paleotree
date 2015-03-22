@@ -102,6 +102,7 @@
 #' #total amount of uncertainty removed by dateRange algorithm
 #' sum(abs(dateChange))
 #' 
+#' layout(1)
 
 
 #' @name occData2timeList

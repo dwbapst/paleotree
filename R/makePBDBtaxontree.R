@@ -34,8 +34,8 @@
 #' 
 #' getTaxaPBDB<-function(taxon){
 #' 	#let's get some taxonomic data
-#' 	taxaData<-read.csv(paste0("http://testpaleodb.geology.wisc.edu/",
-#' 		"data1.2/taxa/list.txt?base_name=",taxon,
+#' 	taxaData<-read.csv(paste0("http://paleobiodb.org/",
+#' 		"data1.1/taxa/list.txt?base_name=",taxon,
 #' 		"&rel=all_children&show=phylo,img,nav&status=senior"))
 #' 	return(taxaData)
 #' 	}
@@ -145,6 +145,8 @@ makePBDBtaxontree<-function(data,rank){
 	Nnode<-length(unique(edge[,1]))
 	tip.label<-taxonData[,ncol(taxonData)]
 	node.label<-labels[-(1:length(tip.label))]
+	#the node labels get lost when I do read.tree(write.tree())
+		#I have no idea what to do about it...
 	Ntip<-length(tip.label)
 	#need to flip node numbers
 	nodes<-sort(unique(edge[,1]))
@@ -168,7 +170,6 @@ makePBDBtaxontree<-function(data,rank){
 	#make it a good tree
 	tree1<-reorder(tree,"cladewise") 	#REORDER IT
 	tree1<-read.tree(text=write.tree(tree))
-	
 	tree1<-ladderize(tree1)
 	#plot(tree1)
 	return(tree1)

@@ -39,8 +39,8 @@ erroneous occurrence data or both.
 
 getTaxaPBDB<-function(taxon){
 	#let's get some taxonomic data
-	taxaData<-read.csv(paste0("http://testpaleodb.geology.wisc.edu/",
-		"data1.2/taxa/list.txt?base_name=",taxon,
+	taxaData<-read.csv(paste0("http://paleobiodb.org/",
+		"data1.1/taxa/list.txt?base_name=",taxon,
 		"&rel=all_children&show=phylo,img,nav&status=senior"))
 	return(taxaData)
 	}

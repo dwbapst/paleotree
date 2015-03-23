@@ -93,7 +93,8 @@
 #' names(x)
 #'
 #' #make sure works with API v1.2
-#' dicelloDataCom<-read.csv(paste0("http://testpaleodb.geology.wisc.edu",
+#' 		#won't work until v1.2 goes live at the regular server
+#' dicelloDataCom<-read.csv(paste0("http://paleobiodb.org",
 #' 	"/data1.2/occs/list.txt?base_name=Dicellograptus",
 #' 	"&show=ident,phylo&limit=all"))
 #' dicelloOcc2<-taxonSortPBDBocc(dicelloDataCom, rank="species", onlyFormal=FALSE)
@@ -107,13 +108,6 @@
 #' names(dicelloOccCom1)
 #' head(dicelloOccCom1[[1]])[,1:7]
 #' 
-#' #make sure works with compact vocab v1.2
-#' dicelloDataCom<-read.csv(paste0("http://testpaleodb.geology.wisc.edu",
-#' 	"/data1.2/occs/list.txt?base_name=Dicellograptus",
-#' 	"&show=ident,phylo&limit=all&vocab=com"))
-#' dicelloOccCom2<-taxonSortPBDBocc(dicelloDataCom, rank="species", onlyFormal=FALSE)
-#' names(dicelloOccCom2)
-#' head(dicelloOccCom2[[1]])[,1:7]
 #' 
 #'
 #' }

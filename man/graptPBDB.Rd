@@ -33,13 +33,7 @@ in \code{paleotree}.
 
 #original code used to obtain this dataset on March 21st, 2015
 
-graptOccPBDB<-read.csv(paste0(
-	"http://testpaleodb.geology.wisc.edu/data1.2/occs/list.txt?",
-	"base_name=Graptolithina&show=ident,phylo,entname&limit=all"))
-#'
-graptTaxaPBDB<-read.csv(paste0("http://testpaleodb.geology.wisc.edu/",
-		"data1.2/taxa/list.txt?base_name=Graptolithina",
-		"&rel=all_children&show=phylo,img,nav&status=senior"))
+(URLs removed as they lead to the test server)
 
 save(graptOccPBDB,graptTaxaPBDB,file="graptPBDB.rdata")
 

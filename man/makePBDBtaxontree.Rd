@@ -2,9 +2,7 @@
 % Please edit documentation in R/makePBDBtaxontree.R
 \name{makePBDBtaxontree}
 \alias{makePBDBtaxontree}
-\title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database
-This function creates phylogeny-like object of type phylo from the taxonomic hierarchy
-recorded in a taxonomy download from the PBDB for a given group.}
+\title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
 makePBDBtaxontree(data, rank)
 }
@@ -23,7 +21,6 @@ and a long branch (length=3) means one genus is simply placed in the class, with
 wile the one on the long branch is within an order and family that is otherwise monogeneric.
 }
 \description{
-Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database
 This function creates phylogeny-like object of type phylo from the taxonomic hierarchy
 recorded in a taxonomy download from the PBDB for a given group.
 }

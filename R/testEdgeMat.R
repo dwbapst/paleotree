@@ -1,5 +1,5 @@
 #' Test the edge matrix of a phylo object for inconsistencies
-
+#'
 #' This is a small simple function which tests the $edge matrix of 'phylo' objects for
 #' inconsistencies that can cause downstream analytical problems.
 

@@ -1,5 +1,5 @@
 #' Converting Occurrences Data to a timeList Data Object
-
+#'
 #' This function converts occurrence data, given as a list where each element
 #' is a different taxon's occurrence table (containing minimum and maximum ages
 #' for each occurrence), to the 'timeList' format, consisting of a list consisting

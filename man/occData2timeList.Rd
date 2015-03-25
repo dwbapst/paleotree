@@ -2,12 +2,7 @@
 % Please edit documentation in R/occData2timeList.R
 \name{occData2timeList}
 \alias{occData2timeList}
-\title{Converting Occurrences Data to a timeList Data Object
-This function converts occurrence data, given as a list where each element
-is a different taxon's occurrence table (containing minimum and maximum ages
-for each occurrence), to the 'timeList' format, consisting of a list consisting
-of a matrix of lower and upper age bounds for intervals and a second matrix
-recording the interval in which taxa first and last occur in the given dataset.}
+\title{Converting Occurrences Data to a timeList Data Object}
 \usage{
 occData2timeList(occList, intervalType = "dateRange")
 }
@@ -31,7 +26,6 @@ at the youngest upper age bound).}
 Returns a standard timeList data object, as used by many other paleotree functions, like \code{\link{bin_timePaleoPhy}}, \code{\link{bin_cal3TimePaleoPhy}} and \code{\link{taxicDivDisc}}
 }
 \description{
-Converting Occurrences Data to a timeList Data Object
 This function converts occurrence data, given as a list where each element
 is a different taxon's occurrence table (containing minimum and maximum ages
 for each occurrence), to the 'timeList' format, consisting of a list consisting

@@ -1,5 +1,5 @@
 #' Sorting Unique Taxa of a Given Rank from Paleobiology Database Occurrence Data
-
+#'
 #' Functions for sorting out unique taxa from Paleobiology Database occurrence downloads,
 #' which should accept several different formats resulting from different versions of the
 #' PBDB API and different vocabularies available from the API.

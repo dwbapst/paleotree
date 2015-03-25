@@ -2,9 +2,7 @@
 % Please edit documentation in R/testEdgeMat.R
 \name{testEdgeMat}
 \alias{testEdgeMat}
-\title{Test the edge matrix of a phylo object for inconsistencies
-This is a small simple function which tests the $edge matrix of 'phylo' objects for
-inconsistencies that can cause downstream analytical problems.}
+\title{Test the edge matrix of a phylo object for inconsistencies}
 \usage{
 testEdgeMat(tree)
 }
@@ -15,7 +13,6 @@ testEdgeMat(tree)
 If all the checks in the function pass correctly, the logical TRUE is returned.
 }
 \description{
-Test the edge matrix of a phylo object for inconsistencies
 This is a small simple function which tests the $edge matrix of 'phylo' objects for
 inconsistencies that can cause downstream analytical problems.
 }

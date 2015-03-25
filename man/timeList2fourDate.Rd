@@ -4,14 +4,7 @@
 \alias{fourDate2timeList}
 \alias{fourDateFunctions}
 \alias{timeList2fourDate}
-\title{Converting Datasets of Taxon Ranges in Intervals Between timeList format and fourDate format
-Functions for manipulating data where the first and last appearances of taxa
-are known from bounded intervals of time. The two main functions listed here
-a data structure consisting of a single 'flat' table where each taxon is listed as a
-set of four dates (a \code{fourDate} data type), and (2) a list format where each taxon
-is listed as its first and last intervals, with an associated table of age bounds for
-the intervals referred to in the first table (referred to as a \code{timeList} data
-structure by many \code{paleotree} functions).}
+\title{Converting Datasets of Taxon Ranges in Intervals Between timeList format and fourDate format}
 \usage{
 timeList2fourDate(timeList)
 
@@ -31,7 +24,6 @@ for that taxon, all in time before present.}
 A converted data object, respective to the function applied.
 }
 \description{
-Converting Datasets of Taxon Ranges in Intervals Between timeList format and fourDate format
 Functions for manipulating data where the first and last appearances of taxa
 are known from bounded intervals of time. The two main functions listed here
 a data structure consisting of a single 'flat' table where each taxon is listed as a

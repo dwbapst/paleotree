@@ -2,10 +2,7 @@
 % Please edit documentation in R/taxonSortPBDBocc.R
 \name{taxonSortPBDBocc}
 \alias{taxonSortPBDBocc}
-\title{Sorting Unique Taxa of a Given Rank from Paleobiology Database Occurrence Data
-Functions for sorting out unique taxa from Paleobiology Database occurrence downloads,
-which should accept several different formats resulting from different versions of the
-PBDB API and different vocabularies available from the API.}
+\title{Sorting Unique Taxa of a Given Rank from Paleobiology Database Occurrence Data}
 \usage{
 taxonSortPBDBocc(data, rank, onlyFormal = TRUE, cleanUncertain = TRUE,
   cleanResoValues = c(NA, "\\"", "", "n. sp.", "n. gen."))
@@ -25,7 +22,6 @@ taxonSortPBDBocc(data, rank, onlyFormal = TRUE, cleanUncertain = TRUE,
 Returns a list where each element is different unique taxon obtained by the sorting function, and named with that taxon name. Each element is composed of a table containing all the same occurrence data fields as the input (potentially with some fields renamed and some field contents change, due to vocabulary translation).
 }
 \description{
-Sorting Unique Taxa of a Given Rank from Paleobiology Database Occurrence Data
 Functions for sorting out unique taxa from Paleobiology Database occurrence downloads,
 which should accept several different formats resulting from different versions of the
 PBDB API and different vocabularies available from the API.

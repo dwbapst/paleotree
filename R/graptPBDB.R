@@ -1,5 +1,5 @@
 #' Example Occurrence and Taxonomic Datasets of the Graptolithina from the Paleobiology Database
-
+#'
 #' Example datasets consisting of (a) occurrence data and (b) taxonomic data
 #' downloaded from the Paleobiology Database API for the Graptolithina.
 

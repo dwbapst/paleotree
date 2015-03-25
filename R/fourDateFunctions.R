@@ -1,5 +1,5 @@
 #' Converting Datasets of Taxon Ranges in Intervals Between timeList format and fourDate format
-
+#'
 #' Functions for manipulating data where the first and last appearances of taxa
 #' are known from bounded intervals of time. The two main functions listed here
 #" are for converting between (1)
@@ -63,6 +63,7 @@
 timeList2fourDate<-function(timeList){
 	if(!is(timeList,"list")){stop("timeList is not a list?")}
 	if(!(length(timeList)==2)){stop("timeList is not length=2")}
+	timeList<-lapply(timeList,as.matrix)
 	if(!all(sapply(timeList,is,class2="matrix"))){stop("timeList elements are not matrices")}
 	if(!all(sapply(timeList,function(x) ncol(x)==2))){stop("timeList matrices do not have two columns")}
 	firstInt<-t(sapply(timeList[[2]][,1],function(x) timeList[[1]][x,]))
@@ -75,6 +76,7 @@ timeList2fourDate<-function(timeList){
 #' @rdname timeList2fourDate
 #' @export
 fourDate2timeList<-function(fourDate){
+	fourDate<-as.matrix(fourDate)
 	if(!is(fourDate,"matrix")){if(ncol(fourDate)!=4){
 		stop("fourDate must be a matrix with four columns")}}
 	taxaFirst<-fourDate[,1:2]

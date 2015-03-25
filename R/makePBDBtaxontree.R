@@ -113,6 +113,7 @@ makePBDBtaxontree<-function(data,rank){
 		colnames(data)[colnames(data)=="odl"]<-"order"
 		colnames(data)[colnames(data)=="cll"]<-"class"	
 		colnames(data)[colnames(data)=="phl"]<-"phylum"	
+		colnames(data)[colnames(data)=="kgl"]<-"kingdom"
 		# taxon rank translation vectors for compact vocab
 		taxRankPBDB<-c("subspecies","species","subgenus","genus","subtribe","tribe","subfamily",
 			"family","superfamily","infraorder","suborder","order","superorder","infraclass",

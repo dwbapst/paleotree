@@ -108,7 +108,11 @@ makePBDBtaxontree<-function(data,rank){
 	# Do some translation
 	#if com vocab
 	if(any("rnk"==colnames(data))){	
+		if(any(colnames(data)=="acn")){
+			colnames(data)[colnames(data)=="acn"]<-"accepted_name"
+			}
 		colnames(data)[colnames(data)=="rnk"]<-"taxon_rank"
+		colnames(data)[colnames(data)=="nam"]<-"taxon_name"
 		colnames(data)[colnames(data)=="fml"]<-"family"
 		colnames(data)[colnames(data)=="odl"]<-"order"
 		colnames(data)[colnames(data)=="cll"]<-"class"	

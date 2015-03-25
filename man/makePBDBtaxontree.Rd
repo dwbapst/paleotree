@@ -8,7 +8,9 @@ makePBDBtaxontree(data, rank)
 }
 \arguments{
 \item{data}{A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
-with show=phylo.}
+with show=phylo. Should work with versions 1.1-1.2 of the API, with either the 'pbdb' or 'com' vocab. However,
+as 'accepted_name' is not available in API v1.1, the resulting tree will have a taxon's *original* name and not
+any formally updated name.}
 
 \item{rank}{The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.}
 }
@@ -18,7 +20,11 @@ the distance from one taxon rank to another 1, then merged to remove singleton n
 taxa have parents at the immediate taxon level above, this leads to some odd cases. For example,
 two genera emanating from a node representing a class but with a very short (length=1) branch
 and a long branch (length=3) means one genus is simply placed in the class, with no family or order listed
-wile the one on the long branch is within an order and family that is otherwise monogeneric.
+while the one on the long branch is within an order and family that is otherwise monogeneric.
+
+Please note that when applied to output from the taxa option of the API version 1.1, the taxon names
+returned are the \emph{original} taxon names as 'accepted_name' is not available in API v1.1, while
+under API v1.2, the returned taxon names should be the most up-to-date formal names for those taxa.
 }
 \description{
 This function creates phylogeny-like object of type phylo from the taxonomic hierarchy
@@ -32,7 +38,7 @@ of temporal and phylogenetic, mainly to look for incongruence due to either inco
 erroneous occurrence data or both.
 
 Note however that, contrary to common opinion among some paleontologists, taxon-trees may be just as useful for
-macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, in press.)
+macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, in press.).
 }
 \examples{
 \dontrun{

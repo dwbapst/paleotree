@@ -104,7 +104,7 @@ makePBDBtaxontree<-function(data,rank){
 	if(length(rank)!=1){stop("rank must be a single value")}
 	if(!any(sapply(c("species","genus","family","order","class","phylum"),function(x) x==rank))){
 		stop("rank must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")}
-	if(!any(colnames(data)=="taxon_name")){stop("Data must be a taxonomic download under vocab='pbdb'")}
+	#if(!any(colnames(data)=="taxon_name")){stop("Data must be a taxonomic download under vocab='pbdb'")}
 	if(!any(colnames(data)=="family")){stop("Data must be a taxonomic download with show=phylo")}
 	# Do some translation
 	#if com vocab
@@ -122,6 +122,7 @@ makePBDBtaxontree<-function(data,rank){
 		taxRankCOM<-2:26
 		#change contents of "identified_rank" and "accepted_rank"
 		data$taxon_rank<-sapply(data$taxon_rank,function(x) taxRankPBDB[x==taxRankCOM])
+		message("compact vocab detected, relevant fields will be translated")
 		}
 	#if 1.1
 	if(any(colnames(data)=="rank")){

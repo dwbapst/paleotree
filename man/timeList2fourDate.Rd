@@ -52,7 +52,7 @@ sum((fourDateRet[,1]-fourDateRet[,2])+(fourDateRet[,3]-fourDateRet[,4]))
 
 #convert back
 newTimeList<-fourDate2timeList(fourDateRet)
-taxicDivDiv(retioRanges)
+taxicDivDisc(retioRanges)
 }
 \author{
 David W. Bapst

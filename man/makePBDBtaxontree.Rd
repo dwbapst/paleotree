@@ -30,6 +30,9 @@ out-of-date or very incomplete taxonomic information. This function is meant to 
 what information is present, and by use of time-scaling functions, allow us to visualize the intersection
 of temporal and phylogenetic, mainly to look for incongruence due to either incorrect taxonomic placements,
 erroneous occurrence data or both.
+
+Note however that, contrary to common opinion among some paleontologists, taxon-trees may be just as useful for
+macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, in press.)
 }
 \examples{
 \dontrun{
@@ -90,6 +93,11 @@ geoscalePhylo(timeTree, ages=timeTree$ranges.used)
 }
 \author{
 David W. Bapst
+}
+\references{
+Soul, L. C., and M. Friedman. In Press. Taxonomy and Phylogeny Can Yield
+Comparable Results in Comparative Palaeontological Analyses.\emph{Systematic Biology}
+(http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract)
 }
 \seealso{
 Other functions for manipulating PBDB data can be found at \code{\link{taxonSortPBDBocc}},

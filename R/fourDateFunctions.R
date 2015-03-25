@@ -54,7 +54,7 @@
 #'
 #' #convert back
 #' newTimeList<-fourDate2timeList(fourDateRet)
-#' taxicDivDiv(retioRanges)
+#' taxicDivDisc(retioRanges)
 #'
 
 #' @name timeList2fourDate

@@ -73,20 +73,15 @@
 #' #yep, identical
 #' 
 #' #so how much uncertainty was gained by using dateRange?
-#' 
-#' timeList2fourDate<-function(timeList){
-#' 	firstInt<-t(sapply(timeList[[2]][,1],function(x) timeList[[1]][x,]))
-#' 	lastInt<-t(sapply(timeList[[2]][,2],function(x) timeList[[1]][x,]))
-#' 	fourDate<-cbind(firstInt,lastInt)
-#' 	return(fourDate)
-#' 	}
-#' 
+#'
+#' # write a simple function for getting uncertainty in first and last
+#' 		# appearance dates from a timeList object
 #' sumAgeUncert<-function(timeList){
 #' 	fourDate<-timeList2fourDate(timeList)
 #' 	perOcc<-(fourDate[,1]-fourDate[,2])+(fourDate[,3]-fourDate[,4])
 #' 	sum(perOcc)
 #' 	}
-#' 
+#'
 #' #total amount of uncertainty in occRange dataset
 #' sumAgeUncert(graptOccRange)
 #' #total amount of uncertainty in dateRange dataset
@@ -166,19 +161,9 @@ occData2timeList<-function(occList,intervalType="dateRange"){
 		#get the earliest early age and earliest latest age as taxaMax (LAD)
 		taxaMax<-t(sapply(taxaInt,function(x) apply(x,2,min)))
 		}
-	#make interval list
-	intTimes<-unique(rbind(taxaMin,taxaMax))
-	intTimes<-intTimes[order(-intTimes[,1],-intTimes[,2]),]
-	#now assign taxa first and last intervals
-	firstInt<-apply(taxaMin,1,function(x)
-		which(apply(intTimes,1,function(y) identical(y,x))))
-	lastInt<-apply(taxaMax,1,function(x)
-		which(apply(intTimes,1,function(y) identical(y,x))))
-	taxonTimes<-cbind(firstInt,lastInt)
-	rownames(taxonTimes)<-names(occList)
-	#package it together
-	dimnames(intTimes)<-list(NULL,c("startTime","endTime"))
-	res<-list(intTimes=intTimes,taxonTimes=taxonTimes)
-	return(res)
+	fourDate<-cbind(taxaMin,taxaMax)
+	timeList<-fourDate2timeList(fourDate)
+	rownames(timeList$taxonTimes)<-names(occList)
+	return(timeList)
 	}
 	

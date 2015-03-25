@@ -98,18 +98,46 @@ makePBDBtaxontree<-function(data,rank){
 		stop("rank must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")}
 	if(!any(colnames(data)=="taxon_name")){stop("Data must be a taxonomic download under vocab='pbdb'")}
 	if(!any(colnames(data)=="family")){stop("Data must be a taxonomic download with show=phylo")}
+	# Do some translation
+	#if com vocab
+	if(any("rnk"==colnames(data))){	
+		colnames(data)[colnames(data)=="rnk"]<-"taxon_rank"
+		colnames(data)[colnames(data)=="fml"]<-"family"
+		colnames(data)[colnames(data)=="odl"]<-"order"
+		colnames(data)[colnames(data)=="cll"]<-"class"	
+		colnames(data)[colnames(data)=="phl"]<-"phylum"	
+		# taxon rank translation vectors for compact vocab
+		taxRankPBDB<-c("subspecies","species","subgenus","genus","subtribe","tribe","subfamily",
+			"family","superfamily","infraorder","suborder","order","superorder","infraclass",
+			"subclass","class","superclass","subphylum","phylum","superphylum","subkingdom",
+			"kingdom","unranked clade","informal")
+		taxRankCOM<-2:26
+		#change contents of "identified_rank" and "accepted_rank"
+		data$taxon_rank<-sapply(data$taxon_rank,function(x) taxRankPBDB[x==taxRankCOM])
+		}
+	#if 1.1
+	if(any(colnames(data)=="rank")){
+		colnames(data)[colnames(data)=="rank"]<-"taxon_rank"
+		}
+	#
 	#filter on rank
 	data<-data[data[,"taxon_rank"]==rank,]
-	#fill empty accepted_name values with taxon_name
-	nameFormal<-data[,"accepted_name"]
-	nameFormal[is.na(nameFormal)]<-as.character(
-		data[is.na(nameFormal),"taxon_name"])
-	if(length(nameFormal)!=length(unique(nameFormal))){
-		stop("Duplicated taxon names??")}
-	data[,"accepted_name"]<-nameFormal
+	#
+	#if 1.2 and there is an accepted_name column
+	if(any(colnames(data)=="accepted_name")){
+		#fill empty accepted_name values with taxon_name
+		nameFormal<-data[,"accepted_name"]
+		nameFormal[is.na(nameFormal)]<-as.character(
+			data[is.na(nameFormal),"taxon_name"])
+		if(length(nameFormal)!=length(unique(nameFormal))){
+			stop("Duplicated taxon names??")}
+		#replace taxon_name
+		data[,"taxon_name"]<-nameFormal	
+		}
+	#
 	#get the fields you want
 	taxonFields<-c("kingdom","phylum","class","order","family",
-		"accepted_name")
+		"taxon_name")
 	taxonData<-data[,taxonFields]
 	taxonData<-apply(taxonData,2,as.character)
 	#remove constant columns

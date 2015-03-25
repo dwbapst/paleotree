@@ -26,6 +26,7 @@ A converted data object, respective to the function applied.
 \description{
 Functions for manipulating data where the first and last appearances of taxa
 are known from bounded intervals of time. The two main functions listed here
+are for converting between (1)
 a data structure consisting of a single 'flat' table where each taxon is listed as a
 set of four dates (a \code{fourDate} data type), and (2) a list format where each taxon
 is listed as its first and last intervals, with an associated table of age bounds for

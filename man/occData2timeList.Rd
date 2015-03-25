@@ -10,7 +10,8 @@ occData2timeList(occList, intervalType = "dateRange")
 \item{occList}{A list where every element is a table of occurrence data for a different taxon,
 such as that returned by \code{\link{taxonSortPBDBocc}}. The occurrence data can be either a
 two-column matrix composed of the lower and upper age bounds on each taxon occurrence, or has
-two named variables which match either the}
+two named variables which match any of the field names given by the PBDB API under either
+the 'pbdb' vocab or 'com' (compact) vocab for early and late age bounds.}
 
 \item{intervalType}{Must be either "dateRange" (the default) or "occRange". If "dateRange",
 the bounds on the first appearances are the span between the oldest upper and lower bounds
@@ -23,17 +24,21 @@ youngest occurrences for the last appearance (i.e. all occurrences with their up
 at the youngest upper age bound).}
 }
 \value{
-Returns a standard timeList data object, as used by many other paleotree functions, like \code{\link{bin_timePaleoPhy}}, \code{\link{bin_cal3TimePaleoPhy}} and \code{\link{taxicDivDisc}}
+Returns a standard timeList data object, as used by many other paleotree functions, like
+\code{\link{bin_timePaleoPhy}}, \code{\link{bin_cal3TimePaleoPhy}} and \code{\link{taxicDivDisc}}
 }
 \description{
 This function converts occurrence data, given as a list where each element
 is a different taxon's occurrence table (containing minimum and maximum ages
-for each occurrence), to the 'timeList' format, consisting of a list consisting
-of a matrix of lower and upper age bounds for intervals and a second matrix
+for each occurrence), to the 'timeList' format, consisting of a list composed
+of a matrix of lower and upper age bounds for intervals, and a second matrix
 recording the interval in which taxa first and last occur in the given dataset.
 }
 \details{
-This function should translate taxon-sorted occurrence data (i.e. datasets output by \code{\link{taxonSortPBDBocc}}
+This function should translate taxon-sorted occurrence data, which could be Paleobiology Database
+datasets sorted by \code{\link{taxonSortPBDBocc}} or any data object where occurrence data
+(i.e. age bounds for each occurrence) for different taxa is separated into different elements
+of a named list.
 }
 \examples{
 data(graptPBDB)
@@ -53,7 +58,7 @@ taxicDivDisc(graptTimeGenus)
 
 # the default interval calculation is "dateRange"
 # let's compare to the other option, "occRange"
-	#for species
+	# for species
 
 graptOccRange<-occData2timeList(occList=graptOccSpecies, intervalType="occRange")
 

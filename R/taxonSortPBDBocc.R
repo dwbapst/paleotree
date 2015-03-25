@@ -4,56 +4,81 @@
 #' which should accept several different formats resulting from different versions of the
 #' PBDB API and different vocabularies available from the API.
 
-
-
-#the following nonsense is stuff from a blog post that I'm going to turn into documentation
-
-# Alright, now that we picked a consistent vocabulary, we need to write a function that sorts occurrence data into the unique taxa of a user-selected taxonomic rank. I think the preferable way to do this is to make a list where each element is a 'unique' taxon and all the occurrences attributed to it are under that element as a table. Additionally, we'll have to allow the function to pull either just the 'formal' identified taxa or 'all' the identified taxa. This is necessary if we want species that are listed under their genus and never got assigned a species-level taxonomic ID in the PBDB. 
-
-# Its important we consider the order of data manipulations we need to perform in this process. Formal identified taxa need to be pulled first, and then informal taxa pulled from whatever occurrences are left over. Furthermore, its possible (but hopefully rare) that the same taxon might be listed both formally and informally in a set of PBDB occurrences, and it would be preferable that the 'informal' occurrences for a taxon be concatenated to the 'formal' occurrences for that same taxon, rather than be treated as separate taxon.
-
-# Now, the functions I used as references when writing this function were `paleobioDB`'s `pbdb_temp_range` function ([code here](https://github.com/ropensci/paleobioDB/blob/master/R/pbdb_temporal_functions.R#L64-178)), and [Matthew Clapham](http://people.ucsc.edu/~mclapham)'s `taxonClean` function ([code here](https://github.com/mclapham/PBDB-R-scripts/blob/master/taxonClean.R)). I took a somewhat different approach though. Both of these write seperate code for the different taxonomic ranks, which is vaguely unsatisfying from a programming perspective, as it could lead to inconsistencies where you fail to update all parts. Thankfully, except for species, one can get the formal taxonomic name for a given taxonomic rank by looking for the variable with the same name as the taxonomic rank. Additionally, we can look for informal occurrences of a taxon by then checking for occurrences with `taxon_rank` identical to the required rank (although it seems this is rarely important).
-
-#And, as noted above, we need a check to convert empty `""` values to `NA`s.
-
-#(I apologize for the terribly uneven indenting above. A strange copy/paste error involving tabs in Rstudio, Notepad++ and R GUI, and the more I tab, the worse it gets. I promise a clean-looking version in the `paleotree` github repo soon.)
-
-# Now, in the following, I have dropped or revised some of the checks from `taxonClean` and `pbdb_temp_ranges`. 
-
-# pbdb_temp_ranges originally (before my issue tickets) checked to see if the same taxon was listed under multiple `taxon_no` ID numbers, and returned an error if this was true. This resulted in some interesting cases where the error arose due to subtle differences in taxonomic name, like *Pseudoclimacograptus (Metaclimacograptus) hughesi* and *Pseudoclimacograptus hughesi* being listed (for whatever reason) under different `taxon_no` ID numbers. I'm blanket presuming that if a taxon's listed taxon name (e.g. formal names `matched_name`, `genus`, etc. as well as informal like `genus_name + species_name` and `taxon_name`.) are the same, its the same taxon. This assumption is tempered by the order of operations I discussed above: formal taxa are identified first, and informal taxa are identified from the occurrences that are 'leftover', and informal occurrences assigned to a taxon with a formal ID are concatenated to the 'formal' occurrences. Otherwise, we could mistakingly link the same occurrences to multiple taxa.
-
-# For what its worth, with respect to my above example, it looks like all taxa with `taxon_name` of *Pseudoclimacograptus (Metaclimacograptus) hughesi* or *Pseudoclimacograptus hughesi* have identical `genus_name` and `species_name` variables... but not identical `matched_name` variables, as only some of these occurrences have been assigned to formal taxon *Diplograptus_hughesi*, while others are assigned to genus-level formal taxa. But that's a whole other can of worms: the inconsistent taxonomy of graptolites in the PBDB.
-
-# taxonClean` removes taxa with question marks, *cf.* or other taxonomic-uncertainty flim-flam from the names it uses to identify unique taxa. Now there are two seperate concerns here:
-
-# Occurrences with taxonomic uncertainy in our data. This really only pertains when `rank` is `"species"` or `"genus"`, and can be easily taken care of by removing occurrences where `species_reso` or `genus_reso` does not equal a 'safe' value, a functionality controlled by the argument `cleanUncertain`, which is `TRUE` by default. The 'safe' values for `species_reso` or `genus_reso`  are listed in the `cleanResoValues` argument, and by default includes common notifiers like *'n. sp.'* which indicate something other than taxonomic uncertainty.
-	
-# The 'cleaning' of names so they don't have unwanted taxonomic cruff on them, like that one sock in your laundry that attracts all the distasteful lint. This is particularly problematic as I use names, and not taxon ID numbers, to match occurrences as having the same tazon. However, my use-case is somewhat different from Clapham's, as `cleanTaxon` uses `taxon_name`, while I use `matched_name` for formal species and the appropriate taxonomic variable for higher-taxa (i.e. `genus` for genera) and, for informal taxa, combining `genus_name` and `species_name` (for species), with `taxon_name` only being called for referencing informal supraspecific taxa. My working assumption is that taxonomic name rubbish has been kept out of `matched_name` and the various 'formal' supraspecific taxon variables, as well as `genus_name` and `species_name` for the taxonomic names given in the reference for that occurrence. That could be a bad assumption, but so far I haven't found any. I know this rubbish exists in `taxon_name`, but (a) its hard to identify every use-case of such name-trash, and plus the case where an occurrence isn't given a formal higher-taxon is very rare (in the data I've looked at). 
-	
 #' @details
 #' Data input for \code{taxonSortPBDBocc} are expected to be from version 1.2 API
 #' with the 'pbdb' vocabulary. However, datasets are passed to internal function \code{translatePBDBocc},
 #' which attempts to correct any necessary field names and field contents used by
 #' \code{taxonSortPBDBocc}.
+#'
+#' This function can pull either \emph{just} the 'formally' identified and synonymized taxa in a given table of occurrence
+#' data or pull \emph{in addition} occurrences listed under informal taxa of the sought taxonomic rank. Only formal taxa
+#' are sorted by default; this is controlled by argument \code{onlyFormal}. Pulling the informally-listed taxonomic
+#' occurrences is often necessary in some groups that have received little focused taxonomic effort, such that many
+#' species are linked to their generic taxon ID and never received a species-level taxonomic ID in the PBDB.
+#' Pulling both formal and informally listed taxonomic occurrences is a hierarchical process and performed in
+#' stages: formal taxa are identified first, informal taxa are identified from the occurrences that are
+#' 'leftover', and informal occurrences with name labels that match a previously sorted formally listed
+#' taxon are concatenated to the 'formal' occurrences for that same taxon, rather than
+#' being listed under separate elements of the list as if they were separate taxa.
+
+#' This function is simpler than similar functions that inspired it by using the input"rank" to both filter occurrences
+#' and directly reference a taxon's accepted taxonomic placement, rather than a series of specific \code{if()} checks.
+#'
+#' Unlike some similar functions in other packages, such as version 0.3 \code{paleobioDB}'s \code{pbdb_temp_range},
+#' \code{taxonSortPBDBocc} does not check if sorted taxa have a single 'taxon_no' ID number. This makes the blanket 
+#' assumption that if a taxon's listed name in relevant fields is identical, the taxon is identical, with the important
+#' caveat that occurrences with accepted formal synonymies are sorted first based on their accepted names, followed by
+#' taxa without formal taxon IDs. This should avoid mistakingly linking the same occurrences to multiple taxa or assigning
+#' occurrences listed under separate formal taxa to the same taxon based on their 'identified' taxon name, as long as all
+#' formal taxa have unique names (which is an untested assumption). In some cases, this procedure is helpful, such as when
+#' taxa with identical generic and species names are listed under separate taxon ID numbers because of a difference in the
+#' listed subgenus for some occurrences (example, "Pseudoclimacograptus (Metaclimacograptus) hughesi' and
+#' 'Pseudoclimacograptus hughesi' in the PBDB as of 03/01/2015). Presumably any data that would be affected by differences
+#' in this procedure is very minor.
+#'
+#' Occurrences with taxonomic uncertainty indicators in the listed identified taxon name are removed
+#' by default, as controlled by argument \code{cleanUncertain}. This is done by removing any occurrences that
+#' have an entry in \code{primary_reso} (was "\code{genus_reso}" in v1.1 API) when \code{rank} is a
+#' supraspecific level, and \code{species_reso} when rank=species, if that entry is not found in
+#' \code{cleanResoValues}. In some rare cases, when \code{onlyFormal=FALSE}, supraspecific taxon names may be
+#' returned in the output that have various 'cruft' attached, like 'n.sp'.
+#'
+#' Empty values in the input data table ("") are converted to NAs, as they may be due to issues
+#' with using read.csv to convert API-downloaded data.
 
 #' @param data A table of occurrence data collected from the Paleobiology Database. 
 
-#' @param rank The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.
+#' @param rank The selected taxon rank; must be one of 'species', 'genus', 'family', 'order',
+#' 'class' or 'phylum'.
 
-#' @param onlyFormal If TRUE (the default) only taxa formally accepted by the Paleobiology Database are returned. If FALSE, then the identified name fields are searched for any additional 'informal' taxa with the proper taxon. If their taxon name happens to match any formal taxa, their occurrences are merged onto the formal taxa. This argument generally has any appreciable effect when rank=species.
+#' @param onlyFormal If TRUE (the default) only taxa formally accepted by the Paleobiology
+#' Database are returned. If FALSE, then the identified name fields are searched for any
+#' additional 'informal' taxa with the proper taxon. If their taxon name happens to match
+#' any formal taxa, their occurrences are merged onto the formal taxa. This argument generally
+#' has any appreciable effect when rank=species.
 
-#' @param cleanUncertain If TRUE (the default) any occurrences with an entry in the respective 'resolution' field that is *not* found in the argument cleanResoValue will be removed from the dataset. These are assumed to be values indicating taxonomic uncertainty, i.e. 'cf.' or '?'.
+#' @param cleanUncertain If TRUE (the default) any occurrences with an entry in the respective
+#' 'resolution' field that is *not* found in the argument cleanResoValue will be removed from
+#' the dataset. These are assumed to be values indicating taxonomic uncertainty, i.e. 'cf.' or '?'.
 
-#' @param cleanResoValues The set of values that can be found in a 'resolution' field that do not cause a taxon to be removed, as they do not seem to indicate taxonomic uncertainty.
+#' @param cleanResoValues The set of values that can be found in a 'resolution' field that do not
+#' cause a taxon to be removed, as they do not seem to indicate taxonomic uncertainty.
 
 #' @return
-#' Returns a list where each element is different unique taxon obtained by the sorting function, and named with that taxon name. Each element is composed of a table containing all the same occurrence data fields as the input (potentially with some fields renamed and some field contents change, due to vocabulary translation).
+#' Returns a list where each element is different unique taxon obtained by the sorting function,
+#' and named with that taxon name. Each element is composed of a table containing all the same
+#' occurrence data fields as the input (potentially with some fields renamed and some field
+#' contents change, due to vocabulary translation).
 	
 #' @seealso
 #' Example dataset of a PBDB download can be found at \code{\link{graptPBDB}}
 
 #' @author 
-#' David W. Bapst, but partly inspired by Matthew Clapham's \code{cleanTaxon} (found at https://github.com/mclapham/PBDB-R-scripts/blob/master/taxonClean.R on github) and R package paleobioDB's \code{pbdb_temp_range} function (found at https://github.com/ropensci/paleobioDB/blob/master/R/pbdb_temporal_functions.R#L64-178 on github.
+#' David W. Bapst, but partly inspired by Matthew Clapham's \code{cleanTaxon} 
+#' (found at https://github.com/mclapham/PBDB-R-scripts/blob/master/taxonClean.R on github) and
+#' R package paleobioDB's \code{pbdb_temp_range} function (found
+#' at https://github.com/ropensci/paleobioDB/blob/master/R/pbdb_temporal_functions.R#L64-178 
+#' on github.
 
 #' @examples
 #' #load example graptolite PBDB occ dataset
@@ -112,8 +137,6 @@
 #'
 #' }
 #' 
-#' 
-
 
 #' @name taxonSortPBDBocc
 #' @rdname taxonSortPBDBocc
@@ -293,9 +316,5 @@ translatePBDBocc<-function(data){
 		}
 	return(data)
 	}
-	
-
-
-
 	
 	

@@ -2,23 +2,21 @@
 #'
 #' This function converts occurrence data, given as a list where each element
 #' is a different taxon's occurrence table (containing minimum and maximum ages
-#' for each occurrence), to the 'timeList' format, consisting of a list consisting
-#' of a matrix of lower and upper age bounds for intervals and a second matrix
+#' for each occurrence), to the 'timeList' format, consisting of a list composed
+#' of a matrix of lower and upper age bounds for intervals, and a second matrix
 #' recording the interval in which taxa first and last occur in the given dataset.
 
-#the following nonsense is stuff from a blog post that I'm going to turn into documentation
-
-# turn these PBDB occurrences into a `paleotree` `timelist` data format. As you might recall from [some](http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html) [previous posts](http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html), `timeList` data objects are lists composed of two matrices, the first matrix giving the start and end times of intervals, and the second matrix giving the intervals in which taxa are first and last observed.
-
-#Now, I imagine there might be more reasons to need to convert occurrence data to a `timeList` object than just those involving the PBDB (such as output from simulation function `sampleRanges`), so I'll allow this function to look either for (a) variables named `early_age` and `late_age` as under 'pbdb' vocab, or, (b) if each element of the list is a two-column matrix, use each pair of values as the earliest and latest time bounds for the listed occurrences.
-
 #' @details
-#' This function should translate taxon-sorted occurrence data (i.e. datasets output by \code{\link{taxonSortPBDBocc}} 
+#' This function should translate taxon-sorted occurrence data, which could be Paleobiology Database
+#' datasets sorted by \code{\link{taxonSortPBDBocc}} or any data object where occurrence data
+#' (i.e. age bounds for each occurrence) for different taxa is separated into different elements
+#' of a named list. 
 
 #' @param occList A list where every element is a table of occurrence data for a different taxon,
 #' such as that returned by \code{\link{taxonSortPBDBocc}}. The occurrence data can be either a 
 #' two-column matrix composed of the lower and upper age bounds on each taxon occurrence, or has
-#' two named variables which match either the 
+#' two named variables which match any of the field names given by the PBDB API under either
+#' the 'pbdb' vocab or 'com' (compact) vocab for early and late age bounds.
 
 #' @param intervalType Must be either "dateRange" (the default) or "occRange". If "dateRange",
 #' the bounds on the first appearances are the span between the oldest upper and lower bounds
@@ -31,7 +29,8 @@
 #' at the youngest upper age bound).
 
 #' @return
-#' Returns a standard timeList data object, as used by many other paleotree functions, like \code{\link{bin_timePaleoPhy}}, \code{\link{bin_cal3TimePaleoPhy}} and \code{\link{taxicDivDisc}}
+#' Returns a standard timeList data object, as used by many other paleotree functions, like
+#' \code{\link{bin_timePaleoPhy}}, \code{\link{bin_cal3TimePaleoPhy}} and \code{\link{taxicDivDisc}}
 
 #' @seealso
 #' \code{\link{taxonSortPBDBocc}} and the example graptolite dataset at \code{\link{graptPBDB}}
@@ -57,7 +56,7 @@
 #' 
 #' # the default interval calculation is "dateRange"
 #' # let's compare to the other option, "occRange"
-#' 	#for species
+#' 	# for species
 #' 
 #' graptOccRange<-occData2timeList(occList=graptOccSpecies, intervalType="occRange")
 #' 

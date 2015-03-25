@@ -36,8 +36,9 @@
 #' \dontrun{
 #' 
 #' #original code used to obtain this dataset on March 21st, 2015
+#' 		# using version 1.2 of the Paleobiology Database API
 #'
-#' (URLs removed as they lead to the test server)
+#' # (sorry, URLs removed as they lead to the PBDB test server...)
 #' 
 #' save(graptOccPBDB,graptTaxaPBDB,file="graptPBDB.rdata")
 #'

@@ -10,16 +10,27 @@ taxonSortPBDBocc(data, rank, onlyFormal = TRUE, cleanUncertain = TRUE,
 \arguments{
 \item{data}{A table of occurrence data collected from the Paleobiology Database.}
 
-\item{rank}{The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.}
+\item{rank}{The selected taxon rank; must be one of 'species', 'genus', 'family', 'order',
+'class' or 'phylum'.}
 
-\item{onlyFormal}{If TRUE (the default) only taxa formally accepted by the Paleobiology Database are returned. If FALSE, then the identified name fields are searched for any additional 'informal' taxa with the proper taxon. If their taxon name happens to match any formal taxa, their occurrences are merged onto the formal taxa. This argument generally has any appreciable effect when rank=species.}
+\item{onlyFormal}{If TRUE (the default) only taxa formally accepted by the Paleobiology
+Database are returned. If FALSE, then the identified name fields are searched for any
+additional 'informal' taxa with the proper taxon. If their taxon name happens to match
+any formal taxa, their occurrences are merged onto the formal taxa. This argument generally
+has any appreciable effect when rank=species.}
 
-\item{cleanUncertain}{If TRUE (the default) any occurrences with an entry in the respective 'resolution' field that is *not* found in the argument cleanResoValue will be removed from the dataset. These are assumed to be values indicating taxonomic uncertainty, i.e. 'cf.' or '?'.}
+\item{cleanUncertain}{If TRUE (the default) any occurrences with an entry in the respective
+'resolution' field that is *not* found in the argument cleanResoValue will be removed from
+the dataset. These are assumed to be values indicating taxonomic uncertainty, i.e. 'cf.' or '?'.}
 
-\item{cleanResoValues}{The set of values that can be found in a 'resolution' field that do not cause a taxon to be removed, as they do not seem to indicate taxonomic uncertainty.}
+\item{cleanResoValues}{The set of values that can be found in a 'resolution' field that do not
+cause a taxon to be removed, as they do not seem to indicate taxonomic uncertainty.}
 }
 \value{
-Returns a list where each element is different unique taxon obtained by the sorting function, and named with that taxon name. Each element is composed of a table containing all the same occurrence data fields as the input (potentially with some fields renamed and some field contents change, due to vocabulary translation).
+Returns a list where each element is different unique taxon obtained by the sorting function,
+and named with that taxon name. Each element is composed of a table containing all the same
+occurrence data fields as the input (potentially with some fields renamed and some field
+contents change, due to vocabulary translation).
 }
 \description{
 Functions for sorting out unique taxa from Paleobiology Database occurrence downloads,
@@ -31,6 +42,41 @@ Data input for \code{taxonSortPBDBocc} are expected to be from version 1.2 API
 with the 'pbdb' vocabulary. However, datasets are passed to internal function \code{translatePBDBocc},
 which attempts to correct any necessary field names and field contents used by
 \code{taxonSortPBDBocc}.
+
+This function can pull either \emph{just} the 'formally' identified and synonymized taxa in a given table of occurrence
+data or pull \emph{in addition} occurrences listed under informal taxa of the sought taxonomic rank. Only formal taxa
+are sorted by default; this is controlled by argument \code{onlyFormal}. Pulling the informally-listed taxonomic
+occurrences is often necessary in some groups that have received little focused taxonomic effort, such that many
+species are linked to their generic taxon ID and never received a species-level taxonomic ID in the PBDB.
+Pulling both formal and informally listed taxonomic occurrences is a hierarchical process and performed in
+stages: formal taxa are identified first, informal taxa are identified from the occurrences that are
+'leftover', and informal occurrences with name labels that match a previously sorted formally listed
+taxon are concatenated to the 'formal' occurrences for that same taxon, rather than
+being listed under separate elements of the list as if they were separate taxa.
+This function is simpler than similar functions that inspired it by using the input"rank" to both filter occurrences
+and directly reference a taxon's accepted taxonomic placement, rather than a series of specific \code{if()} checks.
+
+Unlike some similar functions in other packages, such as version 0.3 \code{paleobioDB}'s \code{pbdb_temp_range},
+\code{taxonSortPBDBocc} does not check if sorted taxa have a single 'taxon_no' ID number. This makes the blanket
+assumption that if a taxon's listed name in relevant fields is identical, the taxon is identical, with the important
+caveat that occurrences with accepted formal synonymies are sorted first based on their accepted names, followed by
+taxa without formal taxon IDs. This should avoid mistakingly linking the same occurrences to multiple taxa or assigning
+occurrences listed under separate formal taxa to the same taxon based on their 'identified' taxon name, as long as all
+formal taxa have unique names (which is an untested assumption). In some cases, this procedure is helpful, such as when
+taxa with identical generic and species names are listed under separate taxon ID numbers because of a difference in the
+listed subgenus for some occurrences (example, "Pseudoclimacograptus (Metaclimacograptus) hughesi' and
+'Pseudoclimacograptus hughesi' in the PBDB as of 03/01/2015). Presumably any data that would be affected by differences
+in this procedure is very minor.
+
+Occurrences with taxonomic uncertainty indicators in the listed identified taxon name are removed
+by default, as controlled by argument \code{cleanUncertain}. This is done by removing any occurrences that
+have an entry in \code{primary_reso} (was "\code{genus_reso}" in v1.1 API) when \code{rank} is a
+supraspecific level, and \code{species_reso} when rank=species, if that entry is not found in
+\code{cleanResoValues}. In some rare cases, when \code{onlyFormal=FALSE}, supraspecific taxon names may be
+returned in the output that have various 'cruft' attached, like 'n.sp'.
+
+Empty values in the input data table ("") are converted to NAs, as they may be due to issues
+with using read.csv to convert API-downloaded data.
 }
 \examples{
 #load example graptolite PBDB occ dataset
@@ -90,7 +136,11 @@ head(dicelloOccCom1[[1]])[,1:7]
 }
 }
 \author{
-David W. Bapst, but partly inspired by Matthew Clapham's \code{cleanTaxon} (found at https://github.com/mclapham/PBDB-R-scripts/blob/master/taxonClean.R on github) and R package paleobioDB's \code{pbdb_temp_range} function (found at https://github.com/ropensci/paleobioDB/blob/master/R/pbdb_temporal_functions.R#L64-178 on github.
+David W. Bapst, but partly inspired by Matthew Clapham's \code{cleanTaxon}
+(found at https://github.com/mclapham/PBDB-R-scripts/blob/master/taxonClean.R on github) and
+R package paleobioDB's \code{pbdb_temp_range} function (found
+at https://github.com/ropensci/paleobioDB/blob/master/R/pbdb_temporal_functions.R#L64-178
+on github.
 }
 \seealso{
 Example dataset of a PBDB download can be found at \code{\link{graptPBDB}}

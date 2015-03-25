@@ -61,7 +61,7 @@
 #' @rdname timeList2fourDate
 #' @export
 timeList2fourDate<-function(timeList){
-	if(!is(timeList,"list"){stop("timeList is not a list?")}
+	if(!is(timeList,"list")){stop("timeList is not a list?")}
 	if(!(length(timeList)==2)){stop("timeList is not length=2")}
 	if(!all(sapply(timeList,is,class2="matrix"))){stop("timeList elements are not matrices")}
 	if(!all(sapply(timeList,function(x) ncol(x)==2))){stop("timeList matrices do not have two columns")}

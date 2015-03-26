@@ -50,7 +50,7 @@
 #' 	#let's get some taxonomic data
 #' 	taxaData<-read.csv(paste0("http://paleobiodb.org/",
 #' 		"data1.1/taxa/list.txt?base_name=",taxon,
-#' 		"&rel=all_children&show=phylo,img,nav&status=senior"))
+#' 		"&rel=all_children&show=phylo,img&status=senior"))
 #' 	return(taxaData)
 #' 	}
 #' 
@@ -141,6 +141,10 @@ makePBDBtaxontree<-function(data,rank){
 	#
 	if(!any(colnames(data)=="family")){stop("Data must be a taxonomic download with show=phylo")}
 	#
+	#check to make sure no taxon names are listed twice
+	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
+	if(any(nDup)){
+		stop(paste0("Duplicate taxa: ",paste0("(",which(nDup),") ",data[nDup,"taxon_name"],collapse=", ")))}
 	#filter on rank
 	data<-data[data[,"taxon_rank"]==rank,]
 	#
@@ -156,6 +160,10 @@ makePBDBtaxontree<-function(data,rank){
 		data[,"taxon_name"]<-nameFormal	
 		}
 	#
+	#check to make sure no taxon names are listed twice
+	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
+	if(any(nDup)){
+		stop(paste0("Duplicate taxa: ",paste0(data[nDup,"taxon_name"],collapse=", ")))}
 	#get the fields you want
 	taxonFields<-c("kingdom","phylum","class","order","family",
 		"taxon_name")
@@ -176,6 +184,7 @@ makePBDBtaxontree<-function(data,rank){
 	for(level in levels){
 		newNodes<-unique(taxonData[,level])[!is.na(unique(taxonData[,level]))]
 		for(node in newNodes){
+			#if(node=="Nodosauridae"){stop("hey")}
 			labels<-c(labels,node)
 			nodeID<-length(labels)
 			#find the descendant nodes
@@ -210,16 +219,17 @@ makePBDBtaxontree<-function(data,rank){
 	edge<-edge[order(edge[,1],edge[,2]),]
 	#make the tree
 	tree<-list(edge=edge,tip.label=tip.label,edge.length=edge.length,
-		Nnode=Nnode)	#,node.label=rev(node.label)
+		Nnode=Nnode,node.label=rev(node.label))	
 	class(tree)<-"phylo"
-	#collapse singles
-	tree<-collapse.singles(tree)
-	#check it
-	if(!testEdgeMat(tree)){stop("Edge matrix has inconsistencies")}
-	#make it a good tree
-	tree1<-reorder(tree,"cladewise") 	#REORDER IT
-	tree1<-read.tree(text=write.tree(tree))
-	tree1<-ladderize(tree1)
-	#plot(tree1)
-	return(tree1)
+	if(cleanTree){ #make it a good tree
+		#collapse singles
+		tree<-collapse.singles(tree)
+		#check it
+		if(!testEdgeMat(tree)){stop("Edge matrix has inconsistencies")}
+		tree<-reorder(tree,"cladewise") 	#REORDER IT
+		tree<-read.tree(text=write.tree(tree))
+		tree<-ladderize(tree)
+		}
+	#plot(tree)
+	return(tree)
 	}

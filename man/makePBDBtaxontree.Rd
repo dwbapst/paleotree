@@ -4,7 +4,7 @@
 \alias{makePBDBtaxontree}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
-makePBDBtaxontree(data, rank)
+makePBDBtaxontree(data, rank, cleanTree = TRUE)
 }
 \arguments{
 \item{data}{A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
@@ -13,6 +13,11 @@ as 'accepted_name' is not available in API v1.1, the resulting tree will have a 
 any formally updated name.}
 
 \item{rank}{The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.}
+
+\item{cleanTree}{By default, the tree is run through a series of post-processing, including having singles collapsed,
+nodes reordered and being written out as a Newick string and read back in, to ensure functionality with ape functions
+and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
+lead to hard-crashes of R.}
 }
 \value{
 A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. Edges are scaled so that
@@ -47,24 +52,35 @@ getTaxaPBDB<-function(taxon){
 	#let's get some taxonomic data
 	taxaData<-read.csv(paste0("http://paleobiodb.org/",
 		"data1.1/taxa/list.txt?base_name=",taxon,
-		"&rel=all_children&show=phylo,img,nav&status=senior"))
+		"&rel=all_children&show=phylo,img&status=senior"))
 	return(taxaData)
 	}
 
 #graptolites
-data<-getTaxaPBDB("Graptolithina")
-graptTree<-makePBDBtaxontree(data,"genus")
-plot(graptTree)
+graptData<-getTaxaPBDB("Graptolithina")
+graptTree<-makePBDBtaxontree(graptData,"genus")
+plot(graptTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
+nodelabels(graptTree$node.label)
 
 #conodonts
-data<-getTaxaPBDB("Conodonta")
-conoTree<-makePBDBtaxontree(data,"genus")
-plot(conoTree)
+conoData<-getTaxaPBDB("Conodonta")
+conoTree<-makePBDBtaxontree(conoData,"genus")
+plot(conoTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
+nodelabels(conoTree$node.label)
 
 #asaphid trilobites
-data<-getTaxaPBDB("Asaphida")
-asaTree<-makePBDBtaxontree(data,"genus")
-plot(asaTree)
+asaData<-getTaxaPBDB("Asaphida")
+asaTree<-makePBDBtaxontree(asaData,"genus")
+plot(asaTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
+nodelabels(asaTree$node.label)
+
+#Ornithischia
+ornithData<-getTaxaPBDB("Ornithischia")
+#need to drop repeated taxon first: (260) Hylaeosaurus, (308) Hylaeosaurus
+ornithData<-ornithData[-308,]
+ornithTree<-makePBDBtaxontree(ornithData,"genus")
+plot(ornithTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
+nodelabels(ornithTree$node.label)
 
 }
 

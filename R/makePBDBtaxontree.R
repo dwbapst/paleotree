@@ -20,6 +20,11 @@
 
 #' @param rank The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.
 
+#' @param cleanTree By default, the tree is run through a series of post-processing, including having singles collapsed,
+#' nodes reordered and being written out as a Newick string and read back in, to ensure functionality with ape functions
+#' and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
+#' lead to hard-crashes of R.
+
 #' @return
 #' A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. Edges are scaled so that
 #' the distance from one taxon rank to another 1, then merged to remove singleton nodes. As not all
@@ -55,19 +60,30 @@
 #' 	}
 #' 
 #' #graptolites
-#' data<-getTaxaPBDB("Graptolithina")
-#' graptTree<-makePBDBtaxontree(data,"genus")
-#' plot(graptTree)
+#' graptData<-getTaxaPBDB("Graptolithina")
+#' graptTree<-makePBDBtaxontree(graptData,"genus")
+#' plot(graptTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
+#' nodelabels(graptTree$node.label)
 #' 
 #' #conodonts
-#' data<-getTaxaPBDB("Conodonta")
-#' conoTree<-makePBDBtaxontree(data,"genus")
-#' plot(conoTree)
+#' conoData<-getTaxaPBDB("Conodonta")
+#' conoTree<-makePBDBtaxontree(conoData,"genus")
+#' plot(conoTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
+#' nodelabels(conoTree$node.label)
 #' 
 #' #asaphid trilobites
-#' data<-getTaxaPBDB("Asaphida")
-#' asaTree<-makePBDBtaxontree(data,"genus")
-#' plot(asaTree)
+#' asaData<-getTaxaPBDB("Asaphida")
+#' asaTree<-makePBDBtaxontree(asaData,"genus")
+#' plot(asaTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
+#' nodelabels(asaTree$node.label)
+#' 
+#' #Ornithischia
+#' ornithData<-getTaxaPBDB("Ornithischia")
+#' #need to drop repeated taxon first: (260) Hylaeosaurus, (308) Hylaeosaurus
+#' ornithData<-ornithData[-308,]
+#' ornithTree<-makePBDBtaxontree(ornithData,"genus")
+#' plot(ornithTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
+#' nodelabels(ornithTree$node.label)
 #' 
 #' }
 #' 
@@ -105,7 +121,7 @@
 #' @name makePBDBtaxontree
 #' @rdname makePBDBtaxontree
 #' @export
-makePBDBtaxontree<-function(data,rank){	
+makePBDBtaxontree<-function(data,rank,cleanTree=TRUE){	
 	if(!is(data,"data.frame")){stop("data isn't a data.frame")}
 	if(length(rank)!=1){stop("rank must be a single value")}
 	if(!any(sapply(c("species","genus","family","order","class","phylum"),function(x) x==rank))){

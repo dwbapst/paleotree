@@ -60,27 +60,29 @@ getTaxaPBDB<-function(taxon){
 graptData<-getTaxaPBDB("Graptolithina")
 graptTree<-makePBDBtaxontree(graptData,"genus")
 plot(graptTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
-nodelabels(graptTree$node.label)
+nodelabels(graptTree$node.label,adj=c(0,1/2))
 
 #conodonts
 conoData<-getTaxaPBDB("Conodonta")
 conoTree<-makePBDBtaxontree(conoData,"genus")
 plot(conoTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
-nodelabels(conoTree$node.label)
+nodelabels(conoTree$node.label,adj=c(0,1/2))
 
 #asaphid trilobites
 asaData<-getTaxaPBDB("Asaphida")
 asaTree<-makePBDBtaxontree(asaData,"genus")
 plot(asaTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
-nodelabels(asaTree$node.label)
+nodelabels(asaTree$node.label,adj=c(0,1/2))
 
 #Ornithischia
 ornithData<-getTaxaPBDB("Ornithischia")
-#need to drop repeated taxon first: (260) Hylaeosaurus, (308) Hylaeosaurus
-ornithData<-ornithData[-308,]
+#need to drop repeated taxon first: Hylaeosaurus
+ornithData<-ornithData[-(which(ornithData[,"taxon_name"]=="Hylaeosaurus")[1]),]
 ornithTree<-makePBDBtaxontree(ornithData,"genus")
 plot(ornithTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
-nodelabels(ornithTree$node.label)
+nodelabels(ornithTree$node.label,adj=c(0,1/2))
+
+#some of these look pretty messy!
 
 }
 

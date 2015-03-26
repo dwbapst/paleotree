@@ -105,6 +105,8 @@
 #' graptTimeGenus<-occData2timeList(occList=graptOccGenus)
 #' 
 #' #let's time-scale this tree with paleotree
+#'		# use minimum branch length for visualization
+#' 		# and nonstoch.bin so we plot maximal ranges
 #' timeTree<-bin_timePaleoPhy(graptTree,timeList=graptTimeGenus,
 #' 	nonstoch.bin=TRUE,type="mbl",vartime=3)
 #' 
@@ -118,7 +120,6 @@
 #' 
 #' }
 #' 
-
 
 #' @name makePBDBtaxontree
 #' @rdname makePBDBtaxontree

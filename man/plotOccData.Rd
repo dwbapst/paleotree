@@ -8,6 +8,12 @@ plotOccData(occList, groupLabel = NULL, occColors = NULL,
   lineWidth = NULL, xlims = NULL)
 }
 \arguments{
+\item{occList}{A list where every element is a table of occurrence data for a different taxon,
+such as that returned by \code{\link{taxonSortPBDBocc}}. The occurrence data can be either a
+two-column matrix composed of the lower and upper age bounds on each taxon occurrence, or has
+two named variables which match any of the field names given by the PBDB API under either
+the 'pbdb' vocab or 'com' (compact) vocab for early and late age bounds.}
+
 \item{groupLabel}{A character vector with a single string giving the name for
 the occurrence dataset used, such as the taxonomic name of the group examined.
 If not given (the default) a generic plot title is appended.}

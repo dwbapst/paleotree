@@ -71,7 +71,8 @@
 #' contents change, due to vocabulary translation).
 	
 #' @seealso
-#' Example dataset of a PBDB download can be found at \code{\link{graptPBDB}}
+#' \code{\link{occData2timeList}}, \code{\link{plotOccData}} and the
+#' example graptolite dataset at \code{\link{graptPBDB}}
 
 #' @author 
 #' David W. Bapst, but partly inspired by Matthew Clapham's \code{cleanTaxon} 

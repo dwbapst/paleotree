@@ -11,6 +11,49 @@
 #' datasets sorted by \code{\link{taxonSortPBDBocc}} or any data object where occurrence data
 #' (i.e. age bounds for each occurrence) for different taxa is separated into different elements
 #' of a named list. 
+#'
+#' \emph{intervalType}
+#'
+#' The argument \code{intervalType} controls the algorithm used for obtain first and last interval bounds for
+#' each taxon, of which there are several to select from:
+#'
+#' \describe{
+
+#'  \item{"dateRange"}{The default option. The bounds on the first appearances
+#' are the span between the oldest upper and lower bounds
+#' of the occurrences, and the bounds on the last appearances are the span between the youngest
+#' upper and lower bounds across all occurrences. This is guaranteed to provide the smallest
+#' bounds on the first and last appearances, and was originally suggested to the author by J. Marcot.}
+
+#' \item{"occRange"}{This option returns the smallest bounds among (a) the oldest occurrences for the
+#' first appearance (i.e. all occurrences with their lowest bound at the oldest lower age bound), and (b) the
+#' youngest occurrences for the last appearance (i.e. all occurrences with their uppermost bound
+#' at the youngest upper age bound).}
+
+#' \item{"zoneOverlap"}{This option is an attempt to mimic the stratigraphic range algorithm used by PBDB Classic
+#' which “finds the oldest base that is older than at least part of all the intervals and the
+#' youngest that is younger than at least part of all the intervals” (pers.comm., J. Alroy). 
+#' This is a somewhat more complex case as we are trying to obtain a \code{timeList} object.
+#' So, for calculating the bounds of the first interval a taxon occurs in, the \code{zoneOverlap}
+#' algorithm looks for all occurrences that overlap with the age range of the earliest-most occurrence
+#' and (1) obtains their earliest boundary ages and returns the latest-most earliest age boundary among
+#' these overlapping occurrences and (2) obtains their latest boundary ages and returns the earliest-most
+#' latest age boundary among these overlapping occurrences. Similarly, for calculating the bound of the
+#' last interval a taxon occurs in, the \code{zoneOverlap} algorithm looks for all occurrences that overlap
+#' with the age range of the latest-most occurrence and (1) obtains their earliest boundary ages and returns
+#' the latest-most earliest age boundary among these overlapping occurrences and (2) obtains their latest
+#' boundary ages and returns the earliest-most latest age boundary among these overlapping occurrences. 
+#'
+#' On theoretical grounds, one could probably describe the zone-of-overlap algorithm as minimizing
+#' taxonomic age ranges by assuming that all overlapping occurrences at the start and end of a taxon's
+#' range probably describe a very similar first and last appearance (FADs and LADs), and thus picks the
+#' occurrence with bounds that extends the taxonomic range the least. However, this does come with a downside
+#' that if these occurrences are not essentially repeated attempts to capture the same FAD or LAD, then the
+#' zone-of-overlap algorithm isn't an accurate depiction of the uncertainty in the ages. The true biological
+#' range of a taxon might be well outside the bounds obtained using the zone-of-overlap algorithm. A more
+#' conservative approach is the \code{"dateRange"} algorithm which finds the smallest possible bounds on the
+#' endpoints of a taxon's range without ignoring uncertainty from any particular set of occurrences.} }
+#' 
 
 #' @param occList A list where every element is a table of occurrence data for a different taxon,
 #' such as that returned by \code{\link{taxonSortPBDBocc}}. The occurrence data can be either a 
@@ -18,22 +61,16 @@
 #' two named variables which match any of the field names given by the PBDB API under either
 #' the 'pbdb' vocab or 'com' (compact) vocab for early and late age bounds.
 
-#' @param intervalType Must be either "dateRange" (the default) or "occRange". If "dateRange",
-#' the bounds on the first appearances are the span between the oldest upper and lower bounds
-#' of the occurrences, and the bounds on the last appearances are the span between the youngest
-#' upper and lower bounds across all occurrences. This is guaranteed to provide the smallest
-#' bounds on the first and last appearances, and was suggested by Jon Marcot. The "occRange" option
-#' instead returns the smallest bounds among (a) the oldest occurrences for the first appearance
-#' (i.e. all occurrences with their lowest bound at the oldest lower age bound), and (b) the
-#' youngest occurrences for the last appearance (i.e. all occurrences with their uppermost bound
-#' at the youngest upper age bound).
+#' @param intervalType Must be either "dateRange" (the default), "occRange" or
+#' "zoneOverlap". Please see details below.
 
 #' @return
 #' Returns a standard timeList data object, as used by many other paleotree functions, like
 #' \code{\link{bin_timePaleoPhy}}, \code{\link{bin_cal3TimePaleoPhy}} and \code{\link{taxicDivDisc}}
 
 #' @seealso
-#' \code{\link{taxonSortPBDBocc}} and the example graptolite dataset at \code{\link{graptPBDB}}
+#' \code{\link{taxonSortPBDBocc}}, \code{\link{plotOccData}} and the
+#' example graptolite dataset at \code{\link{graptPBDB}}
 
 #' @author 
 #' David W. Bapst, with the 'dateRange' algorithm suggested by Jon Marcot.
@@ -98,43 +135,17 @@
 #' 
 #' layout(1)
 
-
 #' @name occData2timeList
 #' @rdname occData2timeList
 #' @export
 occData2timeList<-function(occList,intervalType="dateRange"){
 		#intervalType="dateRange"
 	#the following is all original, though inspired by paleobioDB code
-	#need checks
-	#is occList a list
-	if(!is.list(occList)){stop("occList is not a list?")}
-	#are all elements of occList matrices
-	if(!(all(sapply(occList,is,class2="data.frame")) | all(sapply(occList,is,class2="matrix")))){
-		stop("All elements of occList must be all of type data.frame or type matrix")}
-	#pull first list entry as an example to check with
-	exOcc<-occList[[1]]
-	#test if all occList entries have same number of columns
-	if(!all(sapply(occList,function(x) ncol(x)==ncol(exOcc)))){
-		stop("Not all occList entries have same number of columns?")}
-	#will assume all data given in this manner either has columns named "" and ""
-		#or has only two columns
-	if(any(colnames(exOcc)=="early_age") & any(colnames(exOcc)=="late_age")){
-		ageSelector<-c("early_age","late_age")
- 	}else{
-		if(any(colnames(exOcc)=="eag") & any(colnames(exOcc)=="lag")){
-			if(ncol(exOcc)!=2){
-				ageSelector<-1:2
-			}else{
-				stop("Data is not a list of two-column matrics *and* lacks named age columns (from the PBDB)")
-				}
-		}else{
-			ageSelector<-c("early_age","late_age")
-			}
-		}
-	#
-	if(!any(intervalType==c("occRange","dateRange"))){stop("intervalType must be one of 'dateRange' or 'occRange'")}
-	#get intervals in which taxa appear
-	taxaInt<-lapply(occList,function(x) x[,ageSelector])
+	#check intervalType
+	if(!any(intervalType==c("occRange","dateRange","zoneOverlap"))){
+		stop("intervalType must be one of 'dateRange' or 'occRange' or 'zoneOverlap'")}
+	#get just occurrence data with pullOccListData
+	taxaInt<-pullOccListData(occList)
 	if(intervalType=="occRange"){
 		#get earliest and latest intervals the taxa appear in
 		taxaMin<-lapply(taxaInt,function(x) x[x[,1]==max(x[,1]),,drop=FALSE])
@@ -165,4 +176,38 @@ occData2timeList<-function(occList,intervalType="dateRange"){
 	rownames(timeList$taxonTimes)<-names(occList)
 	return(timeList)
 	}
+
 	
+# hidden function	
+pullOccListData<-function(occList){
+	#need checks
+	#is occList a list
+	if(!is.list(occList)){stop("occList is not a list?")}
+	#are all elements of occList matrices
+	if(!(all(sapply(occList,is,class2="data.frame")) | all(sapply(occList,is,class2="matrix")))){
+		stop("All elements of occList must be all of type data.frame or type matrix")}
+	#pull first list entry as an example to check with
+	exOcc<-occList[[1]]
+	#test if all occList entries have same number of columns
+	if(!all(sapply(occList,function(x) ncol(x)==ncol(exOcc)))){
+		stop("Not all occList entries have same number of columns?")}
+	#will assume all data given in this manner either has columns named "" and ""
+		#or has only two columns
+	if(any(colnames(exOcc)=="early_age") & any(colnames(exOcc)=="late_age")){
+		ageSelector<-c("early_age","late_age")
+ 	}else{
+		if(any(colnames(exOcc)=="eag") & any(colnames(exOcc)=="lag")){
+			if(ncol(exOcc)!=2){
+				ageSelector<-1:2
+			}else{
+				stop("Data is not a list of two-column matrics *and* lacks named age columns (from the PBDB)")
+				}
+		}else{
+			ageSelector<-c("early_age","late_age")
+			}
+		}
+	#get intervals in which taxa appear
+	taxaOcc<-lapply(occList,function(x) x[,ageSelector])
+	return(taxaOcc)
+	}
+

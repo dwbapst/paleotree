@@ -17,7 +17,7 @@
 #' Variables are coded in the 'pbdb' vocabulary of the PBDB API v1.2.
 
 #' @seealso
-#' \code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}}, \code{\link{makePBDBtaxontree}}
+#' \code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}}, \code{\link{makePBDBtaxontree}}, \code{\link{plotOccData}}
 
 #' @source 
 #' See examples for the full R code used to obtain the data from the API.

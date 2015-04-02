@@ -122,7 +122,7 @@ David W. Bapst
 }
 \references{
 Soul, L. C., and M. Friedman. In Press. Taxonomy and Phylogeny Can Yield
-Comparable Results in Comparative Palaeontological Analyses.\emph{Systematic Biology}
+Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology}
 (http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract)
 }
 \seealso{

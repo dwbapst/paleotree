@@ -143,6 +143,7 @@ at https://github.com/ropensci/paleobioDB/blob/master/R/pbdb_temporal_functions.
 on github.
 }
 \seealso{
-Example dataset of a PBDB download can be found at \code{\link{graptPBDB}}
+\code{\link{occData2timeList}}, \code{\link{plotOccData}} and the
+example graptolite dataset at \code{\link{graptPBDB}}
 }
 

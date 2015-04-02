@@ -13,15 +13,8 @@ two-column matrix composed of the lower and upper age bounds on each taxon occur
 two named variables which match any of the field names given by the PBDB API under either
 the 'pbdb' vocab or 'com' (compact) vocab for early and late age bounds.}
 
-\item{intervalType}{Must be either "dateRange" (the default) or "occRange". If "dateRange",
-the bounds on the first appearances are the span between the oldest upper and lower bounds
-of the occurrences, and the bounds on the last appearances are the span between the youngest
-upper and lower bounds across all occurrences. This is guaranteed to provide the smallest
-bounds on the first and last appearances, and was suggested by Jon Marcot. The "occRange" option
-instead returns the smallest bounds among (a) the oldest occurrences for the first appearance
-(i.e. all occurrences with their lowest bound at the oldest lower age bound), and (b) the
-youngest occurrences for the last appearance (i.e. all occurrences with their uppermost bound
-at the youngest upper age bound).}
+\item{intervalType}{Must be either "dateRange" (the default), "occRange" or
+"zoneOverlap". Please see details below.}
 }
 \value{
 Returns a standard timeList data object, as used by many other paleotree functions, like
@@ -39,6 +32,45 @@ This function should translate taxon-sorted occurrence data, which could be Pale
 datasets sorted by \code{\link{taxonSortPBDBocc}} or any data object where occurrence data
 (i.e. age bounds for each occurrence) for different taxa is separated into different elements
 of a named list.
+
+\emph{intervalType}
+
+The argument \code{intervalType} controls the algorithm used for obtain first and last interval bounds for
+each taxon, of which there are several to select from:
+
+\describe{
+ \item{"dateRange"}{The default option. The bounds on the first appearances
+are the span between the oldest upper and lower bounds
+of the occurrences, and the bounds on the last appearances are the span between the youngest
+upper and lower bounds across all occurrences. This is guaranteed to provide the smallest
+bounds on the first and last appearances, and was originally suggested to the author by J. Marcot.}
+\item{"occRange"}{This option returns the smallest bounds among (a) the oldest occurrences for the
+first appearance (i.e. all occurrences with their lowest bound at the oldest lower age bound), and (b) the
+youngest occurrences for the last appearance (i.e. all occurrences with their uppermost bound
+at the youngest upper age bound).}
+\item{"zoneOverlap"}{This option is an attempt to mimic the stratigraphic range algorithm used by PBDB Classic
+which “finds the oldest base that is older than at least part of all the intervals and the
+youngest that is younger than at least part of all the intervals” (pers.comm., J. Alroy).
+This is a somewhat more complex case as we are trying to obtain a \code{timeList} object.
+So, for calculating the bounds of the first interval a taxon occurs in, the \code{zoneOverlap}
+algorithm looks for all occurrences that overlap with the age range of the earliest-most occurrence
+and (1) obtains their earliest boundary ages and returns the latest-most earliest age boundary among
+these overlapping occurrences and (2) obtains their latest boundary ages and returns the earliest-most
+latest age boundary among these overlapping occurrences. Similarly, for calculating the bound of the
+last interval a taxon occurs in, the \code{zoneOverlap} algorithm looks for all occurrences that overlap
+with the age range of the latest-most occurrence and (1) obtains their earliest boundary ages and returns
+the latest-most earliest age boundary among these overlapping occurrences and (2) obtains their latest
+boundary ages and returns the earliest-most latest age boundary among these overlapping occurrences.
+
+On theoretical grounds, one could probably describe the zone-of-overlap algorithm as minimizing
+taxonomic age ranges by assuming that all overlapping occurrences at the start and end of a taxon's
+range probably describe a very similar first and last appearance (FADs and LADs), and thus picks the
+occurrence with bounds that extends the taxonomic range the least. However, this does come with a downside
+that if these occurrences are not essentially repeated attempts to capture the same FAD or LAD, then the
+zone-of-overlap algorithm isn't an accurate depiction of the uncertainty in the ages. The true biological
+range of a taxon might be well outside the bounds obtained using the zone-of-overlap algorithm. A more
+conservative approach is the \code{"dateRange"} algorithm which finds the smallest possible bounds on the
+endpoints of a taxon's range without ignoring uncertainty from any particular set of occurrences.} }
 }
 \examples{
 data(graptPBDB)
@@ -104,6 +136,7 @@ layout(1)
 David W. Bapst, with the 'dateRange' algorithm suggested by Jon Marcot.
 }
 \seealso{
-\code{\link{taxonSortPBDBocc}} and the example graptolite dataset at \code{\link{graptPBDB}}
+\code{\link{taxonSortPBDBocc}}, \code{\link{plotOccData}} and the
+example graptolite dataset at \code{\link{graptPBDB}}
 }
 

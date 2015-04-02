@@ -49,8 +49,8 @@ first appearance (i.e. all occurrences with their lowest bound at the oldest low
 youngest occurrences for the last appearance (i.e. all occurrences with their uppermost bound
 at the youngest upper age bound).}
 \item{"zoneOverlap"}{This option is an attempt to mimic the stratigraphic range algorithm used by PBDB Classic
-which “finds the oldest base that is older than at least part of all the intervals and the
-youngest that is younger than at least part of all the intervals” (pers.comm., J. Alroy).
+which "finds the oldest base that is older than at least part of all the intervals and the
+youngest that is younger than at least part of all the intervals" (pers.comm., J. Alroy).
 This is a somewhat more complex case as we are trying to obtain a \code{timeList} object.
 So, for calculating the bounds of the first interval a taxon occurs in, the \code{zoneOverlap}
 algorithm looks for all occurrences that overlap with the age range of the earliest-most occurrence

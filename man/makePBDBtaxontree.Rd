@@ -104,7 +104,7 @@ data(graptPBDB)
 #get taxontree
 graptTree<-makePBDBtaxontree(graptTaxaPBDB,"genus")
 plot(graptTree)
-nodeLabels(graptTree$node.label,cex=0.5)
+nodelabels(graptTree$node.label,cex=0.5)
 
 #get time data from occurrences
 graptOccGenus<-taxonSortPBDBocc(graptOccPBDB,rank="genus",onlyFormal=FALSE)

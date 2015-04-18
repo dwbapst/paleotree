@@ -89,6 +89,14 @@ presumably unordered, however, then the gains and losses division is arbitrary a
 to obtain the total number of character changes.
 }
 \examples{
+# let's write a quick&dirty ancestral trait plotting function
+
+quickAncPlot<-function(tree,ancData,cex=cex){
+	plot(tree,show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
+	tiplabels(pch=16,col=(as.numeric(char[tree$tip.label])+1))
+	nodelabels(pie=ancData[-(1:Ntip(tree)),],cex=cex,piecol=2:5)
+	}
+
 # example with retiolitid graptolite data
 
 data(retiolitinae)
@@ -98,6 +106,37 @@ ancPropStateMat(retioTree,trait=retioChar[,2],type="ACCTRAN")
 
 minCharChange(retioTree,trait=retioChar[,2],type="MPR")
 minCharChange(retioTree,trait=retioChar[,2],type="ACCTRAN")
+
+# with simulated data
+
+set.seed(444)
+tree<-rtree(50)
+#simulate under a likelihood model
+char<-rTraitDisc(tree,k=3,rate=0.7)
+tree$edge.length<-NULL
+tree<-ladderize(tree)
+
+ancMPR<-ancPropStateMat(tree,trait=char,type="MPR")
+ancACCTRAN<-ancPropStateMat(tree,trait=char,type="ACCTRAN")
+
+#let's compare MPR versus ACCTRAN results
+layout(1:2)
+quickAncPlot(tree,ancMPR,cex=0.3)
+text(x=8,y=15,"type='MPR'",cex=1.5)
+quickAncPlot(tree,ancACCTRAN,cex=0.3)
+text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
+#MPR has much more uncertainty in node estimates
+	#but that doesn't mean ACCTRAN is preferable
+
+\donttest{
+# what ancPropStateMat automates (with lots of checks):
+char1<-matrix(char,,1)
+rownames(char1)<-names(char)
+#translate into something for phangorn to read
+char1<-phyDat(char1,type="USER",levels=sort(unique(char1)))
+x<-ancestral.pars(tree,char1,type="MPR")
+y<-ancestral.pars(tree,char1,type="ACCTRAN")
+}
 }
 \author{
 David W. Bapst
@@ -105,7 +144,7 @@ David W. Bapst
 \references{
 Hanazawa, M., H. Narushima, and N. Minaka. 1995. Generating most parsimonious reconstructions on
 a tree: A generalization of the Farris-Swofford-Maddison method. Discrete Applied Mathematics
-56(2–3):245-265.
+56(2-3):245-265.
 
 Narushima, H., and M. Hanazawa. 1997. A more efficient algorithm for MPR problems in phylogeny.
 Discrete Applied Mathematics 80(2-3):231-238.

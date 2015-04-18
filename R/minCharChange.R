@@ -94,7 +94,7 @@
 #' @references
 #' Hanazawa, M., H. Narushima, and N. Minaka. 1995. Generating most parsimonious reconstructions on
 #' a tree: A generalization of the Farris-Swofford-Maddison method. Discrete Applied Mathematics
-#' 56(2–3):245-265.
+#' 56(2-3):245-265.
 #' 
 #' Narushima, H., and M. Hanazawa. 1997. A more efficient algorithm for MPR problems in phylogeny.
 #' Discrete Applied Mathematics 80(2-3):231-238.
@@ -106,6 +106,14 @@
 
 
 #' @examples
+#' # let's write a quick&dirty ancestral trait plotting function
+#' 
+#' quickAncPlot<-function(tree,ancData,cex=cex){
+#' 	plot(tree,show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
+#' 	tiplabels(pch=16,col=(as.numeric(char[tree$tip.label])+1))
+#' 	nodelabels(pie=ancData[-(1:Ntip(tree)),],cex=cex,piecol=2:5)	
+#' 	}
+#'
 #' # example with retiolitid graptolite data
 #' 
 #' data(retiolitinae)
@@ -115,6 +123,37 @@
 #' 
 #' minCharChange(retioTree,trait=retioChar[,2],type="MPR")
 #' minCharChange(retioTree,trait=retioChar[,2],type="ACCTRAN")
+#' 
+#' # with simulated data
+#' 
+#' set.seed(444)
+#' tree<-rtree(50)
+#' #simulate under a likelihood model
+#' char<-rTraitDisc(tree,k=3,rate=0.7)
+#' tree$edge.length<-NULL
+#' tree<-ladderize(tree)
+#' 
+#' ancMPR<-ancPropStateMat(tree,trait=char,type="MPR")
+#' ancACCTRAN<-ancPropStateMat(tree,trait=char,type="ACCTRAN")
+#' 
+#' #let's compare MPR versus ACCTRAN results
+#' layout(1:2)
+#' quickAncPlot(tree,ancMPR,cex=0.3)
+#' text(x=8,y=15,"type='MPR'",cex=1.5)
+#' quickAncPlot(tree,ancACCTRAN,cex=0.3)
+#' text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
+#' #MPR has much more uncertainty in node estimates
+#' 	#but that doesn't mean ACCTRAN is preferable
+#' 
+#' \donttest{
+#' # what ancPropStateMat automates (with lots of checks):
+#' char1<-matrix(char,,1)
+#' rownames(char1)<-names(char)
+#' #translate into something for phangorn to read
+#' char1<-phyDat(char1,type="USER",levels=sort(unique(char1)))
+#' x<-ancestral.pars(tree,char1,type="MPR")
+#' y<-ancestral.pars(tree,char1,type="ACCTRAN")
+#' }
 #' 
 
 #' @name minCharChange
@@ -254,26 +293,13 @@ ancPropStateMat<-function(trait, tree, type="MPR", cost=NULL){
 	anc1<-ancestral.pars(tree,char1,type=type,cost=cost)
 	#turn into a col-per-state matrix with each row a node or tip, numbered as in edge
 	anc2<-matrix(unlist(anc1),,length(unique(char1)),byrow=T)
-	#need to replace rows named with tip labels with the tip number
-	rownames(anc2)<-attributes(anc1)$names
-	tipLabMatch<-sapply(rownames(anc2),function(x) which(x==tree$tip.label))
-	rownames(anc2)[sapply(tipLabMatch,function(x) length(x)>0)]<-tipLabMatch[
-		sapply(tipLabMatch,function(x) length(x)>0)]
-	#check that the tip taxa have been given rownames and just the tip taxa
-	if(any(is.na(rownames(anc2)[1:Ntip(tree)]))){
-		stop("Strange NAs or misplaced taxon names in ancestral.pars output")
-		}
-	if(type=="MPR"){
-		if(!all(is.na(rownames(anc2)[(Ntip(tree)+1):nrow(anc2)]))){
-			stop("Strange NAs or misplaced taxon names in ancestral.pars output")
-			}
-		#add rownames for internal nodes - assume that ordered as in $node
-		rownames(anc2)[(Ntip(tree)+(1:Nnode(tree)))]<-(Ntip(tree)+(1:Nnode(tree)))
-		}
-	#another check
-	if(nrow(anc2)!=(Ntip(tree)+Nnode(tree)) | any(is.na(rownames(anc2)))){
-		stop("Strange NAs or misplaced taxon names in ancestral.pars output")
-		}
+	#based on conversation with Klaus on 04-17-15
+		#will treat output as if it was always ordered exactly as tips and nodes
+		#are numbered in $edge; should be as basic as numbering 1:nrow
+	rownames(anc2)<-1:nrow(anc2)
+	#does that make sense for the tree
+	if(nrow(anc2) != (Nnode(tree)+Ntip(tree))){
+		stop("ancestral state matrix has wrong number of rows??")}
 	#and now name the columns by the levels
 	colnames(anc2)<-attributes(anc1)$levels
 	return(anc2)

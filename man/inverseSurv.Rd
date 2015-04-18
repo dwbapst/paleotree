@@ -226,7 +226,7 @@ results
 #plot the results
 constrFun(results$par, altMode=TRUE)
 
-\dontrun{
+\donttest{
 #unconstrained function with ALL of 225 parameters!!!
     # this will take forever to converge, so it isn't run
 optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),

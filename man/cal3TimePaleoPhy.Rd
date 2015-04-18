@@ -347,7 +347,7 @@ phyloDiv(ttree)
 ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     sampRate=sRate,ntrees=1,anc.wt=0,plot=TRUE)
 
-\dontrun{
+\donttest{
 #let's look at how three trees generated with very different time of obs. look
 ttreeFAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     FAD.only=TRUE,dateTreatment="firstLast",sampRate=sRate,ntrees=1,plot=TRUE)
@@ -414,7 +414,7 @@ ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRa
     sampRate=sRate1,ntrees=1,nonstoch.bin=TRUE,plot=TRUE)
 phyloDiv(ttree1)
 
-\dontrun{
+\donttest{
 #example with multiple values of anc.wt
 ancWt <- sample(0:1,nrow(rangesDisc[[2]]),replace=TRUE)
 names(ancWt)<-rownames(rangesDisc[[2]])

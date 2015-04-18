@@ -48,7 +48,7 @@ macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, in pr
 \examples{
 \dontrun{
 
-getTaxaPBDB<-function(taxon){
+easyGetPBDBtaxa<-function(taxon){
 	#let's get some taxonomic data
 	taxaData<-read.csv(paste0("http://paleobiodb.org/",
 		"data1.1/taxa/list.txt?base_name=",taxon,
@@ -57,30 +57,38 @@ getTaxaPBDB<-function(taxon){
 	}
 
 #graptolites
-graptData<-getTaxaPBDB("Graptolithina")
+graptData<-easyGetPBDBtaxa("Graptolithina")
 graptTree<-makePBDBtaxontree(graptData,"genus")
 plot(graptTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 nodelabels(graptTree$node.label,adj=c(0,1/2))
 
 #conodonts
-conoData<-getTaxaPBDB("Conodonta")
+conoData<-easyGetPBDBtaxa("Conodonta")
 conoTree<-makePBDBtaxontree(conoData,"genus")
 plot(conoTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 nodelabels(conoTree$node.label,adj=c(0,1/2))
 
 #asaphid trilobites
-asaData<-getTaxaPBDB("Asaphida")
+asaData<-easyGetPBDBtaxa("Asaphida")
 asaTree<-makePBDBtaxontree(asaData,"genus")
 plot(asaTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 nodelabels(asaTree$node.label,adj=c(0,1/2))
 
 #Ornithischia
-ornithData<-getTaxaPBDB("Ornithischia")
+ornithData<-easyGetPBDBtaxa("Ornithischia")
 #need to drop repeated taxon first: Hylaeosaurus
 ornithData<-ornithData[-(which(ornithData[,"taxon_name"]=="Hylaeosaurus")[1]),]
 ornithTree<-makePBDBtaxontree(ornithData,"genus")
 plot(ornithTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 nodelabels(ornithTree$node.label,adj=c(0,1/2))
+
+#Rhynchonellida
+rynchData<-easyGetPBDBtaxa("Rhynchonellida")
+#need to drop repeated taxon first: Rhynchonelloidea
+rynchData<-rynchData[-(which(rynchData[,"taxon_name"]=="Rhynchonelloidea")[1]),]
+rynchTree<-makePBDBtaxontree(rynchData,"genus")
+plot(rynchTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
+nodelabels(rynchTree$node.label,adj=c(0,1/2))
 
 #some of these look pretty messy!
 
@@ -96,6 +104,7 @@ data(graptPBDB)
 #get taxontree
 graptTree<-makePBDBtaxontree(graptTaxaPBDB,"genus")
 plot(graptTree)
+nodeLabels(graptTree$node.label,cex=0.5)
 
 #get time data from occurrences
 graptOccGenus<-taxonSortPBDBocc(graptOccPBDB,rank="genus",onlyFormal=FALSE)
@@ -114,7 +123,7 @@ timeTree<-bin_timePaleoPhy(graptTree,timeList=graptTimeGenus,
 #make pretty plot with library strap
 library(strap)
 geoscalePhylo(timeTree, ages=timeTree$ranges.used)
-
+nodelabels(timeTree$node.label,cex=0.5)
 }
 }
 \author{

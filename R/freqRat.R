@@ -118,7 +118,7 @@
 #' 	ranges<-sampleRanges(taxa,r=r[i])
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
-#' 	freqRats[i]<-get_freqRat(timeList)
+#' 	freqRats[i]<-freqRat(timeList)
 #' 	}
 #' plot(R,freqRats);abline(0,1)
 #' #without the gigantic artifacts bigger than 1...
@@ -137,7 +137,7 @@
 #' 	ranges<-sampleRanges(taxa,r=r[i])
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
-#' 	freqRats[i]<-get_freqRat(timeList)
+#' 	freqRats[i]<-freqRat(timeList)
 #' 	}
 #' plot(R,freqRats,ylim=c(0,1));abline(0,1)
 #' #not so hot, eh?
@@ -157,7 +157,7 @@
 #' 	ranges<-sampleRanges(taxa,r=r[i])
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
-#' 	freqRats[i]<-get_freqRat(timeList)
+#' 	freqRats[i]<-freqRat(timeList)
 #' 	}
 #' plot(R,freqRats,ylim=c(0,1));abline(0,1)
 #' #things get more accurate as interval length increases... odd, eh?
@@ -174,7 +174,7 @@
 #' 	ranges<-sampleRanges(taxa,r=r[i])
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
-#' 	freqRats[i]<-get_freqRat(timeList)
+#' 	freqRats[i]<-freqRat(timeList)
 #' 	}
 #' plot(R,freqRats,ylim=c(0,1));abline(0,1)
 #' #still not so hot at low sample sizes, even with longer bins

@@ -173,7 +173,7 @@
 #' #estimates that r=0.54... Not bad!
 #' #Note: for real data, you may need to use an average int.length (no constant length)
 #' 
-#' \dontrun{
+#' \donttest{
 #' #this data was simulated under homogenous sampling probabilities, extinction rates
 #' #if we fit a model with random groups and allow for multiple timebins
 #' 	#AIC should be higher (less informative models)

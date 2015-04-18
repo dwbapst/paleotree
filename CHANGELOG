@@ -9,6 +9,9 @@ Version - 2.4 -
 -Added example data downloads from the Paleobiology Database of occurrence data and taxonomic data, available under 'graptPBDB'
 -Added function makePBDBtaxonTree which takes taxon data from the PBDB and constructs a very informal taxon tree from the taxonomic hierarchy
 -Added function plotOccData which will plot occurrence data, such as that output by taxonSortPBDBocc from PBDB downloads
+-Changed a number of \dontrun to \donttest so they will run during modified non-CRAN R CHECK tests with --run-donttest
+-Now allowed to have a simpler Travis CI structure, apparently with --run-donttest
+-Added retioChar, character data for 3 characters for the 22 Retiolitinae species, to the retiolitinae example dataset
 
 Version - 2.3 - 01-16-15
 -New function dropPaleoTip which is a simple wrapper for drop.tip in ape but uses fixRootTime to adjust the $root.time element in the resulting tree, after tips are dropped (Thanks to a conversation with Graeme Lloyd)

@@ -110,20 +110,51 @@
 #' length(occSpeciesEverything)
 #' 
 #' \dontrun{
+#'
+#' # simple function for getting occurrence data from API v1.1 
+#' easyGetPBDBocc<-function(taxa,show=c("ident","phylo")){
+#'   #cleans PBDB occurrence downloads of warnings
+#'   taxa<-paste(taxa,collapse=",")
+#' 	taxa<-paste(unlist(strsplit(taxa,"_")),collapse="%20")
+#' 	show<-paste(show,collapse=",")
+#' 	command<-paste0("http://paleobiodb.org/data1.1/occs/list.txt?base_name=",
+#' 		taxa,"&show=",show,"&limit=all",
+#' 		collapse="")
+#' 	command<-paste(unlist(strsplit(command,split=" ")),collapse="%20")
+#' 	downData<-readLines(command)
+#' 	if(length(grep("Warning",downData))!=0){
+#' 		start<-grep("Records",downData)
+#' 		warn<-downData[1:(start-1)]
+#' 		warn<-sapply(warn, function(x) 
+#' 			paste0(unlist(strsplit(unlist(strsplit(x,'"')),",")),collapse=""))
+#' 		warn<-paste0(warn,collapse="\n")
+#' 		names(warn)<-NULL
+#' 		mat<-downData[-(1:start)]
+#' 		mat<-read.csv(textConnection(mat))
+#' 		message(warn)
+#' 	}else{
+#' 		mat<-downData
+#' 		mat<-read.csv(textConnection(mat))
+#' 		}
+#' 	return(mat)
+#' 	}
 #' 
 #' #try a PBDB API download with lots of synonymization
 #' 	#this should have only 1 species
-#' acoData<-read.csv(paste0("http://paleobiodb.org/data1.1/occs/list.txt?",
-#' 	"base_name=Acosarina%20minuta&show=ident,phylo&limit=all"))
+#' #old way:
+#' #acoData<-read.csv(paste0("http://paleobiodb.org/data1.1/occs/list.txt?",
+#' #	"base_name=Acosarina%20minuta&show=ident,phylo&limit=all"))
+#' # with easyGetPBDBocc:
+#' acoData<-easyGetPBDBocc("Acosarina minuta")
 #' x<-taxonSortPBDBocc(acoData, rank="species", onlyFormal=FALSE)
 #' names(x)
 #'
 #' #make sure works with API v1.2
 #' 		#won't work until v1.2 goes live at the regular server
-#' dicelloDataCom<-read.csv(paste0("http://paleobiodb.org",
+#' dicelloData-read.csv(paste0("http://paleobiodb.org",
 #' 	"/data1.2/occs/list.txt?base_name=Dicellograptus",
 #' 	"&show=ident,phylo&limit=all"))
-#' dicelloOcc2<-taxonSortPBDBocc(dicelloDataCom, rank="species", onlyFormal=FALSE)
+#' dicelloOcc2<-taxonSortPBDBocc(dicelloData, rank="species", onlyFormal=FALSE)
 #' names(dicelloOcc2)
 #' 
 #' #make sure works with compact vocab v1.1

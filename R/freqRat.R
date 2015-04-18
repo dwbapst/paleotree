@@ -100,7 +100,7 @@
 #' #5 time-unit intervals, so ~0.44 / 5 = ~0.08 per time-unite
 #' #That's pretty close to the generating value of 0.01, used in simFossilTaxa
 #' 
-#' \dontrun{
+#' \donttest{
 #' #################
 #' #The following example code (which is not run by default) examines how 
 #' 	#the freqRat estimates vary with sample size, interval length

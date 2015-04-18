@@ -171,6 +171,16 @@ occData2timeList<-function(occList,intervalType="dateRange"){
 		#get the earliest early age and earliest latest age as taxaMax (LAD)
 		taxaMax<-t(sapply(taxaInt,function(x) apply(x,2,min)))
 		}
+	if(intervalType=="zoneOverlap"){
+		#emulates behavior of PBDB Classic by John Alroy
+		#get earliest and latest intervals the taxa appear in
+			#these will be set of occurrences that overlap with min/max occs
+		taxaMin<-lapply(taxaInt,function(x) x[x[,1]==max(x[,1]),,drop=FALSE])
+		taxaMax<-lapply(taxaInt,function(x) x[x[,2]==min(x[,2]),,drop=FALSE])
+		#find the latest early age and earliest latest age for occs that overlap
+		taxaMin<-t(sapply(taxaMin,function(x) c(min(x[,1]),max(x[,2]))))
+		taxaMax<-t(sapply(taxaMax,function(x) c(min(x[,1]),max(x[,2]))))		
+		}	
 	fourDate<-cbind(taxaMin,taxaMax)
 	timeList<-fourDate2timeList(fourDate)
 	rownames(timeList$taxonTimes)<-names(occList)

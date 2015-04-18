@@ -1,24 +1,8 @@
-# Sample .travis.yml for R projects from https://github.com/craigcitro/r-travis
+# as of 04-17-15 can be just
 
-language: c
+language: r
 
-env:
-- WARNINGS_ARE_ERRORS=1
+# Be strict when checking our package
+warnings_are_errors: true
 
-before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - chmod 755 ./travis-tool.sh
-  - ./travis-tool.sh bootstrap
-
-install:
-  - ./travis-tool.sh install_deps
-
-script: ./travis-tool.sh run_tests
-
-on_failure:
-  - ./travis-tool.sh dump_logs
-
-notifications:
-  email:
-    on_success: change
-    on_failure: change
+r_check_args: --run-donttest --as-cran

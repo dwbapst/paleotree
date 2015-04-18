@@ -221,7 +221,7 @@
 #' #what does this mix of speciation modes look like as a phylogeny?
 #' tree <- taxa2phylo(res,plot=TRUE)
 #' 
-#' \dontrun{
+#' \donttest{
 #' #some other options with cryptic speciation
 #' taxaCrypt1 <- simFossilTaxa(p=0.1,q=0.1,anag.rate=0,prop.bifurc=0,prop.crypt=0.5,mintaxa=30,
 #'     maxtaxa=60,maxExtant=0,nruns=1,plot=TRUE)
@@ -271,7 +271,7 @@
 #' #histogram of # extant taxa at end of simulation
 #' hist(sapply(res,function(x) sum(x[,5])),main="#extant")
 #' 
-#' \dontrun{
+#' \donttest{
 #' #pure-birth example
 #' #note that conditioning is tricky
 #' layout(1)

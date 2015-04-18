@@ -458,7 +458,7 @@
 #'     nonstoch.bin=TRUE,randres=TRUE,add.term=TRUE,plot=FALSE)
 #' phyloDiv(ttreeB3)
 #' 
-#' \dontrun{
+#' \donttest{
 #' #simple three taxon example for testing inc.term.adj
 #' ranges1<-cbind(c(3,4,5),c(2,3,1));rownames(ranges1)<-paste("t",1:3,sep="")
 #' clado1<-read.tree(file=NA,text="(t1,(t2,t3));")

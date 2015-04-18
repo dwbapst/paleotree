@@ -207,7 +207,7 @@
 #' rangesLive<-sampleRanges(taxaLive,r=0.1,alpha=4,beta=4,randLiveHat=FALSE,plot=TRUE)
 #' 
 #' 
-#' \dontrun{
+#' \donttest{
 #' #simulate a model where sampling rate evolves under brownian motion
 #' tree<-taxa2phylo(taxa,obs=taxa[,3])
 #' sampRateBM <- rTraitCont(tree)

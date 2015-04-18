@@ -23,7 +23,9 @@
 #' one may want to do maxParsimony=FALSE if one is interested in whether there are solutions with a
 #' smaller number of gains or losses and thus wants to return all solutions.
 
-#' @param printMinResult If TRUE (the default), a summary of the results is messaged to the terminal.
+#' @param printMinResult If TRUE (the default), a summary of the results is printed to the terminal. The
+#' information in this summary may be more detailed if the results of the analysis are simpler (i.e. 
+#' fewer unique solutions).
 
 #' @param type The parsimony algorithm applied by \code{ancestral.pars}, which can apply one of two:
 #' "MPR" (the default) is a relatively fast algorithm developed by Hamazawa et al. (1995) and Narushima
@@ -106,7 +108,7 @@
 
 
 #' @examples
-#' # let's write a quick&dirty ancestral trait plotting function
+#' # let's write a quick & dirty ancestral trait plotting function
 #' 
 #' quickAncPlot<-function(tree,ancData,cex=cex){
 #' 	plot(tree,show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
@@ -155,6 +157,11 @@
 #' y<-ancestral.pars(tree,char1,type="ACCTRAN")
 #' }
 #' 
+#' #estimating minimum number of transitions with MPR 
+#' minCharChange(tree,trait=char,type="MPR")
+#'
+#' #and now with ACCTRAN
+#' minCharChange(tree,trait=char,type="ACCTRAN")
 
 #' @name minCharChange
 #' @rdname minCharChange
@@ -170,7 +177,8 @@ minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE,
 	#num of potential solutions
 	taxSol<-apply(ancMat,1,function(x) sum(x>0))	#taxSol = solution length of each taxon
 	nSol<-prod(taxSol)
-	charN<-as.numeric(colnames(ancMat))
+	#supposedly charN (my trait vector to be sampled) can be character, its fine
+	charN<-colnames(ancMat)
 	if(nSol>randomMax){
 		solMat<-t(apply(ancMat,1,function(x) sample(charN[x>0],randomMax,replace=T)))
 	}else{	
@@ -266,7 +274,13 @@ minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE,
 	funcMess<-c(paste(nSol,"potential solutions under",type,",",length(maxPars),"most parsimonious solutions found"),
 		ifelse(nSol>randomMax,"Solutions sampled stochastically","Solutions exhaustively checked"))
 	if(printMinResult){
-		print(list(message=funcMess,sumTransitions=sumTran,minTransitions=minTran))}
+		if(length(maxPars)<6){
+			print(list(message=funcMess,sumTransitions=sumTran,
+				transitionArray=tranMat,minTransitions=minTran))
+		}else{
+			print(list(message=funcMess,sumTransitions=sumTran,minTransitions=minTran))
+			}
+		}
 	return(invisible(list(message=funcMess,sumTransitions=sumTran,minTransitions=minTran,
 		solutionArray=edgeSol,transitionArray=tranMat,transitionSumChanges=tranSumChange))) #
 	}

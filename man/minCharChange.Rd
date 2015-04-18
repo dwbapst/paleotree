@@ -43,7 +43,9 @@ default), the character is assumed to be unordered with equal cost to change fro
 Cost matrices only impact the "MPR" algorithm; if a cost matrix is given but 'type = "ACCTRAN"', an error
 is issued.}
 
-\item{printMinResult}{If TRUE (the default), a summary of the results is messaged to the terminal.}
+\item{printMinResult}{If TRUE (the default), a summary of the results is printed to the terminal. The
+information in this summary may be more detailed if the results of the analysis are simpler (i.e.
+fewer unique solutions).}
 }
 \value{
 A list is invisibly returned containing the following elements:
@@ -89,7 +91,7 @@ presumably unordered, however, then the gains and losses division is arbitrary a
 to obtain the total number of character changes.
 }
 \examples{
-# let's write a quick&dirty ancestral trait plotting function
+# let's write a quick & dirty ancestral trait plotting function
 
 quickAncPlot<-function(tree,ancData,cex=cex){
 	plot(tree,show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
@@ -137,6 +139,12 @@ char1<-phyDat(char1,type="USER",levels=sort(unique(char1)))
 x<-ancestral.pars(tree,char1,type="MPR")
 y<-ancestral.pars(tree,char1,type="ACCTRAN")
 }
+
+#estimating minimum number of transitions with MPR
+minCharChange(tree,trait=char,type="MPR")
+
+#and now with ACCTRAN
+minCharChange(tree,trait=char,type="ACCTRAN")
 }
 \author{
 David W. Bapst

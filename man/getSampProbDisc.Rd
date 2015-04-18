@@ -185,10 +185,10 @@ SPres3 <- getSampProbDisc(rangesDisc,n_tbins=2)
 print(c(SPres1$AICc,SPres2$AICc,SPres3$AICc))
 #and we can see the most simple model has the lowest AICc (most informative model)
 
-#testing temporal change in sampling probabiluty
+#testing temporal change in sampling probability
 set.seed(444)
 taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=100,maxtaxa=125,maxtime=1000,maxExtant=0,
-  plot=T)
+  plot=TRUE)
 #let's see what the 'true' diversity curve looks like in this case
 #simulate two sets of ranges at r=0.7 and r=0.1
 rangesCont <- sampleRanges(taxa,r=1.1)

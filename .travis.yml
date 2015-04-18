@@ -6,4 +6,4 @@ sudo: required
 # Be strict when checking our package
 warnings_are_errors: true
 
-r_check_args: --as-cran --run-donttest 
+# r_check_args: --as-cran --run-donttest 

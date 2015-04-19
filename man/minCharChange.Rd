@@ -82,12 +82,17 @@ discrete character data. \code{minCharChange} relies on \code{ancPropStateMat}, 
 for \code{phangorn}'s function \code{ancestral.pars}.
 }
 \details{
+The wrapper function \code{ancPropStateMat} simply automates the application of functions
+\code{ancestral.pars} and \code{phyDat} from \code{phangorn}, along with several additional checks
+and code to present the result as a matrix, rather than a specialized list.
+
 Note that although the default \code{cost} argument assumes that multistate characters are unordered,
 the results of character change will be reported as gains and losses relative to the numbering of the
-states, exactly as if they had been ordered. In the case where the character is actually ordered, this may be
+states in the output \code{transitionSumChanges}, exactly as if they had been ordered. In the case
+where the character is actually ordered, this may be
 considered a conservative approach, as using a parsimony algorithm for unordered character states allows fewer
 gains or losses to be counted on branches where multiple gains and losses are reported. If the character is
-presumably unordered, however, then the gains and losses division is arbitrary and should be summed to
+presumably unordered, however, then the gains and losses division is arbitrary nonsense and should be combined to
 to obtain the total number of character changes.
 }
 \examples{
@@ -103,8 +108,15 @@ quickAncPlot<-function(tree,ancData,cex=cex){
 
 data(retiolitinae)
 
-ancPropStateMat(retioTree,trait=retioChar[,2],type="MPR")
-ancPropStateMat(retioTree,trait=retioChar[,2],type="ACCTRAN")
+ancMPR<-ancPropStateMat(retioTree,trait=retioChar[,2],type="MPR")
+ancACCTRAN<-ancPropStateMat(retioTree,trait=retioChar[,2],type="ACCTRAN")
+
+#let's compare MPR versus ACCTRAN results
+layout(1:2)
+quickAncPlot(tree,ancMPR,cex=0.3)
+text(x=8,y=15,"type='MPR'",cex=1.5)
+quickAncPlot(tree,ancACCTRAN,cex=0.3)
+text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
 
 minCharChange(retioTree,trait=retioChar[,2],type="MPR")
 minCharChange(retioTree,trait=retioChar[,2],type="ACCTRAN")

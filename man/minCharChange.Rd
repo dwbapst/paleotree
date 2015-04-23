@@ -6,9 +6,9 @@
 \title{Estimating the Minimum Number of Character Transitions Using Maximum Parsimony}
 \usage{
 minCharChange(trait, tree, randomMax = 10000, maxParsimony = TRUE,
-  type = "MPR", cost = NULL, printMinResult = TRUE)
+  ordered = FALSE, type = "MPR", cost = NULL, printMinResult = TRUE)
 
-ancPropStateMat(trait, tree, type = "MPR", cost = NULL)
+ancPropStateMat(trait, tree, ordered = FALSE, type = "MPR", cost = NULL)
 }
 \arguments{
 \item{trait}{A vector of trait values for a discrete character, preferably named with taxon names
@@ -28,6 +28,11 @@ been solutions not examined with a lower number of transitions even if maxParsim
 one may want to do maxParsimony=FALSE if one is interested in whether there are solutions with a
 smaller number of gains or losses and thus wants to return all solutions.}
 
+\item{ordered}{If TRUE (not the default), then the character will be reconstructed with a cost (step)
+matrix of a linear, ordered character. This is not applicable if type=ACCTRAN, as cost matrices cannot
+be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if ordered=TRUE but
+a cost matrix is given, as the only reason to use ordered is to produce a cost matrix automatically.}
+
 \item{type}{The parsimony algorithm applied by \code{ancestral.pars}, which can apply one of two:
 "MPR" (the default) is a relatively fast algorithm developed by Hamazawa et al. (1995) and Narushima
 and Hanazawa (1997), which relies on reconstructing the states at each internal node by re-rooting at
@@ -38,7 +43,8 @@ solutions that satisfy the ACCTRAN algorithm, but does so by assigning edge weig
 As of phangorn v1.99-12, both of these algorithms apply
 the Sankoff parsimony algorithm, which allows multifurcations (polytomies).}
 
-\item{cost}{A matrix of the cost to change between states of the input character trait. If NULL (the
+\item{cost}{A matrix of the cost (i.e. number of steps) necessary to change between states of the input
+character trait. If NULL (the
 default), the character is assumed to be unordered with equal cost to change from any state to another.
 Cost matrices only impact the "MPR" algorithm; if a cost matrix is given but 'type = "ACCTRAN"', an error
 is issued.}
@@ -108,8 +114,10 @@ quickAncPlot<-function(tree,ancData,cex=cex){
 
 data(retiolitinae)
 
-ancMPR<-ancPropStateMat(retioTree,trait=retioChar[,2],type="MPR")
-ancACCTRAN<-ancPropStateMat(retioTree,trait=retioChar[,2],type="ACCTRAN")
+#unordered, MPR
+ancMPR<-ancPropStateMat(retioTree, trait=retioChar[,2], type="MPR")
+#unordered, ACCTRAN
+ancACCTRAN<-ancPropStateMat(retioTree, trait=retioChar[,2], type="ACCTRAN")
 
 #let's compare MPR versus ACCTRAN results
 layout(1:2)
@@ -130,8 +138,12 @@ char<-rTraitDisc(tree,k=3,rate=0.7)
 tree$edge.length<-NULL
 tree<-ladderize(tree)
 
-ancMPR<-ancPropStateMat(tree,trait=char,type="MPR")
-ancACCTRAN<-ancPropStateMat(tree,trait=char,type="ACCTRAN")
+#unordered, MPR
+ancMPR<-ancPropStateMat(tree, trait=char, type="MPR")
+#unordered, ACCTRAN
+ancACCTRAN<-ancPropStateMat(tree, trait=char, type="ACCTRAN")
+#ordered, MPR
+ancMPRord<-ancPropStateMat(tree, trait=char, ordered=TRUE, type="MPR")
 
 #let's compare MPR versus ACCTRAN results
 layout(1:2)
@@ -141,6 +153,13 @@ quickAncPlot(tree,ancACCTRAN,cex=0.3)
 text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
 #MPR has much more uncertainty in node estimates
 	#but that doesn't mean ACCTRAN is preferable
+
+#let's compare unordered versus ordered under MPR
+layout(1:2)
+quickAncPlot(tree,ancMPR,cex=0.3)
+text(x=8,y=15,"ordered = FALSE",cex=1.5)
+quickAncPlot(tree,ancMPRord,cex=0.3)
+text(x=9,y=15,"ordered = TRUE'",cex=1.5)
 
 \donttest{
 # what ancPropStateMat automates (with lots of checks):

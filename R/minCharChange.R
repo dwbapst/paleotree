@@ -27,6 +27,11 @@
 #' information in this summary may be more detailed if the results of the analysis are simpler (i.e. 
 #' fewer unique solutions).
 
+#' @param ordered If TRUE (not the default), then the character will be reconstructed with a cost (step)
+#' matrix of a linear, ordered character. This is not applicable if type=ACCTRAN, as cost matrices cannot
+#' be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if ordered=TRUE but
+#' a cost matrix is given, as the only reason to use ordered is to produce a cost matrix automatically.
+
 #' @param type The parsimony algorithm applied by \code{ancestral.pars}, which can apply one of two:
 #' "MPR" (the default) is a relatively fast algorithm developed by Hamazawa et al. (1995) and Narushima
 #' and Hanazawa (1997), which relies on reconstructing the states at each internal node by re-rooting at
@@ -37,7 +42,8 @@
 #' As of phangorn v1.99-12, both of these algorithms apply
 #' the Sankoff parsimony algorithm, which allows multifurcations (polytomies).
  
-#' @param cost A matrix of the cost to change between states of the input character trait. If NULL (the
+#' @param cost A matrix of the cost (i.e. number of steps) necessary to change between states of the input
+#' character trait. If NULL (the
 #' default), the character is assumed to be unordered with equal cost to change from any state to another.
 #' Cost matrices only impact the "MPR" algorithm; if a cost matrix is given but 'type = "ACCTRAN"', an error
 #' is issued.
@@ -125,8 +131,10 @@
 #' 
 #' data(retiolitinae)
 #' 
-#' ancMPR<-ancPropStateMat(retioTree,trait=retioChar[,2],type="MPR")
-#' ancACCTRAN<-ancPropStateMat(retioTree,trait=retioChar[,2],type="ACCTRAN")
+#' #unordered, MPR
+#' ancMPR<-ancPropStateMat(retioTree, trait=retioChar[,2], type="MPR")
+#' #unordered, ACCTRAN
+#' ancACCTRAN<-ancPropStateMat(retioTree, trait=retioChar[,2], type="ACCTRAN")
 #' 
 #' #let's compare MPR versus ACCTRAN results
 #' layout(1:2)
@@ -147,8 +155,12 @@
 #' tree$edge.length<-NULL
 #' tree<-ladderize(tree)
 #' 
-#' ancMPR<-ancPropStateMat(tree,trait=char,type="MPR")
-#' ancACCTRAN<-ancPropStateMat(tree,trait=char,type="ACCTRAN")
+#' #unordered, MPR
+#' ancMPR<-ancPropStateMat(tree, trait=char, type="MPR")
+#' #unordered, ACCTRAN
+#' ancACCTRAN<-ancPropStateMat(tree, trait=char, type="ACCTRAN")
+#' #ordered, MPR
+#' ancMPRord<-ancPropStateMat(tree, trait=char, ordered=TRUE, type="MPR")
 #' 
 #' #let's compare MPR versus ACCTRAN results
 #' layout(1:2)
@@ -158,6 +170,13 @@
 #' text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
 #' #MPR has much more uncertainty in node estimates
 #' 	#but that doesn't mean ACCTRAN is preferable
+#'
+#' #let's compare unordered versus ordered under MPR
+#' layout(1:2)
+#' quickAncPlot(tree,ancMPR,cex=0.3)
+#' text(x=8,y=15,"ordered = FALSE",cex=1.5)
+#' quickAncPlot(tree,ancMPRord,cex=0.3)
+#' text(x=9,y=15,"ordered = TRUE'",cex=1.5)
 #' 
 #' \donttest{
 #' # what ancPropStateMat automates (with lots of checks):
@@ -178,11 +197,11 @@
 #' @name minCharChange
 #' @rdname minCharChange
 #' @export
-minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE,
+minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE, ordered=FALSE,
 		 type="MPR", cost=NULL, printMinResult=TRUE){
 	#randomMax=100;maxParsimony=TRUE;printMinResult=TRUE;type="MPR";cost=NULL
 	#print result gives back a reasonable 
-	ancMat<-ancPropStateMat(trait, tree, type=type, cost=cost)
+	ancMat<-ancPropStateMat(trait, tree, ordered=ordered, type=type, cost=cost)
 	#num of potential solutions
 	taxSol<-apply(ancMat,1,function(x) sum(x>0))	#taxSol = solution length of each taxon
 	nSol<-prod(taxSol)
@@ -296,13 +315,16 @@ minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE,
 
 #' @rdname minCharChange
 #' @export
-ancPropStateMat<-function(trait, tree, type="MPR", cost=NULL){
+ancPropStateMat<-function(trait, tree, ordered=FALSE, type="MPR", cost=NULL){
 	#wrapper for phangorn's ancestral.pars that returns a fully labeled matrix indicating
 		#the relative frequency of a node being reconstructed under a given state
 	#require(phangorn)
-		#return error if cost is not null and type=ACCTRAN
+	#return error if cost is not null and type=ACCTRAN
 	if(type=="ACCTRAN" & !is.null(cost)){
 		stop("cost matrix is inapplicable if ACCTRAN algorithm is used")}
+	#return error if cost is not null and ordered=TRUE
+	if(ordered & !is.null(cost)){
+		stop("Cannot treat character as ordered; cost matrix inapplicable under ACCTRAN")}
 	#check names
 	if(is.null(names(trait))){
 		if(Ntip(tree)!=length(trait)){
@@ -315,7 +337,18 @@ ancPropStateMat<-function(trait, tree, type="MPR", cost=NULL){
 	char1<-matrix(trait,,1)
 	rownames(char1)<-names(trait)
 	#translate into something for phangorn to read
-	char1<-phyDat(char1,type="USER",levels=sort(unique(char1)))
+	states<-sort(unique(char1))
+	char1<-phyDat(char1,type="USER",levels=states)
+	if(ordered){
+		if(!is.null(cost)){stop("Do not give cost matrix if you set argument cost = TRUE")}
+		#if ordered 
+		nStates<-length(states)
+		cost<-matrix(,nStates,nStates)
+		for(i in 1:nStates){for(j in 1:nStates){
+			cost[i,j]<-abs(i-j)
+			}}
+		colnames(cost)<-rownames(cost)<-states
+		}
 	#get anc states
 	anc1<-ancestral.pars(tree,char1,type=type,cost=cost)
 	#turn into a col-per-state matrix with each row a node or tip, numbered as in edge

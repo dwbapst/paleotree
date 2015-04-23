@@ -174,7 +174,7 @@
 #' @rdname taxonSortPBDBocc
 #' @export
 taxonSortPBDBocc<-function(data,rank, onlyFormal=TRUE, cleanUncertain=TRUE, 
-								cleanResoValues=c(NA, '"', "", "n. sp.", "n. gen.")){
+								cleanResoValues=c(NA, '"', "", "n. sp.", "n. gen."," ","  ")){
 	#this function inspired by Matt Clapham's taxonClean and paleobioDB's pbdb_temp_range
 		#onlyFormal=FALSE;rank="species"
 		#onlyFormal=FALSE;rank="genus"

@@ -6,9 +6,9 @@ Date: 2015-04-18
 Author: David W. Bapst
 Depends:
     R (>= 3.0.0),
-    ape
+    ape (>= 3.2)
 Imports:
-    phangorn
+    phangorn (>= 1.99.12)
 ByteCompile: TRUE
 Maintainer: David W. Bapst <dwbapst@gmail.com>
 Description: Analyzes, time-scales and simulates phylogenies of extinct/fossil

@@ -79,8 +79,8 @@ fourDate2timeList<-function(fourDate){
 	fourDate<-as.matrix(fourDate)
 	if(!is(fourDate,"matrix")){if(ncol(fourDate)!=4){
 		stop("fourDate must be a matrix with four columns")}}
-	taxaFirst<-fourDate[,1:2]
-	taxaLast<-fourDate[,3:4]
+	taxaFirst<-fourDate[,1:2,drop=FALSE]
+	taxaLast<-fourDate[,3:4,drop=FALSE]
 	#make interval list
 	intTimes<-unique(rbind(taxaFirst,taxaLast))
 	intTimes<-intTimes[order(-intTimes[,1],-intTimes[,2]),]

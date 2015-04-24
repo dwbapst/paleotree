@@ -176,7 +176,7 @@ makePBDBtaxontree<-function(data,rank,cleanTree=TRUE,cleanDuplicate=TRUE){
 	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
 	if(any(nDup) & cleanDuplicate){
 		#find any taxa of not right rank, remove them
-		data<-data[-(data[,"taxon_rank"]!=rank & nDup),]
+		data<-data[!(data[,"taxon_rank"]!=rank & nDup),]
 		}
 	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
 	if(any(nDup)){

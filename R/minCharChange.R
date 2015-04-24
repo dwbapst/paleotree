@@ -121,10 +121,10 @@
 #' @examples
 #' # let's write a quick & dirty ancestral trait plotting function
 #' 
-#' quickAncPlot<-function(tree,ancData,cex=cex){
+#' quickAncPlot<-function(tree,ancData,cex=0.3){
 #'	ancCol<-(1:ncol(ancData))+1
 #' 	plot(tree,show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
-#' 	tiplabels(pch=16,pie=ancData[(1:Ntip(tree)),],piecol=ancCol)
+#' 	tiplabels(pch=16,pie=ancData[(1:Ntip(tree)),],cex=cex,piecol=ancCol)
 #' 	nodelabels(pie=ancData[-(1:Ntip(tree)),],cex=cex,piecol=ancCol)	
 #' 	}
 #'

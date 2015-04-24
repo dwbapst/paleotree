@@ -105,9 +105,10 @@ to obtain the total number of character changes.
 # let's write a quick & dirty ancestral trait plotting function
 
 quickAncPlot<-function(tree,ancData,cex=cex){
+	ancCol<-(1:ncol(ancData))+1
 	plot(tree,show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
-	tiplabels(pch=16,col=(as.numeric(char[tree$tip.label])+1))
-	nodelabels(pie=ancData[-(1:Ntip(tree)),],cex=cex,piecol=2:5)
+	tiplabels(pch=16,pie=ancData[(1:Ntip(tree)),],piecol=ancCol)
+	nodelabels(pie=ancData[-(1:Ntip(tree)),],cex=cex,piecol=ancCol)
 	}
 
 # example with retiolitid graptolite data

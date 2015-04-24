@@ -4,7 +4,7 @@
 \alias{makePBDBtaxontree}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
-makePBDBtaxontree(data, rank, cleanTree = TRUE)
+makePBDBtaxontree(data, rank, cleanTree = TRUE, cleanDuplicate = TRUE)
 }
 \arguments{
 \item{data}{A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
@@ -18,6 +18,9 @@ any formally updated name.}
 nodes reordered and being written out as a Newick string and read back in, to ensure functionality with ape functions
 and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
 lead to hard-crashes of R.}
+
+\item{cleanDuplicate}{If TRUE (the default), duplicated taxa of a taxonomic rank *not* selected by argument \code{rank}
+will be removed silently. Only duplicates of the taxonomic rank of interest will actually result in an error message.}
 }
 \value{
 A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. Edges are scaled so that

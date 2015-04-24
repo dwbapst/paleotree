@@ -25,6 +25,9 @@
 #' and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
 #' lead to hard-crashes of R.
 
+#' @param cleanDuplicate If TRUE (the default), duplicated taxa of a taxonomic rank *not* selected by argument \code{rank}
+#' will be removed silently. Only duplicates of the taxonomic rank of interest will actually result in an error message.
+
 #' @return
 #' A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. Edges are scaled so that
 #' the distance from one taxon rank to another 1, then merged to remove singleton nodes. As not all
@@ -133,7 +136,7 @@
 #' @name makePBDBtaxontree
 #' @rdname makePBDBtaxontree
 #' @export
-makePBDBtaxontree<-function(data,rank,cleanTree=TRUE){	
+makePBDBtaxontree<-function(data,rank,cleanTree=TRUE,cleanDuplicate=TRUE){	
 	if(!is(data,"data.frame")){stop("data isn't a data.frame")}
 	if(length(rank)!=1){stop("rank must be a single value")}
 	if(!any(sapply(c("species","genus","family","order","class","phylum"),function(x) x==rank))){
@@ -169,7 +172,12 @@ makePBDBtaxontree<-function(data,rank,cleanTree=TRUE){
 	#
 	if(!any(colnames(data)=="family")){stop("Data must be a taxonomic download with show=phylo")}
 	#
-	#check to make sure no taxon names are listed twice
+	#check to make sure no taxon names are listed twice, first clean then check again
+	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
+	if(any(nDup) & cleanDuplicate){
+		#find any taxa of not right rank, remove them
+		data<-data[-(data[,"taxon_rank"]!=rank & nDup),]
+		}
 	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
 	if(any(nDup)){
 		stop(paste0("Duplicate taxa: ",paste0("(",which(nDup),") ",data[nDup,"taxon_name"],collapse=", ")))}
@@ -188,7 +196,7 @@ makePBDBtaxontree<-function(data,rank,cleanTree=TRUE){
 		data[,"taxon_name"]<-nameFormal	
 		}
 	#
-	#check to make sure no taxon names are listed twice
+	#check to make sure no taxon names are listed twice (don't need to clean because we've already filtered on rank)
 	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
 	if(any(nDup)){
 		stop(paste0("Duplicate taxa: ",paste0(data[nDup,"taxon_name"],collapse=", ")))}

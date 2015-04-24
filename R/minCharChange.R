@@ -121,7 +121,7 @@
 #' @examples
 #' # let's write a quick & dirty ancestral trait plotting function
 #' 
-#' quickAncPlot<-function(tree,ancData,cex=0.3){
+#' quickAncPlot<-function(tree,ancData,cex){
 #'	ancCol<-(1:ncol(ancData))+1
 #' 	plot(tree,show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
 #' 	tiplabels(pch=16,pie=ancData[(1:Ntip(tree)),],cex=cex,piecol=ancCol)
@@ -139,9 +139,9 @@
 #' 
 #' #let's compare MPR versus ACCTRAN results
 #' layout(1:2)
-#' quickAncPlot(retioTree,ancMPR,cex=0.3)
+#' quickAncPlot(retioTree,ancMPR,cex=0.5)
 #' text(x=8,y=15,"type='MPR'",cex=1.5)
-#' quickAncPlot(retioTree,ancACCTRAN,cex=0.3)
+#' quickAncPlot(retioTree,ancACCTRAN,cex=0.5)
 #' text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
 #' 
 #' minCharChange(retioTree,trait=retioChar[,2],type="MPR")

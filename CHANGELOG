@@ -13,6 +13,7 @@ Version - 2.4 -
 -Now allowed to have a simpler Travis CI structure, apparently with --run-donttest
 -Added retioChar, character data for 3 characters for the 22 Retiolitinae species, to the retiolitinae example dataset
 -Added functions minCharChange and ancPropStateMat which are wrappers for doing parsimony ancestral reconstruction via phangorn's ancestral.pars
+-Added a badge to README that counts number of paleotree downloads from RStudio server
 
 Version - 2.3 - 01-16-15
 -New function dropPaleoTip which is a simple wrapper for drop.tip in ape but uses fixRootTime to adjust the $root.time element in the resulting tree, after tips are dropped (Thanks to a conversation with Graeme Lloyd)

@@ -25,7 +25,7 @@
 #' and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
 #' lead to hard-crashes of R.
 
-#' @param cleanDuplicate If TRUE (the default), duplicated taxa of a taxonomic rank *not* selected by argument \code{rank}
+#' @param cleanDuplicate If TRUE (\emph{not} the default), duplicated taxa of a taxonomic rank *not* selected by argument \code{rank}
 #' will be removed silently. Only duplicates of the taxonomic rank of interest will actually result in an error message.
 
 #' @return
@@ -136,7 +136,7 @@
 #' @name makePBDBtaxontree
 #' @rdname makePBDBtaxontree
 #' @export
-makePBDBtaxontree<-function(data,rank,cleanTree=TRUE,cleanDuplicate=TRUE){	
+makePBDBtaxontree<-function(data,rank,cleanTree=TRUE,cleanDuplicate=FALSE){	
 	if(!is(data,"data.frame")){stop("data isn't a data.frame")}
 	if(length(rank)!=1){stop("rank must be a single value")}
 	if(!any(sapply(c("species","genus","family","order","class","phylum"),function(x) x==rank))){

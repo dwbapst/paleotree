@@ -138,9 +138,9 @@
 #' 
 #' #let's compare MPR versus ACCTRAN results
 #' layout(1:2)
-#' quickAncPlot(tree,ancMPR,cex=0.3)
+#' quickAncPlot(retioTree,ancMPR,cex=0.3)
 #' text(x=8,y=15,"type='MPR'",cex=1.5)
-#' quickAncPlot(tree,ancACCTRAN,cex=0.3)
+#' quickAncPlot(retioTree,ancACCTRAN,cex=0.3)
 #' text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
 #' 
 #' minCharChange(retioTree,trait=retioChar[,2],type="MPR")

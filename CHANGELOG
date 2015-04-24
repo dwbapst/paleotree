@@ -14,6 +14,7 @@ Version - 2.4 -
 -Added retioChar, character data for 3 characters for the 22 Retiolitinae species, to the retiolitinae example dataset
 -Added functions minCharChange and ancPropStateMat which are wrappers for doing parsimony ancestral reconstruction via phangorn's ancestral.pars
 -Added a badge to README that counts number of paleotree downloads from RStudio server
+-Added $sampledLogLike and $sumLogLike elements as additional output attached to time-scaled trees from cal3 functions, to allow users to quantify the relative optimality of each tree in a sample under the cal3 probability density function.
 
 Version - 2.3 - 01-16-15
 -New function dropPaleoTip which is a simple wrapper for drop.tip in ape but uses fixRootTime to adjust the $root.time element in the resulting tree, after tips are dropped (Thanks to a conversation with Graeme Lloyd)

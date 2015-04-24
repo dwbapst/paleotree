@@ -258,12 +258,20 @@
 
 #' @return The output of these functions is a time-scaled tree or set of
 #' time-scaled trees, of either class phylo or multiphylo, depending on the
-#' argument ntrees. All trees are output with an element $root.time. This is
+#' argument ntrees. All trees are output with an element \code{$root.time}. This is
 #' the time of the root on the tree and is important for comparing patterns
 #' across trees.
 #'
-#' Trees created with bin_cal3TimePaleoPhy will output with some additional
-#' elements, in particular $ranges.used, a matrix which records the
+#' Additional elements are \code{sampledLogLike} and \code{$sumLogLike} which respectively
+#' record a vector containing
+#' the 'log-densities' of the various node-ages selected for each tree by the 'zipper'
+#' algorithm, and the sum of those log-densities. Although they are very similar to
+#' log-likelihood values, they may not be true likelihoods, as node ages are conditional on the other
+#' ages selected by other nodes. However, these values may give an indication about the relative
+#' optimality of a set of trees output by the cal3 functions.
+#'
+#' Trees created with \code{bin_cal3TimePaleoPhy} will output with some additional
+#' elements, in particular \code{$ranges.used}, a matrix which records the
 #' continuous-time ranges generated for time-scaling each tree. (Essentially a
 #' pseudo-timeData matrix.)
 
@@ -499,6 +507,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	if(length(node.mins)>0){locked_nodes<-which(!is.na(node.mins))++Ntip(tree)}else{locked_nodes<-NA}
 	ttree1<-collapse.singles(ttree1)
 	ttrees<-rmtree(ntrees,3)
+	sampledLogLike<-numeric()
 	for(ntr in 1:ntrees){
 		#10/30/12: get FAD, new LAD (time of observation), and then calculate difference between t.obs and LAD
 		if(dateTreatment=="randObs" | FAD.only){
@@ -631,6 +640,8 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 					if(sum(zip_prob)==0){zip_prob<-rep(1,length(zip_prob))}
 					zip_prob<-zip_prob/sum(zip_prob)
 					ch_zip<-sample(1:nrow(zips),1,prob=zip_prob)	#sample zips
+					#record sampled zip_prob
+					sampledLogLike<-c(sampledLogLike,log(zip_prob[ch_zip]))
 					ch_anc<-zips[ch_zip,2]
 					ch_tzip<-zips[ch_zip,3]
 					#if anagenesis, add to anags; if budding, add to budds
@@ -752,6 +763,8 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 				if(sum(linDensity)==0){linDensity[length(linDensity)]<-1}
 				linDensity1<-linDensity/sum(linDensity)
 				ch_zip<-sample(poss_zip,1,prob=linDensity1)	#pick zipper location
+				#record sampled zip_prob
+				sampledLogLike<-c(sampledLogLike,log(linDensity1[ch_zip]))
 				#calculate new branch lengths, adding terminal ranges to tips
 				new_dlen1<-ifelse(ch_zip>dlen1,NA,dlen1-ch_zip)			#If not budding or anagenesis
 				new_dlen2<-dlen2-ch_zip		
@@ -777,6 +790,9 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 		ktree$anag.tips<-anags	#record the number of anagenetic ancestors
 		ktree$budd.tips<-budds	#record the number of budding ancestors	
 		ktree$nAdjZip<-nAdjZip
+		#record sampled log-likelihoods
+		ktree$sampledLogLike<-sampledLogLike
+		ktree$sumLogLike<-sum(sampledLogLike)
 		#now add root.time: because NO TIPS ARE DROPPED (due to anagenesis) can calculate this now
 			#must be calculated on LADs because the terminal ranges are added to the TREE!!!
 			#should be time of earliest LAD + distance of root from earliest tip

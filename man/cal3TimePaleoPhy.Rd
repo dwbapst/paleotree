@@ -146,12 +146,20 @@ recovered from a single bed/horizon, such as a Lagerstatten.}
 \value{
 The output of these functions is a time-scaled tree or set of
 time-scaled trees, of either class phylo or multiphylo, depending on the
-argument ntrees. All trees are output with an element $root.time. This is
+argument ntrees. All trees are output with an element \code{$root.time}. This is
 the time of the root on the tree and is important for comparing patterns
 across trees.
 
-Trees created with bin_cal3TimePaleoPhy will output with some additional
-elements, in particular $ranges.used, a matrix which records the
+Additional elements are \code{sampledLogLike} and \code{$sumLogLike} which respectively
+record a vector containing
+the 'log-densities' of the various node-ages selected for each tree by the 'zipper'
+algorithm, and the sum of those log-densities. Although they are very similar to
+log-likelihood values, they may not be true likelihoods, as node ages are conditional on the other
+ages selected by other nodes. However, these values may give an indication about the relative
+optimality of a set of trees output by the cal3 functions.
+
+Trees created with \code{bin_cal3TimePaleoPhy} will output with some additional
+elements, in particular \code{$ranges.used}, a matrix which records the
 continuous-time ranges generated for time-scaling each tree. (Essentially a
 pseudo-timeData matrix.)
 }

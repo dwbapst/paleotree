@@ -15,6 +15,7 @@
 # Sample .travis.yml for R projects from https://github.com/craigcitro/r-travis
  
  language: c
+ sudo: required
  
  env:
  - WARNINGS_ARE_ERRORS=1

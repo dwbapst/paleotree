@@ -176,11 +176,14 @@ makePBDBtaxontree<-function(data,rank,cleanTree=TRUE,cleanDuplicate=FALSE){
 	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
 	if(any(nDup) & cleanDuplicate){
 		#find any taxa of not right rank, remove them
-		data<-data[!(data[,"taxon_rank"]!=rank & nDup),]
+		droppers<-which(data[,"taxon_rank"]!=rank & nDup)
+		message(paste0("Duplicate taxa dropped: ",
+			paste0("(",droppers,") ",data[droppers,"taxon_name"]," [rank: ",data[droppers,"taxon_rank"],"]",collapse=", ")))
+		data<-data[-(droppers),]
 		}
 	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
 	if(any(nDup)){
-		stop(paste0("Duplicate taxa: ",paste0("(",which(nDup),") ",data[nDup,"taxon_name"],collapse=", ")))}
+		stop(paste0("Duplicate taxa of selected rank: ",paste0("(",which(nDup),") ",data[nDup,"taxon_name"],collapse=", ")))}
 	#filter on rank
 	data<-data[data[,"taxon_rank"]==rank,]
 	#
@@ -199,7 +202,7 @@ makePBDBtaxontree<-function(data,rank,cleanTree=TRUE,cleanDuplicate=FALSE){
 	#check to make sure no taxon names are listed twice (don't need to clean because we've already filtered on rank)
 	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
 	if(any(nDup)){
-		stop(paste0("Duplicate taxa: ",paste0(data[nDup,"taxon_name"],collapse=", ")))}
+		stop(paste0("Duplicate taxa of selected rank: ",paste0(data[nDup,"taxon_name"],collapse=", ")))}
 	#get the fields you want
 	taxonFields<-c("kingdom","phylum","class","order","family",
 		"taxon_name")

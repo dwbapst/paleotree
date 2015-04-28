@@ -32,7 +32,8 @@ testEdgeMat<-function(tree){
 	if(!is(tree,"phylo")){stop("tree is not of type 'phylo'")}
 	#test edge matrix
 	if(length(tree$edge[,2])!=length(unique(tree$edge[,2]))){
-		stop("Some nodes are listed as a descendant twice in the edge matrix")}
+		stop(paste("Some nodes are listed as a descendant twice in the edge matrix",
+		paste0(tree$edge[duplicated(tree$edge[,2]),2],collapse=", ")))}
 	if(Nnode(tree)!=(max(tree$edge[,1])-Ntip(tree))){stop("Number of nodes is incorrect based on edge[,1]?")}
 	if(Ntip(tree)>2){
 		if(Nnode(tree)!=(max(tree$edge[,2])-Ntip(tree))){stop("Number of nodes is incorrect based on edge[,2]?")}

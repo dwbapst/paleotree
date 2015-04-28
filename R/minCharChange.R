@@ -27,10 +27,10 @@
 #' information in this summary may be more detailed if the results of the analysis are simpler (i.e. 
 #' fewer unique solutions).
 
-#' @param ordered If TRUE (not the default), then the character will be reconstructed with a cost (step)
+#' @param orderedChar If TRUE (not the default), then the character will be reconstructed with a cost (step)
 #' matrix of a linear, ordered character. This is not applicable if type=ACCTRAN, as cost matrices cannot
-#' be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if ordered=TRUE but
-#' a cost matrix is given, as the only reason to use ordered is to produce a cost matrix automatically.
+#' be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if orderedChar=TRUE but
+#' a cost matrix is given, as the only reason to use orderedChar is to produce a cost matrix automatically.
 
 #' @param type The parsimony algorithm applied by \code{ancestral.pars}, which can apply one of two:
 #' "MPR" (the default) is a relatively fast algorithm developed by Hamazawa et al. (1995) and Narushima
@@ -53,13 +53,14 @@
 #' \code{ancestral.pars} and \code{phyDat} from \code{phangorn}, along with several additional checks
 #' and code to present the result as a matrix, rather than a specialized list. 
 #' 
-#' Note that although the default \code{cost} argument assumes that multistate characters are unordered,
-#' the results of character change will be reported as gains and losses relative to the numbering of the
+#' Note that although the default \code{orderedChar} argument assumes that multistate characters are unordered,
+#' the results of character change will always be reported as gains and losses relative to the numbering of the
 #' states in the output \code{transitionSumChanges}, exactly as if they had been ordered. In the case
 #' where the character is actually ordered, this may be
 #' considered a conservative approach, as using a parsimony algorithm for unordered character states allows fewer
 #' gains or losses to be counted on branches where multiple gains and losses are reported. If the character is
-#' presumably unordered, however, then the gains and losses division is arbitrary nonsense and should be combined to
+#' presumably unordered \emph{and multistate}, however, then the gains and losses division
+#' is \emph{arbitrary nonsense} and should be combined to
 #' to obtain the total number of character changes.
 
 #' @return
@@ -121,10 +122,11 @@
 #' @examples
 #' # let's write a quick & dirty ancestral trait plotting function
 #' 
-#' quickAncPlot<-function(tree,ancData,cex){
+#' quickAncPlotter<-function(tree,ancData,cex){
 #'	ancCol<-(1:ncol(ancData))+1
 #' 	plot(tree,show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
-#' 	tiplabels(pch=16,pie=ancData[(1:Ntip(tree)),],cex=cex,piecol=ancCol)
+#' 	tiplabels(pch=16,pie=ancData[(1:Ntip(tree)),],cex=cex,piecol=ancCol,
+#'		col=0)
 #' 	nodelabels(pie=ancData[-(1:Ntip(tree)),],cex=cex,piecol=ancCol)	
 #' 	}
 #'
@@ -139,10 +141,10 @@
 #' 
 #' #let's compare MPR versus ACCTRAN results
 #' layout(1:2)
-#' quickAncPlot(retioTree,ancMPR,cex=0.5)
-#' text(x=8,y=15,"type='MPR'",cex=1.5)
-#' quickAncPlot(retioTree,ancACCTRAN,cex=0.5)
-#' text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
+#' quickAncPlotter(retioTree,ancMPR,cex=0.5)
+#' text(x=4,y=5,"type='MPR'",cex=1.5)
+#' quickAncPlotter(retioTree,ancACCTRAN,cex=0.5)
+#' text(x=5,y=5,"type='ACCTRAN'",cex=1.5)
 #' 
 #' minCharChange(retioTree,trait=retioChar[,2],type="MPR")
 #' minCharChange(retioTree,trait=retioChar[,2],type="ACCTRAN")
@@ -161,23 +163,24 @@
 #' #unordered, ACCTRAN
 #' ancACCTRAN<-ancPropStateMat(tree, trait=char, type="ACCTRAN")
 #' #ordered, MPR
-#' ancMPRord<-ancPropStateMat(tree, trait=char, ordered=TRUE, type="MPR")
+#' ancMPRord<-ancPropStateMat(tree, trait=char, orderedChar=TRUE, type="MPR")
 #' 
 #' #let's compare MPR versus ACCTRAN results
 #' layout(1:2)
-#' quickAncPlot(tree,ancMPR,cex=0.3)
+#' quickAncPlotter(tree,ancMPR,cex=0.3)
 #' text(x=8,y=15,"type='MPR'",cex=1.5)
-#' quickAncPlot(tree,ancACCTRAN,cex=0.3)
+#' quickAncPlotter(tree,ancACCTRAN,cex=0.3)
 #' text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
 #' #MPR has much more uncertainty in node estimates
 #' 	#but that doesn't mean ACCTRAN is preferable
 #'
 #' #let's compare unordered versus ordered under MPR
 #' layout(1:2)
-#' quickAncPlot(tree,ancMPR,cex=0.3)
-#' text(x=8,y=15,"ordered = FALSE",cex=1.5)
-#' quickAncPlot(tree,ancMPRord,cex=0.3)
-#' text(x=9,y=15,"ordered = TRUE'",cex=1.5)
+#' quickAncPlotter(tree,ancMPR,cex=0.3)
+#' text(x=8,y=15,"ordered char",cex=1.5)
+#' quickAncPlotter(tree,ancMPRord,cex=0.3)
+#' text(x=9,y=15,"ordered char'",cex=1.5)
+#' layout(1)
 #' 
 #' \donttest{
 #' # what ancPropStateMat automates (with lots of checks):
@@ -198,11 +201,11 @@
 #' @name minCharChange
 #' @rdname minCharChange
 #' @export
-minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE, ordered=FALSE,
+minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE, orderedChar=FALSE,
 		 type="MPR", cost=NULL, printMinResult=TRUE){
 	#randomMax=100;maxParsimony=TRUE;printMinResult=TRUE;type="MPR";cost=NULL
 	#print result gives back a reasonable 
-	ancMat<-ancPropStateMat(trait, tree, ordered=ordered, type=type, cost=cost)
+	ancMat<-ancPropStateMat(trait, tree, orderedChar=orderedChar, type=type, cost=cost)
 	#num of potential solutions
 	taxSol<-apply(ancMat,1,function(x) sum(x>0))	#taxSol = solution length of each taxon
 	nSol<-prod(taxSol)
@@ -316,15 +319,18 @@ minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE, ordered
 
 #' @rdname minCharChange
 #' @export
-ancPropStateMat<-function(trait, tree, ordered=FALSE, type="MPR", cost=NULL){
+ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL){
 	#wrapper for phangorn's ancestral.pars that returns a fully labeled matrix indicating
 		#the relative frequency of a node being reconstructed under a given state
 	#require(phangorn)
+	#check orderedChar
+	if(!is.logical(orderedChar)){stop("orderedChar must be a logical class element")}
+	if(length(orderedChar)!=1){stop("orderedChar must be a single logical element")}
 	#return error if cost is not null and type=ACCTRAN
 	if(type=="ACCTRAN" & !is.null(cost)){
 		stop("cost matrix is inapplicable if ACCTRAN algorithm is used")}
-	#return error if cost is not null and ordered=TRUE
-	if(ordered & !is.null(cost)){
+	#return error if cost is not null and orderedChar=TRUE
+	if(orderedChar & !is.null(cost)){
 		stop("Cannot treat character as ordered; cost matrix inapplicable under ACCTRAN")}
 	#check names
 	if(is.null(names(trait))){
@@ -340,9 +346,9 @@ ancPropStateMat<-function(trait, tree, ordered=FALSE, type="MPR", cost=NULL){
 	#translate into something for phangorn to read
 	states<-sort(unique(char1))
 	char1<-phyDat(char1,type="USER",levels=states)
-	if(ordered){
+	if(orderedChar){
 		if(!is.null(cost)){stop("Do not give cost matrix if you set argument cost = TRUE")}
-		#if ordered 
+		#if orderedChar 
 		nStates<-length(states)
 		cost<-matrix(,nStates,nStates)
 		for(i in 1:nStates){for(j in 1:nStates){

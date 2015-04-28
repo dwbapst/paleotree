@@ -1,23 +1,55 @@
 #' Resolve Polytomies Using Parsimony-Based Reconstruction of a Discrete Character
 #'
-#'
+#' This function resolves a set of given topology with less than fully-binary phylogenetic resolution so that
+#' lineages are shifted and internal nodes added that minimize the number of independent character transitions needed to explain
+#' an observed distribution of discrete character states for the taxa on such a tree, under various maximum-parsimony algorithms of 
+#' ancestral character reconstruction, powered ultimately by function \code{ancestral.pars} in library \code{phangorn}.
+#' This function is mainly designed for use with poorly resolved trees which are being assessed with the function
+#' \code{\link{minCharChange}}.
 
 #' @details
-#' 
+#' As shown in the example code below, this function offers a wide variety of options for manipulating the
+#' maximum-parsimony algorithm used (i.e. MPR versus ACCTRAN), the ordering (or not) of character states,
+#' and potential biasing of uncertainty character state reconstructions (when ordered characters are
+#' assessed). This allows for a wide variety of possible resolutions for a given tree with polytomies
+#' and a discrete character. In general, the author expects that use of this function will be optimal
+#' when applied to ordered characters using one of the \code{stateBias} options, perhaps
+#' \code{stateBias="primitive"} (based on theoretical expectations for slow evolving characters). However,
+#' anecdotal use of this function with various simulation datasets suggests that the results are quite
+#' variable, and so the best option needs to be assessed based on the prior assumptions regarding the
+#' data and the performance of the dataset with the various arguments of this function.
 #'
 
 #' @inheritParams minCharChange
 
-#' @param orderedChar If TRUE (not the default), then the character will be reconstructed with a cost (step)
+#' @param orderedChar Is the character of interest given for \code{trait} ordered or not?
+#' If FALSE (the default), then for each polytomy, all child nodes that appear to have the
+#' same state as the ancestor node will remain in the polytomy, and any additional states held by child nodes will
+#' each be grouped into their own unique polytomy that forms from a descendant node of the original polytomy.
+#' If TRUE, then the character will be reconstructed with a cost (step)
 #' matrix of a linear, ordered character, and polytomies will be resolved so that lineages with different
-#' states will be placed into a nested ladder that reflects the ordered character. 
+#' states will be placed into a nested ladder that reflects the ordered character. As with the unordered option,
+#' child nodes with a state equivalent to the ancestral node will remain in the polytomy, while more primitive
+#' or more derived states will be sorted into their own separate ladders composed of paraphyletic groups, ordered
+#' so to move 'away' state-by-state from the ancestral node's inferred character state.
 #' This option is not applicable if type=ACCTRAN, as cost matrices cannot
-#' be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if orderedChar=TRUE but
+#' be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if \code{orderedChar=TRUE} but
 #' a cost matrix is given manually.
 
-#' @param stateBias 
-
-#' @param iterative
+#' @param stateBias This argument controls how \code{resolveTreeChar} handles ancestral node reconstructions that have
+#' multiple states competing for the maximum weight of any state (i.e. if states 0 and 1 both have 0.4 of the weight). The
+#' default, where \code{stateBias = NULL} causes uncertainty at nodes among states to be treated as a single 'group' identical
+#' to any states within it. Essentially, this means that for the example polytomy where the ancestor hax maximum weight for both 0 and 1, 
+#' any child nodes with 0, 1 or both of these states will be considered to have an identical state for the purpose of grouping nodes
+#' for the purpose of further resolving polytomies. If and only if \code{orderedChar=TRUE}, then additional options of
+#' \code{stateBias = 'primitive'} and \code{stateBias = 'derived'} become available, which instead force uncertain node
+#' assignments to either be the most primitive (i.e. the minimum) or the most derived (i.e. the maximum) among the
+#' maximum-weight states. In particular, \code{stateBias = 'primitive'} should favor gains and bias any analysis of
+#' character transitions against finding reversals.
+#'
+#' @param iterative A logical argument which, if TRUE (the default), causes the function to repeat the polytomy-resolving
+#' functionality across the entire tree until the number of nodes stabilizes. If FALSE, polytomies are only passed a single
+#' time.
 
 #' @return
 #' Returns the resulting tree, which may be fully resolved, partly more resolved or not more resolved at all
@@ -25,7 +57,9 @@
 #' reconstructions. Applying \code{\link{multi2di}} is suggested as a post-step to obtain a fully-resolved
 #' cladogram, if one is desired.
 
-#' @seealso \code{\link{ancPropStateMat}} which is used internally by this function
+#' @seealso 
+#' \code{\link{ancPropStateMat}} which is used internally by this function. This function was
+#' intentionally designed for use with \code{\link{minCharChange}}.
 
 #' @author David W. Bapst
 
@@ -128,8 +162,8 @@
 #' 
 #' 
 
-#' @name
-#' @rdname
+#' @name resolveTreeChar
+#' @rdname resolveTreeChar
 #' @export
 resolveTreeChar<-function(tree, trait, orderedChar=FALSE, stateBias=NULL, iterative=TRUE, type="MPR", cost=NULL){
 		#	orderedChar=TRUE; type="MPR"; cost=NULL; stateBias="primitive"

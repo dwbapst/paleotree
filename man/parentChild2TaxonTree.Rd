@@ -14,7 +14,8 @@ with first the parent (column 1) taxon name and then the child (column 2).}
 \item{tipSet}{This argument controls which taxa are selected as tip taxa for the
 output tree. The default \code{tipSet="nonParents"} selects all child taxa which
 are not listed as parents in \code{parentChild}. Alternatively, \code{tipSet="all"}
-will add every internal node as a}
+will add a tip to every internal node with the parent-taxon name encapsulated in
+parentheses.}
 
 \item{cleanTree}{By default, the tree is run through a series of post-processing, including having singles collapsed,
 nodes reordered and being written out as a Newick string and read back in, to ensure functionality with ape functions
@@ -44,7 +45,7 @@ pokexample<-rbind(cbind("Squirtadae",c("Squirtle","Blastoise","Wartortle")),
 	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
 	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"))
 
-#Default: tipSet='notParents'
+#Default: tipSet='nonParents'
 pokeTree<-parentChild2TaxonTree(pokexample, tipSet="notParents")
 plot(pokeTree);nodelabels(pokeTree$node.label)
 
@@ -74,6 +75,6 @@ pokeTree<-parentChild2TaxonTree(pokexample_bad)
 David W. Bapst
 }
 \seealso{
-\code{\link{makePBDBtaxontree}},
+\code{\link{makePBDBtaxontree}}, \code{\link{taxonTable2TaxonTree}}
 }
 

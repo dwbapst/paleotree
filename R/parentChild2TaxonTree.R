@@ -16,7 +16,8 @@
 #' @param tipSet This argument controls which taxa are selected as tip taxa for the
 #' output tree. The default \code{tipSet="nonParents"} selects all child taxa which
 #' are not listed as parents in \code{parentChild}. Alternatively, \code{tipSet="all"}
-#' will add every internal node as a
+#' will add a tip to every internal node with the parent-taxon name encapsulated in
+#' parentheses.
 
 #' @inheritParams makePBDBtaxontree
 
@@ -24,8 +25,7 @@
 #' A phylogeny of class 'phylo', with tip taxa as controlled by argument \code{tipSet}.
 #' The output tree is returned with no edge lengths.
 
-#' @seealso \code{\link{makePBDBtaxontree}}, 
-# \code{\link{taxonTable2taxonTree}}
+#' @seealso \code{\link{makePBDBtaxontree}}, \code{\link{taxonTable2TaxonTree}}
 
 #' @author David W. Bapst
 
@@ -39,7 +39,7 @@
 #' 	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
 #' 	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"))
 #' 
-#' #Default: tipSet='notParents'
+#' #Default: tipSet='nonParents'
 #' pokeTree<-parentChild2TaxonTree(pokexample, tipSet="notParents")
 #' plot(pokeTree);nodelabels(pokeTree$node.label)
 #'
@@ -77,10 +77,10 @@ parentChild2TaxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	if(!is.character(parentChild)){
 		message("parentChild isn't of class character, attempting to coerce")
 		parentChild<-as.character(parentChild)}
-	if(length(dim(parentChild))==2){
+	if(length(dim(parentChild))!=2){
 		stop("parentChild must be a matrix of class character with two columns and multiple rows")
 	}else{
-		if(dim(parentChild)[2]==2 | dim(parentChild)[1]>1){
+		if(!(dim(parentChild)[2]==2 & dim(parentChild)[1]>1)){
 			stop("parentChild must be a matrix of class character with two columns and multiple rows")
 			}
 		}
@@ -94,7 +94,7 @@ parentChild2TaxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	nodeNames<-c(nodeNames[whichRoot],nodeNames[-whichRoot])
 	if(tipSet!="nonParents"){
 		if(tipSet=="all"){
-			parentChild<-rbind(parentChild,cbind(nodeNames,paste0("node: ",nodeNames)))
+			parentChild<-rbind(parentChild,cbind(nodeNames,paste0("(",nodeNames,")")))
 		}else{stop("tipSet must be one of either 'nonParents' or 'all'")}}
 	#identify tip taxa, this will be all taxa who are not-parents
 	notParents<-sapply(parentChild[,2],function(x) !any(x==parentChild[,1]))

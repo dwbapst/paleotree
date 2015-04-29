@@ -35,7 +35,7 @@ returned are the \emph{original} taxon names as 'accepted_name' is not available
 under API v1.2, the returned taxon names should be the most up-to-date formal names for those taxa.
 }
 \description{
-This function creates phylogeny-like object of type phylo from the taxonomic hierarchy
+This function creates phylogeny-like object of type \code{phylo} from the taxonomic hierarchy
 recorded in a taxonomy download from the PBDB for a given group.
 }
 \details{

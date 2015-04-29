@@ -1,6 +1,6 @@
 #' Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database
 #'
-#' This function creates phylogeny-like object of type phylo from the taxonomic hierarchy
+#' This function creates phylogeny-like object of type \code{phylo} from the taxonomic hierarchy
 #' recorded in a taxonomy download from the PBDB for a given group.
 
 #' @details

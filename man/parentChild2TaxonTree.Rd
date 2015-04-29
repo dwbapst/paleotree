@@ -46,7 +46,7 @@ pokexample<-rbind(cbind("Squirtadae",c("Squirtle","Blastoise","Wartortle")),
 	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"))
 
 #Default: tipSet='nonParents'
-pokeTree<-parentChild2TaxonTree(pokexample, tipSet="notParents")
+pokeTree<-parentChild2TaxonTree(pokexample, tipSet="nonParents")
 plot(pokeTree);nodelabels(pokeTree$node.label)
 
 #Get ALL taxa as tips with tipSet='all'

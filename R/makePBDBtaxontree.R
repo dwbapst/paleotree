@@ -46,7 +46,7 @@
 #' @return
 #' A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. See additional details
 #' regarding branch lengths can be found in the sub-algorithms used to create the taxon-tree by this function:
-#' \code{\link{parentChild2TaxonTree}} and \code{\link{taxonTable2TaxonTree}}.
+#' \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}.
 #'
 #' Please note that when applied to output from the taxa option of the API version 1.1, the taxon names
 #' returned are the \emph{original} taxon names as 'accepted_name' is not available in API v1.1, while
@@ -56,7 +56,7 @@
 
 #' @seealso
 #' Two sub-algorithms in paleotree are used to create the taxon-tree within this function:
-#' \code{\link{parentChild2TaxonTree}} and \code{\link{taxonTable2TaxonTree}}.
+#' \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}.
 #'
 #' Other functions for manipulating PBDB data can be found at \code{\link{taxonSortPBDBocc}},
 #' \code{\link{occData2timeList}}, and the example data at \code{\link{graptPBDB}}.
@@ -82,19 +82,19 @@
 #' 
 #' #graptolites
 #' graptData<-easyGetPBDBtaxa("Graptolithina")
-#' graptTree<-makePBDBtaxontree(graptData,"genus")
+#' graptTree<-makePBDBtaxonTree(graptData,"genus")
 #' plot(graptTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(graptTree$node.label,adj=c(0,1/2))
 #' 
 #' #conodonts
 #' conoData<-easyGetPBDBtaxa("Conodonta")
-#' conoTree<-makePBDBtaxontree(conoData,"genus")
+#' conoTree<-makePBDBtaxonTree(conoData,"genus")
 #' plot(conoTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(conoTree$node.label,adj=c(0,1/2))
 #' 
 #' #asaphid trilobites
 #' asaData<-easyGetPBDBtaxa("Asaphida")
-#' asaTree<-makePBDBtaxontree(asaData,"genus")
+#' asaTree<-makePBDBtaxonTree(asaData,"genus")
 #' plot(asaTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(asaTree$node.label,adj=c(0,1/2))
 #' 
@@ -102,7 +102,7 @@
 #' ornithData<-easyGetPBDBtaxa("Ornithischia")
 #' #need to drop repeated taxon first: Hylaeosaurus
 #' ornithData<-ornithData[-(which(ornithData[,"taxon_name"]=="Hylaeosaurus")[1]),]
-#' ornithTree<-makePBDBtaxontree(ornithData,"genus")
+#' ornithTree<-makePBDBtaxonTree(ornithData,"genus")
 #' plot(ornithTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(ornithTree$node.label,adj=c(0,1/2))
 #' 
@@ -110,7 +110,7 @@
 #' rynchData<-easyGetPBDBtaxa("Rhynchonellida")
 #' #need to drop repeated taxon first: Rhynchonelloidea
 #' rynchData<-rynchData[-(which(rynchData[,"taxon_name"]=="Rhynchonelloidea")[1]),]
-#' rynchTree<-makePBDBtaxontree(rynchData,"genus")
+#' rynchTree<-makePBDBtaxonTree(rynchData,"genus")
 #' plot(rynchTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(rynchTree$node.label,adj=c(0,1/2))
 #' 
@@ -125,8 +125,8 @@
 #' #get some example occurrence and taxonomic data
 #' data(graptPBDB)
 #' 
-#' #get taxontree
-#' graptTree<-makePBDBtaxontree(graptTaxaPBDB,"genus")
+#' #get the taxon tree
+#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB,"genus")
 #' plot(graptTree)
 #' nodelabels(graptTree$node.label,cex=0.5)
 #' 
@@ -151,10 +151,10 @@
 #' }
 #' 
 
-#' @name makePBDBtaxontree
-#' @rdname makePBDBtaxontree
+#' @name makePBDBtaxonTree
+#' @rdname makePBDBtaxonTree
 #' @export
-makePBDBtaxontree<-function(data,rank,method="parentChild",tipSet="nonParents",cleanTree=TRUE){		# ,cleanDuplicate=FALSE
+makePBDBtaxonTree<-function(data,rank,method="parentChild",tipSet="nonParents",cleanTree=TRUE){		# ,cleanDuplicate=FALSE
 	#CHECKS
 	if(length(method)!=1 | !is.character(method)){
 		stop("method must be a single character value")}
@@ -213,7 +213,7 @@ makePBDBtaxontree<-function(data,rank,method="parentChild",tipSet="nonParents",c
 			}else{
 				floatParents<-floatParents2}
 			}
-		tree<-taxonTable2TaxonTree(parentChild=parentChildMat,tipSet=tipSet,cleanTree=cleanTree)
+		tree<-taxonTable2taxonTree(parentChild=parentChildMat,tipSet=tipSet,cleanTree=cleanTree)
 		}
 	#
 	if(method=="Linnean"){
@@ -242,7 +242,7 @@ makePBDBtaxontree<-function(data,rank,method="parentChild",tipSet="nonParents",c
 			"taxon_name")
 		taxonData<-data[,taxonFields]
 		taxonData<-apply(taxonData,2,as.character)
-		tree<-taxonTable2TaxonTree(taxonTable=taxonData,cleanTree=cleanTree)
+		tree<-taxonTable2taxonTree(taxonTable=taxonData,cleanTree=cleanTree)
 		}
 	return(tree)
 	}

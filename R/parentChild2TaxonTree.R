@@ -19,7 +19,7 @@
 #' will add a tip to every internal node with the parent-taxon name encapsulated in
 #' parentheses.
 
-#' @inheritParams makePBDBtaxontree
+#' @inheritParams makePBDBtaxonTree
 
 #' @return
 #' A phylogeny of class 'phylo', with tip taxa as controlled by argument \code{tipSet}.
@@ -27,7 +27,7 @@
 #'
 #' The names of higher taxa than the tips should be appended as the element $node.label for the internal nodes.
 
-#' @seealso \code{\link{makePBDBtaxontree}}, \code{\link{taxonTable2TaxonTree}}
+#' @seealso \code{\link{makePBDBtaxonTree}}, \code{\link{taxonTable2taxonTree}}
 
 #' @author David W. Bapst
 
@@ -42,11 +42,11 @@
 #' 	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"))
 #' 
 #' #Default: tipSet='nonParents'
-#' pokeTree<-parentChild2TaxonTree(pokexample, tipSet="nonParents")
+#' pokeTree<-parentChild2taxonTree(pokexample, tipSet="nonParents")
 #' plot(pokeTree);nodelabels(pokeTree$node.label)
 #'
 #' #Get ALL taxa as tips with tipSet='all'
-#' pokeTree<-parentChild2TaxonTree(pokexample, tipSet="all")
+#' pokeTree<-parentChild2taxonTree(pokexample, tipSet="all")
 #' plot(pokeTree);nodelabels(pokeTree$node.label)
 #'
 #' 
@@ -63,15 +63,15 @@
 #' 	c("Umbrarcheota","Gengar"))
 #' 
 #' #this should return an error, as Gengar doesn't share common root
-#' pokeTree<-parentChild2TaxonTree(pokexample_bad)
+#' pokeTree<-parentChild2taxonTree(pokexample_bad)
 #' 
 #' }
 #' 
 
-#' @name parentChild2TaxonTree
-#' @rdname parentChild2TaxonTree
+#' @name parentChild2taxonTree
+#' @rdname parentChild2taxonTree
 #' @export
-parentChild2TaxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
+parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	#takes a two column matrix of character class taxon names
 		#each row is a relationship: parent, then child
 	#CHECKS

@@ -55,7 +55,7 @@ table(graptTaxaPBDB$taxon_rank)
 barplot(table(graptTaxaPBDB$taxon_rank))
 }
 \seealso{
-\code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}}, \code{\link{makePBDBtaxontree}}, \code{\link{plotOccData}}
+\code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}}, \code{\link{makePBDBtaxonTree}}, \code{\link{plotOccData}}
 }
 \keyword{datasets}
 

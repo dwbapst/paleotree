@@ -11,7 +11,7 @@
 #' are lower-level taxa which are 'floating' freely somewhere in
 #' taxa several levels higher.
 
-#' @inheritParams makePBDBtaxontree
+#' @inheritParams makePBDBtaxonTree
 
 #' @param taxonTable A matrix of type character and multiple rows and columns, containing the
 #' tip taxa in the last column, one per row, with progressively larger taxa listed in prior
@@ -30,7 +30,7 @@
 #'
 #' The names of higher taxa than the tips should be appended as the element $node.label for the internal nodes.
 
-#' @seealso \code{\link{makePBDBtaxontree}}, \code{\link{parentChild2TaxonTree}}
+#' @seealso \code{\link{makePBDBtaxonTree}}, \code{\link{parentChild2taxonTree}}
 
 #' @author David W. Bapst
 
@@ -45,14 +45,14 @@
 #' 		c("Linoone","Sandshrew","Pikachu")),
 #' 	c("Pokezooa","Hirsutamona",NA,"Ursaring"))
 #' 
-#' pokeTree<-taxonTable2TaxonTree(pokeTable)
+#' pokeTree<-taxonTable2taxonTree(pokeTable)
 #' plot(pokeTree);nodelabels(pokeTree$node.label)
 #'
 
-#' @name taxonTable2TaxonTree
-#' @rdname taxonTable2TaxonTree
+#' @name taxonTable2taxonTree
+#' @rdname taxonTable2taxonTree
 #' @export
-taxonTable2TaxonTree<-function(taxonTable,cleanTree=TRUE){
+taxonTable2taxonTree<-function(taxonTable,cleanTree=TRUE){
 	#CHECKS
 	if(length(dim(taxonTable))!=2 | !is.character(taxonTable)){
 		stop("taxonTable must be a matrix of class character with multiple columns and rows")

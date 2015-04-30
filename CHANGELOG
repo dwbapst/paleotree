@@ -7,7 +7,7 @@ Version - 2.4 -
 -Added function taxonSortPBDBocc which sorts unique taxa out of PBDB occurrence datasets
 -Added function occData2timeList which converts taxon-sorted occurrence data lists to the two-matrix timeList object useable by many other paleotree functions
 -Added example data downloads from the Paleobiology Database of occurrence data and taxonomic data, available under 'graptPBDB'
--Added function makePBDBtaxonTree which takes taxon data from the PBDB and constructs a very informal taxon tree from the taxonomic hierarchy
+-Added function makePBDBtaxonTree which takes taxon data from the PBDB and constructs a very informal taxon tree from either (a) parent-child taxon relationships pairs, by default, or (b) the Linnean taxonomic hierarchy
 -Added function plotOccData which will plot occurrence data, such as that output by taxonSortPBDBocc from PBDB downloads
 -Changed a number of \dontrun to \donttest so they will run during modified non-CRAN R CHECK tests with --run-donttest
 -Now allowed to have a simpler Travis CI structure, apparently with --run-donttest

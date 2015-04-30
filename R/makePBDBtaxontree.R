@@ -136,12 +136,46 @@
 #' @name makePBDBtaxontree
 #' @rdname makePBDBtaxontree
 #' @export
-makePBDBtaxontree<-function(data,rank,cleanTree=TRUE,cleanDuplicate=FALSE){	
+makePBDBtaxontree<-function(data,rank,cleanTree=TRUE){		# ,cleanDuplicate=FALSE
 	if(!is(data,"data.frame")){stop("data isn't a data.frame")}
 	if(length(rank)!=1){stop("rank must be a single value")}
 	if(!any(sapply(c("species","genus","family","order","class","phylum"),function(x) x==rank))){
 		stop("rank must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")}
-	#if(!any(colnames(data)=="taxon_name")){stop("Data must be a taxonomic download under vocab='pbdb'")}
+	#
+	#translate to a common vocabulary
+	data<-translatePBDBtaxa(data)
+
+	#Check if show=phylo was used
+	if(!any(colnames(data)=="family")){stop("Data must be a taxonomic download with show=phylo")}
+	#
+	#check to make sure no taxon names are listed twice, first clean then check again
+	#nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
+	#if(any(nDup) & cleanDuplicate){
+	#	#find any taxa of not right rank, remove them
+	#	droppers<-which(data[,"taxon_rank"]!=rank & nDup)
+	#	message(paste0("Duplicate taxa dropped: ",
+	#		paste0("(",droppers,") ",data[droppers,"taxon_name"]," [rank: ",data[droppers,"taxon_rank"],"]",collapse=", ")))
+	#	data<-data[-(droppers),]
+	#	}
+	#
+	#now check and return an error if duplicates remain
+	nDup<-sapply(nrow(data),function(x) sum(data[,"taxon_name"]==data[x,"taxon_name"])>1 & data[x,"taxon_rank"]==rank)
+	if(any(nDup)){
+		stop(paste0("Duplicate taxa of selected rank: ",paste0("(",which(nDup),") ",data[nDup,"taxon_name"],collapse=", ")))}
+	#filter on rank
+	data<-data[data[,"taxon_rank"]==rank,]
+	#
+	#get the fields you want
+	taxonFields<-c("kingdom","phylum","class","order","family",
+		"taxon_name")
+	taxonData<-data[,taxonFields]
+	taxonData<-apply(taxonData,2,as.character)
+	tree<-taxonTable2TaxonTree(taxonTable=taxonData,cleanTree=cleanTree)
+	return(tree)
+	}
+
+#hidden function, don't import
+translatePBDBtaxa<-function(data){
 	# Do some translation
 	#if com vocab
 	if(any("rnk"==colnames(data))){	
@@ -165,27 +199,10 @@ makePBDBtaxontree<-function(data,rank,cleanTree=TRUE,cleanDuplicate=FALSE){
 		data$taxon_rank<-sapply(data$taxon_rank,function(x) taxRankPBDB[x==taxRankCOM])
 		message("compact vocab detected, relevant fields will be translated")
 		}
-	#if 1.1
+	#if 1.1 and vocab is pbdb
 	if(any(colnames(data)=="rank")){
 		colnames(data)[colnames(data)=="rank"]<-"taxon_rank"
 		}
-	#
-	if(!any(colnames(data)=="family")){stop("Data must be a taxonomic download with show=phylo")}
-	#
-	#check to make sure no taxon names are listed twice, first clean then check again
-	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
-	if(any(nDup) & cleanDuplicate){
-		#find any taxa of not right rank, remove them
-		droppers<-which(data[,"taxon_rank"]!=rank & nDup)
-		message(paste0("Duplicate taxa dropped: ",
-			paste0("(",droppers,") ",data[droppers,"taxon_name"]," [rank: ",data[droppers,"taxon_rank"],"]",collapse=", ")))
-		data<-data[-(droppers),]
-		}
-	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
-	if(any(nDup)){
-		stop(paste0("Duplicate taxa of selected rank: ",paste0("(",which(nDup),") ",data[nDup,"taxon_name"],collapse=", ")))}
-	#filter on rank
-	data<-data[data[,"taxon_rank"]==rank,]
 	#
 	#if 1.2 and there is an accepted_name column
 	if(any(colnames(data)=="accepted_name")){
@@ -193,82 +210,9 @@ makePBDBtaxontree<-function(data,rank,cleanTree=TRUE,cleanDuplicate=FALSE){
 		nameFormal<-data[,"accepted_name"]
 		nameFormal[is.na(nameFormal)]<-as.character(
 			data[is.na(nameFormal),"taxon_name"])
-		if(length(nameFormal)!=length(unique(nameFormal))){
-			stop("Duplicated taxon names??")}
 		#replace taxon_name
 		data[,"taxon_name"]<-nameFormal	
 		}
 	#
-	#check to make sure no taxon names are listed twice (don't need to clean because we've already filtered on rank)
-	nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
-	if(any(nDup)){
-		stop(paste0("Duplicate taxa of selected rank: ",paste0(data[nDup,"taxon_name"],collapse=", ")))}
-	#get the fields you want
-	taxonFields<-c("kingdom","phylum","class","order","family",
-		"taxon_name")
-	taxonData<-data[,taxonFields]
-	taxonData<-apply(taxonData,2,as.character)
-	#remove constant columns
-	constantCol<-apply(taxonData,2,function(x) all(x==x[[1]]))
-	constantCol[rev(which(constantCol))[1]]<-FALSE
-	taxonData<-taxonData[,!constantCol]
-	taxonData[taxonData==""]<-NA
-	#are there any missing accepted names
-	if(any(is.na(taxonData[,ncol(taxonData)]))){stop("Missing taxon names in dataset?")}
-	#head(taxonData)
-	labels<-taxonData[,ncol(taxonData)]
-	edge<-matrix(NA,,2)
-	#need to define columns BACKWARDS
-	levels<-rev(1:ncol(taxonData))[-1]
-	for(level in levels){
-		newNodes<-unique(taxonData[,level])[!is.na(unique(taxonData[,level]))]
-		for(node in newNodes){
-			#if(node=="Nodosauridae"){stop("hey")}
-			labels<-c(labels,node)
-			nodeID<-length(labels)
-			#find the descendant nodes
-			whichDesc<-which(taxonData[,level]==node)
-			descTaxRow<-lapply(whichDesc,function(x) (taxonData[x,-(1:level)]))
-			descTax<-sapply(descTaxRow,function(x) x[!is.na(x)][1])
-			descTax<-unique(descTax)
-			descID<-sapply(descTax,function(x) which(x==labels))
-			names(descID)<-NULL
-			newEdge<-cbind(nodeID,descID)
-			edge<-rbind(edge,newEdge)
-			}
-		}
-	edge<-edge[-1,]
-	edge.length<-rep(1,nrow(edge))
-	Nnode<-length(unique(edge[,1]))
-	tip.label<-taxonData[,ncol(taxonData)]
-	node.label<-labels[-(1:length(tip.label))]
-	#the node labels get lost when I do read.tree(write.tree())
-		#I have no idea what to do about it...
-	Ntip<-length(tip.label)
-	#need to flip node numbers
-	nodes<-sort(unique(edge[,1]))
-	nodes<-cbind(c(1:Ntip,nodes),c(1:Ntip,rev(nodes)))
-	edge[,1]<-sapply(edge[,1],function(x) nodes[x==nodes[,1],2])
-	edge[,2]<-sapply(edge[,2],function(x) nodes[x==nodes[,1],2])
-	#check root
-	nodes<-sort(unique(edge[,1]))
-	root<-nodes[sapply(nodes,function(x) all(x!=edge[,2]))]
-	if(root!=(Ntip+1)){stop("Root isn't renumbering correctly")}
-	#reorder edge
-	edge<-edge[order(edge[,1],edge[,2]),]
-	#make the tree
-	tree<-list(edge=edge,tip.label=tip.label,edge.length=edge.length,
-		Nnode=Nnode,node.label=rev(node.label))	
-	class(tree)<-"phylo"
-	if(cleanTree){ #make it a good tree
-		#collapse singles
-		tree<-collapse.singles(tree)
-		#check it
-		if(!testEdgeMat(tree)){stop("Edge matrix has inconsistencies")}
-		tree<-reorder(tree,"cladewise") 	#REORDER IT
-		tree<-read.tree(text=write.tree(tree))
-		tree<-ladderize(tree)
-		}
-	#plot(tree)
-	return(tree)
+	return(data)
 	}

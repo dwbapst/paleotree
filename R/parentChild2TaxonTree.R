@@ -112,15 +112,9 @@ parentChild2TaxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 		Nnode=length(nodeNames),node.label=nodeNames)
 	class(tree)<-"phylo"
 	if(cleanTree){ #make it a good tree
-		#collapse singles
-		tree<-collapse.singles(tree)
-		#check it
-		if(!testEdgeMat(tree)){stop("Edge matrix has inconsistencies")}
-		tree<-reorder(tree,"cladewise") 	#REORDER IT
-		tree<-read.tree(text=write.tree(tree))
-		if(Ntip(tree)!=length(tipNames)){stop("Taxa number changed while cleaning tree")}
-		tree<-ladderize(tree)
+		tree<-cleanNewPhylo(tree)
 		}
+	if(Ntip(tree)!=length(tipNames)){stop("Taxa number changed while cleaning tree")}
 	#plot(tree);nodelabels(tree$node.label)
 	return(tree)
 	}

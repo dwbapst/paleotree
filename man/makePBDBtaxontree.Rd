@@ -4,7 +4,8 @@
 \alias{makePBDBtaxontree}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
-makePBDBtaxontree(data, rank, cleanTree = TRUE, cleanDuplicate = FALSE)
+makePBDBtaxontree(data, rank, method = "parentChild", tipSet = "nonParents",
+  cleanTree = TRUE)
 }
 \arguments{
 \item{data}{A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
@@ -14,29 +15,40 @@ any formally updated name.}
 
 \item{rank}{The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.}
 
+\item{method}{Controls which algorithm is used for calculating the taxon-tree: either \code{method="parentChild"}
+(the default option) which converts the listed binary parent-child taxon relationships from the input PBDB data,
+or \code{method="Linnean"}, which converts a taxon-tree by creating a table of the Linnean
+taxonomic assignments (family, order, etc), which are provided when
+option 'show=phylo' is used in PBDB API calls.}
+
+\item{tipSet}{This argument only impacts analyses where the argument
+\code{method="parentChild"} is also used. This \code{tipSet} controls
+which taxa are selected as tip taxa for the
+output tree. The default \code{tipSet="nonParents"} selects all child taxa which
+are not listed as parents in \code{parentChild}. Alternatively, \code{tipSet="all"}
+will add a tip to every internal node with the parent-taxon name encapsulated in
+parentheses.}
+
 \item{cleanTree}{By default, the tree is run through a series of post-processing, including having singles collapsed,
 nodes reordered and being written out as a Newick string and read back in, to ensure functionality with ape functions
 and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
 lead to hard-crashes of R.}
-
-\item{cleanDuplicate}{If TRUE (\emph{not} the default), duplicated taxa of a taxonomic rank *not* selected by argument \code{rank}
-will be removed silently. Only duplicates of the taxonomic rank of interest will actually result in an error message.}
 }
 \value{
-A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. Edges are scaled so that
-the distance from one taxon rank to another 1, then merged to remove singleton nodes. As not all
-taxa have parents at the immediate taxon level above, this leads to some odd cases. For example,
-two genera emanating from a node representing a class but with a very short (length=1) branch
-and a long branch (length=3) means one genus is simply placed in the class, with no family or order listed
-while the one on the long branch is within an order and family that is otherwise monogeneric.
+A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. See additional details
+regarding branch lengths can be found in the sub-algorithms used to create the taxon-tree by this function:
+\code{\link{parentChild2TaxonTree}} and \code{\link{taxonTable2TaxonTree}}.
 
 Please note that when applied to output from the taxa option of the API version 1.1, the taxon names
 returned are the \emph{original} taxon names as 'accepted_name' is not available in API v1.1, while
 under API v1.2, the returned taxon names should be the most up-to-date formal names for those taxa.
+Similar issues also effect the identification of parent taxa, as the accepted name of the
+parent ID number is only provided in version 1.2 of the API.
 }
 \description{
-This function creates phylogeny-like object of type \code{phylo} from the taxonomic hierarchy
-recorded in a taxonomy download from the PBDB for a given group.
+This function creates phylogeny-like object of type \code{phylo} from the taxonomic information
+recorded in a taxonomy download from the PBDB for a given group. Two different algorithms are provided,
+the default being based on parent-child taxon relationships, the other based on the nested Linnean hierarchy.
 }
 \details{
 This function should not be taken too seriously. Many groups in the Paleobiology Database have
@@ -51,11 +63,12 @@ macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, in pr
 \examples{
 \dontrun{
 
-easyGetPBDBtaxa<-function(taxon){
+easyGetPBDBtaxa<-function(taxon,show=c("phylo","img","app")){
 	#let's get some taxonomic data
 	taxaData<-read.csv(paste0("http://paleobiodb.org/",
 		"data1.1/taxa/list.txt?base_name=",taxon,
-		"&rel=all_children&show=phylo,img&status=senior"))
+		"&rel=all_children&show=,
+		paste0(show,collapse=","),"&status=senior"))
 	return(taxaData)
 	}
 
@@ -138,6 +151,9 @@ Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Bi
 (http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract)
 }
 \seealso{
+Two sub-algorithms in paleotree are used to create the taxon-tree within this function:
+\code{\link{parentChild2TaxonTree}} and \code{\link{taxonTable2TaxonTree}}.
+
 Other functions for manipulating PBDB data can be found at \code{\link{taxonSortPBDBocc}},
 \code{\link{occData2timeList}}, and the example data at \code{\link{graptPBDB}}.
 }

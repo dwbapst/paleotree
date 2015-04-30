@@ -25,12 +25,14 @@ lead to hard-crashes of R.}
 \value{
 A phylogeny of class 'phylo', with tip taxa as controlled by argument \code{tipSet}.
 The output tree is returned with no edge lengths.
+
+The names of higher taxa than the tips should be appended as the element $node.label for the internal nodes.
 }
 \description{
 This function takes a two-column matrix of taxon names,
 indicating a set of binary parent-taxon:child-taxon
 paired relationships with a common root, and returns
-a phylogeny object of class 'phylo'.
+a 'taxonomy-tree' phylogeny object of class 'phylo'.
 }
 \details{
 All taxa listed must be traceble via their parent-child relationships to a single,

@@ -1,14 +1,36 @@
+#' Create a Taxonomy-Based Phylogeny ('Taxon Tree') from a Hierarchical Table of Taxonomy Memberships
+#'
+#' This function takes a matrix of taxon names,
+#' indicating a set of hierarchical taxonomic relationships
+#' conveyed as nested placements for a set of tip-taxa (listed in
+#' the last column of the matrix) and returns
+#' a 'taxonomy-tree' phylogeny object of class 'phylo'.
+ 
 #' @details
+#' This function can deal with empty entries in cells of \code{taxonTable} by assuming these
+#' are lower-level taxa which are 'floating' freely somewhere in
+#' taxa several levels higher.
 
 #' @inheritParams makePBDBtaxontree
 
-#' @param taxonTable 
+#' @param taxonTable A matrix of type character and multiple rows and columns, containing the
+#' tip taxa in the last column, one per row, with progressively larger taxa listed in prior
+#' columns (reading left-to-right). Invariant columns (i.e. taxa that all
+#' tip taxa are in) are allowed, but all but the most 'shallow' of such invariant taxa are
+#' dropped prior to transformation to a taxon-tree phylogeny object.
 
 #' @return
+#' A phylogeny of class 'phylo', where each tip is a taxon listed in the last column of the
+#' input taxonTable. Edges are scaled so that
+#' the distance from one taxon rank to another 1, then merged to remove singleton nodes. As not all
+#' taxa have parents at the immediate taxon level above, this leads to some odd cases. For example,
+#' two genera emanating from a node representing a class but with a very short (length=1) branch
+#' and a long branch (length=3) means one genus is simply placed in the class, with no family or order listed
+#' while the one on the long branch is within an order and family that is otherwise monogeneric.
+#'
+#' The names of higher taxa than the tips should be appended as the element $node.label for the internal nodes.
 
-#' @aliases
-
-#' @seealso
+#' @seealso \code{\link{makePBDBtaxontree}}, \code{\link{parentChild2TaxonTree}}
 
 #' @author David W. Bapst
 

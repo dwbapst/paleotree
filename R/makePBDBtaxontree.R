@@ -197,7 +197,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",tipSet="nonParents",c
 			return(z)
 			})
 		#get matrix of all parentChild relationships
-		parentChildAll<-cbind(parentName,data[,childName])
+		parentChildAll<-cbind(parentName,data[,"taxon_name"])
 		#first pull out all for desired rank
 		parentChildMat<-parentChildAll[rank==numTaxonRank,]
 		#count parents floating without ancestors of their own

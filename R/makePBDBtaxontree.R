@@ -48,6 +48,10 @@
 #' regarding branch lengths can be found in the sub-algorithms used to create the taxon-tree by this function:
 #' \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}.
 #'
+#' Depending on the \code{method}
+#' used, either the element \code{$parentChild} or \code{$taxonTable} is added to the list structure of
+#' the output phylogeny object, which was used as input for one of the two algorithms mentioned above.
+#'
 #' Please note that when applied to output from the taxa option of the API version 1.1, the taxon names
 #' returned are the \emph{original} taxon names as 'accepted_name' is not available in API v1.1, while
 #' under API v1.2, the returned taxon names should be the most up-to-date formal names for those taxa.
@@ -214,6 +218,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",tipSet="nonParents",c
 				floatParents<-floatParents2}
 			}
 		tree<-taxonTable2taxonTree(parentChild=parentChildMat,tipSet=tipSet,cleanTree=cleanTree)
+		tree$parentChild<-parentChildMat
 		}
 	#
 	if(method=="Linnean"){
@@ -243,6 +248,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",tipSet="nonParents",c
 		taxonData<-data[,taxonFields]
 		taxonData<-apply(taxonData,2,as.character)
 		tree<-taxonTable2taxonTree(taxonTable=taxonData,cleanTree=cleanTree)
+		tree$taxonTable<-taxonData
 		}
 	return(tree)
 	}

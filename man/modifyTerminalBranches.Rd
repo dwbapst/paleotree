@@ -129,7 +129,7 @@ phyloDiv(tree1)
 tree2 <- dropExtant(tree)
 phyloDiv(tree2)
 
-graphics.off()
+#graphics.off()
 
 #example using addTermBranchLength
 set.seed(444)

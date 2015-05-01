@@ -14,7 +14,7 @@
 #' assessed). This allows for a wide variety of possible resolutions for a given tree with polytomies
 #' and a discrete character. In general, the author expects that use of this function will be optimal
 #' when applied to ordered characters using one of the \code{stateBias} options, perhaps
-#' \code{stateBias="primitive"} (based on theoretical expectations for slow evolving characters). However,
+#' \code{stateBias = "primitive"} (based on theoretical expectations for slow evolving characters). However,
 #' anecdotal use of this function with various simulation datasets suggests that the results are quite
 #' variable, and so the best option needs to be assessed based on the prior assumptions regarding the
 #' data and the performance of the dataset with the various arguments of this function.
@@ -32,7 +32,7 @@
 #' child nodes with a state equivalent to the ancestral node will remain in the polytomy, while more primitive
 #' or more derived states will be sorted into their own separate ladders composed of paraphyletic groups, ordered
 #' so to move 'away' state-by-state from the ancestral node's inferred character state.
-#' This option is not applicable if type=ACCTRAN, as cost matrices cannot
+#' This option is not applicable if \code{type = "ACCTRAN"}, as cost matrices cannot
 #' be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if \code{orderedChar=TRUE} but
 #' a cost matrix is given manually.
 
@@ -41,7 +41,7 @@
 #' default, where \code{stateBias = NULL} causes uncertainty at nodes among states to be treated as a single 'group' identical
 #' to any states within it. Essentially, this means that for the example polytomy where the ancestor hax maximum weight for both 0 and 1, 
 #' any child nodes with 0, 1 or both of these states will be considered to have an identical state for the purpose of grouping nodes
-#' for the purpose of further resolving polytomies. If and only if \code{orderedChar=TRUE}, then additional options of
+#' for the purpose of further resolving polytomies. If and only if \code{orderedChar = TRUE}, then additional options of
 #' \code{stateBias = 'primitive'} and \code{stateBias = 'derived'} become available, which instead force uncertain node
 #' assignments to either be the most primitive (i.e. the minimum) or the most derived (i.e. the maximum) among the
 #' maximum-weight states. In particular, \code{stateBias = 'primitive'} should favor gains and bias any analysis of

@@ -19,8 +19,8 @@
 #' @param maxParsimony If maxParsimony is TRUE (the default) then only solutions with the smallest
 #' number of total transitions examined will be returned. Note that since solutions are stochastically
 #' 'guessed' at, and the number of possible solutions may not be exhaustively searched, there may have
-#' been solutions not examined with a lower number of transitions even if maxParsimony=TRUE. Regardless,
-#' one may want to do maxParsimony=FALSE if one is interested in whether there are solutions with a
+#' been solutions not examined with a lower number of transitions even if \code{maxParsimony = TRUE}. Regardless,
+#' one may want to do \code{maxParsimony = FALSE} if one is interested in whether there are solutions with a
 #' smaller number of gains or losses and thus wants to return all solutions.
 
 #' @param printMinResult If TRUE (the default), a summary of the results is printed to the terminal. The
@@ -28,8 +28,8 @@
 #' fewer unique solutions).
 
 #' @param orderedChar If TRUE (not the default), then the character will be reconstructed with a cost (step)
-#' matrix of a linear, ordered character. This is not applicable if type=ACCTRAN, as cost matrices cannot
-#' be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if orderedChar=TRUE but
+#' matrix of a linear, ordered character. This is not applicable if \code{type = "ACCTRAN"}, as cost matrices cannot
+#' be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if \code{orderedChar = TRUE} but
 #' a cost matrix is given, as the only reason to use orderedChar is to produce a cost matrix automatically.
 
 #' @param type The parsimony algorithm applied by \code{ancestral.pars}, which can apply one of two:
@@ -45,7 +45,7 @@
 #' @param cost A matrix of the cost (i.e. number of steps) necessary to change between states of the input
 #' character trait. If NULL (the
 #' default), the character is assumed to be unordered with equal cost to change from any state to another.
-#' Cost matrices only impact the "MPR" algorithm; if a cost matrix is given but 'type = "ACCTRAN"', an error
+#' Cost matrices only impact the "MPR" algorithm; if a cost matrix is given but \code{type = "ACCTRAN"}, an error
 #' is issued.
 
 #' @details
@@ -101,7 +101,7 @@
 
 #' @seealso
 #' The functions described here are effectively wrapers of \code{phangorn}'s function
-#' \code{\link{ancestral.pars}}.
+#' \code{ancestral.pars}.
 
 #' @author David W. Bapst
 
@@ -182,8 +182,11 @@
 #' text(x=9,y=15,"ordered char'",cex=1.5)
 #' layout(1)
 #' 
-#' \donttest{
+#' \dontrun{
 #' # what ancPropStateMat automates (with lots of checks):
+#'
+#' require(phangorn)
+#'
 #' char1<-matrix(char,,1)
 #' rownames(char1)<-names(char)
 #' #translate into something for phangorn to read

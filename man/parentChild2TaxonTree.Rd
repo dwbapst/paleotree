@@ -36,7 +36,11 @@ a 'taxonomy-tree' phylogeny object of class 'phylo'.
 }
 \details{
 All taxa listed must be traceble via their parent-child relationships to a single,
-common ancestor which will act as the root node for output phylogeny.
+common ancestor which will act as the root node for output phylogeny. Additionally,
+the root used will be the parent taxon to all tip taxa closest in terms of parent-child
+relationships to the tip taxa: i.e., the most recent common ancestor. Ancestral taxa which
+are singular internal nodes that trace to this root are removed, and a message
+is printed.
 }
 \examples{
 #let's create a small, really cheesy example

@@ -42,7 +42,7 @@ individual occurrences, with occurrences of the same taxon grouped by color.
 }
 \details{
 This function was originally conceived of in the following blog post:
-http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html
+\href{http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html}{Link}
 }
 \examples{
 #load example graptolite PBDB occ dataset

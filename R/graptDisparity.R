@@ -90,8 +90,10 @@
 #' nspec <- nrow(graptCharMatrix)
 #' 
 #' #some plotting information from Bapst et al.'s plotting scripts
-#' grpLabel <- c("Normalo.","Monogr.","Climaco.","Dicrano.","Lasiogr.","Diplogr.","Retiol.")
-#' grpColor <- c("red","purple",colors()[257],colors()[614],colors()[124],"blue",colors()[556])
+#' grpLabel <- c("Normalo.","Monogr.","Climaco.",
+#' 		"Dicrano.","Lasiogr.","Diplogr.","Retiol.")
+#' grpColor <- c("red","purple",colors()[257],colors()[614],
+#' 		colors()[124],"blue",colors()[556])
 #' 
 #' ##########
 #'
@@ -122,7 +124,8 @@
 #' 
 #' #use ape to plot with colors at the tips
 #' dev.new(width=15) 	# for a prettier plot
-#' plot.phylo(as.phylo(clustRes),show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
+#' plot.phylo(as.phylo(clustRes),show.tip.label=FALSE,
+#' 		no.margin=TRUE,direction="upwards")
 #' tiplabels(pch=16,col=grpColor[groupID+1])
 #' legend("bottomright",legend=grpLabel,col=grpColor,pch=16)
 #' dev.set(2)

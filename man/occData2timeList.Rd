@@ -33,11 +33,10 @@ datasets sorted by \code{\link{taxonSortPBDBocc}} or any data object where occur
 (i.e. age bounds for each occurrence) for different taxa is separated into different elements
 of a named list.
 
-\emph{intervalType}
+\subsection{The argument intervalType}{
 
 The argument \code{intervalType} controls the algorithm used for obtain first and last interval bounds for
-each taxon, of which there are several to select from:
-
+each taxon, of which there are several to select from:intervalType
 \describe{
  \item{"dateRange"}{The default option. The bounds on the first appearances
 are the span between the oldest upper and lower bounds
@@ -71,6 +70,8 @@ zone-of-overlap algorithm isn't an accurate depiction of the uncertainty in the 
 range of a taxon might be well outside the bounds obtained using the zone-of-overlap algorithm. A more
 conservative approach is the \code{"dateRange"} algorithm which finds the smallest possible bounds on the
 endpoints of a taxon's range without ignoring uncertainty from any particular set of occurrences.} }
+
+}
 }
 \examples{
 data(graptPBDB)

@@ -376,7 +376,8 @@ phyloDiv<-function(tree,int.length=0.1,int.times=NULL,plot=TRUE,plotLogRich=FALS
 		div1<-c(div,div)[order(times1)]
 		times1<-sort(times1)
 		layout(matrix(1:2,2,1))
-		parOrig<-par(mar=c(1,4,1,1))
+		parOrig<-par()
+		par(mar=c(1,4,1,1))
 		plot(ladderize(savetree),show.tip.label=FALSE)
 		axisPhylo()    #anticipating that ape will recognize root.time soon
 		par(mar=c(5,4,2,2))

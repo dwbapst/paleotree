@@ -15,34 +15,35 @@ any formally updated name.}
 
 \item{rank}{The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.}
 
-\item{method}{Controls which algorithm is used for calculating the taxon-tree: either \code{method="parentChild"}
+\item{method}{Controls which algorithm is used for calculating the taxon-tree: either \code{method = "parentChild"}
 (the default option) which converts the listed binary parent-child taxon relationships from the input PBDB data,
-or \code{method="Linnean"}, which converts a taxon-tree by creating a table of the Linnean
+or \code{method = "Linnean"}, which converts a taxon-tree by creating a table of the Linnean
 taxonomic assignments (family, order, etc), which are provided when
 option 'show=phylo' is used in PBDB API calls.}
 
-\item{solveMissing}{Under \code{method="parentChild"}, what should \code{makePBDBtaxonTree} do about
+\item{solveMissing}{Under \code{method = "parentChild"}, what should \code{makePBDBtaxonTree} do about
 multiple 'floating' parent taxa, listed without their own parent taxon information in the input
  dataset under \code{data}? Each of these is essentially a separate root taxon, for a different set
  of parent-child relationships, and thus poses a problem as far as returning a single phylogeny is
- concerned. If \code{solveMissing=NULL} (the default), nothing is done and the operation halts with
+ concerned. If \code{solveMissing = NULL} (the default), nothing is done and the operation halts with
  an error, reporting the identity of these taxa. Two alternative solutions are offered: first,
- \code{solveMissing="mergeRoots"} will combine these disparate potential roots and link them to an
+ \code{solveMissing = "mergeRoots"} will combine these disparate potential roots and link them to an
  artificially-constructed pseudo-root, which at least allows for visualization of the taxonomic
- structure in a limited dataset. Secondly, \code{solveMissing="queryPBDB"} queries the Paleobiology
+ structure in a limited dataset. Secondly, \code{solveMissing = "queryPBDB"} queries the Paleobiology
  Database repeatedly via the API for information on parent taxa of the 'floating' parents, and continues
  within a \code{while()} loop until only one such unassigned parent taxon remains. This latter option may
  talk a long time or never finish, depending on the linearity and taxonomic structures encountered in the
  PBDB taxonomic data; i.e. if someone a taxon was ultimately its own indirect child in some grand loop by
  mistake, then under this option \code{makePBDBtaxonTree} might never finish. In cases where taxonomy is
  bad due to weird and erroneous taxonomic assignments reported by the PBDB, this routine may search all
- the way back to the Eukaryota taxon. Users should thus use \code{solveMissing="queryPBDB"} only with caution.}
+ the way back to a very ancient and deep taxon, such as the Eukaryota taxon.
+Users should thus use \code{solveMissing="queryPBDB"} only with caution.}
 
 \item{tipSet}{This argument only impacts analyses where the argument
-\code{method="parentChild"} is also used. This \code{tipSet} controls
+\code{method = "parentChild"} is also used. This \code{tipSet} controls
 which taxa are selected as tip taxa for the
-output tree. The default \code{tipSet="nonParents"} selects all child taxa which
-are not listed as parents in \code{parentChild}. Alternatively, \code{tipSet="all"}
+output tree. The default \code{tipSet = "nonParents"} selects all child taxa which
+are not listed as parents in \code{parentChild}. Alternatively, \code{tipSet = "all"}
 will add a tip to every internal node with the parent-taxon name encapsulated in
 parentheses.}
 
@@ -185,11 +186,14 @@ David W. Bapst
 \references{
 Soul, L. C., and M. Friedman. In Press. Taxonomy and Phylogeny Can Yield
 Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology}
-(http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract)
+(\href{http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract}{Link})
 }
 \seealso{
-Two sub-algorithms in paleotree are used to create the taxon-tree within this function:
-\code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}.
+Two other functions in paleotree are used as sub-algorithms by \code{makePBDBtaxonTree}
+to create the taxon-tree within this function,
+and users should consult their manual pages for additional details:
+
+\code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}
 
 Other functions for manipulating PBDB data can be found at \code{\link{taxonSortPBDBocc}},
 \code{\link{occData2timeList}}, and the example data at \code{\link{graptPBDB}}.

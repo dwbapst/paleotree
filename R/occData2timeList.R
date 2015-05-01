@@ -12,11 +12,11 @@
 #' (i.e. age bounds for each occurrence) for different taxa is separated into different elements
 #' of a named list. 
 #'
-#' \emph{intervalType}
+#' \subsection{The argument intervalType}{
+
 #'
 #' The argument \code{intervalType} controls the algorithm used for obtain first and last interval bounds for
-#' each taxon, of which there are several to select from:
-#'
+#' each taxon, of which there are several to select from:intervalType
 #' \describe{
 
 #'  \item{"dateRange"}{The default option. The bounds on the first appearances
@@ -53,6 +53,8 @@
 #' range of a taxon might be well outside the bounds obtained using the zone-of-overlap algorithm. A more
 #' conservative approach is the \code{"dateRange"} algorithm which finds the smallest possible bounds on the
 #' endpoints of a taxon's range without ignoring uncertainty from any particular set of occurrences.} }
+#'
+#' }
 #' 
 
 #' @param occList A list where every element is a table of occurrence data for a different taxon,

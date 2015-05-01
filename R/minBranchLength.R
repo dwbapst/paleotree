@@ -38,6 +38,8 @@
 #' plot(tree);axisPhylo()
 #' plot(tree2);axisPhylo()
 #' 
+#' layout(1)
+#' 
 #' #now let's try it with an ultrametric case
 #' 
 #' # get a random tree

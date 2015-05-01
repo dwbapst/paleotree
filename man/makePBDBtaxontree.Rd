@@ -4,8 +4,8 @@
 \alias{makePBDBtaxonTree}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
-makePBDBtaxonTree(data, rank, method = "parentChild", tipSet = "nonParents",
-  cleanTree = TRUE)
+makePBDBtaxonTree(data, rank, method = "parentChild", queryMissing = FALSE,
+  tipSet = "nonParents", cleanTree = TRUE)
 }
 \arguments{
 \item{data}{A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
@@ -72,7 +72,8 @@ easyGetPBDBtaxa<-function(taxon,show=c("phylo","img","app")){
 	taxaData<-read.csv(paste0("http://paleobiodb.org/",
 		"data1.1/taxa/list.txt?base_name=",taxon,
 		"&rel=all_children&show=,
-		paste0(show,collapse=","),"&status=senior"))
+		paste0(show,collapse=","),"&status=senior"),
+		stringsAsFactors=FALSE)
 	return(taxaData)
 	}
 

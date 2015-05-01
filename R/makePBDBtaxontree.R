@@ -80,7 +80,8 @@
 #' 	taxaData<-read.csv(paste0("http://paleobiodb.org/",
 #' 		"data1.1/taxa/list.txt?base_name=",taxon,
 #' 		"&rel=all_children&show=,
-#'		paste0(show,collapse=","),"&status=senior"))
+#'		paste0(show,collapse=","),"&status=senior"),
+#'		stringsAsFactors=FALSE)
 #' 	return(taxaData)
 #' 	}
 #' 
@@ -158,7 +159,10 @@
 #' @name makePBDBtaxonTree
 #' @rdname makePBDBtaxonTree
 #' @export
-makePBDBtaxonTree<-function(data,rank,method="parentChild",tipSet="nonParents",cleanTree=TRUE){		# ,cleanDuplicate=FALSE
+makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
+		tipSet="nonParents",cleanTree=TRUE){		# ,cleanDuplicate=FALSE
+	#
+	# rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE
 	#CHECKS
 	if(length(method)!=1 | !is.character(method)){
 		stop("method must be a single character value")}
@@ -171,7 +175,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",tipSet="nonParents",c
 		stop("rank must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")}
 	#
 	#translate to a common vocabulary
-	data<-translatePBDBtaxa(data)
+	data1<-translatePBDBtaxa(data)
 	#
 	if(method=="parentChild"){
 		# translate rank and taxon_rank to a number
@@ -179,73 +183,122 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",tipSet="nonParents",c
 			"family","superfamily","infraorder","suborder","order","superorder","infraclass",
 			"subclass","class","superclass","subphylum","phylum","superphylum","subkingdom",
 			"kingdom","unranked clade","informal")	#keep informal as high, never drop!
-		rank<-which(rank==taxRankPBDB)
-		numTaxonRank<-sapply(data[,"taxon_rank"],function(x) which(x==taxRankPBDB))		
+		rank1<-which(rank==taxRankPBDB)
+		numTaxonRank<-sapply(data1[,"taxon_rank"],function(x) which(x==taxRankPBDB))		
 		#drop taxa below specified rank
-		data<-data[rank>=numTaxonRank,]
+		data1<-data1[rank1<=numTaxonRank,]
+		#also recreate numTaxonRank
+		numTaxonRank<-sapply(data1[,"taxon_rank"],function(x) which(x==taxRankPBDB))		
 		#get parent name
-		parentName<-sapply(data[,"parent_no"],function(x){ 
-			z<-which(data[,"taxon_no"]==x)
+		parentName<-sapply(data1[,"parent_no"],function(x){ 
+			z<-which(data1[,"taxon_no"]==x)
 			#check for multiple matches
 			if(length(z)>1){
 				stop("Multiple taxon matches to taxon IDs? Check if you used '&status=senior' in API call")}
 			#if zero matches
 			if(length(z)<1){
-				z<-as.character(x)
+				z<-paste("ID:",as.character(x))
 			}else{
-				z<-data[,"taxon_name"]}
+				z<-data1[z,"taxon_name"]
+				}
 			return(z)
 			})
+		#check that the same name wasn't returned for multiple ID numbers
+		parentNameNo<-unique(cbind(parentName,data1[,"parent_no"]))
+		if(any(duplicated(parentNameNo[,2]))){
+			stop("multiple taxon numbers assigned to same parent taxon name?")}
+		#
 		#get matrix of all parentChild relationships
-		parentChildAll<-cbind(parentName,data[,"taxon_name"])
+		parentChildAll<-cbind(parentName,data1[,"taxon_name"])
 		#first pull out all for desired rank
-		parentChildMat<-parentChildAll[rank==numTaxonRank,]
+		parentChildMat<-parentChildAll[rank1==numTaxonRank,]
 		#count parents floating without ancestors of their own
-		floatParents<-parentChildMat[sapply(parentChildMat[,1],function(x)
-			all(x!=parentChildmat[,2])),1]
+		getFloat<-function(pcMat){unique(pcMat[sapply(pcMat[,1],function(x) all(x!=pcMat[,2])),1])}
+		floatParents<-getFloat(pcMat=parentChildMat)
 		#start tracing back
+		nCount<-0
 		while(length(floatParents)>1){	#so only a root can float
+			nCount<-nCount+1
 			newRelations<-match(floatParents,parentChildAll[,2])
 			newRelations<-newRelations[!is.na(newRelations)]
 			parentChildMat<-rbind(parentChildMat,parentChildAll[newRelations,])
 			#recalculate float
-			floatParents2<-parentChildMat[sapply(parentChildMat[,1],function(x)
-				all(x!=parentChildmat[,2])),1]
+			floatParents2<-getFloat(pcMat=parentChildMat)
 			#put in stopping condition
-			if(length(floatParents)==length(floatParents2)){
-				stop("Provided PBDB Dataset does not appear to have a monophyletic set of parent-child relationship pairs")
+			if(length(floatParents2)>1 & identical(sort(floatParents),sort(floatParents2))){
+				if(queryMissing){
+					getPBDBtaxaID<-function(ID){
+						#let's get some taxonomic data
+						taxaData<-read.csv(paste0("http://paleobiodb.org/",
+							"data1.1/taxa/list.txt?id=",paste0(ID,collapse=","),
+							"&rel=self&status=senior&vocab=pbdb"),
+							stringsAsFactors=FALSE)
+							return(taxaData)
+							}
+					floatID<-parentNameNo[match(floatParents2,parentNameNo[,1]),2]
+					#drop Eukarya, as it won't return if status=senior under 1.1
+					floatParents2<-floatParents2[floatID!="1"]
+					floatID<-floatID[floatID!="1"]	
+					floatData<-getPBDBtaxaID(floatID)
+					floatData<-translatePBDBtaxa(floatData)
+					#update taxon names in parentNameNo,parentChildMat,parentChildAll
+					newTaxa<-cbind(floatData$taxon_name,floatData[,c("taxon_no")])
+					newTaxa<-cbind(oldname=paste("ID:",as.character(newTaxa[,2])),newTaxa)
+					for(i in 1:nrow(newTaxa)){
+						parentNameNo[parentNameNo==newTaxa[i,1]]<-newTaxa[i,2]
+						parentChildMat[parentChildMat==newTaxa[i,1]]<-newTaxa[i,2]
+						parentChildAll[parentChildAll==newTaxa[i,1]]<-newTaxa[i,2]
+						}
+					newParents<-floatData[,"parent_no"]
+					newParents<-cbind(oldname=paste("ID:",as.character(newParents)),newParents)
+					#update parentNameNo
+					parentNameNo<-rbind(parentNameNo,newParents)
+					#update parentChildMat, parentChildAll
+					newEntries<-cbind(newParents[,1],floatParents2)
+					parentChildMat<-rbind(parentChildMat,newEntries)
+					parentChildAll<-rbind(parentChildAll,newEntries)
+					floatParents<-getFloat(pcMat=parentChildMat)
+				}else{
+					stop(paste0("Provided PBDB Dataset does not appear to have a \n",
+						" monophyletic set of parent-child relationship pairs. \n",
+						"Multiple taxa appear to be listed as parents, but are not \n",
+						"listed themselves so have no parents listed: \n",
+						paste0(floatParents,collapse=", ")))
+					}
 			}else{
 				floatParents<-floatParents2}
 			}
-		tree<-taxonTable2taxonTree(parentChild=parentChildMat,tipSet=tipSet,cleanTree=cleanTree)
+		tree<-parentChild2taxonTree(parentChild=parentChildMat,tipSet=tipSet,cleanTree=cleanTree)
 		tree$parentChild<-parentChildMat
 		}
 	#
 	if(method=="Linnean"){
 		# TRASH:
 		#check to make sure no taxon names are listed twice, first clean then check again
-		#nDup<-sapply(data[,"taxon_name"],function(x) sum(data[,"taxon_name"]==x)>1)
+		#nDup<-sapply(data1[,"taxon_name"],function(x) sum(data1[,"taxon_name"]==x)>1)
 		#if(any(nDup) & cleanDuplicate){
 		#	#find any taxa of not right rank, remove them
-		#	droppers<-which(data[,"taxon_rank"]!=rank & nDup)
+		#	droppers<-which(data1[,"taxon_rank"]!=rank & nDup)
 		#	message(paste0("Duplicate taxa dropped: ",
-		#		paste0("(",droppers,") ",data[droppers,"taxon_name"]," [rank: ",data[droppers,"taxon_rank"],"]",collapse=", ")))
-		#	data<-data[-(droppers),]
+		#		paste0("(",droppers,") ",data1[droppers,"taxon_name"]," [rank: ",data1[droppers,"taxon_rank"],"]",collapse=", ")))
+		#	data1<-data1[-(droppers),]
 		#	}
 		#
 		#Check if show=phylo was used
-		if(!any(colnames(data)=="family")){stop("Data must be a taxonomic download with show=phylo for method='Linnean'")}
-		#now check and return an error if duplicates remain
-		nDup<-sapply(nrow(data),function(x) sum(data[,"taxon_name"]==data[x,"taxon_name"])>1 & data[x,"taxon_rank"]==rank)
+		if(!any(colnames(data1)=="family")){stop("Data must be a taxonomic download with show=phylo for method='Linnean'")}
+		#message that tipSet and queryMissing are ignored
+		message("Linnean taxon-tree option selected, arguments 'tipSet' and 'queryMissing' ignored")
+		#now check and return an error if duplicate taxa of selected rank
+		nDup<-sapply(nrow(data1),function(x) sum(data1[,"taxon_name"]==data1[x,"taxon_name"])>1 & data1[x,"taxon_rank"]==rank)
 		if(any(nDup)){
-			stop(paste0("Duplicate taxa of selected rank: ",paste0("(",which(nDup),") ",data[nDup,"taxon_name"],collapse=", ")))}
+			stop(paste0("Duplicate taxa of selected rank: ",paste0("(",which(nDup),") ",data1[nDup,"taxon_name"],collapse=", ")))}
 		#filter on rank
-		data<-data[data[,"taxon_rank"]==rank,]
+		data1<-data1[data1[,"taxon_rank"]==rank,]
 		#
 		#get the fields you want
 		taxonFields<-c("kingdom","phylum","class","order","family",
 			"taxon_name")
-		taxonData<-data[,taxonFields]
+		taxonData<-data1[,taxonFields]
 		taxonData<-apply(taxonData,2,as.character)
 		tree<-taxonTable2taxonTree(taxonTable=taxonData,cleanTree=cleanTree)
 		tree$taxonTable<-taxonData

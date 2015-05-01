@@ -231,7 +231,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
 			floatersNew<-getFloat(pcDat=pcMat)	#recalculate float
 			#stopping condition, as this is a silly while() loop...
 			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
-				if(solveMissing="queryPBDB"){
+				if(solveMissing=="queryPBDB"){
 					floatData<-queryMissingParents(taxaID=floatersNew)	
 					#update taxon names in taxonNameTable
 					taxonNameTable[match(floatData[,"taxon_no"],taxonNameTable[,1]),2]<-floatData[,"taxon_name"]
@@ -245,7 +245,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
 					pcAll<-rbind(pcAll,newEntries)
 					floaters<-getFloat(pcDat=pcMat)
 				}else{
-					if(solveMissing="mergeRoots"){
+					if(solveMissing=="mergeRoots"){
 						pcMat<-rbind(pcMat,cbind("ArtificialRoot",floaters))
 						taxonNameTable<-rbind(taxonNameTable,c("ArtificialRoot","ArtificialRoot"))
 						message(paste0(

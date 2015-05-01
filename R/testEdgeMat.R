@@ -31,6 +31,10 @@
 #' # should return TRUE
 #' testEdgeMat(tree)
 #'
+#' tree<-stree(10)
+#' # should also return TRUE
+#' testEdgeMat(tree)
+#'
 #' # should also work on trees with two taxa
 #' testEdgeMat(rtree(2))
 #'

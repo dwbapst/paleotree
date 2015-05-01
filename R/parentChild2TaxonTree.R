@@ -78,7 +78,7 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	if(length(tipSet)!=1 | !is.character(tipSet)){stop("tipSet must be a single character element")}
 	if(!is.character(parentChild)){
 		message("parentChild isn't of class character, attempting to coerce")
-		parentChild<-as.character(parentChild)}
+		parentChild<-apply(parentChild,2,as.character)}
 	if(length(dim(parentChild))!=2){
 		stop("parentChild must be a matrix of class character with two columns and multiple rows")
 	}else{
@@ -86,6 +86,50 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 			stop("parentChild must be a matrix of class character with two columns and multiple rows")
 			}
 		}
+	#
+	#test monophyly of parentChild
+		#test that all but one node has an ancestor
+	parentMatch<-match(unique(parentChild[,1]),parentChild[,2])
+	if(sum(is.na(parentMatch))>1){
+		stop(paste("More than one apparent root; \n",
+			"more than one parent without their own parent listed"))}
+	#trace all tips to a single ancestor
+	ultimateAnc<-sapply(unique(c(parentChild[,1],parentChild[,2])),function(taxa){
+		while(any(parentChild[,2]==taxa)){
+			taxa<-parentChild[parentChild[,2]==taxa,1]
+			if(length(taxa)>1){
+				stop("Some parents are listed as a children twice in parentChild")}
+			}
+		return(taxa)
+		})
+	if(length(unique(ultimateAnc))!=1){
+		stop("Taxa in parentChild trace back to more than one unique common ancestor")}
+	#
+	#remove singular root edges
+	#trace tips to ultimate ancestor (should be same for all, as this has already been checked)
+	continue<-TRUE
+	while(continue){
+		ultimateAnc<-sapply(unique(c(parentChild[,1],parentChild[,2])),function(taxa){
+			while(any(parentChild[,2]==taxa)){
+				taxa<-parentChild[parentChild[,2]==taxa,1]
+				}
+			return(taxa)
+			})
+		if(length(unique(ultimateAnc))==1){
+			ultAnc1<-ultimateAnc[1]
+		}else{
+			stop("parentChild constructed improperly")}
+		descEdge<-which(parentChild[,1]==ultAnc1)
+		if(length(descEdge)==1){
+			message(paste("Removing singular node leading to root:",ultAnc1))
+			#remove from parentChild
+			parentChild<-parentChild[-descEdge,,drop=FALSE]
+			if(nrow(parentChild)<1){stop("No branching nodes found?!")}
+		}else{
+			continue=FALSE
+			}
+		}
+	#
 	#first, get nodeNames, with root name first
 	nodeNames<-unique(parentChild[,1])
 	whichRoot<-which(sapply(nodeNames,function(x) !any(x==parentChild[,2])))
@@ -104,6 +148,9 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	#now convert parentChild matrix to edge matrix
 	edgeMat<-matrix(,nrow(parentChild),ncol(parentChild))
 	taxonNames<-c(tipNames,nodeNames)
+	#test that none have been lost
+	if(length(taxonNames)!=length(unique(c(parentChild[,1],parentChild[,2])))){
+		stop("Number of tip and node names doesn't sum to total number of unique names in parentChild")}
 	#convert internal nodes to Ntip+nodeNames ID
 	edgeMat[,1]<-sapply(parentChild[,1],function(x) which(x==taxonNames))
 	edgeMat[,2]<-sapply(parentChild[,2],function(x) which(x==taxonNames))

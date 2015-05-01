@@ -98,6 +98,9 @@ easyGetPBDBtaxa<-function(taxon,show=c("phylo","img","app")){
 graptData<-easyGetPBDBtaxa("Graptolithina")
 graptTree<-makePBDBtaxonTree(graptData,"genus",
 	method="parentChild", solveMissing="queryPBDB")
+#try Linnean
+graptTree<-makePBDBtaxonTree(graptData,"genus",
+	method="Linnean")
 plot(graptTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 nodelabels(graptTree$node.label,adj=c(0,1/2))
 
@@ -117,17 +120,18 @@ nodelabels(asaTree$node.label,adj=c(0,1/2))
 
 #Ornithischia
 ornithData<-easyGetPBDBtaxa("Ornithischia")
+ornithTree<-makePBDBtaxonTree(ornithData,"genus",
+	method="parentChild", solveMissing="queryPBDB")
+#try Linnean
 #need to drop repeated taxon first: Hylaeosaurus
 ornithData<-ornithData[-(which(ornithData[,"taxon_name"]=="Hylaeosaurus")[1]),]
 ornithTree<-makePBDBtaxonTree(ornithData,"genus",
-	method="parentChild", solveMissing="queryPBDB")
+	method="Linnean")
 plot(ornithTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 nodelabels(ornithTree$node.label,adj=c(0,1/2))
 
 #Rhynchonellida
 rynchData<-easyGetPBDBtaxa("Rhynchonellida")
-#need to drop repeated taxon first: Rhynchonelloidea
-rynchData<-rynchData[-(which(rynchData[,"taxon_name"]=="Rhynchonelloidea")[1]),]
 rynchTree<-makePBDBtaxonTree(rynchData,"genus",
 	method="parentChild", solveMissing="queryPBDB")
 plot(rynchTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)

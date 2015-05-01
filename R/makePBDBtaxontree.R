@@ -108,6 +108,9 @@
 #' graptData<-easyGetPBDBtaxa("Graptolithina")
 #' graptTree<-makePBDBtaxonTree(graptData,"genus",
 #' 	method="parentChild", solveMissing="queryPBDB")
+#' #try Linnean
+#' graptTree<-makePBDBtaxonTree(graptData,"genus",
+#' 	method="Linnean")
 #' plot(graptTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(graptTree$node.label,adj=c(0,1/2))
 #' 
@@ -127,17 +130,18 @@
 #' 
 #' #Ornithischia
 #' ornithData<-easyGetPBDBtaxa("Ornithischia")
+#' ornithTree<-makePBDBtaxonTree(ornithData,"genus",
+#' 	method="parentChild", solveMissing="queryPBDB")
+#' #try Linnean
 #' #need to drop repeated taxon first: Hylaeosaurus
 #' ornithData<-ornithData[-(which(ornithData[,"taxon_name"]=="Hylaeosaurus")[1]),]
 #' ornithTree<-makePBDBtaxonTree(ornithData,"genus",
-#' 	method="parentChild", solveMissing="queryPBDB")
+#' 	method="Linnean")
 #' plot(ornithTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(ornithTree$node.label,adj=c(0,1/2))
 #' 
 #' #Rhynchonellida
 #' rynchData<-easyGetPBDBtaxa("Rhynchonellida")
-#' #need to drop repeated taxon first: Rhynchonelloidea
-#' rynchData<-rynchData[-(which(rynchData[,"taxon_name"]=="Rhynchonelloidea")[1]),]
 #' rynchTree<-makePBDBtaxonTree(rynchData,"genus",
 #' 	method="parentChild", solveMissing="queryPBDB")
 #' plot(rynchTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
@@ -393,14 +397,14 @@ translatePBDBtaxa<-function(data){
 #another hidden function
 queryMissingParents<-function(taxaID){
 	#drop Eukarya, as it won't return if status=senior under 1.1
-	taxaID<-as.numeric(taxaID[taxaID!="1"])
+	#taxaID<-as.numeric(taxaID[taxaID!="1"])
 	#let's get some taxonomic data
 	floatData<-read.csv(paste0("http://paleobiodb.org/",
 		"data1.1/taxa/list.txt?id=",paste0(taxaID,collapse=","),
 		"&rel=self&status=senior&vocab=pbdb"),
 		stringsAsFactors=FALSE)
 	if(nrow(floatData)==0){
-		stop(paste("Found taxon IDs which will not be processed by PBDB API: \n",
+		stop(paste("Current PBDB API would not return info for the following taxon IDs: \n",
 			paste0(taxaID,collapse=", ")))}
 	floatData<-translatePBDBtaxa(floatData)
 	#parse down to just taxon_name, taxon_no, parent_no

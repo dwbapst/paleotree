@@ -172,6 +172,9 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 		stop("method must be a single character value")}
 	if(!any(method==c("Linnean","parentChild"))){
 		stop("method must be one of either 'Linnean' or 'parentChild'")}
+	if(mergeMultipleRoots & queryMissing){
+		stop(paste("queryMissing and mergeMultipleRoots are separate and incompatible approaches to dealing \n",
+			" with multiple parent taxa listed with no parents themselves"))}
 	if(!is(data,"data.frame")){stop("data isn't a data.frame")}
 	if(length(rank)!=1 | !is.character(rank)){
 		stop("rank must be a single character value")}
@@ -268,7 +271,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 		#Check if show=phylo was used
 		if(!any(colnames(data1)=="family")){stop("Data must be a taxonomic download with show=phylo for method='Linnean'")}
 		#message that tipSet and queryMissing are ignored
-		message("Linnean taxon-tree option selected, arguments 'tipSet' and 'queryMissing' ignored")
+		message("Linnean taxon-tree option selected, arguments 'tipSet', 'mergeMultipleRoots' and 'queryMissing' ignored")
 		#now check and return an error if duplicate taxa of selected rank
 		nDup<-sapply(nrow(data1),function(x) sum(data1[,"taxon_name"]==data1[x,"taxon_name"])>1 & data1[x,"taxon_rank"]==rank)
 		if(any(nDup)){

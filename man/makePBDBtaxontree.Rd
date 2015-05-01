@@ -122,8 +122,8 @@ nodelabels(rynchTree$node.label,adj=c(0,1/2))
 #get some example occurrence and taxonomic data
 data(graptPBDB)
 
-#get the taxon tree
-graptTree<-makePBDBtaxonTree(graptTaxaPBDB,"genus")
+#get the taxon tree: Linnean method first
+graptTree<-makePBDBtaxonTree(graptTaxaPBDB,"genus",method=="Linnean")
 plot(graptTree)
 nodelabels(graptTree$node.label,cex=0.5)
 

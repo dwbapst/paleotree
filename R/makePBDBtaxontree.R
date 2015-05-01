@@ -130,8 +130,8 @@
 #' #get some example occurrence and taxonomic data
 #' data(graptPBDB)
 #' 
-#' #get the taxon tree
-#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB,"genus")
+#' #get the taxon tree: Linnean method first
+#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB,"genus",method=="Linnean")
 #' plot(graptTree)
 #' nodelabels(graptTree$node.label,cex=0.5)
 #' 
@@ -160,7 +160,7 @@
 #' @rdname makePBDBtaxonTree
 #' @export
 makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
-		tipSet="nonParents",cleanTree=TRUE){		# ,cleanDuplicate=FALSE
+					tipSet="nonParents",cleanTree=TRUE){		
 	#
 	# rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE
 	#CHECKS
@@ -273,17 +273,6 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 		}
 	#
 	if(method=="Linnean"){
-		# TRASH:
-		#check to make sure no taxon names are listed twice, first clean then check again
-		#nDup<-sapply(data1[,"taxon_name"],function(x) sum(data1[,"taxon_name"]==x)>1)
-		#if(any(nDup) & cleanDuplicate){
-		#	#find any taxa of not right rank, remove them
-		#	droppers<-which(data1[,"taxon_rank"]!=rank & nDup)
-		#	message(paste0("Duplicate taxa dropped: ",
-		#		paste0("(",droppers,") ",data1[droppers,"taxon_name"]," [rank: ",data1[droppers,"taxon_rank"],"]",collapse=", ")))
-		#	data1<-data1[-(droppers),]
-		#	}
-		#
 		#Check if show=phylo was used
 		if(!any(colnames(data1)=="family")){stop("Data must be a taxonomic download with show=phylo for method='Linnean'")}
 		#message that tipSet and queryMissing are ignored

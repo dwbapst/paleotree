@@ -129,6 +129,8 @@ phyloDiv(tree1)
 tree2 <- dropExtant(tree)
 phyloDiv(tree2)
 
+graphics.off()
+
 #example using addTermBranchLength
 set.seed(444)
 treeA <- rtree(10)
@@ -139,7 +141,9 @@ compareTermBranches(treeA,treeB)
 	#(and fixRootTime by extension...)
 tree<-read.tree(text="(A:3,(B:2,(C:5,D:3):2):3);")
 tree$root.time<-10
-plot(tree);axisPhylo()
+plot(tree,no.margin=FALSE)
+axisPhylo()
+
 #
 (test<-dropPaleoTip(tree,"A")$root.time) # =7
 (test[2]<-dropPaleoTip(tree,"B")$root.time) # =10

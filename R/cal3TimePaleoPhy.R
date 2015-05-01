@@ -360,6 +360,7 @@
 #' plot(ladderize(ttreeFAD));text(5,5,"time.obs=FAD",cex=1.5,pos=4)
 #' plot(ladderize(ttreeRand));text(5,5,"time.obs=Random",cex=1.5,pos=4)
 #' plot(ladderize(ttreeLAD));text(5,5,"time.obs=LAD",cex=1.5,pos=4)
+#' layout(1); par(parOrig)
 #' }
 #' 
 #' #to get a fair sample of trees, let's increase ntrees
@@ -367,12 +368,13 @@
 #'     sampRate=sRate,ntrees=9,plot=FALSE)
 #' #let's compare nine of them at once in a plot
 #' layout(matrix(1:9,3,3))
+#' parOrig <- par(no.readonly=TRUE)
 #' par(mar=c(0,0,0,0))
 #' for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label=FALSE)}
+#' layout(1); par(parOrig)
 #' #they are all a bit different!
 #' 
 #' #can plot the median diversity curve with multiDiv
-#' layout(1); par(parOrig)
 #' multiDiv(ttrees)
 #' 
 #' #using node.mins

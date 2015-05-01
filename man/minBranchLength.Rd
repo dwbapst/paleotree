@@ -57,8 +57,8 @@ tree2<-multi2di(tree)
 tree2<-minBranchLength(tree2,0.1)
 
 layout(1:2)
-plot(tree);axisPhylo()
-plot(tree2);axisPhylo()
+plot(tree,show.tip.label=FALSE);axisPhylo()
+plot(tree2,show.tip.label=FALSE);axisPhylo()
 
 layout(1)
 }

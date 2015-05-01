@@ -131,7 +131,7 @@
 #' data(graptPBDB)
 #' 
 #' #get the taxon tree: Linnean method first
-#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB,"genus",method=="Linnean")
+#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB,"genus",method="Linnean")
 #' plot(graptTree)
 #' nodelabels(graptTree$node.label,cex=0.5)
 #' 
@@ -178,6 +178,10 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 	data1<-translatePBDBtaxa(data)
 	#
 	if(method=="parentChild"){
+		#need two things: a table of parent-child relationships as IDs
+			#and a look-up table of IDs and taxon names
+		#
+		#filer out lower than selected rank
 		# translate rank and taxon_rank to a number
 		taxRankPBDB<-c("subspecies","species","subgenus","genus","subtribe","tribe","subfamily",
 			"family","superfamily","infraorder","suborder","order","superorder","infraclass",
@@ -189,8 +193,32 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 		data1<-data1[rank1<=numTaxonRank,]
 		#also recreate numTaxonRank
 		numTaxonRank<-sapply(data1[,"taxon_rank"],function(x) which(x==taxRankPBDB))		
+		#
+		#create lookup table for taxon names
+		taxonNameTable<-data1[,c("taxon_no","taxon_name")]
+		#add parents not listed
+		parentFloat<-unique(data[,"parent_no"])
+		parentFloat<-parentFloat[is.na(match(parentFloat,taxonNameTable[,1]))]
+		taxonNameTable<-rbind(taxonNameTable,cbind(parentFloat,paste("ID:",as.character(parentFloat)))
+		#DONE
+		#
+		#now need to put together parentChild table
+		#first, get table of all parentChild relationships in data
+		pcAll<-data[,c("parent_no","taxon_no")]
+		#then start creating final matrix: first, those of desired rank
+		pcMat<-pcAll[rank1==numTaxonRank,]
+		
+
+
+
+
+		#identify IDs of parents floating without ancestors of their own
+		getFloat<-function(pcMat){unique(pcMat[sapply(pcMat[,1],function(x) all(x!=pcMat[,2])),1])}
+		floatParents<-getFloat(pcMat=parentChildMat)
+
+		#TRASH
 		#get parent name
-		parentName<-sapply(data1[,"parent_no"],function(x){ 
+		#parentName<-sapply(data1[,"parent_no"],function(x){ 
 			z<-which(data1[,"taxon_no"]==x)
 			#check for multiple matches
 			if(length(z)>1){
@@ -207,14 +235,8 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 		parentNameNo<-unique(cbind(parentName,data1[,"parent_no"]))
 		if(any(duplicated(parentNameNo[,2]))){
 			stop("multiple taxon numbers assigned to same parent taxon name?")}
-		#
-		#get matrix of all parentChild relationships
-		parentChildAll<-cbind(parentName,data1[,"taxon_name"])
-		#first pull out all for desired rank
-		parentChildMat<-parentChildAll[rank1==numTaxonRank,]
-		#count parents floating without ancestors of their own
-		getFloat<-function(pcMat){unique(pcMat[sapply(pcMat[,1],function(x) all(x!=pcMat[,2])),1])}
-		floatParents<-getFloat(pcMat=parentChildMat)
+
+
 		#start tracing back
 		nCount<-0
 		while(length(floatParents)>1){	#so only a root can float
@@ -298,6 +320,8 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 #hidden function, don't import
 translatePBDBtaxa<-function(data){
 	# Do some translation
+	#need to replace any empty string values with NAs (due perhaps to use of read.csv with the API)
+	data[data==""]<-NA
 	#if com vocab
 	if(any("rnk"==colnames(data))){	
 		#apparently it doesn't matter if these columns *are* present or not
@@ -333,7 +357,13 @@ translatePBDBtaxa<-function(data){
 		nameFormal<-data[,"accepted_name"]
 		nameFormal[is.na(nameFormal)]<-as.character(data[is.na(nameFormal),"taxon_name"])
 		#replace taxon_name
-		data[,"taxon_name"]<-nameFormal	
+		data[,"taxon_name"]<-nameFormal
+		#
+		#replace taxon_no with accepted_no
+		taxNum<-data[,"accepted_no"]
+		taxNum[is.na(taxNum)]<-as.character(data[is.na(taxNum),"taxon_no"])	
+		data[,"taxon_no"]<-taxNum			
+		#
 		#also replace parent_no in the same way with senpar_no
 		parNum<-data[,"senpar_no"]
 		parNum[is.na(parNum)]<-as.character(data[is.na(parNum),"parent_no"])	

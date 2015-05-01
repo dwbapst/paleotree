@@ -1,3 +1,5 @@
+Version - 2.5 -
+
 Version - 2.4 - 05-01-15
 -Modified timePaleoPhy help file to clarify 'these are not realistic time-scaling functions' statement and correcting an 'either' to 'neither' in the description of argument 'ntrees'
 -Modified bin_timePaleoPhy and bin_cal3TimePaleoPhy to clarify that dateTreatment=minMax should be replaced be *either* the point.occur argument *or* a sites matrix

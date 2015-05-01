@@ -160,7 +160,7 @@
 #' @rdname makePBDBtaxonTree
 #' @export
 makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
-					tipSet="nonParents",cleanTree=TRUE){		
+					mergeMultipleRoots=TRUE,tipSet="nonParents",cleanTree=TRUE){		
 	#
 	# rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE
 	#CHECKS
@@ -199,7 +199,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 		#add parents not listed
 		parentFloat<-unique(data[,"parent_no"])
 		parentFloat<-parentFloat[is.na(match(parentFloat,taxonNameTable[,1]))]
-		taxonNameTable<-rbind(taxonNameTable,cbind(parentFloat,paste("ID:",as.character(parentFloat)))
+		taxonNameTable<-rbind(taxonNameTable,cbind(parentFloat,paste("ID:",as.character(parentFloat))))
 		#DONE
 		#
 		#now need to put together parentChild table
@@ -207,90 +207,57 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 		pcAll<-data[,c("parent_no","taxon_no")]
 		#then start creating final matrix: first, those of desired rank
 		pcMat<-pcAll[rank1==numTaxonRank,]
-		
-
-
-
-
 		#identify IDs of parents floating without ancestors of their own
-		getFloat<-function(pcMat){unique(pcMat[sapply(pcMat[,1],function(x) all(x!=pcMat[,2])),1])}
-		floatParents<-getFloat(pcMat=parentChildMat)
-
-		#TRASH
-		#get parent name
-		#parentName<-sapply(data1[,"parent_no"],function(x){ 
-			z<-which(data1[,"taxon_no"]==x)
-			#check for multiple matches
-			if(length(z)>1){
-				stop("Multiple taxon matches to taxon IDs? Check if you used '&status=senior' in API call")}
-			#if zero matches
-			if(length(z)<1){
-				z<-paste("ID:",as.character(x))
-			}else{
-				z<-data1[z,"taxon_name"]
-				}
-			return(z)
-			})
-		#check that the same name wasn't returned for multiple ID numbers
-		parentNameNo<-unique(cbind(parentName,data1[,"parent_no"]))
-		if(any(duplicated(parentNameNo[,2]))){
-			stop("multiple taxon numbers assigned to same parent taxon name?")}
-
-
-		#start tracing back
-		nCount<-0
-		while(length(floatParents)>1){	#so only a root can float
+		getFloat<-function(pcDat){unique(pcDat[sapply(pcDat[,1],function(x) all(x!=pcDat[,2])),1])}
+		floaters<-getFloat(pcDat=pcMat)
+		#
+		nCount<-0	#start tracing back
+		while(length(floaters)>1){	#so only ONE root can float
 			nCount<-nCount+1
-			newRelations<-match(floatParents,parentChildAll[,2])
-			newRelations<-newRelations[!is.na(newRelations)]
-			parentChildMat<-rbind(parentChildMat,parentChildAll[newRelations,])
-			#recalculate float
-			floatParents2<-getFloat(pcMat=parentChildMat)
-			#put in stopping condition
-			if(length(floatParents2)>1 & identical(sort(floatParents),sort(floatParents2))){
+			#get new relations: will 'anchor' the floaters
+			anchors<-match(floaters,pcAll[,2])
+			pcMat<-rbind(pcMat,pcAll[anchors[!is.na(anchors)],])	#bind to pcMat
+			floatersNew<-getFloat(pcDat=pcMat)	#recalculate float
+			#stopping condition, as this is a silly while() loop...
+			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
 				if(queryMissing){
-					getPBDBtaxaID<-function(ID){
-						#let's get some taxonomic data
-						taxaData<-read.csv(paste0("http://paleobiodb.org/",
-							"data1.1/taxa/list.txt?id=",paste0(ID,collapse=","),
-							"&rel=self&status=senior&vocab=pbdb"),
-							stringsAsFactors=FALSE)
-							return(taxaData)
-							}
-					floatID<-parentNameNo[match(floatParents2,parentNameNo[,1]),2]
-					#drop Eukarya, as it won't return if status=senior under 1.1
-					floatParents2<-floatParents2[floatID!="1"]
-					floatID<-floatID[floatID!="1"]	
-					floatData<-getPBDBtaxaID(floatID)
-					floatData<-translatePBDBtaxa(floatData)
-					#update taxon names in parentNameNo,parentChildMat,parentChildAll
-					newTaxa<-cbind(floatData$taxon_name,floatData[,c("taxon_no")])
-					newTaxa<-cbind(oldname=paste("ID:",as.character(newTaxa[,2])),newTaxa)
-					for(i in 1:nrow(newTaxa)){
-						parentNameNo[parentNameNo==newTaxa[i,1]]<-newTaxa[i,2]
-						parentChildMat[parentChildMat==newTaxa[i,1]]<-newTaxa[i,2]
-						parentChildAll[parentChildAll==newTaxa[i,1]]<-newTaxa[i,2]
-						}
-					newParents<-floatData[,"parent_no"]
-					newParents<-cbind(oldname=paste("ID:",as.character(newParents)),newParents)
-					#update parentNameNo
-					parentNameNo<-rbind(parentNameNo,newParents)
+					floatData<-queryMissingParents(taxaID=floatersNew)	
+					#update taxon names in taxonNameTable
+					taxonNameTable[match(floatData[,"taxon_no"],taxonNameTable[,1]),2]<-floatData[,"taxon_name"]
+					#add any new parent taxa to taxonNameTable
+					parentFloat<-unique(floatData[,"parent_no"])
+					parentFloat<-parentFloat[is.na(match(parentFloat,taxonNameTable[,1]))]
+					taxonNameTable<-rbind(taxonNameTable,cbind(parentFloat,paste("ID:",as.character(parentFloat))))
 					#update parentChildMat, parentChildAll
-					newEntries<-cbind(newParents[,1],floatParents2)
+					newEntries<-floatData[,c("parent_no","taxon_no")]
 					parentChildMat<-rbind(parentChildMat,newEntries)
 					parentChildAll<-rbind(parentChildAll,newEntries)
-					floatParents<-getFloat(pcMat=parentChildMat)
+					floaters<-getFloat(pcDat=parentChildMat)
 				}else{
-					stop(paste0("Provided PBDB Dataset does not appear to have a \n",
-						" monophyletic set of parent-child relationship pairs. \n",
-						"Multiple taxa appear to be listed as parents, but are not \n",
-						"listed themselves so have no parents listed: \n",
-						paste0(floatParents,collapse=", ")))
+					if(mergeMultipleRoots){
+
+
+
+
+					}else{
+						stop(paste0("Provided PBDB Dataset does not appear to have a \n",
+							" monophyletic set of parent-child relationship pairs. \n",
+							"Multiple taxa appear to be listed as parents, but are not \n",
+							"listed themselves so have no parents listed: \n",
+							paste0(floaters,collapse=", ")))
+						}
 					}
 			}else{
-				floatParents<-floatParents2}
+				floaters<-floatersNew}
 			}
+
+
+
+
 		tree<-parentChild2taxonTree(parentChild=parentChildMat,tipSet=tipSet,cleanTree=cleanTree)
+
+		#convert tip.label and node.label to taxon names from taxonNameTable
+
 		tree$parentChild<-parentChildMat
 		}
 	#
@@ -371,4 +338,19 @@ translatePBDBtaxa<-function(data){
 		}
 	#
 	return(data)
+	}
+
+#another hidden function
+queryMissingParents<-function(taxaID){
+	#drop Eukarya, as it won't return if status=senior under 1.1
+	taxaID<-taxaID[taxaID!="1"]
+	#let's get some taxonomic data
+	floatData<-read.csv(paste0("http://paleobiodb.org/",
+		"data1.1/taxa/list.txt?id=",paste0(taxaID,collapse=","),
+		"&rel=self&status=senior&vocab=pbdb"),
+		stringsAsFactors=FALSE)
+	floatData<-translatePBDBtaxa(floatData)
+	#parse down to just taxon_name, taxon_no, parent_no
+	floatData<-floatData[,c("taxon_name","parent_no","taxon_no")]
+	return(floatData)
 	}

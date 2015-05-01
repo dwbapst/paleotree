@@ -44,6 +44,9 @@ testEdgeMat(stree(10))
 # should also work on trees with two taxa
 testEdgeMat(rtree(2))
 
+# should also work on trees with one taxon
+testEdgeMat(stree(1))
+
 #running cleanNewPhylo on this tree should have little effect
 		#beyond ladderizing it...
 tree1<-cleanNewPhylo(tree)

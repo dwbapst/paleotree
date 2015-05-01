@@ -280,7 +280,6 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
 						newEntries<-floatData[,c("parent_no","taxon_no")]
 						pcMat<-rbind(pcMat,newEntries)
 						pcAll<-rbind(pcAll,newEntries)
-						floaters<-getFloat(pcDat=pcMat)
 						}
 					if(solveMissing=="mergeRoots"){
 						pcMat<-rbind(pcMat,cbind("ArtificialRoot",floaters))
@@ -290,6 +289,8 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
 							paste0(taxonNameTable[match(floaters,taxonNameTable[,1]),2]
 								,collapse=", ")))
 						}
+					#regardless of method used, recalculate floaters
+					floaters<-getFloat(pcDat=pcMat)
 				}else{
 					stop(paste0("Provided PBDB Dataset does not appear to have a \n",
 						" monophyletic set of parent-child relationship pairs. \n",

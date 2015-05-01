@@ -159,22 +159,26 @@
 #' @name makePBDBtaxonTree
 #' @rdname makePBDBtaxonTree
 #' @export
-makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
-					mergeMultipleRoots=FALSE,tipSet="nonParents",cleanTree=TRUE){		
+makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
+					tipSet="nonParents",cleanTree=TRUE){		
 	# 
-	# data(graptPBDB);data<-graptTaxaPBDB; rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE
-	# data<-graptTaxaPBDB; rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE; queryMissing=TRUE
-	# data<-graptTaxaPBDB; rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE; mergeMultipleRoots=TRUE
+	# library(paleotree);data(graptPBDB);
+	# data<-graptTaxaPBDB; rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE
+	# data<-graptTaxaPBDB; rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE; solveMissing="queryPBDB"
+	# data<-graptTaxaPBDB; rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE; solveMissing="mergeRoots"
 	# data<-graptTaxaPBDB; rank="genus"; method="Linnean"; 
-
+	#
 	#CHECKS
 	if(length(method)!=1 | !is.character(method)){
 		stop("method must be a single character value")}
 	if(!any(method==c("Linnean","parentChild"))){
 		stop("method must be one of either 'Linnean' or 'parentChild'")}
-	if(mergeMultipleRoots & queryMissing){
-		stop(paste("queryMissing and mergeMultipleRoots are separate and incompatible approaches to dealing \n",
-			" with multiple parent taxa listed with no parents themselves"))}
+	if(!is.null(solveMissings)){
+		if(length(solveMissing)>1 | !is.character(solveMissings)){
+			stop("solveMissing must be either NULL or a single character value")}
+		if(is.na(solveMissing,c("queryPBDB","mergeRoots"))){
+			stop('solveMissing but be either NULL or "queryPBDB" or "mergeRoots"')}
+		}
 	if(!is(data,"data.frame")){stop("data isn't a data.frame")}
 	if(length(rank)!=1 | !is.character(rank)){
 		stop("rank must be a single character value")}
@@ -227,7 +231,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 			floatersNew<-getFloat(pcDat=pcMat)	#recalculate float
 			#stopping condition, as this is a silly while() loop...
 			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
-				if(queryMissing){
+				if(solveMissing="queryPBDB"){
 					floatData<-queryMissingParents(taxaID=floatersNew)	
 					#update taxon names in taxonNameTable
 					taxonNameTable[match(floatData[,"taxon_no"],taxonNameTable[,1]),2]<-floatData[,"taxon_name"]
@@ -241,7 +245,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 					pcAll<-rbind(pcAll,newEntries)
 					floaters<-getFloat(pcDat=pcMat)
 				}else{
-					if(mergeMultipleRoots){
+					if(solveMissing="mergeRoots"){
 						pcMat<-rbind(pcMat,cbind("ArtificialRoot",floaters))
 						taxonNameTable<-rbind(taxonNameTable,c("ArtificialRoot","ArtificialRoot"))
 						message(paste0(
@@ -270,8 +274,8 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 	if(method=="Linnean"){
 		#Check if show=phylo was used
 		if(!any(colnames(data1)=="family")){stop("Data must be a taxonomic download with show=phylo for method='Linnean'")}
-		#message that tipSet and queryMissing are ignored
-		message("Linnean taxon-tree option selected, arguments 'tipSet', 'mergeMultipleRoots' and 'queryMissing' ignored")
+		#message that tipSet and solveMissing are ignored
+		message("Linnean taxon-tree option selected, arguments 'tipSet', 'solveMissing' ignored")
 		#now check and return an error if duplicate taxa of selected rank
 		nDup<-sapply(nrow(data1),function(x) sum(data1[,"taxon_name"]==data1[x,"taxon_name"])>1 & data1[x,"taxon_rank"]==rank)
 		if(any(nDup)){

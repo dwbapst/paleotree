@@ -38,16 +38,15 @@ tree<-rtree(10)
 # should return TRUE
 testEdgeMat(tree)
 
-tree<-stree(10)
-# should also return TRUE
-testEdgeMat(tree)
+# should also work on star trees
+testEdgeMat(stree(10))
 
 # should also work on trees with two taxa
 testEdgeMat(rtree(2))
 
 #running cleanNewPhylo on this tree should have little effect
 		#beyond ladderizing it...
-tree<-cleanNewPhylo(tree)
+tree1<-cleanNewPhylo(tree)
 
 #compare outputs
 layout(1:2)

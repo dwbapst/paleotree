@@ -31,16 +31,15 @@
 #' # should return TRUE
 #' testEdgeMat(tree)
 #'
-#' tree<-stree(10)
-#' # should also return TRUE
-#' testEdgeMat(tree)
+#' # should also work on star trees
+#' testEdgeMat(stree(10))
 #'
 #' # should also work on trees with two taxa
 #' testEdgeMat(rtree(2))
 #'
 #' #running cleanNewPhylo on this tree should have little effect
 #' 		#beyond ladderizing it...
-#' tree<-cleanNewPhylo(tree)
+#' tree1<-cleanNewPhylo(tree)
 #'
 #' #compare outputs
 #' layout(1:2)
@@ -62,11 +61,13 @@ testEdgeMat<-function(tree){
 	if(Ntip(tree)>2){
 		if(Nnode(tree)!=(max(tree$edge)-Ntip(tree))){
 			stop("Number of nodes is incorrect based on edge numbering?")}
-		#is every internal node listed as a descendant and ancestor, in edge[,2] and edge[,1]?
-		if(!all(sapply((2:Nnode(tree))+Ntip(tree),function(x) any(x==tree$edge[,1])))){
-			stop("Not all internal nodes (except root) listed in edge[,1]?")}
-		if(!all(sapply((2:Nnode(tree))+Ntip(tree),function(x) any(x==tree$edge[,2])))){
-			stop("Not all internal nodes (except root) listed in edge[,2]?")}
+		if(Nnode(tree)>1){
+			#is every internal node listed as a descendant and ancestor, in edge[,2] and edge[,1]?
+			if(!all(sapply((2:Nnode(tree))+Ntip(tree),function(x) any(x==tree$edge[,1])))){
+				stop("Not all internal nodes (except root) listed in edge[,1]?")}
+			if(!all(sapply((2:Nnode(tree))+Ntip(tree),function(x) any(x==tree$edge[,2])))){
+				stop("Not all internal nodes (except root) listed in edge[,2]?")}
+			}
 	#}else{
 	#	if(identical(sort(unique(tree$edge[,2])),c(1L,2L))){stop("Number of nodes is incorrect based on edge[,2]?")}
 		}
@@ -78,7 +79,7 @@ testEdgeMat<-function(tree){
 cleanNewPhylo<-function(tree){ 
 		#CHECKS
 		if(class(tree)!="phylo"){stop("Must be class 'phylo'")}
-		if(any(is.na(match(c("edge","tip.label","Nnode","edge.length"),names(tree))))){
+		if(any(is.na(match(c("edge","tip.label","Nnode"),names(tree))))){
 			stop("Missing key required elements of a 'phylo' object")}
 		oldNtip<-length(tree$tip.label)
 		#make it a good tree

@@ -354,7 +354,9 @@
 #' #by default the time of observations are the LADs
 #' ttreeLAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
 #'     FAD.only=FALSE,dateTreatment="randObs",sampRate=sRate,ntrees=1,plot=TRUE)
-#' layout(1:3);parOrig<-par(mar=c(0,0,0,0))
+#' layout(1:3)
+#' parOrig <- par(no.readonly=TRUE)
+#' par(mar=c(0,0,0,0))
 #' plot(ladderize(ttreeFAD));text(5,5,"time.obs=FAD",cex=1.5,pos=4)
 #' plot(ladderize(ttreeRand));text(5,5,"time.obs=Random",cex=1.5,pos=4)
 #' plot(ladderize(ttreeLAD));text(5,5,"time.obs=LAD",cex=1.5,pos=4)
@@ -364,7 +366,8 @@
 #' ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
 #'     sampRate=sRate,ntrees=9,plot=FALSE)
 #' #let's compare nine of them at once in a plot
-#' layout(matrix(1:9,3,3));parOrig<-par(mar=c(0,0,0,0))
+#' layout(matrix(1:9,3,3))
+#' par(mar=c(0,0,0,0))
 #' for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label=FALSE)}
 #' #they are all a bit different!
 #' 
@@ -806,10 +809,14 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 		if(length(unique(timeData1[,2]))<Ntip(tree)){test2<-TRUE}	#test 2 does not work if any LADS are same
 		if(all(c(test1,test2))){ktree$test<-"passed"}else{warning("Warning: Terminal tips improperly aligned, cause unknown. Use ouput with care.")}
 		if(plot){
-			parOrig<-par(mar=c(2.5,2.5,1,2.5));layout(matrix(1:3,3,));plot(ladderize(tree),show.tip.label=TRUE,use.edge.length=FALSE)
+			parOrig <- par(no.readonly=TRUE)
+			par(mar=c(2.5,2.5,1,2.5))
+			layout(matrix(1:3,3,))
+			plot(ladderize(tree),show.tip.label=TRUE,use.edge.length=FALSE)
 			plot(ladderize(ttree1),show.tip.label=TRUE);axisPhylo()			
-			plot(ladderize(ktree),show.tip.label=TRUE);axisPhylo();
-			layout(1);par(parOrig)		
+			plot(ladderize(ktree),show.tip.label=TRUE);axisPhylo()
+			layout(1)
+			par(parOrig)		
 			}
 		names(ktree$edge.length)<-NULL
 		ttrees[[ntr]]<-ktree

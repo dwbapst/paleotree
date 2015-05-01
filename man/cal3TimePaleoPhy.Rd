@@ -364,7 +364,9 @@ ttreeRand <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRat
 #by default the time of observations are the LADs
 ttreeLAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     FAD.only=FALSE,dateTreatment="randObs",sampRate=sRate,ntrees=1,plot=TRUE)
-layout(1:3);parOrig<-par(mar=c(0,0,0,0))
+layout(1:3)
+parOrig <- par(no.readonly=TRUE)
+par(mar=c(0,0,0,0))
 plot(ladderize(ttreeFAD));text(5,5,"time.obs=FAD",cex=1.5,pos=4)
 plot(ladderize(ttreeRand));text(5,5,"time.obs=Random",cex=1.5,pos=4)
 plot(ladderize(ttreeLAD));text(5,5,"time.obs=LAD",cex=1.5,pos=4)
@@ -374,7 +376,8 @@ plot(ladderize(ttreeLAD));text(5,5,"time.obs=LAD",cex=1.5,pos=4)
 ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     sampRate=sRate,ntrees=9,plot=FALSE)
 #let's compare nine of them at once in a plot
-layout(matrix(1:9,3,3));parOrig<-par(mar=c(0,0,0,0))
+layout(matrix(1:9,3,3))
+par(mar=c(0,0,0,0))
 for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label=FALSE)}
 #they are all a bit different!
 

@@ -376,7 +376,7 @@ phyloDiv<-function(tree,int.length=0.1,int.times=NULL,plot=TRUE,plotLogRich=FALS
 		div1<-c(div,div)[order(times1)]
 		times1<-sort(times1)
 		layout(matrix(1:2,2,1))
-		parOrig<-par()
+		parOrig<-par(no.readonly=TRUE)
 		par(mar=c(1,4,1,1))
 		plot(ladderize(savetree),show.tip.label=FALSE)
 		axisPhylo()    #anticipating that ape will recognize root.time soon
@@ -393,7 +393,8 @@ phyloDiv<-function(tree,int.length=0.1,int.times=NULL,plot=TRUE,plotLogRich=FALS
 				ylim=c(0,max(div1)+1),
 				xlab="Time (Before Present)",ylab="Lineage Richness")
 			}
-		par(parOrig);layout(1)
+		par(parOrig)
+		layout(1)
 		}
 	res<-cbind(int.start,int.end,int.div=div)
 	return(invisible(res))

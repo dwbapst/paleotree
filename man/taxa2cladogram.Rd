@@ -77,12 +77,17 @@ tree<-taxa2phylo(taxa,plot=TRUE)
 #testing with cryptic speciation
 taxaCrypt<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=10,maxtaxa=20,
     maxtime=1000,maxExtant=0)
-layout(1:2);parOrig<-par(mar=c(0,0,0,0))
+layout(1:2)
+parOrig<-par(no.readonly=TRUE)
+par(mar=c(0,0,0,0))
 cladoCrypt1<-taxa2cladogram(taxaCrypt,drop.cryptic=FALSE)
 plot(cladoCrypt1)
 cladoCrypt2<-taxa2cladogram(taxaCrypt,drop.cryptic=TRUE)
 plot(cladoCrypt2)
-par(parOrig);layout(1) #reset plotting
+
+#reset plotting
+par(parOrig)
+layout(1)
 }
 \author{
 David W. Bapst

@@ -99,7 +99,8 @@ plotOccData<-function(occList,groupLabel=NULL,occColors=NULL,lineWidth=NULL,xlim
 	plotMainTitle<-ifelse(is.null(groupLabel),"Age Uncertainty of Occurrence Data",
              paste("Age Uncertainty of Occurrence Data for",groupLabel))
 	#initiate the plot with a modifiable main title
-	origPar<-par(yaxt="n")	#save original parameters	
+	origPar<-par(no.readonly=TRUE)	#save original parameters	
+	par(yaxt="n")
 	plot(0, 0, type="n", xlim=xlims,
 		ylim=c(0,sum(sapply(occList,nrow))+(2*length(occList))),
 		ylab = "", xlab = "Time (Ma)",

@@ -353,7 +353,9 @@ ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",ntrees=1,randres=TRUE,
 ttrees <- timePaleoPhy(cladogram,rangesCont,type="basic",ntrees=9,randres=TRUE,
     add.term=TRUE,plot=TRUE)
 #let's compare nine of them at once in a plot
-layout(matrix(1:9,3,3));parOrig <- par(mar=c(1,1,1,1))
+layout(matrix(1:9,3,3))
+parOrig <- par(no.readonly=TRUE)
+par(mar=c(1,1,1,1))
 for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label=FALSE,no.margin=TRUE)}
 #they are all a bit different!
 
@@ -367,7 +369,9 @@ layout(1);par(parOrig)
 multiDiv(ttrees)
 
 #compare different methods of timePaleoPhy
-layout(matrix(1:6,3,2));parOrig <- par(mar=c(3,2,1,2))
+layout(matrix(1:6,3,2))
+parOrig <- par(no.readonly=TRUE)
+par(mar=c(3,2,1,2))
 plot(ladderize(timePaleoPhy(cladogram,rangesCont,type="basic",vartime=NULL,add.term=TRUE)))
     axisPhylo();text(x=50,y=23,"type=basic",adj=c(0,0.5),cex=1.2)
 plot(ladderize(timePaleoPhy(cladogram,rangesCont,type="equal",vartime=10,add.term=TRUE)))

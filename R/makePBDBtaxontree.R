@@ -237,7 +237,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
 		numTaxonRank<-sapply(data1[,"taxon_rank"],function(x) which(x==taxRankPBDB))		
 		#
 		#create lookup table for taxon names
-		taxonNameTable<-cbind(as.character(data1[,"taxon_no"]),as.character(data1[,"taxon_name"]))
+		taxonNameTable<-cbind(as.numeric(data1[,"taxon_no"]),as.character(data1[,"taxon_name"]))
 		#add parents not listed
 		parentFloat<-unique(data1[,"parent_no"])
 		parentFloat<-parentFloat[is.na(match(parentFloat,taxonNameTable[,1]))]
@@ -246,7 +246,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
 		#
 		#now need to put together parentChild table
 		#first, get table of all parentChild relationships in data
-		pcAll<-cbind(as.character(data1[,"parent_no"]),as.character(data1[,"taxon_no"]))
+		pcAll<-cbind(as.numeric(data1[,"parent_no"]),as.numeric(data1[,"taxon_no"]))
 		#then start creating final matrix: first, those of desired rank
 		pcMat<-pcAll[rank1==numTaxonRank,]
 		#identify IDs of parents floating without ancestors of their own
@@ -402,7 +402,8 @@ queryMissingParents<-function(taxaID){
 			paste0(taxaID,collapse=", ")))}
 	floatData<-translatePBDBtaxa(floatData)
 	#parse down to just taxon_name, taxon_no, parent_no
-	floatData<-floatData[,c("taxon_name","parent_no","taxon_no"),drop=FALSE]
-	floatData<-apply(floatData,2,as.character)
+	floatData<-cbind("taxon_name"=as.character(floatData[,"taxon_name"]),
+		"parent_no"=as.numeric(floatData[,"parent_no"]),
+		"taxon_no"=as.numeric(floatData[,"taxon_no"]))
 	return(floatData)
 	}

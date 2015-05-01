@@ -53,18 +53,24 @@
 #' @rdname taxonTable2taxonTree
 #' @export
 taxonTable2taxonTree<-function(taxonTable,cleanTree=TRUE){
+	# taxonTable<-taxonData
 	#CHECKS
 	if(length(dim(taxonTable))!=2 | !is.character(taxonTable)){
 		stop("taxonTable must be a matrix of class character with multiple columns and rows")
 		}
 	if(all(dim(taxonTable)<2)){stop("taxonTable must have multiple rows and columns")}
+	#
+	#turn NAs to blanks
+	taxonTable[is.na(taxonTable)]<-""
+	#
 	#remove constant columns, as they are meaningless
-	constantCol<-apply(taxonTable,2,function(x) all(x==x[[1]]))
+	constantCol<-apply(taxonTable,2,function(x) all(x==x[1]))
 	# except for the last (which will be the root)
 	constantCol[rev(which(constantCol))[1]]<-FALSE
 	taxonTable<-taxonTable[,!constantCol,drop=FALSE]
 	#check that enough columns remain
 	if(ncol(taxonTable)<2){stop("Must have at least one varying taxonomy columns in taxonTable")}
+	#
 	#turn blanks to NAs
 	taxonTable[taxonTable==""]<-NA
 	#are there any missing names

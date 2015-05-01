@@ -63,14 +63,13 @@ testEdgeMat<-function(tree){
 			stop("Number of nodes is incorrect based on edge numbering?")}
 		if(Nnode(tree)>1){
 			#is every internal node listed as a descendant and ancestor, in edge[,2] and edge[,1]?
-			if(!all(sapply((2:Nnode(tree))+Ntip(tree),function(x) any(x==tree$edge[,1])))){
+			if(sum(!sapply((1:Nnode(tree))+Ntip(tree),function(x) any(x==tree$edge[,1])))<=0){
 				stop("Not all internal nodes (except root) listed in edge[,1]?")}
-			if(!all(sapply((2:Nnode(tree))+Ntip(tree),function(x) any(x==tree$edge[,2])))){
+			if(sum(!sapply((1:Nnode(tree))+Ntip(tree),function(x) any(x==tree$edge[,2])))<=1){
 				stop("Not all internal nodes (except root) listed in edge[,2]?")}
 			}
-	#}else{
-	#	if(identical(sort(unique(tree$edge[,2])),c(1L,2L))){stop("Number of nodes is incorrect based on edge[,2]?")}
 		}
+	#if(identical(sort(unique(tree$edge[,2])),c(1L,2L))){stop("Number of nodes is incorrect based on edge[,2]?")}
 	return(TRUE)
 	}
 
@@ -83,13 +82,15 @@ cleanNewPhylo<-function(tree){
 			stop("Missing key required elements of a 'phylo' object")}
 		oldNtip<-length(tree$tip.label)
 		#make it a good tree
-		#collapse singles
-		tree<-collapse.singles(tree)
 		#check it
 		if(!testEdgeMat(tree)){stop("Edge matrix has inconsistencies")}
-		tree<-reorder(tree,"cladewise") 	#REORDER IT
-		tree<-read.tree(text=write.tree(tree))
-		tree<-ladderize(tree)
-		if(oldNtip!=Ntip(tree)){stop("Final tip taxon number different from original number of tip taxon names")}
-		return(tree)
+		#collapse singles
+		tree1<-collapse.singles(tree)
+		if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
+		tree1<-reorder(tree1,"cladewise") 	#REORDER IT
+		if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
+		tree1<-read.tree(text=write.tree(tree1))
+		tree1<-ladderize(tree1)
+		if(oldNtip!=Ntip(tree1)){stop("Final tip taxon number different from original number of tip taxon names")}
+		return(tree1)
 		}

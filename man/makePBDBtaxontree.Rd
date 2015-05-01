@@ -88,7 +88,7 @@ easyGetPBDBtaxa<-function(taxon,show=c("phylo","img","app")){
 	#let's get some taxonomic data
 	taxaData<-read.csv(paste0("http://paleobiodb.org/",
 		"data1.1/taxa/list.txt?base_name=",taxon,
-		"&rel=all_children&show=,
+		"&rel=all_children&show=",
 		paste0(show,collapse=","),"&status=senior"),
 		stringsAsFactors=FALSE)
 	return(taxaData)
@@ -146,48 +146,19 @@ data(graptPBDB)
 
 #get the taxon tree: Linnean method
 graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus", method="Linnean")
-plot(graptTree)
+plot(graptTree,cex=0.4)
 nodelabels(graptTree$node.label,cex=0.5)
-
-\dontrun{
 
 #get the taxon tree: parentChild method
 graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus", method="parentChild")
-plot(graptTree)
+plot(graptTree,cex=0.4)
 nodelabels(graptTree$node.label,cex=0.5)
-
-#This will return an error due to missing parent taxon information
-
-}
-
-
-# parentChild method with solveMissing="mergeRoots"
-graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus",
-	method="parentChild", solveMissing="mergeRoots")
-plot(graptTree)
-nodelabels(graptTree$node.label,cex=0.5)
-
-#Note message about an artificial root being constructed!
-
-
-\dontrun{
-
-# parentChild method with solveMissing="queryPBDB"
-#The following may take a while
-	# in general, this may occassionally be an unsafe option
-graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus",
-	method="parentChild", solveMissing="queryPBDB")
-plot(graptTree)
-nodelabels(graptTree$node.label,cex=0.5)
-
-
-}
 
 #get time data from occurrences
 graptOccGenus<-taxonSortPBDBocc(graptOccPBDB,rank="genus",onlyFormal=FALSE)
 graptTimeGenus<-occData2timeList(occList=graptOccGenus)
 
-#let's time-scale this tree with paleotree
+#let's time-scale the parentChild tree with paleotree
 		# use minimum branch length for visualization
 		# and nonstoch.bin so we plot maximal ranges
 timeTree<-bin_timePaleoPhy(graptTree,timeList=graptTimeGenus,

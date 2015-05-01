@@ -5,7 +5,7 @@
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
 makePBDBtaxonTree(data, rank, method = "parentChild", queryMissing = FALSE,
-  tipSet = "nonParents", cleanTree = TRUE)
+  mergeMultipleRoots = TRUE, tipSet = "nonParents", cleanTree = TRUE)
 }
 \arguments{
 \item{data}{A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
@@ -123,7 +123,7 @@ nodelabels(rynchTree$node.label,adj=c(0,1/2))
 data(graptPBDB)
 
 #get the taxon tree: Linnean method first
-graptTree<-makePBDBtaxonTree(graptTaxaPBDB,"genus",method=="Linnean")
+graptTree<-makePBDBtaxonTree(graptTaxaPBDB,"genus",method="Linnean")
 plot(graptTree)
 nodelabels(graptTree$node.label,cex=0.5)
 

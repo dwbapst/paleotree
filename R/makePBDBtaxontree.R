@@ -40,8 +40,27 @@
 #' will add a tip to every internal node with the parent-taxon name encapsulated in
 #' parentheses.
 
-# @param cleanDuplicate If TRUE (\emph{not} the default), duplicated taxa of a taxonomic rank *not* selected by argument \code{rank}
-# will be removed silently. Only duplicates of the taxonomic rank of interest will actually result in an error message.
+#' @param solveMissing Under \code{method="parentChild"}, what should \code{makePBDBtaxonTree} do about
+#' multiple 'floating' parent taxa, listed without their own parent taxon information in the input
+#'  dataset under \code{data}? Each of these is essentially a separate root taxon, for a different set
+#'  of parent-child relationships, and thus poses a problem as far as returning a single phylogeny is
+#'  concerned. If \code{solveMissing=NULL} (the default), nothing is done and the operation halts with
+#'  an error, reporting the identity of these taxa. Two alternative solutions are offered: first,
+#'  \code{solveMissing="mergeRoots"} will combine these disparate potential roots and link them to an
+#'  artificially-constructed pseudo-root, which at least allows for visualization of the taxonomic
+#'  structure in a limited dataset. Secondly, \code{solveMissing="queryPBDB"} queries the Paleobiology
+#'  Database repeatedly via the API for information on parent taxa of the 'floating' parents, and continues
+#'  within a \code{while()} loop until only one such unassigned parent taxon remains. This latter option may
+#'  talk a long time or never finish, depending on the linearity and taxonomic structures encountered in the
+#'  PBDB taxonomic data; i.e. if someone a taxon was ultimately its own indirect child in some grand loop by
+#'  mistake, then under this option \code{makePBDBtaxonTree} might never finish. In cases where taxonomy is
+#'  bad due to weird and erroneous taxonomic assignments reported by the PBDB, this routine may search all
+#'  the way back to the Eukaryota taxon. Users should thus use \code{solveMissing="queryPBDB"} only with caution.
+
+# @param cleanDuplicate If TRUE (\emph{not} the default), duplicated taxa of a
+# taxonomic rank *not* selected by argument \code{rank}
+# will be removed silently. Only duplicates of the taxonomic rank of interest
+# will actually result in an error message.
 
 #' @return
 #' A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. See additional details
@@ -87,19 +106,22 @@
 #' 
 #' #graptolites
 #' graptData<-easyGetPBDBtaxa("Graptolithina")
-#' graptTree<-makePBDBtaxonTree(graptData,"genus")
+#' graptTree<-makePBDBtaxonTree(graptData,"genus",
+#' 	method="parentChild", solveMissing="queryPBDB")
 #' plot(graptTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(graptTree$node.label,adj=c(0,1/2))
 #' 
 #' #conodonts
 #' conoData<-easyGetPBDBtaxa("Conodonta")
-#' conoTree<-makePBDBtaxonTree(conoData,"genus")
+#' conoTree<-makePBDBtaxonTree(conoData,"genus",
+#' 	method="parentChild", solveMissing="queryPBDB")
 #' plot(conoTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(conoTree$node.label,adj=c(0,1/2))
 #' 
 #' #asaphid trilobites
 #' asaData<-easyGetPBDBtaxa("Asaphida")
-#' asaTree<-makePBDBtaxonTree(asaData,"genus")
+#' asaTree<-makePBDBtaxonTree(asaData,"genus",
+#' 	method="parentChild", solveMissing="queryPBDB")
 #' plot(asaTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(asaTree$node.label,adj=c(0,1/2))
 #' 
@@ -107,7 +129,8 @@
 #' ornithData<-easyGetPBDBtaxa("Ornithischia")
 #' #need to drop repeated taxon first: Hylaeosaurus
 #' ornithData<-ornithData[-(which(ornithData[,"taxon_name"]=="Hylaeosaurus")[1]),]
-#' ornithTree<-makePBDBtaxonTree(ornithData,"genus")
+#' ornithTree<-makePBDBtaxonTree(ornithData,"genus",
+#' 	method="parentChild", solveMissing="queryPBDB")
 #' plot(ornithTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(ornithTree$node.label,adj=c(0,1/2))
 #' 
@@ -115,7 +138,8 @@
 #' rynchData<-easyGetPBDBtaxa("Rhynchonellida")
 #' #need to drop repeated taxon first: Rhynchonelloidea
 #' rynchData<-rynchData[-(which(rynchData[,"taxon_name"]=="Rhynchonelloidea")[1]),]
-#' rynchTree<-makePBDBtaxonTree(rynchData,"genus")
+#' rynchTree<-makePBDBtaxonTree(rynchData,"genus",
+#' 	method="parentChild", solveMissing="queryPBDB")
 #' plot(rynchTree,show.tip.label=FALSE,no.margin=TRUE,edge.width=0.35)
 #' nodelabels(rynchTree$node.label,adj=c(0,1/2))
 #' 
@@ -130,10 +154,44 @@
 #' #get some example occurrence and taxonomic data
 #' data(graptPBDB)
 #' 
-#' #get the taxon tree: Linnean method first
-#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB,"genus",method="Linnean")
+#' #get the taxon tree: Linnean method
+#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus", method="Linnean")
 #' plot(graptTree)
 #' nodelabels(graptTree$node.label,cex=0.5)
+#'
+#' \dontrun{
+#'
+#' #get the taxon tree: parentChild method
+#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus", method="parentChild")
+#' plot(graptTree)
+#' nodelabels(graptTree$node.label,cex=0.5)
+#'
+#' #This will return an error due to missing parent taxon information
+#'
+#' }
+#'
+#'
+#' # parentChild method with solveMissing="mergeRoots"
+#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus",
+#'	method="parentChild", solveMissing="mergeRoots")
+#' plot(graptTree)
+#' nodelabels(graptTree$node.label,cex=0.5)
+#'
+#' #Note message about an artificial root being constructed!
+#'
+#'
+#' \dontrun{
+#'
+#' # parentChild method with solveMissing="queryPBDB"
+#' #The following may take a while
+#' 	# in general, this may occassionally be an unsafe option
+#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus",
+#' 	method="parentChild", solveMissing="queryPBDB")
+#' plot(graptTree)
+#' nodelabels(graptTree$node.label,cex=0.5)
+#'
+#'
+#' }
 #' 
 #' #get time data from occurrences
 #' graptOccGenus<-taxonSortPBDBocc(graptOccPBDB,rank="genus",onlyFormal=FALSE)
@@ -153,6 +211,7 @@
 #' library(strap)
 #' geoscalePhylo(timeTree, ages=timeTree$ranges.used)
 #' nodelabels(timeTree$node.label,cex=0.5)
+#'
 #' }
 #' 
 
@@ -173,8 +232,8 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
 		stop("method must be a single character value")}
 	if(!any(method==c("Linnean","parentChild"))){
 		stop("method must be one of either 'Linnean' or 'parentChild'")}
-	if(!is.null(solveMissings)){
-		if(length(solveMissing)>1 | !is.character(solveMissings)){
+	if(!is.null(solveMissing)){
+		if(length(solveMissing)>1 | !is.character(solveMissing)){
 			stop("solveMissing must be either NULL or a single character value")}
 		if(is.na(solveMissing,c("queryPBDB","mergeRoots"))){
 			stop('solveMissing but be either NULL or "queryPBDB" or "mergeRoots"')}

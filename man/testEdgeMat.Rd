@@ -23,6 +23,7 @@ For \code{cleanNewPhylo}, an object of class 'phylo' is returned.
 inconsistencies that can cause downstream analytical problems.
 The associated function, \code{cleanNewPhylo} puts an input
 phylo object, presumably freshly created or reconstituted by some function, through a series
+of post-processing, This includes having singles collapsed,
 nodes reordered and being written out as a Newick string and read back in,
 to ensure functionality with ape functions
 and ape-derived functions.

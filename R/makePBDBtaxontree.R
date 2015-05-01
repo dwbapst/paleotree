@@ -303,6 +303,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
 				floaters<-floatersNew
 				}
 			}
+		pcMat<-apply(pcMat,2,as.character)
 		tree<-parentChild2taxonTree(parentChild=pcMat,tipSet=tipSet,cleanTree=cleanTree)
 		#convert tip.label and node.label to taxon names from taxonNameTable
 		tree$tip.label<-taxonNameTable[match(tree$tip.label,taxonNameTable[,1]),2]

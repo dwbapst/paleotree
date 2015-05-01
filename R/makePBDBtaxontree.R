@@ -160,9 +160,13 @@
 #' @rdname makePBDBtaxonTree
 #' @export
 makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
-					mergeMultipleRoots=TRUE,tipSet="nonParents",cleanTree=TRUE){		
-	#
-	# rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE
+					mergeMultipleRoots=FALSE,tipSet="nonParents",cleanTree=TRUE){		
+	# 
+	# data(graptPBDB);data<-graptTaxaPBDB; rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE
+	# data<-graptTaxaPBDB; rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE; queryMissing=TRUE
+	# data<-graptTaxaPBDB; rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE; mergeMultipleRoots=TRUE
+	# data<-graptTaxaPBDB; rank="genus"; method="Linnean"; 
+
 	#CHECKS
 	if(length(method)!=1 | !is.character(method)){
 		stop("method must be a single character value")}
@@ -230,34 +234,33 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",queryMissing=FALSE,
 					taxonNameTable<-rbind(taxonNameTable,cbind(parentFloat,paste("ID:",as.character(parentFloat))))
 					#update parentChildMat, parentChildAll
 					newEntries<-floatData[,c("parent_no","taxon_no")]
-					parentChildMat<-rbind(parentChildMat,newEntries)
-					parentChildAll<-rbind(parentChildAll,newEntries)
-					floaters<-getFloat(pcDat=parentChildMat)
+					pcMat<-rbind(pcMat,newEntries)
+					pcAll<-rbind(pcAll,newEntries)
+					floaters<-getFloat(pcDat=pcMat)
 				}else{
 					if(mergeMultipleRoots){
-
-
-
-
+						pcMat<-rbind(pcMat,cbind("ArtificialRoot",floaters))
+						taxonNameTable<-rbind(taxonNameTable,c("ArtificialRoot","ArtificialRoot"))
+						message(paste0(
+							"Multiple potential root-taxa artificially merged at a common root:",
+							paste0(taxonNameTable[match(floaters,taxonNameTable[,1]),2]
+								,collapse=", ")))
 					}else{
 						stop(paste0("Provided PBDB Dataset does not appear to have a \n",
 							" monophyletic set of parent-child relationship pairs. \n",
 							"Multiple taxa appear to be listed as parents, but are not \n",
 							"listed themselves so have no parents listed: \n",
-							paste0(floaters,collapse=", ")))
+							paste0(taxonNameTable[match(floaters,taxonNameTable[,1]),2]
+								,collapse=", ")))
 						}
 					}
 			}else{
 				floaters<-floatersNew}
 			}
-
-
-
-
 		tree<-parentChild2taxonTree(parentChild=parentChildMat,tipSet=tipSet,cleanTree=cleanTree)
-
 		#convert tip.label and node.label to taxon names from taxonNameTable
-
+		tree$tip.label<-taxonNameTable[match(tree$tip.label,taxonNameTable[,1]),2]
+		tree$node.label<-taxonNameTable[match(tree$node.label,taxonNameTable[,1]),2]
 		tree$parentChild<-parentChildMat
 		}
 	#

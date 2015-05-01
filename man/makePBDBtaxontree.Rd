@@ -5,7 +5,7 @@
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
 makePBDBtaxonTree(data, rank, method = "parentChild", queryMissing = FALSE,
-  mergeMultipleRoots = TRUE, tipSet = "nonParents", cleanTree = TRUE)
+  mergeMultipleRoots = FALSE, tipSet = "nonParents", cleanTree = TRUE)
 }
 \arguments{
 \item{data}{A table of taxonomic data collected from the Paleobiology Database, using the taxa list option

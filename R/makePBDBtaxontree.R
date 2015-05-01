@@ -98,7 +98,7 @@
 #' 	#let's get some taxonomic data
 #' 	taxaData<-read.csv(paste0("http://paleobiodb.org/",
 #' 		"data1.1/taxa/list.txt?base_name=",taxon,
-#' 		"&rel=all_children&show=,
+#' 		"&rel=all_children&show=",
 #'		paste0(show,collapse=","),"&status=senior"),
 #'		stringsAsFactors=FALSE)
 #' 	return(taxaData)
@@ -156,48 +156,19 @@
 #' 
 #' #get the taxon tree: Linnean method
 #' graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus", method="Linnean")
-#' plot(graptTree)
+#' plot(graptTree,cex=0.4)
 #' nodelabels(graptTree$node.label,cex=0.5)
-#'
-#' \dontrun{
 #'
 #' #get the taxon tree: parentChild method
 #' graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus", method="parentChild")
-#' plot(graptTree)
+#' plot(graptTree,cex=0.4)
 #' nodelabels(graptTree$node.label,cex=0.5)
-#'
-#' #This will return an error due to missing parent taxon information
-#'
-#' }
-#'
-#'
-#' # parentChild method with solveMissing="mergeRoots"
-#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus",
-#'	method="parentChild", solveMissing="mergeRoots")
-#' plot(graptTree)
-#' nodelabels(graptTree$node.label,cex=0.5)
-#'
-#' #Note message about an artificial root being constructed!
-#'
-#'
-#' \dontrun{
-#'
-#' # parentChild method with solveMissing="queryPBDB"
-#' #The following may take a while
-#' 	# in general, this may occassionally be an unsafe option
-#' graptTree<-makePBDBtaxonTree(graptTaxaPBDB, "genus",
-#' 	method="parentChild", solveMissing="queryPBDB")
-#' plot(graptTree)
-#' nodelabels(graptTree$node.label,cex=0.5)
-#'
-#'
-#' }
 #' 
 #' #get time data from occurrences
 #' graptOccGenus<-taxonSortPBDBocc(graptOccPBDB,rank="genus",onlyFormal=FALSE)
 #' graptTimeGenus<-occData2timeList(occList=graptOccGenus)
 #' 
-#' #let's time-scale this tree with paleotree
+#' #let's time-scale the parentChild tree with paleotree
 #'		# use minimum branch length for visualization
 #' 		# and nonstoch.bin so we plot maximal ranges
 #' timeTree<-bin_timePaleoPhy(graptTree,timeList=graptTimeGenus,
@@ -246,6 +217,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
 	#
 	#translate to a common vocabulary
 	data1<-translatePBDBtaxa(data)
+	data1<-apply(data1,2,as.character)
 	#
 	if(method=="parentChild"){
 		#need two things: a table of parent-child relationships as IDs
@@ -294,11 +266,16 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
 					if(solveMissing=="queryPBDB"){
 						floatData<-queryMissingParents(taxaID=floatersNew)	
 						#update taxon names in taxonNameTable
-						taxonNameTable[match(floatData[,"taxon_no"],taxonNameTable[,1]),2]<-floatData[,"taxon_name"]
+						whichUpdate<-match(floatData[,"taxon_no"],taxonNameTable[,1])
+						taxonNameTable[whichUpdate[!is.na(whichUpdate)],2]<-floatData[
+							!is.na(whichUpdate),"taxon_name"]
 						#add any new parent taxa to taxonNameTable
 						parentFloat<-unique(floatData[,"parent_no"])
 						parentFloat<-parentFloat[is.na(match(parentFloat,taxonNameTable[,1]))]
-						taxonNameTable<-rbind(taxonNameTable,cbind(parentFloat,paste("ID:",as.character(parentFloat))))
+						if(length(parentFloat)>0){
+							taxonNameTable<-rbind(taxonNameTable,
+								cbind(parentFloat,paste("ID:",as.character(parentFloat))))
+							}
 						#update parentChildMat, parentChildAll
 						newEntries<-floatData[,c("parent_no","taxon_no")]
 						pcMat<-rbind(pcMat,newEntries)
@@ -414,14 +391,18 @@ translatePBDBtaxa<-function(data){
 #another hidden function
 queryMissingParents<-function(taxaID){
 	#drop Eukarya, as it won't return if status=senior under 1.1
-	taxaID<-taxaID[taxaID!="1"]
+	taxaID<-as.numeric(taxaID[taxaID!="1"])
 	#let's get some taxonomic data
 	floatData<-read.csv(paste0("http://paleobiodb.org/",
 		"data1.1/taxa/list.txt?id=",paste0(taxaID,collapse=","),
 		"&rel=self&status=senior&vocab=pbdb"),
 		stringsAsFactors=FALSE)
+	if(nrow(floatData)==0){
+		stop(paste("Found taxon IDs which will not be processed by PBDB API: \n",
+			paste0(taxaID,collapse=", ")))}
 	floatData<-translatePBDBtaxa(floatData)
 	#parse down to just taxon_name, taxon_no, parent_no
-	floatData<-floatData[,c("taxon_name","parent_no","taxon_no")]
+	floatData<-floatData[,c("taxon_name","parent_no","taxon_no"),drop=FALSE]
+	floatData<-apply(floatData,2,as.character)
 	return(floatData)
 	}

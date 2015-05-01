@@ -2,7 +2,7 @@ Package: paleotree
 Type: Package
 Version: 2.4
 Title: Paleontological and Phylogenetic Analyses of Evolution
-Date: 2015-04-18
+Date: 2015-05-01
 Author: David W. Bapst
 Depends:
     R (>= 3.0.0),

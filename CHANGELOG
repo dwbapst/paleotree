@@ -10,15 +10,19 @@ Version - 2.4 - 05-01-15
 -Added function occData2timeList which converts taxon-sorted occurrence data lists to the two-matrix timeList object useable by many other paleotree functions
 -Added example data downloads from the Paleobiology Database of occurrence data and taxonomic data, available under 'graptPBDB'
 -Added function makePBDBtaxonTree which takes taxon data from the PBDB and constructs a very informal taxon tree from either (a) parent-child taxon relationships pairs, by default, or (b) the Linnean taxonomic hierarchy
+-Added functions timeList2fourDate and fourDate2timeList which convert between the 'four-date' and 'timeList' formats for first and last appearance dates given as bounded ages (i.e. start and end times of intervals)
 -Added function plotOccData which will plot occurrence data, such as that output by taxonSortPBDBocc from PBDB downloads
 -Changed a number of \dontrun to \donttest so they will run during modified non-CRAN R CHECK tests with --run-donttest
--Now allowed to have a simpler Travis CI structure, apparently with --run-donttest
+-Now allowed to have a simpler Travis CI structure, apparently with --run-donttest 
+	-REVERTED due to new r-travis not failing broken builds; Will make this change on a later date)
 -Added retioChar, character data for 3 characters for the 22 Retiolitinae species, to the retiolitinae example dataset
 -Added functions minCharChange and ancPropStateMat which are wrappers for doing parsimony ancestral reconstruction via phangorn's ancestral.pars
 -Added a badge to README that counts number of paleotree downloads from RStudio server
 -Added $sampledLogLike and $sumLogLike elements as additional output attached to time-scaled trees from cal3 functions, to allow users to quantify the relative optimality of each tree in a sample under the cal3 probability density function.
 -Added function resolveTreeChar, which will use parsimony ancestral reconstruction algorithms to try to resolve polytomies in a phylogeny, so as to minimize the number of independent transitions for some given discrete trait (ordered or unordered). This function ultimately relies on phangorn's ancestral.pars, via ancPropStateMat
 -Added function parentChild2TaxonTree which converts a two-column matrix parent-child relationships to a taxon-tree of 'phylo' format
+-Added function taxonTable2TaxonTree which converts a table of taxonomic hierarchy membership to a taxon-tree of 'phylo' format
+
 
 Version - 2.3 - 01-16-15
 -New function dropPaleoTip which is a simple wrapper for drop.tip in ape but uses fixRootTime to adjust the $root.time element in the resulting tree, after tips are dropped (Thanks to a conversation with Graeme Lloyd)

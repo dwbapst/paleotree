@@ -5,7 +5,7 @@
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
 makePBDBtaxonTree(data, rank, method = "parentChild", solveMissing = NULL,
-  tipSet = "nonParents", cleanTree = TRUE)
+  tipSet = "nonParents", cleanTree = TRUE, APIversion = "1.1")
 }
 \arguments{
 \item{data}{A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
@@ -51,6 +51,12 @@ parentheses.}
 nodes reordered and being written out as a Newick string and read back in, to ensure functionality with ape functions
 and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
 lead to hard-crashes of R.}
+
+\item{APIversion}{Version of the Paleobiology Database API used by \code{makePBDBtaxonTree} when
+\code{solveMissing = "queryPBDB"}. The current default is "1.1", which is the only option available
+as of 05/05/2015. In the future, the improved API version "1.2" will be released on the public
+PBDB server, which will become the new default for this function, but the option to return to "1.1"
+behavior will be retained for .}
 }
 \value{
 A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. See additional details

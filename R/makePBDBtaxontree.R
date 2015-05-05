@@ -58,6 +58,12 @@
 #'  the way back to a very ancient and deep taxon, such as the Eukaryota taxon.
 #' Users should thus use \code{solveMissing="queryPBDB"} only with caution.
 
+#' @param APIversion Version of the Paleobiology Database API used by \code{makePBDBtaxonTree} when
+#' \code{solveMissing = "queryPBDB"}. The current default is "1.1", which is the only option available
+#' as of 05/05/2015. In the future, the improved API version "1.2" will be released on the public
+#' PBDB server, which will become the new default for this function, but the option to return to "1.1"
+#' behavior will be retained for .
+
 # @param cleanDuplicate If TRUE (\emph{not} the default), duplicated taxa of a
 # taxonomic rank *not* selected by argument \code{rank}
 # will be removed silently. Only duplicates of the taxonomic rank of interest
@@ -199,7 +205,7 @@
 #' @rdname makePBDBtaxonTree
 #' @export
 makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
-					tipSet="nonParents",cleanTree=TRUE){		
+					tipSet="nonParents",cleanTree=TRUE,APIversion="1.1"){		
 	# 
 	# library(paleotree);data(graptPBDB);
 	# data<-graptTaxaPBDB; rank="genus"; method="parentChild"; tipSet="nonParents"; cleanTree=TRUE; solveMissing=NULL
@@ -273,7 +279,7 @@ makePBDBtaxonTree<-function(data,rank,method="parentChild",solveMissing=NULL,
 			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
 				if(!is.null(solveMissing)){
 					if(solveMissing=="queryPBDB"){
-						floatData<-queryMissingParents(taxaID=floatersNew)	
+						floatData<-queryMissingParents(taxaID=floatersNew,APIversion=APIversion)	
 						#update taxon names in taxonNameTable
 						whichUpdate<-match(floatData[,"taxon_no"],taxonNameTable[,1])
 						taxonNameTable[whichUpdate[!is.na(whichUpdate)],2]<-floatData[
@@ -400,12 +406,13 @@ translatePBDBtaxa<-function(data){
 	}
 
 #another hidden function
-queryMissingParents<-function(taxaID){
+queryMissingParents<-function(taxaID, APIversion="1.1"){
 	#drop Eukarya, as it won't return if status=senior under 1.1
 	#taxaID<-as.numeric(taxaID[taxaID!="1"])
 	#let's get some taxonomic data
 	floatData<-read.csv(paste0("http://paleobiodb.org/",
-		"data1.1/taxa/list.txt?id=",paste0(taxaID,collapse=","),
+		"data",APIversion,
+		"/taxa/list.txt?id=",paste0(taxaID,collapse=","),
 		"&rel=self&status=senior&vocab=pbdb"),
 		stringsAsFactors=FALSE)
 	if(nrow(floatData)==0){

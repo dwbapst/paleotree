@@ -55,7 +55,12 @@ information in this summary may be more detailed if the results of the analysis 
 fewer unique solutions).}
 }
 \value{
-A list is invisibly returned containing the following elements:
+\code{ancPropStateMat} returns a matrix, with rows corresponding to the ID numbers of tips and nodes in
+\code{$edge}, and columns corresponding to character states, with the value representing the proportional
+weight of that node being that state under the algorithm used (known tip values are always 1).
+
+\code{minCharChange} invisibly returns a list containing the following elements, several of which are printed
+by default to the console, as controlled by argument \code{printMinResult}:
 
 \describe{
  \item{\code{message}}{Describes the performance of \code{minCharChange} at searching for a minimum solution.}

@@ -1,4 +1,25 @@
+#' @details
 
+#' @inheritParams
+
+#' @param
+
+#' @return
+
+#' @aliases
+
+#' @seealso
+
+#' @author 
+#' David W. Bapst, inspired by code written by Peter Smits.
+
+#' @references
+
+#' @examples
+
+#' @name
+#' @rdname
+#' @export
 
 
 
@@ -6,10 +27,13 @@
 	#p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.1;prop.cryptic=0;nruns=10;mintaxa=1;maxtaxa=200;mintime=1;maxtime=100;minExtant=0;maxExtant=0;plot=TRUE;print.runs=TRUE;min.cond=TRUE
 	#
 	#p=0.1;q=0.9;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=1;mintaxa=1;maxtaxa=100;mintime=1;maxtime=100;minExtant=0;maxExtant=0;plot=TRUE;print.runs=TRUE;min.cond=TRUE
+	
 	#min.cond example
 	#set.seed(444);p=0.1;q=0.1;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=10;mintaxa=1;maxtaxa=1000;mintime=1;maxtime=100;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=FALSE
+	
 	#pure birth example
 	#set.seed(444);p=0.1;q=0;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE
+	
 	#cryptic speciation
 	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.5;prop.cryptic=0.5;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
 	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=TRUE
@@ -31,10 +55,18 @@ simFossilRecord<-function(p,q,r,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1
 
 	#simplified birth-death-sampling simulator for fossil record
 	#
-	#p is the rate of speciation as either budding cladogenesis or bifurcationg speciation
-		#HOWEVER by default, w (the rate of anagensis) is zero and u (the proportion of speciation by bifurcation) is zero
-		#these need to changed to allow other modes of morphological speciation in the fossil record
+	#p is the rate of branching
+		#may be either budding (prob = 1-prop.bifurc) or bifurcation (prob = prop.bifurc)
+	#anagenesis is a separate rate (anag.rate)
+	#q is rate of extinction
+	#r is rate of sampling
+	
 
+
+	
+
+	#how should treat min/max bounds?
+		#how simFossiltaxa does it:
 
 		#Simulations will not go longer than maxtime, period
 		#when maxtaxa is hit, simulation will go up until FO of maxtaxa+1 taxon to avoid Hartmann et al. effect
@@ -63,34 +95,87 @@ simFossilRecord<-function(p,q,r,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1
 	
 	stop<-FALSE
 	while(stop){
+		#vector of which taxa are still alive
+		whichLive<-which()
 		
+		#standing number of extant lineages 
+			# (i.e. number of lineages that stuff can happen to)
+		nLive<- 
+		
+	
 		# calculate rates (which may be diversity dependent)
+			# ONLY do this if rates are changing (i.e. div dep)
+			
+		#get the new branching rate, extinction rate, sampling rate, anagenesis rate
+		branchRate<-
+		extRate<-
+		sampRate<-
+		anagRate<-		
 		
-		n<- #standing number of extant lineages
+		#get budding and bifurcation components
+		buddRate<-branchRate*(1-prop.bifurc)
+		bifurcRate<-branchRate*(prop.bifurc)
 		
-		#waiting time to an event (from Peter Smits)
-		dt <- rexp(1, rate =(q*n)+(p*n))
+
 		
 		
-		#get probabilities of events
+		#get probabilities of event types
+		rateVector<-c(buddRate,bifurcRate,anagRate,extRate,sampRate)
+		names(rateVector)<-c('budd','bifurc','anag','ext','samp')
+		sumRates<-sum(rateVector)
+		eventProb<-rateVector/sumRates
 		
-		#event type probabilities
-		eventProb<-c(q,p)/sum(q,p)
-		#type of event (from Peter Smits)
-		event <- sample(c(-1, 1), 1, prob = eventProb)
+		
+		#pull type of event (from Peter Smits)
+		event <- sample( names(rateVector), 1, prob = eventProb)
 		
 		
 		#select which lineage does it occur to
+		target<-sample(whicLive,1)
 		
+		#draw waiting time to an event (from Peter Smits)
+		dt <- rexp(1, rate =sumRates*nLive)
+		newTime<-
 		
-		#draw waiting time
-		
-			#check against time stopping conditions
+		#check waiting time against time stopping conditions
 			
 			
 		#update taxa with the new event
 		
 			#if origination, create new taxon
+		
+		
+		#FUNCTIONALIZE EACH EVENT TYPE
+		
+		buddingEvent<-function(taxa,parent,time){
+			newTaxa<-addNewTaxon()
+			return(newTaxa)
+			}
+			
+		bifurcEvent<-function(taxa,parent,time){
+			newTaxa<-addNewTaxon()
+			newTaxa<-killTaxon()
+			return(newTaxa)
+			}
+		
+		anagEvent<-function(taxa,parent,time){
+			return(newTaxa)
+			}	
+		
+		
+		addNewTaxon<-function(taxa,ancestor,time){
+		
+			return(newTaxa)
+			}
+			
+		killTaxon<-
+		
+		extinctionEvent<-function()
+		
+			}
+		
+		
+		
 		
 		
 		#evaluate stopping conditions

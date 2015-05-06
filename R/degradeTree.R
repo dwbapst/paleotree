@@ -91,12 +91,16 @@ degradeTree<-function(tree,prop_collapse=NULL,nCollapse=NULL,node.depth=NA,leave
 		#node.depth conditions on depth of edge in tree
 			# 1 removes more shallow nodes, 0 removes deeper nodes
 	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
-	if(!is.null(nCollapse) & !is.null(prop_collapse)){
-		stop("Providing both 'prop_collapse' and 'nCollapse' are conflicting choices")}	
 	if(is.null(nCollapse) & is.null(prop_collapse)){
 		stop("One of either 'prop_collapse' or 'nCollapse' must be provided")}
-	if(nCollapse<1){stop("nCollapse must be greater than 1")}
-	if(prop_collapse>1){stop("prop_collapse must be less than 1")}
+	if(!is.null(nCollapse)){
+		if(nCollapse<1){stop("nCollapse must be greater than 1")}
+		}
+	if(!is.null(prop_collapse)){
+		if(prop_collapse>1){stop("prop_collapse must be less than 1")}
+		}
+	if(!is.null(nCollapse) & !is.null(prop_collapse)){
+		stop("Providing both 'prop_collapse' and 'nCollapse' are conflicting choices")}			
 	edge<-(1:length(tree$edge))[which(tree$edge[,2]>Ntip(tree))]	#internal edges
 	if(is.null(nCollapse)){nCollapse<-round(prop_collapse*length(edge))}
 	if(is.na(node.depth)){

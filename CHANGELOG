@@ -1,5 +1,7 @@
 Version - 2.5 -
 -Added argument APIversion to makePBDBtaxonTree which allows a user to control which version of the API is called when argument solveMissing=queryPBDB. Current default is "1.1", this will need to be updated when PBDB API 1.2 becomes public
+-Added some safety checks to degradeTree
+-
 
 Version - 2.4 - 05-01-15
 -Modified timePaleoPhy help file to clarify 'these are not realistic time-scaling functions' statement and correcting an 'either' to 'neither' in the description of argument 'ntrees'

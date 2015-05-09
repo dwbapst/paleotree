@@ -44,12 +44,37 @@
 
 
 
-simFossilRecord<-function(p,q,r,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,
+simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
+	prop.bifurc=0, prop.cryptic=0, startTaxa=1, nruns=1,
 	#stopping conditions can be given as vectors of length 1 or length 2 (= min,max)
 	nTotalTaxa=c(1,1000), totalTime=c(1,1000), nExtant=c(0,1000), 
 	count.cryptic=FALSE, print.runs=FALSE, sortNames=FALSE, plot=FALSE){
 
 	min.cond=TRUE
+	
+	#functions that will live only in simFossilRecord's namespace
+		#so not to crowd paleotree namespace
+	
+	initiateTaxa<-function(startTaxa,time){
+		newTaxa<-lapply(1:startTaxa,function(x) 
+			newTaxon(newID=x,ancID=NA,time=time,looksLike=x)
+			)
+		return(newTaxa)
+		}
+		
+	newTaxon<-function(newID,ancID,time,looksLike){
+		#creates an entirely new just-originated taxon
+		#store taxa as a list structure
+			# $taxa.data, exactly like output from simFossilTaxa
+		taxaData<-c(newID,ancID,time,NA,1,looksLike)
+		names(taxaData)<- c("taxon.id","ancestor.id","orig.time","ext.time","still.alive","looks.like")
+		# $sampling.times = times of sampling events for this taxon
+			#thus can come up with quick/simple ways of evaluating stopping conditions
+			# e.g. evaluate number of sampled taxa by sum(length($sampling.times)>0)
+		taxon<-list(taxa.data=taxaData, sampling.times=numeric())
+		return(taxon)
+		}
+	
 	
 	#
 
@@ -77,14 +102,13 @@ simFossilRecord<-function(p,q,r,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1
 			#when maxExtant is hit, simulation will go up until FO of maxExtant+1 to avoid Hartmann et al. effect
 		
 	
-	#store taxa as a list structure
-	# $taxa.data
-		# exactly like output from simFossilTaxa
-	# $sampling.times
-		# times of sampling events for this taxon
+
 		
-	#thus can come up with quick/simple ways of evaluating stopping conditions
-		# e.g. evaluate number of sampled taxa by sum(length($sampling.times)>0)
+ taxon.id ancestor.id orig.time ext.time still.alive looks.like
+ 
+ c("taxon.id","ancestor.id","orig.time","ext.time","still.alive","looks.like")
+		
+
 	
 	
 	# stopping conditions can be given as vectors of length 1 or 2
@@ -93,6 +117,8 @@ simFossilRecord<-function(p,q,r,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1
 	
 	
 	
+
+	initiateTaxa(startTaxa=startTaxa,time=totalTime[2])
 	stop<-FALSE
 	while(stop){
 		#vector of which taxa are still alive
@@ -105,34 +131,33 @@ simFossilRecord<-function(p,q,r,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1
 	
 		# calculate rates (which may be diversity dependent)
 			# ONLY do this if rates are changing (i.e. div dep)
-			
+		
 		#get the new branching rate, extinction rate, sampling rate, anagenesis rate
-		branchRate<-
-		extRate<-
-		sampRate<-
-		anagRate<-		
-		
-		#get budding and bifurcation components
-		buddRate<-branchRate*(1-prop.bifurc)
-		bifurcRate<-branchRate*(prop.bifurc)
-		
+		branchRate<-p
+		extRate<-q
+		sampRate<-r
+		anagRate<-anag.rate
+
 
 		
 		
+		#get cryptic, budding and bifurcation components
+		crypticRate<-branchRate*(prop.cryptic)
+		#rate of morph differentiation per branching event
+		morphRate<-branchRate*(1-prop.cryptic)
+		buddRate<-morphRate*(1-prop.bifurc)
+		bifurcRate<-morphRate*(prop.bifurc)
+
+		
 		#get probabilities of event types
-		rateVector<-c(buddRate,bifurcRate,anagRate,extRate,sampRate)
-		names(rateVector)<-c('budd','bifurc','anag','ext','samp')
+		rateVector<-c(buddRate,bifurcRate,anagRate,crypticRate,extRate,sampRate)
+		names(rateVector)<-c('budd','bifurc','anag','crypt','ext','samp')
 		sumRates<-sum(rateVector)
 		eventProb<-rateVector/sumRates
-		
-		
 		#pull type of event (from Peter Smits)
 		event <- sample( names(rateVector), 1, prob = eventProb)
-		
-		
 		#select which lineage does it occur to
-		target<-sample(whicLive,1)
-		
+		target<-sample(whichLive,1)
 		#draw waiting time to an event (from Peter Smits)
 		dt <- rexp(1, rate =sumRates*nLive)
 		newTime<-
@@ -143,6 +168,9 @@ simFossilRecord<-function(p,q,r,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1
 		#update taxa with the new event
 		
 			#if origination, create new taxon
+		
+		
+		if(any(event)
 		
 		
 		#FUNCTIONALIZE EACH EVENT TYPE

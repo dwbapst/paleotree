@@ -75,6 +75,68 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 		return(taxon)
 		}
 	
+	origination<-function(taxa,ancID,time,looksLike=NULL){
+		#adds a new taxon via branching
+		newID<-newTaxaID(
+		if(is.null(looksLike)){
+			looksLike<-newID
+			}
+		newTaxon<-function(newID=newID,ancID=ancID,time=time,looksLike=looksLike)	
+		newTaxa<-c(taxa,newTaxon)
+		return(newTaxa)
+		}
+
+	termination<-function(taxa,targetID,time){
+		#kills an existing taxon
+		whichTarget<-which(sapply(taxa,function(x) x[[1]][,1]==targetID))
+		if(length(whichTarget)!=1){stop("taxon IDs repeated??")}
+		taxa[[whichTarget]][[1]][,4]<-time
+		taxa[[whichTarget]][[1]][,5]<-0
+		return(taxa)
+		}
+
+	newTaxaID<-function(taxa){
+		newID<-max(sapply(taxa,function(x) x[[1]][,1])+1
+		return(newID)
+		}
+
+	buddingEvent<-function(taxa,parent,time){
+		taxa<-origination(taxa=taxa,ancID=parent,time=time,looksLike=NULL)
+		return(taxa)
+		}
+
+	crypticEvent<-function(taxa,parent,time){
+		taxa<-origination(taxa=taxa,ancID=parent,time=time,looksLike=parent)
+		return(taxa)
+		}
+
+	anagEvent<-function(taxa,parent,time){
+		taxa<-origination(taxa=taxa,ancID=parent,time=time,looksLike=NULL)
+		taxa<-termination(taxa=taxa,targetID=parent,time=time)
+		return(taxa)
+		}	
+			
+	bifurcEvent<-function(taxa,parent,time){
+		taxa<-origination(taxa=taxa,ancID=parent,time=time,looksLike=NULL)
+		taxa<-origination(taxa=taxa,ancID=parent,time=time,looksLike=NULL)
+		taxa<-termination(taxa=taxa,targetID=parent,time=time)
+		return(taxa)
+		}	
+		
+	extEvent<-function(taxa,target,time){
+		taxa<-termination(taxa=taxa,targetID=target,time=time)
+		return(taxa)		
+		}
+		
+		
+
+			
+		killTaxon<-
+		
+		extinctionEvent<-function()
+		
+			}
+	
 	
 	#
 
@@ -175,32 +237,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 		
 		#FUNCTIONALIZE EACH EVENT TYPE
 		
-		buddingEvent<-function(taxa,parent,time){
-			newTaxa<-addNewTaxon()
-			return(newTaxa)
-			}
-			
-		bifurcEvent<-function(taxa,parent,time){
-			newTaxa<-addNewTaxon()
-			newTaxa<-killTaxon()
-			return(newTaxa)
-			}
-		
-		anagEvent<-function(taxa,parent,time){
-			return(newTaxa)
-			}	
-		
-		
-		addNewTaxon<-function(taxa,ancestor,time){
-		
-			return(newTaxa)
-			}
-			
-		killTaxon<-
-		
-		extinctionEvent<-function()
-		
-			}
+
 		
 		
 		
@@ -214,8 +251,8 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 
 	
 	#CHECKING
-	if(any(c(p,q,anag.rate,prop.bifurc,prop.cryptic)<0)){
-		stop("bad parameters input, p, q, anag.rate, prop.bifurc or prop.cryptic are less than 0")}
+	if(any(c(p,q,anag.rate,prop.bifurc,prop.cryptic)<0)){stop(
+		"bad parameters input, p, q, anag.rate, prop.bifurc or prop.cryptic are less than 0")}
 	if(prop.bifurc>0 & prop.cryptic==1){stop("Prop.bifurc greater than 0 even though cryptic cladogenesis = 1??")}
 	if(nruns<1){stop("nruns<1")}
 	if(maxtaxa<0){stop("maxtaxa<0")}

@@ -509,11 +509,11 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	#timeData<-runif(10,30,200);timeData<-cbind(timeData,timeData-runif(10,1,20));rownames(timeData)<-tree$tip.label
 	#node.mins<-runif(9,50,300)
 	#require(ape)	
-	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
-		}else{stop("Error: timeData not of matrix or data.frame format")}}
-	if(class(tree$tip.label)!="character"){stop("Error: tree tip labels are not a character vector")}
-	if(ntrees<1){stop("Error: ntrees<1")}
+		}else{stop("timeData not of matrix or data.frame format")}}
+	if(class(tree$tip.label)!="character"){stop("tree tip labels are not a character vector")}
+	if(ntrees<1){stop("ntrees<1")}
 	if(!any(dateTreatment==c("firstLast","minMax","randObs"))){
 		stop("dateTreatment must be one of 'firstLast', 'minMax' or 'randObs'!")}
 	if(!any(type==c("basic","mbl","equal","equal_paleotree_legacy","equal_date.phylo_legacy","aba","zlba"))){
@@ -524,33 +524,33 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	if(add.term & dateTreatment=="minMax"){stop(
 		"Inconsistent arguments: randomized dates (dateTreatment=minMax) are treated as point occurrences, so there are effectively no terminal ranges for add.term to add!"
 		)}
-	if(ntrees>1 & !randres & dateTreatment=="firstLast"){stop("Error: Time-scale more trees without randomly resolving or random dates?!")}
+	if(ntrees>1 & !randres & dateTreatment=="firstLast"){stop("Time-scale more trees without randomly resolving or random dates?!")}
 	if(ntrees==1 & randres){message("Warning: Do not interpret a single randomly-resolved tree")}
 	if(ntrees==1 & dateTreatment=="randObs"){message("Warning: Do not interpret a single tree with randomly-placed observation times")}
 	if(ntrees==1 & dateTreatment=="minMax"){message("Warning: Do not interpret a single tree with randomly-placed taxon dates")}
 	if(randres & timeres){stop(
 		"Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!")}
 	if(!add.term & inc.term.adj){stop(
-		"Error: Inconsistent arguments: Terminal ranges cannot be used in adjustment of branch lengths if not added to tree!")}
+		"Inconsistent arguments: Terminal ranges cannot be used in adjustment of branch lengths if not added to tree!")}
 	if(type=="basic" & inc.term.adj){stop(
-		"Error: Inconsistent arguments: Terminal range adjustment of branch lengths does not affect basic time-scaling method!")}
+		"Inconsistent arguments: Terminal range adjustment of branch lengths does not affect basic time-scaling method!")}
 	originalInputTree<-tree
 	#remove taxa that are NA or missing in timeData
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
 	if(length(droppers)>0){
-		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
+		if(length(droppers)==Ntip(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
 		if(noisyDrop){message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))}
 		tree<-drop.tip(tree,droppers)
-		if(is.null(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
+		if(is.null(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
 		timeData[which(!sapply(rownames(timeData),function(x) any(x==tree$tip.label))),1]<-NA
 		}
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
-	if(length(unique(rownames(timeData)))!=length(rownames(timeData))){stop("Error: Duplicate taxa in timeList[[2]]")}
-	if(length(unique(tree$tip.label))!=length(tree$tip.label)){stop("Error: Duplicate tip taxon names in tree$tip.label")}
+	if(any(timeData[,1]<timeData[,2])){stop("timeData is not in time relative to modern (decreasing to present)")}
+	if(length(unique(rownames(timeData)))!=length(rownames(timeData))){stop("Duplicate taxa in timeList[[2]]")}
+	if(length(unique(tree$tip.label))!=length(tree$tip.label)){stop("Duplicate tip taxon names in tree$tip.label")}
 	if(length(rownames(timeData))!=length(tree$tip.label)){
-		stop("Error: Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
+		stop("Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
 	ttrees<-rmtree(ntrees,2)
 	savetree<-tree			#save tree now so can replace with each loop for multi2di()
 	saveTD<-timeData
@@ -708,29 +708,29 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,
 	#type="basic";vartime=NULL;ntrees=1;nonstoch.bin=FALSE;randres=FALSE;timeres=FALSE
 	#sites=NULL;point.occur=FALSE;add.term=FALSE;inc.term.adj=FALSE;rand.obs=FALSE;node.mins=NULL;plot=FALSE
 	#require(ape)
-	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
 	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
-		}else{stop("Error: timeList[[1]] not of matrix or data.frame format")}}
+		}else{stop("timeList[[1]] not of matrix or data.frame format")}}
 	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])
-		}else{stop("Error: timeList[[2]] not of matrix or data.frame format")}}
+		}else{stop("timeList[[2]] not of matrix or data.frame format")}}
 	if(ntrees==1 & !nonstoch.bin){
 		message("Warning: Do not interpret a single tree; dates are stochastically pulled from uniform distributions")}
-	if(ntrees<1){stop("Error: ntrees<1")}
-	if(!is.null(sites) & point.occur){stop("Error: Inconsistent arguments, point.occur=TRUE would replace input 'sites' matrix\n Why not just make site assignments for first and last appearance the same in your input site matrix?")}
+	if(ntrees<1){stop("ntrees<1")}
+	if(!is.null(sites) & point.occur){stop("Inconsistent arguments, point.occur=TRUE would replace input 'sites' matrix\n Why not just make site assignments for first and last appearance the same in your input site matrix?")}
 	if(!any(dateTreatment==c("firstLast","randObs"))){
 		stop("dateTreatment must be one of 'firstLast' or 'randObs'!")}
 	#clean out all taxa which are NA or missing for timeData
 	if(ntrees==1 & randres){message("Warning: Do not interpret a single randomly-resolved tree")}
 	if(randres & timeres){stop(
-		"Error: Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!")}
-	if(!is.null(sites) & point.occur){stop("Error: Inconsistent arguments, point.occur=TRUE will replace input 'sites' matrix")}
+		"Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!")}
+	if(!is.null(sites) & point.occur){stop("Inconsistent arguments, point.occur=TRUE will replace input 'sites' matrix")}
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
-		if(length(droppers)==Ntip(tree)){stop("Error: Absolutely NO valid taxa shared between the tree and temporal data!")}
+		if(length(droppers)==Ntip(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
 		if(noisyDrop){
 			message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))}
 		tree<-drop.tip(tree,droppers)
-		if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data!")}
+		if(Ntip(tree)<2){stop("Less than two valid taxa shared between the tree and temporal data!")}
 		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x==tree$tip.label))),1]<-NA
 		}
 	if(!is.null(node.mins)){
@@ -752,18 +752,18 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,
 		}	
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
 	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}
-	if(any(apply(timeList[[1]],1,diff)>0)){stop("Error: timeList[[1]] not in intervals in time relative to modern")}
-	if(any(timeList[[1]][,2]<0)){stop("Error: Some dates in timeList[[1]] <0 ?")}
-	if(any(apply(timeList[[2]],1,diff)<0)){stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
-	if(any(timeList[[2]][,2]<0)){stop("Error: Some dates in timeList[[2]] <0 ?")}
-	if(length(unique(rownames(timeList[[2]])))!=length(rownames(timeList[[2]]))){stop("Error: Duplicate taxa in timeList[[2]]")}
-	if(length(unique(tree$tip.label))!=length(tree$tip.label)){stop("Error: Duplicate tip taxon names in tree$tip.label")}
+	if(any(apply(timeList[[1]],1,diff)>0)){stop("timeList[[1]] not in intervals in time relative to modern")}
+	if(any(timeList[[1]][,2]<0)){stop("Some dates in timeList[[1]] <0 ?")}
+	if(any(apply(timeList[[2]],1,diff)<0)){stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
+	if(any(timeList[[2]][,2]<0)){stop("Some dates in timeList[[2]] <0 ?")}
+	if(length(unique(rownames(timeList[[2]])))!=length(rownames(timeList[[2]]))){stop("Duplicate taxa in timeList[[2]]")}
+	if(length(unique(tree$tip.label))!=length(tree$tip.label)){stop("Duplicate tip taxon names in tree$tip.label")}
 	if(length(rownames(timeList[[2]]))!=length(tree$tip.label)){
-		stop("Error: Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
+		stop("Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
 	if(is.null(sites)){
 		if(point.occur){
 			if(any(timeList[[2]][,1]!=timeList[[2]][,2])){
-				stop("Error: point.occur=TRUE but some taxa have FADs and LADs listed in different intervals?!")}
+				stop("point.occur=TRUE but some taxa have FADs and LADs listed in different intervals?!")}
 			sites<-matrix(c(1:Ntip(tree),1:Ntip(tree)),Ntip(tree),2)
 		}else{
 			sites<-matrix(1:(Ntip(tree)*2),,2)

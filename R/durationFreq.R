@@ -195,7 +195,7 @@ make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=
 		#in fact, this was probably a bad idea to begin with
 	#drop.extant drops ALL taxa that survive to the modern (i.e. truncated ranges)
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
-		}else{stop("Error: timeData not of matrix or data.frame format")}}
+		}else{stop("timeData not of matrix or data.frame format")}}
 	#drop unsampled taxa (i.e. NAs)
 	naDroppers<-is.na(timeData[,1]) | is.na(timeData[,2])
 	if(any(naDroppers)){
@@ -224,8 +224,8 @@ make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=
 		}
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){
-		stop("Error: timeData is not in time relative to modern (decreasing to present)")}
-	if(any(timeData[,2]<0)){stop("Error: Some dates in timeData <0 ?")}
+		stop("timeData is not in time relative to modern (decreasing to present)")}
+	if(any(timeData[,2]<0)){stop("Some dates in timeData <0 ?")}
 	#get the dataset
 	dur<-(timeData[,1]-timeData[,2])
 	#THRESHOLD DETERMINES RANGES TOO SMALL TO BE CONSIDERED NOT ONE-TIMERS
@@ -325,10 +325,10 @@ make_durationFreqDisc<-function(timeList,groups=NULL,drop.extant=TRUE){				# ,in
 		}
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(apply(timeData,1,diff)<0)){
-		stop("Error: timeData / timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
-	if(any(timeData[,2]<0)){stop("Error: Some dates in timeList <0 ?")}
+		stop("timeData / timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
+	if(any(timeData[,2]<0)){stop("Some dates in timeList <0 ?")}
 	if(sum(timeData%%1)>0){
-		stop("Error: Some of these interval numbers aren't given as whole numbers! What?")}
+		stop("Some of these interval numbers aren't given as whole numbers! What?")}
 	#get the dataset
 	dur<-apply(timeData,1,diff)+1
 	#timeData1<-max(timeData)-timeData+1

@@ -140,7 +140,7 @@ multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,drop
 	dclass<-sapply(data,class)	#data classes
 	dclass1<-numeric(length(dclass));dclass1[dclass=="matrix"]<-1;
 		dclass1[dclass=="list"]<-2;dclass1[dclass=="phylo"]<-3
-	if(any(dclass1==0)){stop("Error: Data of Unknown Type")}
+	if(any(dclass1==0)){stop("Data of Unknown Type")}
 	if(is.null(int.times)){
 		tblen<-int.length
 		#get max and min times for each type
@@ -186,7 +186,7 @@ multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,drop
 			if(any(mustSplit)){
 				for(i in which(mustSplit)){
 						splitter<-splinters[sapply(splinters[,1],function(y) int.times[i,1]>y & int.times[i,2]<y),1]
-						#if(length(splitter)>1){stop("Error: Splitter returning more than one value?!")}
+						#if(length(splitter)>1){stop("Splitter returning more than one value?!")}
 						splitter<-c(int.times[i,1],splitter,int.times[i,2])
 						int.times<-rbind(int.times,cbind(splitter[1:(length(splitter)-1)],splitter[2:length(splitter)]))
 					}

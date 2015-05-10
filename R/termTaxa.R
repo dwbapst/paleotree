@@ -281,7 +281,7 @@ trueTermTaxaTree<-function(TermTaxaRes,time.obs){
 	for(i in 1:Ntip(tree1)){
 		newDur<-newDurations[tipMatch[i]]
 		if(!is.na(newDur)){
-			if(tree1$edge.length[tree1$edge[,2]==i]<newDur){stop("Error: New duration longer than original taxon ranges?")}
+			if(tree1$edge.length[tree1$edge[,2]==i]<newDur){stop("New duration longer than original taxon ranges?")}
 			tree1$edge.length[tree1$edge[,2]==i]<-newDur
 		}else{
 			dropTaxa<-c(dropTaxa,tree1$tip.label[i])

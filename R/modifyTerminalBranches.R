@@ -145,7 +145,7 @@ dropZLB<-function(tree){
 	#drops terminal branches that are zero length
 		#adjusts tree$root.time if necessary
 	#require(ape)
-	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
 	drop_e<-(tree$edge[,2]<(Ntip(tree)+1)) & (tree$edge.length==0)
 	drop_t<-(tree$edge[,2])[drop_e]
 	if((Ntip(tree)-length(drop_t))>1){
@@ -161,15 +161,15 @@ dropZLB<-function(tree){
 dropExtinct<-function(tree,tol=0.01,ignore.root.time=FALSE){
 	#drop all terminal taxa that are less than 0.001 from the modern
 	#require(ape)
-	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
 	if(is.null(tree$root.time)){
 		message("No tree$root.time: Assuming latest tip is at present (time=0)")
 		}
 	dnode<-dist.nodes(tree)[1:Ntip(tree),Ntip(tree)+1]
 	dnode<-round(dnode,6)
-	if(!is.null(tree$root.time) & !ignore.root.time){if(round(tree$root.time,6)>max(dnode)){stop("Error: all tips are extinct based on tree$root.time!")}}
+	if(!is.null(tree$root.time) & !ignore.root.time){if(round(tree$root.time,6)>max(dnode)){stop("all tips are extinct based on tree$root.time!")}}
 	droppers<-which((dnode+tol)<max(dnode))
-	if((Ntip(tree)-length(droppers))<2){stop("Error: Less than 2 tips are extant on the tree!")}
+	if((Ntip(tree)-length(droppers))<2){stop("Less than 2 tips are extant on the tree!")}
 	stree<-drop.tip(tree,droppers)
 	if(!is.null(tree$root.time)){
 		#now need to add $root.time given the droppers
@@ -185,15 +185,15 @@ dropExtinct<-function(tree,tol=0.01,ignore.root.time=FALSE){
 dropExtant<-function(tree,tol=0.01){
 	#drop all terminal taxa that are more than 0.001 from the modern
 	#require(ape)
-	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
 	if(is.null(tree$root.time)){
 		message("Warning: no tree$root.time! Assuming latest tip is at present (time=0)")
 		}
 	dnode<-dist.nodes(tree)[1:Ntip(tree),Ntip(tree)+1]
 	dnode<-round(dnode,6)
-	if(!is.null(tree$root.time)){if(round(tree$root.time,6)>max(dnode)){stop("Error: all tips are extinct based on tree$root.time!")}}
+	if(!is.null(tree$root.time)){if(round(tree$root.time,6)>max(dnode)){stop("all tips are extinct based on tree$root.time!")}}
 	droppers<-which((dnode+tol)>max(dnode))
-	if((Ntip(tree)-length(droppers))<2){stop("Error: Less than 2 tips extinct on the tree!")}
+	if((Ntip(tree)-length(droppers))<2){stop("Less than 2 tips extinct on the tree!")}
 	stree<-drop.tip(tree,droppers)
 	if(!is.null(tree$root.time)){
 		#now need to add $root.time given the droppers
@@ -208,9 +208,9 @@ dropExtant<-function(tree,tol=0.01){
 #' @export
 addTermBranchLength<-function(tree,addtime=0.001){
 	#require(ape)
-	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
 	tree$edge.length[tree$edge[,2]<(Ntip(tree)+1)]<-tree$edge.length[tree$edge[,2]<(Ntip(tree)+1)]+addtime
-	if(any(tree$edge.length<0)){stop("Error: tree has negative branch lengths!")}
+	if(any(tree$edge.length<0)){stop("tree has negative branch lengths!")}
 	if(!is.null(tree$root.time)){tree$root.time<-tree$root.time+addtime}
 	return(tree)
 	}
@@ -223,8 +223,8 @@ fixRootTime<-function(treeOrig,treeNew,consistentDepth=TRUE,nodeAgeTransfer=TRUE
 		max(dist.nodes(tree)[,Ntip(tree)+1])
 		}
 	#require(ape)
-	if(!is(treeOrig, "phylo")){stop("Error: treeOrig is not of class phylo")}
-	if(!is(treeNew, "phylo")){stop("Error: treeNew is not of class phylo")}
+	if(!is(treeOrig, "phylo")){stop("treeOrig is not of class phylo")}
+	if(!is(treeNew, "phylo")){stop("treeNew is not of class phylo")}
 	if(is.null(treeOrig$root.time)){stop("ERROR: treeOrig passed to fixRootTime with no $root.time??")}
 	#also need a warning message if taxa present in treeNew that aren't in treeOrig
 	taxaNewNM<-treeNew$tip.label[sapply(treeNew$tip.label,function(x) !any(x==treeOrig$tip.label))]
@@ -268,7 +268,7 @@ fixRootTime<-function(treeOrig,treeNew,consistentDepth=TRUE,nodeAgeTransfer=TRUE
 		}
 	if(consistentDepth){
 		if(round(max(dist.nodes(treeNew)[, Ntip(treeNew) + 1]) - treeNew$root.time)>0){
-			stop("Error: fixRootTime isn't fixing correctly, root.time less than max tip-to-root length!")}
+			stop("fixRootTime isn't fixing correctly, root.time less than max tip-to-root length!")}
 		}
 	return(treeNew)
 	}

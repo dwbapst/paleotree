@@ -264,24 +264,24 @@ sampleRanges<-function(taxad,r,alpha=1,beta=1,rTimeRatio=1,modern.samp.prob=1,mi
 		timeData<-taxad
 		names<-if(is.null(rownames(taxad))){paste("t",1:nrow(taxad),sep="")}else{rownames(taxad)}
 		}
-	if(nrow(taxad)<min.taxa){stop("Error: min.taxa set higher than number of taxa in input")}	
+	if(nrow(taxad)<min.taxa){stop("min.taxa set higher than number of taxa in input")}	
 	if(merge.cryptic==TRUE & nrow(taxad)<sum(!is.na(cryptic))){
-		stop("Error: min.taxa set higher than number of non-cryptic taxa in input")}
+		stop("min.taxa set higher than number of non-cryptic taxa in input")}
 	timeData<-timeData[!is.na(timeData[,1]),,drop=FALSE]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
-	if(any(timeData[,2]<0)){stop("Error: Some dates in timeData <0 ?")}
+	if(any(timeData[,1]<timeData[,2])){stop("timeData is not in time relative to modern (decreasing to present)")}
+	if(any(timeData[,2]<0)){stop("Some dates in timeData <0 ?")}
 	#check input parameters for inconsistencies
-	if(any(r<0)){stop("Error: some r values < 0")}
-	if(any(alpha<=0) | any(beta<=0)){stop("Error: some shape parameters (alpha, beta) <= 0")}
+	if(any(r<0)){stop("some r values < 0")}
+	if(any(alpha<=0) | any(beta<=0)){stop("some shape parameters (alpha, beta) <= 0")}
 	if(length(alpha)==1){alpha<-rep(alpha,length(names))
 		}else{if(length(alpha)!=length(names)){
-		stop("Error: Multiple alpha values input but not same length as number of taxa?")}}
+		stop("Multiple alpha values input but not same length as number of taxa?")}}
 	if(length(beta)==1){beta<-rep(beta,length(names))
 		}else{if(length(beta)!=length(names)){
-		stop("Error: Multiple beta values input but not same length as number of taxa?")}}
+		stop("Multiple beta values input but not same length as number of taxa?")}}
 	if(length(rTimeRatio)!=1){if(length(rTimeRatio)!=length(names)){
-		stop("Error: Multiple rTimeRatio values input but not same length as number of taxa?")}}
+		stop("Multiple rTimeRatio values input but not same length as number of taxa?")}}
 	midpoint<-(max(timeData)+min(timeData))/2
 	taxa.midpoints<-((timeData[,1]+timeData[,2])/2)
 	#need to calculate rTimeChange based on rTimeRatio
@@ -304,8 +304,8 @@ sampleRanges<-function(taxad,r,alpha=1,beta=1,rTimeRatio=1,modern.samp.prob=1,mi
 		taxa.timeChange<-midpoint-taxa.midpoints
 		r<-r+(rTimeChange*taxa.timeChange)
 		}
-	if(length(r)!=length(names)){stop("Error: Multiple r values given but not same length as number of taxa?")}
-	if(any(r<0)){stop("Error: rTimeRatio so low as to cause some species-specific avg r < 0")}
+	if(length(r)!=length(names)){stop("Multiple r values given but not same length as number of taxa?")}
+	if(any(r<0)){stop("rTimeRatio so low as to cause some species-specific avg r < 0")}
 	if(any(alpha!=1) | any(beta!=1) | any(rTimeChange!=0) | alt.method){		#get per species time vectors of r
 		rangesTimes<-apply(timeData,1,function(x) seq(x[1],x[2],by=-minInt))
 		#get the time change component per minInt of the taxon ranges

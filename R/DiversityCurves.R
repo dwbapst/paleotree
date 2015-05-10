@@ -215,11 +215,11 @@ taxicDivCont<-function(timeData,int.length=1,int.times=NULL,plot=TRUE,plotLogRic
 			}
 		}	
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
-		}else{stop("Error: timeData not of matrix or data.frame format")}}
+		}else{stop("timeData not of matrix or data.frame format")}}
 	timeData<-timeData[!is.na(timeData[,1]),,drop=FALSE]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
-	if(any(timeData[,2]<0)){stop("Error: Some dates in timeData <0 ?")}
+	if(any(timeData[,1]<timeData[,2])){stop("timeData is not in time relative to modern (decreasing to present)")}
+	if(any(timeData[,2]<0)){stop("Some dates in timeData <0 ?")}
 	FAD<-as.numeric(timeData[,1]);LAD<-as.numeric(timeData[,2])
 	if(is.null(int.times)){
 		midtimes<-seq(max(FAD)+2*tblen,min(LAD)-2*tblen,by=-tblen)
@@ -262,9 +262,9 @@ taxicDivDisc<-function(timeList,int.times=NULL,drop.singletons=FALSE,plot=TRUE,p
 		#standing richness may never be high as the apparent richness of some bins
 	#output (if TRUE) is 3 col matrix of int-start, int-end, div
 	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
-		}else{stop("Error: timeList[[1]] not of matrix or data.frame format")}}
+		}else{stop("timeList[[1]] not of matrix or data.frame format")}}
 	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])
-		}else{stop("Error: timeList[[2]] not of matrix or data.frame format")}}
+		}else{stop("timeList[[2]] not of matrix or data.frame format")}}
 	intMat<-timeList[[1]]	#the intervals the DATA is given in
 	timeData<-timeList[[2]]
 	#if(drop.extant){timeData[[2]][(timeData[[1]][timeData[[2]][,2],1]==0),1]<-NA}
@@ -272,11 +272,11 @@ taxicDivDisc<-function(timeList,int.times=NULL,drop.singletons=FALSE,plot=TRUE,p
 	intMat[intMat[,1]==0,1]<-extant.adjust
 	timeData<-timeData[!is.na(timeData[,1]),,drop=FALSE]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(any(!sapply(intMat,is.numeric))){stop("Error: Some values in the interval times aren't numeric??")}
-	if(any(apply(intMat,1,diff)>0)){stop("Error: timeList[[1]] not in intervals in time relative to modern")}
-	if(any(intMat[,2]<0)){stop("Error: Some dates in timeList[[1]] <0 ?")}
-	if(any(apply(timeData,1,diff)<0)){stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
-	if(any(timeData[,2]<0)){stop("Error: Some dates in timeList[[2]] <0 ?")}
+	if(any(!sapply(intMat,is.numeric))){stop("Some values in the interval times aren't numeric??")}
+	if(any(apply(intMat,1,diff)>0)){stop("timeList[[1]] not in intervals in time relative to modern")}
+	if(any(intMat[,2]<0)){stop("Some dates in timeList[[1]] <0 ?")}
+	if(any(apply(timeData,1,diff)<0)){stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
+	if(any(timeData[,2]<0)){stop("Some dates in timeList[[2]] <0 ?")}
 	Fint<-as.numeric(timeData[,1]);Lint<-as.numeric(timeData[,2])
 	FAD<-intMat[Fint,1];LAD<-intMat[Lint,2]
 	if(is.null(int.times)){
@@ -345,7 +345,7 @@ phyloDiv<-function(tree,int.length=0.1,int.times=NULL,plot=TRUE,plotLogRich=FALS
 	#plotLogRich just decides if the div plot if log-scale or not on the y axis
 	#require(ape)
 	ttree<-tree
-	if(!is(ttree, "phylo")){stop("Error: ttree is not of class phylo")}
+	if(!is(ttree, "phylo")){stop("ttree is not of class phylo")}
 	tblen<-int.length
 	if(drop.ZLB){ttree<-dropZLB(ttree)}
 	savetree<-ttree
@@ -357,7 +357,7 @@ phyloDiv<-function(tree,int.length=0.1,int.times=NULL,plot=TRUE,plotLogRich=FALS
 		ntime<-dist.nodes(ttree)[,Ntip(ttree)+1]
 		ntime<-ttree$root.time-ntime
 		ntime<-round(ntime,6)
-		if(min(ntime)<0){stop("Error: tree$root.time is less than total depth of tree!")}
+		if(min(ntime)<0){stop("tree$root.time is less than total depth of tree!")}
 		}
 	if(is.null(int.times)){
 		midtimes<-seq(max(ntime)+3*tblen,min(ntime)-2*tblen,by=-tblen)

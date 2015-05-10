@@ -296,7 +296,7 @@ constrainParPaleo<-function(f, ..., formulae=NULL, names=parnames(f),extra=NULL)
 	bounds <- parbounds(f)
 	#
 	if(!is(f,'paleotreeFunc')){
-		stop("Error: Given function does not appear to be a paleotree likelihood function")}
+		stop("Given function does not appear to be a paleotree likelihood function")}
 	if ( inherits(f, "constrained") ) {	#this thing checks to see if its already constrained 
 		formulae <- c(attr(f, "formulae"), formulae)
 		f <- attr(f, "origfunction")

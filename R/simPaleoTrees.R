@@ -119,8 +119,8 @@ simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mi
 		#zero-length branches are dropped
 	#simPaleoTrees(p=0.1,q=0.1,r=0.1,ntrees=10)
 	#require(ape)
-	if(mintaxa<2){stop("Error: Need at least two taxa per tree; increase mintaxa")}
-	if(ntrees<1){stop("Error: number of trees to simulate is <1")}
+	if(mintaxa<2){stop("Need at least two taxa per tree; increase mintaxa")}
+	if(ntrees<1){stop("number of trees to simulate is <1")}
 	res<-rmtree(ntrees,2)
 	ntries<-0
 	for(i in 1:ntrees){

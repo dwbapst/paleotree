@@ -228,8 +228,8 @@ freqRat<-function(timeData,calcExtinction=FALSE,plot=FALSE){
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(apply(timeData,1,diff)<0)){
-		stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
-	if(any(timeData[,2]<0)){stop("Error: Some dates in timeList[[2]] <0 ?")}
+		stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
+	if(any(timeData[,2]<0)){stop("Some dates in timeList[[2]] <0 ?")}
 	durations<-apply(timeData,1,diff)+1
 	sumDur<-sapply(1:max(c(durations,3)),function(x) sum(durations==x))/length(durations)
 	#get freqRat

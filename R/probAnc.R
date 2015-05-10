@@ -80,7 +80,7 @@ probAnc<-function(p,q,R,mode="budding",analysis="directDesc",Mmax=85,nrep=10000)
 	if(mode=="anagenesis"){message("p will be treated as the rate of anagenesis/pseudospeciation")}
 	if(!any(analysis==c("directDesc","indirectDesc"))){
 		stop("Analysis type not designated, must be 'directDesc' or 'indirectDesc'")}
-	if(nrep<0){stop("Error: Nrep is less than zero?")}
+	if(nrep<0){stop("Nrep is less than zero?")}
 	if(analysis=="directDesc"){
 		#get completeness
 		Pp<-qsProb2Comp(R=R,p=p,q=q,mode=mode)
@@ -129,7 +129,7 @@ probAnc<-function(p,q,R,mode="budding",analysis="directDesc",Mmax=85,nrep=10000)
 	if(analysis=="indirectDesc"){
 		if(mode=="budding" | mode=="bifurcating"){
 			if(p>q){stop(
-				"Error: Indirect Descendant formulae are unsolved if p>q, see Foote 1996")}
+				"Indirect Descendant formulae are unsolved if p>q, see Foote 1996")}
 			Qm<-function(p,q,M){
 				x<-(4*p*q)/((p+q)^2)
 				res<-((p+q)/(2*p))*(factorial(2*M)/((2^(2*M))*factorial(M)^2))*((x^M)/((2*M)-1))

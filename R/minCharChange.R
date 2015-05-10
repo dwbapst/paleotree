@@ -254,7 +254,7 @@ minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE, ordered
 			solMat<-solMat[,!solDup]
 		}else{
 			#if not random, then stop cause something is wrong!
-			stop("Error: Not all solutions are unique, as calculated, despite random permutations not used. Please investigate or contact Dave Bapst.")
+			stop("Not all solutions are unique, as calculated, despite random permutations not used. Please investigate or contact Dave Bapst.")
 			}
 		}
 	#edgeSol is a 3D array, where for each solution, we have a matrix with edges for

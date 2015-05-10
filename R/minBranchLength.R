@@ -70,12 +70,12 @@ minBranchLength<-function(tree, mbl){
 	#require(phangorn)
 	#test arguments
 	#tree - a tree with edge lengths
-	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
-	if(is.null(tree$edge.length)){stop("Error: Tree has no edge lengths")}
+	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
+	if(is.null(tree$edge.length)){stop("Tree has no edge lengths")}
 	timetree<-tree
 	#mbl - a single numeric value
 	if(!is.numeric(mbl) | length(mbl)!=1){
-		stop("Error: mbl is a not a single numeric value")}
+		stop("mbl is a not a single numeric value")}
 	#
 	root_node<-Ntip(timetree)+1
 	while(any(timetree$edge.length<mbl)){

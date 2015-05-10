@@ -20,7 +20,7 @@
 #' @export depthRainbow
 depthRainbow<-function(tree){
 	#plots a tree with edges color-coded to depth
-	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
 	tree<-ladderize(tree)
 	ndepth<-dist.nodes(tree)[,Ntip(tree)+1]
 	#nodelabels(ceiling(ndepth[(Ntip(tree):Nedge(tree))+1]),node=(Ntip(tree):Nedge(tree))+1)

@@ -49,7 +49,7 @@
 branchClasses<-function(tree,whichExtant=NULL,tol=0.01){
 	#names will be time of origin for each branch
 	#require(ape)
-	if(!is(tree,"phylo")){stop("Error: tree is not of class phylo")}
+	if(!is(tree,"phylo")){stop("tree is not of class phylo")}
 	dists<-dist.nodes(tree)[Ntip(tree)+1,]
 	if(is.null(whichExtant)){
 		dists1<-dists[1:Ntip(tree)]
@@ -57,7 +57,7 @@ branchClasses<-function(tree,whichExtant=NULL,tol=0.01){
 		modern.tips<-which(dists1>(modern-tol))
 		dead.tips<-which(dists1<=(modern-tol))
 	}else{
-		if(length(whichExtant)!=Ntip(tree)){stop("Error: Length of ")}
+		if(length(whichExtant)!=Ntip(tree)){stop("Length of whichExtant is not equal to number of tip taxa on tree")}
 		modern.tips<-which(sapply(tree$tip.label,function(x) any(x==names(which(whichExtant==1)))))
 		dead.tips<-which(sapply(tree$tip.label,function(x) any(x==names(which(whichExtant==0)))))
 		}

@@ -63,22 +63,22 @@ timeLadderTree<-function(tree,timeData){
 	#only applicable to continuous time data
 	#require(ape)	
 	#first sanitize data
-	if(!is(tree, "phylo")){stop("Error: tree is not of class phylo")}
+	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
-		}else{stop("Error: timeData not of matrix or data.frame format")}}
+		}else{stop("timeData not of matrix or data.frame format")}}
 	if(ncol(timeData)==6){timeData<-timeData[,3:4,drop=FALSE]}	#also allow it to accept taxad objects
 	#first clean out all taxa which are NA or missing in timeData
 	#remove taxa that are NA or missing in timeData
 	tree<-drop.tip(tree,tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))])
-	if(Ntip(tree)<2){stop("Error: Less than two valid taxa shared between the tree and temporal data")}
+	if(Ntip(tree)<2){stop("Less than two valid taxa shared between the tree and temporal data")}
 	timeData<-timeData[!is.na(timeData[,1]),]
-	if(any(is.na(timeData))){stop("Error: Weird NAs in Data??")}
-	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
+	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
+	if(any(timeData[,1]<timeData[,2])){stop("timeData is not in time relative to modern (decreasing to present)")}
 	#node IDs of polytomies
 	nodes<-Ntip(tree)+1:Nnode(tree)
 	polys<-nodes[sapply(nodes,function(x) sum(tree$edge[,1]==x)>2)]
 	#error if no polytomies
-	if(length(polys)==0){stop("Error: No Polytomies in Cropped Tree?")}
+	if(length(polys)==0){stop("No Polytomies in Cropped Tree?")}
 	while(length(polys)>0){
 		node<-polys[1]
 		#make a list of the first FAD of each descendant

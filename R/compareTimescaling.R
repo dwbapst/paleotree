@@ -111,10 +111,10 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 		#08-02-12: Allows multiple trees2 to be multiple trees
 			#will produce a matrix, each row is a tree in tree2, each column a different but commonly shared clade
 	#require(ape)
-	if(!is(tree1, "phylo")){stop("Error: tree1 is not of class phylo")}
+	if(!is(tree1, "phylo")){stop("tree1 is not of class phylo")}
 	tree1orig<-tree1
 	if(!is(tree2, "phylo")){
-		if(!is(tree2, "multiPhylo")){stop("Error: tree2 is not of class phylo or multiphylo")}
+		if(!is(tree2, "multiPhylo")){stop("tree2 is not of class phylo or multiphylo")}
 		trees2<-tree2
 	}else{		#if it isn't multiphylo, make it into one!
 		trees2<-list(tree2)
@@ -130,7 +130,7 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 		tree1<-tree1orig
 		#incredibly, all of the following is necessary to properly adjust node dates (??!!)
 		matches1<-which(!is.na(match(tree1$tip.label,tree2$tip.label)))[1]
-		if(length(matches1)<1){stop(paste("Error: No shared taxa between tree2 and tree1[[",i,"]]!"))}
+		if(length(matches1)<1){stop(paste("No shared taxa between tree2 and tree1[[",i,"]]!"))}
 		tipmatch<-tree1$tip.label[matches1]
 		mtimeA<-dist.nodes(tree1)[matches1,Ntip(tree1)+1]
 		mtimeB<-dist.nodes(tree2)[match(tipmatch,tree2$tip.label),Ntip(tree2)+1]
@@ -144,7 +144,7 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 			tree1$root.time<-tree1$root.time-(mtimeA-mtime1)
 			ntime1<-tree1$root.time-ntime1
 			ntime1<-round(ntime1,6)
-			if(min(ntime1)<0){stop(paste("Error: tree1$root.time is less than total depth of tree1!"))}
+			if(min(ntime1)<0){stop(paste("tree1$root.time is less than total depth of tree1!"))}
 		}else{
 			ntime1<-max(ntime1)-ntime1
 			}
@@ -152,7 +152,7 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 			tree2$root.time<-tree2$root.time-(mtimeB-mtime2)
 			ntime2<-tree2$root.time-ntime2
 			ntime2<-round(ntime2,6)
-			if(min(ntime2)<0){stop("Error: tree2[",i,"]$root.time is less than total depth of that tree!")}
+			if(min(ntime2)<0){stop("tree2[",i,"]$root.time is less than total depth of that tree!")}
 		}else{
 			ntime2<-max(ntime2)-ntime2
 			}
@@ -202,8 +202,8 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 compareTermBranches<-function(tree1,tree2){
 	#output vector of shifts in terminal branch lengths
 	#require(ape)
-	if(!is(tree1, "phylo")){stop("Error: tree1 is not of class phylo")}
-	if(!is(tree2, "phylo")){stop("Error: tree2 is not of class phylo")}
+	if(!is(tree1, "phylo")){stop("tree1 is not of class phylo")}
+	if(!is(tree2, "phylo")){stop("tree2 is not of class phylo")}
 	tree1<-drop.tip(tree1,tree1$tip.label[is.na(match(tree1$tip.label,tree2$tip.label))])
 	tree2<-drop.tip(tree2,tree2$tip.label[is.na(match(tree2$tip.label,tree1$tip.label))])
 	term1<-tree1$edge.length[tree1$edge[,2]<=Ntip(tree1)]

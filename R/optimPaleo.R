@@ -32,7 +32,7 @@
 #' @export
 optimPaleo<-function(modelFun){
 	if(!is(modelFun,'paleotreeFunc')){
-		stop("Error: Given function does not appear to be a paleotree likelihood function")}
+		stop("Given function does not appear to be a paleotree likelihood function")}
 	#
 	res<-optim(parInit(modelFun),modelFun,
 		lower=parLower(modelFun),upper=parUpper(modelFun), 

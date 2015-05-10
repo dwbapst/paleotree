@@ -105,8 +105,8 @@ binTimeData<-function(timeData,int.length=1,start=NA,int.times=NULL){
 	#x<-c(0,runif(99));timeData<-cbind(x+rexp(100),x);int.length=1;start=NA;int.times=NULL
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data?")}
-	if(any(timeData[,1]<timeData[,2])){stop("Error: timeData is not in time relative to modern (decreasing to present)")}
-	if(any(timeData[,2]<0)){stop("Error: Some dates in timeData <0 ?")}
+	if(any(timeData[,1]<timeData[,2])){stop("timeData is not in time relative to modern (decreasing to present)")}
+	if(any(timeData[,2]<0)){stop("Some dates in timeData <0 ?")}
 	if(is.null(int.times)){
 		if(is.na(start)){start<-max(timeData)+int.length}else{if(start<max(timeData)){stop("Error:Start<max(timeData)?")}}
 		end<-start-(ceiling((start-min(timeData))/int.length)+1)*int.length
@@ -123,7 +123,7 @@ binTimeData<-function(timeData,int.length=1,start=NA,int.times=NULL){
 			taxon.times=cbind(first.int=fads,last.int=lads))
 	}else{
 		int.durs<-int.times[,1]-int.times[,2]
-		if(any(int.durs<=0)){stop("Error: Some input time intervals have zero or negative durations?")}
+		if(any(int.durs<=0)){stop("Some input time intervals have zero or negative durations?")}
 		int.times<-int.times[order(int.durs),]
 		Fint<-sapply(timeData[,1],function(x) which(apply(int.times,1,function(y) y[1]>=x & y[2]<x))[1])
 		Lint<-sapply(timeData[,2],function(x) which(apply(int.times,1,function(y) y[1]>=x & y[2]<x))[1])

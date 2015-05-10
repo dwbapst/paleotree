@@ -82,13 +82,13 @@ horizonSampRate<-function(sampOcc=NULL,durations=NULL,nCollections=NULL){
 		#just like sampleRanges(data,ranges.only=FALSE)
 	if(is.null(durations) & is.null(nCollections)){
 		if(!is.list(sampOcc)){
-			stop("Error: sampOcc isn't a list of species occurrences")}
+			stop("sampOcc isn't a list of species occurrences")}
 		sampOcc<-sampOcc[!is.na(sampOcc)]
 		nCollections<-sapply(sampOcc,length)
 		durations<-sapply(sampOcc,max)-sapply(sampOcc,min)
 		}
 	if(is.null(durations) | is.null(nCollections)){
-		stop("Error: durations and nCollections have to be both supplied, if one is given")}
+		stop("durations and nCollections have to be both supplied, if one is given")}
 	sampRate<-(sum(nCollections-1)^2)/(sum(durations)*sum(nCollections))
 	names(sampRate)<-"sampRate"
 	return(sampRate)

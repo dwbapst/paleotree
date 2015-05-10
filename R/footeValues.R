@@ -87,9 +87,9 @@
 footeValues<-function(p,q,r,PA_n=0,PB_1=0,p_cont=TRUE,q_cont=TRUE,Nb=1){
 	#set '03 Table Values
 	# TEST p, q, r
-	if (length(p)!=length(q)){stop("Error: p is not same length as q!")}
-	if (length(p)!=length(r)){stop("Error: p is not same length as r!")}
-	if (length(r)!=length(q)){stop("Error: q is not same length as r!")}
+	if (length(p)!=length(q)){stop("p is not same length as q!")}
+	if (length(p)!=length(r)){stop("p is not same length as r!")}
+	if (length(r)!=length(q)){stop("q is not same length as r!")}
 	#following relies on separate p, q, r of all intervals
 	#assumes interval length is 1; i.e. the rates have been rescaled accordingly
 	n<-length(p)

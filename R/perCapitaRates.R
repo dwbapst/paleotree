@@ -128,17 +128,17 @@ perCapitaRates<-function(timeList,plot=TRUE,logRates=FALSE,drop.extant=FALSE,isE
 			#drop.extant=FALSE;isExtant=NULL;split.int=TRUE
 	#
 	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
-		}else{stop("Error: timeList[[1]] not of matrix or data.frame format")}}
+		}else{stop("timeList[[1]] not of matrix or data.frame format")}}
 	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])
-		}else{stop("Error: timeList[[2]] not of matrix or data.frame format")}}
+		}else{stop("timeList[[2]] not of matrix or data.frame format")}}
 	intMat<-timeList[[1]]	#the intervals the DATA is given in
 	timeData<-timeList[[2]]
 	timeData<-timeData[!is.na(timeData[,1]),,drop=FALSE]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(any(apply(intMat,1,diff)>0)){stop("Error: timeList[[1]] not in intervals in time relative to modern")}
-	if(any(intMat[,2]<0)){stop("Error: Some dates in timeList[[1]] <0 ?")}
-	if(any(apply(timeData,1,diff)<0)){stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
-	if(any(timeData[,2]<0)){stop("Error: Some dates in timeList[[2]] <0 ?")}
+	if(any(apply(intMat,1,diff)>0)){stop("timeList[[1]] not in intervals in time relative to modern")}
+	if(any(intMat[,2]<0)){stop("Some dates in timeList[[1]] <0 ?")}
+	if(any(apply(timeData,1,diff)<0)){stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
+	if(any(timeData[,2]<0)){stop("Some dates in timeList[[2]] <0 ?")}
 	#get rid of modern intervals
 	modInt<-which(intMat[,1]==0)
 	if(length(modInt)>0){
@@ -158,7 +158,7 @@ perCapitaRates<-function(timeList,plot=TRUE,logRates=FALSE,drop.extant=FALSE,isE
 	isNonRep<-all(apply(intMat,2,function(x) identical(length(x),length(unique(x)))))
 	isSequential_2<-all(sapply(2:nrow(intMat),function(x) intMat[x,1]==intMat[x-1,2]))
 	if(!(isSequential_1 & isSequential_2 & isNonRep)){
-		stop("Error: Sorry, intervals need to be sequential, ordered and non-overlapping.")}
+		stop("Sorry, intervals need to be sequential, ordered and non-overlapping.")}
 	#now get int length to modify rates with
 	intlen<-(-apply(intMat,1,diff))
 	#modify timeData if there are any extant taxa

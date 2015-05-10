@@ -214,22 +214,22 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 
 	
 	#CHECKING
-	if(any(c(p,q,anag.rate,prop.bifurc,prop.cryptic)<0)){stop(
-		"Error: bad parameters input, p, q, anag.rate, prop.bifurc or prop.cryptic are less than 0")}
-	if(prop.bifurc>0 & prop.cryptic==1){stop("Error: Prop.bifurc greater than 0 even though cryptic cladogenesis = 1??")}
-	if(nruns<1){stop("Error: nruns<1")}
-	if(maxtaxa<0){stop("Error: maxtaxa<0")}
-	if(mintaxa<1){stop("Error: mintaxa<1")}
-	if(mintime<1){stop("Error: mintime<1")}
-	if(maxtime<mintime){stop("Error: maxtime<mintime")}
-	if(mintaxa>maxtaxa){stop("Error: mintaxa > maxtaxa")}
+	if(any(c(p,q,anag.rate,prop.bifurc,prop.cryptic)<0)){
+		stop("bad parameters input, p, q, anag.rate, prop.bifurc or prop.cryptic are less than 0")}
+	if(prop.bifurc>0 & prop.cryptic==1){stop("Prop.bifurc greater than 0 even though cryptic cladogenesis = 1??")}
+	if(nruns<1){stop("nruns<1")}
+	if(maxtaxa<0){stop("maxtaxa<0")}
+	if(mintaxa<1){stop("mintaxa<1")}
+	if(mintime<1){stop("mintime<1")}
+	if(maxtime<mintime){stop("maxtime<mintime")}
+	if(mintaxa>maxtaxa){stop("mintaxa > maxtaxa")}
 	if(maxtaxa>10000 & maxtime>10000){warning("Warning: Unrealistic limits for maxtaxa or maxtime")}
-	if(minExtant<0){stop("Error: minExtant<0")}
+	if(minExtant<0){stop("minExtant<0")}
 	if(minExtant>mintaxa){mintaxa<-minExtant}
 	if(!is.null(maxExtant)){
-		if(maxExtant<0){stop("Error: maxExtant<0")}
+		if(maxExtant<0){stop("maxExtant<0")}
 		if(maxExtant>maxtaxa){maxtaxa<-maxExtant}
-		if(minExtant>maxExtant){stop("Error: maxExtant is set higher than minExtant")}
+		if(minExtant>maxExtant){stop("maxExtant is set higher than minExtant")}
 		}
 	if(!min.cond){message("No conditioning during simulation; run until max limits or total extinction")}
 	#end idiot proofing
@@ -316,7 +316,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 				#if continue is false (maxtime1 is hit!), evaluate!
 				#don't just use one maxtime1, use a bunch 02-07-12: let's you use more runs!
 				taxad<-matrix(taxad[taxad[,3]<maxtime1,],sum(taxad[,3]<maxtime1),)
-				if(any(is.na(taxad[,4]))){stop("Error: Live creatures escaping simulation! Get out now while you still have time!")}
+				if(any(is.na(taxad[,4]))){stop("Live creatures escaping simulation! Get out now while you still have time!")}
 				posstimes<-sort(unique(c(taxad[,3:4],maxtime1)))
 				maxtimes<-posstimes[posstimes>=mintime & posstimes<=maxtime1]				#make vector of maxtimes
 				if(length(maxtimes)==0){

@@ -93,7 +93,7 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	#require(ape)
 	taxad1<-taxad[,1:4]
 	if(any((taxad1[,4]-taxad1[,3])<0)){taxad1[,3:4]<-max(taxad1[,3:4])-taxad1[,3:4]}
-	if(any((taxad1[,4]-taxad1[,3])<0)){stop("Error: Time Error! Check data in taxad")}
+	if(any((taxad1[,4]-taxad1[,3])<0)){stop("Time Error! Check data in taxad")}
 	if(is.null(obs_time)){obs<-taxad1[,4]}else{
 		obs<-max(taxad[,3:4])-obs_time
 		#check if the times of observations are outside of original taxon ranges
@@ -104,7 +104,7 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 			})
 		if(any(obsOutRange)){stop("ERROR: Given obs_time are outside of the original taxon ranges! If cryptic taxa, perhaps you forgot to set merge.cryptic=FALSE?")}
 		}
-	if(nrow(taxad1)!=length(obs)){stop("Error: Number of observations are not equal to number of lineages!")}
+	if(nrow(taxad1)!=length(obs)){stop("Number of observations are not equal to number of lineages!")}
 	#make observations as fake taxa, assuming that observations are WITHIN actual taxon ranges
 	fake_taxa<-matrix(sapply((1:nrow(taxad1))[!is.na(obs)],function(x) c(nrow(taxad1)+x,taxad1[x,1],obs[x],obs[x])),,4,byrow=TRUE)
 	fake_taxa[,1]<-(1:nrow(fake_taxa))+nrow(taxad1)

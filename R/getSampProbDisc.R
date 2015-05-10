@@ -348,18 +348,18 @@ getSampProbDisc<-function(timeData,n_tbins=1,grp1=NA,grp2=NA,est_only=FALSE,iter
 		}	
 	#get rid of any NAs
 	if(length(grp1)>1){
-		if(length(grp1)!=nrow(timeData)){stop("Error: grp1 is not same length as timeData")}
+		if(length(grp1)!=nrow(timeData)){stop("grp1 is not same length as timeData")}
 		grp1<-grp1[!is.na(timeData[,1])]
 
 		}
 	if(length(grp2)>1){
-		if(length(grp2)!=nrow(timeData)){stop("Error: grp2 is not same length as timeData")}		
+		if(length(grp2)!=nrow(timeData)){stop("grp2 is not same length as timeData")}		
 		grp2<-grp2[!is.na(timeData[,1])]
 		}
 	timeData<-timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(any(apply(timeData,1,diff)<0)){stop("Error: timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
-	if(any(timeData[,2]<0)){stop("Error: Some dates in timeList[[2]] <0 ?")}
+	if(any(apply(timeData,1,diff)<0)){stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
+	if(any(timeData[,2]<0)){stop("Some dates in timeList[[2]] <0 ?")}
 	dur<-apply(timeData,1,diff)+1
 	timeData1<-max(timeData)-timeData+1
 	FO<-timeData1[,1];LO<-timeData1[,2]

@@ -5,7 +5,7 @@
 \alias{degradeTree}
 \title{Randomly Collapse a Portion of Nodes on a Phylogeny}
 \usage{
-degradeTree(tree, prop_collapse, nCollapse = NULL, node.depth = NA,
+degradeTree(tree, prop_collapse = NULL, nCollapse = NULL, node.depth = NA,
   leave.zlb = FALSE)
 
 collapseNodes(tree, nodeID, collapseType, leave.zlb = FALSE)
@@ -65,7 +65,8 @@ argument leave.zlb is TRUE.
 \examples{
 set.seed(444)
 tree <- rtree(100)
-tree1 <- degradeTree(tree,0.5)
+tree1 <- degradeTree(tree,prop_collapse=0.5)
+tree3 <- degradeTree(tree,nCollapse=50)
 
 #let's compare the input and output
 layout(matrix(1:2,,2))

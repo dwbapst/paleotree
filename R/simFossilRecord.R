@@ -1,3 +1,5 @@
+"
+
 #' @details
 
 #' @inheritParams
@@ -5,6 +7,8 @@
 #' @param
 
 #' @return
+
+ #taxon.id ancestor.id orig.time ext.time still.alive looks.like
 
 #' @aliases
 
@@ -41,13 +45,22 @@
 	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
 
 
+# a function that transforms a simfossilrecord to a taxa object
 
+# a function that transforms a simfossilrecord to a set of ranges (like from sampleRanges)
+	# merge.cryptic = TRUE or FALSE
+	# ranges.only or sampling times?
+
+# a function that wraps taxa2phylo for simFossilRecord, providing time-scaled tree of sampled taxa
+	# merge.cryptic = TRUE or FALSE
+	#ala simPaleoTrees:
+		# tree<-taxa2phylo(taxa,obs_time=ranges1[,2],plot=plot)
 
 
 simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
-	prop.bifurc=0, prop.cryptic=0, startTaxa=1, nruns=1,
+	prop.bifurc=0, prop.cryptic=0, startTaxa=1, modern.samp.prob=1, nruns=1,
 	#stopping conditions can be given as vectors of length 1 or length 2 (= min,max)
-	nTotalTaxa=c(1,1000), totalTime=c(1,1000), nExtant=c(0,1000), 
+	nTotalTaxa=c(1,1000), totalTime=c(1,1000), nSamp=c(0,1000), nExtant=c(0,1000), 
 	count.cryptic=FALSE, print.runs=FALSE, sortNames=FALSE, plot=FALSE){
 
 	min.cond=TRUE
@@ -55,6 +68,63 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 	#functions that will live only in simFossilRecord's namespace
 		#so not to crowd paleotree namespace
 	
+	makeParFunct<-function(par,isBranchRate){
+		#things to look for
+			# N = number of extant taxa
+			# T = time
+			# P = branching rate
+		acceptedArg<-if(isBranchRate){c('N','T')
+			}else{c('N','T','P')}
+		if(is.numeric(par)){par<-as.character(par)}
+		if(is.numeric(type.convert(par,as.is=TRUE))){
+			res<-type.convert(par,as.is=TRUE)
+			#now convert formula expression to function
+			parFunct<-if(isBranchRate){
+				function(N,T){}
+			}else{
+				function(N,T,P){}
+				}
+			body(parFunct)<-res
+			res<-parFunct
+		}else{
+			#first convert par to a formula
+			#check arguments match only accepted list
+			args<-all.vars(as.formula(paste0('XXdave~',par)))
+			args<-args[!(args=='XXdave')]
+			if(!all(sapply(args,function(x) any(x==acceptedArg)))){
+				if(isBranchRate){
+					stop(paste0('Incorrect parameterization of branching rate formula, \n',
+						'Only N and T allowed as variables'))
+				}else{
+					stop(paste0('Incorrect parameterization of a non-branching rate formula, \n',
+						'Only P, N and T allowed as variables'))
+					}
+				}
+			#now convert formula expression to function
+			parFunct<-if(isBranchRate){
+				function(N,T){}
+			}else{
+				function(N,T,P){}
+				}
+			body(parFunct)<-parse(text=par)
+			res<-parFunct
+			}
+		return(res)
+		}
+
+	#RANDOM EXAMPLES TO TEST makeParFunct with...
+	#makeParFunct(0.1,isBranchRate=TRUE)
+	#
+	#z<-0.1
+	#makeParFunct(z^2,isBranchRate=TRUE)
+	#
+	#makeParFunct('P-0.1*N',isBranchRate=TRUE)
+	#
+	#makeExtRate<-makeParFunct('P-0.1*N',isBranchRate=FALSE)
+	#makeExtRate(P=0.1,N=10,T=100)
+	#
+	#makeParFunct('0.1+T*0.2-0.1^N',isBranchRate=FALSE)
+
 	initiateTaxa<-function(startTaxa,time){
 		newTaxa<-lapply(1:startTaxa,function(x) 
 			newTaxon(newID=x,ancID=NA,time=time,looksLike=x)
@@ -67,7 +137,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 		#store taxa as a list structure
 			# $taxa.data, exactly like output from simFossilTaxa
 		taxaData<-c(newID,ancID,time,NA,1,looksLike)
-		names(taxaData)<- c("taxon.id","ancestor.id","orig.time","ext.time","still.alive","looks.like")
+		names(taxaData)<- c('taxon.id','ancestor.id','orig.time','ext.time','still.alive','looks.like')
 		# $sampling.times = times of sampling events for this taxon
 			#thus can come up with quick/simple ways of evaluating stopping conditions
 			# e.g. evaluate number of sampled taxa by sum(length($sampling.times)>0)
@@ -89,7 +159,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 	termination<-function(taxa,targetID,time){
 		#kills an existing taxon
 		whichTarget<-which(sapply(taxa,function(x) x[[1]][,1]==targetID))
-		if(length(whichTarget)!=1){stop("taxon IDs repeated??")}
+		if(length(whichTarget)!=1){stop('taxon IDs repeated??')}
 		taxa[[whichTarget]][[1]][,4]<-time
 		taxa[[whichTarget]][[1]][,5]<-0
 		return(taxa)
@@ -131,14 +201,13 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 		
 
 			
-		killTaxon<-
-		
-		extinctionEvent<-function()
-		
-			}
+
 	
 	
-	#
+
+
+
+
 
 	#simplified birth-death-sampling simulator for fossil record
 	#
@@ -166,9 +235,9 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 	
 
 		
- taxon.id ancestor.id orig.time ext.time still.alive looks.like
+
  
- c("taxon.id","ancestor.id","orig.time","ext.time","still.alive","looks.like")
+
 		
 
 	
@@ -177,52 +246,60 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 		# i.e. a point condition or range
 	# turn stopping conditions of length 1 into vectors of length 2
 	
-	
-	
+	#get the basic rate functions
+	getBranchRate<-makeParFunct(p,isBranchRate)
+	getExtRate<-makeParFunct(q,isBranchRate)
+	getSampRate<-makeParFunct(r,isBranchRate)
+	getAnagRate<-makeParFunct(anag.rate,isBranchRate)
+	#
 
-	initiateTaxa(startTaxa=startTaxa,time=totalTime[2])
+	#initiate the taxa dataset
+	taxa<-initiateTaxa(startTaxa=startTaxa,time=totalTime[2])
 	stop<-FALSE
 	while(stop){
+		#get some basic summary statistics first
 		#vector of which taxa are still alive
-		whichLive<-which()
-		
+		whichLive<-which(sapply(taxa,function(x) x[[1]][,5]==1))
 		#standing number of extant lineages 
 			# (i.e. number of lineages that stuff can happen to)
-		nLive<- 
-		
-	
-		# calculate rates (which may be diversity dependent)
-			# ONLY do this if rates are changing (i.e. div dep)
-		
+		nLive<-length(whichLive)
+		#timePassed from the initiation of the simulation
+		timePassed<-totalTime[2]-time	
+		#
+		# calculate rates (which may be time of diversity dependent)
+			#use rate-getting functions from above
 		#get the new branching rate, extinction rate, sampling rate, anagenesis rate
-		branchRate<-p
-		extRate<-q
-		sampRate<-r
-		anagRate<-anag.rate
-
-
-		
-		
+		branchRate<-getBranchRate(N=nLive,T=timePassed)
+		extRate<-getExtRate(N=nLive,T=timePassed,P=branchRate)
+		sampRate<-getSampRate(N=nLive,T=timePassed,P=branchRate)
+		anagRate<-getAnagRate(N=nLive,T=timePassed,P=branchRate)
+		#
+		# now deal with proportional types of branching
 		#get cryptic, budding and bifurcation components
 		crypticRate<-branchRate*(prop.cryptic)
 		#rate of morph differentiation per branching event
 		morphRate<-branchRate*(1-prop.cryptic)
 		buddRate<-morphRate*(1-prop.bifurc)
-		bifurcRate<-morphRate*(prop.bifurc)
-
-		
+		bifurcRate<-morphRate*(prop.bifurc)		
+		#
 		#get probabilities of event types
 		rateVector<-c(buddRate,bifurcRate,anagRate,crypticRate,extRate,sampRate)
 		names(rateVector)<-c('budd','bifurc','anag','crypt','ext','samp')
+		#check rates, make sure none are less than zero
+		if(any(rateVector<0)){
+			stop(paste0(names(which(rateVector<0)),'rate calculated less than zero'))}
+		#sum the rates
 		sumRates<-sum(rateVector)
 		eventProb<-rateVector/sumRates
+		#
 		#pull type of event (from Peter Smits)
 		event <- sample( names(rateVector), 1, prob = eventProb)
 		#select which lineage does it occur to
 		target<-sample(whichLive,1)
+		#
 		#draw waiting time to an event (from Peter Smits)
-		dt <- rexp(1, rate =sumRates*nLive)
-		newTime<-
+		changeTime <- rexp(1, rate =sumRates*nLive)
+		newTime<- time + changeTime
 		
 		#check waiting time against time stopping conditions
 			
@@ -246,9 +323,20 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 		#evaluate stopping conditions
 		
 		
+	# if stop and there are extant, evaluate if sampled at modern
+		# 0< modern.samp.prob <1 need to randomly sample
 		
 		}
 
+"
+
+
+
+
+################################################
+
+#OLD SIM FOSSIL TAXA CODE
+'
 	
 	#CHECKING
 	if(any(c(p,q,anag.rate,prop.bifurc,prop.cryptic)<0)){stop(
@@ -311,7 +399,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 					taxad<-rbind(taxad,c(max(taxad[,1])+1,tpick,wait+tpick_FO,NA,max(taxad[,1])+1))
 					}
 				#these loops ONLY end if maxtime1 is hit, so to kill a run, you need to change maxtime1
-					#then you'll need to evaluate it again to make sure it meets criteria
+					#then youll need to evaluate it again to make sure it meets criteria
 				#count numtax and numext based on count.cryptic
 				if(count.cryptic){numtax<-nrow(taxad)}else{numtax<-length(unique(taxad[,5]))}
 				if(numtax>maxtaxa){
@@ -337,7 +425,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 				if(max(taxad[,3:4],na.rm=TRUE)>=mintime & ifelse(numext>0,numtax>mintaxa,numtax>=mintaxa)
 					& numext>=minExtant1 & ifelse(is.null(maxExtant),TRUE,numext<=maxExtant) & min.cond){
 						#if conditions have been hit,reset maxtime1 to the FAD of the newest living taxa that broke conditions
-					if(any(is.na(taxad[,4]))){		#if its dead, don't change maxtime1...
+					if(any(is.na(taxad[,4]))){		#if its dead, dont change maxtime1...
 						maxtime2<-min(c(maxtime1,max(taxad[is.na(taxad[,4]) | taxad[,4]>=maxtime1,3])))
 						if(maxtime2>mintime){maxtime1<-maxtime2}
 						}
@@ -351,7 +439,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 				}
 			if(!continue & eval){
 				#if continue is false (maxtime1 is hit!), evaluate!
-				#don't just use one maxtime1, use a bunch 02-07-12: let's you use more runs!
+				#dont just use one maxtime1, use a bunch 02-07-12: lets you use more runs!
 				taxad<-matrix(taxad[taxad[,3]<maxtime1,],sum(taxad[,3]<maxtime1),)
 				if(any(is.na(taxad[,4]))){stop("Live creatures escaping simulation! Get out now while you still have time!")}
 				posstimes<-sort(unique(c(taxad[,3:4],maxtime1)))
@@ -383,7 +471,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 					}
 				}
 			if(!continue & !eval){
-				#reset if the clade is done (continue=FALSE) but eval is FALSE (didn't hit conditions)
+				#reset if the clade is done (continue=FALSE) but eval is FALSE (didnt hit conditions)
 				taxad<-matrix(c(1,NA,0,NA,1),1,)
 				ntries<-ntries+1
 				continue<-TRUE;eval<-FALSE;evalcond<-NULL
@@ -422,4 +510,6 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 	if(nruns==1){results<-results[[1]]}
 	return(results)	
 	
-	}
+	
+
+'

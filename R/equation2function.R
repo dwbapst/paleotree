@@ -3,7 +3,7 @@
 #' \code{equation2function} converts the right-hand side of an equation that can be written
 #' as a single line (like the right-hand side of an object of class \code{formula}) and
 #' creates an R function which calls the variables within as arguments and returns values
-#' consistent with the equation as written.
+#' consistent with the parameters of the input equation as written.
 
 #' @details
 #' This simple little function is rather hacky but seems to get the job done, for a

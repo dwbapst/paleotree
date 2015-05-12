@@ -26,7 +26,7 @@
 #' @author David W. Bapst
 
 #' @examples
-#' some simple examples
+#' # some simple examples
 #' foo<-equation2function("x+y")
 #' foo
 #' foo(x=4,y=0.1)
@@ -35,8 +35,8 @@
 #' foo
 #' foo(x=4,y=0.1)
 #'
-#' # weird long argument names
-#' foo<-equation2function("stegosaur+0.4*P")
+#' # what about weird long argument names and spaces
+#' foo<-equation2function("stegosaur + 0.4 * P")
 #' foo
 #' foo(stegosaur=5,P=0.3)
 

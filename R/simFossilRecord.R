@@ -221,17 +221,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 
 	
 
-	#how should treat min/max bounds?
-		#how simFossiltaxa does it:
 
-		#Simulations will not go longer than maxtime, period
-		#when maxtaxa is hit, simulation will go up until FO of maxtaxa+1 taxon to avoid Hartmann et al. effect
-		#if minExtant is set, simulation will end once minExtant is hit
-			#unless maxExtant is zero, in which case 
-		#if maxExtant is set, simulation will end once maxExtant is hit, if before maxtaxa or mintime is hit
-			#if maxtaxa or mintime is hit, run is discarded if maxExtant is not satisfied
-			#when maxExtant is hit, simulation will go up until FO of maxExtant+1 to avoid Hartmann et al. effect
-		
 	
 
 		
@@ -322,6 +312,23 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 		
 		#evaluate stopping conditions
 		
+
+	#how should treat min/max bounds?
+		#how simFossiltaxa does it:
+
+		#Simulations will not go longer than maxtime, period
+		#when maxtaxa is hit, simulation will go up until FO of maxtaxa+1 taxon to avoid Hartmann et al. effect
+		#if minExtant is set, simulation will end once minExtant is hit
+			#unless maxExtant is zero, in which case 
+		#if maxExtant is set, simulation will end once maxExtant is hit, if before maxtaxa or mintime is hit
+			#if maxtaxa or mintime is hit, run is discarded if maxExtant is not satisfied
+			#when maxExtant is hit, simulation will go up until FO of maxExtant+1 to avoid Hartmann et al. effect
+		
+
+#discussion with Smits 05/11/15
+	#real stopping condition is max limits for real birth-death simulators
+		#except total extinction...
+	#minimums are just for acceptability of runs when they hit stopping conditions
 		
 	# if stop and there are extant, evaluate if sampled at modern
 		# 0< modern.samp.prob <1 need to randomly sample

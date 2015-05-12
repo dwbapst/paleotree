@@ -25,14 +25,14 @@ A function, with named blank (i.e. no default value) arguments.
 \code{equation2function} converts the right-hand side of an equation that can be written
 as a single line (like the right-hand side of an object of class \code{formula}) and
 creates an R function which calls the variables within as arguments and returns values
-consistent with the equation as written.
+consistent with the parameters of the input equation as written.
 }
 \details{
 This simple little function is rather hacky but seems to get the job done, for a
 functionality that doesn't seem to be present elsewhere in R.
 }
 \examples{
-some simple examples
+# some simple examples
 foo<-equation2function("x+y")
 foo
 foo(x=4,y=0.1)
@@ -41,8 +41,8 @@ foo<-equation2function("x+2*sqrt(2*y+3)^2")
 foo
 foo(x=4,y=0.1)
 
-# weird long argument names
-foo<-equation2function("stegosaur+0.4*P")
+# what about weird long argument names and spaces
+foo<-equation2function("stegosaur + 0.4 * P")
 foo
 foo(stegosaur=5,P=0.3)
 }

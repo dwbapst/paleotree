@@ -497,7 +497,7 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL,
 		stop("ancestral state matrix has wrong number of rows??")}
 	#and now name the columns by the levels
 	colnames(anc2)<-attributes(anc1)$levels
-	if(printContrast){
+	if(returnContrast){
 		result<-contrastTable
 	}else{
 		result<-anc2

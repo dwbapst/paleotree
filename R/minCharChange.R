@@ -95,9 +95,11 @@
 #' to obtain the total number of character changes.
 
 #' @return
-#' \code{ancPropStateMat} returns a matrix, with rows corresponding to the ID numbers of tips and nodes in
+#' By default, \code{ancPropStateMat} returns a matrix, with rows corresponding to the ID numbers of tips and nodes in
 #' \code{$edge}, and columns corresponding to character states, with the value representing the proportional
 #' weight of that node being that state under the algorithm used (known tip values are always 1).
+#' If argument \code{returnContrast} is \code{TRUE} then \code{ancPropStateMat} will instead return the final
+#' contrast table used by \code{phyDat} for interpreting character state strings.
 #'
 #' \code{minCharChange} invisibly returns a list containing the following elements, several of which are printed
 #' by default to the console, as controlled by argument \code{printMinResult}:
@@ -213,9 +215,9 @@
 #' #let's compare unordered versus ordered under MPR
 #' layout(1:2)
 #' quickAncPlotter(tree,ancMPR,cex=0.3)
-#' text(x=8,y=15,"ordered char",cex=1.5)
+#' text(x=8,y=15,"unordered char, MPR",cex=1.5)
 #' quickAncPlotter(tree,ancMPRord,cex=0.3)
-#' text(x=9,y=15,"ordered char'",cex=1.5)
+#' text(x=9,y=15,"ordered char, MPR",cex=1.5)
 #' layout(1)
 #' 
 #' \dontrun{
@@ -255,7 +257,7 @@
 #' colnames(contrast012)<-rownames(contrast012)<-0:2
 #' contrast012
 #' 
-#' #add polymorphic state and NA ambituity as new rows
+#' #add polymorphic state and NA ambiguity as new rows
 #' contrastPoly<-c(0,1,1)
 #' contrastNA<-c(1,1,1)
 #' contrastNew<-rbind(contrast012,'1&2'=contrastPoly,contrastNA)
@@ -266,7 +268,7 @@
 #' 
 #' # now try this contrast table we've assembled
 #'     # default: unordered, MPR
-#' ancPoly<-ancPropStateMat(tree, trait=charPoly, contrast=contrast)
+#' ancPoly<-ancPropStateMat(tree, trait=charPoly, contrast=contrastNew)
 #' 
 #' # but...!
 #' # we can also do it automatically, 
@@ -390,7 +392,7 @@ minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE, ordered
 	#get the minimum solution
 	minTran<-apply(tranMat,c(1,2),min)
 	#
-	funcMess<-c(paste(nSol,"potential solutions under",type,",",length(maxPars),"most parsimonious solutions found"),
+	funcMess<-c(paste0(nSol," potential solutions under ",type,", ",length(maxPars)," most parsimonious solutions found"),
 		ifelse(nSol>randomMax,"Solutions sampled stochastically","Solutions exhaustively checked"))
 	if(printMinResult){
 		if(length(maxPars)<6){
@@ -413,8 +415,13 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL,
 	#wrapper for phangorn's ancestral.pars that returns a fully labeled matrix indicating
 		#the relative frequency of a node being reconstructed under a given state
 	#require(phangorn)
+	#convert trait to a character vector
+	saveNames<-names(trait)
+	trait<-as.character(trait)
+	names(trait)<-saveNames
 	#check trait
-	if(!is.vector(trait)){stop("trait must be vector of state data for a single character")}
+	if(!is.vector(trait) | !is.character(trait)){
+		stop("trait must be vector of state data for a single character, that can be coerced to type 'character'")}
 	#check orderedChar
 	if(!is.logical(orderedChar)){stop("orderedChar must be a logical class element")}
 	if(length(orderedChar)!=1){stop("orderedChar must be a single logical element")}
@@ -437,7 +444,7 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL,
 		}
 	if(dropAmbiguity){
 		#if dropAmbiguity, drop all taxa with ambiguity
-		isAmbig<-sapply(trait,any,function(x) sapply(ambiguity,identical,x))
+		isAmbig<-sapply(trait,function(x) any(sapply(ambiguity,identical,x)))
 		whichAmbig<-names(trait)[isAmbig]
 		#make message
 		message(paste0("dropping following taxa with ambiguious codings: ",
@@ -460,23 +467,32 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL,
 					polySymbol=polySymbol, ambiguity=ambiguity)
 			}
 		}
+	#now if contrast exists, get trueStates from it, otherwise figure them out relative to ambiguity
+	if(is.null(contrast)){
+		unqState<-unique(c(trait))
+		#identify unique non-ambiguous states
+		isAmbigState<-sapply(unqState,function(x) any(sapply(ambiguity,identical,x)))
+		trueStates <- sort(unqState[!isAmbigState], na.last = TRUE)
+	}else{
+		#get trueStates from contrast
+		trueStates<-colnames(contrast)
+		}
 	#basic data structure setup
 	char1<-matrix(trait,,1)
 	rownames(char1)<-names(trait)
 	#translate into something for phangorn to read
-	states<-sort(unique(char1))
-	char1<-phyDat(char1,type="USER",levels=states,
+	char1<-phyDat(char1,type="USER",levels=trueStates,
 		ambiguity=ambiguity,contrast=contrast,compress=FALSE)
 	#if ordered
 	if(orderedChar){
 		if(!is.null(cost)){stop("Do not give cost matrix if you set argument cost = TRUE")}
 		#if orderedChar 
-		nStates<-length(states)
+		nStates<-length(trueStates)
 		cost<-matrix(,nStates,nStates)
 		for(i in 1:nStates){for(j in 1:nStates){
 			cost[i,j]<-abs(i-j)
 			}}
-		colnames(cost)<-rownames(cost)<-states
+		colnames(cost)<-rownames(cost)<-trueStates
 		}
 	#get anc states
 	anc1<-ancestral.pars(tree,char1,type=type,cost=cost)
@@ -487,7 +503,7 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL,
 	contrastTable <- attr(anc1, "contrast")
 	dimnames(contrastTable) <- list(attr(anc1, "allLevels"), attr(anc1, "levels"))
 	#turn into a col-per-state matrix with each row a node or tip, numbered as in edge
-	anc2<-matrix(unlist(anc1),,length(unique(char1)),byrow=T)
+	anc2<-matrix(unlist(anc1),,length(attr(anc1, "levels")),byrow=T)
 	#based on conversation with Klaus on 04-17-15
 		#will treat output as if it was always ordered exactly as tips and nodes
 		#are numbered in $edge; should be as basic as numbering 1:nrow
@@ -510,8 +526,8 @@ buildContrastPoly<-function(trait, polySymbol="&", ambiguity=c(NA, "?")){
 	#test if any states with polySymbol
 	unqState<-unique(c(trait))
 	containPoly<-sapply(unqState,grepl,pattern=polySymbol)
-	#identify unique non-poly, non-ambiguious states
-	isAmbig<-sapply(unqState,any,function(x) sapply(ambiguity,identical,x))
+	#identify unique non-poly, non-ambiguous states
+	isAmbig<-sapply(unqState,function(x) any(sapply(ambiguity,identical,x)))
 	trueStates <- sort(unqState[!containPoly & !isAmbig], na.last = TRUE)
 	#now get number of trueStates
 	nTrue<-length(trueStates)	
@@ -550,3 +566,4 @@ buildContrastPoly<-function(trait, polySymbol="&", ambiguity=c(NA, "?")){
 	#return contrast table
 	return(contrast)
 	}
+	

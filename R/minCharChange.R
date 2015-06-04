@@ -55,11 +55,14 @@
 #' This argument is designed to mirror an hidden argument with an identical name in function \code{phyDat} in package {phangorn}.
 
 #' @param dropAmbiguity A logical. If \code{TRUE} (which is not the default), all taxa with ambiguous codings as defined
-#' by argument \code{ambiguity} will be dropped prior to use by 
+#' by argument \code{ambiguity} will be dropped prior to ancestral nodes being inferred. This may result in too few taxa.
 
 #' @param polySymbol A single symbol which separates alternative states for polymorphic codings; the default symbol is
-#' \code{"&"}. For example, a taxon coded as polymorphic for states 1 or 2, would be indicated by the string "1&2".
-#' \code{polySymbol} is used to break up these strings and automatically construct a fitting 
+#' \code{"&"}, following the output by \code{Claddis}'s \code{ReadMorphNexus} function, where polymorphic taxa are indicated
+#' by default with a string with state labels separated by an \code{"&"} symbol.
+#' For example, a taxon coded as polymorphic for states 1 or 2, would be indicated by the string "1&2".
+#' \code{polySymbol} is used to break up these strings and automatically construct a fitting \code{contrast} table
+#' for use with this data, including for ambiguous character state codings.
 	
 #' @param contrast A matrix of type integer with cells of 0 and 1, where each row is labelled with a string value
 #' used for indicating character states in \code{trait}, and each column is labelled with the formal state label to
@@ -74,7 +77,7 @@
 #' on its implementation within \code{phangorn} including an example.
 #' See examples below for the construction of an example contrast matrix for character data with polymorphisms, 
 #' coded as character data output by \code{Claddis}'s \code{ReadMorphNexus} function, where polymorphic taxa are indicated
-#' with a string with state labels seperated by an \code{"&"} symbol.
+#' with a string with state labels separated by an \code{"&"} symbol.
 
 #' @param returnContrast If TRUE, the contrast table used by \code{ancestral.pars} will be output instead for
 #' user evaluation that polymorphic symbols and ambiguous states are being parsed correctly.
@@ -475,6 +478,7 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL,
 		trait<-trait[!isAmbig]
 		#drop from tree
 		tree<-drop.tip(phy=tree,tip=whichAmbig)
+		if(Ntip(tree)<2){stop("Too few non-ambiguous taxa remain on the tree to continue analysis")}
 		}
 	#if contrast isn't null, ignore polySymbol and ambiguity
 	if(!is.null(contrast)){

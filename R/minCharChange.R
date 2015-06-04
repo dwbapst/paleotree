@@ -215,9 +215,9 @@
 #' #let's compare unordered versus ordered under MPR
 #' layout(1:2)
 #' quickAncPlotter(tree,ancMPR,cex=0.3)
-#' text(x=8,y=15,"unordered char, MPR",cex=1.5)
+#' text(x=8,y=15,"unordered char\nMPR",cex=1.5)
 #' quickAncPlotter(tree,ancMPRord,cex=0.3)
-#' text(x=9,y=15,"ordered char, MPR",cex=1.5)
+#' text(x=9,y=15,"ordered char\nMPR",cex=1.5)
 #' layout(1)
 #' 
 #' \dontrun{
@@ -291,9 +291,9 @@
 #' #compare reconstructions
 #' layout(1:2)
 #' quickAncPlotter(tree,ancPoly,cex=0.5)
-#' text(x=3.5,y=2,"manually-constructed\ncontrast",cex=1.3)
+#' text(x=3.5,y=y=1.2,"manually-constructed\ncontrast",cex=1.3)
 #' quickAncPlotter(tree,ancPolyAuto,cex=0.5)
-#' text(x=3.5,y=2,"auto-constructed\ncontrast",cex=1.3)
+#' text(x=3.5,y=y=1.2,"auto-constructed\ncontrast",cex=1.3)
 #' layout(1)
 #' 
 #' #look pretty similar!

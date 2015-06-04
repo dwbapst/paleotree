@@ -89,9 +89,11 @@ with a string with state labels seperated by an \code{"&"} symbol.}
 user evaluation that polymorphic symbols and ambiguous states are being parsed correctly.}
 }
 \value{
-\code{ancPropStateMat} returns a matrix, with rows corresponding to the ID numbers of tips and nodes in
+By default, \code{ancPropStateMat} returns a matrix, with rows corresponding to the ID numbers of tips and nodes in
 \code{$edge}, and columns corresponding to character states, with the value representing the proportional
 weight of that node being that state under the algorithm used (known tip values are always 1).
+If argument \code{returnContrast} is \code{TRUE} then \code{ancPropStateMat} will instead return the final
+contrast table used by \code{phyDat} for interpreting character state strings.
 
 \code{minCharChange} invisibly returns a list containing the following elements, several of which are printed
 by default to the console, as controlled by argument \code{printMinResult}:
@@ -200,9 +202,9 @@ text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
 #let's compare unordered versus ordered under MPR
 layout(1:2)
 quickAncPlotter(tree,ancMPR,cex=0.3)
-text(x=8,y=15,"ordered char",cex=1.5)
+text(x=8,y=15,"unordered char, MPR",cex=1.5)
 quickAncPlotter(tree,ancMPRord,cex=0.3)
-text(x=9,y=15,"ordered char'",cex=1.5)
+text(x=9,y=15,"ordered char, MPR",cex=1.5)
 layout(1)
 
 \dontrun{
@@ -231,6 +233,8 @@ minCharChange(tree,trait=char,type="ACCTRAN")
 charPoly<-as.character(c(1,2,NA,0,0,1,"1&2",2,0,NA,0,2,1,NA,"1&2"))
 #simulate a tree with 15 taxa
 tree<-rtree(15)
+tree$edge.length<-NULL
+tree<-ladderize(tree)
 names(charPoly)<-tree$tip.label
 charPoly
 
@@ -242,7 +246,7 @@ contrast012<-rbind(c(1,0,0),c(0,1,0),c(0,0,1))
 colnames(contrast012)<-rownames(contrast012)<-0:2
 contrast012
 
-#add polymorphic state and NA ambituity as new rows
+#add polymorphic state and NA ambiguity as new rows
 contrastPoly<-c(0,1,1)
 contrastNA<-c(1,1,1)
 contrastNew<-rbind(contrast012,'1&2'=contrastPoly,contrastNA)
@@ -253,7 +257,7 @@ contrastNew
 
 # now try this contrast table we've assembled
     # default: unordered, MPR
-ancPoly<-ancPropStateMat(tree, trait=charPoly, contrast=contrast)
+ancPoly<-ancPropStateMat(tree, trait=charPoly, contrast=contrastNew)
 
 # but...!
 # we can also do it automatically,
@@ -262,14 +266,29 @@ ancPoly<-ancPropStateMat(tree, trait=charPoly, contrast=contrast)
 ancPolyAuto<-ancPropStateMat(tree, trait=charPoly, polySymbol="&")
 
 # but does this match what the table we constructed?
-ancPolyAuto<-ancPropStateMat(tree, trait=charPoly,
+ancPropStateMat(tree, trait=charPoly,
 		polySymbol="&", returnContrast=TRUE)
+
+# compare to contrastNew above!
+# only difference should be the default ambiguous
+	# character '?' is added to the table
+
+#compare reconstructions
+layout(1:2)
+quickAncPlotter(tree,ancPoly,cex=0.5)
+text(x=3.5,y=2,"manually-constructed\\ncontrast",cex=1.3)
+quickAncPlotter(tree,ancPolyAuto,cex=0.5)
+text(x=3.5,y=2,"auto-constructed\\ncontrast",cex=1.3)
+layout(1)
+
+#look pretty similar!
 
 #i.e. the default polySymbol="&", but could be a different symbol
      #such as "," or "\\"... it can only be *one* symbol, though
 
 # all of this machinery should function just fine in minCharChange
-minCharChange(tree, trait=char, polySymbol="&")
+		# again, by default polySymbol="&" (not shown here)
+minCharChange(tree, trait=charPoly, randomMax = 100)
 }
 \author{
 David W. Bapst

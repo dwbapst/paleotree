@@ -246,6 +246,8 @@
 #' charPoly<-as.character(c(1,2,NA,0,0,1,"1&2",2,0,NA,0,2,1,NA,"1&2"))
 #' #simulate a tree with 15 taxa
 #' tree<-rtree(15)
+#' tree$edge.length<-NULL
+#' tree<-ladderize(tree)
 #' names(charPoly)<-tree$tip.label
 #' charPoly
 #' 
@@ -277,14 +279,32 @@
 #' ancPolyAuto<-ancPropStateMat(tree, trait=charPoly, polySymbol="&")
 #'
 #' # but does this match what the table we constructed?
-#' ancPolyAuto<-ancPropStateMat(tree, trait=charPoly,
-#'		polySymbol="&", returnContrast=TRUE)
-#' 	
+#' ancPropStateMat(tree, trait=charPoly,
+#' 		polySymbol="&", returnContrast=TRUE)
+#' 
+#' # compare to contrastNew above!
+#' # only difference should be the default ambiguous
+#' 	# character '?' is added to the table
+#' 
+#' #compare reconstructions
+#' layout(1:2)
+#' quickAncPlotter(tree,ancPoly,cex=0.5)
+#' text(x=3.5,y=2,"manually-constructed\ncontrast",cex=1.3)
+#' quickAncPlotter(tree,ancPolyAuto,cex=0.5)
+#' text(x=3.5,y=2,"auto-constructed\ncontrast",cex=1.3)
+#' layout(1)
+#' 
+#' #look pretty similar!
+#' 
 #' #i.e. the default polySymbol="&", but could be a different symbol
 #'      #such as "," or "\"... it can only be *one* symbol, though
-#'
+#' 
 #' # all of this machinery should function just fine in minCharChange
-#' minCharChange(tree, trait=char, polySymbol="&")
+#'		# again, by default polySymbol="&" (not shown here)
+#' minCharChange(tree, trait=charPoly, randomMax = 100)
+#' 
+
+
 
 #' @name minCharChange
 #' @rdname minCharChange
@@ -549,12 +569,13 @@ buildContrastPoly<-function(trait, polySymbol="&", ambiguity=c(NA, "?")){
 	#now polymorphic characters
 		#break polymorphic states down into contrast rows
 	polyState<-sort(unqState[containPoly])
+	nPoly<-length(polyState)
 	#break the strings up
 	polyStateBr<-strsplit(polyState,polySymbol)	#so polySymbol needs to be length=1
 	polyMatch<-sapply(polyStateBr,function(x) match(x, trueStates))
-	contrastPoly<-matrix(0,length(polyState,nTrue))
+	contrastPoly<-matrix(0,nPoly,nTrue)
 	contrastPolyRaw<-numeric(nTrue) #get a bunch of zeroes
-	for(i in 1:length(polyState)){
+	for(i in 1:nPoly){
 		newContrast<-contrastPolyRaw
 		newContrast[polyMatch]<-1		#fill in with 1s
 		contrastPoly[i,]<-newContrast

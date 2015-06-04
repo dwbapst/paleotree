@@ -2,6 +2,7 @@ Version - 2.5 -
 -Added argument APIversion to makePBDBtaxonTree which allows a user to control which version of the API is called when argument solveMissing=queryPBDB. Current default is "1.1", this will need to be updated when PBDB API 1.2 becomes public
 -Added some safety checks to degradeTree
 -Added function equation2function which converts a character string containing the right-hand side of a single-line equation (like from class formula) to an R function with arguments corresponding the parameters in the input equation.
+-Added handling for ambiguous and polymorphic characters to minCharChange, AncPropStateMat and resolveTreeChar by adding support for these options as they already existed in phangorn
 -
 
 Version - 2.4 - 05-01-15

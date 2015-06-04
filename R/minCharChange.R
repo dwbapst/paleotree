@@ -48,6 +48,37 @@
 #' Cost matrices only impact the "MPR" algorithm; if a cost matrix is given but \code{type = "ACCTRAN"}, an error
 #' is issued.
 
+#' @param ambiguity A vector of values which indicate ambiguous (i.e. missing or unknown) character state codings
+#' in supplied \code{trait} data. Taxa coded ambiguously as treated as being equally likely to be any state coding.
+#' By default, \code{NA} values and "?" symbols are treated as ambiguous character codings, in agreement with behavior 
+#' of functions in packages \code{phangorn} and \code{Claddis}. 
+#' This argument is designed to mirror an hidden argument with an identical name in function \code{phyDat} in package {phangorn}.
+
+#' @param dropAmbiguity A logical. If \code{TRUE} (which is not the default), all taxa with ambiguous codings as defined
+#' by argument \code{ambiguity} will be dropped prior to use by 
+
+#' @param polySymbol A single symbol which separates alternative states for polymorphic codings; the default symbol is
+#' \code{"&"}. For example, a taxon coded as polymorphic for states 1 or 2, would be indicated by the string "1&2".
+#' \code{polySymbol} is used to break up these strings and automatically construct a fitting 
+	
+#' @param contrast A matrix of type integer with cells of 0 and 1, where each row is labelled with a string value
+#' used for indicating character states in \code{trait}, and each column is labelled with the formal state label to
+#' be used for assign taxa to particular character states. A value of 1 indicates that the respective coding string for
+#' that row should be interpreted as reflecting the character state listed for that column. A coding could reflect
+#' multiple states (such as might occur when taxa are polymorphic for some morphological character), so the sums of
+#' rows and columns can sum to more than 1. 
+#' If \code{contrast} is not \code{NULL} (the default), the arguments will nullify 
+#' This argument is designed to mirror an hidden argument with an identical name in function \code{phyDat} in package {phangorn}.
+#' This structure is based on the \code{\link{contrasts}} tables used for statistical evaluation of factors.
+#' See the \code{phangorn} vignette "Special features of phangorn" for more details
+#' on its implementation within \code{phangorn} including an example.
+#' See examples below for the construction of an example contrast matrix for character data with polymorphisms, 
+#' coded as character data output by \code{Claddis}'s \code{ReadMorphNexus} function, where polymorphic taxa are indicated
+#' with a string with state labels seperated by an \code{"&"} symbol.
+
+#' @param returnContrast If TRUE, the contrast table used by \code{ancestral.pars} will be output instead for
+#' user evaluation that polymorphic symbols and ambiguous states are being parsed correctly.
+
 #' @details
 #' The wrapper function \code{ancPropStateMat} simply automates the application of functions
 #' \code{ancestral.pars} and \code{phyDat} from \code{phangorn}, along with several additional checks
@@ -191,7 +222,6 @@
 #' # what ancPropStateMat automates (with lots of checks):
 #'
 #' require(phangorn)
-#'
 #' char1<-matrix(char,,1)
 #' rownames(char1)<-names(char)
 #' #translate into something for phangorn to read
@@ -205,12 +235,61 @@
 #'
 #' #and now with ACCTRAN
 #' minCharChange(tree,trait=char,type="ACCTRAN")
+#'
+#' #POLYMORPHISM IN CHARACTER DATA
+#' 
+#' # example trait data with a polymorphic taxon
+#'      # separated with '&' symbol
+#' # similar to polymorphic data output by ReadMorphNexus from package Claddis
+#' charPoly<-as.character(c(1,2,NA,0,0,1,"1&2",2,0,NA,0,2,1,NA,"1&2"))
+#' #simulate a tree with 15 taxa
+#' tree<-rtree(15)
+#' names(charPoly)<-tree$tip.label
+#' charPoly
+#' 
+#' # need a contrast matrix that takes this into account
+#'     #can build row by row, by hand
+#' 
+#' #first, build contrast matrix for basic states
+#' contrast012<-rbind(c(1,0,0),c(0,1,0),c(0,0,1))
+#' colnames(contrast012)<-rownames(contrast012)<-0:2
+#' contrast012
+#' 
+#' #add polymorphic state and NA ambituity as new rows
+#' contrastPoly<-c(0,1,1)
+#' contrastNA<-c(1,1,1)
+#' contrastNew<-rbind(contrast012,'1&2'=contrastPoly,contrastNA)
+#' rownames(contrastNew)[5]<-NA
+#' 
+#' #let's look at contrast
+#' contrastNew
+#' 
+#' # now try this contrast table we've assembled
+#'     # default: unordered, MPR
+#' ancPoly<-ancPropStateMat(tree, trait=charPoly, contrast=contrast)
+#' 
+#' # but...!
+#' # we can also do it automatically, 
+#'     # by default, states with '&' are automatically treated
+#'     # as polymorphic character codings by ancPropStateMat
+#' ancPolyAuto<-ancPropStateMat(tree, trait=charPoly, polySymbol="&")
+#'
+#' # but does this match what the table we constructed?
+#' ancPolyAuto<-ancPropStateMat(tree, trait=charPoly,
+#'		polySymbol="&", returnContrast=TRUE)
+#' 	
+#' #i.e. the default polySymbol="&", but could be a different symbol
+#'      #such as "," or "\"... it can only be *one* symbol, though
+#'
+#' # all of this machinery should function just fine in minCharChange
+#' minCharChange(tree, trait=char, polySymbol="&")
 
 #' @name minCharChange
 #' @rdname minCharChange
 #' @export
 minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE, orderedChar=FALSE,
-		 type="MPR", cost=NULL, printMinResult=TRUE){
+		type="MPR", cost=NULL, printMinResult=TRUE,  ambiguity= c(NA, "?"),
+		dropAmbiguity=FALSE, polySymbol="&", contrast=NULL){
 	#randomMax=100;maxParsimony=TRUE;printMinResult=TRUE;type="MPR";cost=NULL
 	#print result gives back a reasonable 
 	ancMat<-ancPropStateMat(trait, tree, orderedChar=orderedChar, type=type, cost=cost)
@@ -325,12 +404,17 @@ minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE, ordered
 		solutionArray=edgeSol,transitionArray=tranMat,transitionSumChanges=tranSumChange))) #
 	}
 
+
+
 #' @rdname minCharChange
 #' @export
-ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL){
+ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL, ambiguity= c(NA, "?"),
+	dropAmbiguity=FALSE, polySymbol="&", contrast=NULL, returnContrast=FALSE){
 	#wrapper for phangorn's ancestral.pars that returns a fully labeled matrix indicating
 		#the relative frequency of a node being reconstructed under a given state
 	#require(phangorn)
+	#check trait
+	if(!is.vector(trait)){stop("trait must be vector of state data for a single character")}
 	#check orderedChar
 	if(!is.logical(orderedChar)){stop("orderedChar must be a logical class element")}
 	if(length(orderedChar)!=1){stop("orderedChar must be a single logical element")}
@@ -340,6 +424,8 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL)
 	#return error if cost is not null and orderedChar=TRUE
 	if(orderedChar & !is.null(cost)){
 		stop("Cannot treat character as ordered; cost matrix inapplicable under ACCTRAN")}
+	#check polySymbol
+	if(length(polySymbol)!=1){stop("polySymbol must be length 1, multiple (or zero) polySymbols not allowed")}
 	#check names
 	if(is.null(names(trait))){
 		if(Ntip(tree)!=length(trait)){
@@ -349,11 +435,39 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL)
 			message("names(trait) missing \n","trait values will be assigned to taxa exactly as in tree$tip.label")
 			}
 		}
+	if(dropAmbiguity){
+		#if dropAmbiguity, drop all taxa with ambiguity
+		isAmbig<-sapply(trait,any,function(x) sapply(ambiguity,identical,x))
+		whichAmbig<-names(trait)[isAmbig]
+		#make message
+		message(paste0("dropping following taxa with ambiguious codings: ",
+			whichAmbig,collapse="\n    "))
+		#drop from trait
+		trait<-trait[!isAmbig]
+		#drop from tree
+		tree<-drop.tip(phy=tree,tip=whichAmbig)
+		}
+	#if contrast isn't null, ignore polySymbol and ambiguity
+	if(!is.null(contrast)){
+		message("contrast supplied, thus ignoring states indicated in arguments ambituity and polySymbol")
+	}else{
+		#if contrast isn't null..
+		#if anything is polymorphic, need to build contrast table
+		anyPoly<-any(sapply(unique(c(trait)),grepl,pattern=polySymbol))
+		if(anyPoly){
+			#Need to build a contrasts matrix
+			contrast<-buildContrastPoly(trait=trait,
+					polySymbol=polySymbol, ambiguity=ambiguity)
+			}
+		}
+	#basic data structure setup
 	char1<-matrix(trait,,1)
 	rownames(char1)<-names(trait)
 	#translate into something for phangorn to read
 	states<-sort(unique(char1))
-	char1<-phyDat(char1,type="USER",levels=states)
+	char1<-phyDat(char1,type="USER",levels=states,
+		ambiguity=ambiguity,contrast=contrast,compress=FALSE)
+	#if ordered
 	if(orderedChar){
 		if(!is.null(cost)){stop("Do not give cost matrix if you set argument cost = TRUE")}
 		#if orderedChar 
@@ -366,6 +480,12 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL)
 		}
 	#get anc states
 	anc1<-ancestral.pars(tree,char1,type=type,cost=cost)
+	#check to make sure trait data isn't empty
+	if(length(anc1[[1]])<1){
+		stop("Ancestral reconstruction returned by ancestral.pars is empty, check arguments involving state codings")}
+	#pull final contrast table
+	contrastTable <- attr(anc1, "contrast")
+	dimnames(contrastTable) <- list(attr(anc1, "allLevels"), attr(anc1, "levels"))
 	#turn into a col-per-state matrix with each row a node or tip, numbered as in edge
 	anc2<-matrix(unlist(anc1),,length(unique(char1)),byrow=T)
 	#based on conversation with Klaus on 04-17-15
@@ -377,5 +497,56 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL)
 		stop("ancestral state matrix has wrong number of rows??")}
 	#and now name the columns by the levels
 	colnames(anc2)<-attributes(anc1)$levels
-	return(anc2)
+	if(printContrast){
+		result<-contrastTable
+	}else{
+		result<-anc2
+		}
+	return(result)
+	}
+	
+#hidden internal function
+buildContrastPoly<-function(trait, polySymbol="&", ambiguity=c(NA, "?")){
+	#test if any states with polySymbol
+	unqState<-unique(c(trait))
+	containPoly<-sapply(unqState,grepl,pattern=polySymbol)
+	#identify unique non-poly, non-ambiguious states
+	isAmbig<-sapply(unqState,any,function(x) sapply(ambiguity,identical,x))
+	trueStates <- sort(unqState[!containPoly & !isAmbig], na.last = TRUE)
+	#now get number of trueStates
+	nTrue<-length(trueStates)	
+	#
+	## now create contrast table
+	#create contrastTrue
+	contrastTrue<-matrix(0,nTrue,nTrue)
+	diag(contrastTrue)<-1
+	colnames(contrastTrue)<-trueStates
+	rowNamesGo<-trueStates
+	#now ambiguous characters
+	if(length(ambiguity)>0){
+		#now create rows for ambiguous characters
+		contrastAmbig<-matrix(1,length(ambiguity),nTrue)
+		rowNamesGo<-c(rowNamesGo,ambiguity)
+	}else{
+		contrastAmbig<-NULL
+		}
+	#now polymorphic characters
+		#break polymorphic states down into contrast rows
+	polyState<-sort(unqState[containPoly])
+	#break the strings up
+	polyStateBr<-strsplit(polyState,polySymbol)	#so polySymbol needs to be length=1
+	polyMatch<-sapply(polyStateBr,function(x) match(x, trueStates))
+	contrastPoly<-matrix(0,length(polyState,nTrue))
+	contrastPolyRaw<-numeric(nTrue) #get a bunch of zeroes
+	for(i in 1:length(polyState)){
+		newContrast<-contrastPolyRaw
+		newContrast[polyMatch]<-1		#fill in with 1s
+		contrastPoly[i,]<-newContrast
+		}
+	rowNamesGo<-c(rowNamesGo, polyState)
+	#now combine	
+	contrast<-rbind(contrastTrue,contrastAmbig,contrastPoly)
+	rownames(contrast)<-rowNamesGo
+	#return contrast table
+	return(contrast)
 	}

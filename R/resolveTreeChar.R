@@ -165,7 +165,8 @@
 #' @name resolveTreeChar
 #' @rdname resolveTreeChar
 #' @export
-resolveTreeChar<-function(tree, trait, orderedChar=FALSE, stateBias=NULL, iterative=TRUE, type="MPR", cost=NULL){
+resolveTreeChar<-function(tree, trait, orderedChar=FALSE, stateBias=NULL, iterative=TRUE, type="MPR", cost=NULL,
+			ambiguity= c(NA, "?"), dropAmbiguity=FALSE, polySymbol="&", contrast=NULL){
 		#	orderedChar=TRUE; type="MPR"; cost=NULL; stateBias="primitive"
 		#	orderedChar=FALSE; type="MPR"; cost=NULL; stateBias=NULL
 	#orderedChar=TRUE : put clades together relative to character being ordered, 0 is most primitive state

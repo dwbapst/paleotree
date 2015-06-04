@@ -240,11 +240,13 @@
 #'
 #' #POLYMORPHISM IN CHARACTER DATA
 #' 
+#' 
 #' # example trait data with a polymorphic taxon
 #'      # separated with '&' symbol
 #' # similar to polymorphic data output by ReadMorphNexus from package Claddis
-#' charPoly<-as.character(c(1,2,NA,0,0,1,"1&2",2,0,NA,0,2,1,NA,"1&2"))
-#' #simulate a tree with 15 taxa
+#' charPoly<-as.character(c(1,2,NA,0,0,1,"1&2",2,0,NA,0,2,1,1,"1&2"))
+#' #simulate a tree with 16 taxa
+#' set.seed(444)
 #' tree<-rtree(15)
 #' tree$edge.length<-NULL
 #' tree<-ladderize(tree)
@@ -300,8 +302,8 @@
 #'      #such as "," or "\"... it can only be *one* symbol, though
 #' 
 #' # all of this machinery should function just fine in minCharChange
-#'		# again, by default polySymbol="&" (not shown here)
-#' minCharChange(tree, trait=charPoly, randomMax = 100)
+#'		# again, by default polySymbol="&" (included anyway here for kicks)
+#' minCharChange(tree, trait=charPoly, polySymbol="&")
 #' 
 
 

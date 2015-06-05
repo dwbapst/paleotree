@@ -555,6 +555,16 @@ buildContrastPoly<-function(trait, polySymbol="&", ambiguity=c(NA, "?")){
 	#identify unique non-poly, non-ambiguous states
 	isAmbig<-sapply(unqState,function(x) any(sapply(ambiguity,identical,x)))
 	trueStates <- sort(unqState[!containPoly & !isAmbig], na.last = TRUE)
+	#WAIT also need to include all partial states from poly codings 06-04-15
+		# a state might not be listed 'alone'
+		# might only be listed for polymorphic taxon!
+	#unique polymorphic codings
+	polyState<-sort(unqState[containPoly])
+	#break the strings up
+	polyStateBr<-strsplit(polyState,polySymbol)	#so polySymbol needs to be length=1
+	#get unique true states listed by poly codings
+	uniquePolyTrueStates<-unique(unlist(polyStateBr))
+	trueStates<-sort(unique(c(trueStates,uniquePolyTrueStates)))
 	#now get number of trueStates
 	nTrue<-length(trueStates)	
 	#
@@ -574,11 +584,9 @@ buildContrastPoly<-function(trait, polySymbol="&", ambiguity=c(NA, "?")){
 		}
 	#now polymorphic characters
 		#break polymorphic states down into contrast rows
-	polyState<-sort(unqState[containPoly])
-	nPoly<-length(polyState)
-	#break the strings up
-	polyStateBr<-strsplit(polyState,polySymbol)	#so polySymbol needs to be length=1
 	polyMatch<-sapply(polyStateBr,function(x) match(x, trueStates))
+	#number of unique polymorphic codings
+	nPoly<-length(polyState)
 	contrastPoly<-matrix(0,nPoly,nTrue)
 	contrastPolyRaw<-numeric(nTrue) #get a bunch of zeroes
 	for(i in 1:nPoly){

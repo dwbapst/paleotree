@@ -281,9 +281,9 @@ ancPropStateMat(tree, trait=charPoly,
 #compare reconstructions
 layout(1:2)
 quickAncPlotter(tree,ancPoly,cex=0.5)
-text(x=3.5,y=y=1.2,"manually-constructed\\ncontrast",cex=1.3)
+text(x=3.5,y=1.2,"manually-constructed\\ncontrast",cex=1.3)
 quickAncPlotter(tree,ancPolyAuto,cex=0.5)
-text(x=3.5,y=y=1.2,"auto-constructed\\ncontrast",cex=1.3)
+text(x=3.5,y=1.2,"auto-constructed\\ncontrast",cex=1.3)
 layout(1)
 
 #look pretty similar!

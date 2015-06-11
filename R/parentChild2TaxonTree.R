@@ -71,11 +71,34 @@
 #' 
 #' }
 #' 
+#' 
+#' 
+#' # note that we should even be able to do this with ancestor-descendent pairs from
+#' 	 # simulated datasets from simFossilTaxa, like so:
+#' set.seed(444)
+#' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+#' # need to reorder the columns so parents (ancestors) first, then children 
+#' parentChild2taxonTree(taxa[,2:1])
+#' # now note that it issues a warning that the input wasn't type character
+#'    # and it will be coerced to be such
+#'
+
 
 #' @name parentChild2taxonTree
 #' @rdname parentChild2taxonTree
 #' @export
 parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
+	#
+	#small hidden function
+	getUltimateAnc<-function(taxa,parentChild){
+		while(any(sapply(parentChild[,2],identical,unname(taxa)))){
+			taxa<-parentChild[match(taxa,parentChild[,2]),1]
+			if(length(taxa)>1){
+				stop("Some parents are listed as children twice in parentChild")}
+			}
+		return(taxa)
+		}
+	#
 	#takes a two column matrix of character class taxon names
 		#each row is a relationship: parent, then child
 	#CHECKS
@@ -98,14 +121,8 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 		stop(paste("More than one apparent root; \n",
 			"more than one parent without their own parent listed"))}
 	#trace all tips to a single ancestor
-	ultimateAnc<-sapply(unique(c(parentChild[,1],parentChild[,2])),function(taxa){
-		while(any(parentChild[,2]==taxa)){
-			taxa<-parentChild[parentChild[,2]==taxa,1]
-			if(length(taxa)>1){
-				stop("Some parents are listed as a children twice in parentChild")}
-			}
-		return(taxa)
-		})
+	unqIDs<-unique(c(parentChild[,1],parentChild[,2]))
+	ultimateAnc<-sapply(unqIDs,getUltimateAnc,parentChild=parentChild)
 	if(length(unique(ultimateAnc))!=1){
 		stop("Taxa in parentChild trace back to more than one unique common ancestor")}
 	#
@@ -113,12 +130,8 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	#trace tips to ultimate ancestor (should be same for all, as this has already been checked)
 	continue<-TRUE
 	while(continue){
-		ultimateAnc<-sapply(unique(c(parentChild[,1],parentChild[,2])),function(taxa){
-			while(any(parentChild[,2]==taxa)){
-				taxa<-parentChild[parentChild[,2]==taxa,1]
-				}
-			return(taxa)
-			})
+		unqIDs<-unique(c(parentChild[,1],parentChild[,2]))
+		ultimateAnc<-sapply(unqIDs,getUltimateAnc,parentChild=parentChild)
 		if(length(unique(ultimateAnc))==1){
 			ultAnc1<-ultimateAnc[1]
 		}else{
@@ -136,18 +149,24 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	#
 	#first, get nodeNames, with root name first
 	nodeNames<-unique(parentChild[,1])
-	whichRoot<-which(sapply(nodeNames,function(x) !any(x==parentChild[,2])))
+	whichRoot<-which(sapply(nodeNames,function(x) 
+		!any(sapply(parentChild[,2],identical,unname(x)))))
 	#check that there isn't more than one root
-	if(length(whichRoot)>1){stop(paste("Not all taxable are traceable to a single common root \n",
-		length(whichRoot),"possible roots found:",paste0(nodeNames[whichRoot],collapse=", ")))}
+	if(length(whichRoot)>1){
+		stop(paste("Not all taxable are traceable to a single common root \n",
+			length(whichRoot),"possible roots found:",
+			paste0(nodeNames[whichRoot],collapse=", ")))}
 	#now resort nodeNames
 	nodeNames<-c(nodeNames[whichRoot],nodeNames[-whichRoot])
 	if(tipSet!="nonParents"){
 		if(tipSet=="all"){
 			parentChild<-rbind(parentChild,cbind(nodeNames,paste0("(",nodeNames,")")))
-		}else{stop("tipSet must be one of either 'nonParents' or 'all'")}}
+		}else{
+			stop("tipSet must be one of either 'nonParents' or 'all'")}
+			}
 	#identify tip taxa, this will be all taxa who are not-parents
-	notParents<-sapply(parentChild[,2],function(x) !any(x==parentChild[,1]))
+	notParents<-sapply(parentChild[,2],function(x) 
+		!any(sapply(parentChild[,1],identical,unname(x))))
 	tipNames<-parentChild[notParents,2]
 	#now convert parentChild matrix to edge matrix
 	edgeMat<-matrix(,nrow(parentChild),ncol(parentChild))
@@ -156,8 +175,10 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	if(length(taxonNames)!=length(unique(c(parentChild[,1],parentChild[,2])))){
 		stop("Number of tip and node names doesn't sum to total number of unique names in parentChild")}
 	#convert internal nodes to Ntip+nodeNames ID
-	edgeMat[,1]<-sapply(parentChild[,1],function(x) which(x==taxonNames))
-	edgeMat[,2]<-sapply(parentChild[,2],function(x) which(x==taxonNames))
+	edgeMat[,1]<-sapply(parentChild[,1],function(x)
+		which(sapply(taxonNames,identical,x)))
+	edgeMat[,2]<-sapply(parentChild[,2],function(x) 
+		which(sapply(taxonNames,identical,x)))
 	#reorder edge
 	edge<-edgeMat[order(edgeMat[,1],edgeMat[,2]),]
 	#make the tree

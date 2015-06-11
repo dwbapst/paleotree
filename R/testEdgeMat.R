@@ -17,6 +17,9 @@
 
 #' @param tree A phylogeny object of type phylo
 
+#' @param reorderTree A logical indicating whether a step of \code{reorder.phylo()} will be applied.
+#' Reordering may cause more problems than it is worth.
+
 #' @return
 #' For \code{testEdgeMat}, if all the checks in the function pass correctly, the logical TRUE is returned.
 #'
@@ -95,7 +98,7 @@ testEdgeMat<-function(tree){
 
 #' @rdname testEdgeMat
 #' @export 
-cleanNewPhylo<-function(tree){ 
+cleanNewPhylo<-function(tree,reorderTree=TRUE){ 
 		#CHECKS
 		if(class(tree)!="phylo"){stop("Must be class 'phylo'")}
 		if(any(is.na(match(c("edge","tip.label","Nnode"),names(tree))))){
@@ -105,10 +108,28 @@ cleanNewPhylo<-function(tree){
 		#check it
 		if(!testEdgeMat(tree)){stop("Edge matrix has inconsistencies")}
 		#collapse singles
-		tree1<-collapse.singles(tree)
-		if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
-		tree1<-reorder(tree1,"cladewise") 	#REORDER IT
-		if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
+			#count number of single nodes
+		Nsingle<-sum(sapply(unique(tree$edge[,1]),function(x) sum(x==tree$edge[,1])==1))
+		if(Nsingle>0){
+			treePrev<-tree
+			while(Nsingle>0){
+				tree1<-collapse.singles(treePrev)
+				if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
+				if((Nnode(treePrev)-Nnode(tree1))>Nsingle){
+					stop("collapse.singles dropped too many nodes")}
+				Nsingle<-sum(sapply(unique(tree1$edge[,1]),function(x) sum(x==tree1$edge[,1])==1))
+				treePrev<-tree1
+				#print("for counting how many times singles need to be dropped")
+				}
+		}else{
+			tree1<-tree
+			}
+		#
+		if(reorderTree){
+			#reorder
+			tree1<-reorder(tree1,"cladewise") 	#REORDER IT
+			if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
+			}
 		tree1<-read.tree(text=write.tree(tree1))
 		if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
 		tree1<-ladderize(tree1)

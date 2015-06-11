@@ -186,7 +186,8 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 		Nnode=length(nodeNames),node.label=nodeNames)
 	class(tree)<-"phylo"
 	if(cleanTree){ #make it a good tree
-		tree<-cleanNewPhylo(tree)
+		#reordering seems to cause errors?? 06-11-15
+		tree<-cleanNewPhylo(tree,reorderTree=FALSE)
 		}
 	if(Ntip(tree)!=length(tipNames)){stop("Taxa number changed while cleaning tree")}
 	#plot(tree);nodelabels(tree$node.label)

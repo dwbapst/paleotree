@@ -8,10 +8,13 @@
 \usage{
 testEdgeMat(tree)
 
-cleanNewPhylo(tree)
+cleanNewPhylo(tree, reorderTree = TRUE)
 }
 \arguments{
 \item{tree}{A phylogeny object of type phylo}
+
+\item{reorderTree}{A logical indicating whether a step of \code{reorder.phylo()} will be applied.
+Reordering may cause more problems than it is worth.}
 }
 \value{
 For \code{testEdgeMat}, if all the checks in the function pass correctly, the logical TRUE is returned.

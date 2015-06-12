@@ -93,8 +93,11 @@ expandTaxonTree<-function(taxonTree,taxaData,collapse=NULL,keepBrLen=FALSE,plot=
 			}}
 		cotaxa<-names(taxaData)[taxaData==i]	#which species do I want? These...
 		repTree<-stree(length(cotaxa))		#replacement polytomy
-		if(keepBrLen){repTree$edge.length<-rep(0,length(cotaxa))
-			}else{repTree$edge.length<-rep(1,length(cotaxa))}
+		if(keepBrLen){
+			repTree$edge.length<-rep(0,length(cotaxa))
+		}else{
+			repTree$edge.length<-rep(1,length(cotaxa))
+			}
 		repTree$tip.label<-cotaxa			#replace names,edge.lengths
 		tree<-bind.tree(tree,repTree,tip)	#replace the right tip	
 		}
@@ -102,10 +105,13 @@ expandTaxonTree<-function(taxonTree,taxaData,collapse=NULL,keepBrLen=FALSE,plot=
 	if(!keepBrLen){
 		tree1<-di2multi(tree)
 		tree1$edge.length<-NULL
-		tree1<-collapse.singles(tree1)
-		if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
-		tree1<-read.tree(text=write.tree(tree1))
-		}else{tree1<-tree}
+		#tree1<-collapse.singles(tree1)
+		#if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
+		#tree1<-read.tree(text=write.tree(tree1))
+		tree1<-cleanNewPhylo(tree1)
+	}else{
+		tree1<-tree
+		}
 	if(plot==TRUE){layout(1:2);plot(taxonTree);plot(tree1);layout(1)}
 	return(tree1)
 	}

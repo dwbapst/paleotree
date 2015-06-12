@@ -124,6 +124,7 @@ taxa2cladogram<-function(taxad,drop.cryptic=FALSE,plot=FALSE){
 		}
 	tree1<-paste(lab[[1]],";",sep="")
 	tree2<-read.tree(text=tree1)
+	tree2<-cleanNewPhylo(tree2)
 	if(drop.cryptic & any(taxad[,6]!=taxad[,1])){
 		tree2<-drop.tip(tree2,tlabs[taxad[,6]!=taxad[,1]])
 		tree2<-collapse.singles(tree2)

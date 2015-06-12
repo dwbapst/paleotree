@@ -378,9 +378,10 @@ resolveTreeCharMechanism<-function(tree, trait, orderedChar, stateBias, type, co
 			tree2<-tree1
 			tree2$edge<-rbind(tree2$edge[tree2$edge[,1]!=chosen,],edgeMat)
 			tree2$Nnode<-tree2$Nnode+length(unique(nodeChar))-1
-			tree2<-collapse.singles(reorder(tree2))
-			if(!testEdgeMat(tree2)){stop("Produced edge matrix has inconsistencies")}
-			tree3<-read.tree(text=write.tree(tree2))
+			#tree2<-collapse.singles(reorder(tree2))
+			#if(!testEdgeMat(tree2)){stop("Produced edge matrix has inconsistencies")}
+			#tree3<-read.tree(text=write.tree(tree2))
+			tree3<-cleanNewPhylo(tree2)
 			if(Ntip(tree1)!=Ntip(tree3)){
 				if(Ntip(tree1)!=Ntip(tree2)){
 					stop("Taxa loss/added somehow in fixing polytomies?")

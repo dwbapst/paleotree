@@ -102,11 +102,15 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 		obsOutRange<-sapply(1:length(obs_time),function(x) if(is.na(obs_time[x])){FALSE}else{
 			(obs_time[x]>taxad[x,3])|(obs_time[x]<taxad[x,4])
 			})
-		if(any(obsOutRange)){stop("ERROR: Given obs_time are outside of the original taxon ranges! If cryptic taxa, perhaps you forgot to set merge.cryptic=FALSE?")}
+		if(any(obsOutRange)){
+			stop(paste0("ERROR: Given obs_time are outside of the original taxon ranges!",
+				"\n If cryptic taxa, perhaps you forgot to set merge.cryptic=FALSE?")}
 		}
-	if(nrow(taxad1)!=length(obs)){stop("Number of observations are not equal to number of lineages!")}
+	if(nrow(taxad1)!=length(obs)){
+		stop("Number of observations are not equal to number of lineages!")}
 	#make observations as fake taxa, assuming that observations are WITHIN actual taxon ranges
-	fake_taxa<-matrix(sapply((1:nrow(taxad1))[!is.na(obs)],function(x) c(nrow(taxad1)+x,taxad1[x,1],obs[x],obs[x])),,4,byrow=TRUE)
+	fake_taxa<-matrix(sapply((1:nrow(taxad1))[!is.na(obs)],function(x)
+		 c(nrow(taxad1)+x,taxad1[x,1],obs[x],obs[x])),,4,byrow=TRUE)
 	fake_taxa[,1]<-(1:nrow(fake_taxa))+nrow(taxad1)
 	taxad2<-rbind(taxad1,fake_taxa)
 	ntaxa<-nrow(taxad2)
@@ -115,21 +119,43 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	desc<-lapply(taxad2[,1],function(x) taxad2[c(FALSE,taxad2[-1,2]==x),1])						#desc of each taxon
 	births2<-lapply(desc,function(x) if(length(x)>0){sapply(x,function(y) taxad2[y==taxad2[,1],3])})	#time of desc births
 	desc<-lapply(1:length(desc),function(x)	#MORE STUPIDLY COMPLICATED CODE
-		if(length(desc[[x]])>0){desc[[x]][match(1:length(births2[[x]]),rank(births2[[x]],ties.method="random"))]}else{numeric()})
-	births<-lapply(desc,function(x) if(length(x)>0){sapply(x,function(y) taxad2[y==taxad2[,1],3])})	#time of desc births
-	#make events list: first event is taxon birth, with that taxon as desc, next is desc births, extinction not recorded but implied
-	events<-lapply(1:ntaxa,function(x) if(length(desc[[x]])>0){c(taxad2[x,1],desc[[x]])}else{c(taxad2[x,1])})
+		if(length(desc[[x]])>0){
+			desc[[x]][match(1:length(births2[[x]]),rank(births2[[x]],ties.method="random"))]
+		}else{
+			numeric()
+			})
+	#time of desc births
+	births<-lapply(desc,function(x)
+		 if(length(x)>0){sapply(x,function(y) taxad2[y==taxad2[,1],3])})	
+	#make events list: first event is taxon birth, with that taxon as desc,
+		# next is desc births, extinction not recorded but implied
+	events<-lapply(1:ntaxa,function(x)
+		if(length(desc[[x]])>0){
+			c(taxad2[x,1],desc[[x]])
+		}else{
+			c(taxad2[x,1])
+			})
 	#times of events: taxon birth, desc births, extinction
-	times<-lapply(1:ntaxa,function(x) if(length(births[[x]])>0){c(taxad2[x,3],births[[x]],taxad2[x,4])}else{c(taxad2[x,3],taxad2[x,4])})
-	#labels for each lineage segment between event times (these may as well represent the daughter node ID too)
+	times<-lapply(1:ntaxa,function(x)
+		if(length(births[[x]])>0){
+			c(taxad2[x,3],births[[x]],taxad2[x,4])
+		}else{
+			c(taxad2[x,3],taxad2[x,4])
+		})
+	#labels for each lineage segment between event times
+		# (these may as well represent the daughter node ID too)
 		#use decimals to keep track of segments, set first segment as X.0
-		#as long as a single taxon doesn't have millions of descendants, in which case the IDs may stop being unique...
+		#as long as a single taxon doesn't have millions of descendants,
+			# in which case the IDs may stop being unique...
 	nseg<-sapply(times,length)-1
 	seg_labs<-lapply(1:ntaxa,function(x) taxad2[x,1]+(1:nseg[x]/(nseg[x]+1)))
 	seg_labs<-lapply(seg_labs,function(x) c(floor(x[1]),x[-1]))
 	#now, find the mother segment for each taxon
-	taxa_anc<-c(0,sapply(2:ntaxa,function(x) unlist(seg_labs[taxad2[x,2]==taxad2[,1]])[which(unlist(events[taxad2[x,2]==taxad2[,1]])==taxad2[x,1])-1]))
-	moms2<-lapply(seg_labs,function(x) x[-length(x)])	#now make list of all seg ids for all mom segs
+	taxa_anc<-c(0,sapply(2:ntaxa,function(x)
+		unlist(seg_labs[taxad2[x,2]==taxad2[,1]])[
+			which(unlist(events[taxad2[x,2]==taxad2[,1]])==taxad2[x,1])-1]))
+	#now make list of all seg ids for all mom segs
+	moms2<-lapply(seg_labs,function(x) x[-length(x)])	
 	moms<-lapply(1:ntaxa,function(x) c(taxa_anc[x],unlist(moms2[[x]])))
 	lengths<-lapply(times,diff)	#get lengths of segments 
 	term<-sapply(unlist(seg_labs),function(x) !any(unlist(moms)==x))	#which are terminal?
@@ -148,19 +174,22 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	#collapse single internal nodes
 	ndesc<-sapply(edgeD[,1],function(x) sum(x==edgeD[,2]))	#ndesc from each node
 	while(any(ndesc==1)){		#picks only internal branches with 1 desc
-		epick<-edgeD[ndesc==1,];if(is.data.frame(epick)){epick<-epick[1,]}	#pick a single, if matrix, use first one
+		#pick a single, if matrix, use first one
+		epick<-edgeD[ndesc==1,];if(is.data.frame(epick)){epick<-epick[1,]}	
 		edesc<-edgeD[edgeD$anc==epick$id,]
 		#remove desc
 		edgeD<-edgeD[-which(edgeD$id==edesc$id),]
 		#replace picked edge w/new edge
-		newe<-data.frame(id=edesc$id,anc=epick$anc,brlen=(epick$brlen+edesc$brlen),term=edesc$term)
+		newe<-data.frame(id=edesc$id, anc=epick$anc,
+			brlen=(epick$brlen+edesc$brlen), term=edesc$term)
 		edgeD[edgeD$id==epick$id,]<-newe
 		ndesc<-sapply(edgeD$id,function(x) sum(x==edgeD$anc))
 		}
 	ndesc<-sapply(edgeD$id,function(x) sum(x==edgeD$anc))
 	#replace stupid decimal edge placeholders with clean numbers
 	e_fix<-numeric()
-	e_fix[edgeD$term]<-sapply(edgeD[edgeD$term,1],function(x) which(fake_taxa[,1]==x)) 	#the species in the original data
+	#the species in the original data
+	e_fix[edgeD$term]<-sapply(edgeD[edgeD$term,1],function(x) which(fake_taxa[,1]==x)) 	
 	e_fix[!edgeD$term]<-sum(edgeD$term)+1+(1:sum(!edgeD$term))
 	ea_fix<-sapply(edgeD$anc,function(x) ifelse(x!=MRCA,e_fix[edgeD$id==x],sum(edgeD$term)+1))
 	#NOW MAKE A TREE
@@ -168,11 +197,13 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	edgf<-cbind(ea_fix,e_fix);colnames(edgf)<-NULL
 	tree1<-list(edge=edgf,tip.label=tlabs,edge.length=edgeD[,3],Nnode=length(unique(edgf[,1])))
 	class(tree1)<-"phylo"						#ITS A TREE!
-	tree<-reorder(collapse.singles(tree1),"cladewise") 	#REORDER IT
-	if(!testEdgeMat(tree)){stop("Edge matrix has inconsistencies")}
-	tree<-read.tree(text=write.tree(tree))
+	#tree<-reorder(collapse.singles(tree1),"cladewise") 	#REORDER IT
+	#if(!testEdgeMat(tree)){stop("Edge matrix has inconsistencies")}
+	#tree<-read.tree(text=write.tree(tree))
+	tree<-cleanNewPhylo(tree)
 	if(plot){plot(ladderize(tree),show.tip.label=FALSE);axisPhylo()}
-	#now, root.time should be the time of the first obs PLUS the distance from the earliest tip to the root
+	#now, root.time should be the time of the first obs PLUS the distance
+		# from the earliest tip to the root
 	first_obs_time<-max(taxad[,3:4])-min(obs,na.rm=TRUE)
 	tree$root.time<-first_obs_time+min(dist.nodes(tree)[1:Ntip(tree),Ntip(tree)+1])
 	return(tree)

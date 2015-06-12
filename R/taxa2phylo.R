@@ -82,6 +82,7 @@
 #' 
 #' @export taxa2phylo
 taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
+		#obs_time=NULL; plot=TRUE
 	#INPUT a taxad object and a vector of observation times for each species
 		#if obs=NULL, LADs in taxad1 are used as observation times
 		#all times must be in backwards format (zero is present)
@@ -92,19 +93,40 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	#OUTPUT an ape phylo object with the tips at the times of observation
 	#require(ape)
 	taxad1<-taxad[,1:4]
-	if(any((taxad1[,4]-taxad1[,3])<0)){taxad1[,3:4]<-max(taxad1[,3:4])-taxad1[,3:4]}
-	if(any((taxad1[,4]-taxad1[,3])<0)){stop("Time Error! Check data in taxad")}
-	if(is.null(obs_time)){obs<-taxad1[,4]}else{
+	#check that root ancestor is in first row, if not, move it there
+	if(!is.na(taxad1[1,2])){
+		#find the damn room
+		isRoot<-which(is.na(taxad1[,2]))
+		if(length(isRoot)!=1){
+			if(length(isRoot)>1){
+				stop("Multiple taxa listed as an apparent root (ancestor is NA)")}
+			if(length(isRoot)<1){
+				stop("No taxa are listed as an apparent root (i.e. ancestor is NA)")}
+		}else{
+			taxad1<-rbind(taxad1[isRoot,],taxad1[-isRoot,])
+			message("Root ancestor (ancestor listed as NA) is not in row 1, ")
+			}		
+		}
+	if(any((taxad1[,4]-taxad1[,3])<0)){
+		taxad1[,3:4]<-max(taxad1[,3:4])-taxad1[,3:4]}
+	if(any((taxad1[,4]-taxad1[,3])<0)){
+		stop("Last occurrences appear to occur before first occurrences?")}
+	if(is.null(obs_time)){
+		obs<-taxad1[,4]
+	}else{
 		obs<-max(taxad[,3:4])-obs_time
 		#check if the times of observations are outside of original taxon ranges
 		#nameMatch<-match(names(time.obs),rownames(taxR))
 		#if(any(is.na(nameMatch))){stop("ERROR: names on time.obs and in candleRes don't match")}
-		obsOutRange<-sapply(1:length(obs_time),function(x) if(is.na(obs_time[x])){FALSE}else{
-			(obs_time[x]>taxad[x,3])|(obs_time[x]<taxad[x,4])
+		obsOutRange<-sapply(1:length(obs_time),function(x)
+			if(is.na(obs_time[x])){
+				FALSE
+			}else{
+				(obs_time[x]>taxad[x,3])|(obs_time[x]<taxad[x,4])
 			})
 		if(any(obsOutRange)){
 			stop(paste0("ERROR: Given obs_time are outside of the original taxon ranges!",
-				"\n If cryptic taxa, perhaps you forgot to set merge.cryptic=FALSE?")}
+				"\n If cryptic taxa, perhaps you forgot to set merge.cryptic=FALSE?"))}
 		}
 	if(nrow(taxad1)!=length(obs)){
 		stop("Number of observations are not equal to number of lineages!")}
@@ -116,8 +138,13 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	ntaxa<-nrow(taxad2)
 	#MAKE IT INTO AN NODE/EDGE-BASED PHYLOGENY
 	#find descendents of every taxon
-	desc<-lapply(taxad2[,1],function(x) taxad2[c(FALSE,taxad2[-1,2]==x),1])						#desc of each taxon
-	births2<-lapply(desc,function(x) if(length(x)>0){sapply(x,function(y) taxad2[y==taxad2[,1],3])})	#time of desc births
+	desc<-lapply(taxad2[,1],function(x)
+		taxad2[c(FALSE,taxad2[-1,2]==x),1])	
+	#get time of desc births
+	births2<-lapply(desc,function(x)
+		 if(length(x)>0){
+			sapply(x,function(y) taxad2[y==taxad2[,1],3])
+		})
 	desc<-lapply(1:length(desc),function(x)	#MORE STUPIDLY COMPLICATED CODE
 		if(length(desc[[x]])>0){
 			desc[[x]][match(1:length(births2[[x]]),rank(births2[[x]],ties.method="random"))]

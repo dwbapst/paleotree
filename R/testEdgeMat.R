@@ -79,6 +79,10 @@ testEdgeMat<-function(tree){
 		})
 	if(length(unique(ultimateAnc))!=1){
 		stop("Tip and internal node IDs in $edge trace back to more than one unique common ancestor")}
+	#check that root node and Nnode defined correctly
+	rootID<-getRootID(tree)
+	if(rootID!=(Ntip(tree)+1)){
+		stop(paste0("The root node is numbered ",rootID," in $edge, should be Ntip(tree)+1 (",Ntip(tree)+1,")"))}
 	if(Nnode(tree)!=(max(tree$edge[,1])-Ntip(tree))){
 		stop("Nnode is lower than number implied by edge[,1]?")}
 	if(Ntip(tree)>2){
@@ -95,6 +99,17 @@ testEdgeMat<-function(tree){
 	#if(identical(sort(unique(tree$edge[,2])),c(1L,2L))){stop("Number of nodes is incorrect based on edge[,2]?")}
 	return(TRUE)
 	}
+	
+#hidden function
+	getRootID<-function(tree){
+		uniqueNode<-unique(tree$edge[,1])
+		whichRoot<-sapply(uniqueNode,function(x)
+			(sum(x==tree$edge[,2])==0))
+		if(sum(whichRoot)>1){
+			stop("More than one apparent root in $edge matrix")}
+		rootID<-uniqueNode[whichRoot]
+		return(rootID)
+		}
 
 #' @rdname testEdgeMat
 #' @export 

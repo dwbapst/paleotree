@@ -23,6 +23,10 @@
 #' will add a tip to every internal node with the parent-taxon name encapsulated in
 #' parentheses.
 
+#' @param reorderTree A logical indicating whether a step of \code{reorder.phylo()} will be applied,
+#' if \code{cleanTree=TRUE}; has no effect if \code{cleanTree=FALSE}.
+#' Reordering may cause more problems than it is worth in older versions of \code{ape}.
+
 #' @inheritParams makePBDBtaxonTree
 
 #' @return
@@ -87,7 +91,7 @@
 #' @name parentChild2taxonTree
 #' @rdname parentChild2taxonTree
 #' @export
-parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
+parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE,reorderTree=TRUE){
 	#
 	#small hidden function
 	getUltimateAnc<-function(taxa,parentChild){
@@ -187,7 +191,7 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	class(tree)<-"phylo"
 	if(cleanTree){ #make it a good tree
 		#reordering seems to cause errors?? 06-11-15
-		tree<-cleanNewPhylo(tree,reorderTree=FALSE)
+		tree<-cleanNewPhylo(tree,reorderTree=reorderTree)
 		}
 	if(Ntip(tree)!=length(tipNames)){stop("Taxa number changed while cleaning tree")}
 	#plot(tree);nodelabels(tree$node.label)

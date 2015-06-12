@@ -127,7 +127,7 @@ cleanNewPhylo<-function(tree,reorderTree=TRUE){
 		#
 		if(reorderTree){
 			#reorder
-			tree1<-reorder(tree1,"cladewise") 	#REORDER IT
+			tree1<-reorder.phylo(tree1,"cladewise") 	#REORDER IT
 			if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
 			}
 		tree1<-read.tree(text=write.tree(tree1))

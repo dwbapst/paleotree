@@ -4,7 +4,7 @@ Version - 2.5 -
 -Added function equation2function which converts a character string containing the right-hand side of a single-line equation (like from class formula) to an R function with arguments corresponding the parameters in the input equation.
 -Added handling for ambiguous and polymorphic characters to minCharChange, AncPropStateMat and resolveTreeChar by adding support for these options as they already existed in phangorn
 -Altered function parentChild2TaxonTree to handle datasets where root-ancestor was indicated with an NA value
--
+-Additional checking in testEdgeMat to catch when the root node is misnumbered, or if collapse.singles fails to collapse all nodes
 
 Version - 2.4 - 05-01-15
 -Modified timePaleoPhy help file to clarify 'these are not realistic time-scaling functions' statement and correcting an 'either' to 'neither' in the description of argument 'ntrees'

@@ -17,8 +17,8 @@
 
 #' @param tree A phylogeny object of type phylo
 
-#' @param reorderTree A logical indicating whether a step of \code{reorder.phylo()} will be applied.
-#' Reordering may cause more problems than it is worth.
+# @param reorderTree A logical indicating whether a step of \code{reorder.phylo()} will be applied.
+# Reordering may cause more problems than it is worth.
 
 #' @return
 #' For \code{testEdgeMat}, if all the checks in the function pass correctly, the logical TRUE is returned.
@@ -113,7 +113,7 @@ testEdgeMat<-function(tree){
 
 #' @rdname testEdgeMat
 #' @export 
-cleanNewPhylo<-function(tree,reorderTree=TRUE){ 
+cleanNewPhylo<-function(tree){ #,reorderTree=TRUE
 		#CHECKS
 		if(class(tree)!="phylo"){stop("Must be class 'phylo'")}
 		if(any(is.na(match(c("edge","tip.label","Nnode"),names(tree))))){
@@ -140,11 +140,9 @@ cleanNewPhylo<-function(tree,reorderTree=TRUE){
 			tree1<-tree
 			}
 		#
-		if(reorderTree){
-			#reorder
-			tree1<-reorder.phylo(tree1,"cladewise") 	#REORDER IT
-			if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
-			}
+		#reorder	#if(reorderTree){
+		tree1<-reorder.phylo(tree1,"cladewise") 	#REORDER IT
+		if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
 		tree1<-read.tree(text=write.tree(tree1))
 		if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
 		tree1<-ladderize(tree1)

@@ -4,7 +4,8 @@ Version - 2.5 -
 -Added function equation2function which converts a character string containing the right-hand side of a single-line equation (like from class formula) to an R function with arguments corresponding the parameters in the input equation.
 -Added handling for ambiguous and polymorphic characters to minCharChange, AncPropStateMat and resolveTreeChar by adding support for these options as they already existed in phangorn
 -Altered function parentChild2TaxonTree to handle datasets where root-ancestor was indicated with an NA value
--Additional checking in testEdgeMat to catch when the root node is misnumbered, or if collapse.singles fails to collapse all nodes
+-Additional checking in testEdgeMat to catch when the root node is misnumbered,  also additional checking taken with modification from Emmanuel Paradis's checkValidPhylo
+-Additional routines in cleanNewPhylo to convert $edge and $Nnode to integer storage, and in case collapse.singles fails to collapse all nodes
 -Modified taxa2phylo, expandTaxonTree, resolveTreeChar, taxa2cladogram to use cleanNewPhylo
 -
 

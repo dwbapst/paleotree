@@ -103,7 +103,7 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 			if(length(isRoot)<1){
 				stop("No taxa are listed as an apparent root (i.e. ancestor is NA)")}
 		}else{
-			taxad1<-rbind(taxad1[isRoot,],taxad1[-isRoot,])
+			taxad1<-rbind(taxad1[isRoot,,drop=FALSE],taxad1[-isRoot,])
 			message("Root ancestor (ancestor listed as NA) is not in row 1, ")
 			}		
 		}
@@ -202,7 +202,8 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	ndesc<-sapply(edgeD[,1],function(x) sum(x==edgeD[,2]))	#ndesc from each node
 	while(any(ndesc==1)){		#picks only internal branches with 1 desc
 		#pick a single, if matrix, use first one
-		epick<-edgeD[ndesc==1,];if(is.data.frame(epick)){epick<-epick[1,]}	
+		epick<-edgeD[ndesc==1,]
+		if(is.data.frame(epick)){epick<-epick[1,]}	
 		edesc<-edgeD[edgeD$anc==epick$id,]
 		#remove desc
 		edgeD<-edgeD[-which(edgeD$id==edesc$id),]
@@ -221,13 +222,17 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	ea_fix<-sapply(edgeD$anc,function(x) ifelse(x!=MRCA,e_fix[edgeD$id==x],sum(edgeD$term)+1))
 	#NOW MAKE A TREE
 	tlabs<-rownames(taxad1)[!is.na(obs)]
-	edgf<-cbind(ea_fix,e_fix);colnames(edgf)<-NULL
+	edgf<-cbind(ea_fix,e_fix)
+	colnames(edgf)<-NULL
+	#check one more time before you make it a tree
+	if(any(is.na(edgf))){stop("NAs introduced into edge matrix?")}
+	#Now really make it a tree
 	tree1<-list(edge=edgf,tip.label=tlabs,edge.length=edgeD[,3],Nnode=length(unique(edgf[,1])))
 	class(tree1)<-"phylo"						#ITS A TREE!
 	#tree<-reorder(collapse.singles(tree1),"cladewise") 	#REORDER IT
 	#if(!testEdgeMat(tree)){stop("Edge matrix has inconsistencies")}
 	#tree<-read.tree(text=write.tree(tree))
-	tree<-cleanNewPhylo(tree)
+	tree<-cleanNewPhylo(tree1)
 	if(plot){plot(ladderize(tree),show.tip.label=FALSE);axisPhylo()}
 	#now, root.time should be the time of the first obs PLUS the distance
 		# from the earliest tip to the root

@@ -66,7 +66,7 @@ testEdgeMat<-function(tree){
 		stop("Missing key required elements of a 'phylo' object")}
 	#MASSIVE SET OF TESTS FROM PARADIS'S checkValidPhylo, added 06-15-15
 	#check that there are no NAs in $edge
-	if(any(is.na(tree$edge)){stop("NA values in $edge table")}
+	if(any(is.na(tree$edge))){stop("NA values in $edge table")}
 	#check that there is a $tip.label and its a vector of type character with length>0
 	if(!is.vector(tree$tip.label)){stop("$tip.label must be a vector")}
 	if(!is.character(tree$tip.label)){stop("$tip.label must be of type character")}
@@ -157,9 +157,6 @@ testEdgeMat<-function(tree){
 	#if(identical(sort(unique(tree$edge[,2])),c(1L,2L))){stop("Number of nodes is incorrect based on edge[,2]?")}
 	return(TRUE)
 	}
-	
-
-							
 
 	
 #hidden function

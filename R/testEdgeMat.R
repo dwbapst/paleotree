@@ -66,29 +66,45 @@ testEdgeMat<-function(tree){
 		stop("Missing key required elements of a 'phylo' object")}
 	#MASSIVE SET OF TESTS FROM PARADIS'S checkValidPhylo, added 06-15-15
 	#check that there are no NAs in $edge
-	if(any(is.na(tree$edge))){stop("NA values in $edge table")}
+	if(any(is.na(tree$edge))){
+		stop("NA values in $edge table")}
 	#check that there is a $tip.label and its a vector of type character with length>0
-	if(!is.vector(tree$tip.label)){stop("$tip.label must be a vector")}
-	if(!is.character(tree$tip.label)){stop("$tip.label must be of type character")}
-	if(length(tree$tip.label)<1){stop("$tip.label must be of length greater than 0")}
+	if(!is.vector(tree$tip.label)){
+		stop("$tip.label must be a vector")}
+	if(!is.character(tree$tip.label)){
+		stop("$tip.label must be of type character")}
+	if(length(tree$tip.label)<1){
+		stop("$tip.label must be of length greater than 0")}
 	#check than Nnode exists, is a vector of length 1, of type number, stored as an integer
-	if(!is.vector(tree$Nnode)){stop("$Nnode must be a vector")}
-	if(!is.numeric(tree$Nnode)){stop("$Nnode must be of type numeric")}
-	if(!length(tree$Nnode)!=1){stop("$Nnode must be of length 1")}
-	if(tree$Nnode<1){stop("$Nnode must be at least 1")}
+	if(!is.vector(tree$Nnode)){
+		stop("$Nnode must be a vector")}
+	if(!is.numeric(tree$Nnode)){
+		stop("$Nnode must be of type numeric")}
+	if(length(tree$Nnode)!=1){
+		stop("$Nnode must be of length 1")}
+	if(tree$Nnode<1){
+		stop("$Nnode must be at least 1")}
 	#test edge matrix has two columns, is numeric
-	if(!is.matrix(tree$edge)){stop("$edge must be of type matrix"}
-	if(ncol(tree$edge)!=2){stop("$edge must have two columns")}
-	if(!is.numeric(tree$edge)){stop("$edge must be of type numeric")}
-	if(any(is.na(tree$edge))){stop("NAs found in $edge matrix")}
+	if(!is.matrix(tree$edge)){
+		stop("$edge must be of type matrix")}
+	if(ncol(tree$edge)!=2){
+		stop("$edge must have two columns")}
+	if(!is.numeric(tree$edge)){
+		stop("$edge must be of type numeric")}
+	if(any(is.na(tree$edge))){
+		stop("NAs found in $edge matrix")}
 	#test that edge and Nnode is stored as integers
-	if(storage.mode(tree$Nnode)!="integer"){stop("$Nnode is not stored as an integer")}
-	if(storage.mode(tree$edge)!="integer"){stop("$Nnode is not stored as an integer")}
+	if(storage.mode(tree$Nnode)!="integer"){
+		stop("$Nnode is not stored as an integer")}
+	if(storage.mode(tree$edge)!="integer"){
+		stop("$Nnode is not stored as an integer")}
 	#check values in $edge for bad values
-	if(any(is.na(tree$edge))){stop("NAs found in $edge matrix")}	
-	if(any(tree$edge<1)){stop("All elements of $edge must be integers of 1 or greater")}
+	if(any(is.na(tree$edge))){
+		stop("NAs found in $edge matrix")}	
+	if(any(tree$edge<1)){
+		stop("All elements of $edge must be integers of 1 or greater")}
 	#expected number of tips and nodes is Nnode+length($tip.label)
-	expNodeNumber<-Nnode+length(tree$tip.label)
+	expNodeNumber<-tree$Nnode+length(tree$tip.label)
 	if(any(tree$edge>expNodeNumber)){
 		stop(paste0("Some elements of edge are numbered greater than ",
 			expNodeNumber,"\n calculated from Nnode+length(tree$tip.label)","\n Check these:",
@@ -99,20 +115,23 @@ testEdgeMat<-function(tree){
 	if(length(tabEdge)<expNodeNumber){
 		stop("Fewer node IDs found in $edge than expected from Nnode+length(tree$tip.label)")}
 	#do all tips only appear once?
-	if(any(tabEdge[1:length(tree$tip.label])]>1)){
+	if(any(tabEdge[1:length(tree$tip.label)]>1)){
 		stop("Some tip IDs appear more than once in $edge")}
-	if(any(tabEdge[1:length(tree$tip.label])]<1)){
+	if(any(tabEdge[1:length(tree$tip.label)]<1)){
 		stop("Some tip IDs appear less than once in $edge")}
 	#
 	#All internal nodes should appear at least once (even if singleton nodes)
-	if(any(tabEdge[length(tree$tip.label] + 1:tree$Nnode)]<2)){
-		stop("Some internal node IDs appear less than twice in $edge")}
+	if(any(tabEdge[length(tree$tip.label) + 2:tree$Nnode]<2)){
+		stop("Some internal node IDs appear less than twice in $edge: ")}
+	if(any(tabEdge[length(tree$tip.label) + 2:tree$Nnode]<2)){
+		stop(paste0("Some internal node IDs appear less than twice in $edge: ",
+			which(tabEdge[length(tree$tip.label) + 1:tree$Nnode]<2),
+			collapse=" "))}
 	#check that tips do not appear in tree$edge[,1]
-	if(any(tree$edge[,1]<(length(tree$tip.label] + 1))){
+	if(any(tree$edge[,1]<(length(tree$tip.label) + 1))){
 		stop(paste0("Apparent tip IDs appear in column 1 of $edge: \n",
-		tree$edge[tree$edge[,1]<(length(tree$tip.label] + 1)),1],collapse=" "))}
+		tree$edge[tree$edge[,1]<(length(tree$tip.label) + 1),1],collapse=" "))}
 	if(any(table(tree$edge[,2])>1)){
-		stop("Node or tip IDs appear more than once in ")}
 		stop(paste0("Node or tip IDs appear more than once in column 2 of $edge, \n",
 			,"i.e. listed as child twice:",
 			which(table(tree$edge[,2])>1),collapse=" "))}
@@ -180,10 +199,12 @@ cleanNewPhylo<-function(tree){ #,reorderTree=TRUE
 		oldNtip<-length(tree$tip.label)
 		#make it a good tree
 		#coerce edge and Nnode to storage mode for integers
-		tree$edge<-as.integer(tree$edge)
-		tree$Nnode<-as.integer(tree$Nnode)
-
-
+		if(storage.mode(tree$edge)!="integer"){
+			storage.mode(tree$edge)<-"integer"
+			}
+		if(storage.mode(tree$Nnode)!="integer"){
+			storage.mode(tree$Nnode)<-"integer"
+			}
 		#check it
 		if(!testEdgeMat(tree)){stop("Edge matrix has inconsistencies")}
 		#collapse singles

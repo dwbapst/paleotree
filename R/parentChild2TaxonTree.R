@@ -195,15 +195,16 @@ charEdge2numeric<-function(parentChild){
 	if(!is.character(parentChild)){
 		stop("parentChild has to be character for charEdge2numeric")}
 	#get unique IDs
-	unqIDs<-unique(c(parentChild[,1],parentChild[,2]))
+	unqIDs<-c(NA,sort(unique(c(parentChild[,1],parentChild[,2]))))
+	parentChild2<-matrix(,nrow(parentChild),2)
 	#convert internal nodes to Ntip+nodeNames ID
-	parentChild[,1]<-sapply(parentChild[,1],function(x)
-		which(sapply(unqIDs,identical,x)))
-	parentChild[,2]<-sapply(parentChild[,2],function(x) 
-		which(sapply(unqIDs,identical,x)))	
-	if(!is.numeric(parentChild)){
+	parentChild2[,1]<-sapply(parentChild[,1],function(x)
+		which(sapply(unqIDs,identical,x))-1)
+	parentChild2[,2]<-sapply(parentChild[,2],function(x) 
+		which(sapply(unqIDs,identical,x))-1)	
+	if(!is.numeric(parentChild2)){
 		stop("parentChild not coercing correctly to numeric for charEdge2numeric")}
-	return(parentChild)
+	return(parentChild2)
 	}
 
 testParentChild<-function(parentChild){
@@ -212,16 +213,17 @@ testParentChild<-function(parentChild){
 		stop("edge/parentChild matrix must be of type matrix")}
 	if(ncol(parentChild)!=2){
 		stop("edge/parentChild matrix must have two columns")}
+	#convert to numeric
 	if(!is.numeric(parentChild)){
 		if(is.character(parentChild)){
 			parentChild<-charEdge2numeric(parentChild)
 		}else{
-			stop("edge/parentChild matrix must be of type numeric or type character")
+			stop("input must be of type numeric or type character")
 			}			
 		}
+	#
 	#replace NA values
 	parentChild[is.na(parentChild)]<-min(parentChild,na.rm=TRUE)-1
-	#
 	#test monophyly of parentChild
 		#test that all but one node has an ancestor
 	parentMatch<-match(unique(parentChild[,1]),parentChild[,2])

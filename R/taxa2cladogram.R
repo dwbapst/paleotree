@@ -100,6 +100,7 @@ taxa2cladogram<-function(taxad,drop.cryptic=FALSE,plot=FALSE){
 			taxad[taxad[,2]==taxad[i,1],2]<-taxad[i,6]
 			}
 		}
+	if(!testParentChild(parentChild=taxad[,2:1])){stop("taxad anc-desc relationships are inconsistent")}
 	tlabs<-rownames(taxad)
 	desc<-lapply(taxad[,1],function(x) (taxad[taxad[,2]==x,1])[!is.na(taxad[taxad[,2]==x,1])])
 	ndesc<-sapply(desc,length)

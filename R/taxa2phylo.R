@@ -103,14 +103,26 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 			if(length(isRoot)<1){
 				stop("No taxa are listed as an apparent root (i.e. ancestor is NA)")}
 		}else{
-			taxad1<-rbind(taxad1[isRoot,,drop=FALSE],taxad1[-isRoot,])
-			message("Root ancestor (ancestor listed as NA) is not in row 1, ")
+			stop("Root taxon (ancestor listed as NA) must be in row 1")
+			#newRoot<-taxad1[isRoot,,drop=FALSE]
+			#newRoot[,1]<-1
+			#taxad1Drop<-taxad1[-isRoot,]
+			#taxad1Drop[taxad1Drop[,1]==1,]<-isRoot
+			#taxad1<-rbind(newRoot,taxad1Drop)
+			#taxad1<-taxad1[order(taxad1[,1]),]
+			#message(paste0("Root ancestor (ancestor listed as NA) is not in row 1,",
+			#	" \n coercing root ancestor to first row"))
 			}		
 		}
+	if(!testParentChild(parentChild=taxad1[,2:1])){
+		stop("input anc-desc relationships are inconsistent")}
 	if(any((taxad1[,4]-taxad1[,3])<0)){
 		taxad1[,3:4]<-max(taxad1[,3:4])-taxad1[,3:4]}
 	if(any((taxad1[,4]-taxad1[,3])<0)){
 		stop("Last occurrences appear to occur before first occurrences?")}
+	if(any(table(taxad1[,1])>1)){
+		stop(paste("Duplicated values of taxon ID's in input:",
+			which(tabulate(taxad1[,1])>1),collapse=" "))}
 	if(is.null(obs_time)){
 		obs<-taxad1[,4]
 	}else{
@@ -189,9 +201,10 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	#make edge data.frame, with id, anc-id, length and logical indicating terminal branches
 	edgeD<-data.frame(id=unlist(seg_labs),anc=unlist(moms),brlen=unlist(lengths),term=term)
 	MRCA<-min(edgeD[sapply(edgeD$id,function(x) 1<sum(x==edgeD$anc)),1])
+	#edgeD[edgeD[,2]==MRCA,]
 	edgeD<-edgeD[-which(edgeD[,1]<=MRCA),]	#want to drop any extraneous root as well
 	#add/leave only the terminals needed for the observations, remove others
-	droppers<-which(edgeD[,4] & edgeD[,1]<(nrow(taxad1)+1))
+	droppers<-which(as.logical(edgeD[,4]) & edgeD[,1]<(nrow(taxad1)+1))
 	while(length(droppers)>0){
 		edgeD<-edgeD[-droppers,]
 		edgeD[,4]<-sapply(edgeD[,1],function(x) !any(edgeD[,2]==x))
@@ -226,6 +239,8 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	colnames(edgf)<-NULL
 	#check one more time before you make it a tree
 	if(any(is.na(edgf))){stop("NAs introduced into edge matrix?")}
+	if(!testParentChild(parentChild=edgf)){
+		stop("produced edge matrix is inconsistent")}
 	#Now really make it a tree
 	tree1<-list(edge=edgf,tip.label=tlabs,edge.length=edgeD[,3],Nnode=length(unique(edgf[,1])))
 	class(tree1)<-"phylo"						#ITS A TREE!

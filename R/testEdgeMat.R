@@ -103,12 +103,19 @@ testEdgeMat<-function(tree){
 		stop("NAs found in $edge matrix")}	
 	if(any(tree$edge<1)){
 		stop("All elements of $edge must be integers of 1 or greater")}
+	#check that root node and Nnode defined correctly
+	rootID<-getRootID(tree)
+	if(rootID!=(Ntip(tree)+1)){
+		stop(paste0("The root node is numbered ",rootID," in $edge, should be Ntip(tree)+1 (",Ntip(tree)+1,")"))}
 	#expected number of tips and nodes is Nnode+length($tip.label)
 	expNodeNumber<-tree$Nnode+length(tree$tip.label)
 	if(any(tree$edge>expNodeNumber)){
 		stop(paste0("Some elements of edge are numbered greater than ",
 			expNodeNumber,"\n calculated from Nnode+length(tree$tip.label)","\n Check these:",
 			tree$edge[tree$edge>expNodeNumber],collapse=" "))}
+	#test if Nnode agrees with number of nodes in $edge
+	if(Nnode(tree)!=(max(tree$edge[,1])-Ntip(tree))){
+		stop("Nnode is lower than number implied by edge[,1]?")}
 	#now switch to tabulate based checking of node IDs in $edge (stolen from Paradis)
 	tabEdge<-tabulate(tree$edge)
 	#are all expected node IDs found in tabEdge?
@@ -131,37 +138,9 @@ testEdgeMat<-function(tree){
 	if(any(tree$edge[,1]<(length(tree$tip.label) + 1))){
 		stop(paste0("Apparent tip IDs appear in column 1 of $edge: \n",
 		tree$edge[tree$edge[,1]<(length(tree$tip.label) + 1),1],collapse=" "))}
-	if(any(table(tree$edge[,2])>1)){
-		stop(paste0("Node or tip IDs appear more than once in column 2 of $edge, \n",
-			,"i.e. listed as child twice:",
-			which(table(tree$edge[,2])>1),collapse=" "))}
-	#
-	#now test edge matrix 
-	if(length(tree$edge[,2])!=length(unique(tree$edge[,2]))){
-		stop(paste("Some nodes are listed as a descendant twice in the edge matrix",
-		paste0(tree$edge[duplicated(tree$edge[,2]),2],collapse=", ")))}
-	#test that all but one node has an ancestor
-	parentMatch<-match(unique(tree$edge[,1]),tree$edge[,2])
-	if(sum(is.na(parentMatch))>1){
-		stop(paste("More than one apparent root; \n",
-			"more than one internal node without an ancestor listed"))}
-	#trace all tips to a single ancestor
-	ultimateAnc<-sapply(unique(c(tree$edge[,1],tree$edge[,2])),function(taxa){
-		while(any(tree$edge[,2]==taxa)){
-			taxa<-tree$edge[tree$edge[,2]==taxa,1]
-			if(length(taxa)>1){
-				stop("Some nodes are listed as a descendant twice in the edge matrix")}
-			}
-		return(taxa)
-		})
-	if(length(unique(ultimateAnc))!=1){
-		stop("Tip and internal node IDs in $edge trace back to more than one unique common ancestor")}
-	#check that root node and Nnode defined correctly
-	rootID<-getRootID(tree)
-	if(rootID!=(Ntip(tree)+1)){
-		stop(paste0("The root node is numbered ",rootID," in $edge, should be Ntip(tree)+1 (",Ntip(tree)+1,")"))}
-	if(Nnode(tree)!=(max(tree$edge[,1])-Ntip(tree))){
-		stop("Nnode is lower than number implied by edge[,1]?")}
+	#test edge matrix
+	if(!testParentChild(parentChild=tree$edge)){stop("Edge matrix has inconsistencies")}
+	#more tests of edge matrix
 	if(Ntip(tree)>2){
 		if(Nnode(tree)!=(max(tree$edge)-Ntip(tree))){
 			stop("Number of nodes is incorrect based on edge numbering?")}
@@ -176,6 +155,39 @@ testEdgeMat<-function(tree){
 	#if(identical(sort(unique(tree$edge[,2])),c(1L,2L))){stop("Number of nodes is incorrect based on edge[,2]?")}
 	return(TRUE)
 	}
+	
+testParentChild<-function(parentChild){
+	#check that its a matrix with two columns
+	if(!is.matrix(parentChild)){
+		stop("edge/parentChild matrix must be of type matrix")}
+	if(ncol(parentChild)!=2){
+		stop("edge/parentChild matrix must have two columns")}
+	if(!is.numeric(parentChild)){
+		stop("edge/parentChild matrix must be of type numeric")}
+	parentChild[is.na(parentChild)]<-min(parentChild,na.rm=TRUE)-1
+	#test for nodes listed as descendant twice
+	if(any(table(parentChild[,2])>1)){
+		stop(paste("Some IDs are listed as a descendant twice in the edge/parentChild matrix",
+		paste0(parentChild[duplicated(parentChild[,2]),2],collapse=", ")))}
+	#test that all but one node has an ancestor
+	parentMatch<-match(unique(parentChild[,1]),parentChild[,2])
+	if(sum(is.na(parentMatch))>1){
+		stop(paste("More than one apparent root; \n",
+			"more than ancestor without an ancestor listed"))}	
+	#trace all tips to a single ancestor
+	ultimateAnc<-sapply(unique(c(parentChild[,1],parentChild[,2])),function(x){
+		while(any(parentChild[,2]==x)){
+			x<-parentChild[parentChild[,2]==x,1]
+			if(length(x)>1){
+				stop("Some nodes are listed as a descendant twice in the edge/parentChild matrix")}
+			}
+		return(x)
+		})
+	if(length(unique(ultimateAnc))!=1){
+		stop("IDs trace back to more than one unique common ancestor")}
+	return(TRUE)
+	}
+
 
 	
 #hidden function

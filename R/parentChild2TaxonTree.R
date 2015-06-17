@@ -130,6 +130,7 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	ultimateAnc<-sapply(unqIDs,getUltimateAnc,parentChild=parentChild)
 	if(length(unique(ultimateAnc))!=1){
 		stop("Taxa in parentChild trace back to more than one unique common ancestor")}
+	if(!testParentChild(parentChild=taxad1[,2:1])){stop("parentChild relationships are inconsistent")}
 	#
 	#remove singular root edges
 	#trace tips to ultimate ancestor (should be same for all, as this has already been checked)

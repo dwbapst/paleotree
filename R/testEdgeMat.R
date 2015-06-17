@@ -156,54 +156,33 @@ testEdgeMat<-function(tree){
 	return(TRUE)
 	}
 	
-testParentChild<-function(parentChild){
-	#check that its a matrix with two columns
-	if(!is.matrix(parentChild)){
-		stop("edge/parentChild matrix must be of type matrix")}
-	if(ncol(parentChild)!=2){
-		stop("edge/parentChild matrix must have two columns")}
-	if(!is.numeric(parentChild)){
-		stop("edge/parentChild matrix must be of type numeric")}
-	parentChild[is.na(parentChild)]<-min(parentChild,na.rm=TRUE)-1
-	#test for nodes listed as descendant twice
-	if(any(table(parentChild[,2])>1)){
-		stop(paste("Some IDs are listed as a descendant twice in the edge/parentChild matrix",
-		paste0(parentChild[duplicated(parentChild[,2]),2],collapse=", ")))}
-	#test that all but one node has an ancestor
-	parentMatch<-match(unique(parentChild[,1]),parentChild[,2])
-	if(sum(is.na(parentMatch))>1){
-		stop(paste("More than one apparent root; \n",
-			"more than ancestor without an ancestor listed"))}	
-	#trace all tips to a single ancestor
-	ultimateAnc<-sapply(unique(c(parentChild[,1],parentChild[,2])),function(x){
-		while(any(parentChild[,2]==x)){
-			x<-parentChild[parentChild[,2]==x,1]
-			if(length(x)>1){
-				stop("Some nodes are listed as a descendant twice in the edge/parentChild matrix")}
-			}
-		return(x)
-		})
-	if(length(unique(ultimateAnc))!=1){
-		stop("IDs trace back to more than one unique common ancestor")}
-	return(TRUE)
-	}
-
-
-	
 #hidden function
-	getRootID<-function(tree){
-		uniqueNode<-unique(tree$edge[,1])
-		whichRoot<-sapply(uniqueNode,function(x)
-			(sum(x==tree$edge[,2])==0))
-		if(sum(whichRoot)>1){
-			stop("More than one apparent root in $edge matrix")}
-		rootID<-uniqueNode[whichRoot]
-		return(rootID)
-		}
+getRootID<-function(tree){
+	uniqueNode<-unique(tree$edge[,1])
+	whichRoot<-sapply(uniqueNode,function(x)
+		(sum(x==tree$edge[,2])==0))
+	if(sum(whichRoot)>1){
+		stop("More than one apparent root in $edge matrix")}
+	rootID<-uniqueNode[whichRoot]
+	return(rootID)
+	}
 
 #' @rdname testEdgeMat
 #' @export 
-cleanNewPhylo<-function(tree){ #,reorderTree=TRUE
+cleanNewPhylo<-function(tree){ 		#,reorderTree=TRUE
+		#
+		renumberRootID<-function(tree){
+			rootID<-getRootID(tree)
+			expRootID<-length(tree$tip.label)+1
+			if(rootID!=expRootID){
+				tree$edge[tree$edge==rootID]<-0
+				tree$edge[tree$edge==expRootID]<-rootID
+				tree$edge[tree$edge==0]<-expRootID
+				storage.mode(tree$edge)<-"integer"
+				}
+			return(tree)
+			}
+		#
 		#CHECKS
 		if(class(tree)!="phylo"){stop("Must be class 'phylo'")}
 		if(any(is.na(match(c("edge","tip.label","Nnode"),names(tree))))){
@@ -226,6 +205,8 @@ cleanNewPhylo<-function(tree){ #,reorderTree=TRUE
 			treePrev<-tree
 			while(Nsingle>0){
 				tree1<-collapse.singles(treePrev)
+				#renumber root if numbered incorrectly
+				tree1<-renumberRootID(tree1)
 				if(!testEdgeMat(tree1)){stop("Edge matrix has inconsistencies")}
 				if((Nnode(treePrev)-Nnode(tree1))>Nsingle){
 					stop("collapse.singles dropped too many nodes")}

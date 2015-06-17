@@ -94,16 +94,6 @@
 parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	#,reorderTree=TRUE
 	#
-	#small hidden function
-	getUltimateAnc<-function(taxa,parentChild){
-		while(any(sapply(parentChild[,2],identical,unname(taxa)))){
-			taxa<-parentChild[match(taxa,parentChild[,2]),1]
-			if(length(taxa)>1){
-				stop("Some parents are listed as children twice in parentChild")}
-			}
-		return(taxa)
-		}
-	#
 	#takes a two column matrix of character class taxon names
 		#each row is a relationship: parent, then child
 	#CHECKS
@@ -119,18 +109,7 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 			}
 		}
 	#
-	#test monophyly of parentChild
-		#test that all but one node has an ancestor
-	parentMatch<-match(unique(parentChild[,1]),parentChild[,2])
-	if(sum(is.na(parentMatch))>1){
-		stop(paste("More than one apparent root; \n",
-			"more than one parent without their own parent listed"))}
-	#trace all tips to a single ancestor
-	unqIDs<-unique(c(parentChild[,1],parentChild[,2]))
-	ultimateAnc<-sapply(unqIDs,getUltimateAnc,parentChild=parentChild)
-	if(length(unique(ultimateAnc))!=1){
-		stop("Taxa in parentChild trace back to more than one unique common ancestor")}
-	if(!testParentChild(parentChild=taxad1[,2:1])){stop("parentChild relationships are inconsistent")}
+	if(!testParentChild(parentChild=parentChild)){stop("parentChild relationships are inconsistent")}
 	#
 	#remove singular root edges
 	#trace tips to ultimate ancestor (should be same for all, as this has already been checked)
@@ -187,6 +166,9 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 		which(sapply(taxonNames,identical,x)))
 	#reorder edge
 	edge<-edgeMat[order(edgeMat[,1],edgeMat[,2]),]
+	#check edge
+	if(!testParentChild(parentChild=edge)){
+		stop("created edge relationships are inconsistent")}	
 	#make the tree
 	tree<-list(edge=edge,tip.label=tipNames,edge.length=NULL, #edge.length=rep(1,nrow(edge))
 		Nnode=length(nodeNames),node.label=nodeNames)
@@ -198,4 +180,69 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	if(Ntip(tree)!=length(tipNames)){stop("Taxa number changed while cleaning tree")}
 	#plot(tree);nodelabels(tree$node.label)
 	return(tree)
+	}
+
+getUltimateAnc<-function(taxa,parentChild){
+	while(any(sapply(parentChild[,2],identical,unname(taxa)))){
+		taxa<-parentChild[match(taxa,parentChild[,2]),1]
+		if(length(taxa)>1){
+			stop("Some parents are listed as children twice in parentChild")}
+		}
+	return(taxa)
+	}
+
+charEdge2numeric<-function(parentChild){
+	if(!is.character(parentChild)){
+		stop("parentChild has to be character for charEdge2numeric")}
+	#get unique IDs
+	unqIDs<-unique(c(parentChild[,1],parentChild[,2]))
+	#convert internal nodes to Ntip+nodeNames ID
+	parentChild[,1]<-sapply(parentChild[,1],function(x)
+		which(sapply(unqIDs,identical,x)))
+	parentChild[,2]<-sapply(parentChild[,2],function(x) 
+		which(sapply(unqIDs,identical,x)))	
+	if(!is.numeric(parentChild)){
+		stop("parentChild not coercing correctly to numeric for charEdge2numeric")}
+	return(parentChild)
+	}
+
+testParentChild<-function(parentChild){
+	#check that its a matrix with two columns
+	if(!is.matrix(parentChild)){
+		stop("edge/parentChild matrix must be of type matrix")}
+	if(ncol(parentChild)!=2){
+		stop("edge/parentChild matrix must have two columns")}
+	if(!is.numeric(parentChild)){
+		if(is.character(parentChild)){
+			parentChild<-charEdge2numeric(parentChild)
+		}else{
+			stop("edge/parentChild matrix must be of type numeric or type character")
+			}			
+		}
+	#replace NA values
+	parentChild[is.na(parentChild)]<-min(parentChild,na.rm=TRUE)-1
+	#
+	#test monophyly of parentChild
+		#test that all but one node has an ancestor
+	parentMatch<-match(unique(parentChild[,1]),parentChild[,2])
+	if(sum(is.na(parentMatch))>1){
+		stop(paste("More than one apparent root; \n",
+			"more than one parent without their own parent listed"))}
+	#
+	#trace all tips to a single ancestor
+	unqIDs<-unique(c(parentChild[,1],parentChild[,2]))
+	ultimateAnc<-sapply(unqIDs,getUltimateAnc,parentChild=parentChild)
+	if(length(unique(ultimateAnc))!=1){
+		stop("IDs trace back to more than one unique common ancestor")}
+	#
+	#test for nodes listed as descendant twice
+	if(any(table(parentChild[,2])>1)){
+		stop(paste("Some IDs are listed as a descendant twice in the edge/parentChild matrix",
+		paste0(parentChild[duplicated(parentChild[,2]),2],collapse=", ")))}
+	#test that all but one node has an ancestor
+	parentMatch<-match(unique(parentChild[,1]),parentChild[,2])
+	if(sum(is.na(parentMatch))>1){
+		stop(paste("More than one apparent root; \n",
+			"more than ancestor without an ancestor listed"))}	
+	return(TRUE)
 	}

@@ -96,10 +96,6 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	#some checks
 	if(!testParentChild(parentChild=taxad1[,2:1])){
 		stop("input anc-desc relationships are inconsistent")}
-	if(any((taxad1[,4]-taxad1[,3])<0)){
-		taxad1[,3:4]<-max(taxad1[,3:4])-taxad1[,3:4]}
-	if(any((taxad1[,4]-taxad1[,3])<0)){
-		stop("Last occurrences appear to occur before first occurrences?")}
 	#important checks 06-17-15
 	#check that taxa are ordered by FAD
 	if(!identical(order(-taxad1[,3]),1:nrow(taxad1))){
@@ -127,6 +123,11 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 			}		
 		}
 	#
+	#convert time so it runs from forward in time
+	if(any((taxad1[,4]-taxad1[,3])<0)){
+		taxad1[,3:4]<-max(taxad1[,3:4])-taxad1[,3:4]}
+	if(any((taxad1[,4]-taxad1[,3])<0)){
+		stop("Last occurrences appear to occur before first occurrences?")}
 	if(any(table(taxad1[,1])>1)){
 		stop(paste("Duplicated values of taxon ID's in input:",
 			which(tabulate(taxad1[,1])>1),collapse=" "))}

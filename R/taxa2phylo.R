@@ -95,21 +95,17 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 		#this must be calculated prior to adding anything to terminal branches
 	#OUTPUT an ape phylo object with the tips at the times of observation
 	#require(ape)
-	taxad1<-taxad[,1:4,drop=FALSE]
-	#some checks
-	if(!testParentChild(parentChild=taxad1[,2:1])){
-		stop("input anc-desc relationships are inconsistent")}
 	#important checks 06-17-15
 	#check that taxa are ordered by FAD
-	if(!identical(order(-taxad1[,3]),1:nrow(taxad1))){
-		#let's coerce the taxad1 so that it satisfies this
-		taxadNew<-taxad1[order(-taxad1[,3]),]
+	if(!identical(order(-taxad[,3]),1:nrow(taxad))){
+		#let's coerce the taxad so that it satisfies this
+		taxadNew<-taxad[order(-taxad[,3]),]
 		if(!is.null(obs_time)){
 			#reorder obs_time too!
-			obs_time<-obs_time[order(-taxad1[,3])]
+			obs_time<-obs_time[order(-taxad[,3])]
 			}
 		#reassign ancestor IDs
-		newAnc<-sapply(taxad1[,2],function(x) {
+		newAnc<-sapply(taxad[,2],function(x) {
 			if(is.na(x)){
 				NA
 			}else{
@@ -122,11 +118,11 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 			stop("ancestor IDs cannot be reassigned properly")
 			}
 		#reassign taxon IDs
-		taxadNew[,1]<-1:nrow(taxad1)
-		taxad1<-taxadNew
+		taxadNew[,1]<-1:nrow(taxad)
+		taxad<-taxadNew
 		#
 		#check
-		if(!identical(order(-taxad1[,3]),1:nrow(taxad1))){
+		if(!identical(order(-taxad[,3]),1:nrow(taxad))){
 			stop("Cannot coerce input table so taxa are ordered with FADs going from first to last")
 			}
 		#message(paste0("Input table must be ordered with FADs going from first to last",
@@ -135,9 +131,9 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 		#stop("input table must be ordered with FADs going from first to last")
 		}
 	# check root ancestor is in first row
-	if(!is.na(taxad1[1,2])){
+	if(!is.na(taxad[1,2])){
 		#find the damn root
-		isRoot<-which(is.na(taxad1[,2]))
+		isRoot<-which(is.na(taxad[,2]))
 		if(length(isRoot)!=1){
 			if(length(isRoot)>1){
 				stop("Multiple taxa listed as an apparent root (ancestor is NA)")}
@@ -145,16 +141,21 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 				stop("No taxa are listed as an apparent root (i.e. ancestor is NA)")}
 		}else{
 			stop("Root taxon (ancestor listed as NA) must be in row 1")
-			#newRoot<-taxad1[isRoot,,drop=FALSE]
+			#newRoot<-taxad[isRoot,,drop=FALSE]
 			#newRoot[,1]<-1
-			#taxad1Drop<-taxad1[-isRoot,]
-			#taxad1Drop[taxad1Drop[,1]==1,]<-isRoot
-			#taxad1<-rbind(newRoot,taxad1Drop)
-			#taxad1<-taxad1[order(taxad1[,1]),]
+			#taxadDrop<-taxad[-isRoot,]
+			#taxadDrop[taxadDrop[,1]==1,]<-isRoot
+			#taxad<-rbind(newRoot,taxadDrop)
+			#taxad<-taxad[order(taxad[,1]),]
 			#message(paste0("Root ancestor (ancestor listed as NA) is not in row 1,",
 			#	" \n coercing root ancestor to first row"))
 			}		
 		}
+	taxad1<-taxad[,1:4,drop=FALSE]
+	#some checks
+	if(!testParentChild(parentChild=taxad1[,2:1])){
+		stop("input anc-desc relationships are inconsistent")}
+
 	#
 	#convert time so it runs from forward in time
 	if(any((taxad1[,4]-taxad1[,3])<0)){

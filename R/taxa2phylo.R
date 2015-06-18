@@ -99,7 +99,22 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	#important checks 06-17-15
 	#check that taxa are ordered by FAD
 	if(!identical(order(-taxad1[,3]),1:nrow(taxad1))){
-		stop("input table must be ordered with FADs going from first to last")
+		#let's coerce the taxad1 so that it satisfies this
+		taxadNew<-taxad1[order(-taxad1[,3]),]
+		#reassign ancestor IDs
+		taxadNew[,2]<-sapply(taxad1[,2],function(x) which(taxadNew[,1]==x))
+		#reassign taxon IDs
+		taxadNew[,1]<-1:nrow(taxad1)
+		taxad1<-taxadNew
+		#
+		#check
+		if(!identical(order(-taxad1[,3]),1:nrow(taxad1))){
+			stop("Cannot coerce input table so taxa are ordered with FADs going from first to last")
+			}
+		#message(paste0("Input table must be ordered with FADs going from first to last",
+		#	" \n coercing taxon order to first row"))
+		#
+		#stop("input table must be ordered with FADs going from first to last")
 		}
 	# check root ancestor is in first row
 	if(!is.na(taxad1[1,2])){

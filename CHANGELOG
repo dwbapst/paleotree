@@ -7,6 +7,11 @@ Version - 2.5 -
 -Additional checking in testEdgeMat to catch when the root node is misnumbered,  also additional checking taken with modification from Emmanuel Paradis's checkValidPhylo
 -Additional routines in cleanNewPhylo to convert $edge and $Nnode to integer storage, and in case collapse.singles fails to collapse all nodes
 -Modified taxa2phylo, expandTaxonTree, resolveTreeChar, taxa2cladogram to use cleanNewPhylo
+-Sweeping grandiose changes of how trees are created, cleaned, checked, etc with loads of tiny hidden functions. An unlikable yet necessary thing to implement.
+-Function taxa2phylo apparently requires that taxa be ordered by FAD, with the root ancestor being listed first (probably reflecting bad coding practices of Dave circa 2011...)
+	-Function taxa2phylo will now silently coerce a dataset so that taxa are ordered by FAD, before continuing
+-Added tolerance argument to dateNodes to stop spurious warnings related to floating precision about native node dates that were barely distinguishable from zero
+-Added new example dataset of macroperforate relationships and ages taken from Aze et al. 2011 for use in testing taxa2phylo and other related functions
 -
 
 Version - 2.4 - 05-01-15

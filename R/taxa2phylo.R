@@ -32,10 +32,13 @@
 #' 
 #' @param taxad A five-column matrix of taxonomic data, as output by
 #' simFossilTaxa
+
 #' @param obs_time A vector of per-taxon times of observation which must be in
 #' the same order of taxa as in the object taxad; if NULL, the LADs (column 4)
 #' in taxad2 are used
+
 #' @param plot Plot the resulting phylogeny?
+
 #' @return The resulting phylogeny with branch lengths is output as an object
 #' of class phylo. This function will output trees with the element $root.time,
 #' which is the time of the root divergence in absolute time.
@@ -92,7 +95,7 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 		#this must be calculated prior to adding anything to terminal branches
 	#OUTPUT an ape phylo object with the tips at the times of observation
 	#require(ape)
-	taxad1<-taxad[,1:4]
+	taxad1<-taxad[,1:4,drop=FALSE]
 	#some checks
 	if(!testParentChild(parentChild=taxad1[,2:1])){
 		stop("input anc-desc relationships are inconsistent")}
@@ -101,8 +104,23 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	if(!identical(order(-taxad1[,3]),1:nrow(taxad1))){
 		#let's coerce the taxad1 so that it satisfies this
 		taxadNew<-taxad1[order(-taxad1[,3]),]
+		if(!is.null(obs_time)){
+			#reorder obs_time too!
+			obs_time<-obs_time[order(-taxad1[,3])]
+			}
 		#reassign ancestor IDs
-		taxadNew[,2]<-sapply(taxad1[,2],function(x) which(taxadNew[,1]==x))
+		newAnc<-sapply(taxad1[,2],function(x) {
+			if(is.na(x)){
+				NA
+			}else{
+				which(sapply(taxadNew[,1],identical,x))
+				}
+			})
+		if(is.vector(newAnc)){
+			taxadNew[,2]<-newAnc
+		}else{
+			stop("ancestor IDs cannot be reassigned properly")
+			}
 		#reassign taxon IDs
 		taxadNew[,1]<-1:nrow(taxad1)
 		taxad1<-taxadNew

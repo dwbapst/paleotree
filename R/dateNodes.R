@@ -24,6 +24,9 @@
 #' internal tips a label that might be very long, composed of multiple tip labels pasted
 #' together. Thus, by default, this argument is FALSE.
 
+#' @param tolerance The tolerance within which a node date has to be removed from time = 0 
+#' (i.e. the modern) to issue a warning that there are 'negative' node dates.
+
 #' @return 
 #' Returns a vector of length \code{Ntip(tree) + Nnode(tree)} which contains the dates for
 #' all terminal tip nodes and internal nodes for the tree, in that order, as numbered in the \code{tree$edge}
@@ -55,7 +58,7 @@
 #' dateNodes(tree1,labelDates=TRUE)
 
 #' @export
-dateNodes<-function(tree,rootAge=tree$root.time,labelDates=FALSE){
+dateNodes<-function(tree,rootAge=tree$root.time,labelDates=FALSE,tolerance=0.001){
 	#based on date.nodes by Graeme Lloyd, but using dist.nodes
 	#test that it has edge lengths
 	if(is.null(tree$edge.length)){stop("tree does not appear to have edge lengths?")}
@@ -64,7 +67,8 @@ dateNodes<-function(tree,rootAge=tree$root.time,labelDates=FALSE){
 		rootAge <- max(nodeRelTimes)
 		message("Root age not given; treating tree as if latest tip was at modern day (time=0)")}
 	res<-rootAge-nodeRelTimes
-	if(any(res<0)){message("Warning: Some dates are negative? rootAge may be incorrectly defined or you are using a time-scaling method that warps the tree, like aba or zbla.")}
+	if(any(res<(-tolerance))){
+		message("Warning: Some dates are negative? rootAge may be incorrectly defined or you are using a time-scaling method that warps the tree, like aba or zbla.")}
 	if(labelDates){
 		names(res)<-sapply(Descendants(tree),function(x) paste0(sort(tree$tip.label[x]),collapse=" "))
 	}else{

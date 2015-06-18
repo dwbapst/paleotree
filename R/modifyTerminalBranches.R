@@ -225,7 +225,8 @@ fixRootTime<-function(treeOrig,treeNew,consistentDepth=TRUE,nodeAgeTransfer=TRUE
 	#require(ape)
 	if(!is(treeOrig, "phylo")){stop("treeOrig is not of class phylo")}
 	if(!is(treeNew, "phylo")){stop("treeNew is not of class phylo")}
-	if(is.null(treeOrig$root.time)){stop("ERROR: treeOrig passed to fixRootTime with no $root.time??")}
+	if(is.null(treeOrig$root.time)){
+		stop("ERROR: treeOrig passed to fixRootTime with no $root.time??")}
 	#also need a warning message if taxa present in treeNew that aren't in treeOrig
 	taxaNewNM<-treeNew$tip.label[sapply(treeNew$tip.label,function(x) !any(x==treeOrig$tip.label))]
 	if(length(taxaNewNM)>0){
@@ -238,7 +239,7 @@ fixRootTime<-function(treeOrig,treeNew,consistentDepth=TRUE,nodeAgeTransfer=TRUE
 			#(\emph{1}) the treeOrig clade that contains *all* taxa present in treeNew and, if the set of (1)
 			#contains multiple clades, (\emph{2}) the clade in the (1) set that contains the fewest taxa not in
 			#treeNew.
-		dates<-dateNodes(treeOrig,labelDates=FALSE)
+		dates<-dateNodes(treeOrig,labelDates=FALSE,tolerance=0.001)
 		treeDesc<-lapply(Descendants(treeOrig),function(x) sort(treeOrig$tip.label[x]))
 		#treeRootNew<-sort(treeNew$tip.label[Descendants(treeNew)[[Ntip(treeNew)+1]]]) #no
 		#the descendants of treeNew's root are ALL the taxa in treeNEW

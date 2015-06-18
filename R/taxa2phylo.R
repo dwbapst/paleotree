@@ -93,9 +93,21 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	#OUTPUT an ape phylo object with the tips at the times of observation
 	#require(ape)
 	taxad1<-taxad[,1:4]
-	#check that root ancestor is in first row, if not, move it there
+	#some checks
+	if(!testParentChild(parentChild=taxad1[,2:1])){
+		stop("input anc-desc relationships are inconsistent")}
+	if(any((taxad1[,4]-taxad1[,3])<0)){
+		taxad1[,3:4]<-max(taxad1[,3:4])-taxad1[,3:4]}
+	if(any((taxad1[,4]-taxad1[,3])<0)){
+		stop("Last occurrences appear to occur before first occurrences?")}
+	#important checks 06-17-15
+	#check that taxa are ordered by FAD
+	if(!identical(order(-taxad1[,3]),1:nrow(taxad1))){
+		stop("input table must be ordered with FADs going from first to last")
+		}
+	# check root ancestor is in first row
 	if(!is.na(taxad1[1,2])){
-		#find the damn room
+		#find the damn root
 		isRoot<-which(is.na(taxad1[,2]))
 		if(length(isRoot)!=1){
 			if(length(isRoot)>1){
@@ -114,12 +126,7 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 			#	" \n coercing root ancestor to first row"))
 			}		
 		}
-	if(!testParentChild(parentChild=taxad1[,2:1])){
-		stop("input anc-desc relationships are inconsistent")}
-	if(any((taxad1[,4]-taxad1[,3])<0)){
-		taxad1[,3:4]<-max(taxad1[,3:4])-taxad1[,3:4]}
-	if(any((taxad1[,4]-taxad1[,3])<0)){
-		stop("Last occurrences appear to occur before first occurrences?")}
+	#
 	if(any(table(taxad1[,1])>1)){
 		stop(paste("Duplicated values of taxon ID's in input:",
 			which(tabulate(taxad1[,1])>1),collapse=" "))}

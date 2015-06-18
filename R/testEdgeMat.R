@@ -128,12 +128,14 @@ testEdgeMat<-function(tree){
 		stop("Some tip IDs appear less than once in $edge")}
 	#
 	#All internal nodes should appear at least once (even if singleton nodes)
-	if(any(tabEdge[length(tree$tip.label) + 2:tree$Nnode]<2)){
-		stop("Some internal node IDs appear less than twice in $edge: ")}
-	if(any(tabEdge[length(tree$tip.label) + 2:tree$Nnode]<2)){
-		stop(paste0("Some internal node IDs appear less than twice in $edge: ",
-			which(tabEdge[length(tree$tip.label) + 1:tree$Nnode]<2),
-			collapse=" "))}
+	if(tree$Nnode>1){
+		if(any(tabEdge[length(tree$tip.label) + 2:tree$Nnode]<2)){
+			stop("Some internal node IDs appear less than twice in $edge: ")}
+		if(any(tabEdge[length(tree$tip.label) + 2:tree$Nnode]<2)){
+			stop(paste0("Some internal node IDs appear less than twice in $edge: ",
+				which(tabEdge[length(tree$tip.label) + 1:tree$Nnode]<2),
+				collapse=" "))}
+		}
 	#check that tips do not appear in tree$edge[,1]
 	if(any(tree$edge[,1]<(length(tree$tip.label) + 1))){
 		stop(paste0("Apparent tip IDs appear in column 1 of $edge: \n",

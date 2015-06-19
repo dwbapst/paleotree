@@ -2,7 +2,8 @@
 #'
 #' An example dataset of ancestor-descendent relationships and first and last appearance dates for
 #' a set of macroperforate Foramanifera, taken from the supplemental materials of Aze et al. (2011).
-#' This dataset is included here primarily for testing functions \code{parentChild2taxonTree} and \code{taxa2phylo}.
+#' This dataset is included here primarily for testing functions \code{parentChild2taxonTree}
+#' and \code{taxa2phylo}.
 
 #' @name macroperforateForam
 
@@ -48,11 +49,11 @@
 #' Identifying anagenesis and cladogenesis in the fossil record.
 #' \emph{Proceedings of the National Academy of Sciences} 110(32):E2946-E2946.
 #' 
-#' Ezard, T. H. G., T. Aze, P. N. Pearson, and A. Purvis. 2011. Interplay Between Changing Climate and Species’
+#' Ezard, T. H. G., T. Aze, P. N. Pearson, and A. Purvis. 2011. Interplay Between Changing Climate and Species'
 #' Ecology Drives Macroevolutionary Dynamics. \emph{Science} 332(6027):349-351.
 #' 
 #' Ezard, T. H. G., P. N. Pearson, T. Aze, and A. Purvis. 2012. The meaning of birth and death (in
-#' macroevolutionary birth–death models). \emph{Biology Letters} 8(1):139-142.
+#' macroevolutionary birth-death models). \emph{Biology Letters} 8(1):139-142.
 #' 
 #' Ezard, T. H. G., G. H. Thomas, and A. Purvis. 2013. Inclusion of a near-complete fossil record reveals
 #' speciation-related molecular evolution. \emph{Methods in Ecology and Evolution} 4(8):745-753.
@@ -71,6 +72,7 @@
 #' @examples
 #' 
 #' # Following Text Reproduced from Aze et al. 2011's Supplemental Material
+#' # Appendix S5
 #' # 
 #' # 'Data required to produce all of the phylogenies included in the manuscript
 #' # using paleoPhylo (Ezard & Purvis, 2009) a free software package to draw

@@ -2,6 +2,10 @@
 % Please edit documentation in R/macroperforateForam.R
 \docType{data}
 \name{macroperforateForam}
+\alias{AL}
+\alias{ALb}
+\alias{AM}
+\alias{AMb}
 \alias{macroperforateForam}
 \title{Ancestor-Descendant Relationships for Macroperforate Foraminifera, from Aze et al. (2011)}
 \format{The 'AM' and 'AL' tables include budding taxon units

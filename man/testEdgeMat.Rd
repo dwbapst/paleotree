@@ -8,13 +8,10 @@
 \usage{
 testEdgeMat(tree)
 
-cleanNewPhylo(tree, reorderTree = TRUE)
+cleanNewPhylo(tree)
 }
 \arguments{
 \item{tree}{A phylogeny object of type phylo}
-
-\item{reorderTree}{A logical indicating whether a step of \code{reorder.phylo()} will be applied.
-Reordering may cause more problems than it is worth.}
 }
 \value{
 For \code{testEdgeMat}, if all the checks in the function pass correctly, the logical TRUE is returned.
@@ -61,6 +58,7 @@ plot(tree1)
 layout(1)
 }
 \author{
-David W. Bapst
+David W. Bapst, with a large number of tests incorporated from Emmanuel Paradis's checkValidPhylo function,
+provided at his github repo here, which was released GPL v>2: https://github.com/emmanuelparadis/checkValidPhylo
 }
 

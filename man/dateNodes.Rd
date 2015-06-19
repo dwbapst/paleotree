@@ -4,7 +4,8 @@
 \alias{dateNodes}
 \title{Absolute Dates for Nodes of a Time-Scaled Phylogeny}
 \usage{
-dateNodes(tree, rootAge = tree$root.time, labelDates = FALSE)
+dateNodes(tree, rootAge = tree$root.time, labelDates = FALSE,
+  tolerance = 0.001)
 }
 \arguments{
 \item{tree}{A phylogeny object of class 'phylo'. Must have edge.lengths!}
@@ -22,6 +23,9 @@ tip/node numbers as in \code{tree$edge}. If TRUE, they are labeled with the tip 
 of every descendant tip, which for terminal tips means a single taxon label, and for
 internal tips a label that might be very long, composed of multiple tip labels pasted
 together. Thus, by default, this argument is FALSE.}
+
+\item{tolerance}{The tolerance within which a node date has to be removed from time = 0
+(i.e. the modern) to issue a warning that there are 'negative' node dates.}
 }
 \value{
 Returns a vector of length \code{Ntip(tree) + Nnode(tree)} which contains the dates for

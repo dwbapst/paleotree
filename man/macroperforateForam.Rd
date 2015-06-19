@@ -2,16 +2,16 @@
 % Please edit documentation in R/macroperforateForam.R
 \docType{data}
 \name{macroperforateForam}
-\alias{AL}
-\alias{ALb}
-\alias{AM}
-\alias{AMb}
+\alias{foramAL}
+\alias{foramALb}
+\alias{foramAM}
+\alias{foramAMb}
 \alias{macroperforateForam}
 \title{Ancestor-Descendant Relationships for Macroperforate Foraminifera, from Aze et al. (2011)}
-\format{The 'AM' and 'AL' tables include budding taxon units
+\format{The 'foramAM' and 'foramAL' tables include budding taxon units
 for morphospecies and lineages respective, with four columns:
 taxon name, ancestral taxon's name, first appearance date and last appearance
-date (note that column headings vary). The 'AMb' and 'ALb' tables are
+date (note that column headings vary). The 'foramAMb' and 'foramALb' tables are
 composed of data for the same taxon units as the previous
 branching events are split so that the relationships are fully 'bifurcating', rather
 than 'budding'. As this obscures taxonomic identity, taxon identification labels
@@ -68,13 +68,13 @@ events. See the examples section for more details.
 	#converted to separate tab-deliminated text files
 
 # aM: budding/bifurcating morphospecies phylogeny
-AM<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
+foramAM<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
 # aL: budding/bifurcating lineage phylogeny
-AL<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
+foramAL<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
 # aMb: fully bifurcating morphospecies phylogeny
-AMb<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
+foramAMb<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
 # aLb: fully bifurcating lineage phylogeny
-ALb<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
+foramALb<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
 
 save.image("macroperforateForam.Rdata")
 
@@ -96,10 +96,10 @@ data(macroperforateForam)
 	# This division of taxon units requires abstracting the taxon IDs,
 	# requiring another column for Species Name.
 
-dim(AM)
-dim(AL)
-dim(AMb)
-dim(ALb)
+dim(foramAM)
+dim(foramAL)
+dim(foramAMb)
+dim(foramALb)
 
 #Need to convert these to same format as simFossilTaxa output.
 	#simFossilTaxa output has 6 columns...
@@ -128,10 +128,10 @@ createTaxaData<-function(table){
 	return(res)
 	}
 
-taxaAM<-createTaxaData(AM)
-taxaAMb<-createTaxaData(AMb)
-taxaAL<-createTaxaData(AL)
-taxaALb<-createTaxaData(ALb)
+taxaAM<-createTaxaData(foramAM)
+taxaAMb<-createTaxaData(foramAMb)
+taxaAL<-createTaxaData(foramAL)
+taxaALb<-createTaxaData(foramALb)
 
 ##################################
 
@@ -146,10 +146,10 @@ countParentsWithoutMatch<-function(table){
 	}
 
 #test this on the provided ancestor-descendant relationships
-countParentsWithoutMatch(AM)
-countParentsWithoutMatch(AL)
-countParentsWithoutMatch(AMb)
-countParentsWithoutMatch(ALb)
+countParentsWithoutMatch(foramAM)
+countParentsWithoutMatch(foramAL)
+countParentsWithoutMatch(foramAMb)
+countParentsWithoutMatch(foramALb)
 
 #and on the converted datasets
 countParentsWithoutMatch(taxaAM)
@@ -164,10 +164,10 @@ countParentsWithoutMatch(taxaALb)
 
 #can be very slow...
 
-treeAM<-parentChild2taxonTree(AM[,2:1])
-treeAL<-parentChild2taxonTree(AL[,2:1])
-treeAMb<-parentChild2taxonTree(AMb[,2:1])
-treeALb<-parentChild2taxonTree(ALb[,2:1])
+treeAM<-parentChild2taxonTree(foramAM[,2:1])
+treeAL<-parentChild2taxonTree(foramAL[,2:1])
+treeAMb<-parentChild2taxonTree(foramAMb[,2:1])
+treeALb<-parentChild2taxonTree(foramALb[,2:1])
 
 layout(matrix(1:4,2,2))
 plot(treeAM,main='treeAM',show.tip.label=FALSE)
@@ -194,10 +194,10 @@ checkFoLo<-function(data){
 	return(isGood)
 	}
 
-checkFoLo(AM)
-checkFoLo(AL)
-checkFoLo(AMb)
-checkFoLo(ALb)
+checkFoLo(foramAM)
+checkFoLo(foramAL)
+checkFoLo(foramAMb)
+checkFoLo(foramALb)
 
 #cool, but do all ancestors appear before their descendents?
 	# easier to check unified simFossilTaxa format here

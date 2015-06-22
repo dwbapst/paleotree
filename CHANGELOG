@@ -12,6 +12,7 @@ Version - 2.5 -
 	-Function taxa2phylo will now silently coerce a dataset (and input obs_time) so that taxa are ordered by FAD, before continuing
 -Added tolerance argument to dateNodes to stop spurious warnings related to floating precision about native node dates that were barely distinguishable from zero
 -Added new example dataset of macroperforate foram relationships and ages taken from Aze et al. 2011 for use in testing taxa2phylo and other related functions
+-Added a tolerance argument to cal3timePaleoPhy to stop spurious warnings related to floating precision about terminal tip ages that were barely distinguishable from zero
 -
 
 Version - 2.4 - 05-01-15

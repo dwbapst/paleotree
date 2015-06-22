@@ -148,7 +148,7 @@
 #' http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
 #' 
 #' @rdname cal3TimePaleoPhy
-#' @aliases cal3TimePaleoPhy bin_cal3TimePaleoPhy
+#' @aliases cal3TimePaleoPhy bin_cal3TimePaleoPhy cal3
 
 #' @inheritParams timePaleoPhy
 
@@ -252,6 +252,11 @@
 
 #' @param plot If true, plots the input, "basic" timescaled and output
 #' cal3-timescaled phylogenies
+
+#' @param tolerance Acceptable amount of shift in tip dates from dates listed
+#' in \code{timeData}. Shifts outside of the range of \code{tolerance} will
+#' cause a warning message to be issued that terminal tips appear to be
+#' improperly aligned.
 
 #' @param nonstoch.bin If true, dates are not stochastically pulled from
 #' uniform distributions. See below for more details.
@@ -431,17 +436,22 @@
 # @rdname cal3Timescaling
 
 #' @export
-cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt=1,node.mins=NULL,
-	dateTreatment="firstLast",FAD.only=FALSE,adj.obs.wt=TRUE,root.max=200,step.size=0.1,randres=FALSE,noisyDrop=TRUE,plot=FALSE){
-	#see SRC function for more notation...
+cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
+	ntrees=1, anc.wt=1, node.mins=NULL, dateTreatment="firstLast",
+	FAD.only=FALSE, adj.obs.wt=TRUE, root.max=200, step.size=0.1,
+	randres=FALSE, noisyDrop=TRUE, tolerance=0.0001, plot=FALSE){
+
+
 	#function for Ps - use pqr2Ps
 	#example data
 	#tree<-rtree(10);tree$edge.length<-sample(0:1,Nedge(tree),replace=TRUE);tree<-di2multi(tree)
-	#ntrees=2;anc.wt=1;node.mins=NULL;sampRate=rep(0.1,Ntip(tree));names(sampRate)<-tree$tip.label
+	#sampRate=rep(0.1,Ntip(tree));names(sampRate)<-tree$tip.label
 	#brRate<-extRate<-sampRate
 	#timeData<-runif(Ntip(tree),200,400);timeData<-cbind(timeData,timeData-runif(Ntip(tree),1,80))
-	#rownames(timeData)<-tree$tip.label;root.max=200;plot=TRUE;rand.obs=FALSE;FAD.only=TRUE
-	#step.size=0.1;adj.obs.wt=TRUE;randres=FALSE
+	#rownames(timeData)<-tree$tip.label
+	#ntrees=1; anc.wt=1; node.mins=NULL; dateTreatment="firstLast";
+	#FAD.only=FALSE; adj.obs.wt=TRUE; root.max=200; step.size=0.1;
+	#randres=FALSE; noisyDrop=TRUE; plot=FALSE
 	#
 	#taxa<-simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=50,maxtaxa=100,maxtime=1000,maxExtant=0)
 	#cladogram<-taxa2cladogram(taxa);timeData<-sampleRanges(taxa,r=0.1)
@@ -467,10 +477,14 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 	originalInputTree<-tree
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
 	if(length(droppers)>0){
-		if(length(droppers)==Ntip(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
-		if(noisyDrop){message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))}
+		if(length(droppers)==Ntip(tree)){
+			stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
+		if(noisyDrop){
+			message(paste("Warning: Following taxa dropped from tree:",
+				paste0(droppers,collapse=", ")))}
 		tree<-drop.tip(tree,droppers)
-		if(Ntip(tree)<2){stop("Less than two valid taxa shared between the tree and temporal data!")}
+		if(Ntip(tree)<2){
+			stop("Less than two valid taxa shared between the tree and temporal data!")}
 		timeData[which(!sapply(rownames(timeData),function(x) any(x==tree$tip.label))),1]<-NA
 		}
 	if(!is.null(node.mins)){
@@ -788,7 +802,7 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 					}
 				ktree$edge.length[match(dnode1,ktree$edge[,2])]<-new_dlen1
 				ktree$edge.length[match(dnode2,ktree$edge[,2])]<-new_dlen2
-				#print(c(node,ch_zip-min_zip,new_dlen1,new_dlen2))
+				print(c(node,ch_zip-min_zip,new_dlen1,new_dlen2))
 				nodes<-nodes[-1]			#update nodes
 			}}
 		ktree<-reorder(collapse.singles(ktree),"cladewise")
@@ -802,14 +816,21 @@ cal3TimePaleoPhy<-function(tree,timeData,brRate,extRate,sampRate,ntrees=1,anc.wt
 			#must be calculated on LADs because the terminal ranges are added to the TREE!!!
 			#should be time of earliest LAD + distance of root from earliest tip
 		ktree$root.time<-max(timeData1[ktree$tip.label,2])+min(dist.nodes(ktree)[1:Ntip(ktree),Ntip(ktree)+1])	
-		names(ktree$edge.length)<-NULL;names(ktree$tip.label)<-NULL;names(ktree$budd.tips)<-NULL;names(ktree$anag.tips)<-NULL
+		names(ktree$edge.length)<-names(ktree$tip.label)<-names(ktree$budd.tips)<-names(ktree$anag.tips)<-NULL
 		#stuff for checking if things are correct
-		tipdiffs<-cbind(diff(sort(-timeData1[,2])),diff(sort(dist.nodes(ktree)[1:Ntip(ktree),Ntip(ktree)+1]))
-			,diff(sort(-timeData1[,2]))-diff(sort(dist.nodes(ktree)[1:Ntip(ktree),Ntip(ktree)+1])))	
-		test1<-all(tipdiffs[,3]<(10^-10))
-		test2<-identical(names(sort(-timeData1[,2])),ktree$tip.label[order(dist.nodes(ktree)[1:Ntip(ktree),Ntip(ktree)+1])])
-		if(length(unique(timeData1[,2]))<Ntip(tree)){test2<-TRUE}	#test 2 does not work if any LADS are same
-		if(all(c(test1,test2))){ktree$test<-"passed"}else{warning("Warning: Terminal tips improperly aligned, cause unknown. Use ouput with care.")}
+		tipdiffs<-cbind(	diff(sort(-timeData1[,2])),
+					diff(sort(dist.nodes(ktree)[1:Ntip(ktree),Ntip(ktree)+1])),
+					diff(sort(-timeData1[,2]))-diff(sort(dist.nodes(ktree)[1:Ntip(ktree),Ntip(ktree)+1])))	
+		test1<-all(tipdiffs[,3]<tolerance)
+		test2<-identical(names(sort(-timeData1[,2])),
+				ktree$tip.label[order(dist.nodes(ktree)[1:Ntip(ktree),Ntip(ktree)+1])])
+		if(length(unique(timeData1[,2]))<Ntip(tree)){
+			test2<-TRUE}	#test 2 does not work if any LADS are same
+		if(all(c(test1,test2))){
+			ktree$test<-"passed"
+		}else{
+			warning("Warning: Terminal tips improperly aligned, cause unknown. Use ouput with care.")
+			}
 		if(plot){
 			parOrig <- par(no.readonly=TRUE)
 			par(mar=c(2.5,2.5,1,2.5))
@@ -880,13 +901,20 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 			}
 		}	
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
-	if(any(is.na(timeList[[2]]))){stop("Weird NAs in Data??")}
-	if(any(apply(timeList[[1]],1,diff)>0)){stop("timeList[[1]] not in intervals in time relative to modern")}
-	if(any(timeList[[1]][,2]<0)){stop("Some dates in timeList[[1]] <0 ?")}
-	if(any(apply(timeList[[2]],1,diff)<0)){stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
-	if(any(timeList[[2]][,2]<0)){stop("Some dates in timeList[[2]] <0 ?")}
-	if(length(unique(rownames(timeList[[2]])))!=length(rownames(timeList[[2]]))){stop("Duplicate taxa in timeList[[2]]")}
-	if(length(unique(tree$tip.label))!=length(tree$tip.label)){stop("Duplicate tip taxon names in tree$tip.label")}
+	if(any(is.na(timeList[[2]]))){
+		stop("Weird NAs in Data??")}
+	if(any(apply(timeList[[1]],1,diff)>0)){
+		stop("timeList[[1]] not in intervals in time relative to modern")}
+	if(any(timeList[[1]][,2]<0)){
+		stop("Some dates in timeList[[1]] <0 ?")}
+	if(any(apply(timeList[[2]],1,diff)<0)){
+		stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
+	if(any(timeList[[2]][,2]<0)){
+		stop("Some dates in timeList[[2]] <0 ?")}
+	if(length(unique(rownames(timeList[[2]])))!=length(rownames(timeList[[2]]))){
+		stop("Duplicate taxa in timeList[[2]]")}
+	if(length(unique(tree$tip.label))!=length(tree$tip.label)){
+		stop("Duplicate tip taxon names in tree$tip.label")}
 	if(length(rownames(timeList[[2]]))!=length(tree$tip.label)){
 		stop("Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
 	if(is.null(sites)){

@@ -105,7 +105,8 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 			obs_time<-obs_time[order(-taxad[,3])]
 			}
 		#reassign ancestor IDs
-		newAnc<-sapply(taxad[,2],function(x) {
+			#DON'T FORGET YOU NEED TO REORDER THEM
+		newAnc<-sapply(taxad[order(-taxad[,3]),2],function(x) {
 			if(is.na(x)){
 				NA
 			}else{
@@ -155,7 +156,6 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	#some checks
 	if(!testParentChild(parentChild=taxad1[,2:1])){
 		stop("input anc-desc relationships are inconsistent")}
-
 	#
 	#convert time so it runs from forward in time
 	if(any((taxad1[,4]-taxad1[,3])<0)){
@@ -272,15 +272,18 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	#replace stupid decimal edge placeholders with clean numbers
 	e_fix<-numeric()
 	#the species in the original data
-	e_fix[edgeD$term]<-sapply(edgeD[edgeD$term,1],function(x) which(fake_taxa[,1]==x)) 	
+	e_fix[edgeD$term]<-sapply(edgeD[edgeD$term,1],function(x)
+		 which(fake_taxa[,1]==x)) 	
 	e_fix[!edgeD$term]<-sum(edgeD$term)+1+(1:sum(!edgeD$term))
-	ea_fix<-sapply(edgeD$anc,function(x) ifelse(x!=MRCA,e_fix[edgeD$id==x],sum(edgeD$term)+1))
+	ea_fix<-sapply(edgeD$anc,function(x)
+		 ifelse(x!=MRCA,e_fix[edgeD$id==x],sum(edgeD$term)+1))
 	#NOW MAKE A TREE
 	tlabs<-rownames(taxad1)[!is.na(obs)]
 	edgf<-cbind(ea_fix,e_fix)
 	colnames(edgf)<-NULL
 	#check one more time before you make it a tree
-	if(any(is.na(edgf))){stop("NAs introduced into edge matrix?")}
+	if(any(is.na(edgf))){
+		stop("NAs introduced into edge matrix?")}
 	if(!testParentChild(parentChild=edgf)){
 		stop("produced edge matrix is inconsistent")}
 	#Now really make it a tree

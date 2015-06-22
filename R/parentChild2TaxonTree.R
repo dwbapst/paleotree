@@ -73,6 +73,19 @@
 #' #this should return an error, as Gengar doesn't share common root
 #' pokeTree<-parentChild2taxonTree(pokexample_bad)
 #' 
+#' 
+#' # another example, where a taxon is listed as both parent and child
+#' pokexample_bad2<-rbind(cbind("Squirtadae",c("Squirtle","Blastoise","Wartortle")),
+#' 	c("Shelloidea",c("Lapras","Squirtadae","Shelloidea")),
+#' 	c("Pokezooa","Shelloidea"),c("Pokezooa","Parasect"),
+#' 	c("Rodentapokemorpha","Linoone"),c("Rodentapokemorpha","Sandshrew"),
+#' 	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
+#' 	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"),
+#' 	c("Umbrarcheota","Gengar"))
+#'
+#' #this should return an error, as Shelloidea is its own parent
+#' pokeTree<-parentChild2taxonTree(pokexample_bad2)
+#'
 #' }
 #' 
 #' 
@@ -183,10 +196,15 @@ parentChild2taxonTree<-function(parentChild,tipSet="nonParents",cleanTree=TRUE){
 	}
 
 getUltimateAnc<-function(taxa,parentChild){
+	count<-0
 	while(any(sapply(parentChild[,2],identical,unname(taxa)))){
+		count<-count+1
 		taxa<-parentChild[match(taxa,parentChild[,2]),1]
 		if(length(taxa)>1){
 			stop("Some parents are listed as children twice in parentChild")}
+		if(count>(length(parentChild)*2)){
+			stop("Breaking while() loop: cannot find ultimate ancestor")
+			}
 		}
 	return(taxa)
 	}
@@ -230,6 +248,15 @@ testParentChild<-function(parentChild){
 	if(sum(is.na(parentMatch))>1){
 		stop(paste("More than one apparent root; \n",
 			"more than one parent without their own parent listed"))}
+	#
+	#check that any ancestor is listed as its own descendant
+	parentANDchild<-apply(parentChild,1,function(x){
+		x<-unname(x)
+		identical(x[1],x[2])
+		})
+	if(any(parentANDchild)){
+		stop("Some pairs with same ID listed for both parent and child (?!)")
+		}
 	#
 	#trace all tips to a single ancestor
 	unqIDs<-unique(c(parentChild[,1],parentChild[,2]))

@@ -258,6 +258,11 @@
 #' cause a warning message to be issued that terminal tips appear to be
 #' improperly aligned.
 
+#' @param diagnosticMode If \code{TRUE}, \code{cal3timePaleoPhy} will return to the
+#' console and to graphic devices an enormous number of messages, plots and
+#' anciliary information that may be useful or entirely useless to figuring
+#' out what is going wrong.
+
 #' @param nonstoch.bin If true, dates are not stochastically pulled from
 #' uniform distributions. See below for more details.
 
@@ -439,9 +444,8 @@
 cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 	ntrees=1, anc.wt=1, node.mins=NULL, dateTreatment="firstLast",
 	FAD.only=FALSE, adj.obs.wt=TRUE, root.max=200, step.size=0.1,
-	randres=FALSE, noisyDrop=TRUE, tolerance=0.0001, plot=FALSE){
-
-
+	randres=FALSE, noisyDrop=TRUE, tolerance=0.0001, diagnosticMode=FALSE, plot=FALSE){
+	
 	#function for Ps - use pqr2Ps
 	#example data
 	#tree<-rtree(10);tree$edge.length<-sample(0:1,Nedge(tree),replace=TRUE);tree<-di2multi(tree)
@@ -463,6 +467,7 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 	#add.zombie=FALSE;node.mins<-c(-sort(-runif(1,600,900)),rep(NA,Nnode(tree)-1))	#assume two very deep divergences
 	#
 	#require(ape)#;require(phangorn)
+
 	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
 	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
 		}else{stop("timeData not of matrix or data.frame format")}}
@@ -550,7 +555,8 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 		nodes<-nodes[order(-node.depth(ktree)[-(1:Ntip(ktree))])]	#order by depth
 		anags<-character();budds<-character();nAdjZip<-0
 		while(length(nodes)>0){		#can't use a for() because # of nodes may change
-			#save_tree<-ktree;dev.new();plot(ktree)
+			#save_tree<-ktree;dev.new()
+			if(diagnosticMode){plot(ktree)}
 			node<-nodes[1]
 			tipl<-ktree$tip.label
 			#put together tip data: diffLAD is the difference between the time of observation and the true LAD
@@ -717,7 +723,9 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 						locked_nodes<-Ntip(ktree1)+locked_nodes
 						}					
 				}else{nodes1<-numeric()}				#don't bother if no more nodes left...
-				#layout(matrix(1:2,2,));plot(save_tree);plot(ktree1);layout(1)
+				if(diagnosticMode){
+					layout(matrix(1:2,2,));plot(save_tree);plot(ktree1);layout(1)
+					}
 				#update tipd and nodes (tree str will have changed)
 				ktree1<-collapse.singles(ktree1)
 				ktree<-ktree1
@@ -802,7 +810,9 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 					}
 				ktree$edge.length[match(dnode1,ktree$edge[,2])]<-new_dlen1
 				ktree$edge.length[match(dnode2,ktree$edge[,2])]<-new_dlen2
-				print(c(node,ch_zip-min_zip,new_dlen1,new_dlen2))
+				if(diagnosticMode){
+					print(c(node,ch_zip-min_zip,new_dlen1,new_dlen2))
+					}
 				nodes<-nodes[-1]			#update nodes
 			}}
 		ktree<-reorder(collapse.singles(ktree),"cladewise")

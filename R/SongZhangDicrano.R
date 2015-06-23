@@ -50,17 +50,15 @@
 #' 
 #' cladogramDicrano<-read.nexus(file.choose())
 #' 
-#' save.image("SongZhangDicrano.rdata")
+#' save(charMatDicrano,cladogramDicrano,file="SongZhangDicrano.rdata")
 #' 
 #' }
 #'
 #' data(SongZhangDicrano)
-
-
-
-#MajRule_24charX12Taxa_wBiostratChar
-
-
-
+#'
+#' # plot majority rule tree from Song and Zhang
+#' plot(cladogramDicrano,
+#'	main="MajRule_24charX12Taxa_wBiostratChar")
+#'
 #'
 NULL

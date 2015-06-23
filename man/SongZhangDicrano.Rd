@@ -46,11 +46,15 @@ charMatDicrano<-readNexus(file.choose(),type="data",SYMBOLS = " 0 1 2")
 
 cladogramDicrano<-read.nexus(file.choose())
 
-save.image("SongZhangDicrano.rdata")
+save(charMatDicrano,cladogramDicrano,file="SongZhangDicrano.rdata")
 
 }
 
 data(SongZhangDicrano)
+
+# plot majority rule tree from Song and Zhang
+plot(cladogramDicrano,
+	main="MajRule_24charX12Taxa_wBiostratChar")
 }
 \keyword{datasets}
 

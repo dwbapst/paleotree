@@ -75,6 +75,19 @@ pokexample_bad<-rbind(cbind("Squirtadae",c("Squirtle","Blastoise","Wartortle")),
 #this should return an error, as Gengar doesn't share common root
 pokeTree<-parentChild2taxonTree(pokexample_bad)
 
+
+# another example, where a taxon is listed as both parent and child
+pokexample_bad2<-rbind(cbind("Squirtadae",c("Squirtle","Blastoise","Wartortle")),
+	c("Shelloidea",c("Lapras","Squirtadae","Shelloidea")),
+	c("Pokezooa","Shelloidea"),c("Pokezooa","Parasect"),
+	c("Rodentapokemorpha","Linoone"),c("Rodentapokemorpha","Sandshrew"),
+	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
+	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"),
+	c("Umbrarcheota","Gengar"))
+
+#this should return an error, as Shelloidea is its own parent
+pokeTree<-parentChild2taxonTree(pokexample_bad2)
+
 }
 
 

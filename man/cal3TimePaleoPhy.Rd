@@ -2,13 +2,15 @@
 % Please edit documentation in R/cal3TimePaleoPhy.R
 \name{cal3TimePaleoPhy}
 \alias{bin_cal3TimePaleoPhy}
+\alias{cal3}
 \alias{cal3TimePaleoPhy}
 \title{Three Rate Calibrated Timescaling of Paleo-Phylogenies}
 \usage{
 cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1,
   anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
   FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200, step.size = 0.1,
-  randres = FALSE, noisyDrop = TRUE, plot = FALSE)
+  randres = FALSE, noisyDrop = TRUE, tolerance = 1e-04,
+  diagnosticMode = FALSE, plot = FALSE)
 
 bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
   nonstoch.bin = FALSE, sites = NULL, point.occur = FALSE, anc.wt = 1,
@@ -116,6 +118,16 @@ relative to sampling in the fossil record?}
 
 \item{noisyDrop}{If TRUE (the default), any taxa dropped from tree due to not
 having a matching entry in the time data will be listed in a system message.}
+
+\item{tolerance}{Acceptable amount of shift in tip dates from dates listed
+in \code{timeData}. Shifts outside of the range of \code{tolerance} will
+cause a warning message to be issued that terminal tips appear to be
+improperly aligned.}
+
+\item{diagnosticMode}{If \code{TRUE}, \code{cal3timePaleoPhy} will return to the
+console and to graphic devices an enormous number of messages, plots and
+anciliary information that may be useful or entirely useless to figuring
+out what is going wrong.}
 
 \item{plot}{If true, plots the input, "basic" timescaled and output
 cal3-timescaled phylogenies}
@@ -355,7 +367,6 @@ phyloDiv(ttree)
 ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     sampRate=sRate,ntrees=1,anc.wt=0,plot=TRUE)
 
-\donttest{
 #let's look at how three trees generated with very different time of obs. look
 ttreeFAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     FAD.only=TRUE,dateTreatment="firstLast",sampRate=sRate,ntrees=1,plot=TRUE)
@@ -371,7 +382,6 @@ plot(ladderize(ttreeFAD));text(5,5,"time.obs=FAD",cex=1.5,pos=4)
 plot(ladderize(ttreeRand));text(5,5,"time.obs=Random",cex=1.5,pos=4)
 plot(ladderize(ttreeLAD));text(5,5,"time.obs=LAD",cex=1.5,pos=4)
 layout(1); par(parOrig)
-}
 
 #to get a fair sample of trees, let's increase ntrees
 ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,

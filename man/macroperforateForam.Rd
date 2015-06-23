@@ -76,7 +76,7 @@ foramAMb<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
 # aLb: fully bifurcating lineage phylogeny
 foramALb<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
 
-save.image("macroperforateForam.Rdata")
+save.image("macroperforateForam.rdata")
 
 }
 

@@ -52,6 +52,56 @@ save(charMatDicrano,cladogramDicrano,file="SongZhangDicrano.rdata")
 
 data(SongZhangDicrano)
 
+# calculate a distance matrix from the character data
+char<-charMatDicrano
+charDist<-matrix(,nrow(char),nrow(char))
+rownames(charDist)<-colnames(charDist)<-rownames(char)
+for(i in 1:nrow(char)){for(j in 1:nrow(char)){
+	charDiff<-logical()
+	for(k in 1:ncol(char)){
+		selectPair<-char[c(i,j),k]
+		if(all(!is.na(selectPair))){
+			#drop states that are missing
+			isSame<-identical(selectPair[1],selectPair[2])
+			charDiff<-c(charDiff,isSame)
+			}
+		}
+	charDist[i,j]<-1-sum(charDiff)/length(charDiff)
+	}}
+
+#####
+# the following is mostly stolen from the example code for my graptDisparity dataset
+
+#now, is the diagonal zero? (it should be)
+all(diag(charDist)==0)
+
+#now, is the matrix symmetric? (it should be)
+isSymmetric(charDist)
+
+#can apply cluster analysis
+clustRes <- hclust(as.dist(charDist))
+plot(clustRes)
+
+#can apply PCO (use lingoes correction to account for negative values
+   #resulting from non-euclidean matrix
+pco_res <- pcoa(charDist,correction="lingoes")
+
+#relative corrected eigenvalues
+rel_corr_eig <- pco_res$values$Rel_corr_eig
+layout(1:2)
+plot(rel_corr_eig)
+#cumulative
+plot(cumsum(rel_corr_eig))
+
+#well let's look at those PCO axes anyway
+layout(1)
+pco_axes <- pco_res$vectors
+plot(pco_axes[,1],pco_axes[,2],pch=16,
+   xlab=paste("PCO Axis 1, Rel. Corr. Eigenvalue =",round(rel_corr_eig[1],3)),
+   ylab=paste("PCO Axis 2, Rel. Corr. Eigenvalue =",round(rel_corr_eig[2],3)))
+
+#######
+
 # plot majority rule tree from Song and Zhang
 plot(cladogramDicrano,
 	main="MajRule_24charX12Taxa_wBiostratChar")

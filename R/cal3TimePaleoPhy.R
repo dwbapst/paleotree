@@ -555,8 +555,11 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 		nodes<-nodes[order(-node.depth(ktree)[-(1:Ntip(ktree))])]	#order by depth
 		anags<-character();budds<-character();nAdjZip<-0
 		while(length(nodes)>0){		#can't use a for() because # of nodes may change
-			#save_tree<-ktree;dev.new()
-			if(diagnosticMode){plot(ktree)}
+			if(diagnosticMode){
+				save_tree<-ktree
+				dev.new()
+				plot(ktree)
+				}
 			node<-nodes[1]
 			tipl<-ktree$tip.label
 			#put together tip data: diffLAD is the difference between the time of observation and the true LAD

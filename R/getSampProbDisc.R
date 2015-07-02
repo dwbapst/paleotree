@@ -250,7 +250,7 @@ getSampProbDisc<-function(timeData,n_tbins=1,grp1=NA,grp2=NA,est_only=FALSE,iter
 		function(par){
 			qR<-qR_predict(par)
 			q<-qR[,1]; R<-qR[,2]/10
-			data<-cbind(q,R,dur)
+			#data<-cbind(q,R,dur)
 			class<-apply(qR,1,function(x) which(apply(unique(qR),1,function(y) all(x==y))))	#get unique classes of q,R
 			f<-sapply(unique(class),function(x) f_dur(q[x==class][1],R[x==class][1],dur[x==class]))
 			res<-(-sum(f))
@@ -311,7 +311,7 @@ getSampProbDisc<-function(timeData,n_tbins=1,grp1=NA,grp2=NA,est_only=FALSE,iter
 				tbin<-c(max(FO),max(FO)-cumsum(t_bl))[1:n_tbins]
 				mqrt<-matrix(par[(n_tb+1):(length(par))],,2,byrow=TRUE)
 				tcat<-sapply(FO,function(x) sum(tbin>=x))
-				tcount<-sapply(sort(unique(tcat)),function(x) sum(tcat==x))
+				#tcount<-sapply(sort(unique(tcat)),function(x) sum(tcat==x))
 				#if(all(tcount>100)){t(sapply(tcat,function(x) mqrt[x,]))
 				#}else{matrix(0.99,length(FO),2,byrow=TRUE)}
 				t(sapply(tcat,function(x) mqrt[x,]))

@@ -144,7 +144,7 @@ parnames.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
 	np<-attr(x,"np")	#number of parameters 
 	#original uses base, not current number of params? I'm not following why...
-	parnames<-attr(x,"parnames")
+	#parnames<-attr(x,"parnames")
 	value<-as.character(value)
 	if(length(value)!=np){stop("length of new parnames not equal to number of parameters")}
 	if(any(is.na(value))){stop("NA values in parnames replacement")}

@@ -1,4 +1,4 @@
-"
+
 
 #' @details
 
@@ -146,7 +146,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 		}
 	
 	origination<-function(taxa,ancID,time,looksLike=NULL){
-		#adds a new taxon via branching
+		#adds a new taxon via branching or anagenesis
 		newID<-newTaxaID(
 		if(is.null(looksLike)){
 			looksLike<-newID
@@ -157,7 +157,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 		}
 
 	termination<-function(taxa,targetID,time){
-		#kills an existing taxon
+		#ends an existing taxon (from extinction or pseudoextinction)
 		whichTarget<-which(sapply(taxa,function(x) x[[1]][,1]==targetID))
 		if(length(whichTarget)!=1){stop('taxon IDs repeated??')}
 		taxa[[whichTarget]][[1]][,4]<-time
@@ -216,7 +216,7 @@ simFossilRecord<-function(p, q, r=Inf, anag.rate=0,
 	#anagenesis is a separate rate (anag.rate)
 	#q is rate of extinction
 	#r is rate of sampling
-	
+	#
 
 
 	

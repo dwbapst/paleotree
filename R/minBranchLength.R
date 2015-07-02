@@ -77,7 +77,7 @@ minBranchLength<-function(tree, mbl){
 	if(!is.numeric(mbl) | length(mbl)!=1){
 		stop("mbl is a not a single numeric value")}
 	#
-	root_node<-Ntip(timetree)+1
+	#root_node<-Ntip(timetree)+1
 	while(any(timetree$edge.length<mbl)){
 		#pick one at random, make vector of every mom node that is ancestral
 		mom<-timetree$edge[((1:Nedge(timetree))[timetree$edge.length<mbl])

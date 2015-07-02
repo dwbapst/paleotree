@@ -111,8 +111,8 @@ testEdgeMat<-function(tree){
 	expNodeNumber<-tree$Nnode+length(tree$tip.label)
 	if(any(tree$edge>expNodeNumber)){
 		stop(paste0("Some elements of edge are numbered greater than ",
-			expNodeNumber,"\n calculated from Nnode+length(tree$tip.label)","\n Check these:",
-			tree$edge[tree$edge>expNodeNumber],collapse=" "))}
+			expNodeNumber,"\n calculated from Nnode+length(tree$tip.label)","\n Check these: ",
+			paste(unique(tree$edge[tree$edge>expNodeNumber]),collapse=" ")))}
 	#test if Nnode agrees with number of nodes in $edge
 	if(Nnode(tree)!=(max(tree$edge[,1])-Ntip(tree))){
 		stop("Nnode is lower than number implied by edge[,1]?")}

@@ -218,10 +218,12 @@ addTermBranchLength<-function(tree,addtime=0.001){
 #' @rdname modifyTerminalBranches
 #' @export
 fixRootTime<-function(treeOrig,treeNew,consistentDepth=TRUE,nodeAgeTransfer=TRUE){
-	treeDepth<-function(tree){
-		#require(ape)
-		max(dist.nodes(tree)[,Ntip(tree)+1])
-		}
+	# UNUSED FUNCTION?
+	#treeDepth<-function(tree){
+	#	#require(ape)
+	#	max(dist.nodes(tree)[,Ntip(tree)+1])
+	#	}
+	#
 	#require(ape)
 	if(!is(treeOrig, "phylo")){stop("treeOrig is not of class phylo")}
 	if(!is(treeNew, "phylo")){stop("treeNew is not of class phylo")}

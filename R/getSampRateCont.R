@@ -225,7 +225,7 @@ getSampRateCont<-function(timeData,n_tbins=1,grp1=NA,grp2=NA,threshold=0.1,est_o
 				tbin<-c(max(FO),max(FO)-cumsum(t_bl))[1:n_tbins]
 				mqrt<-matrix(par[(n_tb+1):(length(par))],,2,byrow=TRUE)
 				tcat<-sapply(FO,function(x) sum(tbin>=x))
-				tcount<-sapply(sort(unique(tcat)),function(x) sum(tcat==x))
+				#tcount<-sapply(sort(unique(tcat)),function(x) sum(tcat==x))
 				#if(all(tcount>100)){t(sapply(tcat,function(x) mqrt[x,]))
 				#}else{matrix(0.99,length(FO),2,byrow=TRUE)}
 				t(sapply(tcat,function(x) mqrt[x,]))

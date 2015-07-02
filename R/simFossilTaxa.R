@@ -421,7 +421,7 @@ simFossilTaxa<-function(p,q,anag.rate=0,prop.bifurc=0,prop.cryptic=0,nruns=1,min
 				#are any "live" taxa below maxtime1? if so, continue
 				continue<-ifelse(any(is.na(taxad[,4])),any(taxad[is.na(taxad[,4]),3]<=maxtime1),FALSE)
 				if(!continue & !min.cond){eval<-TRUE}
-				taxad_save<-taxad
+				#taxad_save<-taxad
 				#print(c(nrow(taxad),sum(is.na(taxad[,4]))))
 				}
 			if(!continue & eval){

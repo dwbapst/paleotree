@@ -141,7 +141,7 @@ simPaleoTrees<-function(p,q,r,ntrees=1,all.extinct=FALSE,modern.samp.prob=1.0,mi
 				tree<-taxa2phylo(taxa,obs_time=ranges1[,2],plot=plot)
 				if(drop.zlb){tree<-dropZLB(tree)}
 				if(all(!is.na(tree))){
-					numext<-sum(ranges1[,2]==0)
+					#numext<-sum(ranges1[,2]==0)
 					minta<-Ntip(tree)>mintaxa
 					minti<-(max(ranges1,na.rm=TRUE)-min(ranges1,na.rm=TRUE))>mintime
 					if(minta & minti){

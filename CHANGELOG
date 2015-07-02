@@ -16,6 +16,8 @@ Version - 2.5 -
 -Added a tolerance argument to cal3timePaleoPhy to stop spurious warnings related to floating precision about terminal tip ages that were barely distinguishable from zero
 -Discovered broken while() loop in getUltimateAnc and testParentChild, added code to avoid infinite-running while loops
 -Added example dataset of character matrix and cladogram from Song and Zhang (2014) study of dicranograptid relationships
+-Removed variables from functions that were assigned but never used via package codetools
+-Following recent change in CRAN policy, now explicitly importing various functions from default non-base package into paleotree namespace, including importing package stats as a whole. These imports now listed in DESCRIPTION.
 -
 
 Version - 2.4 - 05-01-15

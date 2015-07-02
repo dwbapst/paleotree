@@ -479,7 +479,7 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 	#first clean out all taxa which are NA or missing in timeData
 	if(ntrees==1){message("Warning: Do not interpret a single cal3 time-scaled tree, regardless of other arguments!")}
 	if(ntrees<1){stop("ntrees<1")}
-	originalInputTree<-tree
+	#originalInputTree<-tree
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
 	if(length(droppers)>0){
 		if(length(droppers)==Ntip(tree)){
@@ -568,7 +568,7 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 			if(node==(Ntip(ktree)+1)){
 				min_zip<-(-root.max)	#if root, allow to be push back up to root.max
 				stem_len<-root.max
-				root_push<--seq(min_zip,0,by=step.size)
+				#root_push<--seq(min_zip,0,by=step.size)
 			}else{									#if not root, push down to lower node
 				min_zip<-(-ktree$edge.length[ktree$edge[,2]==node])
 				stem_len<-ktree$edge.length[ktree$edge[,2]==node]

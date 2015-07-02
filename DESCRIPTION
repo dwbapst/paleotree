@@ -4,11 +4,9 @@ Version: 2.5
 Title: Paleontological and Phylogenetic Analyses of Evolution
 Date: 2015-05-01
 Author: David W. Bapst
-
 Depends:
     R (>= 3.0.0),
     ape (>= 3.2)
-	
 Imports:
     phangorn (>= 1.99.12),
 	stats,
@@ -16,7 +14,6 @@ Imports:
 	grDevices,
 	methods,
 	utils
-	
 ByteCompile: TRUE
 Maintainer: David W. Bapst <dwbapst@gmail.com>
 Description: Analyzes, time-scales and simulates phylogenies of extinct/fossil

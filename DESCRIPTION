@@ -10,6 +10,7 @@ Depends:
 Imports:
     phangorn (>= 1.99.12),
 	stats,
+	phytools,
 	graphics,
 	grDevices,
 	methods,

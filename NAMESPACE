@@ -114,3 +114,4 @@ importFrom("graphics", "par", "layout", "plot", "hist", "lines", "legend", "poly
 importFrom("grDevices", "rainbow")
 importFrom("methods", "is")
 importFrom("utils", "read.csv")
+importFrom("phytools", "bind.tip")

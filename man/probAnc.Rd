@@ -60,8 +60,8 @@ means that even when sampling is perfect (R=1, meaning completeness of
 can be no higher than 0.5. See Foote (1996) for a graphic depiction of this
 non-intuitive ceiling. For reasons (probably?) having to do with finite
 approximations of infinite summations, values close to perfect sampling
-may have values slightly higher than this ceiling (which is also apparent
-visually in the figures in Foote, 1996).
+may have values slightly higher than this ceiling, which is also apparent
+visually in the figures in Foote (1996).
 }
 \examples{
 #examples, run at very low nrep for sake of speed (examples need to be fast)

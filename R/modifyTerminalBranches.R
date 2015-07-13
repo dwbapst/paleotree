@@ -95,9 +95,9 @@
 
 #' @param tipAge The age of the tip taxon added to the tree, in time before present (i.e. where
 #' present is 0), given in the same units as the edges of the tree are already scaled. Cannot be
-#' given if \code{newLength} is given.
+#' given if \code{edgeLength} is given.
 
-#' @param newLength The new \code{edge.length} of the terminal branch this tip is connected to.
+#' @param edgeLength The new \code{edge.length} of the terminal branch this tip is connected to.
 #' Cannot be given if \code{tipAge} is given. 
 
 #' @param nodeAttach Node or tip ID number (as given in tree$edge) at which to attach the new tip. 

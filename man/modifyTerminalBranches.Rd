@@ -72,7 +72,10 @@ See documentation of \code{bind.tip} for more details.}
 
 \item{tipAge}{The age of the tip taxon added to the tree, in time before present (i.e. where
 present is 0), given in the same units as the edges of the tree are already scaled. Cannot be
-given if \code{newLength} is given.}
+given if \code{edgeLength} is given.}
+
+\item{edgeLength}{The new \code{edge.length} of the terminal branch this tip is connected to.
+Cannot be given if \code{tipAge} is given.}
 
 \item{positionBelow}{The distance along the edge below the node to be attached to
 (given in code{nodeAttach} to add the new tip. Cannot be negative or greater than the length of the
@@ -80,9 +83,6 @@ edge below \code{nodeAttach}.}
 
 \item{noNegativeEdgeLength}{Return an error if a negative terminal edge length is calculated
 for the new tip.}
-
-\item{newLength}{The new \code{edge.length} of the terminal branch this tip is connected to.
-Cannot be given if \code{tipAge} is given.}
 }
 \value{
 Gives back a modified phylogeny as a phylo object, generally with a

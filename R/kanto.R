@@ -54,7 +54,7 @@
 #' kanto5<-kanto[1:5,]
 #' barplotAbund(kanto5)
 #'
-#' donttest{
+#' \donttest{
 #'
 #' require(vegan)
 #' bcDist<-vegdist(abundances,method="bray")

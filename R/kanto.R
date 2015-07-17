@@ -17,8 +17,8 @@
 #' only been recently recognized. When separate names are commonly applied to sexual
 #' dimorphic forms, these were also combined and a single common name was used.
 #'
-#' \emph{Note: This data is totally made-up, and a satirical homage to
-#' a well-known video game series, and thus should constitute fair-use.}
+#' \emph{Note: This data is a totally made-up, satirical homage to
+#' a well-known video game series (thus constituting fair-use).}
 
 #' @format 
 #' A table of type integer, representing terrestrial fauna and flora abundance counts.
@@ -53,15 +53,79 @@
 #' #first five sites
 #' kanto5<-kanto[1:5,]
 #' barplotAbund(kanto5)
-#'
+#' 
+#' #get pairwise Spearman rho coefficients
+#' rhoCoeff<-pairwiseSpearmanRho(kanto,dropAbsent="bothAbsent")
+#' 
+#' #what are the nearest-neighbor rhos (largest rho correlations)?
+#' diag(rhoCoeff)<-NA
+#' rhoNearest<-apply(rhoCoeff,1,max,na.rm=TRUE)
+#' rhoNearest
+#' 
+#' # We can see the power plant sample is extremely different from the rest
+#' 
+#' # measure evenness: Hurlbert's PIE
+#' 
+#' kantoPIE<-HurlbertPIE(kanto)
+#' 
+#' # compare to dominance (relative abundance of most abundant taxon)
+#' 
+#' dominance<-apply(kanto,1,function(x) max(x)/sum(x) )
+#' 
+#' plot(kantoPIE,dominance)
+#' 
+#' # relatively strong relationship!
+#' 
+#' 
 #' \dontrun{
 #'
-#' require(vegan)
-#' bcDist<-vegdist(abundances,method="bray")
-#'
+#' #get bray-curtis distances
+#' library(vegan)
+#' bcDist <- vegdist(kanto,method="bray")
+#' 
+#' #do a PCO on the bray-curtis distances
+#' pcoRes <- pcoa(bcDist,correction="lingoes")
+#' scores <- pcoRes$vectors
+#' #plot the PCO
+#' plot(scores,type="n")
+#' text(labels=rownames(kanto),scores[,1],scores[,2],cex=0.5)
+#' 
+#' #the way the power plant the the pokemon tower converge
+#' 	# is very suspicious: may be distortion due to a long gradient
+#' 
+#' #do a DCA instead with vegan's decorana
+#' dcaRes<-decorana(kanto)
+#' #plot using native vegan functions
+#' 	#will show species scores in red
+#' plot(dcaRes,cex=0.5)
+#' #kind of messy
+#' 
+#' #show just the sites scores
+#' plot(dcaRes,cex=0.5,display="sites")
+#' 
+#' #show just the species scores
+#' plot(dcaRes,cex=0.5,display="species")
+#' 
+#' #well, that's pretty cool
+#' 
+#' 
+#' #get the nearest neighbor for each site based on pair-wise rho coefficients
+#' rhoNeighbor<-apply(rhoCoeff,1,function(x)
+#' 	rownames(kanto)[tail(order(x,na.last=NA),1)])
+#' 
+#' #let's plot the nearest neighbor connections with igraph
+#' NNtable<-cbind(rownames(kanto),rhoNeighbor)
+#' 
+#' # now plot with igraph
+#' library(igraph)
+#' NNlist <- graph.data.frame(NNtable)
+#' plot(NNlist)
+#' 
+#' #arrows point at the nearest neighbor of each sample
+#' 	# based on maximum Spearman rho correlation
 #'
 #' }
-
+#' 
 
 
 #'

@@ -20,6 +20,7 @@ Version - 2.5 -
 -Following recent change in CRAN policy, now explicitly importing various functions from default non-base package into paleotree namespace, including importing package stats as a whole. These imports now listed in DESCRIPTION.
 -Added function bindPaleoTip which wraps phytool's bind.tip for use with non-ultrametric paleontological phylogenies with $root.time elements, allows input of the new tips age and updates $root.time
 -Added 'kanto' a fictional example dataset, consisting of a taxon abundances-by-sites table for community ecology
+-Added community ecology functions 'pairwiseSpearmanRho' and 'HurlbertPIE' since they don't seem to be in any other package
 -
 
 Version - 2.4 - 05-01-15

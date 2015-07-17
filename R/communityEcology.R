@@ -71,7 +71,6 @@
 #' Example dataset: \code{\link{kanto}}
 
 #' @name communityEcology
-#' @rdname communityEcology
 
 #' @author David W. Bapst
 
@@ -136,7 +135,7 @@
 #' hist(kantoPIE)
 #' #evenness of the kanto data is fairly high
 #' 
-#' #plot
+#' #barplot
 #' parX<-par(mar=c(7,5,3,3))
 #' barplot(kantoPIE,las=3,cex.names=0.7,
 #' 	ylab="Hurlbert's PIE",ylim=c(0.5,1),xpd=FALSE)
@@ -145,7 +144,16 @@
 #' #and we can see that the Tower has extremely low unevenness
 #' 	#...overly high abundance of ghosts?
 #' 
+#' #let's look at evenness of 5 most abundant taxa
+#' kantoPIE_5<-HurlbertPIE(kanto,nAnalyze=5)
+#'
+#' #barplot
+#' parX<-par(mar=c(7,5,3,3))
+#' barplot(kantoPIE_5,las=3,cex.names=0.7,
+#' 	ylab="Hurlbert's PIE for 5 most abundant taxa",ylim=c(0.5,1),xpd=FALSE)
+#' par(parX)
 
+#' @rdname communityEcology
 #' @export
 pairwiseSpearmanRho<-function(x, dropAbsent="bothAbsent", asDistance=FALSE,
 	diag=NULL, upper=NULL, na.rm=FALSE){
@@ -215,10 +223,10 @@ pairwiseSpearmanRho<-function(x, dropAbsent="bothAbsent", asDistance=FALSE,
 	return(result)
 	}
 
-
+#' @rdname communityEcology
 #' @export
 HurlbertPIE<-function(x,nAnalyze=Inf){
-	if(is.vector(x)){
+	if(is.vector(x)){ 
 		x<-matrix(x,1,length(x))
 		}
 	if(length(nAnalyze)!=1 | !is.numeric(nAnalyze) | nAnalyze<2){
@@ -237,7 +245,7 @@ HurlbertPIE<-function(x,nAnalyze=Inf){
 		samp<-x[i,]
 		#remove all but n most abundant
 		if(!is.infinite(nAnalyze)){
-			samp<-samp[rank(-samp)<(n+1)]
+			samp<-samp[rank(-samp)<(nAnalyze+1)]
 			}
 		#drop zeroes
 		samp<-samp[samp>0]

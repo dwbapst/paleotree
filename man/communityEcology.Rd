@@ -8,6 +8,8 @@
 \usage{
 pairwiseSpearmanRho(x, dropAbsent = "bothAbsent", asDistance = FALSE,
   diag = NULL, upper = NULL, na.rm = FALSE)
+
+HurlbertPIE(x, nAnalyze = Inf)
 }
 \arguments{
 \item{x}{The community abundance matrix. Must be a matrix with two dimensions for
@@ -132,7 +134,7 @@ kantoPIE<-HurlbertPIE(kanto)
 hist(kantoPIE)
 #evenness of the kanto data is fairly high
 
-#plot
+#barplot
 parX<-par(mar=c(7,5,3,3))
 barplot(kantoPIE,las=3,cex.names=0.7,
 	ylab="Hurlbert's PIE",ylim=c(0.5,1),xpd=FALSE)
@@ -140,6 +142,15 @@ par(parX)
 
 #and we can see that the Tower has extremely low unevenness
 	#...overly high abundance of ghosts?
+
+#let's look at evenness of 5 most abundant taxa
+kantoPIE_5<-HurlbertPIE(kanto,nAnalyze=5)
+
+#barplot
+parX<-par(mar=c(7,5,3,3))
+barplot(kantoPIE_5,las=3,cex.names=0.7,
+	ylab="Hurlbert's PIE for 5 most abundant taxa",ylim=c(0.5,1),xpd=FALSE)
+par(parX)
 }
 \author{
 David W. Bapst

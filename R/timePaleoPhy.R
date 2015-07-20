@@ -370,6 +370,32 @@
 #' evolutionary patterns. Blackwell Scientific, Oxford.
 
 #' @examples
+#'
+#' # examples with empirical data
+#' 
+#' #load data
+#' data(retiolitinae)
+#' 
+#' #Can plot the unscaled cladogram
+#' plot(retioTree)
+#' #Can plot discrete time interval diversity curve with retioRanges
+#' taxicDivDisc(retioRanges)
+#' 
+#' #Use basic time-scaling (terminal branches only go to FADs)
+#' ttree<-bin_timePaleoPhy(tree=retioTree,timeList=retioRanges,type="basic",
+#' 	ntrees=1, plot=TRUE)
+#' 
+#' #Use basic time-scaling (terminal branches go to LADs)
+#' ttree<-bin_timePaleoPhy(tree=retioTree,timeList=retioRanges,type="basic",
+#' 	add.term=TRUE, ntrees=1, plot=TRUE)
+#' 
+#' #mininum branch length time-scaling (terminal branches only go to FADs)
+#' ttree<-bin_timePaleoPhy(tree=retioTree,timeList=retioRanges,type="mbl",
+#' 	vartime=1, ntrees=1, plot=TRUE)
+#' 
+#' ###################
+#'
+#' # examples with simulated data
 #' 
 #' #Simulate some fossil ranges with simFossilTaxa
 #' set.seed(444)
@@ -575,7 +601,8 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 			if(length(droppers)>0){
 				stop("node.mins not compatible with datasets where some taxa are dropped; drop before analysis instead")}
 			if((!is.binary.tree(originalInputTree) | !is.rooted(tree)) & randres){
-				node_changes<-match(prop.part(originalInputTree),prop.part(tree))
+				node_changes<-match(originalInputTree$tip.label[prop.part(originalInputTree)],
+					tree$tip.label[prop.part(tree)])
 				node.mins1<-rep(NA,Nnode(tree))
 				node.mins1[node_changes]<-node.mins
 			}else{

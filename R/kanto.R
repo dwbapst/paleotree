@@ -124,6 +124,30 @@
 #' #arrows point at the nearest neighbor of each sample
 #' 	# based on maximum Spearman rho correlation
 #'
+#' #testing for differences between groups of sites
+#' 
+#' #is there a difference between routes and non-routes
+#' groups<-rep(0,nrow(kanto))
+#' groups[grep(rownames(kanto),pattern="Route")]<-1
+#' 
+#' #anosim (in vegan)
+#' 	#are distances within groups smaller than distances between?
+#' #we could also use adonis from vegan instead 
+#' library(vegan)
+#' 
+#' anosim(dat=kanto,grouping=groups)
+#' adonis(kanto~factor(groups))
+#' #both are very significant
+#' 
+#' #alternative: using multivariate GLMs in mvabund
+#' 
+#' library(mvabund)
+#' 
+#' ft <- manyglm(formula=kanto~factor(groups))
+#' anova(ft)
+#' #also highly significant!
+#' 
+#'
 #' }
 #' 
 

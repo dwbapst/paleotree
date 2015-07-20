@@ -21,7 +21,8 @@ Version - 2.5 -
 -Added function bindPaleoTip which wraps phytool's bind.tip for use with non-ultrametric paleontological phylogenies with $root.time elements, allows input of the new tips age and updates $root.time
 -Added 'kanto' a fictional example dataset, consisting of a taxon abundances-by-sites table for community ecology
 -Added community ecology functions 'pairwiseSpearmanRho' and 'HurlbertPIE' since they don't seem to be in any other package
--
+-Modified how timePaleoPhy looks for node dates to assign, after taxa are dropped (originally matched clades based on tip IDs, not tip labels)
+
 
 Version - 2.4 - 05-01-15
 -Modified timePaleoPhy help file to clarify 'these are not realistic time-scaling functions' statement and correcting an 'either' to 'neither' in the description of argument 'ntrees'

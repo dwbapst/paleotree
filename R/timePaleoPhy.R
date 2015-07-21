@@ -601,8 +601,9 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 			if(length(droppers)>0){
 				stop("node.mins not compatible with datasets where some taxa are dropped; drop before analysis instead")}
 			if((!is.binary.tree(originalInputTree) | !is.rooted(tree)) & randres){
-				node_changes<-match(originalInputTree$tip.label[prop.part(originalInputTree)],
-					tree$tip.label[prop.part(tree)])
+				origDesc<-lapply(prop.part(originalInputTree),function(x) sort(originalInputTree$tip.label[x]))
+				treeDesc<-lapply(prop.part(tree),function(x) sort(tree$tip.label[x]))
+				node_changes<-match(origDesc,treeDesc)
 				node.mins1<-rep(NA,Nnode(tree))
 				node.mins1[node_changes]<-node.mins
 			}else{

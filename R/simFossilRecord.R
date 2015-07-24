@@ -27,7 +27,13 @@
 
 
 
-
+#' Hartmann et al. (2011) recently discovered a potential statistical artifact
+#' when branching simulations are conditioned on some maximum number of taxa.
+#' Thus, this function continues the simulation once the maxima for
+#' \code{nTotalTaxa}, \code{nExtant} or \code{nSamp} are reached
+#' stopping immediately before the next taxon (limit +1) originates. Once the simulation
+#' terminates, it is judged whether it is acceptable for all conditions given
+#' and if so, the run is accepted as a dataset for output.
 
 
 
@@ -171,6 +177,59 @@ simFossilRecord<-function(
 	#
 	#makeParFunct('0.1+T*0.2-0.1^N',isBranchRate=FALSE)
 
+	# get rate vector
+
+	whichLive<-function(taxa){
+		res<-which(sapply(taxa,function(x) x[[1]][5]==1))
+		return(res)
+		}
+
+	getRateVector<-function(taxa,timePassed,
+			getBranchRate,getExtRate,getSampRate,getAnagRate,
+			prop.cryptic,prop.bifurc,negRatesAsZero){
+		#
+		#get some basic summary statistics first
+		#vector of which taxa are still alive
+		whichLive<-whichLive(taxa)
+		#standing number of extant lineages 
+		# (i.e. number of lineages that stuff can happen to)
+		nLive<-length(whichLive)	
+		#
+		###########################################################
+		# calculate rates (which may be time of diversity dependent)
+			#use rate-getting functions from above
+		#get the new branching rate, extinction rate, sampling rate, anagenesis rate
+		branchRate<-getBranchRate(N=nLive,T=timePassed)
+		extRate<-getExtRate(N=nLive,T=timePassed,P=branchRate)
+		sampRate<-getSampRate(N=nLive,T=timePassed,P=branchRate)
+		anagRate<-getAnagRate(N=nLive,T=timePassed,P=branchRate)
+		##
+		# now deal with proportional types of branching
+		#get cryptic, budding and bifurcation components
+		crypticRate<-branchRate*(prop.cryptic)
+		#rate of morph differentiation per branching event
+		morphRate<-branchRate*(1-prop.cryptic)
+		buddRate<-morphRate*(1-prop.bifurc)
+		bifurcRate<-morphRate*(prop.bifurc)		
+		#
+		#get probabilities of event types
+		rateVector<-c(buddRate,bifurcRate,anagRate,crypticRate,extRate,sampRate)
+		names(rateVector)<-c('budd','bifurc','anag','crypt','ext','samp')
+		#check rates, make sure none are less than zero
+		if(any(rateVector<0)){
+			if(negRatesAsZero){
+				rateVector[rateVector<0]<-0
+			}else{
+				stop(paste0(names(which(rateVector<0)),'rate calculated less than zero'))
+				}
+			}
+		#
+		return(rateVector)
+		}
+
+
+
+
 	#FUNCTIONALIZE EACH EVENT TYPE
 	#internal functions for branching/extinction/anagenesis processes	
 
@@ -294,6 +353,7 @@ simFossilRecord<-function(
 	#ARGUMENT CHECKING
 
 	
+# number of starting taxa must be at least 1
 
 
 	
@@ -372,67 +432,119 @@ simFossilRecord<-function(
 			#currentTime is the max time from stoppingConditions
 		currentTime<-stoppingConditions$totalTime[2]
 		taxa<-initiateTaxa(startTaxa=startTaxa,time=currentTime)
-		continue<-TRUE
+		#test to make sure stopping conditions aren't impossible
+		continue<-testContinue(taxa=taxa,timePassed=0,stoppingConditions=stoppingConditions)
+		if(!continue){
+			stop("Initial starting point already surpasses acceptable maxima for stopping conditions")
+			}
+	
+
+
+
 		while(continue){
-			#get some basic summary statistics first
-			#vector of which taxa are still alive
-			whichLive<-which(sapply(taxa,function(x) x[[1]][5]==1))
-			#standing number of extant lineages 
-			# (i.e. number of lineages that stuff can happen to)
-			nLive<-length(whichLive)
+
+
 			#timePassed from the initiation of the simulation
-			timePassed<-totalTime[2]-currentTime	
+			timePassed<-stoppingConditions$totalTime[2]-currentTime
+
+
+			#evalutate stopping conditions NOW
 			#
-			#########################
-			# calculate rates (which may be time of diversity dependent)
-				#use rate-getting functions from above
-			#get the new branching rate, extinction rate, sampling rate, anagenesis rate
-			branchRate<-getBranchRate(N=nLive,T=timePassed)
-			extRate<-getExtRate(N=nLive,T=timePassed,P=branchRate)
-			sampRate<-getSampRate(N=nLive,T=timePassed,P=branchRate)
-			anagRate<-getAnagRate(N=nLive,T=timePassed,P=branchRate)
-			##
-			# now deal with proportional types of branching
-			#get cryptic, budding and bifurcation components
-			crypticRate<-branchRate*(prop.cryptic)
-			#rate of morph differentiation per branching event
-			morphRate<-branchRate*(1-prop.cryptic)
-			buddRate<-morphRate*(1-prop.bifurc)
-			bifurcRate<-morphRate*(prop.bifurc)		
+			#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
+				# none of these can REVERSE
+			#(2) then go back, find all interval for which stopping conditions were met
+				# if no acceptable intervals, reject run
+			#(3) randomly sample within intervals for a single date, apply timeSliceFossilRecord
+
+
+			#for (2), keep a table that records changes in nTotalTaxa, nExtant, nSamp with timePassed
+				#then can quickly evaluate (2)
+			
+		testContinue<-function(taxa,timePassed,stoppingConditions){
+			#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
+				# none of these can REVERSE
+			#total number of taxa
+			nTaxa<-length(taxa)
+			#vector of which taxa are still alive
+			whichLive<-whichLive(taxa)
+			nLive<-length(whichLive)
+			#total number of sampled taxa
+			nObs<-
 			#
-			#get probabilities of event types
-			rateVector<-c(buddRate,bifurcRate,anagRate,crypticRate,extRate,sampRate)
-			names(rateVector)<-c('budd','bifurc','anag','crypt','ext','samp')
-			#check rates, make sure none are less than zero
-			if(any(rateVector<0)){
-				if(negRatesAsZero){
-					rateVector[rateVector<0]<-0
-				}else{
-					stop(paste0(names(which(rateVector<0)),'rate calculated less than zero'))
-					}
-				}
+			#time passed
+			timePassed<-stoppingConditions$totalTime[2]-currentTime			
+			#
+			# test stopping conditions
+			totalExtinction<-nLive==0
+			tooMuchTime<-timePassed>stoppingConditions$totalTime[2]
+			tooManyTaxa<-nTaxa>stoppingConditions$nTotalTaxa[2]
+			tooManySamp<-nObs>stoppingConditions$nSamp[2]
+			runStop<-totalExtinction | tooMuchTime | tooManyTaxa | tooManySamp			
+			continue<-!runStop
+			return(continue)
+			}
+
+			testContinue(taxa=taxa,timePassed=timePassed,stoppingConditions=stoppingConditions)
+
+
+			#
+			####################################################
+
+
+			#only if continue=TRUE
+
+			# get rates, sample new event, have it occur
+			#
+			#get event probability vector
+			rateVector<-getRateVector(taxa=taxa,timePassed=timePassed,
+				getBranchRate=getBranchRate,getExtRate=getExtRate,
+				getSampRate=getSampRate,getAnagRate=getAnagRate,
+				prop.cryptic=prop.cryptic,prop.bifurc=prop.bifurc,
+				negRatesAsZero=negRatesAsZero)
 			#
 			#sum the rates
 			sumRates<-sum(rateVector)
 			eventProb<-rateVector/sumRates
-			##################################
 			#
 			#pull type of event (from Peter Smits)
-			event <- sample( names(rateVector), 1, prob = eventProb)
+			event <- sample( names(eventProb), 1, prob = eventProb)
+			#
+			#vector of which taxa are still alive
+			whichLive<-whichLive(taxa)
 			#select which lineage does it occur to
 			target<-sample(whichLive,1)
 			#
 			#draw waiting time to an event (from Peter Smits)
 			changeTime <- rexp(1, rate =sumRates*nLive)
-			newTime<- currentTime + changeTime
+			newTime<- currentTime - changeTime
+
+
+			newTimePassed<-timePassed+changeTime
+
+
+
 			#
 			###########################################
 			#
-			#evalutate stopping conditions NOW
-			#
+
+
+
+
+
 			# NEED TO AVOID HARMANN ET AL. EFFECT
-				# run
-			#
+				# need to record intervals before 
+				# that match stopping conditions
+
+
+			#first, are all stopping conditions met
+
+			timePassed>=stoppingConditions$totalTime[1] & timePassed<=stoppingConditions$totalTime[2]
+
+			timePassed>=stoppingConditions$totalTime[1] & timePassed<=stoppingConditions$totalTime[2]
+
+
+
+
 			#discussion with Smits 05/11/15
 				#real stopping condition is max limits for typical birth-death simulators
 					#except total extinction...
@@ -446,9 +558,6 @@ simFossilRecord<-function(
 				#when maxtaxa is hit, simulation will go up until FO of maxtaxa+1 taxon to avoid Hartmann et al. effect
 				#if minExtant is set, simulation will end once minExtant is hit
 					#unless maxExtant is zero, in which case 
-				#if maxExtant is set, simulation will end once maxExtant is hit, if before maxtaxa or mintime is hit
-					#if maxtaxa or mintime is hit, run is discarded if maxExtant is not satisfied
-					#when maxExtant is hit, simulation will go up until FO of maxExtant+1 to avoid Hartmann et al. effect
 		
 		if(newTime>	
 

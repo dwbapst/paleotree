@@ -343,12 +343,23 @@ simFossilRecord<-function(
 		return(res)
 		}
 	
-	getRunVitals<-function(taxa){
-		#total number of taxa
-		nTaxa<-length(taxa)
-		nLive<-length(whichLive(taxa))
-		#total number of sampled taxa
-		nSampled<-length(whichSampled(taxa))
+	getRunVitals<-function(taxa,count.cryptic){
+		#NOTE need to change vital measurement dependent on count.cryptic or not
+		whichExtant<-whichLive(taxa)
+		whichSamp<-whichSampled(taxa)
+		if(count.cryptic){
+			nTaxa<-length(taxa)	#total number of taxa
+			nLive<-length(whichExtant)
+			nSampled<-length(whichSamp)	#total number of sampled taxa
+		}else{
+			looksLike<-sapply(taxa,function(x) x[[1]][6])
+			#count number of unique taxa based on looksLike
+			nTaxa<-length(unique(looksLike))
+			#count number of unique extant taxa
+			nLive<-length(unique(looksLike[whichExtant]))
+			#count number of unique sampled taxa
+			nSampled<-length(unique(looksLike[whichSamp]))
+			}
 		vitals<-c(nTotalTaxa=nTaxa,nExtant=nLive,nSamp=nSampled)
 		return(vitals)
 		}
@@ -369,194 +380,6 @@ simFossilRecord<-function(
 		continue<-unname(!runStop)
 		return(continue)
 		}
-
-
-
-
-
-	##################################################################################
-	#
-	#simplified birth-death-sampling simulator for fossil record
-	#
-	#p is the rate of branching
-		#may be either budding (prob = 1-prop.bifurc) or bifurcation (prob = prop.bifurc)
-	#anagenesis is a separate rate (anag.rate)
-	#q is rate of extinction
-	#r is rate of sampling
-	#
-	#ARGUMENT CHECKING
-
-	
-# number of starting taxa must be at least 1
-
-
-	
-
-#OLD SIM FOSSIL TAXA CODE
-'
-	
-	#CHECKING
-	if(any(c(p,q,anag.rate,prop.bifurc,prop.cryptic)<0)){stop(
-		"bad parameters input, p, q, anag.rate, prop.bifurc or prop.cryptic are less than 0")}
-	if(prop.bifurc>0 & prop.cryptic==1){stop("Prop.bifurc greater than 0 even though cryptic cladogenesis = 1??")}
-	if(nruns<1){stop("nruns<1")}
-	if(maxtaxa<0){stop("maxtaxa<0")}
-	if(mintaxa<1){stop("mintaxa<1")}
-	if(mintime<1){stop("mintime<1")}
-	if(maxtime<mintime){stop("maxtime<mintime")}
-	if(mintaxa>maxtaxa){stop("mintaxa > maxtaxa")}
-	if(maxtaxa>10000 & maxtime>10000){warning("Warning: Unrealistic limits for maxtaxa or maxtime")}
-	if(minExtant<0){stop("minExtant<0")}
-	if(minExtant>mintaxa){mintaxa<-minExtant}
-	if(!is.null(maxExtant)){
-		if(maxExtant<0){stop("maxExtant<0")}
-		if(maxExtant>maxtaxa){maxtaxa<-maxExtant}
-		if(minExtant>maxExtant){stop("maxExtant is set higher than minExtant")}
-		}
-	if(!min.cond){message("No conditioning during simulation; run until max limits or total extinction")}
-	#end idiot proofing
-
-'		
-
- 	#check that min nSamp isn't higher that 0, if r = 0 or Inf
-
-		
-
-	
-	#
-	##################################
-	# CHECK STOPPING CONDITIONS
-	stoppingConditions<-list(totalTime=totalTime,nTotalTaxa=nTotalTaxa,nExtant=nExtant,nSamp=nSamp)
-	#check that all are numeric
-	if(any(!sapply(stoppingConditions,is.numeric))){
-		stop("Stopping condition arguments must be all of type numeric")
-		}
-	#are length of 1 or 2
-	if(any(sapply(stoppingConditions,length)>2) | any(sapply(stoppingConditions,length)<1)){
-		stop("Stopping condition arguments must be of length 1 or 2")
-		}
-	# stopping conditions can be given as vectors of length 1 or 2
-		# i.e. a point condition or range
-	# turn stopping conditions of length 1 into vectors of length 2
-	stoppingConditions<-lapply(stoppingConditions,function(x)
-		if(length(x)==1){c(x,x)}else{x}
-		)
-	#all values are over zero
-	if(any(!sapply(stoppingConditions,function(x) all(x>=0)))){
-		stop("Stopping Condition values must be equal to or greater than 0")
-		}	
-	#with minimums less than maximums
-	if(any(!sapply(stoppingConditions,function(x) x[1]<=x[2]))){
-		stop("Stopping condition misordered: values given as a range must have the minimum before the maximum")
-		}	
-	###########################
-	#get the basic rate functions
-	getBranchRate<-makeParFunct(p,isBranchRate=TRUE)
-	getExtRate<-makeParFunct(q,isBranchRate=FALSE)
-	getSampRate<-makeParFunct(r,isBranchRate=FALSE)
-	getAnagRate<-makeParFunct(anag.rate,isBranchRate=FALSE)
-	#
-	##############################################
-	#now iterate for nruns
-	results<-list()
-	ntries<-0
-	for(i in 1:nruns){
-		ntries<-ntries+1
-		#
-		#initiate the taxa dataset
-		timePassed<-0
-		#currentTime is the max time from stoppingConditions
-		currentTime<-stoppingConditions$totalTime[2]
-		taxa<-initiateTaxa(startTaxa=startTaxa,time=currentTime)
-		#
-		#get vitals
-		startVitals<-getRunVitals(taxa)
-		#start vitals table		
-		vitalsRecord<-cbind(timePassed=timePassed,t(as.matrix(startVitals)))
-		#test to make sure stopping conditions aren't impossible
-		continue<-testContinue(vitals=startVitals,timePassed=timePassed,
-			stoppingConditions=stoppingConditions)
-		if(!continue){
-			stop("Initial starting point already matches given stopping conditions")
-			}
-		
-
-
-
-		while(continue){
-			#only as long as continue=TRUE
-			#
-			#timePassed from the initiation of the simulation
-			timePassed<-stoppingConditions$totalTime[2]-currentTime
-			#
-			# get rates, sample new event, have it occur
-			#
-			#get event probability vector
-			rateVector<-getRateVector(taxa=taxa,timePassed=timePassed,
-				getBranchRate=getBranchRate,getExtRate=getExtRate,
-				getSampRate=getSampRate,getAnagRate=getAnagRate,
-				prop.cryptic=prop.cryptic,prop.bifurc=prop.bifurc,
-				negRatesAsZero=negRatesAsZero)
-			#
-			#sum the rates
-			sumRates<-sum(rateVector)
-			eventProb<-rateVector/sumRates
-			#
-			#pull type of event (from Peter Smits)
-			event <- sample( names(eventProb), 1, prob = eventProb)
-			#
-			#vector of which taxa are still alive
-			whichLive<-whichLive(taxa)
-			#select which lineage does it occur to
-			target<-sample(whichLive,1)
-			#
-			#draw waiting time to an event (from Peter Smits)
-			changeTime <- rexp(1, rate =sumRates*nLive)
-			newTime<- currentTime - changeTime
-			newTimePassed<-timePassed+changeTime
-			#
-			####################################################
-			#
-			#evalutate stopping conditions NOW
-			#
-			#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
-				# none of these can REVERSE
-			#(2) then go back, find all interval for which stopping conditions were met
-				# if no acceptable intervals, reject run
-			#(3) randomly sample within intervals for a single date, apply timeSliceFossilRecord
-			#
-			#get vitals
-			currentVitals<-getRunVitals(taxa)
-			# continue ??
-			continue<-testContinue(vitals=currentVitals,timePassed=newTimePassed,
-				stoppingConditions=stoppingConditions)
-			#
-			# Updated vitals table
-			#for (2), keep a table that records changes in nTotalTaxa, nExtant, nSamp with timePassed
-				#then can quickly evaluate (2)
-			currentVitals<-c(timePassed=timePassed,t(as.matrix(currentVitals)))
-			vitalsRecord<-rbind(vitalsRecord,currentVitals)
-			}
-		###########################################
-		#
-		#accepting or rejecting runs
-		#
-		#discussion with Smits 05/11/15
-			#real stopping condition is max limits / total ext for typical birth-death simulators
-			#minimums are just for acceptability of runs when they hit stopping conditions
-		#
-		# NEED TO AVOID HARMANN ET AL. EFFECT
-			# sample simulation from intervals where it 'matched' stopping conditions
-		#
-		#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
-			# none of these can REVERSE
-		#(2) then go back, find all interval for which stopping conditions were met
-			# if no acceptable intervals, reject run
-		#(3) randomly sample within intervals for a single date, apply timeSliceFossilRecord
-		#
-		###########################################
-		#
-		# use vitalRecords to identify intervals of acceptable 
 
 	contiguousIntegerSeq<-function(vector){
 		vector<-as.integer(vector)
@@ -660,20 +483,238 @@ simFossilRecord<-function(
 	sampleSeqVitals<-function(seqVitals){
 		cumSumSeq<-cumsum(apply(seqVitals,1,diff))
 		totalSum<-rev(cumSumSeq)[1]
-		if(totalSum)>0{
-
+		if(totalSum>0){
+			placedDate<-runif(1)*totalSum
+			findRow<-which(cumSumSeq>=placedDate)[1]
+			earlierRowCumSum<-ifelse(findRow==1,0,cumSumSeq[findRow-1])
+			date<-seqVitals[findRow,1]+placedDate-earlierRowCumSum
 		}else{
-			date<-
+			# no probability density to sample
+			# randomly pick a row
+			date<-sample(seqVitals[,1],1)
 			}					
 		return(date)
 		}
-			
 
+	timeSliceFossilRecord<-function(fossilRecord,cutDate){
+		#take a fossilRecord data object and cut it at some specific date
+		#
+		#drop all taxa that originate after the cutDate
+		droppers<-which(sapply(fossilRecord,function(x) x[[1]][3]<cutDate))
+		fossilRecord<-fossilRecord[-droppers]
+		#
+		#turn all taxa that went extinct after cutDate so they are still alive
+		stillAlive<-which(sapply(fossilRecord,function(x) x[[1]][4]<cutDate))
+		fossilRecord[stillAlive][[1]][4:5]<-c(NA,1)
+		#
+		#remove all sampling events after cutDate
+		for(i in 1:length(fossilRecord)){
+			fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]][fossilRecord[[i]][[2]]>=cutDate]
+			}
+		return(fossilRecord)
+		}
+
+
+
+	##################################################################################
+	#
+	#simplified birth-death-sampling simulator for fossil record
+	#
+	#p is the rate of branching
+		#may be either budding (prob = 1-prop.bifurc) or bifurcation (prob = prop.bifurc)
+	#anagenesis is a separate rate (anag.rate)
+	#q is rate of extinction
+	#r is rate of sampling
+	#
+	#ARGUMENT CHECKING
+
+	
+# number of starting taxa must be at least 1
+
+
+	
+
+#OLD SIM FOSSIL TAXA CODE
+'
+	
+	#CHECKING
+	if(any(c(p,q,anag.rate,prop.bifurc,prop.cryptic)<0)){stop(
+		"bad parameters input, p, q, anag.rate, prop.bifurc or prop.cryptic are less than 0")}
+	if(prop.bifurc>0 & prop.cryptic==1){stop("Prop.bifurc greater than 0 even though cryptic cladogenesis = 1??")}
+	if(nruns<1){stop("nruns<1")}
+	if(maxtaxa<0){stop("maxtaxa<0")}
+	if(mintaxa<1){stop("mintaxa<1")}
+	if(mintime<1){stop("mintime<1")}
+	if(maxtime<mintime){stop("maxtime<mintime")}
+	if(mintaxa>maxtaxa){stop("mintaxa > maxtaxa")}
+	if(maxtaxa>10000 & maxtime>10000){warning("Warning: Unrealistic limits for maxtaxa or maxtime")}
+	if(minExtant<0){stop("minExtant<0")}
+	if(minExtant>mintaxa){mintaxa<-minExtant}
+	if(!is.null(maxExtant)){
+		if(maxExtant<0){stop("maxExtant<0")}
+		if(maxExtant>maxtaxa){maxtaxa<-maxExtant}
+		if(minExtant>maxExtant){stop("maxExtant is set higher than minExtant")}
+		}
+	if(!min.cond){message("No conditioning during simulation; run until max limits or total extinction")}
+	#end idiot proofing
+
+'		
+
+ 	#check that min nSamp isn't higher that 0, if r = 0 or Inf
+
+		
+
+	
+	#
+	##################################
+	# CHECK STOPPING CONDITIONS
+	stoppingConditions<-list(totalTime=totalTime,nTotalTaxa=nTotalTaxa,nExtant=nExtant,nSamp=nSamp)
+	#check that all are numeric
+	if(any(!sapply(stoppingConditions,is.numeric))){
+		stop("Stopping condition arguments must be all of type numeric")
+		}
+	#are length of 1 or 2
+	if(any(sapply(stoppingConditions,length)>2) | any(sapply(stoppingConditions,length)<1)){
+		stop("Stopping condition arguments must be of length 1 or 2")
+		}
+	# stopping conditions can be given as vectors of length 1 or 2
+		# i.e. a point condition or range
+	# turn stopping conditions of length 1 into vectors of length 2
+	stoppingConditions<-lapply(stoppingConditions,function(x)
+		if(length(x)==1){c(x,x)}else{x}
+		)
+	#all values are over zero
+	if(any(!sapply(stoppingConditions,function(x) all(x>=0)))){
+		stop("Stopping Condition values must be equal to or greater than 0")
+		}	
+	#with minimums less than maximums
+	if(any(!sapply(stoppingConditions,function(x) x[1]<=x[2]))){
+		stop("Stopping condition misordered: values given as a range must have the minimum before the maximum")
+		}	
+	###########################
+	#get the basic rate functions
+	getBranchRate<-makeParFunct(p,isBranchRate=TRUE)
+	getExtRate<-makeParFunct(q,isBranchRate=FALSE)
+	getSampRate<-makeParFunct(r,isBranchRate=FALSE)
+	getAnagRate<-makeParFunct(anag.rate,isBranchRate=FALSE)
+	#
+	##############################################
+	#now iterate for nruns
+	results<-list()
+	ntries<-0
+	for(i in 1:nruns){
+		ntries<-ntries+1
+		#
+		#initiate the taxa dataset
+		timePassed<-0
+		#currentTime is the max time from stoppingConditions
+		currentTime<-stoppingConditions$totalTime[2]
+		taxa<-initiateTaxa(startTaxa=startTaxa,time=currentTime)
+		#
+		#get vitals
+		startVitals<-getRunVitals(taxa,count.cryptic=count.cryptic)
+		#start vitals table		
+		vitalsRecord<-cbind(timePassed=timePassed,t(as.matrix(startVitals)))
+		#test to make sure stopping conditions aren't impossible
+		continue<-testContinue(vitals=startVitals,timePassed=timePassed,
+			stoppingConditions=stoppingConditions)
+		if(!continue){
+			stop("Initial starting point already matches given stopping conditions")
+			}
+		
+
+
+
+		while(continue){
+			#only as long as continue=TRUE
+			#
+			#timePassed from the initiation of the simulation
+			timePassed<-stoppingConditions$totalTime[2]-currentTime
+			#
+			# get rates, sample new event, have it occur
+			#
+			#get event probability vector
+			rateVector<-getRateVector(taxa=taxa,timePassed=timePassed,
+				getBranchRate=getBranchRate,getExtRate=getExtRate,
+				getSampRate=getSampRate,getAnagRate=getAnagRate,
+				prop.cryptic=prop.cryptic,prop.bifurc=prop.bifurc,
+				negRatesAsZero=negRatesAsZero)
+			#
+			#sum the rates
+			sumRates<-sum(rateVector)
+			eventProb<-rateVector/sumRates
+			#
+			#pull type of event (from Peter Smits)
+			event <- sample( names(eventProb), 1, prob = eventProb)
+			#
+			#vector of which taxa are still alive
+			whichLive<-whichLive(taxa)
+			#select which lineage does it occur to
+			target<-sample(whichLive,1)
+			#
+			#draw waiting time to an event (from Peter Smits)
+			changeTime <- rexp(1, rate =sumRates*nLive)
+			newTime<- currentTime - changeTime
+			newTimePassed<-timePassed+changeTime
+			#
+			####################################################
+			#
+			#evalutate stopping conditions NOW
+			#
+			#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
+				# none of these can REVERSE
+			#(2) then go back, find all interval for which stopping conditions were met
+				# if no acceptable intervals, reject run
+			#(3) randomly sample within intervals for a single date, apply timeSliceFossilRecord
+			#
+			#get vitals
+			currentVitals<-getRunVitals(taxa,count.cryptic=count.cryptic)
+			# continue ??
+			continue<-testContinue(vitals=currentVitals,timePassed=newTimePassed,
+				stoppingConditions=stoppingConditions)
+			#
+			# Updated vitals table
+			#for (2), keep a table that records changes in nTotalTaxa, nExtant, nSamp with timePassed
+				#then can quickly evaluate (2)
+			currentVitals<-c(timePassed=timePassed,t(as.matrix(currentVitals)))
+			vitalsRecord<-rbind(vitalsRecord,currentVitals)
+			}
+		###########################################
+		#
+		#accepting or rejecting runs
+		#
+		#discussion with Smits 05/11/15
+			#real stopping condition is max limits / total ext for typical birth-death simulators
+			#minimums are just for acceptability of runs when they hit stopping conditions
+		#
+		# NEED TO AVOID HARMANN ET AL. EFFECT
+			# sample simulation from intervals where it 'matched' stopping conditions
+		#
+		#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
+			# none of these can REVERSE
+		#(2) then go back, find all interval for which stopping conditions were met
+			# if no acceptable intervals, reject run
+		#(3) randomly sample within intervals for a single date, apply timeSliceFossilRecord
+		#
+		###########################################
+		#
+		# use vitalRecords to identify intervals of acceptable parameter values
+		#		
+		#test with testVitalsRecord to get seqVitals
 		seqVitals<-testVitalsRecord(vitalsRecord,stoppingConditions)
 		if(!is.na(seqVitals)){
+			#hey, if its an acceptable simulation!
+				passedDate<-sampleSeqVitals(seqVitals=seqVitals)
+				#this date is in timePassed units: convert to currentTime
+				currentDate<-stoppingConditions$totalTime[2]-passedDate
+			
 			
 			}
-		#in timePassed units
+
+
+
+
+
 
 
 
@@ -724,91 +765,7 @@ simFossilRecord<-function(
 
 
 
-	#make new min/max extant
-	minExtant1<-ifelse(minExtant==0,0,minExtant+1)
-
-
-		maxtime1<-maxtime;continue<-TRUE;eval<-FALSE
-		while(any(is.na(taxad[,4])) & continue){
-			tpot<-is.na(taxad[,4])
-			tpot2<-min(taxad[tpot,3])==taxad[,3]
-			tpick<-which(tpot & tpot2)[1]
-			tpick_FO<-taxad[tpick,3]
-			wait<-0
-			while(is.na(taxad[tpick,4]) & continue){
-				wait<-rexp(1,rate=pqw)+wait
-				type<-sample(1:3,1,prob=c(p/pqw,q/pqw,anag.rate/pqw))	#choose the event type: cladogenesis, extinction, anagenesis
-				if(type==1){	#IF SPECIATION
-					#now need to choose if cryptic, budding or bifurcation!
-					type1<-sample(1:3,1,prob=c((1-prop.cryptic)-((1-prop.cryptic)*prop.bifurc),
-						(1-prop.cryptic)*prop.bifurc,prop.cryptic))	
-					if(type1==1){	#IF BUDDING
-						taxad<-rbind(taxad,c(max(taxad[,1])+1,taxad[tpick,1],wait+tpick_FO,NA,max(taxad[,1])+1))
-						}
-					if(type1==2){	#IF BIFURCATION
-						taxad[tpick,4]<-wait+tpick_FO
-						taxad<-rbind(taxad,c(max(taxad[,1])+1,taxad[tpick,1],wait+tpick_FO,NA,max(taxad[,1])+1))
-						taxad<-rbind(taxad,c(max(taxad[,1])+1,taxad[tpick,1],wait+tpick_FO,NA,max(taxad[,1])+1))
-						}
-					if(type1==3){	#IF CRYPTIC
-						taxad<-rbind(taxad,c(max(taxad[,1])+1,taxad[tpick,1],wait+tpick_FO,NA,taxad[tpick,5]))
-						}					
-					}
-				if(type==2){	#IF EXTINCTION
-					taxad[tpick,4]<-wait+tpick_FO}
-				if(type==3){	#IF ANAGENESIS
-					taxad[tpick,4]<-wait+tpick_FO
-					taxad<-rbind(taxad,c(max(taxad[,1])+1,tpick,wait+tpick_FO,NA,max(taxad[,1])+1))
-					}
-				#these loops ONLY end if maxtime1 is hit, so to kill a run, you need to change maxtime1
-					#then youll need to evaluate it again to make sure it meets criteria
-				#count numtax and numext based on count.cryptic
-				if(count.cryptic){numtax<-nrow(taxad)}else{numtax<-length(unique(taxad[,5]))}
-				if(numtax>maxtaxa){
-					maxtime1<-min(c(maxtime1,taxad[maxtaxa+1,3]))
-					if(!min.cond){eval<-TRUE}
-					}
-				#under pure-birth, extinction will never happen: kill off lineage manually
-				if(wait>maxtime1){taxad[tpick,4]<-wait}
-				#have to kill this if the number of taxa just explodes
-				if(sum(taxad[,3]<maxtime1)>(maxtaxa*2)){
-					taxad[is.na(taxad[,4]),4]<-maxtime+1
-					}
-				#simulation MUST always terminate if maxtaxa or maxtime are hit (these are safety limits)
-					#maxExtant is a similar soft bound; the real bounds that will determine the output are the mins...
-				if(count.cryptic){
-					numtax<-nrow(taxad)
-					numext<-sum(is.na(taxad[,4]))+sum(taxad[!is.na(taxad[,4]),4]>=maxtime1)	#extant taxa w/cryptic
-				}else{
-					numtax<-length(unique(taxad[,5]))
-					numext<-length(unique(taxad[(is.na(taxad[,4]) | taxad[,4]>=maxtime1),5]))
-					}
-				#want to end the function if >mintaxa,>mintime,>minExtant1 and >maxExtant
-				if(max(taxad[,3:4],na.rm=TRUE)>=mintime & ifelse(numext>0,numtax>mintaxa,numtax>=mintaxa)
-					& numext>=minExtant1 & ifelse(is.null(maxExtant),TRUE,numext<=maxExtant) & min.cond){
-						#if conditions have been hit,reset maxtime1 to the FAD of the newest living taxa that broke conditions
-					if(any(is.na(taxad[,4]))){		#if its dead, dont change maxtime1...
-						maxtime2<-min(c(maxtime1,max(taxad[is.na(taxad[,4]) | taxad[,4]>=maxtime1,3])))
-						if(maxtime2>mintime){maxtime1<-maxtime2}
-						}
-					eval<-TRUE
-					}
-				#are any "live" taxa below maxtime1? if so, continue
-				continue<-ifelse(any(is.na(taxad[,4])),any(taxad[is.na(taxad[,4]),3]<=maxtime1),FALSE)
-				if(!continue & !min.cond){eval<-TRUE}
-				taxad_save<-taxad
-				#print(c(nrow(taxad),sum(is.na(taxad[,4]))))
-				}
-			if(!continue & eval){
-				#if continue is false (maxtime1 is hit!), evaluate!
-				#dont just use one maxtime1, use a bunch 02-07-12: lets you use more runs!
-				taxad<-matrix(taxad[taxad[,3]<maxtime1,],sum(taxad[,3]<maxtime1),)
-				if(any(is.na(taxad[,4]))){stop("Live creatures escaping simulation! Get out now while you still have time!")}
-				posstimes<-sort(unique(c(taxad[,3:4],maxtime1)))
-				maxtimes<-posstimes[posstimes>=mintime & posstimes<=maxtime1]				#make vector of maxtimes
-				if(length(maxtimes)==0){
-					eval<-FALSE
-				}else{
+	
 					mtds<-lapply(maxtimes,function(x) matrix(taxad[taxad[,3]<x,],sum(taxad[,3]<x),)) 	#maxtime taxa datasets
 					if(count.cryptic){
 						numtaxa<-sapply(mtds,function(x) nrow(x))

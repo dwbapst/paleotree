@@ -324,7 +324,7 @@ simFossilRecord<-function(
 		return(taxa)		
 		}
 			
-	eventOccurs<-(taxa,target,type,time)
+	eventOccurs<-(taxa,target,type,time){
 		#possible types : 'budd','bifurc','anag','crypt','ext','samp'
 		if(type=="budd"){
 			taxa<-buddEvent(taxa=taxa,parent=target,time=time)
@@ -547,30 +547,15 @@ simFossilRecord<-function(
 	#r is rate of sampling
 	#
 	#ARGUMENT CHECKING
-
-startTaxa=1,  nruns=1,
-
-	# run conditions can be given as vectors of length 1 or length 2 (= min,max)
 	#
-	totalTime = c(0, 1000), nTotalTaxa = c(1, 1000),
-	nExtant = c(0, 1000), nSamp = c(0, 1000))
-
-	#control parameters
-	#
-	count.cryptic=FALSE, negRatesAsZero=TRUE, print.runs=FALSE, sortNames=FALSE, plot=FALSE){
-
-	
 	# number of starting taxa and runs must be at least 1
 	if(nruns<1){
 		stop("nruns must be at least 1")}
 	if(startTaxa<1){
 		stop("startTaxa must be at least 1")}
 	#nruns, starting taxa must be integer values
-	
-	
-
-
-
+	if(!sapply(c(nruns,startTaxa),function(x) x==round(x))){
+			stop("nruns and startTaxa must coercible to whole number integers")}
 	# check that prop.bifurc, prop.cryptic, modern.samp.prob are greater than 0 and less than 1
 	if(any(c(prop.bifurc, prop.cryptic, modern.samp.prob)<0) |
 			any(c(prop.bifurc, prop.cryptic, modern.samp.prob)>1)){
@@ -578,20 +563,20 @@ startTaxa=1,  nruns=1,
 	# is prop.bifurc and prop.cryptic consistent?
 	if(prop.bifurc>0 & prop.cryptic==1){
 		stop("Prop.bifurc greater than 0 when probability of branching being cryptic is 1")}
-
  	#check that min nSamp isn't higher that 0, if r = 0 or Inf
 	if((r==0 | is.infinite(r)) & nSamp[1]>0){
 		stop("Minimum number of required sampled taxa is >0 but sampling rate is zero (or infinite)")}
-
-
-
-# nTotalTaxa, nExtant, nSamp must all be integer values
-		
-
-	
+	#check that count.cryptic,negRatesAsZero,print.runs,sortNames,plot are all logicals
+	if(!all(is.logical(count.cryptic,negRatesAsZero,print.runs,sortNames,plot))){
+		stop("count.cryptic, negRatesAsZero, print.runs, sortNames, and plot arguments must be logicals")}
 	#
 	##################################
 	# CHECK RUN CONDITIONS
+	#
+	# nTotalTaxa, nExtant, nSamp must all be integer values
+	if(!sapply(c(nTotalTaxa,nExtant,nSamp),function(x) x==round(x))){
+			stop("nTotalTaxa, nExtant, nSamp must coercible to whole number integers")}		
+	#
 	runConditions<-list(totalTime=totalTime,nTotalTaxa=nTotalTaxa,nExtant=nExtant,nSamp=nSamp)
 	#check that all are numeric
 	if(any(!sapply(runConditions,is.numeric))){
@@ -607,7 +592,7 @@ startTaxa=1,  nruns=1,
 	runConditions<-lapply(runConditions,function(x)
 		if(length(x)==1){c(x,x)}else{x}
 		)
-	#all values are over zero
+	#all values are over or equal to zero
 	if(any(!sapply(runConditions,function(x) all(x>=0)))){
 		stop("Run Condition values must be equal to or greater than 0")
 		}	
@@ -747,6 +732,10 @@ startTaxa=1,  nruns=1,
 		#name each normal taxon as t + ID 
 			#cryptic taxa are cryptic id + . taxon number within that complex
 		names(taxa)<-getTaxaNames(taxa=taxa)
+		#sort if sortNames
+		if(sortNames){
+			taxa<-taxa[order(names(taxa))]
+			}
 		#
 		results[[i]]<-taxa
 		if(plot){
@@ -763,45 +752,3 @@ startTaxa=1,  nruns=1,
 	if(nruns==1){results<-results[[1]]}
 	return(results)	
 	}	
-
-
-
-
-fossilRecord2fossilTaxa<-function(fossilRecord){
-	# a function that transforms a simfossilrecord to a taxa object
-	taxaConvert<-t(sapply(fossilRecord,function(x) x[[1]]))	
-	rownames(taxaConvert)<-names(fossilRecord)
-	return(taxaConvert)
-	}
-
-fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.only = TRUE){
-	# a function that transforms a simfossilrecord to a set of ranges (like from sampleRanges)
-		# merge.cryptic = TRUE or FALSE
-		# ranges.only or sampling times?
-	sampData<-lapply(fossilRecord,function(x) x[[2]]) 
-	#merge cryptic taxa
-	if(merge.cryptic=TRUE){
-		cryptIDs<-sapply(fossilRecord,function(x) x[[1]][6])
-		
-		}
-	rangeData	
-
-	return(rangeData)
-	}
-
-# a function that wraps taxa2phylo for simFossilRecord, providing time-scaled tree of sampled taxa
-	# merge.cryptic = TRUE or FALSE
-	#ala simPaleoTrees:
-		# tree<-taxa2phylo(taxa,obs_time=ranges1[,2],plot=plot)	
-
-
-
-################################################
-
-
-
-
-
-
-
-

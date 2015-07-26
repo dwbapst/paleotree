@@ -21,6 +21,29 @@
 
 #' @examples
 
+
+
+	#
+	#p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.1;prop.cryptic=0;nruns=10;mintaxa=1;maxtaxa=200;mintime=1;maxtime=100;minExtant=0;maxExtant=0;plot=TRUE;print.runs=TRUE;min.cond=TRUE
+	#
+	#p=0.1;q=0.9;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=1;mintaxa=1;maxtaxa=100;mintime=1;maxtime=100;minExtant=0;maxExtant=0;plot=TRUE;print.runs=TRUE;min.cond=TRUE
+	
+	#min.cond example
+	#set.seed(444);p=0.1;q=0.1;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=10;mintaxa=1;maxtaxa=1000;mintime=1;maxtime=100;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=FALSE
+	
+	#pure birth example
+	#set.seed(444);p=0.1;q=0;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE
+	
+	#cryptic speciation
+	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.5;prop.cryptic=0.5;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
+	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=TRUE
+	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
+	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
+
+	# p=0.1;q='0.01*N';r=0.1
+
+
+
 #' @name
 #' @rdname
 #' @export
@@ -124,13 +147,13 @@ simFossilRecord<-function(
 	#example parameter sets
 	#
 	# DEFAULTS (without rates set)
-		# anag.rate=0.1;prop.bifurc=0.1;prop.cryptic=0;startTaxa=1;nruns=1;
+		# anag.rate=0;prop.bifurc=0;prop.cryptic=0;startTaxa=1;nruns=1;
 		# nTotalTaxa=c(1,1000);totalTime=c(1,1000);nSamp=c(0,1000);nExtant=c(0,1000);
 		# plot=TRUE;count.cryptic=FALSE;print.runs=TRUE;sortNames=FALSE	
 	#
 	# BASIC RUN	with diversity-dep extinction
 	# p=0.1;q='0.01*N';r=0.1
-		# anag.rate=0.1;prop.bifurc=0.1;prop.cryptic=0;startTaxa=1;nruns=1;
+		# anag.rate=0;prop.bifurc=0;prop.cryptic=0;startTaxa=1;nruns=1;
 		# nTotalTaxa=c(10,200);totalTime=c(1,1000);nSamp=c(0,1000);nExtant=c(0,0);plot=TRUE;
 		# count.cryptic=FALSE;print.runs=TRUE;sortNames=FALSE;set.seed(444)
 	#
@@ -526,6 +549,28 @@ simFossilRecord<-function(
 		return(date)
 		}
 
+	getTaxaNames<-function(taxa){	
+		#name each normal taxon as t + ID 
+			#cryptic taxa are cryptic id + . taxon number within that complex
+		cryptIDs<-sapply(taxa,function(x) x[[1]][6])
+		taxonIDs<-sapply(taxa,function(x) x[[1]][1])
+		whichCrypt<-sapply(cryptIDs,function(x) sum(x==cryptID)>1)
+		newIDs<-sapply(1:length(taxonIDs),function(x){
+			if(whichCrypt){
+				#find what number this taxon is, within the cryptic complex
+				matchCrypt<-cryptIDs==cryptIDs[x]
+				nCrypt<-which(taxonIDs[matchCrypt]==taxonIDs[x])-1
+				res<-paste0(cryptIDs[x],".",nCrypt)
+			}else{
+				res<-taxonIDs[x]
+				}
+			return(res)
+			})
+		newIDs<-paste0("t",taxonIDs)
+		return(newIDs)
+		}
+
+		
 
 
 	##################################################################################
@@ -540,6 +585,8 @@ simFossilRecord<-function(
 	#
 	#ARGUMENT CHECKING
 
+	if(nruns<1){
+		stop("nruns<1")}
 	
 # number of starting taxa must be at least 1
 
@@ -547,31 +594,18 @@ simFossilRecord<-function(
 	if(any(c(prop.bifurc,prop.cryptic)<0)){stop(
 		"bad parameters input: prop.bifurc or prop.cryptic are less than 0")}	
 
-#OLD SIM FOSSIL TAXA CODE
-'
-	
-	#CHECKING
 
-	if(prop.bifurc>0 & prop.cryptic==1){stop("Prop.bifurc greater than 0 even though cryptic cladogenesis = 1??")}
-	if(nruns<1){stop("nruns<1")}
-	if(maxtaxa<0){stop("maxtaxa<0")}
-	if(mintaxa<1){stop("mintaxa<1")}
-	if(mintime<1){stop("mintime<1")}
 
-	if(maxtaxa>10000 & maxtime>10000){warning("Warning: Unrealistic limits for maxtaxa or maxtime")}
-	if(minExtant<0){stop("minExtant<0")}
-	if(minExtant>mintaxa){mintaxa<-minExtant}
-	if(!is.null(maxExtant)){
-		if(maxExtant<0){stop("maxExtant<0")}
-		if(maxExtant>maxtaxa){maxtaxa<-maxExtant}
-		if(minExtant>maxExtant){stop("maxExtant is set higher than minExtant")}
-		}
-	if(!min.cond){message("No conditioning during simulation; run until max limits or total extinction")}
-	#end idiot proofing
+	if(prop.bifurc>0 & prop.cryptic==1){
+		stop("Prop.bifurc greater than 0 when probability of branching being cryptic is 1")}
 
-'		
+
+
+
 
  	#check that min nSamp isn't higher that 0, if r = 0 or Inf
+
+#nruns, starting taxa must be integer values
 
 # nTotalTaxa, nExtant, nSamp must all be integer values
 		
@@ -727,37 +761,60 @@ simFossilRecord<-function(
 		passedDate<-sampleSeqVitals(seqVitals=seqVitals)
 		#this date is in timePassed units: convert to currentTime
 		currentDate<-runConditions$totalTime[2]-passedDate
-		timeSliceFossilRecord(fossilRecord=taxa,sliceTime=currentDate)
-		# if stop and there are extant, evaluate if sampled at modern
-		# 0< modern.samp.prob <1 need to randomly sample
-	
-
+		# now time slice
+			# if stop and there are extant, evaluate if sampled at modern
+			# 0< modern.samp.prob <1 need to randomly sample
+		taxa<-timeSliceFossilRecord(fossilRecord=taxa,sliceTime=currentDate,
+			modern.samp.prob=modern.samp.prob)
+		#name each normal taxon as t + ID 
+			#cryptic taxa are cryptic id + . taxon number within that complex
+		names(taxa)<-getTaxaNames(taxa=taxa)
+		#
+		results[[i]]<-taxa
+		if(plot){
+			taxaConvert<-fossilRecord2fossilTaxa(fossilRecord=taxa)
+			taxicDivCont(taxaConvert,int.length=0.2)
+			if(nruns>1){title(paste("Run Num.",i," of ",nruns,sep=""))}
+			}
 		}
+	if(print.runs){
+		message(paste(
+			nruns," runs accepted from ",ntries," total runs ("
+			,signif(nruns/ntries,2)," Acceptance Probability)",sep=""))
+		}
+	if(nruns==1){results<-results[[1]]}
+	return(results)	
+	}	
 
 
 
 
+fossilRecord2fossilTaxa<-function(fossilRecord){
+	# a function that transforms a simfossilrecord to a taxa object
+	taxaConvert<-t(sapply(fossilRecord,function(x) x[[1]]))	
+	rownames(taxaConvert)<-names(fossilRecord)
+	return(taxaConvert)
+	}
 
-
-
-
-
-
+fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.only = TRUE){
+	# a function that transforms a simfossilrecord to a set of ranges (like from sampleRanges)
+		# merge.cryptic = TRUE or FALSE
+		# ranges.only or sampling times?
+	sampData<-lapply(fossilRecord,function(x) x[[2]]) 
+	#merge cryptic taxa
+	if(merge.cryptic=TRUE){
+		cryptIDs<-sapply(fossilRecord,function(x) x[[1]][6])
 		
+		}
+	rangeData	
 
-		
-			
+	return(rangeData)
+	}
 
-
-
-		
-
-		
-		
-		
-
-
-
+# a function that wraps taxa2phylo for simFossilRecord, providing time-scaled tree of sampled taxa
+	# merge.cryptic = TRUE or FALSE
+	#ala simPaleoTrees:
+		# tree<-taxa2phylo(taxa,obs_time=ranges1[,2],plot=plot)	
 
 
 
@@ -765,73 +822,8 @@ simFossilRecord<-function(
 
 
 
-				#reset if the clade is done (continue=FALSE) but eval is FALSE (didnt hit conditions)
-				taxad<-matrix(c(1,NA,0,NA,1),1,)
-				ntries<-ntries+1
-				continue<-TRUE;eval<-FALSE;evalcond<-NULL
-				maxtime1<-maxtime
-				}
-			}
-		taxad1<-cbind(taxad[,1:4,drop=FALSE],(taxad[,4]>=maxtime1),taxad[,5])	#make extinct/extant column
-		#reorder time so that time is backwards
-		taxad1[,3:4]<-maxtime1-taxad1[,3:4]
-		taxad1[,3]<-round(taxad1[,3],digits=4)
-		taxad1[,4]<-round(taxad1[,4],digits=4)
-		taxad1[taxad1[,4]<0,4]<-0
-		#change order so that taxa ids are sequential	
-		taxad2<-cbind(matrix(1:nrow(taxad1),,1),matrix(match(taxad1[,2],taxad1[,1]),,1),
-			matrix(taxad1[,3:5],,3),matrix(match(taxad1[,6],taxad1[,1]),,1))	
-		#give column names to taxad2
-		colnames(taxad2)<-c("taxon.id","ancestor.id","orig.time","ext.time","still.alive","looks.like")
-		#give rownames
-		names<-paste("t",taxad2[,1],sep="")
-		if(any(taxad2[,6]!=taxad2[,1])){
-			for(cry in which(sapply(taxad2[,6],function(x) sum(x==taxad2[,6])>1))){
-				#name all cryptic taxa special
-				names[cry]<-paste("t",taxad2[cry,6],".",sum(taxad2[1:cry,6]==taxad2[cry,6]),sep="")
-			}}
-		rownames(taxad2)<-names
-		if(sortNames){
-			taxad2<-taxad2[order(as.numeric(substring(rownames(taxad2),2))),]
-			}
-		results[[i]]<-taxad2
-		if(plot){
-			taxicDivCont(results[[i]],int.length=0.2)
-			if(nruns>1){title(paste("Run Num.",i," of ",nruns,sep=""))}
-			}
-		}
-	if(print.runs){message(paste(nruns," runs accepted from ",ntries," total runs (",signif(nruns/ntries,2)," Acceptance Probability)",sep=""))}
-	if(nruns==1){results<-results[[1]]}
-	return(results)	
-	
-}
-
-	#
-	#p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.1;prop.cryptic=0;nruns=10;mintaxa=1;maxtaxa=200;mintime=1;maxtime=100;minExtant=0;maxExtant=0;plot=TRUE;print.runs=TRUE;min.cond=TRUE
-	#
-	#p=0.1;q=0.9;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=1;mintaxa=1;maxtaxa=100;mintime=1;maxtime=100;minExtant=0;maxExtant=0;plot=TRUE;print.runs=TRUE;min.cond=TRUE
-	
-	#min.cond example
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=10;mintaxa=1;maxtaxa=1000;mintime=1;maxtime=100;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=FALSE
-	
-	#pure birth example
-	#set.seed(444);p=0.1;q=0;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE
-	
-	#cryptic speciation
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.5;prop.cryptic=0.5;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=TRUE
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
 
 
-# a function that transforms a simfossilrecord to a taxa object
 
-# a function that transforms a simfossilrecord to a set of ranges (like from sampleRanges)
-	# merge.cryptic = TRUE or FALSE
-	# ranges.only or sampling times?
 
-# a function that wraps taxa2phylo for simFossilRecord, providing time-scaled tree of sampled taxa
-	# merge.cryptic = TRUE or FALSE
-	#ala simPaleoTrees:
-		# tree<-taxa2phylo(taxa,obs_time=ranges1[,2],plot=plot)	
 

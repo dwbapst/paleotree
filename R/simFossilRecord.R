@@ -1,4 +1,6 @@
-"
+#' Full-Scale Simulations of the Fossil Record with Birth, Death and Sampling of Morphotaxa
+#'
+#' 
 
 #' @details
 
@@ -56,43 +58,6 @@
 
 
 
-#maybe export?
-
-#' @export
-timeSliceFossilRecord<-function(fossilRecord,sliceTime,modern.samp.prob=1){
-	#take a fossilRecord data object and cut it at some specific date
-	#
-	#drop all taxa that originate after the sliceTime
-	droppers<-which(sapply(fossilRecord,function(x) x[[1]][3]<sliceTime))
-	fossilRecord<-fossilRecord[-droppers]
-	#
-	#turn all taxa that went extinct after sliceTime so they are still alive
-	stillAlive<-which(sapply(fossilRecord,function(x) x[[1]][4]<sliceTime))
-	fossilRecord[stillAlive][[1]][4:5]<-c(NA,1)
-	#
-	#remove all sampling events after sliceTime
-	#adjust all dates so cutdate becomes 0
-	for(i in 1:length(fossilRecord)){
-		#remove all sampling events after sliceTime
-		fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]][fossilRecord[[i]][[2]]>=sliceTime]
-		#adjust all dates so cutdate becomes 0
-		fossilRecord[[i]][[1]][3:4]<-fossilRecord[[i]][[1]][3:4]-sliceTime
-		fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]]-sliceTime
-		}
-	#
-	# sample at modern based on modern.samp.prob
-	whichExtant<-which(sapply(fossilRecord,function(x) x[[1]][5]==1))
-	nLive<-length(whichExtant)
-	liveSampled<-as.logical(rbinom(n=nLive, size=1, prob=modern.samp.prob))
-	whichSampled<-whichExtant[liveSampled]
-	#add sampling event at modern
-	for(i in whichSampled){
-		fossilRecord[[i]][[2]]<-c(fossilRecord[[i]][[2]],0)
-		}
-	#
-	return(fossilRecord)
-	}
-
 
 
 
@@ -118,12 +83,7 @@ timeSliceFossilRecord<-function(fossilRecord,sliceTime,modern.samp.prob=1){
 
 #' @param p,q,r,anag.rate These parameters control the instantaneous ('per-capita') rates of branching, extinction,
 #' sampling and anagenesis, respectively.
-
-# infinite rates are treated as if 0 : this event type cannot occur!
-
-#WRITE CHECKS
-
-	min.cond=TRUE
+#' Rates set to \code{= Inf} are treated as if 0. When a rate is set to 0, this event type will not occur in the simulation.
 
 #' @export
 simFossilRecord<-function(
@@ -142,7 +102,7 @@ simFossilRecord<-function(
 	#
 	count.cryptic=FALSE, negRatesAsZero=TRUE, print.runs=FALSE, sortNames=FALSE, plot=FALSE){
 
-
+	# NOT USED (but in simFossilTaxa):	min.cond=TRUE
 
 	#example parameter sets
 	#
@@ -193,6 +153,9 @@ simFossilRecord<-function(
 			res<-type.convert(par,as.is=TRUE)
 			#convert any 'Inf' rates to 0: this event type cannot occur !
 			if(is.infinite(res)){res<-0}
+			#return error if any rate is negative
+			if(res<0){
+				stop("input rates must be at least 0 if input can be coerced to type numeric")}
 			#now convert formula expression to function
 			parFunct<-if(isBranchRate){
 				function(N,T){}
@@ -585,27 +548,42 @@ simFossilRecord<-function(
 	#
 	#ARGUMENT CHECKING
 
-	if(nruns<1){
-		stop("nruns<1")}
+startTaxa=1,  nruns=1,
+
+	# run conditions can be given as vectors of length 1 or length 2 (= min,max)
+	#
+	totalTime = c(0, 1000), nTotalTaxa = c(1, 1000),
+	nExtant = c(0, 1000), nSamp = c(0, 1000))
+
+	#control parameters
+	#
+	count.cryptic=FALSE, negRatesAsZero=TRUE, print.runs=FALSE, sortNames=FALSE, plot=FALSE){
+
 	
-# number of starting taxa must be at least 1
+	# number of starting taxa and runs must be at least 1
+	if(nruns<1){
+		stop("nruns must be at least 1")}
+	if(startTaxa<1){
+		stop("startTaxa must be at least 1")}
+	#nruns, starting taxa must be integer values
+	
+	
 
-	# check that prop.bifurc, prop.cryptic are greater than 0
-	if(any(c(prop.bifurc,prop.cryptic)<0)){stop(
-		"bad parameters input: prop.bifurc or prop.cryptic are less than 0")}	
 
 
-
+	# check that prop.bifurc, prop.cryptic, modern.samp.prob are greater than 0 and less than 1
+	if(any(c(prop.bifurc, prop.cryptic, modern.samp.prob)<0) |
+			any(c(prop.bifurc, prop.cryptic, modern.samp.prob)>1)){
+		stop("bad parameters input: prop.bifurc, prop.cryptic and modern.samp.prob must be between 0 and 1")}	
+	# is prop.bifurc and prop.cryptic consistent?
 	if(prop.bifurc>0 & prop.cryptic==1){
 		stop("Prop.bifurc greater than 0 when probability of branching being cryptic is 1")}
 
-
-
-
-
  	#check that min nSamp isn't higher that 0, if r = 0 or Inf
+	if((r==0 | is.infinite(r)) & nSamp[1]>0){
+		stop("Minimum number of required sampled taxa is >0 but sampling rate is zero (or infinite)")}
 
-#nruns, starting taxa must be integer values
+
 
 # nTotalTaxa, nExtant, nSamp must all be integer values
 		

@@ -29,16 +29,13 @@
 
 #' Hartmann et al. (2011) recently discovered a potential statistical artifact
 #' when branching simulations are conditioned on some maximum number of taxa.
-#' Thus, this function continues the simulation once the maxima for
-#' \code{nTotalTaxa}, \code{nExtant} or \code{nSamp} are reached
-#' stopping immediately before the next taxon (limit +1) originates. Once the simulation
-#' terminates, it is judged whether it is acceptable for all conditions given
-#' and if so, the run is accepted as a dataset for output.
+
 
 
 
 #maybe export?
 
+#' @export
 timeSliceFossilRecord<-function(fossilRecord,sliceTime,modern.samp.prob=1){
 	#take a fossilRecord data object and cut it at some specific date
 	#
@@ -77,16 +74,17 @@ timeSliceFossilRecord<-function(fossilRecord,sliceTime,modern.samp.prob=1){
 
 
 
-#' @param totalTime,nTotalTaxa,nExtant,NSamp These arguments represent stopping conditions,
-#' respectively the total length of the simulation in time-units, the total number of taxa
-#' over evolutionary history in the clade, the total number of extant taxa at the end of the
-#' simulation and the total number of sampled taxa (not counting extant taxa sampled at the
-#' modern day). These are used to determine when to end simulation runs, and whether to accept
+#' @param totalTime,nTotalTaxa,nExtant,NSamp These arguments represent stopping and
+#' acceptance conditions for simulation runs. They are respectively \code{totalTime}, the
+#' total length of the simulation in time-units, \code{nTotalTaxa}, the total number of taxa
+#' over evolutionary history in the clade, \code{nExtant}, the total number of extant taxa at
+#' the end of the simulation and \code{nSamp} the total number of sampled taxa (not counting extant
+#' taxa sampled at the modern day). These are used to determine when to end simulation runs, and whether to accept
 #' or reject them as output. They can be input as a vector of two numbers, representing minimum
 #' and maximum values of a range for accepted simulation runs (i.e. the simulation length can be between 0 and
 #' 1000 time-steps, by default), or as a single number, representing a point condition (i.e. if
 #' \code{nSamp = 100} then the only simulation runs with exactly 100 taxa sampled will be output).
-#' Note that it is easy to set combinations of parameters and stopping conditions that are impossible
+#' Note that it is easy to set combinations of parameters and run conditions that are impossible
 #' to produce satisfactory input under, in which case \code{simFossilRecord} would run in a nonstop loop.
 
 #' @param negRatesAsZero A logical. Should rates calculated as a negative number cause the simulation to fail
@@ -102,32 +100,37 @@ timeSliceFossilRecord<-function(fossilRecord,sliceTime,modern.samp.prob=1){
 
 #WRITE CHECKS
 
+	min.cond=TRUE
+
+#' @export
 simFossilRecord<-function(
 
 	# model parameters
+	#
 	p, q, r, anag.rate=0, prop.bifurc=0, prop.cryptic=0,
 	modern.samp.prob=1, startTaxa=1,  nruns=1,
 
-	# stopping conditions can be given as vectors of length 1 or length 2 (= min,max)
-
+	# run conditions can be given as vectors of length 1 or length 2 (= min,max)
+	#
 	totalTime = c(0, 1000), nTotalTaxa = c(1, 1000),
 	nExtant = c(0, 1000), nSamp = c(0, 1000))
 
 	#control parameters
-	
+	#
 	count.cryptic=FALSE, negRatesAsZero=TRUE, print.runs=FALSE, sortNames=FALSE, plot=FALSE){
 
-	min.cond=TRUE
+
 
 	#example parameter sets
 	#
-	# DEFAULTS
-	# anag.rate=0.1;prop.bifurc=0.1;prop.cryptic=0;startTaxa=1;nruns=1;
+	# DEFAULTS (without rates set)
+		# anag.rate=0.1;prop.bifurc=0.1;prop.cryptic=0;startTaxa=1;nruns=1;
 		# nTotalTaxa=c(1,1000);totalTime=c(1,1000);nSamp=c(0,1000);nExtant=c(0,1000);
 		# plot=TRUE;count.cryptic=FALSE;print.runs=TRUE;sortNames=FALSE	
 	#
 	# BASIC RUN	with diversity-dep extinction
-	# p=0.1;q='0.01*N';r=0.1;anag.rate=0.1;prop.bifurc=0.1;prop.cryptic=0;startTaxa=1;nruns=1;
+	# p=0.1;q='0.01*N';r=0.1
+		# anag.rate=0.1;prop.bifurc=0.1;prop.cryptic=0;startTaxa=1;nruns=1;
 		# nTotalTaxa=c(10,200);totalTime=c(1,1000);nSamp=c(0,1000);nExtant=c(0,0);plot=TRUE;
 		# count.cryptic=FALSE;print.runs=TRUE;sortNames=FALSE;set.seed(444)
 	#
@@ -259,10 +262,6 @@ simFossilRecord<-function(
 		return(rateVector)
 		}
 
-
-
-
-	#FUNCTIONALIZE EACH EVENT TYPE
 	#internal functions for branching/extinction/anagenesis processes	
 
 	initiateTaxa<-function(startTaxa,time){
@@ -279,7 +278,7 @@ simFossilRecord<-function(
 		taxaData<-c(newID,ancID,time,NA,1,looksLike)
 		names(taxaData)<- c('taxon.id','ancestor.id','orig.time','ext.time','still.alive','looks.like')
 		# $sampling.times = times of sampling events for this taxon
-			#thus can come up with quick/simple ways of evaluating stopping conditions
+			#thus can come up with quick/simple ways of evaluating run conditions
 			# e.g. evaluate number of sampled taxa by sum(length($sampling.times)>0)
 		taxon<-list(taxa.data=taxaData, sampling.times=numeric())
 		return(taxon)
@@ -304,11 +303,6 @@ simFossilRecord<-function(
 		taxa[[whichTarget]][[1]][5]<-0
 		return(taxa)
 		}
-
-	#newTaxaID<-function(taxa){
-	#	newID<-max(sapply(taxa,function(x) x[[1]][1]))+1
-	#	return(newID)
-	#	}
 
 	buddingEvent<-function(taxa,parent,time){
 		taxa<-origination(taxa=taxa,ancID=parent,time=time,looksLike=NULL)
@@ -400,18 +394,18 @@ simFossilRecord<-function(
 		return(vitals)
 		}
 	
-	testContinue<-function(vitals,timePassed,stoppingConditions){
+	testContinue<-function(vitals,timePassed,runConditions){
 		#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
 			# none of these can ever REVERSE
 		#
 		#time passed
-		timePassed<-stoppingConditions$totalTime[2]-currentTime			
+		timePassed<-runConditions$totalTime[2]-currentTime			
 		#
-		# test stopping conditions
+		# test run conditions
 		totalExtinction<-vitals[2]==0
-		tooMuchTime<-timePassed>stoppingConditions$totalTime[2]
-		tooManyTaxa<-vitals[1]>stoppingConditions$nTotalTaxa[2]
-		tooManySamp<-vitals[3]>stoppingConditions$nSamp[2]
+		tooMuchTime<-timePassed>runConditions$totalTime[2]
+		tooManyTaxa<-vitals[1]>runConditions$nTotalTaxa[2]
+		tooManySamp<-vitals[3]>runConditions$nSamp[2]
 		runStop<-totalExtinction | tooMuchTime | tooManyTaxa | tooManySamp			
 		continue<-unname(!runStop)
 		return(continue)
@@ -442,38 +436,38 @@ simFossilRecord<-function(
 		return(table)
 		}
 
-	testVitalsRecord<-function(vitalsRecord,stoppingConditions){
+	testVitalsRecord<-function(vitalsRecord,runConditions){
 		#
-		# check that labels for vitalsRecord and stoppingConditions match
-		labMatch<-colnames(vitalsRecord)[2:4]==names(stoppingConditions)[2:4]
+		# check that labels for vitalsRecord and runConditions match
+		labMatch<-colnames(vitalsRecord)[2:4]==names(runConditions)[2:4]
 		if(!all(labMatch)){
-			stop("stoppingConditions and vitalsRecord objects are mislabeled/misordered")
+			stop("runConditions and vitalsRecord objects are mislabeled/misordered")
 			}
 		#
 		#first INSERT FAKE EVENTS INTO VITALS MAT
 			# FOR MIN TIME AND MAX TIME
 		#
 		# for min time
-		if(vitalsRecord[1,1]<stoppingConditions$totalTime[1] 
-			& vitalsRecord[nrow(vitalsRecord),1]>stoppingConditions$totalTime[1]
-			& all(vitalsRecord[,1]!=stoppingConditions$totalTime[1])){
+		if(vitalsRecord[1,1]<runConditions$totalTime[1] 
+			& vitalsRecord[nrow(vitalsRecord),1]>runConditions$totalTime[1]
+			& all(vitalsRecord[,1]!=runConditions$totalTime[1])){
 			#
 			#what row to insert at
-			whereInsert<-which(vitalsRecord[,1]>stoppingConditions$totalTime[1])[1]
-			newRow<-c(stoppingConditions$totalTime[1],vitalsRecord[whereInsert-1,-1])
+			whereInsert<-which(vitalsRecord[,1]>runConditions$totalTime[1])[1]
+			newRow<-c(runConditions$totalTime[1],vitalsRecord[whereInsert-1,-1])
 			#vitalsRecord<-insertRow(table=vitalsRecord,row=newRow,rownum=whereInsert-1)
 			vitalsRecord<-rbind(vitalsRecord,newRow)
 			}
 		vitalsRecord<-vitalsRecord[order(vitalsRecord[,1]),]
 		#
 		# for max time
-		if(vitalsRecord[1,1]<stoppingConditions$totalTime[2] 
-			& vitalsRecord[nrow(vitalsRecord),1]>stoppingConditions$totalTime[2]
-			& all(vitalsRecord[,1]!=stoppingConditions$totalTime[2])){
+		if(vitalsRecord[1,1]<runConditions$totalTime[2] 
+			& vitalsRecord[nrow(vitalsRecord),1]>runConditions$totalTime[2]
+			& all(vitalsRecord[,1]!=runConditions$totalTime[2])){
 			#
 			#what row to insert at
-			whereInsert<-rev(which(vitalsRecord[,1]<stoppingConditions$totalTime[2]))[1]
-			newRow<-c(stoppingConditions$totalTime[2],vitalsRecord[whereInsert,-1])
+			whereInsert<-rev(which(vitalsRecord[,1]<runConditions$totalTime[2]))[1]
+			newRow<-c(runConditions$totalTime[2],vitalsRecord[whereInsert,-1])
 			#vitalsRecord<-insertRow(table=vitalsRecord,row=newRow,rownum=whereInsert+1)
 			vitalsRecord<-rbind(vitalsRecord,newRow)
 			}
@@ -497,7 +491,7 @@ simFossilRecord<-function(
 		#
 		okayVitalsMat<-sapply(1:4,function(i){
 			var<-vitalsRecord[,i]
-			varRange<-stoppingConditions[[i]]
+			varRange<-runConditions[[i]]
 				var>=varRange[1] & var<=varRange[2]
 				})
 		okayVitals<-apply(okayVitalsMat,1,all)				
@@ -534,17 +528,6 @@ simFossilRecord<-function(
 
 
 
-
-	sampleModernFossilRecord<-function(fossilRecord,modern.samp.prob){
-		whichExtant<-whichLive(taxa=fossilRecord)
-		nLive<-length(whichExtant)
-		whichSampled<-as.logical(rbinom(n=nLive, size=1, prob=modern.samp.prob))
-		#add sampling event at modern
-		
-
-		return(fossilRecord)
-		}
-
 	##################################################################################
 	#
 	#simplified birth-death-sampling simulator for fossil record
@@ -560,22 +543,21 @@ simFossilRecord<-function(
 	
 # number of starting taxa must be at least 1
 
-
-	
+	# check that prop.bifurc, prop.cryptic are greater than 0
+	if(any(c(prop.bifurc,prop.cryptic)<0)){stop(
+		"bad parameters input: prop.bifurc or prop.cryptic are less than 0")}	
 
 #OLD SIM FOSSIL TAXA CODE
 '
 	
 	#CHECKING
-	if(any(c(p,q,anag.rate,prop.bifurc,prop.cryptic)<0)){stop(
-		"bad parameters input, p, q, anag.rate, prop.bifurc or prop.cryptic are less than 0")}
+
 	if(prop.bifurc>0 & prop.cryptic==1){stop("Prop.bifurc greater than 0 even though cryptic cladogenesis = 1??")}
 	if(nruns<1){stop("nruns<1")}
 	if(maxtaxa<0){stop("maxtaxa<0")}
 	if(mintaxa<1){stop("mintaxa<1")}
 	if(mintime<1){stop("mintime<1")}
-	if(maxtime<mintime){stop("maxtime<mintime")}
-	if(mintaxa>maxtaxa){stop("mintaxa > maxtaxa")}
+
 	if(maxtaxa>10000 & maxtime>10000){warning("Warning: Unrealistic limits for maxtaxa or maxtime")}
 	if(minExtant<0){stop("minExtant<0")}
 	if(minExtant>mintaxa){mintaxa<-minExtant}
@@ -591,34 +573,35 @@ simFossilRecord<-function(
 
  	#check that min nSamp isn't higher that 0, if r = 0 or Inf
 
+# nTotalTaxa, nExtant, nSamp must all be integer values
 		
 
 	
 	#
 	##################################
-	# CHECK STOPPING CONDITIONS
-	stoppingConditions<-list(totalTime=totalTime,nTotalTaxa=nTotalTaxa,nExtant=nExtant,nSamp=nSamp)
+	# CHECK RUN CONDITIONS
+	runConditions<-list(totalTime=totalTime,nTotalTaxa=nTotalTaxa,nExtant=nExtant,nSamp=nSamp)
 	#check that all are numeric
-	if(any(!sapply(stoppingConditions,is.numeric))){
-		stop("Stopping condition arguments must be all of type numeric")
+	if(any(!sapply(runConditions,is.numeric))){
+		stop("Run condition arguments must be all of type numeric")
 		}
 	#are length of 1 or 2
-	if(any(sapply(stoppingConditions,length)>2) | any(sapply(stoppingConditions,length)<1)){
-		stop("Stopping condition arguments must be of length 1 or 2")
+	if(any(sapply(runConditions,length)>2) | any(sapply(runConditions,length)<1)){
+		stop("Run condition arguments must be of length 1 or 2")
 		}
-	# stopping conditions can be given as vectors of length 1 or 2
+	# run conditions can be given as vectors of length 1 or 2
 		# i.e. a point condition or range
-	# turn stopping conditions of length 1 into vectors of length 2
-	stoppingConditions<-lapply(stoppingConditions,function(x)
+	# turn run conditions of length 1 into vectors of length 2
+	runConditions<-lapply(runConditions,function(x)
 		if(length(x)==1){c(x,x)}else{x}
 		)
 	#all values are over zero
-	if(any(!sapply(stoppingConditions,function(x) all(x>=0)))){
-		stop("Stopping Condition values must be equal to or greater than 0")
+	if(any(!sapply(runConditions,function(x) all(x>=0)))){
+		stop("Run Condition values must be equal to or greater than 0")
 		}	
 	#with minimums less than maximums
-	if(any(!sapply(stoppingConditions,function(x) x[1]<=x[2]))){
-		stop("Stopping condition misordered: values given as a range must have the minimum before the maximum")
+	if(any(!sapply(runConditions,function(x) x[1]<=x[2]))){
+		stop("Run condition misordered: values given as a range must have the minimum before the maximum")
 		}	
 	###########################
 	#get the basic rate functions
@@ -638,19 +621,19 @@ simFossilRecord<-function(
 			#
 			#initiate the taxa dataset
 			timePassed<-0
-			#currentTime is the max time from stoppingConditions
-			currentTime<-stoppingConditions$totalTime[2]
+			#currentTime is the max time from runConditions
+			currentTime<-runConditions$totalTime[2]
 			taxa<-initiateTaxa(startTaxa=startTaxa,time=currentTime)
 			#
 			#get vitals
 			startVitals<-getRunVitals(taxa,count.cryptic=count.cryptic)
 			#start vitals table		
 			vitalsRecord<-cbind(timePassed=timePassed,t(as.matrix(startVitals)))
-			#test to make sure stopping conditions aren't impossible
+			#test to make sure run conditions aren't impossible
 			continue<-testContinue(vitals=startVitals,timePassed=timePassed,
-				stoppingConditions=stoppingConditions)
+				runConditions=runConditions)
 			if(!continue){
-				stop("Initial starting point already matches given stopping conditions")
+				stop("Initial starting point already matches given run conditions")
 				}
 		
 
@@ -660,7 +643,7 @@ simFossilRecord<-function(
 				#only as long as continue=TRUE
 				#
 				#timePassed from the initiation of the simulation
-				timePassed<-stoppingConditions$totalTime[2]-currentTime
+				timePassed<-runConditions$totalTime[2]-currentTime
 				#
 				# get rates, sample new event, have it occur
 				#
@@ -693,7 +676,7 @@ simFossilRecord<-function(
 				#
 				####################################################
 				#
-				#evalutate stopping conditions NOW
+				#evalutate run conditions NOW
 				#
 				#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
 					# none of these can REVERSE
@@ -702,7 +685,7 @@ simFossilRecord<-function(
 				currentVitals<-getRunVitals(taxa,count.cryptic=count.cryptic)
 				# continue ??
 				continue<-testContinue(vitals=currentVitals,timePassed=newTimePassed,
-					stoppingConditions=stoppingConditions)
+					runConditions=runConditions)
 				#
 				# Updated vitals table
 					#for (2), keep a table that records changes in nTotalTaxa, nExtant, nSamp with timePassed
@@ -717,15 +700,15 @@ simFossilRecord<-function(
 			#accepting or rejecting runs
 			#
 			#discussion with Smits 05/11/15
-				#real stopping condition is max limits / total ext for typical birth-death simulators
-				#minimums are just for acceptability of runs when they hit stopping conditions
+				#real run condition is max limits / total ext for typical birth-death simulators
+				#minimums are just for acceptability of runs when they hit run conditions
 			#
 			# NEED TO AVOID HARTMANN ET AL. EFFECT ---- simFossilTaxa did it wrong!!
-				# sample simulation from intervals where it 'matched' stopping conditions
+				# sample simulation from intervals where it 'matched' run conditions
 			#
 			#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
 				# none of these can REVERSE
-			#(2) then go back, find all interval for which stopping conditions were met
+			#(2) then go back, find all interval for which run conditions were met
 				# if no acceptable intervals, reject run
 			#(3) randomly sample within intervals for a single date, apply timeSliceFossilRecord
 			#
@@ -734,7 +717,7 @@ simFossilRecord<-function(
 			# use vitalRecords to identify intervals of acceptable parameter values
 			#		
 			#test with testVitalsRecord to get seqVitals
-			seqVitals<-testVitalsRecord(vitalsRecord,stoppingConditions)
+			seqVitals<-testVitalsRecord(vitalsRecord,runConditions)
 			if(!is.na(seqVitals)){
 				#hey, if its an acceptable simulation!!!!!!
 				accept<-TRUE
@@ -743,7 +726,7 @@ simFossilRecord<-function(
 		#sample the sequences for a date
 		passedDate<-sampleSeqVitals(seqVitals=seqVitals)
 		#this date is in timePassed units: convert to currentTime
-		currentDate<-stoppingConditions$totalTime[2]-passedDate
+		currentDate<-runConditions$totalTime[2]-passedDate
 		timeSliceFossilRecord(fossilRecord=taxa,sliceTime=currentDate)
 		# if stop and there are extant, evaluate if sampled at modern
 		# 0< modern.samp.prob <1 need to randomly sample

@@ -96,7 +96,7 @@ simFossilRecord<-function(
 	# run conditions can be given as vectors of length 1 or length 2 (= min,max)
 	#
 	totalTime = c(0, 1000), nTotalTaxa = c(1, 1000),
-	nExtant = c(0, 1000), nSamp = c(0, 1000))
+	nExtant = c(0, 1000), nSamp = c(0, 1000),
 
 	#control parameters
 	#
@@ -281,9 +281,9 @@ simFossilRecord<-function(
 		return(newTaxa)
 		}
 
-	termination<-function(taxa,targetID,time){
+	termination<-function(taxa,target,time){
 		#ends an existing taxon (from extinction or pseudoextinction)
-		whichTarget<-which(sapply(taxa,function(x) x[[1]][1]==targetID))
+		whichTarget<-which(sapply(taxa,function(x) x[[1]][1]==target))
 		if(length(whichTarget)!=1){stop('taxon IDs repeated??')}
 		taxa[[whichTarget]][[1]][4]<-time
 		taxa[[whichTarget]][[1]][5]<-0
@@ -302,29 +302,29 @@ simFossilRecord<-function(
 
 	anagEvent<-function(taxa,parent,time){
 		taxa<-origination(taxa=taxa,ancID=parent,time=time,looksLike=NULL)
-		taxa<-termination(taxa=taxa,targetID=parent,time=time)
+		taxa<-termination(taxa=taxa,target=parent,time=time)
 		return(taxa)
 		}	
 			
 	bifurcEvent<-function(taxa,parent,time){
 		taxa<-origination(taxa=taxa,ancID=parent,time=time,looksLike=NULL)
 		taxa<-origination(taxa=taxa,ancID=parent,time=time,looksLike=NULL)
-		taxa<-termination(taxa=taxa,targetID=parent,time=time)
+		taxa<-termination(taxa=taxa,target=parent,time=time)
 		return(taxa)
 		}	
 		
 	extEvent<-function(taxa,target,time){
-		taxa<-termination(taxa=taxa,targetID=target,time=time)
+		taxa<-termination(taxa=taxa,target=target,time=time)
 		return(taxa)		
 		}
 		
 	sampEvent<-function(taxa,target,time){
-		whichTarget<-which(sapply(taxa,function(x) x[[1]][1]==targetID))
+		whichTarget<-which(sapply(taxa,function(x) x[[1]][1]==target\))
 		taxa[[whichTarget]][[2]]<-c(taxa[[whichTarget]][[2]],time)
 		return(taxa)		
 		}
 			
-	eventOccurs<-(taxa,target,type,time){
+	eventOccurs<-function(taxa,target,type,time){
 		#possible types : 'budd','bifurc','anag','crypt','ext','samp'
 		if(type=="budd"){
 			taxa<-buddEvent(taxa=taxa,parent=target,time=time)
@@ -462,8 +462,8 @@ simFossilRecord<-function(
 		################################################################
 		#
 		# NOW need to essentially duplicated EVERY ROW with time-stamp of row immediately after it
-		newVitalsRecord<-cbind(vitalsRecord[2:nrow(vitalsRecord),1],
-			vitalsRecord[1:(nrow(vitalsRecord)-1),2:4])
+		newVitalsRecord<-cbind(vitalsRecord[2:nrow(vitalsRecord),1,drop=FALSE],
+			vitalsRecord[1:(nrow(vitalsRecord)-1),2:4,drop=FALSE])
 		pastIncrement<-diff(vitalsRecord[,1])
 		pastIncrement<-min(pastIncrement[pastIncrement>0])/1000
 		newTimes<-newVitalsRecord[,1]-pastIncrement
@@ -554,7 +554,7 @@ simFossilRecord<-function(
 	if(startTaxa<1){
 		stop("startTaxa must be at least 1")}
 	#nruns, starting taxa must be integer values
-	if(!sapply(c(nruns,startTaxa),function(x) x==round(x))){
+	if(!all(sapply(c(nruns,startTaxa),function(x) x==round(x)))){
 			stop("nruns and startTaxa must coercible to whole number integers")}
 	# check that prop.bifurc, prop.cryptic, modern.samp.prob are greater than 0 and less than 1
 	if(any(c(prop.bifurc, prop.cryptic, modern.samp.prob)<0) |
@@ -567,14 +567,14 @@ simFossilRecord<-function(
 	if((r==0 | is.infinite(r)) & nSamp[1]>0){
 		stop("Minimum number of required sampled taxa is >0 but sampling rate is zero (or infinite)")}
 	#check that count.cryptic,negRatesAsZero,print.runs,sortNames,plot are all logicals
-	if(!all(is.logical(count.cryptic,negRatesAsZero,print.runs,sortNames,plot))){
+	if(!all(sapply(c(count.cryptic,negRatesAsZero,print.runs,sortNames,plot),is.logical))){
 		stop("count.cryptic, negRatesAsZero, print.runs, sortNames, and plot arguments must be logicals")}
 	#
 	##################################
 	# CHECK RUN CONDITIONS
 	#
 	# nTotalTaxa, nExtant, nSamp must all be integer values
-	if(!sapply(c(nTotalTaxa,nExtant,nSamp),function(x) x==round(x))){
+	if(!all(sapply(c(nTotalTaxa,nExtant,nSamp),function(x) x==round(x)))){
 			stop("nTotalTaxa, nExtant, nSamp must coercible to whole number integers")}		
 	#
 	runConditions<-list(totalTime=totalTime,nTotalTaxa=nTotalTaxa,nExtant=nExtant,nSamp=nSamp)

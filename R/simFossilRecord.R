@@ -37,6 +37,42 @@
 
 
 
+#maybe export?
+
+timeSliceFossilRecord<-function(fossilRecord,sliceTime,modern.samp.prob=1){
+	#take a fossilRecord data object and cut it at some specific date
+	#
+	#drop all taxa that originate after the sliceTime
+	droppers<-which(sapply(fossilRecord,function(x) x[[1]][3]<sliceTime))
+	fossilRecord<-fossilRecord[-droppers]
+	#
+	#turn all taxa that went extinct after sliceTime so they are still alive
+	stillAlive<-which(sapply(fossilRecord,function(x) x[[1]][4]<sliceTime))
+	fossilRecord[stillAlive][[1]][4:5]<-c(NA,1)
+	#
+	#remove all sampling events after sliceTime
+	#adjust all dates so cutdate becomes 0
+	for(i in 1:length(fossilRecord)){
+		#remove all sampling events after sliceTime
+		fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]][fossilRecord[[i]][[2]]>=sliceTime]
+		#adjust all dates so cutdate becomes 0
+		fossilRecord[[i]][[1]][3:4]<-fossilRecord[[i]][[1]][3:4]-sliceTime
+		fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]]-sliceTime
+		}
+	#
+	# sample at modern based on modern.samp.prob
+	whichExtant<-which(sapply(fossilRecord,function(x) x[[1]][5]==1))
+	nLive<-length(whichExtant)
+	liveSampled<-as.logical(rbinom(n=nLive, size=1, prob=modern.samp.prob))
+	whichSampled<-whichExtant[liveSampled]
+	#add sampling event at modern
+	for(i in whichSampled){
+		fossilRecord[[i]][[2]]<-c(fossilRecord[[i]][[2]],0)
+		}
+	#
+	return(fossilRecord)
+	}
+
 
 
 
@@ -308,7 +344,7 @@ simFossilRecord<-function(
 		return(taxa)		
 		}
 			
-	eventOccurs<-(taxa,target,type)
+	eventOccurs<-(taxa,target,type,time)
 		#possible types : 'budd','bifurc','anag','crypt','ext','samp'
 		if(type=="budd"){
 			taxa<-buddEvent(taxa=taxa,parent=target,time=time)
@@ -496,25 +532,18 @@ simFossilRecord<-function(
 		return(date)
 		}
 
-	timeSliceFossilRecord<-function(fossilRecord,cutDate){
-		#take a fossilRecord data object and cut it at some specific date
-		#
-		#drop all taxa that originate after the cutDate
-		droppers<-which(sapply(fossilRecord,function(x) x[[1]][3]<cutDate))
-		fossilRecord<-fossilRecord[-droppers]
-		#
-		#turn all taxa that went extinct after cutDate so they are still alive
-		stillAlive<-which(sapply(fossilRecord,function(x) x[[1]][4]<cutDate))
-		fossilRecord[stillAlive][[1]][4:5]<-c(NA,1)
-		#
-		#remove all sampling events after cutDate
-		for(i in 1:length(fossilRecord)){
-			fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]][fossilRecord[[i]][[2]]>=cutDate]
-			}
+
+
+
+	sampleModernFossilRecord<-function(fossilRecord,modern.samp.prob){
+		whichExtant<-whichLive(taxa=fossilRecord)
+		nLive<-length(whichExtant)
+		whichSampled<-as.logical(rbinom(n=nLive, size=1, prob=modern.samp.prob))
+		#add sampling event at modern
+		
+
 		return(fossilRecord)
 		}
-
-
 
 	##################################################################################
 	#
@@ -603,63 +632,96 @@ simFossilRecord<-function(
 	results<-list()
 	ntries<-0
 	for(i in 1:nruns){
-		ntries<-ntries+1
-		#
-		#initiate the taxa dataset
-		timePassed<-0
-		#currentTime is the max time from stoppingConditions
-		currentTime<-stoppingConditions$totalTime[2]
-		taxa<-initiateTaxa(startTaxa=startTaxa,time=currentTime)
-		#
-		#get vitals
-		startVitals<-getRunVitals(taxa,count.cryptic=count.cryptic)
-		#start vitals table		
-		vitalsRecord<-cbind(timePassed=timePassed,t(as.matrix(startVitals)))
-		#test to make sure stopping conditions aren't impossible
-		continue<-testContinue(vitals=startVitals,timePassed=timePassed,
-			stoppingConditions=stoppingConditions)
-		if(!continue){
-			stop("Initial starting point already matches given stopping conditions")
-			}
+		accept<-FALSE
+		while(!accept){
+			ntries<-ntries+1
+			#
+			#initiate the taxa dataset
+			timePassed<-0
+			#currentTime is the max time from stoppingConditions
+			currentTime<-stoppingConditions$totalTime[2]
+			taxa<-initiateTaxa(startTaxa=startTaxa,time=currentTime)
+			#
+			#get vitals
+			startVitals<-getRunVitals(taxa,count.cryptic=count.cryptic)
+			#start vitals table		
+			vitalsRecord<-cbind(timePassed=timePassed,t(as.matrix(startVitals)))
+			#test to make sure stopping conditions aren't impossible
+			continue<-testContinue(vitals=startVitals,timePassed=timePassed,
+				stoppingConditions=stoppingConditions)
+			if(!continue){
+				stop("Initial starting point already matches given stopping conditions")
+				}
 		
 
 
 
-		while(continue){
-			#only as long as continue=TRUE
-			#
-			#timePassed from the initiation of the simulation
-			timePassed<-stoppingConditions$totalTime[2]-currentTime
-			#
-			# get rates, sample new event, have it occur
-			#
-			#get event probability vector
-			rateVector<-getRateVector(taxa=taxa,timePassed=timePassed,
-				getBranchRate=getBranchRate,getExtRate=getExtRate,
-				getSampRate=getSampRate,getAnagRate=getAnagRate,
-				prop.cryptic=prop.cryptic,prop.bifurc=prop.bifurc,
+			while(continue){
+				#only as long as continue=TRUE
+				#
+				#timePassed from the initiation of the simulation
+				timePassed<-stoppingConditions$totalTime[2]-currentTime
+				#
+				# get rates, sample new event, have it occur
+				#
+				#get event probability vector
+				rateVector<-getRateVector(taxa=taxa,timePassed=timePassed,
+					getBranchRate=getBranchRate,getExtRate=getExtRate,
+					getSampRate=getSampRate,getAnagRate=getAnagRate,
+					prop.cryptic=prop.cryptic,prop.bifurc=prop.bifurc,
 				negRatesAsZero=negRatesAsZero)
+				#
+				#sum the rates
+				sumRates<-sum(rateVector)
+				eventProb<-rateVector/sumRates
+				#
+				#pull type of event (from Peter Smits)
+				event <- sample( names(eventProb), 1, prob = eventProb)
+				#
+				#vector of which taxa are still alive
+				whichLive<-whichLive(taxa)
+				#select which lineage does it occur to
+				target<-sample(whichLive,1)
+				#
+				#draw waiting time to an event (from Peter Smits)
+				changeTime <- rexp(1, rate =sumRates*nLive)
+				newTime<- currentTime - changeTime
+				newTimePassed<-timePassed+changeTime
+				#
+				# make the new event so!
+				taxa<-eventOccurs(taxa=taxa,target=target,type=event,time=newTime)
+				#
+				####################################################
+				#
+				#evalutate stopping conditions NOW
+				#
+				#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
+					# none of these can REVERSE
+				#
+				#get vitals
+				currentVitals<-getRunVitals(taxa,count.cryptic=count.cryptic)
+				# continue ??
+				continue<-testContinue(vitals=currentVitals,timePassed=newTimePassed,
+					stoppingConditions=stoppingConditions)
+				#
+				# Updated vitals table
+					#for (2), keep a table that records changes in nTotalTaxa, nExtant, nSamp with timePassed
+				#then can quickly evaluate (2)
+				currentVitals<-c(timePassed=timePassed,t(as.matrix(currentVitals)))
+				vitalsRecord<-rbind(vitalsRecord,currentVitals)
+				# set new current time
+				currentTime<-newTime	
+				}
+			###########################################
 			#
-			#sum the rates
-			sumRates<-sum(rateVector)
-			eventProb<-rateVector/sumRates
+			#accepting or rejecting runs
 			#
-			#pull type of event (from Peter Smits)
-			event <- sample( names(eventProb), 1, prob = eventProb)
+			#discussion with Smits 05/11/15
+				#real stopping condition is max limits / total ext for typical birth-death simulators
+				#minimums are just for acceptability of runs when they hit stopping conditions
 			#
-			#vector of which taxa are still alive
-			whichLive<-whichLive(taxa)
-			#select which lineage does it occur to
-			target<-sample(whichLive,1)
-			#
-			#draw waiting time to an event (from Peter Smits)
-			changeTime <- rexp(1, rate =sumRates*nLive)
-			newTime<- currentTime - changeTime
-			newTimePassed<-timePassed+changeTime
-			#
-			####################################################
-			#
-			#evalutate stopping conditions NOW
+			# NEED TO AVOID HARMANN ET AL. EFFECT ---- simFossilTaxa did it wrong!!
+				# sample simulation from intervals where it 'matched' stopping conditions
 			#
 			#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
 				# none of these can REVERSE
@@ -667,49 +729,23 @@ simFossilRecord<-function(
 				# if no acceptable intervals, reject run
 			#(3) randomly sample within intervals for a single date, apply timeSliceFossilRecord
 			#
-			#get vitals
-			currentVitals<-getRunVitals(taxa,count.cryptic=count.cryptic)
-			# continue ??
-			continue<-testContinue(vitals=currentVitals,timePassed=newTimePassed,
-				stoppingConditions=stoppingConditions)
+			###########################################
 			#
-			# Updated vitals table
-			#for (2), keep a table that records changes in nTotalTaxa, nExtant, nSamp with timePassed
-				#then can quickly evaluate (2)
-			currentVitals<-c(timePassed=timePassed,t(as.matrix(currentVitals)))
-			vitalsRecord<-rbind(vitalsRecord,currentVitals)
-			}
-		###########################################
-		#
-		#accepting or rejecting runs
-		#
-		#discussion with Smits 05/11/15
-			#real stopping condition is max limits / total ext for typical birth-death simulators
-			#minimums are just for acceptability of runs when they hit stopping conditions
-		#
-		# NEED TO AVOID HARMANN ET AL. EFFECT
-			# sample simulation from intervals where it 'matched' stopping conditions
-		#
-		#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
-			# none of these can REVERSE
-		#(2) then go back, find all interval for which stopping conditions were met
-			# if no acceptable intervals, reject run
-		#(3) randomly sample within intervals for a single date, apply timeSliceFossilRecord
-		#
-		###########################################
-		#
-		# use vitalRecords to identify intervals of acceptable parameter values
-		#		
-		#test with testVitalsRecord to get seqVitals
-		seqVitals<-testVitalsRecord(vitalsRecord,stoppingConditions)
-		if(!is.na(seqVitals)){
-			#hey, if its an acceptable simulation!
+			# use vitalRecords to identify intervals of acceptable parameter values
+			#		
+			#test with testVitalsRecord to get seqVitals
+			seqVitals<-testVitalsRecord(vitalsRecord,stoppingConditions)
+			if(!is.na(seqVitals)){				#hey, if its an acceptable simulation!!!!!!
+				#sample the sequences for a date
 				passedDate<-sampleSeqVitals(seqVitals=seqVitals)
 				#this date is in timePassed units: convert to currentTime
 				currentDate<-stoppingConditions$totalTime[2]-passedDate
+				timeSliceFossilRecord(fossilRecord=taxa,sliceTime=currentDate)
+				# if stop and there are extant, evaluate if sampled at modern
+					# 0< modern.samp.prob <1 need to randomly sample
 			
-			
-			}
+
+				}
 
 
 
@@ -718,24 +754,10 @@ simFossilRecord<-function(
 
 
 
-
-
-			#
-			#how should treat min/max bounds?
-				#
-				
-				#how simFossiltaxa does it:
-				#Simulations will not go longer than maxtime, period
-				#when maxtaxa is hit, simulation will go up until FO of maxtaxa+1 taxon to avoid Hartmann et al. effect
-				#if minExtant is set, simulation will end once minExtant is hit
-					#unless maxExtant is zero, in which case 
-		
-		
 
 
 		
-	# if stop and there are extant, evaluate if sampled at modern
-		# 0< modern.samp.prob <1 need to randomly sample
+
 		
 			
 
@@ -745,10 +767,10 @@ simFossilRecord<-function(
 			# only add new event if continue = TRUE
 			if(continue = TRUE){
 				#update taxa with the new event
-				taxa<-eventOccurs(taxa=taxa,target=target,type=event)
+
 				}
-			# set new current time
-			currentTime<-newTime	
+
+
 
 		
 

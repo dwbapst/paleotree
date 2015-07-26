@@ -720,7 +720,7 @@ simFossilRecord<-function(
 				#real stopping condition is max limits / total ext for typical birth-death simulators
 				#minimums are just for acceptability of runs when they hit stopping conditions
 			#
-			# NEED TO AVOID HARMANN ET AL. EFFECT ---- simFossilTaxa did it wrong!!
+			# NEED TO AVOID HARTMANN ET AL. EFFECT ---- simFossilTaxa did it wrong!!
 				# sample simulation from intervals where it 'matched' stopping conditions
 			#
 			#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
@@ -735,17 +735,21 @@ simFossilRecord<-function(
 			#		
 			#test with testVitalsRecord to get seqVitals
 			seqVitals<-testVitalsRecord(vitalsRecord,stoppingConditions)
-			if(!is.na(seqVitals)){				#hey, if its an acceptable simulation!!!!!!
-				#sample the sequences for a date
-				passedDate<-sampleSeqVitals(seqVitals=seqVitals)
-				#this date is in timePassed units: convert to currentTime
-				currentDate<-stoppingConditions$totalTime[2]-passedDate
-				timeSliceFossilRecord(fossilRecord=taxa,sliceTime=currentDate)
-				# if stop and there are extant, evaluate if sampled at modern
-					# 0< modern.samp.prob <1 need to randomly sample
-			
-
+			if(!is.na(seqVitals)){
+				#hey, if its an acceptable simulation!!!!!!
+				accept<-TRUE
 				}
+			}
+		#sample the sequences for a date
+		passedDate<-sampleSeqVitals(seqVitals=seqVitals)
+		#this date is in timePassed units: convert to currentTime
+		currentDate<-stoppingConditions$totalTime[2]-passedDate
+		timeSliceFossilRecord(fossilRecord=taxa,sliceTime=currentDate)
+		# if stop and there are extant, evaluate if sampled at modern
+		# 0< modern.samp.prob <1 need to randomly sample
+	
+
+		}
 
 
 
@@ -760,15 +764,6 @@ simFossilRecord<-function(
 
 		
 			
-
-			#
-			############################################
-			# additional tasks
-			# only add new event if continue = TRUE
-			if(continue = TRUE){
-				#update taxa with the new event
-
-				}
 
 
 
@@ -787,31 +782,6 @@ simFossilRecord<-function(
 
 
 
-	
-					mtds<-lapply(maxtimes,function(x) matrix(taxad[taxad[,3]<x,],sum(taxad[,3]<x),)) 	#maxtime taxa datasets
-					if(count.cryptic){
-						numtaxa<-sapply(mtds,function(x) nrow(x))
-						numexta<-sapply(1:length(mtds),function(x) sum(mtds[[x]][4]>=maxtimes[x]))		#number of extant taxa
-					}else{	#do not count cryptics
-						numtaxa<-sapply(mtds,function(x) length(unique(x[,5])))
-						numexta<-sapply(1:length(mtds),function(x) length(unique(mtds[[x]][mtds[[x]][4]>=maxtimes[x],5])))
-						}
-					minta<-numtaxa>=mintaxa								#is the clade big enough, per mintaxa?
-					maxta<-numtaxa<=maxtaxa								#is the clade small enough, per maxtaxa?
-					minti<-maxtimes>=mintime							#is the simulation long enough, per mintime?
-					maxti<-maxtimes<=maxtime							#is the simulation short enough, per maxtime?
-					maxext<-if(!is.null(maxExtant)){maxExtant>=numexta}else{TRUE}	#is the number of extant taxa <= max?
-					minext<-minExtant<=numexta						#is there the right number of extant taxa?
-					evalcond<-maxext & minext & minta & maxta & minti & maxti	#evaluate conditions				
-					#numext<-sum(is.na(taxad[,4]))+sum(taxad[!is.na(taxad[,4]),4]>=maxtime1)	
-					if(any(evalcond)){
-						chosen<-rev(which(evalcond))[1]	#choose the last time eval is good to avoid Gerehardt effect
-						taxad<-mtds[[chosen]]
-						maxtime1<-maxtimes[chosen]
-					}else{eval<-FALSE}
-					}
-				}
-			if(!continue & !eval){
 				#reset if the clade is done (continue=FALSE) but eval is FALSE (didnt hit conditions)
 				taxad<-matrix(c(1,NA,0,NA,1),1,)
 				ntries<-ntries+1

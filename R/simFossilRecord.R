@@ -413,6 +413,10 @@ simFossilRecord<-function(
 		ends<-c(ends,TRUE)
 		ends<-vector[ends]
 		seqMat<-cbind(starts,ends)
+		#
+		# checks
+		if(!is.matrix(seqMat)){stop("seqMat isn't a matrix")}
+		if(ncol(seqMat)!=2){stop("seqMat doesn't have 2 columns")}
 		return(seqMat)
 		}
 
@@ -495,6 +499,9 @@ simFossilRecord<-function(
 			seqVitals<-contiguousIntegerSeq(which(okayVitals))
 			#replaced with the passedTime dates
 			seqVitals<-apply(seqVitals,2,function(x) vitalsRecord[x,1])
+			if(is.vector(seqVitals)){
+				seqVitals<-matrix(seqVitals,,2)
+				}
 			#
 			# checks
 			if(!is.matrix(seqVitals)){stop("seqVitals isn't a matrix")}
@@ -530,9 +537,9 @@ simFossilRecord<-function(
 			#cryptic taxa are cryptic id + . taxon number within that complex
 		cryptIDs<-sapply(taxa,function(x) x[[1]][6])
 		taxonIDs<-sapply(taxa,function(x) x[[1]][1])
-		whichCrypt<-sapply(cryptIDs,function(x) sum(x==cryptID)>1)
+		whichCrypt<-sapply(cryptIDs,function(x) sum(x==cryptIDs)>1)
 		newIDs<-sapply(1:length(taxonIDs),function(x){
-			if(whichCrypt){
+			if(whichCrypt[x]){
 				#find what number this taxon is, within the cryptic complex
 				matchCrypt<-cryptIDs==cryptIDs[x]
 				nCrypt<-which(taxonIDs[matchCrypt]==taxonIDs[x])-1

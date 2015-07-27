@@ -64,3 +64,29 @@ timeSliceFossilRecord<-function(fossilRecord,sliceTime,modern.samp.prob=1){
 	return(fossilRecord)
 	}
 	
+fossilRecord2fossilTaxa<-function(fossilRecord){
+	# a function that transforms a simfossilrecord to a taxa object
+	taxaConvert<-t(sapply(fossilRecord,function(x) x[[1]]))	
+	rownames(taxaConvert)<-names(fossilRecord)
+	return(taxaConvert)
+	}
+
+fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.only = TRUE){
+	# a function that transforms a simfossilrecord to a set of ranges (like from sampleRanges)
+		# merge.cryptic = TRUE or FALSE
+		# ranges.only or sampling times?
+	sampData<-lapply(fossilRecord,function(x) x[[2]]) 
+	#merge cryptic taxa
+	if(merge.cryptic=TRUE){
+		cryptIDs<-sapply(fossilRecord,function(x) x[[1]][6])
+		
+		}
+	rangeData	
+
+	return(rangeData)
+	}
+
+# a function that wraps taxa2phylo for simFossilRecord, providing time-scaled tree of sampled taxa
+	# merge.cryptic = TRUE or FALSE
+	#ala simPaleoTrees:
+		# tree<-taxa2phylo(taxa,obs_time=ranges1[,2],plot=plot)	

@@ -211,10 +211,10 @@ simFossilRecord<-function(
 		#
 		#get some basic summary statistics first
 		#vector of which taxa are still alive
-		whichLive<-whichLive(taxa)
+		whichExtant<-whichLive(taxa)
 		#standing number of extant lineages 
 		# (i.e. number of lineages that stuff can happen to)
-		nLive<-length(whichLive)	
+		nLive<-length(whichExtant)	
 		#
 		###########################################################
 		# calculate rates (which may be time of diversity dependent)
@@ -344,6 +344,9 @@ simFossilRecord<-function(
 		if(type=="samp"){
 			taxa<-sampEvent(taxa=taxa,target=target,time=time)
 			}
+		#check
+		if(any(sapply(taxa,length)!=2)){
+			stop("taxa object contains taxa with not 2 elements?")}
 		return(taxa)
 		}
 
@@ -399,16 +402,22 @@ simFossilRecord<-function(
 		}
 
 	contiguousIntegerSeq<-function(vector){
+		if(!is.vector(vector)){
+			stop("contiguousIntegerSeq handed a non-vector?")}
+		if(length(vector)<2){
+			stop("contiguousIntegerSeq handed length 1 vector?")}
+		#		
 		vector<-as.integer(vector)
 		#because unbelievably base R has no simple function for
 			#pulling contiguous sequences of integers from 
 		starts<-sapply(2:length(vector),function(i){
-			vector[i]-vector[i-1]>1
+			(vector[i]-vector[i-1])>1
 			})
+		#browser()
 		starts<-c(TRUE,starts)
 		starts<-vector[starts]
 		ends<-sapply(1:(length(vector)-1),function(i){
-			vector[i+1]-vector[i]>1
+			(vector[i+1]-vector[i])>1
 			})
 		ends<-c(ends,TRUE)
 		ends<-vector[ends]
@@ -482,7 +491,7 @@ simFossilRecord<-function(
 		vitalsRecord<-vitalsRecord[order(vitalsRecord[,1]),]
 		#
 		###########################################################################
-		# identify all rows where nTaxa, nExtant and nSamp are good
+		# identify all rows where timePassed, nTaxa, nExtant and nSamp are good
 		#
 		okayVitalsMat<-sapply(1:4,function(i){
 			var<-vitalsRecord[,i]
@@ -496,7 +505,12 @@ simFossilRecord<-function(
 		#
 		if(any(okayVitals)){
 			# need to build a matrix of the paired-date sequences
-			seqVitals<-contiguousIntegerSeq(which(okayVitals))
+			whichOkay<-which(okayVitals)
+			if(length(whichOkay)>1){
+				seqVitals<-contiguousIntegerSeq(whichOkay)
+			}else{
+				seqVitals<-matrix(whichOkay,1,2)
+				}
 			#replaced with the passedTime dates
 			seqVitals<-apply(seqVitals,2,function(x) vitalsRecord[x,1])
 			if(is.vector(seqVitals)){
@@ -527,7 +541,11 @@ simFossilRecord<-function(
 		}else{
 			# no probability density to sample
 			# randomly pick a row
-			date<-sample(seqVitals[,1],1)
+			if(length(seqVitals[,1])>1){
+				date<-sample(seqVitals[,1],1)
+			}else{
+				date<-seqVitals[,1]
+				}
 			}					
 		return(date)
 		}
@@ -652,10 +670,6 @@ simFossilRecord<-function(
 			if(!continue){
 				stop("Initial starting point already matches given run conditions")
 				}
-		
-
-
-
 			while(continue){
 				#only as long as continue=TRUE
 				#
@@ -679,12 +693,12 @@ simFossilRecord<-function(
 				event <- sample( names(eventProb), 1, prob = eventProb)
 				#
 				#vector of which taxa are still alive
-				whichLive<-whichLive(taxa)
+				whichExtant<-whichLive(taxa)
 				#select which lineage does it occur to
-				target<-sample(whichLive,1)
+				target<-sample(whichExtant,1)
 				#
 				#draw waiting time to an event (from Peter Smits)
-				changeTime <- rexp(1, rate =sumRates*nLive)
+				changeTime <- rexp(1, rate =sumRates*length(whichExtant))
 				newTime<- currentTime - changeTime
 				newTimePassed<-timePassed+changeTime
 				#

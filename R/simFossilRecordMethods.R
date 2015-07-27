@@ -30,45 +30,67 @@
 
 
 #' @export
-timeSliceFossilRecord<-function(fossilRecord,sliceTime,modern.samp.prob=1){
+timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FALSE,
+		modern.samp.prob=1, tolerance=10^-4){
 	#take a fossilRecord data object and cut it at some specific date
 	#
+	# CHECKS
 	if(any(sapply(fossilRecord,length)>2)){
 		stop("fossilRecord object has taxon entries with more than two elements")}
+	#check shiftRoot4TimeSlice
+	shiftPar<-c(TRUE,FALSE,"withExtantOnly")
+	shiftRoot4TimeSlice<-shiftPar[pmatch(shiftRoot4TimeSlice,shiftPar)]
+	if(is.na(shiftRoot4TimeSlice)){
+		stop("shiftRoot4TimeSlice must be a logical or the string 'withExtantOnly'")}
 	#
 	#drop all taxa that originate after the sliceTime
-	droppers<-which(sapply(fossilRecord,function(x) x[[1]][3]<sliceTime))
-	browser()
-	fossilRecord<-fossilRecord[-droppers]
+	droppers<-sapply(fossilRecord,function(x) x[[1]][3]<sliceTime)
+	fossilRecord<-fossilRecord[!droppers]
 	#
-	#turn all taxa that went extinct after sliceTime so they are still alive
-	stillAlive<-sapply(fossilRecord,function(x){
+	#remove all sampling events after sliceTime
+		for(i in 1:length(fossilRecord)){
+			#remove all sampling events after sliceTime
+			fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]][fossilRecord[[i]][[2]]>=sliceTime]
+		}
+	# adjusting time, making taxa extant
+		# need to first test if there are extant taxa or not
+	isAlive<-sapply(fossilRecord,function(x){
 		if(is.na(x[[1]][4])){
 			TRUE
 		}else{
-			x[[1]][4]<sliceTime
+			(sliceTime-x[[1]][4])>tolerance
 		}})
-	#
-	if(any(stillAlive)){
-		for(i in which(stillAlive)){
-			fossilRecord[[i]][[1]][4:5]<-c(sliceTime,1)
+	if(shiftRoot4TimeSlice=="withExtantOnly"){
+		if(any(isAlive)){
+			shiftRoot4TimeSlice<-TRUE
+		}else{
+			shiftRoot4TimeSlice<-FALSE
 			}
 		}
-	if(any(sapply(fossilRecord,length)>2)){
-		stop("time-slicing created taxon entries with more than two elements?")}
 	#
-	#remove all sampling events after sliceTime
-	#adjust all dates so cutdate becomes 0
-	for(i in 1:length(fossilRecord)){
-		#remove all sampling events after sliceTime
-		fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]][fossilRecord[[i]][[2]]>=sliceTime]
+	# if shiftRoot4TimeSlice, then the whole thing shifts so time=0 is slice time
+	if(shiftRoot4TimeSlice){	
 		#adjust all dates so cutdate becomes 0
-			#if stillAlive, replace 4:5 with 0,1
-		isAlive<-if(is.na(fossilRecord[[i]][[1]][4]))
-		if(
-		fossilRecord[[i]][[1]][3:4]<-fossilRecord[[i]][[1]][3:4]-sliceTime
-		
-		fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]]-sliceTime
+		for(i in 1:length(fossilRecord)){
+			#adjust all dates so cutdate becomes 0
+				#if stillAlive, replace 4:5 with 0,1
+			if(isAlive[i]){
+				#turn all taxa that went extinct after sliceTime so they are still alive
+				fossilRecord[[i]][[1]][3]<-fossilRecord[[i]][[1]][3]-sliceTime
+				fossilRecord[[i]][[1]][4:5]<-c(0,1)
+			}else{
+				fossilRecord[[i]][[1]][3:4]<-fossilRecord[[i]][[1]][3:4]-sliceTime
+				}
+			fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]]-sliceTime
+			}
+	# if shiftRoot4TimeSlice=FALSE, then simply replace all extant taxa with
+		# LADs at sliceTime and score as extant
+	}else{
+		for(i in 1:length(fossilRecord)){
+			if(isAlive[i]){
+				fossilRecord[[i]][[1]][4:5]<-c(sliceTime,1)
+				}
+			}
 		}
 	#
 	# sample at modern based on modern.samp.prob

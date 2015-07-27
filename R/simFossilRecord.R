@@ -91,7 +91,7 @@ simFossilRecord<-function(
 	# model parameters
 	#
 	p, q, r, anag.rate=0, prop.bifurc=0, prop.cryptic=0,
-	modern.samp.prob=1, startTaxa=1,  nruns=1,
+	modern.samp.prob=1, startTaxa=1, nruns=1,
 
 	# run conditions can be given as vectors of length 1 or length 2 (= min,max)
 	#
@@ -100,6 +100,7 @@ simFossilRecord<-function(
 
 	#control parameters
 	#
+	tolerance=10^-4, shiftRoot4TimeSlice="withExtantOnly",
 	count.cryptic=FALSE, negRatesAsZero=TRUE, print.runs=FALSE, sortNames=FALSE, plot=FALSE){
 
 	# NOT USED (but in simFossilTaxa):	min.cond=TRUE
@@ -435,8 +436,25 @@ simFossilRecord<-function(
 		table<-rbind(table[1:(rownum-1),],row,table[-(1:(rownum-1)),])
 		return(table)
 		}
+		
+	worthCheckingVitalsRecord<-function(vitalsRecord,runConditions){
+		#
+		# check that labels for vitalsRecord and runConditions match
+		labMatch<-colnames(vitalsRecord)[2:4]==names(runConditions)[2:4]
+		if(!all(labMatch)){
+			stop("runConditions and vitalsRecord objects are mislabeled/misordered")
+			}
+		#
+		lastVitals<-vitalsRecord[nrow(vitalsRecord),]
+		reachMin<-sapply(c(1,2,4),function(i){
+			lastVitals[i]>=runConditions[[i]][1]
+			})
+		worthChecking<-all(reachMin)
+		#
+		return(worthChecking)
+		}
 
-	testVitalsRecord<-function(vitalsRecord,runConditions){
+	testVitalsRecord<-function(vitalsRecord,runConditions,tolerance){
 		#
 		# check that labels for vitalsRecord and runConditions match
 		labMatch<-colnames(vitalsRecord)[2:4]==names(runConditions)[2:4]
@@ -481,8 +499,9 @@ simFossilRecord<-function(
 		pastIncrement<-diff(vitalsRecord[,1])
 		if(any(pastIncrement>0)){
 			pastIncrement<-min(pastIncrement[pastIncrement>0])/1000
+			pastIncrement<-min(c(tolerance,pastIncrement))
 		}else{
-			pastIncrement<-1/10000
+			pastIncrement<-tolerance
 			}
 		newTimes<-newVitalsRecord[,1]-pastIncrement
 		newTimes<-ifelse(newTimes>0,newTimes,0)
@@ -707,7 +726,7 @@ simFossilRecord<-function(
 				#
 				####################################################
 				#
-				#evalutate run conditions NOW
+				#evaluate run conditions NOW for stopping
 				#
 				#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
 					# none of these can REVERSE
@@ -721,7 +740,7 @@ simFossilRecord<-function(
 				# Updated vitals table
 					#for (2), keep a table that records changes in nTotalTaxa, nExtant, nSamp with timePassed
 				#then can quickly evaluate (2)
-				currentVitals<-c(timePassed=timePassed,t(as.matrix(currentVitals)))
+				currentVitals<-c(timePassed=newTimePassed,t(as.matrix(currentVitals)))
 				vitalsRecord<-rbind(vitalsRecord,currentVitals)
 				# set new current time
 				currentTime<-newTime	
@@ -747,11 +766,16 @@ simFossilRecord<-function(
 			#
 			# use vitalRecords to identify intervals of acceptable parameter values
 			#		
-			#test with testVitalsRecord to get seqVitals
-			seqVitals<-testVitalsRecord(vitalsRecord,runConditions)
-			if(all(!is.na(seqVitals))){
-				#hey, if its an acceptable simulation!!!!!!
-				accept<-TRUE
+			#is it even worth checking? (were mins reached)
+			worthyVitals<-worthCheckingVitalsRecord(vitalsRecord=vitalsRecord,runConditions=runConditions)
+			if(worthyVitals){
+				#test with testVitalsRecord to get seqVitals
+				seqVitals<-testVitalsRecord(vitalsRecord=vitalsRecord,runConditions=runConditions
+					,tolerance=tolerance)
+				if(all(!is.na(seqVitals))){
+					#hey, if its an acceptable simulation!!!!!!
+					accept<-TRUE
+					}
 				}
 			}
 		#sample the sequences for a date
@@ -761,8 +785,9 @@ simFossilRecord<-function(
 		# now time slice
 			# if stop and there are extant, evaluate if sampled at modern
 			# 0< modern.samp.prob <1 need to randomly sample
+		#browser()
 		taxa<-timeSliceFossilRecord(fossilRecord=taxa,sliceTime=currentDate,
-			modern.samp.prob=modern.samp.prob)
+			shiftRoot4TimeSlice=shiftRoot4TimeSlice, modern.samp.prob=modern.samp.prob)
 		#name each normal taxon as t + ID 
 			#cryptic taxa are cryptic id + . taxon number within that complex
 		names(taxa)<-getTaxaNames(taxa=taxa)
@@ -775,7 +800,7 @@ simFossilRecord<-function(
 		if(plot){
 			taxaConvert<-fossilRecord2fossilTaxa(fossilRecord=taxa)
 			taxicDivCont(taxaConvert,int.length=0.2)
-			if(nruns>1){title(paste("Run Num.",i," of ",nruns,sep=""))}
+			if(nruns>1){title(paste0("Run Number ",i," of ",nruns))}
 			}
 		}
 	if(print.runs){

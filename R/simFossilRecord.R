@@ -269,7 +269,7 @@ simFossilRecord<-function(
 		taxon<-list(taxa.data=taxaData, sampling.times=numeric())
 		return(taxon)
 		}
-	
+
 	origination<-function(taxa,ancID,time,looksLike=NULL){
 		#adds a new taxon via branching or anagenesis
 		newID<-max(sapply(taxa,function(x) x[[1]][1]))+1
@@ -277,7 +277,7 @@ simFossilRecord<-function(
 			looksLike<-newID
 			}
 		newTaxonData<-newTaxon(newID=newID,ancID=ancID,time=time,looksLike=looksLike)	
-		newTaxa<-c(taxa,newTaxonData)
+		newTaxa<-c(taxa,list(newTaxonData))
 		return(newTaxa)
 		}
 
@@ -319,7 +319,7 @@ simFossilRecord<-function(
 		}
 		
 	sampEvent<-function(taxa,target,time){
-		whichTarget<-which(sapply(taxa,function(x) x[[1]][1]==target\))
+		whichTarget<-which(sapply(taxa,function(x) x[[1]][1]==target))
 		taxa[[whichTarget]][[2]]<-c(taxa[[whichTarget]][[2]],time)
 		return(taxa)		
 		}
@@ -327,7 +327,7 @@ simFossilRecord<-function(
 	eventOccurs<-function(taxa,target,type,time){
 		#possible types : 'budd','bifurc','anag','crypt','ext','samp'
 		if(type=="budd"){
-			taxa<-buddEvent(taxa=taxa,parent=target,time=time)
+			taxa<-buddingEvent(taxa=taxa,parent=target,time=time)
 			}
 		if(type=="bifurc"){
 			taxa<-bifurcEvent(taxa=taxa,parent=target,time=time)		
@@ -336,7 +336,7 @@ simFossilRecord<-function(
 			taxa<-anagEvent(taxa=taxa,parent=target,time=time)
 			}
 		if(type=="crypt"){
-			taxa<-cryptEvent(taxa=taxa,parent=target,time=time)
+			taxa<-crypticEvent(taxa=taxa,parent=target,time=time)
 			}
 		if(type=="ext"){
 			taxa<-extEvent(taxa=taxa,target=target,time=time)		
@@ -361,6 +361,7 @@ simFossilRecord<-function(
 	
 	getRunVitals<-function(taxa,count.cryptic){
 		#NOTE need to change vital measurement dependent on count.cryptic or not
+		if(!is.list(taxa)){stop("handed getRunVitals a taxa object that isn't a list??")}
 		whichExtant<-whichLive(taxa)
 		whichSamp<-whichSampled(taxa)
 		if(count.cryptic){
@@ -461,11 +462,15 @@ simFossilRecord<-function(
 		#
 		################################################################
 		#
-		# NOW need to essentially duplicated EVERY ROW with time-stamp of row immediately after it
+		# NOW need to essentially duplicate EVERY ROW with time-stamp of row immediately after it
 		newVitalsRecord<-cbind(vitalsRecord[2:nrow(vitalsRecord),1,drop=FALSE],
 			vitalsRecord[1:(nrow(vitalsRecord)-1),2:4,drop=FALSE])
 		pastIncrement<-diff(vitalsRecord[,1])
-		pastIncrement<-min(pastIncrement[pastIncrement>0])/1000
+		if(any(pastIncrement>0)){
+			pastIncrement<-min(pastIncrement[pastIncrement>0])/1000
+		}else{
+			pastIncrement<-1/10000
+			}
 		newTimes<-newVitalsRecord[,1]-pastIncrement
 		newTimes<-ifelse(newTimes>0,newTimes,0)
 		newVitalsRecord[,1]<-newTimes
@@ -490,9 +495,17 @@ simFossilRecord<-function(
 			seqVitals<-contiguousIntegerSeq(which(okayVitals))
 			#replaced with the passedTime dates
 			seqVitals<-apply(seqVitals,2,function(x) vitalsRecord[x,1])
+			#
+			# checks
+			if(!is.matrix(seqVitals)){stop("seqVitals isn't a matrix")}
+			if(ncol(seqVitals)!=2){stop("seqVitals doesn't have 2 columns")}
 		}else{
 			seqVitals<-NA
 			}
+		#
+		#check to make sure it makes sense
+		if(length(seqVitals)==0){stop("seqVitals constructed incorrectly")}
+		#
 		return(seqVitals)
 		}
 
@@ -623,7 +636,7 @@ simFossilRecord<-function(
 			taxa<-initiateTaxa(startTaxa=startTaxa,time=currentTime)
 			#
 			#get vitals
-			startVitals<-getRunVitals(taxa,count.cryptic=count.cryptic)
+			startVitals<-getRunVitals(taxa=taxa,count.cryptic=count.cryptic)
 			#start vitals table		
 			vitalsRecord<-cbind(timePassed=timePassed,t(as.matrix(startVitals)))
 			#test to make sure run conditions aren't impossible
@@ -679,7 +692,7 @@ simFossilRecord<-function(
 					# none of these can REVERSE
 				#
 				#get vitals
-				currentVitals<-getRunVitals(taxa,count.cryptic=count.cryptic)
+				currentVitals<-getRunVitals(taxa=taxa,count.cryptic=count.cryptic)
 				# continue ??
 				continue<-testContinue(vitals=currentVitals,timePassed=newTimePassed,
 					runConditions=runConditions)
@@ -715,7 +728,7 @@ simFossilRecord<-function(
 			#		
 			#test with testVitalsRecord to get seqVitals
 			seqVitals<-testVitalsRecord(vitalsRecord,runConditions)
-			if(!is.na(seqVitals)){
+			if(all(!is.na(seqVitals))){
 				#hey, if its an acceptable simulation!!!!!!
 				accept<-TRUE
 				}

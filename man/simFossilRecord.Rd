@@ -13,8 +13,27 @@ simFossilRecord(p, q, r, anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0,
 }
 \arguments{
 \item{p,q,r,anag.rate}{These parameters control the instantaneous ('per-capita') rates of branching, extinction,
-sampling and anagenesis, respectively.
-Rates set to \code{= Inf} are treated as if 0. When a rate is set to 0, this event type will not occur in the simulation.}
+sampling and anagenesis, respectively. These can be given as a number equal to or greater than zero, or as a
+character string which will be interpreted as an algebraic equation. These equations can make use of three
+quantities which will/may change throughout the simulation: the standing richness is \code{N}, the
+current time passed since the start of the simulation is \code{T} and the current branching rate is \code{P}
+(corresponding to the argument name \code{p}).
+Note that \code{P} cannot be used in equations for the branching rate itself; it is for making other rates
+relative to the branching rate.
+Rates set to \code{= Inf} are treated as if 0. When a rate is set to 0, this event type will not occur in the simulation.
+Setting certain processes to zero, like sampling, may increase simulation efficiency, if the goal is a birth-death or
+pure-birth model.
+See documentation for argument \code{negRatesAsZero} about the treatment of rates that decrease below zero.}
+
+\item{prop.cryptic,prop.bifurc}{These parameters control (respectively) the proportion of branching events that have
+morphological differentiation, versus those that are cryptic (\code{prop.cryptic}) and the proportion of morphological
+branching events that are bifurcating, as opposed to budding. Both of these proportions must be a number between 0 and 1.
+By default, both are set to zero, meaning all branching events are events of budding cladogenesis.}
+
+\item{startTaxa}{Number of initital taxa to begin a simulation with. All will have the simulation start date
+listed as their time of origination.}
+
+\item{nruns}{Number of simulation datasets to accept, save and output.}
 
 \item{totalTime,nTotalTaxa,nExtant,nSamp}{These arguments represent stopping and
 acceptance conditions for simulation runs. They are respectively \code{totalTime}, the
@@ -29,8 +48,19 @@ and maximum values of a range for accepted simulation runs (i.e. the simulation 
 Note that it is easy to set combinations of parameters and run conditions that are impossible
 to produce satisfactory input under, in which case \code{simFossilRecord} would run in a nonstop loop.}
 
+\item{tolerance}{A small number which defines a tiny interval for the sake of placing run-sampling dates before events,
+and for use in determining whether a taxon is extant in simFossilRecordMethods.}
+
+\item{shiftRoot4TimeSlice}{Should the dating of events be shifted, so that the
+date given for \code{sliceTime} is now 0, or should the dates not be shifted,
+so that they remain on the same scale as the input? This argument accepts a
+logical TRUE or FALSE, but also accepts the string \code{"withExtantOnly"},
+which will only 'shift' the time-scale if living taxa are present, as
+determined by having ranges that overlap within \code{tolerance} of \code{sliceTime}.}
+
 \item{negRatesAsZero}{A logical. Should rates calculated as a negative number cause the simulation to fail
-with an error message (\code{ = FALSE}) or should these be treated as zero (\code{"= TRUE"}, the default).}
+with an error message (\code{ = FALSE}) or should these be treated as zero (\code{"= TRUE"}, the default). This
+is equivalent to saying that the \code{ rate.as.used = max(0, rate.as.given) }.}
 }
 \value{
 A list object composed
@@ -116,11 +146,10 @@ records <- simFossilRecord(p=0.1, q=0.8, r=0, nruns=10,
 
 ######################
 
-# Using
+# Using the rate equation-input for complex diversification models
 
-# Diversity Dependent Models!
-
-# First, let's try Diversity-Dependent Branching over 50 time-units
+# First up... Diversity Dependent Models!
+# Let's try Diversity-Dependent Branching over 50 time-units
 
 # first, let's write the rate equation
 # We'll use the diversity dependent rate equation model
@@ -382,7 +411,7 @@ record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
 
 # Test to make sure runs are being filtered correctly :
 
-res<-simFossilRecord(0.1,0.1,0.1,nTotalTaxa=10,nExtant=0,nruns=1000,plot=TRUE)
+res<-simFossilRecord(p=0.1, q=0.1, r=0.1,nTotalTaxa=10,nExtant=0,nruns=1000,plot=TRUE)
 anyLive<-any(sapply(res,function(z) any(sapply(z,function(x) x[[1]][5]==1))))
 if(anyLive){
 	stop("Runs have extant taxa under conditioning for none?")

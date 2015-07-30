@@ -5,6 +5,9 @@
 #' @details
 #' Hartmann et al. (2011) recently discovered a potential statistical artifact
 #' when branching simulations are conditioned on some maximum number of taxa.
+# no more min.cond
+# only GSA
+# 
 
 
 #' @inheritParams simFossilRecordMethods
@@ -98,11 +101,10 @@
 #' 
 #' ######################
 #' 
-#' # Using 
+#' # Using the rate equation-input for complex diversification models
 #' 
-#' # Diversity Dependent Models!
-#' 
-#' # First, let's try Diversity-Dependent Branching over 50 time-units
+#' # First up... Diversity Dependent Models!
+#' # Let's try Diversity-Dependent Branching over 50 time-units
 #' 
 #' # first, let's write the rate equation
 #' # We'll use the diversity dependent rate equation model
@@ -364,7 +366,7 @@
 #'	
 #' # Test to make sure runs are being filtered correctly :
 #'
-#' res<-simFossilRecord(0.1,0.1,0.1,nTotalTaxa=10,nExtant=0,nruns=1000,plot=TRUE)
+#' res<-simFossilRecord(p=0.1, q=0.1, r=0.1,nTotalTaxa=10,nExtant=0,nruns=1000,plot=TRUE)
 #' anyLive<-any(sapply(res,function(z) any(sapply(z,function(x) x[[1]][5]==1))))
 #' if(anyLive){
 #'	stop("Runs have extant taxa under conditioning for none?")
@@ -397,13 +399,34 @@
 #' to produce satisfactory input under, in which case \code{simFossilRecord} would run in a nonstop loop.
 
 #' @param negRatesAsZero A logical. Should rates calculated as a negative number cause the simulation to fail
-#' with an error message (\code{ = FALSE}) or should these be treated as zero (\code{"= TRUE"}, the default).
-
-
+#' with an error message (\code{ = FALSE}) or should these be treated as zero (\code{"= TRUE"}, the default). This
+#' is equivalent to saying that the \code{ rate.as.used = max(0, rate.as.given) }.
 
 #' @param p,q,r,anag.rate These parameters control the instantaneous ('per-capita') rates of branching, extinction,
-#' sampling and anagenesis, respectively.
+#' sampling and anagenesis, respectively. These can be given as a number equal to or greater than zero, or as a 
+#' character string which will be interpreted as an algebraic equation. These equations can make use of three
+#' quantities which will/may change throughout the simulation: the standing richness is \code{N}, the
+#' current time passed since the start of the simulation is \code{T} and the current branching rate is \code{P}
+#' (corresponding to the argument name \code{p}).
+#' Note that \code{P} cannot be used in equations for the branching rate itself; it is for making other rates
+#' relative to the branching rate.
 #' Rates set to \code{= Inf} are treated as if 0. When a rate is set to 0, this event type will not occur in the simulation.
+#' Setting certain processes to zero, like sampling, may increase simulation efficiency, if the goal is a birth-death or
+#' pure-birth model.
+#' See documentation for argument \code{negRatesAsZero} about the treatment of rates that decrease below zero.
+
+#' @param prop.cryptic,prop.bifurc These parameters control (respectively) the proportion of branching events that have
+#' morphological differentiation, versus those that are cryptic (\code{prop.cryptic}) and the proportion of morphological
+#' branching events that are bifurcating, as opposed to budding. Both of these proportions must be a number between 0 and 1.
+#' By default, both are set to zero, meaning all branching events are events of budding cladogenesis.
+
+#' @param tolerance A small number which defines a tiny interval for the sake of placing run-sampling dates before events,
+#' and for use in determining whether a taxon is extant in simFossilRecordMethods.
+
+#' @param nruns Number of simulation datasets to accept, save and output.
+
+#' @param startTaxa Number of initital taxa to begin a simulation with. All will have the simulation start date
+#' listed as their time of origination.
 
 
 
@@ -428,8 +451,12 @@ simFossilRecord<-function(
 	tolerance=10^-4, shiftRoot4TimeSlice="withExtantOnly",
 	count.cryptic=FALSE, negRatesAsZero=TRUE, print.runs=FALSE, sortNames=FALSE, plot=FALSE){
 
+	#####################################################################################
+	
 	# NOT USED (but in simFossilTaxa):	min.cond=TRUE
 
+	#################################################################################
+	
 	#example parameter sets
 	#
 	# DEFAULTS (without rates set)
@@ -444,26 +471,6 @@ simFossilRecord<-function(
 		# count.cryptic=FALSE;print.runs=TRUE;sortNames=FALSE;set.seed(444)
 	#
 	
-	
-
-	#p=0.1;q=0.1;r=0.1,anag.rate=0.1;prop.bifurc=0.1;prop.cryptic=0;nruns=10;mintaxa=1;maxtaxa=200;mintime=1;maxtime=100;minExtant=0;maxExtant=0;plot=TRUE;print.runs=TRUE;min.cond=TRUE
-	#
-	#p=0.1;q=0.9;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=1;mintaxa=1;maxtaxa=100;mintime=1;maxtime=100;minExtant=0;maxExtant=0;plot=TRUE;print.runs=TRUE;min.cond=TRUE
-
-	#min.cond example
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=10;mintaxa=1;maxtaxa=1000;mintime=1;maxtime=100;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=FALSE
-	
-	#pure birth example
-	#set.seed(444);p=0.1;q=0;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE
-	
-	#cryptic speciation
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.5;prop.cryptic=0.5;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=TRUE
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
-
-
-
 	##################################################################################
 	#
 	#simplified birth-death-sampling simulator for fossil record

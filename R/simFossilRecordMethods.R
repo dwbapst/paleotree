@@ -34,8 +34,18 @@
 #' 	nTotalTaxa=c(20,30) ,nExtant=0, plot=TRUE)
 #'
 
+#' @param sliceTime The date to slice the \code{simFossilRecord} output at, given
+#' in time-units before the modern, on the same scale as the input \code{fossilRecord}.
 
+#' @param shiftRoot4TimeSlice Should the dating of events be shifted, so that the
+#' date given for \code{sliceTime} is now 0, or should the dates not be shifted,
+#' so that they remain on the same scale as the input? This argument accepts a
+#' logical TRUE or FALSE, but also accepts the string \code{"withExtantOnly"},
+#' which will only 'shift' the time-scale if living taxa are present, as
+#' determined by having ranges that overlap within \code{tolerance} of \code{sliceTime}.
 
+#' @param tolerance A small number which sets a range around the \code{sliceTime} within
+#' which taxa will be considered extant.
 
 #' @rdname simFossilRecordMethods
 #' @export

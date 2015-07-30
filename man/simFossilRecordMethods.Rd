@@ -21,8 +21,21 @@ of multiple elements, each of which is data for 'one taxon', with the first
 element being a distinctive six-element vector composed of numbers, corresponding
 to the six numbers in a \code{simFossilTaxa} matrix.}
 
+\item{sliceTime}{The date to slice the \code{simFossilRecord} output at, given
+in time-units before the modern, on the same scale as the input \code{fossilRecord}.}
+
+\item{shiftRoot4TimeSlice}{Should the dating of events be shifted, so that the
+date given for \code{sliceTime} is now 0, or should the dates not be shifted,
+so that they remain on the same scale as the input? This argument accepts a
+logical TRUE or FALSE, but also accepts the string \code{"withExtantOnly"},
+which will only 'shift' the time-scale if living taxa are present, as
+determined by having ranges that overlap within \code{tolerance} of \code{sliceTime}.}
+
 \item{modern.samp.prob}{Probability of sampling living taxa at the present
 day (time=0), see below.}
+
+\item{tolerance}{A small number which sets a range around the \code{sliceTime} within
+which taxa will be considered extant.}
 
 \item{merge.cryptic}{If TRUE, sampling events for cryptic species will be
 merged into one taxon.}

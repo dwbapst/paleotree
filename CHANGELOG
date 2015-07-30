@@ -22,6 +22,8 @@ Version - 2.5 -
 -Added 'kanto' a fictional example dataset, consisting of a taxon abundances-by-sites table for community ecology
 -Added community ecology functions 'pairwiseSpearmanRho' and 'HurlbertPIE' since they don't seem to be in any other package
 -Modified how timePaleoPhy looks for node dates to assign, after taxa are dropped (originally matched clades based on tip IDs, not tip labels)
+-Added argument to multiDiv that allows for control of line type
+-Modified taxa2phylo so root.time is added before plotting
 -
 
 Version - 2.4 - 05-01-15

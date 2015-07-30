@@ -1,4 +1,4 @@
-#' Methods for Editting or Converting Output from simFossilRecord
+#' Methods for Editing or Converting Output from simFossilRecord
 #'
 #'
 
@@ -166,7 +166,4 @@ fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.onl
 	return(result)
 	}
 
-# a function that wraps taxa2phylo for simFossilRecord, providing time-scaled tree of sampled taxa
-	# merge.cryptic = TRUE or FALSE
-	#ala simPaleoTrees:
-		# tree<-taxa2phylo(taxa,obs_time=ranges1[,2],plot=plot)	
+

@@ -3,6 +3,9 @@
 #' 
 
 #' @details
+#' Hartmann et al. (2011) recently discovered a potential statistical artifact
+#' when branching simulations are conditioned on some maximum number of taxa.
+
 
 #' @inheritParams
 
@@ -318,12 +321,44 @@
 #' length(unique(taxa[taxa[,5]==1,6]))	   	#number of still-living morph-dist. taxa
 #' 
 #' 
-
-
-
-
-	
+#'
+#' ######################################################
 #' \donttest{
+#' 
+#' 
+#' # Using run conditions
+#' 
+#' # Users can generate datasets that meet multiple conditions:
+#' 	# such as time, number of total taxa, extant taxa, sampled taxa
+#' # These can be set as point conditions or ranges
+#' 
+#' # let's set time = 10-100 units, total taxa = 30-40, extant = 10
+#' 	#and look at acceptance rates with print.run
+#' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1, 
+#' 	totalTime=c(10,100), nTotalTaxa=c(30,40), nExtant=10,
+#' 	print.runs=TRUE, plot=TRUE)
+#' 
+#' # let's make the constraints on totaltaxa a little tighter
+#' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1, 
+#' 	totalTime=c(50,100), nTotalTaxa=30, nExtant=10,
+#' 	print.runs=TRUE, plot=TRUE)
+#' # still okay acceptance rates
+#' 
+#' # alright, now let's add a constraint on sampled taxa
+#' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1, 
+#' 	totalTime=c(50,100), nTotalTaxa=30, nExtant=10,
+#' 	nSamp=15, print.runs=TRUE, plot=TRUE)
+#' # still okay acceptance rates
+#' 
+#' #Typically, a user may want to condition on a precise
+#' 	# number of sampled taxa in an all-extinct simulation
+#' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1, 
+#' 	nTotalTaxa=c(1,100), nExtant=0, nSamp=20,
+#' 	print.runs=TRUE, plot=TRUE)
+#'
+#' ##################################################################
+#'	
+#' # Test to make sure runs are being filtered correctly :
 #'
 #' res<-simFossilRecord(0.1,0.1,0.1,nTotalTaxa=10,nExtant=0,nruns=1000,plot=TRUE)
 #' anyLive<-any(sapply(res,function(z) any(sapply(z,function(x) x[[1]][5]==1))))
@@ -333,14 +368,9 @@
 #'
 #' }
 
-#' @name
-#' @rdname
-#' @export
 
 
 
-#' Hartmann et al. (2011) recently discovered a potential statistical artifact
-#' when branching simulations are conditioned on some maximum number of taxa.
 
 
 
@@ -367,11 +397,15 @@
 
 
 
-
 #' @param p,q,r,anag.rate These parameters control the instantaneous ('per-capita') rates of branching, extinction,
 #' sampling and anagenesis, respectively.
 #' Rates set to \code{= Inf} are treated as if 0. When a rate is set to 0, this event type will not occur in the simulation.
 
+
+
+
+#' @name simFossilRecord
+#' @rdname simFossilRecord
 #' @export
 simFossilRecord<-function(
 
@@ -889,6 +923,16 @@ simFossilRecord<-function(
 		}
 
 	testFinal<-function(taxa,timePassed,runConditions,count.cryptic){
+		# need to adjust sampling for modern.sampling
+		whichExtant<-whichLive(taxa)
+		if(length(whichExtant)>0){
+			# find extant time
+			extantTime<-taxa[[whichExtant[1]]][[1]][4]
+			for(i in 1:length(taxa)){
+				# remove all sampling events at zero
+				taxa[[i]][[2]]<-taxa[[i]][[2]][taxa[[i]][[2]]!=extantTime]
+				}
+			}
 		# test that the produced taxa object actually passed the runConditions
 		finalVitals<-getRunVitals(taxa=taxa,count.cryptic=count.cryptic)
 		finalVitals<-c(timePassed=timePassed,finalVitals)
@@ -1081,6 +1125,7 @@ simFossilRecord<-function(
 				#if(newTimePassed>74.5){browser()}
 				#if(newTimePassed>120){if(taxa[[4]][[1]][4]<120){browser()}}
 				#
+				}
 			###########################################
 			#
 			#accepting or rejecting runs
@@ -1105,7 +1150,7 @@ simFossilRecord<-function(
 			#is it even worth checking? (were mins reached)
 			worthyVitals<-worthCheckingVitalsRecord(vitalsRecord=vitalsRecord,runConditions=runConditions)
 			if(worthyVitals){
-			#test with testVitalsRecord to get seqVitals
+				#test with testVitalsRecord to get seqVitals
 				seqVitals<-testVitalsRecord(vitalsRecord=vitalsRecord,runConditions=runConditions
 					,tolerance=tolerance)
 				if(all(!is.na(seqVitals))){
@@ -1130,11 +1175,10 @@ simFossilRecord<-function(
 		finalTest<-testFinal(taxa=taxa,timePassed=passedDate,
 			runConditions=runConditions,count.cryptic=count.cryptic)
 		#are there any non-identical taxa in a simulation with pure cryptic speciation?
-			if(anag.rate==0 & prop.cryptic==1 & startTaxa==1){
-				taxaIDsTest<-sapply(taxa,function(x) x[[1]][6])
-				if(any(!sapply(taxaIDsTest,function(x) all(x==taxaIDsTest)))){
-					stop("non-cryptic taxa created in a simulation with pure cryptic speciation?!")
-					}
+		if(anag.rate==0 & prop.cryptic==1 & startTaxa==1){
+			taxaIDsTest<-sapply(taxa,function(x) x[[1]][6])
+			if(any(!sapply(taxaIDsTest,function(x) all(x==taxaIDsTest)))){
+				stop("non-cryptic taxa created in a simulation with pure cryptic speciation?!")
 				}
 			}
 		################################################################################

@@ -25,19 +25,11 @@
 
 #' @examples
 
-#' @name
-#' @rdname
-#' @export
 
 
-checkFossilRecord<-function(fossilRecord){
-	if(any(sapply(fossilRecord,length)!=2)){
-		stop("fossilRecord object has taxon entries with more or less than two elements")}
-	if(any(sapply(fossilRecord,function(x) length(x[[1]]))!=6)){
-		stop("fossilRecord object has taxon entries with more or less than six elements in first element")}		
-	return(TRUE)
-	}
 
+
+#' @rdname simFossilRecordMethods
 #' @export
 timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FALSE,
 		modern.samp.prob=1, tolerance=10^-4){
@@ -114,7 +106,9 @@ timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FAL
 	#
 	return(fossilRecord)
 	}
-	
+
+#' @rdname simFossilRecordMethods
+#' @export
 fossilRecord2fossilTaxa<-function(fossilRecord){
 	# CHECKS
 	checkResult<-checkFossilRecord(fossilRecord)
@@ -124,6 +118,8 @@ fossilRecord2fossilTaxa<-function(fossilRecord){
 	return(taxaConvert)
 	}
 
+#' @rdname simFossilRecordMethods
+#' @export	
 fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.only = TRUE){
 	# a function that transforms a simfossilrecord to a set of ranges (like from sampleRanges)
 		# merge.cryptic = TRUE or FALSE
@@ -166,4 +162,12 @@ fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.onl
 	return(result)
 	}
 
+# don't export
+checkFossilRecord<-function(fossilRecord){
+	if(any(sapply(fossilRecord,length)!=2)){
+		stop("fossilRecord object has taxon entries with more or less than two elements")}
+	if(any(sapply(fossilRecord,function(x) length(x[[1]]))!=6)){
+		stop("fossilRecord object has taxon entries with more or less than six elements in first element")}		
+	return(TRUE)
+	}
 

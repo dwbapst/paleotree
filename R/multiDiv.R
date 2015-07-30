@@ -56,6 +56,13 @@
 #' over multRainbow. Must be the same length as the number of diversity curves
 #' supplied.
 
+#' @param divLineType Used to determine line type (\code{lty}) of the
+#' diversity curves plotted when \code{plotMultCurves = TRUE}. Default
+#' is \code{lty = 1} for all curves. Must be either length of 1 or 
+#' exact length as number of diversity curves.
+
+#' @param main The main label for the figure.
+
 #' @return A list composed of three elements will be invisibly returned:
 #' \item{int.times}{A two column matrix giving interval start and end times}
 #' \item{div}{A matrix of measured diversities in particular intervals by rows,
@@ -121,7 +128,7 @@
 #' @export
 multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,drop.cryptic=FALSE,
 	extant.adjust=0.01,plotLogRich=FALSE,timelims=NULL,int.times=NULL,
-	plotMultCurves=FALSE,multRainbow=TRUE,divPalette=NULL){
+	plotMultCurves=FALSE,multRainbow=TRUE,divPalette=NULL,divLineType=1,main=NULL){
 	#lines up a bunch of taxic or phylo objects and calculates diversity curves simulataneously
 		#across all their objects; intuits the type of object without being told
 		#it also calculates a "average" median curve and 95% quantile intervals
@@ -220,19 +227,23 @@ multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,drop
 	median.curve<-cbind(median=median,low.95.quantile=q1,high.95.quantile=q2)
 	res<-list(int.times=int.times,div.counts=div,median.curve=median.curve)
 	if(plot){plotMultiDiv(res,plotLogRich=plotLogRich,timelims=timelims,
-		plotMultCurves=plotMultCurves,multRainbow=multRainbow,divPalette=divPalette)}
+		plotMultCurves=plotMultCurves,multRainbow=multRainbow,
+		divPalette=divPalette,divLineType=divLineType,main=main)}
 	return(invisible(res))
 	}
 
 #' @rdname multiDiv
 #' @export	
 plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FALSE,
-		multRainbow=TRUE,divPalette=NULL){
+		multRainbow=TRUE,divPalette=NULL,divLineType=1,main=NULL){
 	#plots the median diversity curve for a multiDiv() result
 	int.start<-results[[1]][,1]
 	int.end<-results[[1]][,2]
 	times1<-c(int.start,(int.end+((int.start-int.end)/10000)))
 	if(plotMultCurves){
+		if(is.null(main)){
+			main<-"Multiple Diversity Curves"
+			}
 		divs<-results[[2]]	#here's my div information
 		divs1<-rbind(divs,divs)[order(times1),]
 		times1<-sort(times1)
@@ -243,23 +254,29 @@ plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FA
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Log Lineage/Taxic Richness",
-				main=paste("Multiple Diversity Curves"))
+				main=)
 		}else{
 			y_lim<-c(min(divs1),max(divs1))
 			plot(times1,divs1[,1],type="n",ylim=y_lim,
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Lineage/Taxic Richness",
-				main=paste("Multiple Diversity Curves"))
+				main=main)
 			}
 		if(is.null(divPalette)){
 			if(multRainbow){divPalette<-sample(rainbow(ncol(divs1)))
 				}else{divPalette<-rep(1,ncol(divs1))}
 			}
+		if(length(divLineType)!=ncol(divs1)){
+			divLineType<-rep(divLineType,ncol(divs1))
+			}
 		for(i in 1:ncol(divs1)){	#plot each line
-			lines(times1,divs1[,i],lwd=3,col=divPalette[i])
+			lines(times1,divs1[,i],lwd=3,col=divPalette[i],lty=divLineType[i])
 			}
 	}else{
+		if(is.null(main)){
+			main<-"Median Diversity Curve"
+			}
 		mdiv<-results[[3]]
 		mdiv1<-rbind(mdiv,mdiv)[order(times1),]
 		times1<-sort(times1)
@@ -270,14 +287,14 @@ plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FA
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Log Lineage/Taxic Richness",
-				main=paste("Median Diversity Curve"))
+				main=main)
 		}else{
 			y_lim<-c(min(mdiv1),max(mdiv1))
 			plot(times1,mdiv1[,3],type="n",ylim=y_lim,
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Lineage/Taxic Richness",
-				main=paste("Median Diversity Curve"))
+				main=main)
 			}
 		polygon(c(times1,rev(times1)),c(mdiv1[,3],rev(mdiv1[,2])),col="gray",border=NA)
 		lines(times1,mdiv1[,1],lwd=3)

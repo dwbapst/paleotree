@@ -25,26 +25,18 @@
 
 
 
-	#
-	#p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.1;prop.cryptic=0;nruns=10;mintaxa=1;maxtaxa=200;mintime=1;maxtime=100;minExtant=0;maxExtant=0;plot=TRUE;print.runs=TRUE;min.cond=TRUE
-	#
-	#p=0.1;q=0.9;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=1;mintaxa=1;maxtaxa=100;mintime=1;maxtime=100;minExtant=0;maxExtant=0;plot=TRUE;print.runs=TRUE;min.cond=TRUE
-	
-	#min.cond example
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=10;mintaxa=1;maxtaxa=1000;mintime=1;maxtime=100;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=FALSE
-	
-	#pure birth example
-	#set.seed(444);p=0.1;q=0;anag.rate=0;prop.bifurc=0;prop.cryptic=0;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE
-	
-	#cryptic speciation
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0.5;prop.cryptic=0.5;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=TRUE
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
-	#set.seed(444);p=0.1;q=0.1;anag.rate=0.1;prop.bifurc=0;prop.cryptic=1;nruns=1;mintaxa=10;maxtaxa=20;mintime=1;maxtime=10;minExtant=0;maxExtant=NULL;plot=TRUE;print.runs=TRUE;min.cond=TRUE;count.cryptic=FALSE
-
-	# p=0.1;q='0.01*N';r=0.1
 
 
+	
+#' \donttest{
+#'
+#' res<-simFossilRecord(0.1,0.1,0.1,nTotalTaxa=10,nExtant=0,nruns=1000,plot=TRUE)
+#' anyLive<-any(sapply(res,function(z) any(sapply(z,function(x) x[[1]][5]==1))))
+#' if(anyLive){
+#'	stop("Runs have extant taxa under conditioning for none?")
+#'	}
+#'
+#' }
 
 #' @name
 #' @rdname
@@ -245,6 +237,10 @@ simFossilRecord<-function(
 				stop(paste0(names(which(rateVector<0)),'rate calculated less than zero'))
 				}
 			}
+		# check that not *all* rates are 0\
+		if(!(sum(rateVector)>0)){
+			stop("Simulation found scenario in which all rates are zero (?!)")
+			}	
 		#
 		return(rateVector)
 		}
@@ -355,6 +351,10 @@ simFossilRecord<-function(
 	
 	whichLive<-function(taxa){
 		res<-which(sapply(taxa,function(x) x[[1]][5]==1))
+		res2<-which(sapply(taxa,function(x) is.na(x[[1]][4]) | identical(unname(x[[1]][4]),0)))
+		if(!identical(unname(res),unname(res2))){
+			#browser()
+			stop("Disagreement on which taxa are extant")}
 		return(res)
 		}
 
@@ -590,7 +590,28 @@ simFossilRecord<-function(
 		return(newIDs)
 		}
 
-		
+	testFinal<-function(taxa,timePassed,runConditions,count.cryptic){
+		# test that the produced taxa object actually passed the runConditions
+		finalVitals<-getRunVitals(taxa=taxa,count.cryptic=count.cryptic)
+		finalVitals<-c(timePassed=timePassed,finalVitals)
+			#time
+			#okayTime<-(timePassed>=runConditions[[1]][1] & timePassed<=runConditions[[1]][2])
+		#other vitals
+		okayVitals<-sapply(1:4,function(i){
+			var<-finalVitals[i]
+			varRange<-runConditions[[i]]
+			var>=varRange[1] & var<=varRange[2]
+			})
+		#finalCheck<-all(finalVitals)
+		if(any(!okayVitals)){
+			print(finalVitals)
+			#browser()
+			stop(paste0("Accepted run as outside of bounds set for conditions:",
+				names(runConditions)[!okayVitals],collapse=", "))
+			}
+		finalCheck<-all(okayVitals)
+		return(finalVitals)
+		}		
 
 
 	##################################################################################
@@ -702,7 +723,7 @@ simFossilRecord<-function(
 					getBranchRate=getBranchRate,getExtRate=getExtRate,
 					getSampRate=getSampRate,getAnagRate=getAnagRate,
 					prop.cryptic=prop.cryptic,prop.bifurc=prop.bifurc,
-				negRatesAsZero=negRatesAsZero)
+					negRatesAsZero=negRatesAsZero)
 				#
 				#sum the rates
 				sumRates<-sum(rateVector)
@@ -714,7 +735,11 @@ simFossilRecord<-function(
 				#vector of which taxa are still alive
 				whichExtant<-whichLive(taxa)
 				#select which lineage does it occur to
-				target<-sample(whichExtant,1)
+				if(length(whichExtant)>1){
+					target<-sample(whichExtant,1)
+				}else{
+					target<-whichExtant
+					}
 				#
 				#draw waiting time to an event (from Peter Smits)
 				changeTime <- rexp(1, rate =sumRates*length(whichExtant))
@@ -744,6 +769,10 @@ simFossilRecord<-function(
 				vitalsRecord<-rbind(vitalsRecord,currentVitals)
 				# set new current time
 				currentTime<-newTime	
+				#
+				# some archived debugging lines for posterity
+				#if(newTimePassed>74.5){browser()}
+				#if(newTimePassed>120){if(taxa[[4]][[1]][4]<120){browser()}}
 				}
 			###########################################
 			#
@@ -769,7 +798,7 @@ simFossilRecord<-function(
 			#is it even worth checking? (were mins reached)
 			worthyVitals<-worthCheckingVitalsRecord(vitalsRecord=vitalsRecord,runConditions=runConditions)
 			if(worthyVitals){
-				#test with testVitalsRecord to get seqVitals
+			#test with testVitalsRecord to get seqVitals
 				seqVitals<-testVitalsRecord(vitalsRecord=vitalsRecord,runConditions=runConditions
 					,tolerance=tolerance)
 				if(all(!is.na(seqVitals))){
@@ -780,14 +809,18 @@ simFossilRecord<-function(
 			}
 		#sample the sequences for a date
 		passedDate<-sampleSeqVitals(seqVitals=seqVitals)
-		#this date is in timePassed units: convert to currentTime
+		#this date is in timePassed units: convert to backwards currentTime
 		currentDate<-runConditions$totalTime[2]-passedDate
 		# now time slice
 			# if stop and there are extant, evaluate if sampled at modern
 			# 0< modern.samp.prob <1 need to randomly sample
-		#browser()
 		taxa<-timeSliceFossilRecord(fossilRecord=taxa,sliceTime=currentDate,
 			shiftRoot4TimeSlice=shiftRoot4TimeSlice, modern.samp.prob=modern.samp.prob)
+		#
+		# test that the produced taxa object actually passed the runConditions
+		finalTest<-testFinal(taxa=taxa,timePassed=passedDate,
+			runConditions=runConditions,count.cryptic=count.cryptic)		
+		#
 		#name each normal taxon as t + ID 
 			#cryptic taxa are cryptic id + . taxon number within that complex
 		names(taxa)<-getTaxaNames(taxa=taxa)
@@ -799,8 +832,16 @@ simFossilRecord<-function(
 		results[[i]]<-taxa
 		if(plot){
 			taxaConvert<-fossilRecord2fossilTaxa(fossilRecord=taxa)
-			taxicDivCont(taxaConvert,int.length=0.2)
-			if(nruns>1){title(paste0("Run Number ",i," of ",nruns))}
+			#taxicDivCont(taxaConvert,int.length=0.2)
+			fossilRanges<-fossilRecord2fossilRanges(fossilRecord=taxa, merge.cryptic=TRUE, ranges.only = TRUE)
+			curveList<-list(taxaConvert,fossilRanges)
+			multiDiv(curveList,plotMultCurves=TRUE,
+				divPalette=c("black","red"),divLineType=c(1,2),main="")
+			legend("topleft",legend=c("True Richness", "Sampled Richness"),
+				col=c("black","red"),lty=c(1,2))
+			if(nruns>1){
+				title(paste0("Run Number ",i," of ",nruns))
+				}
 			}
 		}
 	if(print.runs){

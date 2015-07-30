@@ -13,21 +13,30 @@
 
 #' @return
 
- #taxon.id ancestor.id orig.time ext.time still.alive looks.like
 
 #' @aliases
 
 #' @seealso
 
 #' @author 
-#' David W. Bapst, inspired by code written by Peter Smits.
+#' David W. Bapst.
 
 #' @references
 
 #' @examples
 
+#' @name
+#' @rdname
+#' @export
 
 
+checkFossilRecord<-function(fossilRecord){
+	if(any(sapply(fossilRecord,length)!=2)){
+		stop("fossilRecord object has taxon entries with more or less than two elements")}
+	if(any(sapply(fossilRecord,function(x) length(x[[1]]))!=6)){
+		stop("fossilRecord object has taxon entries with more or less than six elements in first element")}		
+	return(TRUE)
+	}
 
 #' @export
 timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FALSE,
@@ -35,8 +44,7 @@ timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FAL
 	#take a fossilRecord data object and cut it at some specific date
 	#
 	# CHECKS
-	if(any(sapply(fossilRecord,length)>2)){
-		stop("fossilRecord object has taxon entries with more than two elements")}
+	checkResult<-checkFossilRecord(fossilRecord)
 	#check shiftRoot4TimeSlice
 	shiftPar<-c(TRUE,FALSE,"withExtantOnly")
 	shiftRoot4TimeSlice<-shiftPar[pmatch(shiftRoot4TimeSlice,shiftPar)]
@@ -60,6 +68,7 @@ timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FAL
 		}else{
 			(sliceTime-x[[1]][4])>tolerance
 		}})
+	#browser()
 	if(shiftRoot4TimeSlice=="withExtantOnly"){
 		if(any(isAlive)){
 			shiftRoot4TimeSlice<-TRUE
@@ -107,6 +116,8 @@ timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FAL
 	}
 	
 fossilRecord2fossilTaxa<-function(fossilRecord){
+	# CHECKS
+	checkResult<-checkFossilRecord(fossilRecord)
 	# a function that transforms a simfossilrecord to a taxa object
 	taxaConvert<-t(sapply(fossilRecord,function(x) x[[1]]))	
 	rownames(taxaConvert)<-names(fossilRecord)
@@ -117,6 +128,9 @@ fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.onl
 	# a function that transforms a simfossilrecord to a set of ranges (like from sampleRanges)
 		# merge.cryptic = TRUE or FALSE
 		# ranges.only or sampling times?
+	# CHECKS
+	checkResult<-checkFossilRecord(fossilRecord)
+	#
 	sampData<-lapply(fossilRecord,function(x) x[[2]]) 
 	#get sampOcc : separate out the sampling events
 	sampOcc<-sapply(fossilRecord,function(x) x[[2]])

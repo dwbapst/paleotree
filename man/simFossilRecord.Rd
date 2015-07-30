@@ -16,7 +16,7 @@ simFossilRecord(p, q, r, anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0,
 sampling and anagenesis, respectively.
 Rates set to \code{= Inf} are treated as if 0. When a rate is set to 0, this event type will not occur in the simulation.}
 
-\item{totalTime,nTotalTaxa,nExtant,NSamp}{These arguments represent stopping and
+\item{totalTime,nTotalTaxa,nExtant,nSamp}{These arguments represent stopping and
 acceptance conditions for simulation runs. They are respectively \code{totalTime}, the
 total length of the simulation in time-units, \code{nTotalTaxa}, the total number of taxa
 over evolutionary history in the clade, \code{nExtant}, the total number of extant taxa at
@@ -55,6 +55,8 @@ record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
 	nTotalTaxa=50, plot=TRUE)
 
 ###################################################################
+
+\donttest{
 
 # examining multiple runs of simulations
 
@@ -345,8 +347,6 @@ length(unique(taxa[taxa[,5]==1,6]))	   	#number of still-living morph-dist. taxa
 
 
 ######################################################
-\donttest{
-
 
 # Using run conditions
 

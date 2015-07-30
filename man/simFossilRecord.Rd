@@ -30,6 +30,11 @@ morphological differentiation, versus those that are cryptic (\code{prop.cryptic
 branching events that are bifurcating, as opposed to budding. Both of these proportions must be a number between 0 and 1.
 By default, both are set to zero, meaning all branching events are events of budding cladogenesis.}
 
+\item{modern.samp.prob}{The probability that a taxon is sampled at the modern time
+(or, for \code{timeSliceFossilRecord}, the time at which the simulation data is
+slice). Must be a number between 0 and 1. If 1, all taxa that survive to the modern
+day (to the \code{sliceTime}) are sampled, if 0, none are.}
+
 \item{startTaxa}{Number of initital taxa to begin a simulation with. All will have the simulation start date
 listed as their time of origination.}
 
@@ -58,9 +63,26 @@ logical TRUE or FALSE, but also accepts the string \code{"withExtantOnly"},
 which will only 'shift' the time-scale if living taxa are present, as
 determined by having ranges that overlap within \code{tolerance} of \code{sliceTime}.}
 
+\item{count.cryptic}{If TRUE, cryptic taxa are counted as separate taxa for
+conditioning limits that count a number of taxon units, such as \code{nTotalTaxa},
+\code{nExtant} and \code{nSamp}. If FALSE (the default), then each cryptic
+complex (i.e. each distinguishable morphotaxon) is treated as a single taxon.
+See examples.}
+
 \item{negRatesAsZero}{A logical. Should rates calculated as a negative number cause the simulation to fail
 with an error message (\code{ = FALSE}) or should these be treated as zero (\code{"= TRUE"}, the default). This
 is equivalent to saying that the \code{ rate.as.used = max(0, rate.as.given) }.}
+
+\item{print.runs}{If TRUE, prints the proportion of simulations accepted for
+output to the terminal.}
+
+\item{sortNames}{If TRUE, output taxonomic lists are sorted by the taxon
+names (thus sorting cryptic taxa together) rather than by taxon ID number
+(i.e. the order they were simulated in).}
+
+\item{plot}{If TRUE, plots the diversity curves of accepted simulations,
+including both the diversity curve of the true number of taxa and the
+diversity curve for the 'observed' (sampled) number of taxa.}
 }
 \value{
 A list object composed
@@ -373,7 +395,11 @@ taxa<-fossilRecord2fossilTaxa(record)
 sum(taxa[,5])             		  	#number of still-living lineages (inc. cryptic)
 length(unique(taxa[taxa[,5]==1,6]))	   	#number of still-living morph-dist. taxa
 
+#################################################
 
+# an example using startTaxa to have more initial taxa
+record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
+	nTotalTaxa=100, startTaxa=20, plot=TRUE)
 
 ######################################################
 

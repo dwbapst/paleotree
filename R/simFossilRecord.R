@@ -328,7 +328,11 @@
 #' sum(taxa[,5])             		  	#number of still-living lineages (inc. cryptic)
 #' length(unique(taxa[taxa[,5]==1,6]))	   	#number of still-living morph-dist. taxa
 #' 
-#' 
+#' #################################################
+#'
+#' # an example using startTaxa to have more initial taxa
+#' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
+#'	nTotalTaxa=100, startTaxa=20, plot=TRUE)
 #'
 #' ######################################################
 #' 
@@ -428,7 +432,22 @@
 #' @param startTaxa Number of initital taxa to begin a simulation with. All will have the simulation start date
 #' listed as their time of origination.
 
+#' @param sortNames If TRUE, output taxonomic lists are sorted by the taxon
+#' names (thus sorting cryptic taxa together) rather than by taxon ID number
+#' (i.e. the order they were simulated in).
 
+#' @param print.runs If TRUE, prints the proportion of simulations accepted for
+#' output to the terminal.
+
+#' @param plot If TRUE, plots the diversity curves of accepted simulations,
+#' including both the diversity curve of the true number of taxa and the
+#' diversity curve for the 'observed' (sampled) number of taxa.
+
+#' @param count.cryptic If TRUE, cryptic taxa are counted as separate taxa for
+#' conditioning limits that count a number of taxon units, such as \code{nTotalTaxa},
+#' \code{nExtant} and \code{nSamp}. If FALSE (the default), then each cryptic
+#' complex (i.e. each distinguishable morphotaxon) is treated as a single taxon.
+#' See examples.
 
 
 #' @name simFossilRecord
@@ -712,6 +731,7 @@ simFossilRecord<-function(
 			#taxicDivCont(taxaConvert,int.length=0.2)
 			fossilRanges<-fossilRecord2fossilRanges(fossilRecord=taxa, merge.cryptic=TRUE, ranges.only = TRUE)
 			curveList<-list(taxaConvert,fossilRanges)
+			if(i==4 & nruns==1000){browser()}
 			multiDiv(curveList,plotMultCurves=TRUE,
 				divPalette=c("black","red"),divLineType=c(1,2),main="")
 			legend("topleft",legend=c("True Richness", "Sampled Richness"),

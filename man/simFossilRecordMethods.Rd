@@ -31,8 +31,10 @@ logical TRUE or FALSE, but also accepts the string \code{"withExtantOnly"},
 which will only 'shift' the time-scale if living taxa are present, as
 determined by having ranges that overlap within \code{tolerance} of \code{sliceTime}.}
 
-\item{modern.samp.prob}{Probability of sampling living taxa at the present
-day (time=0), see below.}
+\item{modern.samp.prob}{The probability that a taxon is sampled at the modern time
+(or, for \code{timeSliceFossilRecord}, the time at which the simulation data is
+slice). Must be a number between 0 and 1. If 1, all taxa that survive to the modern
+day (to the \code{sliceTime}) are sampled, if 0, none are.}
 
 \item{tolerance}{A small number which sets a range around the \code{sliceTime} within
 which taxa will be considered extant.}

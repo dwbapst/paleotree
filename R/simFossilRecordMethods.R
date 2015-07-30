@@ -47,6 +47,11 @@
 #' @param tolerance A small number which sets a range around the \code{sliceTime} within
 #' which taxa will be considered extant.
 
+#' @param modern.samp.prob The probability that a taxon is sampled at the modern time
+#' (or, for \code{timeSliceFossilRecord}, the time at which the simulation data is
+#' slice). Must be a number between 0 and 1. If 1, all taxa that survive to the modern
+#' day (to the \code{sliceTime}) are sampled, if 0, none are.
+
 #' @rdname simFossilRecordMethods
 #' @export
 timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FALSE,

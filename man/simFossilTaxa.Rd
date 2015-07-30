@@ -122,9 +122,7 @@ that some combinations of conditions, such as attempting to condition on a
 specific non-zero value of minExtant and maxExtant, may take a long time to
 find any acceptable simulation runs.
 
-Hartmann et al. (2011) recently discovered a potential statistical artifact
-when branching simulations are conditioned on some maximum number of taxa.
-Thus, this function continues the simulation once mintaxa or minExtant is
+This function continues the simulation once mintaxa or minExtant is
 hit, until the next taxon (limit +1) originates. Once the simulation
 terminates, it is judged whether it is acceptable for all conditions given
 and if so, the run is accepted as a dataset for output.
@@ -295,9 +293,6 @@ David W. Bapst
 \references{
 Foote, M. 1996 On the Probability of Ancestors in the Fossil
 Record. \emph{Paleobiology} \bold{22}(2):141--151.
-
-Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary
-Models. \emph{Systematic Biology} \bold{59}(4):465--476.
 
 Kendall, D. G. 1948 On the Generalized "Birth-and-Death" Process. \emph{The
 Annals of Mathematical Statistics} \bold{19}(1):1--15.

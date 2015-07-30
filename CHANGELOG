@@ -24,7 +24,7 @@ Version - 2.5 -
 -Modified how timePaleoPhy looks for node dates to assign, after taxa are dropped (originally matched clades based on tip IDs, not tip labels)
 -Added argument to multiDiv that allows for control of line type
 -Modified taxa2phylo so root.time is added before plotting
--
+-Removed erroneous, incorrect references to Hartmann et al. 2011 from simFossilTaxa; this effect is now properly accounted for by simFossilRecord
 
 Version - 2.4 - 05-01-15
 -Modified timePaleoPhy help file to clarify 'these are not realistic time-scaling functions' statement and correcting an 'either' to 'neither' in the description of argument 'ntrees'

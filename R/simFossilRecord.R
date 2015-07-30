@@ -985,7 +985,7 @@ testContinue<-function(vitals,timePassed,runConditions){
 		# none of these can ever REVERSE
 	#
 	#time passed
-	timePassed<-runConditions$totalTime[2]-currentTime			
+	#timePassed<-runConditions$totalTime[2]-currentTime			
 	#
 	# test run conditions
 	totalExtinction<-vitals[2]==0

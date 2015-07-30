@@ -323,6 +323,32 @@ Unless you have exceptionally resolved data, select an appropriate option in
 that accounts for stratigraphic uncertainty in your dataset.
 }
 \examples{
+# examples with empirical data
+
+#load data
+data(retiolitinae)
+
+#Can plot the unscaled cladogram
+plot(retioTree)
+#Can plot discrete time interval diversity curve with retioRanges
+taxicDivDisc(retioRanges)
+
+#Use basic time-scaling (terminal branches only go to FADs)
+ttree<-bin_timePaleoPhy(tree=retioTree,timeList=retioRanges,type="basic",
+	ntrees=1, plot=TRUE)
+
+#Use basic time-scaling (terminal branches go to LADs)
+ttree<-bin_timePaleoPhy(tree=retioTree,timeList=retioRanges,type="basic",
+	add.term=TRUE, ntrees=1, plot=TRUE)
+
+#mininum branch length time-scaling (terminal branches only go to FADs)
+ttree<-bin_timePaleoPhy(tree=retioTree,timeList=retioRanges,type="mbl",
+	vartime=1, ntrees=1, plot=TRUE)
+
+###################
+
+# examples with simulated data
+
 #Simulate some fossil ranges with simFossilTaxa
 set.seed(444)
 taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)

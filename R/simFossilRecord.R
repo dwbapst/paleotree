@@ -7,22 +7,26 @@
 #' when branching simulations are conditioned on some maximum number of taxa.
 
 
-#' @inheritParams
-
-#' @param
+#' @inheritParams simFossilRecordMethods
 
 #' @return
-
- #taxon.id ancestor.id orig.time ext.time still.alive looks.like
-
-#' @aliases
+#' A list object composed
+#' of multiple elements, each of which is data for 'one taxon', with the first
+#' element being a distinctive six-element vector composed of numbers, corresponding
+#' to the six numbers in a \code{simFossilTaxa} matrix, with the following field names:
+#'
+#' \code{taxon.id ancestor.id orig.time ext.time still.alive looks.like}
+#'
 
 #' @seealso
+#' #' \code{\link{simFossilRecordMethods}}
 
 #' @author 
 #' David W. Bapst, inspired by code written by Peter Smits.
 
 #' @references
+#' Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary
+#' Models. \emph{Systematic Biology} \bold{59}(4):465--476.
 
 #' @examples
 #' 

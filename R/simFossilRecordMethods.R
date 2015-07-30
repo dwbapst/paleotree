@@ -6,25 +6,33 @@
 #' @name simFossilRecordMethods
 
 #' @details
+#' These functions exist to manipulate output from \code{simFossilRecord},
+#' particularly so that 
 
-#' @inheritParams
+#' @inheritParams sampleRanges
 
-#' @param
+#' @param fossilRecord A list object output by \code{simFossilRecord}, often composed
+#' of multiple elements, each of which is data for 'one taxon', with the first
+#' element being a distinctive six-element vector composed of numbers, corresponding
+#' to the six numbers in a \code{simFossilTaxa} matrix.
 
 #' @return
+#' Depends on the function.
 
-
-#' @aliases
+#' @aliases timeSliceFossilRecord fossilRecord2fossilTaxa fossilRecord2fossilRanges
 
 #' @seealso
+#' \code{\link{simFossilRecord}}
 
 #' @author 
 #' David W. Bapst.
 
-#' @references
-
 #' @examples
-
+#'
+#' set.seed(444)
+#' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
+#' 	nTotalTaxa=c(20,30) ,nExtant=0, plot=TRUE)
+#'
 
 
 

@@ -8,10 +8,12 @@
 multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE,
   drop.ZLB = TRUE, drop.cryptic = FALSE, extant.adjust = 0.01,
   plotLogRich = FALSE, timelims = NULL, int.times = NULL,
-  plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL)
+  plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL,
+  divLineType = 1, main = NULL)
 
 plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL,
-  plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL)
+  plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL,
+  divLineType = 1, main = NULL)
 }
 \arguments{
 \item{data}{A list where each element is a dataset, formatted to be input in
@@ -60,6 +62,13 @@ divPalette is supplied.}
 identifiers for each diversity curve in 'data' which will take precedence
 over multRainbow. Must be the same length as the number of diversity curves
 supplied.}
+
+\item{divLineType}{Used to determine line type (\code{lty}) of the
+diversity curves plotted when \code{plotMultCurves = TRUE}. Default
+is \code{lty = 1} for all curves. Must be either length of 1 or
+exact length as number of diversity curves.}
+
+\item{main}{The main label for the figure.}
 
 \item{results}{The output of a previous run of multiDiv for replotting.}
 }

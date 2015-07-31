@@ -1,13 +1,105 @@
 #' Full-Scale Simulations of the Fossil Record with Birth, Death and Sampling of Morphotaxa
 #'
-#' 
+#' A complete birth-death-sampling branching simulator that captures morphological-taxon identity
+#' of lineages, as is typically discussed in models of paleontological data. This function
+#' allows for the use of precise point constraints to condition simulation run acceptance and
+#' can interpret complex character strings given as rate values for use in modeling
+#' complex process
 
 #' @details
+#' \code{simFossilRecord} simulates a birth-death-sampling branching process (ala Foote, 1997, 2000;
+#' Stadler, 2010) in which lineages of organisms may branch, go extinct or be sampled
+#' thought a continuous time-interval, with the occurrence of these events
+#' modeled as Poisson process controlled by some set of instantaneous rates.
+#' This model is ultimately based on the birth-death model (Kendall, 1948; Nee, 2006),
+#' which is widely implemented in many R package. Unlike other such typical branching
+#' simulators, this function enmeshes the lineage units within explicit models of how
+#' lineages are morphologically differentiated. This is key to allow comparison
+#' to datasets from the fossil record, as morphotaxa are the basic
+#' units of paleontological estimates of diversity and phylogenetics. In particular,
+#' this means that \code{simFossilRecord} allows for multiple types of branching
+#' events as well as for a fourth event-type, anagenetic morphological change
+#' (also modelled as a Poisson process with some instantaneous rate).
+#' 
 #' Hartmann et al. (2011) recently discovered a potential statistical artifact
-#' when branching simulations are conditioned on some maximum number of taxa.
-# no more min.cond
-# only GSA
-# 
+#' when branching simulations are conditioned on some number of taxa.
+#' Previously, within paleotree, this was accounted for in \code{simFossilTaxa} by
+#' a complex arrangement of minimum and maximum constraints, and an (incorrect)
+#' presumption that allowing simulations to continue for a short distance after
+#' constraints were reached. This strategy is not applied here. Instead,
+#' \code{simFossilRecord} applies the General Sampling Algorithm presented
+#' by Hartmann et al. (or at least, a close variant). A simulation continues until
+#' extinction or some maximum time-constraint is reached, evaluated for intervals
+#' that match the set run conditions (e.g. nExtant, nTotalTime) and, if some
+#' interval or set of intervals matches the run conditions, a date is randomly sampled
+#' from within this interval/intervals. The simulation is then cut at this date using
+#' the \code{timeSliceFossilRecord} function, and saved as an accepted run.
+#' The simulation data is otherwise discarded and then a new simulation initiated
+#' (thus, at most, only one simulated dataset is accepted from one simulation run).
+
+#' @param p,q,r,anag.rate These parameters control the instantaneous ('per-capita') rates of branching, extinction,
+#' sampling and anagenesis, respectively. These can be given as a number equal to or greater than zero, or as a 
+#' character string which will be interpreted as an algebraic equation. These equations can make use of three
+#' quantities which will/may change throughout the simulation: the standing richness is \code{N}, the
+#' current time passed since the start of the simulation is \code{T} and the current branching rate is \code{P}
+#' (corresponding to the argument name \code{p}).
+#' Note that \code{P} cannot be used in equations for the branching rate itself; it is for making other rates
+#' relative to the branching rate.
+#' By default, the rates \code{r} and \code{anag.rate} are set to zero, so that the default simulator is a birth-death
+#' simulator.
+#' Rates set to \code{= Inf} are treated as if 0. When a rate is set to 0, this event type will not occur in the simulation.
+#' Setting certain processes to zero, like sampling, may increase simulation efficiency, if the goal is a birth-death or
+#' pure-birth model.
+#' See documentation for argument \code{negRatesAsZero} about the treatment of rates that decrease below zero.
+
+#' @param totalTime,nTotalTaxa,nExtant,nSamp These arguments represent stopping and
+#' acceptance conditions for simulation runs. They are respectively \code{totalTime}, the
+#' total length of the simulation in time-units, \code{nTotalTaxa}, the total number of taxa
+#' over evolutionary history in the clade, \code{nExtant}, the total number of extant taxa at
+#' the end of the simulation and \code{nSamp} the total number of sampled taxa (not counting extant
+#' taxa sampled at the modern day). These are used to determine when to end simulation runs, and whether to accept
+#' or reject them as output. They can be input as a vector of two numbers, representing minimum
+#' and maximum values of a range for accepted simulation runs (i.e. the simulation length can be between 0 and
+#' 1000 time-steps, by default), or as a single number, representing a point condition (i.e. if
+#' \code{nSamp = 100} then the only simulation runs with exactly 100 taxa sampled will be output).
+#' Note that it is easy to set combinations of parameters and run conditions that are impossible
+#' to produce satisfactory input under, in which case \code{simFossilRecord} would run in a nonstop loop.
+
+#' @param negRatesAsZero A logical. Should rates calculated as a negative number cause the simulation to fail
+#' with an error message (\code{ = FALSE}) or should these be treated as zero (\code{"= TRUE"}, the default). This
+#' is equivalent to saying that the \code{ rate.as.used = max(0, rate.as.given) }.
+
+
+
+#' @param prop.cryptic,prop.bifurc These parameters control (respectively) the proportion of branching events that have
+#' morphological differentiation, versus those that are cryptic (\code{prop.cryptic}) and the proportion of morphological
+#' branching events that are bifurcating, as opposed to budding. Both of these proportions must be a number between 0 and 1.
+#' By default, both are set to zero, meaning all branching events are events of budding cladogenesis.
+
+#' @param tolerance A small number which defines a tiny interval for the sake of placing run-sampling dates before events,
+#' and for use in determining whether a taxon is extant in simFossilRecordMethods.
+
+#' @param nruns Number of simulation datasets to accept, save and output.
+
+#' @param startTaxa Number of initital taxa to begin a simulation with. All will have the simulation start date
+#' listed as their time of origination.
+
+#' @param sortNames If TRUE, output taxonomic lists are sorted by the taxon
+#' names (thus sorting cryptic taxa together) rather than by taxon ID number
+#' (i.e. the order they were simulated in).
+
+#' @param print.runs If TRUE, prints the proportion of simulations accepted for
+#' output to the terminal.
+
+#' @param plot If TRUE, plots the diversity curves of accepted simulations,
+#' including both the diversity curve of the true number of taxa and the
+#' diversity curve for the 'observed' (sampled) number of taxa.
+
+#' @param count.cryptic If TRUE, cryptic taxa are counted as separate taxa for
+#' conditioning limits that count a number of taxon units, such as \code{nTotalTaxa},
+#' \code{nExtant} and \code{nSamp}. If FALSE (the default), then each cryptic
+#' complex (i.e. each distinguishable morphotaxon) is treated as a single taxon.
+#' See examples.
 
 
 #' @inheritParams simFossilRecordMethods
@@ -46,7 +138,7 @@
 #' # examining multiple runs of simulations
 #' 
 #' #example of repeated pure birth simulations over 50 time-units
-#' records <- simFossilRecord(p=0.1, q=0, r=0, nruns=10,
+#' records <- simFossilRecord(p=0.1, q=0, nruns=10,
 #' 	totalTime=50, plot=TRUE)
 #' #plot multiple diversity curves on a log scale
 #' records<-lapply(records,fossilRecord2fossilTaxa)
@@ -79,13 +171,13 @@
 #' 	# with high extinction relative to branching
 #' # use default run conditions (barely any conditioning)
 #' # use print.runs to look at acceptance probability
-#' records <- simFossilRecord(p=0.1, q=0.8, r=0, nruns=10,
+#' records <- simFossilRecord(p=0.1, q=0.8, nruns=10,
 #' 	print.runs=TRUE, plot=TRUE)
 #' # 10 runs accepted from a total of 10 !
 #' 
 #' # now let's give much more stringent run conditions
 #' 	# require 3 extant taxa at minimum, 5 taxa total minimum
-#' records <- simFossilRecord(p=0.1, q=0.8, r=0, nruns=10,
+#' records <- simFossilRecord(p=0.1, q=0.8, nruns=10,
 #' 	nExtant=c(3,100), nTotalTaxa=c(5,100),
 #' 	print.runs=TRUE, plot=TRUE)
 #' # thousands of simulations to just obtail 10 accepable runs!
@@ -144,7 +236,7 @@
 #' # its a thing of beauty, folks
 #' 
 #' # now let's try it
-#' records <- simFossilRecord(p=branchingRateEq, q=mu, r=0, nruns=3,
+#' records <- simFossilRecord(p=branchingRateEq, q=mu, nruns=3,
 #' 	totalTime=100, plot=TRUE, print.runs=TRUE)
 #' records<-lapply(records,fossilRecord2fossilTaxa)
 #' multiDiv(records,plotMultCurves=TRUE)
@@ -166,7 +258,7 @@
 #' extRateEq
 #' 
 #' # now let's try it
-#' records <- simFossilRecord(p=lambda, q=extRateEq, r=0, nruns=3,
+#' records <- simFossilRecord(p=lambda, q=extRateEq, nruns=3,
 #' 	totalTime=100, plot=TRUE, print.runs=TRUE)
 #' records<-lapply(records,fossilRecord2fossilTaxa)
 #' multiDiv(records,plotMultCurves=TRUE)
@@ -189,7 +281,7 @@
 #' # "P" is the algebraic equivalent for "branching rate" in simFossilRecord
 #' 
 #' # now let's try it
-#' records <- simFossilRecord(p=timeEquation, q="P", r=0, nruns=3,
+#' records <- simFossilRecord(p=timeEquation, q="P", nruns=3,
 #' 	totalTime=50, plot=TRUE, print.runs=TRUE)
 #' records<-lapply(records,fossilRecord2fossilTaxa)
 #' multiDiv(records,plotMultCurves=TRUE)
@@ -389,67 +481,6 @@
 
 
 
-#' @param totalTime,nTotalTaxa,nExtant,nSamp These arguments represent stopping and
-#' acceptance conditions for simulation runs. They are respectively \code{totalTime}, the
-#' total length of the simulation in time-units, \code{nTotalTaxa}, the total number of taxa
-#' over evolutionary history in the clade, \code{nExtant}, the total number of extant taxa at
-#' the end of the simulation and \code{nSamp} the total number of sampled taxa (not counting extant
-#' taxa sampled at the modern day). These are used to determine when to end simulation runs, and whether to accept
-#' or reject them as output. They can be input as a vector of two numbers, representing minimum
-#' and maximum values of a range for accepted simulation runs (i.e. the simulation length can be between 0 and
-#' 1000 time-steps, by default), or as a single number, representing a point condition (i.e. if
-#' \code{nSamp = 100} then the only simulation runs with exactly 100 taxa sampled will be output).
-#' Note that it is easy to set combinations of parameters and run conditions that are impossible
-#' to produce satisfactory input under, in which case \code{simFossilRecord} would run in a nonstop loop.
-
-#' @param negRatesAsZero A logical. Should rates calculated as a negative number cause the simulation to fail
-#' with an error message (\code{ = FALSE}) or should these be treated as zero (\code{"= TRUE"}, the default). This
-#' is equivalent to saying that the \code{ rate.as.used = max(0, rate.as.given) }.
-
-#' @param p,q,r,anag.rate These parameters control the instantaneous ('per-capita') rates of branching, extinction,
-#' sampling and anagenesis, respectively. These can be given as a number equal to or greater than zero, or as a 
-#' character string which will be interpreted as an algebraic equation. These equations can make use of three
-#' quantities which will/may change throughout the simulation: the standing richness is \code{N}, the
-#' current time passed since the start of the simulation is \code{T} and the current branching rate is \code{P}
-#' (corresponding to the argument name \code{p}).
-#' Note that \code{P} cannot be used in equations for the branching rate itself; it is for making other rates
-#' relative to the branching rate.
-#' Rates set to \code{= Inf} are treated as if 0. When a rate is set to 0, this event type will not occur in the simulation.
-#' Setting certain processes to zero, like sampling, may increase simulation efficiency, if the goal is a birth-death or
-#' pure-birth model.
-#' See documentation for argument \code{negRatesAsZero} about the treatment of rates that decrease below zero.
-
-#' @param prop.cryptic,prop.bifurc These parameters control (respectively) the proportion of branching events that have
-#' morphological differentiation, versus those that are cryptic (\code{prop.cryptic}) and the proportion of morphological
-#' branching events that are bifurcating, as opposed to budding. Both of these proportions must be a number between 0 and 1.
-#' By default, both are set to zero, meaning all branching events are events of budding cladogenesis.
-
-#' @param tolerance A small number which defines a tiny interval for the sake of placing run-sampling dates before events,
-#' and for use in determining whether a taxon is extant in simFossilRecordMethods.
-
-#' @param nruns Number of simulation datasets to accept, save and output.
-
-#' @param startTaxa Number of initital taxa to begin a simulation with. All will have the simulation start date
-#' listed as their time of origination.
-
-#' @param sortNames If TRUE, output taxonomic lists are sorted by the taxon
-#' names (thus sorting cryptic taxa together) rather than by taxon ID number
-#' (i.e. the order they were simulated in).
-
-#' @param print.runs If TRUE, prints the proportion of simulations accepted for
-#' output to the terminal.
-
-#' @param plot If TRUE, plots the diversity curves of accepted simulations,
-#' including both the diversity curve of the true number of taxa and the
-#' diversity curve for the 'observed' (sampled) number of taxa.
-
-#' @param count.cryptic If TRUE, cryptic taxa are counted as separate taxa for
-#' conditioning limits that count a number of taxon units, such as \code{nTotalTaxa},
-#' \code{nExtant} and \code{nSamp}. If FALSE (the default), then each cryptic
-#' complex (i.e. each distinguishable morphotaxon) is treated as a single taxon.
-#' See examples.
-
-
 #' @name simFossilRecord
 #' @rdname simFossilRecord
 #' @export
@@ -457,7 +488,7 @@ simFossilRecord<-function(
 
 	# model parameters
 	#
-	p, q, r, anag.rate=0, prop.bifurc=0, prop.cryptic=0,
+	p, q, r=0, anag.rate=0, prop.bifurc=0, prop.cryptic=0,
 	modern.samp.prob=1, startTaxa=1, nruns=1,
 
 	# run conditions can be given as vectors of length 1 or length 2 (= min,max)
@@ -479,13 +510,13 @@ simFossilRecord<-function(
 	#example parameter sets
 	#
 	# DEFAULTS (without rates set)
-		# anag.rate=0;prop.bifurc=0;prop.cryptic=0;startTaxa=1;nruns=1;
+		# r=0.1;anag.rate=0;prop.bifurc=0;prop.cryptic=0;startTaxa=1;nruns=1;
 		# nTotalTaxa=c(1,1000);totalTime=c(1,1000);nSamp=c(0,1000);nExtant=c(0,1000);
 		# plot=TRUE;count.cryptic=FALSE;print.runs=TRUE;sortNames=FALSE	
 	#
 	# BASIC RUN	with diversity-dep extinction
-	# p=0.1;q='0.01*N';r=0.1
-		# anag.rate=0;prop.bifurc=0;prop.cryptic=0;startTaxa=1;nruns=1;
+	# p=0.1;q='0.01*N'
+		# r=0.1;anag.rate=0;prop.bifurc=0;prop.cryptic=0;startTaxa=1;nruns=1;
 		# nTotalTaxa=c(10,200);totalTime=c(1,1000);nSamp=c(0,1000);nExtant=c(0,0);plot=TRUE;
 		# count.cryptic=FALSE;print.runs=TRUE;sortNames=FALSE;set.seed(444)
 	#
@@ -729,13 +760,19 @@ simFossilRecord<-function(
 		if(plot){
 			taxaConvert<-fossilRecord2fossilTaxa(fossilRecord=taxa)
 			#taxicDivCont(taxaConvert,int.length=0.2)
-			fossilRanges<-fossilRecord2fossilRanges(fossilRecord=taxa, merge.cryptic=TRUE, ranges.only = TRUE)
-			curveList<-list(taxaConvert,fossilRanges)
-			if(i==4 & nruns==1000){browser()}
-			multiDiv(curveList,plotMultCurves=TRUE,
-				divPalette=c("black","red"),divLineType=c(1,2),main="")
-			legend("topleft",legend=c("True Richness", "Sampled Richness"),
-				col=c("black","red"),lty=c(1,2))
+			#are any sampled?
+			areSampled<-whichSampled(taxa)
+			if(length(areSampled)>0){
+				fossilRanges<-fossilRecord2fossilRanges(fossilRecord=taxa, merge.cryptic=TRUE, ranges.only = TRUE)
+				curveList<-list(taxaConvert,fossilRanges)
+				#if(i==5 & nruns==1000){browser()}
+				multiDiv(curveList,plotMultCurves=TRUE,
+					divPalette=c("black","red"),divLineType=c(1,2),main="")
+				legend("topleft",legend=c("True Richness", "Sampled Richness"),
+					col=c("black","red"),lty=c(1,2))
+			}else{ #none sampled
+				taxicDivCont(taxaConvert,int.length=0.2)
+				}
 			if(nruns>1){
 				title(paste0("Run Number ",i," of ",nruns))
 				}

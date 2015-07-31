@@ -4,12 +4,13 @@
 \alias{simFossilRecord}
 \title{Full-Scale Simulations of the Fossil Record with Birth, Death and Sampling of Morphotaxa}
 \usage{
-simFossilRecord(p, q, r, anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0,
-  modern.samp.prob = 1, startTaxa = 1, nruns = 1, totalTime = c(0,
-  1000), nTotalTaxa = c(1, 1000), nExtant = c(0, 1000), nSamp = c(0,
-  1000), tolerance = 10^-4, shiftRoot4TimeSlice = "withExtantOnly",
-  count.cryptic = FALSE, negRatesAsZero = TRUE, print.runs = FALSE,
-  sortNames = FALSE, plot = FALSE)
+simFossilRecord(p, q, r = 0, anag.rate = 0, prop.bifurc = 0,
+  prop.cryptic = 0, modern.samp.prob = 1, startTaxa = 1, nruns = 1,
+  totalTime = c(0, 1000), nTotalTaxa = c(1, 1000), nExtant = c(0, 1000),
+  nSamp = c(0, 1000), tolerance = 10^-4,
+  shiftRoot4TimeSlice = "withExtantOnly", count.cryptic = FALSE,
+  negRatesAsZero = TRUE, print.runs = FALSE, sortNames = FALSE,
+  plot = FALSE)
 }
 \arguments{
 \item{p,q,r,anag.rate}{These parameters control the instantaneous ('per-capita') rates of branching, extinction,
@@ -20,6 +21,8 @@ current time passed since the start of the simulation is \code{T} and the curren
 (corresponding to the argument name \code{p}).
 Note that \code{P} cannot be used in equations for the branching rate itself; it is for making other rates
 relative to the branching rate.
+By default, the rates \code{r} and \code{anag.rate} are set to zero, so that the default simulator is a birth-death
+simulator.
 Rates set to \code{= Inf} are treated as if 0. When a rate is set to 0, this event type will not occur in the simulation.
 Setting certain processes to zero, like sampling, may increase simulation efficiency, if the goal is a birth-death or
 pure-birth model.
@@ -93,11 +96,42 @@ to the six numbers in a \code{simFossilTaxa} matrix, with the following field na
 \code{taxon.id ancestor.id orig.time ext.time still.alive looks.like}
 }
 \description{
-Full-Scale Simulations of the Fossil Record with Birth, Death and Sampling of Morphotaxa
+A complete birth-death-sampling branching simulator that captures morphological-taxon identity
+of lineages, as is typically discussed in models of paleontological data. This function
+allows for the use of precise point constraints to condition simulation run acceptance and
+can interpret complex character strings given as rate values for use in modeling
+complex process
 }
 \details{
+\code{simFossilRecord} simulates a birth-death-sampling branching process (ala Foote, 1997, 2000;
+Stadler, 2010) in which lineages of organisms may branch, go extinct or be sampled
+thought a continuous time-interval, with the occurrence of these events
+modeled as Poisson process controlled by some set of instantaneous rates.
+This model is ultimately based on the birth-death model (Kendall, 1948; Nee, 2006),
+which is widely implemented in many R package. Unlike other such typical branching
+simulators, this function enmeshes the lineage units within explicit models of how
+lineages are morphologically differentiated. This is key to allow comparison
+to datasets from the fossil record, as morphotaxa are the basic
+units of paleontological estimates of diversity and phylogenetics. In particular,
+this means that \code{simFossilRecord} allows for multiple types of branching
+events as well as for a fourth event-type, anagenetic morphological change
+(also modelled as a Poisson process with some instantaneous rate).
+
 Hartmann et al. (2011) recently discovered a potential statistical artifact
-when branching simulations are conditioned on some maximum number of taxa.
+when branching simulations are conditioned on some number of taxa.
+Previously, within paleotree, this was accounted for in \code{simFossilTaxa} by
+a complex arrangement of minimum and maximum constraints, and an (incorrect)
+presumption that allowing simulations to continue for a short distance after
+constraints were reached. This strategy is not applied here. Instead,
+\code{simFossilRecord} applies the General Sampling Algorithm presented
+by Hartmann et al. (or at least, a close variant). A simulation continues until
+extinction or some maximum time-constraint is reached, evaluated for intervals
+that match the set run conditions (e.g. nExtant, nTotalTime) and, if some
+interval or set of intervals matches the run conditions, a date is randomly sampled
+from within this interval/intervals. The simulation is then cut at this date using
+the \code{timeSliceFossilRecord} function, and saved as an accepted run.
+The simulation data is otherwise discarded and then a new simulation initiated
+(thus, at most, only one simulated dataset is accepted from one simulation run).
 }
 \examples{
 set.seed(2)
@@ -113,7 +147,7 @@ record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
 # examining multiple runs of simulations
 
 #example of repeated pure birth simulations over 50 time-units
-records <- simFossilRecord(p=0.1, q=0, r=0, nruns=10,
+records <- simFossilRecord(p=0.1, q=0, nruns=10,
 	totalTime=50, plot=TRUE)
 #plot multiple diversity curves on a log scale
 records<-lapply(records,fossilRecord2fossilTaxa)
@@ -146,13 +180,13 @@ set.seed(1)
 	# with high extinction relative to branching
 # use default run conditions (barely any conditioning)
 # use print.runs to look at acceptance probability
-records <- simFossilRecord(p=0.1, q=0.8, r=0, nruns=10,
+records <- simFossilRecord(p=0.1, q=0.8, nruns=10,
 	print.runs=TRUE, plot=TRUE)
 # 10 runs accepted from a total of 10 !
 
 # now let's give much more stringent run conditions
 	# require 3 extant taxa at minimum, 5 taxa total minimum
-records <- simFossilRecord(p=0.1, q=0.8, r=0, nruns=10,
+records <- simFossilRecord(p=0.1, q=0.8, nruns=10,
 	nExtant=c(3,100), nTotalTaxa=c(5,100),
 	print.runs=TRUE, plot=TRUE)
 # thousands of simulations to just obtail 10 accepable runs!
@@ -211,7 +245,7 @@ branchingRateEq
 # its a thing of beauty, folks
 
 # now let's try it
-records <- simFossilRecord(p=branchingRateEq, q=mu, r=0, nruns=3,
+records <- simFossilRecord(p=branchingRateEq, q=mu, nruns=3,
 	totalTime=100, plot=TRUE, print.runs=TRUE)
 records<-lapply(records,fossilRecord2fossilTaxa)
 multiDiv(records,plotMultCurves=TRUE)
@@ -233,7 +267,7 @@ extRateEq<-paste0(mu0,"-(",mu0,"-",muK,")*(N/",K,")")
 extRateEq
 
 # now let's try it
-records <- simFossilRecord(p=lambda, q=extRateEq, r=0, nruns=3,
+records <- simFossilRecord(p=lambda, q=extRateEq, nruns=3,
 	totalTime=100, plot=TRUE, print.runs=TRUE)
 records<-lapply(records,fossilRecord2fossilTaxa)
 multiDiv(records,plotMultCurves=TRUE)
@@ -256,7 +290,7 @@ timeEquation<-"0.4-(0.007*T)"
 # "P" is the algebraic equivalent for "branching rate" in simFossilRecord
 
 # now let's try it
-records <- simFossilRecord(p=timeEquation, q="P", r=0, nruns=3,
+records <- simFossilRecord(p=timeEquation, q="P", nruns=3,
 	totalTime=50, plot=TRUE, print.runs=TRUE)
 records<-lapply(records,fossilRecord2fossilTaxa)
 multiDiv(records,plotMultCurves=TRUE)
@@ -427,17 +461,31 @@ record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
 	nSamp=15, print.runs=TRUE, plot=TRUE)
 # still okay acceptance rates
 
+########################################################
+
+# Simulations of entirely extinct taxa
+
 #Typically, a user may want to condition on a precise
 	# number of sampled taxa in an all-extinct simulation
 record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
 	nTotalTaxa=c(1,100), nExtant=0, nSamp=20,
 	print.runs=TRUE, plot=TRUE)
 
-##################################################################
+# Note that when simulations don't include
+# sampling or extant taxa, the plot
+# functionality changes
+record <- simFossilRecord(p=0.1, q=0.1, r=0, nruns=1,
+	nExtant=0, print.runs=TRUE, plot=TRUE)
+# something similar happens when there is no sampling
+# and there are extant taxa but they aren't sampled
+record <- simFossilRecord(p=0.1, q=0.1, r=0, nruns=1,
+	nExtant=10, nTotalTaxa=100, modern.samp.prob=0,
+	print.runs=TRUE, plot=TRUE)
 
-# Test to make sure runs are being filtered correctly :
 
-res<-simFossilRecord(p=0.1, q=0.1, r=0.1,nTotalTaxa=10,nExtant=0,nruns=1000,plot=TRUE)
+# We can set up a test to make sure that no extant taxa somehow get
+# returned in many simulations with extinct-only conditioning:
+res<-simFossilRecord(p=0.1, q=0.1, r=0.1,nTotalTaxa=10,nExtant=0,nruns=500,plot=TRUE)
 anyLive<-any(sapply(res,function(z) any(sapply(z,function(x) x[[1]][5]==1))))
 if(anyLive){
 	stop("Runs have extant taxa under conditioning for none?")

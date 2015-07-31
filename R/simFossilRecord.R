@@ -451,6 +451,10 @@
 #' 	totalTime=c(50,100), nTotalTaxa=30, nExtant=10,
 #' 	nSamp=15, print.runs=TRUE, plot=TRUE)
 #' # still okay acceptance rates
+#'
+#' ########################################################
+#' 
+#' # Simulations of entirely extinct taxa
 #' 
 #' #Typically, a user may want to condition on a precise
 #' 	# number of sampled taxa in an all-extinct simulation
@@ -458,11 +462,21 @@
 #' 	nTotalTaxa=c(1,100), nExtant=0, nSamp=20,
 #' 	print.runs=TRUE, plot=TRUE)
 #'
-#' ##################################################################
+#' # Note that when simulations don't include
+#' # sampling or extant taxa, the plot 
+#' # functionality changes
+#' record <- simFossilRecord(p=0.1, q=0.1, r=0, nruns=1, 
+#' 	nExtant=0, print.runs=TRUE, plot=TRUE)
+#' # something similar happens when there is no sampling
+#' # and there are extant taxa but they aren't sampled
+#' record <- simFossilRecord(p=0.1, q=0.1, r=0, nruns=1, 
+#' 	nExtant=10, nTotalTaxa=100, modern.samp.prob=0,
+#' 	print.runs=TRUE, plot=TRUE)
+#' 
 #'	
-#' # Test to make sure runs are being filtered correctly :
-#'
-#' res<-simFossilRecord(p=0.1, q=0.1, r=0.1,nTotalTaxa=10,nExtant=0,nruns=1000,plot=TRUE)
+#' # We can set up a test to make sure that no extant taxa somehow get
+#' # returned in many simulations with extinct-only conditioning:
+#' res<-simFossilRecord(p=0.1, q=0.1, r=0.1,nTotalTaxa=10,nExtant=0,nruns=500,plot=TRUE)
 #' anyLive<-any(sapply(res,function(z) any(sapply(z,function(x) x[[1]][5]==1))))
 #' if(anyLive){
 #'	stop("Runs have extant taxa under conditioning for none?")

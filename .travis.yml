@@ -6,7 +6,7 @@ sudo: required
 # Be strict when checking our package
 warnings_are_errors: true
 
-r_check_args: --as-cran --run-donttest 
+# r_check_args: --as-cran --run-donttest 
 
 ###########
 #OLD: brought back due to r-travis not failing bad builds

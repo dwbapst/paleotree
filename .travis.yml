@@ -1,7 +1,7 @@
 # as of 04-17-15 can be just
 
 language: r
-#sudo: required
+sudo: required
 
 # Be strict when checking our package
 #warnings_are_errors: true

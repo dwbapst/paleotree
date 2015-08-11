@@ -59,8 +59,6 @@ particularly so that
 set.seed(444)
 record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
 	nTotalTaxa=c(20,30) ,nExtant=0, plot=TRUE)
-
-checkFossilRecord(record)
 }
 \author{
 David W. Bapst.

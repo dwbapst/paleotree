@@ -16,24 +16,6 @@
 #' element being a distinctive six-element vector composed of numbers, corresponding
 #' to the six numbers in a \code{simFossilTaxa} matrix.
 
-#' @return
-#' Depends on the function.
-
-#' @aliases timeSliceFossilRecord fossilRecord2fossilTaxa fossilRecord2fossilRanges
-
-#' @seealso
-#' \code{\link{simFossilRecord}}
-
-#' @author 
-#' David W. Bapst.
-
-#' @examples
-#'
-#' set.seed(444)
-#' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
-#' 	nTotalTaxa=c(20,30) ,nExtant=0, plot=TRUE)
-#'
-
 #' @param sliceTime The date to slice the \code{simFossilRecord} output at, given
 #' in time-units before the modern, on the same scale as the input \code{fossilRecord}.
 
@@ -51,6 +33,27 @@
 #' (or, for \code{timeSliceFossilRecord}, the time at which the simulation data is
 #' slice). Must be a number between 0 and 1. If 1, all taxa that survive to the modern
 #' day (to the \code{sliceTime}) are sampled, if 0, none are.
+
+#' @return
+#' Depends on the function.
+
+#' @aliases timeSliceFossilRecord fossilRecord2fossilTaxa fossilRecord2fossilRanges
+
+#' @seealso
+#' \code{\link{simFossilRecord}}
+
+#' @author 
+#' David W. Bapst.
+
+#' @examples
+#'
+#' set.seed(444)
+#' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
+#' 	nTotalTaxa=c(20,30) ,nExtant=0, plot=TRUE)
+#'
+#' checkFossilRecord(record)
+
+
 
 #' @rdname simFossilRecordMethods
 #' @export

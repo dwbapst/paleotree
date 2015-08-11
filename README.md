@@ -29,6 +29,6 @@ Once installed, you can check the version number of your paleotree install using
 
 As of 01/13/15, the paleotree repository was restructured so the package no longer sat within a subdirectory. An old directory composed of deprecated, previously public functions (more than a year old) was removed.
 
-This code is authored by David Bapst and offered under GPL >2.0.
+This code is authored by David Bapst and offered under CC0.
 
 The current total number of downloads of the paleotree package from the RStudio CRAN mirror is: [![Number of Downloads](http://cranlogs.r-pkg.org/badges/grand-total/paleotree)](https://github.com/metacran/cranlogs.app)

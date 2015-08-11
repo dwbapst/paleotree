@@ -1,12 +1,12 @@
 # as of 04-17-15 can be just
 
-#language: r
-#sudo: required
+language: r
+sudo: required
 
 # Be strict when checking our package
-#warnings_are_errors: true
+warnings_are_errors: true
 
-# r_check_args: --as-cran --run-donttest 
+ r_check_args: --as-cran --run-donttest 
 
 ###########
 #OLD: brought back due to r-travis not failing bad builds
@@ -14,26 +14,26 @@
 
 # Sample .travis.yml for R projects from https://github.com/craigcitro/r-travis
  
- language: c
- sudo: required
+# language: c
+# sudo: required
  
- env:
- - WARNINGS_ARE_ERRORS=1
+# env:
+# - WARNINGS_ARE_ERRORS=1
  
- before_install:
-   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-   - chmod 755 ./travis-tool.sh
-   - ./travis-tool.sh bootstrap
+# before_install:
+#   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+#   - chmod 755 ./travis-tool.sh
+#   - ./travis-tool.sh bootstrap
  
- install:
-   - ./travis-tool.sh install_deps
+# install:
+#   - ./travis-tool.sh install_deps
  
- script: ./travis-tool.sh run_tests
+# script: ./travis-tool.sh run_tests
  
- on_failure:
-   - ./travis-tool.sh dump_logs
+# on_failure:
+#   - ./travis-tool.sh dump_logs
  
- notifications:
-   email:
-     on_success: change
-     on_failure: change
+# notifications:
+#   email:
+#     on_success: change
+#     on_failure: change

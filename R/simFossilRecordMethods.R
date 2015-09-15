@@ -1,13 +1,15 @@
 #' Methods for Editing or Converting Output from simFossilRecord
 #'
-#'
-
+#' These are a set of functions available for manipulating, translating
+#' and editing the output data objects from function \code{simFossilRecord}.
 
 #' @name simFossilRecordMethods
 
 #' @details
 #' These functions exist to manipulate output from \code{simFossilRecord},
-#' particularly so that 
+#' particularly so that they can be interfaced with functions in library
+#' \code{paleotree} in the same way that output from the
+#' (legacy) function \code{simFossilTaxa} was used.
 
 #' @inheritParams sampleRanges
 

@@ -76,9 +76,15 @@
 #' branching events that are bifurcating, as opposed to budding. Both of these proportions must be a number between 0 and 1.
 #' By default, both are set to zero, meaning all branching events are events of budding cladogenesis.
 
-#' @param tolerance A small number which defines a tiny interval for the sake of placing run-sampling dates before events,
-#' for use in determining whether a taxon is extant in simFossilRecordMethods, and for stepping forward in time when rates are
-#' time-dependent.
+#' @param tolerance A small number which defines a tiny interval for the sake of placing run-sampling dates before events and
+#' for use in determining whether a taxon is extant in simFossilRecordMethods.
+
+#' @param maxStepTime When rates are time-dependent (i.e. when parameters 'D' or 'T' are used in equations input for one of
+#' the four rate arguments), then protocol used by \code{simFossilRecord} of drawing waiting times to the next event could
+#' produce a serious mismatch of resulting process to the defined model, because the possibility of new events is only
+#' considered at the end of these waiting times. Instead, any time a waiting time greater than \code{maxStepTime} is
+#' selected, then instead \emph{no} event occurs and a time-step equal to \code{maxStepTime} occurs instead, thus effectively
+#' discretizing the progression of time in the simulations run by \code{simFossilRecord}.
 
 #' @param nruns Number of simulation datasets to accept, save and output.
 
@@ -615,6 +621,11 @@ simFossilRecord<-function(
 	getSampRate<-makeParFunct(r,isBranchRate=FALSE)
 	getAnagRate<-makeParFunct(anag.rate,isBranchRate=FALSE)
 	#
+	# check if time-dependent simulation
+	isTimeDep<-any(sapply(
+		list(getBranchRate,getExtRate,getSampRate,getAnagRate)
+		,attr,which="timeDep"))
+	#
 	##############################################
 	#now iterate for nruns
 	results<-list()
@@ -659,6 +670,7 @@ simFossilRecord<-function(
 				sumRates<-sum(rateVector)
 				eventProb<-rateVector/sumRates
 				#
+				
 				#pull type of event (from Peter Smits)
 				event <- sample( names(eventProb), 1, prob = eventProb)
 				#
@@ -675,6 +687,8 @@ simFossilRecord<-function(
 				changeTime <- rexp(1, rate =sumRates*length(whichExtant))
 				newTime<- currentTime - changeTime
 				newTimePassed<-timePassed+changeTime
+				
+				
 				#
 				# make the new event so!
 				taxa<-eventOccurs(taxa=taxa,target=target,type=event,time=newTime)

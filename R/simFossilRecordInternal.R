@@ -6,10 +6,13 @@ makeParFunct<-function(par,isBranchRate){
 	#things to look for
 		# N = number of extant taxa
 		# T = time
+		# D = duration
 		# P = branching rate
-	acceptedArg<-if(isBranchRate){c('N','T')
-		}else{c('N','T','P')}
+	acceptedArg<-if(isBranchRate){c('N','T','D')
+		}else{c('N','T','D','P')}
 	if(is.numeric(par)){par<-as.character(par)}
+	#set default timeDepAttr to FALSE
+	timeDepAttr<-FALSE
 	if(is.numeric(type.convert(par,as.is=TRUE))){
 		res<-type.convert(par,as.is=TRUE)
 		#convert any 'Inf' rates to 0: this event type cannot occur !
@@ -19,9 +22,9 @@ makeParFunct<-function(par,isBranchRate){
 			stop("input rates must be at least 0 if input can be coerced to type numeric")}
 		#now convert formula expression to function
 		parFunct<-if(isBranchRate){
-			function(N,T){}
+			function(N,T,D){}
 		}else{
-			function(N,T,P){}
+			function(N,T,D,P){}
 			}
 		body(parFunct)<-res
 		res<-parFunct
@@ -39,15 +42,22 @@ makeParFunct<-function(par,isBranchRate){
 					'Only P, N and T allowed as variables'))
 				}
 			}
+		# define a logical object to be output as an attr that signifies
+			# if a rate had "T" or "D" args	
+		if(any(sapply(args,function(x) any(x==c("T","D")))){
+			timeDepAttr<-TRUE
+			}
 		#now convert formula expression to function
 		parFunct<-if(isBranchRate){
-			function(N,T){}
+			function(N,T,D){}
 		}else{
-			function(N,T,P){}
+			function(N,T,D,P){}
 			}
 		body(parFunct)<-parse(text=par)
 		res<-parFunct
 		}
+	# add an attr saying whether or not its a time-dependent rate function
+	attr(res,"timeDep")<-timeDepAttr
 	return(res)
 	}
 
@@ -76,15 +86,26 @@ getRateVector<-function(taxa,timePassed,
 	#standing number of extant lineages 
 	# (i.e. number of lineages that stuff can happen to)
 	nLive<-length(whichExtant)	
+	# get durations
+	taxaDurations<-getTaxonDurations(taxa)
 	#
 	###########################################################
-	# calculate rates (which may be time of diversity dependent)
+	# calculate rates (which may be time or diversity dependent)
 		#use rate-getting functions from above
-	#get the new branching rate, extinction rate, sampling rate, anagenesis rate
-	branchRate<-getBranchRate(N=nLive,T=timePassed)
-	extRate<-getExtRate(N=nLive,T=timePassed,P=branchRate)
-	sampRate<-getSampRate(N=nLive,T=timePassed,P=branchRate)
-	anagRate<-getAnagRate(N=nLive,T=timePassed,P=branchRate)
+	#
+	# set up mega vector for all taxa
+	
+	#get rates for each taxon
+	for(i in whichExtant){
+		taxonDur<-taxaDurations[i]
+		#get the new branching rate, extinction rate, sampling rate, anagenesis rate
+		branchRate<-getBranchRate(N=nLive,T=timePassed, D=taxonDur)
+		extRate<-getExtRate(N=nLive,T=timePassed, D=taxonDur, P=branchRate)
+		sampRate<-getSampRate(N=nLive,T=timePassed, D=taxonDur, P=branchRate)
+		anagRate<-getAnagRate(N=nLive,T=timePassed,  D=taxonDur, P=branchRate)
+		
+		}
+
 	##
 	# now deal with proportional types of branching
 	#get cryptic, budding and bifurcation components
@@ -112,6 +133,7 @@ getRateVector<-function(taxa,timePassed,
 	#
 	return(rateVector)
 	}
+	
 
 #internal functions for branching/extinction/anagenesis processes	
 

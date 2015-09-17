@@ -677,8 +677,12 @@ simFossilRecord<-function(
 				#
 				# get rates, sample new event, have it occur
 				#
+				# first get durations
+				taxaDurations<-getTaxonDurations(taxa,currentTime)
+				#
 				#get event probability vector
 				rateMatrix<-getRateMatrix(taxa=taxa, timePassed=timePassed,
+					taxaDurations = taxaDurations,
 					getBranchRate=getBranchRate, getExtRate=getExtRate,
 					getSampRate=getSampRate, getAnagRate=getAnagRate,
 					prop.cryptic=prop.cryptic, prop.bifurc=prop.bifurc,

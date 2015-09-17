@@ -76,7 +76,7 @@ makeParFunct<-function(par,isBranchRate){
 
 # get rate vector
 
-getRateMatrix<-function(taxa,timePassed,
+getRateMatrix<-function(taxa,timePassed,taxaDurations,
 		getBranchRate,getExtRate,getSampRate,getAnagRate,
 		prop.cryptic,prop.bifurc,negRatesAsZero){
 	#
@@ -86,8 +86,6 @@ getRateMatrix<-function(taxa,timePassed,
 	#standing number of extant lineages 
 	# (i.e. number of lineages that stuff can happen to)
 	nLive<-length(whichExtant)	
-	# get durations
-	taxaDurations<-getTaxonDurations(taxa,timePassed)
 	#
 	###########################################################
 	# calculate rates (which may be time or diversity dependent)
@@ -265,9 +263,9 @@ whichSampled<-function(taxa){
 	return(res)
 	}
 
-getTaxonDurations<-function(taxa,passedTime){
+getTaxonDurations<-function(taxa,currentTime){
 	areExtant<-whichLive(taxa)
-	durations<-sapply(taxa[areExtant],function(x) passedTime-x[[1]][3])
+	durations<-sapply(taxa[areExtant],function(x) x[[1]][3]-currentTime)
 	if(any(durations<0)){
 		stop("negative durations calculated??")
 		}

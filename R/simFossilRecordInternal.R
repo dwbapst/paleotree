@@ -123,7 +123,7 @@ getRateMatrix<-function(taxa,timePassed,taxaDurations,
 				stop(paste0(names(which(rateVector<0)),'rate calculated less than zero'))
 				}
 			}
-		rateMat[i]<-rateVector
+		rateMat[i,]<-rateVector
 		}
 	# check that not *all* rates are 0\
 	if(!(sum(rateMat)>0)){

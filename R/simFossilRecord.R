@@ -715,9 +715,9 @@ simFossilRecord<-function(
 					# obviously no event needs to occur...
 				}else{
 					# what is the event type
-					event<-colnames(rateMatrix)[,sampledCell[1,2]]
+					event<-colnames(rateMatrix)[sampledCell[1,2]]
 					# who did it happen to (what lineage)
-					target<-attr(rateMatrix,"whichExtant")[,sampledCell[1,1]]
+					target<-attr(rateMatrix,"whichExtant")[sampledCell[1,1]]
 					#
 					# measure time passed
 					newTime<- currentTime - changeTime

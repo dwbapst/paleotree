@@ -96,13 +96,13 @@ getRateMatrix<-function(taxa,timePassed,taxaDurations,
 	colnames(rateMat)<-c('budd','bifurc','anag','crypt','ext','samp')
 	attr(rateMat,"whichExtant")<-whichExtant
 	#get rates for each taxon
-	for(i in whichExtant){
+	for(i in 1:nLive){
 		taxonDur<-taxaDurations[i]
 		#get the new branching rate, extinction rate, sampling rate, anagenesis rate
-		branchRate<-getBranchRate(N=nLive,T=timePassed, D=taxonDur)
-		extRate<-getExtRate(N=nLive,T=timePassed, D=taxonDur, P=branchRate)
-		sampRate<-getSampRate(N=nLive,T=timePassed, D=taxonDur, P=branchRate)
-		anagRate<-getAnagRate(N=nLive,T=timePassed,  D=taxonDur, P=branchRate)
+		branchRate<-getBranchRate(N=nLive, T=timePassed, D=taxonDur)
+		extRate<-getExtRate(N=nLive, T=timePassed, D=taxonDur, P=branchRate)
+		sampRate<-getSampRate(N=nLive, T=timePassed, D=taxonDur, P=branchRate)
+		anagRate<-getAnagRate(N=nLive, T=timePassed,  D=taxonDur, P=branchRate)
 		##
 		# now deal with proportional types of branching
 		#get cryptic, budding and bifurcation components
@@ -114,7 +114,7 @@ getRateMatrix<-function(taxa,timePassed,taxaDurations,
 		#
 		#get probabilities of event types into rateVector
 		rateVector<-c(buddRate,bifurcRate,anagRate,crypticRate,extRate,sampRate)	
-		names(rateVector)<-colnames(rateMat)
+		names(rateVector)<-c('budd','bifurc','anag','crypt','ext','samp')
 		#check rates, make sure none are less than zero
 		if(any(rateVector<0)){
 			if(negRatesAsZero){
@@ -125,7 +125,7 @@ getRateMatrix<-function(taxa,timePassed,taxaDurations,
 			}
 		rateMat[i,]<-rateVector
 		}
-	# check that not *all* rates are 0\
+	# check that not *all* rates are 0
 	if(!(sum(rateMat)>0)){
 		stop("Simulation found scenario in which all rates at some time point are zero (?!)")
 		}	

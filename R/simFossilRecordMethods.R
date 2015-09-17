@@ -132,6 +132,9 @@ timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FAL
 		fossilRecord[[i]][[2]]<-c(fossilRecord[[i]][[2]],0)
 		}
 	#
+	# make sure it has the right class
+	class(fossilRecord)<-'fossilRecordSimulation'
+	# 
 	return(fossilRecord)
 	}
 
@@ -193,6 +196,8 @@ fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.onl
 
 # don't export
 checkFossilRecord<-function(fossilRecord){
+	if(!inherits(fossilRecord,"fossilRecordSimulation")){
+		stop("fossilRecord object is not of class 'fossilRecordSimulation'")}
 	if(any(sapply(fossilRecord,length)!=2)){
 		stop("fossilRecord object has taxon entries with more or less than two elements")}
 	if(any(sapply(fossilRecord,function(x) length(x[[1]]))!=6)){

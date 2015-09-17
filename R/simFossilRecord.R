@@ -701,7 +701,8 @@ simFossilRecord<-function(
 				sampledCell<-arrayInd(sampledCell,dim(rateMatrix))
 				#
 				#draw waiting time to an event (from Peter Smits)
-				changeTime <- rexp(1, rate = rateMatrix[sampledCell])
+					# exponential with rate = sum of all rates, across all taxa
+				changeTime <- rexp(1, rate = sum(rateMatrix))
 				#
 				# if time dep rates, test if changeTime is greater than 
 				if(isTimeDep & changeTime>maxStepTime){

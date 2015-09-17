@@ -144,11 +144,11 @@
 #' Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary
 #' Models. \emph{Systematic Biology} \bold{59}(4):465--476.
 #'
-#' Heath, T. A., J. P. Huelsenbeck, and T. Stadler. 2014. The fossilized birth–death process
+#' Heath, T. A., J. P. Huelsenbeck, and T. Stadler. 2014. The fossilized birth-death process
 #' for coherent calibration of divergence-time estimates. Proceedings of the National Academy
 #' of Sciences 111(29):E2957-E2966.
 #'
-#' Stadler, T. 2009. On incomplete sampling under birth–death models and connections to the
+#' Stadler, T. 2009. On incomplete sampling under birth-death models and connections to the
 #' sampling-based coalescent. Journal of Theoretical Biology 261(1):58-66.
 
 

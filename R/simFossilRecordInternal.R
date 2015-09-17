@@ -87,7 +87,7 @@ getRateMatrix<-function(taxa,timePassed,
 	# (i.e. number of lineages that stuff can happen to)
 	nLive<-length(whichExtant)	
 	# get durations
-	taxaDurations<-getTaxonDurations(taxa)
+	taxaDurations<-getTaxonDurations(taxa,timePassed)
 	#
 	###########################################################
 	# calculate rates (which may be time or diversity dependent)
@@ -265,6 +265,15 @@ whichSampled<-function(taxa){
 	return(res)
 	}
 
+getTaxonDurations<-function(taxa,passedTime){
+	areExtant<-whichLive(taxa)
+	durations<-sapply(taxa[areExtant],function(x) passedTime-x[[1]][3])
+	if(any(durations<0)){
+		stop("negative durations calculated??")
+		}
+	return(durations)
+	}
+	
 getRunVitals<-function(taxa,count.cryptic){
 	#NOTE need to change vital measurement dependent on count.cryptic or not
 	if(!is.list(taxa)){stop("handed getRunVitals a taxa object that isn't a list??")}

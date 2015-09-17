@@ -100,8 +100,6 @@ names (thus sorting cryptic taxa together) rather than by taxon ID number
 \item{plot}{If TRUE, plots the diversity curves of accepted simulations,
 including both the diversity curve of the true number of taxa and the
 diversity curve for the 'observed' (sampled) number of taxa.}
-
-\item{minTimeStep}{}
 }
 \value{
 A list object composed

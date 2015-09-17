@@ -518,16 +518,6 @@
 #' }
 
 
-
-
-
-
-
-
-
-#' @param minTimeStep 
-
-
 #' @name simFossilRecord
 #' @rdname simFossilRecord
 #' @export

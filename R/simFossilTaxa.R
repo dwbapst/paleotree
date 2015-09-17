@@ -27,7 +27,7 @@
 #' 
 # Hartmann et al. (2011) recently discovered a potential statistical artifact
 # when branching simulations are conditioned on some maximum number of taxa.
-#'
+#
 #' This function continues the simulation once mintaxa or minExtant is
 #' hit, until the next taxon (limit +1) originates. Once the simulation
 #' terminates, it is judged whether it is acceptable for all conditions given
@@ -189,7 +189,8 @@
 #' \code{\link{simPaleoTrees}}, \code{\link{taxa2phylo}},
 #' \code{\link{taxa2cladogram}}
 
-#' @references Foote, M. 1996 On the Probability of Ancestors in the Fossil
+#' @references 
+#' Foote, M. 1996 On the Probability of Ancestors in the Fossil
 #' Record. \emph{Paleobiology} \bold{22}(2):141--151.
 # 
 # Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary

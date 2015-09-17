@@ -167,6 +167,7 @@ fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.onl
 			if(taxonIDs[i]==cryptIDs[i]){
 				#if its the original taxon, collect all sampling events
 					# for this cryptic complex into one pool
+				# browser()
 				sampOcc[[i]]<-unlist(c(sampOcc[taxonIDs[i]==cryptIDs]))
 				#check that its a vector
 				if(is.list(sampOcc[[i]])){

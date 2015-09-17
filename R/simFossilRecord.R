@@ -303,6 +303,11 @@
 #' # Now let's try an example with time-dependent origination
 #' 	# and extinction constrained to equal origination
 #' 
+#' # Note! Use of time-dependent parameters "D" and "T" may
+#' # result in slower than normal simulation run times
+#' # as the time-scale has to be discretized; see
+#' # info for argument maxTimeStep above
+#' 
 #' # First, let's define a time-dependent rate equation
 #' 	# "T" is the symbol for time passed
 #' timeEquation<-"0.4-(0.007*T)"
@@ -312,13 +317,24 @@
 #' 	# at time=50, the final rate will be 0.05
 #' # We can easily make it so extinction is always equal to branching rate
 #' # "P" is the algebraic equivalent for "branching rate" in simFossilRecord
-#' 
+#'
 #' # now let's try it
 #' records <- simFossilRecord(p=timeEquation, q="P", nruns=3,
 #' 	totalTime=50, plot=TRUE, print.runs=TRUE)
 #' records<-lapply(records,fossilRecord2fossilTaxa)
 #' multiDiv(records,plotMultCurves=TRUE)
 #' # high variability that seems to then smooth out as turnover decreases
+#'
+#' # And duration what about duration-dependent processes?
+#'		# let's do a duration-dep extinction equation:
+#' durDepExt<-"0.01+(0.01*D)"
+#'
+#' # okay, let's take it for a spin
+#' records <- simFossilRecord(p=0.1, q=durDepExt, nruns=3,
+#' 	totalTime=50, plot=TRUE, print.runs=TRUE)
+#' records<-lapply(records,fossilRecord2fossilTaxa)
+#' multiDiv(records,plotMultCurves=TRUE)
+#' # creates runs full of short lived taxa
 #' 
 #' ##########################################################
 #' 
@@ -707,7 +723,7 @@ simFossilRecord<-function(
 				# if time dep rates, test if changeTime is greater than 
 				if(isTimeDep & changeTime>maxStepTime){
 					# redefine changeTime as maxStepTime
-					changeTime <- rexp(1, rate = rateMatrix[sampledCell])
+					changeTime <- maxStepTime
 					#
 					# measure time passed
 					newTime<- currentTime - changeTime

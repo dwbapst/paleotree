@@ -41,7 +41,8 @@
 #' sampling and anagenesis, respectively. These can be given as a number equal to or greater than zero, or as a 
 #' character string which will be interpreted as an algebraic equation. These equations can make use of three
 #' quantities which will/may change throughout the simulation: the standing richness is \code{N}, the
-#' current time passed since the start of the simulation is \code{T} and the current branching rate is \code{P}
+#' current time passed since the start of the simulation is \code{T}, the present duration of a given still-living
+#' lineage since its origination time is code{D}, and the current branching rate is \code{P}
 #' (corresponding to the argument name \code{p}).
 #' Note that \code{P} cannot be used in equations for the branching rate itself; it is for making other rates
 #' relative to the branching rate.
@@ -51,6 +52,9 @@
 #' Setting certain processes to zero, like sampling, may increase simulation efficiency, if the goal is a birth-death or
 #' pure-birth model.
 #' See documentation for argument \code{negRatesAsZero} about the treatment of rates that decrease below zero.
+#' Notation of branching, extinction and sampling rates as \code{p, q, r} 
+#' follows what is typical for the paleobiology literature (e.g. Foote, 1997), not the  Greek letters \code{lambda, mu, phi}
+#' found more typically in the biological literature (e.g. Stadler, 2009; Heath et al., 2014; Gavrykushina et al., 2014).
 
 #' @param totalTime,nTotalTaxa,nExtant,nSamp These arguments represent stopping and
 #' acceptance conditions for simulation runs. They are respectively \code{totalTime}, the
@@ -84,7 +88,10 @@
 #' produce a serious mismatch of resulting process to the defined model, because the possibility of new events is only
 #' considered at the end of these waiting times. Instead, any time a waiting time greater than \code{maxStepTime} is
 #' selected, then instead \emph{no} event occurs and a time-step equal to \code{maxStepTime} occurs instead, thus effectively
-#' discretizing the progression of time in the simulations run by \code{simFossilRecord}.
+#' discretizing the progression of time in the simulations run by \code{simFossilRecord}. Decreasing this value will increase
+#' accuracy (as the timescale is effectively more discretized) but increase computation time, as the computer will need
+#' to stop and check rates to see if an event happened more often. Users should toggle this value relative to the time-dependent
+#' rate equations they input, relative to the rate of change in rates expected in time-dependent rates.
 
 #' @param nruns Number of simulation datasets to accept, save and output.
 
@@ -127,8 +134,27 @@
 #' David W. Bapst, inspired by code written by Peter Smits.
 
 #' @references
+#' Foote, M. 1997. Estimating Taxonomic Durations and Preservation
+#' Probability. Paleobiology 23(3):278-300.
+#'
+#' Gavryushkina, A., D. Welch, T. Stadler, and A. J. Drummond. 2014. Bayesian Inference
+#' of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. PLoS Comput Biol
+#' 10(12):e1003919.
+#'
 #' Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary
 #' Models. \emph{Systematic Biology} \bold{59}(4):465--476.
+#'
+#' Heath, T. A., J. P. Huelsenbeck, and T. Stadler. 2014. The fossilized birth–death process
+#' for coherent calibration of divergence-time estimates. Proceedings of the National Academy
+#' of Sciences 111(29):E2957-E2966.
+#'
+#' Stadler, T. 2009. On incomplete sampling under birth–death models and connections to the
+#' sampling-based coalescent. Journal of Theoretical Biology 261(1):58-66.
+
+
+
+
+
 
 #' @examples
 #' 
@@ -519,7 +545,7 @@ simFossilRecord<-function(
 
 	#control parameters
 	#
-	tolerance=10^-4, shiftRoot4TimeSlice="withExtantOnly",
+	tolerance=10^-4, maxStepTime=0.01, shiftRoot4TimeSlice="withExtantOnly",
 	count.cryptic=FALSE, negRatesAsZero=TRUE, print.runs=FALSE, sortNames=FALSE, plot=FALSE){
 
 	#####################################################################################
@@ -533,13 +559,15 @@ simFossilRecord<-function(
 	# DEFAULTS (without rates set)
 		# r=0.1;anag.rate=0;prop.bifurc=0;prop.cryptic=0;startTaxa=1;nruns=1;
 		# nTotalTaxa=c(1,1000);totalTime=c(1,1000);nSamp=c(0,1000);nExtant=c(0,1000);
-		# plot=TRUE;count.cryptic=FALSE;print.runs=TRUE;sortNames=FALSE	
+		# tolerance=10^-4; maxStepTime=0.01; shiftRoot4TimeSlice="withExtantOnly";
+		# count.cryptic=FALSE; negRatesAsZero=TRUE; print.runs=FALSE; sortNames=FALSE; plot=FALSE
 	#
 	# BASIC RUN	with diversity-dep extinction
 	# p=0.1;q='0.01*N'
 		# r=0.1;anag.rate=0;prop.bifurc=0;prop.cryptic=0;startTaxa=1;nruns=1;
 		# nTotalTaxa=c(10,200);totalTime=c(1,1000);nSamp=c(0,1000);nExtant=c(0,0);plot=TRUE;
-		# count.cryptic=FALSE;print.runs=TRUE;sortNames=FALSE;set.seed(444)
+		# tolerance=10^-4; maxStepTime=0.01; shiftRoot4TimeSlice="withExtantOnly";
+		# count.cryptic=FALSE; negRatesAsZero=TRUE; print.runs=FALSE; sortNames=FALSE; plot=FALSE
 	#
 	
 	##################################################################################
@@ -660,38 +688,50 @@ simFossilRecord<-function(
 				# get rates, sample new event, have it occur
 				#
 				#get event probability vector
-				rateVector<-getRateVector(taxa=taxa, timePassed=timePassed,
+				rateMatrix<-getRateMatrix(taxa=taxa, timePassed=timePassed,
 					getBranchRate=getBranchRate, getExtRate=getExtRate,
 					getSampRate=getSampRate, getAnagRate=getAnagRate,
 					prop.cryptic=prop.cryptic, prop.bifurc=prop.bifurc,
 					negRatesAsZero=negRatesAsZero)
 				#
-				#sum the rates
-				sumRates<-sum(rateVector)
-				eventProb<-rateVector/sumRates
+				#get the probabilty for each event in rateMatrix
+				eventProbMatrix<-rateMatrix/sum(rateMatrix)
 				#
-				
-				#pull type of event (from Peter Smits)
-				event <- sample( names(eventProb), 1, prob = eventProb)
+				# from stackoverflow.com/questions/30232740/
+					# randomly-sample-entries-of-a-matrix-and-return-the-row-column-indexes-in-r
+					# simplified: arrayInd(sample(length(m),1,prob=m),dim(m)) 
 				#
-				#vector of which taxa are still alive
-				whichExtant<-whichLive(taxa)
-				#select which lineage does it occur to
-				if(length(whichExtant)>1){
-					target<-sample(whichExtant,1)
-				}else{
-					target<-whichExtant
-					}
+				#get event type and which taxon it occurs to
+				sampledCell<-sample(length(rateMatrix),1,prob=eventProbMatrix)
+				#will return as a 1 row matrix, of row # and col #
+				sampledCell<-arrayInd(sampledCell,dim(rateMatrix))
 				#
 				#draw waiting time to an event (from Peter Smits)
-				changeTime <- rexp(1, rate =sumRates*length(whichExtant))
-				newTime<- currentTime - changeTime
-				newTimePassed<-timePassed+changeTime
-				
-				
+				changeTime <- rexp(1, rate = rateMatrix[sampledCell])
 				#
-				# make the new event so!
-				taxa<-eventOccurs(taxa=taxa,target=target,type=event,time=newTime)
+				# if time dep rates, test if changeTime is greater than 
+				if(isTimeDep & changeTime>maxStepTime){
+					# redefine changeTime as maxStepTime
+					changeTime <- rexp(1, rate = rateMatrix[sampledCell])
+					#
+					# measure time passed
+					newTime<- currentTime - changeTime
+					newTimePassed<-timePassed+changeTime
+					#
+					# obviously no event needs to occur...
+				}else{
+					# what is the event type
+					event<-colnames(rateMatrix)[,sampledCell[1,2]]
+					# who did it happen to (what lineage)
+					target<-attr(rateMatrix,"whichExtant")[,sampledCell[1,1]]
+					#
+					# measure time passed
+					newTime<- currentTime - changeTime
+					newTimePassed<-timePassed+changeTime
+					#
+					# make the new event so!
+					taxa<-eventOccurs(taxa=taxa,target=target,type=event,time=newTime)
+					}
 				#
 				####################################################
 				#

@@ -76,7 +76,7 @@ makeParFunct<-function(par,isBranchRate){
 
 # get rate vector
 
-getRateVector<-function(taxa,timePassed,
+getRateMatrix<-function(taxa,timePassed,
 		getBranchRate,getExtRate,getSampRate,getAnagRate,
 		prop.cryptic,prop.bifurc,negRatesAsZero){
 	#
@@ -94,7 +94,9 @@ getRateVector<-function(taxa,timePassed,
 		#use rate-getting functions from above
 	#
 	# set up mega vector for all taxa
-	
+	rateMat<-matrix(,nLive,6)
+	colnames(rateMat)<-c('budd','bifurc','anag','crypt','ext','samp')
+	attr(rateMat,"whichExtant")<-whichExtant
 	#get rates for each taxon
 	for(i in whichExtant){
 		taxonDur<-taxaDurations[i]
@@ -103,36 +105,43 @@ getRateVector<-function(taxa,timePassed,
 		extRate<-getExtRate(N=nLive,T=timePassed, D=taxonDur, P=branchRate)
 		sampRate<-getSampRate(N=nLive,T=timePassed, D=taxonDur, P=branchRate)
 		anagRate<-getAnagRate(N=nLive,T=timePassed,  D=taxonDur, P=branchRate)
-		
-		}
-
-	##
-	# now deal with proportional types of branching
-	#get cryptic, budding and bifurcation components
-	crypticRate<-branchRate*(prop.cryptic)
-	#rate of morph differentiation per branching event
-	morphRate<-branchRate*(1-prop.cryptic)
-	buddRate<-morphRate*(1-prop.bifurc)
-	bifurcRate<-morphRate*(prop.bifurc)		
-	#
-	#get probabilities of event types
-	rateVector<-c(buddRate,bifurcRate,anagRate,crypticRate,extRate,sampRate)
-	names(rateVector)<-c('budd','bifurc','anag','crypt','ext','samp')
-	#check rates, make sure none are less than zero
-	if(any(rateVector<0)){
-		if(negRatesAsZero){
-			rateVector[rateVector<0]<-0
-		}else{
-			stop(paste0(names(which(rateVector<0)),'rate calculated less than zero'))
+		##
+		# now deal with proportional types of branching
+		#get cryptic, budding and bifurcation components
+		crypticRate<-branchRate*(prop.cryptic)
+		#rate of morph differentiation per branching event
+		morphRate<-branchRate*(1-prop.cryptic)
+		buddRate<-morphRate*(1-prop.bifurc)
+		bifurcRate<-morphRate*(prop.bifurc)		
+		#
+		#get probabilities of event types into rateVector
+		rateVector<-c(buddRate,bifurcRate,anagRate,crypticRate,extRate,sampRate)	
+		names(rateVector)<-colnames(rateMat)
+		#check rates, make sure none are less than zero
+		if(any(rateVector<0)){
+			if(negRatesAsZero){
+				rateVector[rateVector<0]<-0
+			}else{
+				stop(paste0(names(which(rateVector<0)),'rate calculated less than zero'))
+				}
 			}
+		rateMat[i]<-rateVector
 		}
 	# check that not *all* rates are 0\
-	if(!(sum(rateVector)>0)){
-		stop("Simulation found scenario in which all rates are zero (?!)")
+	if(!(sum(rateMat)>0)){
+		stop("Simulation found scenario in which all rates at some time point are zero (?!)")
 		}	
 	#
-	return(rateVector)
+	return(rateMat)
 	}
+
+# example of randomly sampling a matrix with weighted probs
+	# and getting row/col indices
+# m<-matrix(runif(6*6),ncol=6,nrow=6)
+# m<-m/sum(m)
+# m[1,2]<-1
+# m<-m/sum(m)
+# arrayInd(sample(length(m),1,prob=m),dim(m)) 
 	
 
 #internal functions for branching/extinction/anagenesis processes	
@@ -215,7 +224,7 @@ sampEvent<-function(taxa,target,time){
 	}
 		
 eventOccurs<-function(taxa,target,type,time){
-	#possible types : 'budd','bifurc','anag','crypt','ext','samp'
+	#possible types : 'budd','bifurc','anag','crypt','ext','samp', 'wait'
 	if(type=="budd"){
 		taxa<-buddingEvent(taxa=taxa,parent=target,time=time)
 		}

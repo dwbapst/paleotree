@@ -44,7 +44,7 @@ makeParFunct<-function(par,isBranchRate){
 			}
 		# define a logical object to be output as an attr that signifies
 			# if a rate had "T" or "D" args	
-		if(any(sapply(args,function(x) any(x==c("T","D")))){
+		if(any(sapply(args,function(x) any(x==c("T","D"))))){
 			timeDepAttr<-TRUE
 			}
 		#now convert formula expression to function

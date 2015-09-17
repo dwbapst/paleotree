@@ -7,7 +7,7 @@
 simFossilRecord(p, q, r = 0, anag.rate = 0, prop.bifurc = 0,
   prop.cryptic = 0, modern.samp.prob = 1, startTaxa = 1, nruns = 1,
   totalTime = c(0, 1000), nTotalTaxa = c(1, 1000), nExtant = c(0, 1000),
-  nSamp = c(0, 1000), tolerance = 10^-4,
+  nSamp = c(0, 1000), tolerance = 10^-4, maxStepTime = 0.01,
   shiftRoot4TimeSlice = "withExtantOnly", count.cryptic = FALSE,
   negRatesAsZero = TRUE, print.runs = FALSE, sortNames = FALSE,
   plot = FALSE)
@@ -17,7 +17,8 @@ simFossilRecord(p, q, r = 0, anag.rate = 0, prop.bifurc = 0,
 sampling and anagenesis, respectively. These can be given as a number equal to or greater than zero, or as a
 character string which will be interpreted as an algebraic equation. These equations can make use of three
 quantities which will/may change throughout the simulation: the standing richness is \code{N}, the
-current time passed since the start of the simulation is \code{T} and the current branching rate is \code{P}
+current time passed since the start of the simulation is \code{T}, the present duration of a given still-living
+lineage since its origination time is code{D}, and the current branching rate is \code{P}
 (corresponding to the argument name \code{p}).
 Note that \code{P} cannot be used in equations for the branching rate itself; it is for making other rates
 relative to the branching rate.
@@ -26,7 +27,10 @@ simulator.
 Rates set to \code{= Inf} are treated as if 0. When a rate is set to 0, this event type will not occur in the simulation.
 Setting certain processes to zero, like sampling, may increase simulation efficiency, if the goal is a birth-death or
 pure-birth model.
-See documentation for argument \code{negRatesAsZero} about the treatment of rates that decrease below zero.}
+See documentation for argument \code{negRatesAsZero} about the treatment of rates that decrease below zero.
+Notation of branching, extinction and sampling rates as \code{p, q, r}
+follows what is typical for the paleobiology literature (e.g. Foote, 1997), not the  Greek letters \code{lambda, mu, phi}
+found more typically in the biological literature (e.g. Stadler, 2009; Heath et al., 2014; Gavrykushina et al., 2014).}
 
 \item{prop.cryptic,prop.bifurc}{These parameters control (respectively) the proportion of branching events that have
 morphological differentiation, versus those that are cryptic (\code{prop.cryptic}) and the proportion of morphological
@@ -56,8 +60,18 @@ and maximum values of a range for accepted simulation runs (i.e. the simulation 
 Note that it is easy to set combinations of parameters and run conditions that are impossible
 to produce satisfactory input under, in which case \code{simFossilRecord} would run in a nonstop loop.}
 
-\item{tolerance}{A small number which defines a tiny interval for the sake of placing run-sampling dates before events,
-and for use in determining whether a taxon is extant in simFossilRecordMethods.}
+\item{tolerance}{A small number which defines a tiny interval for the sake of placing run-sampling dates before events and
+for use in determining whether a taxon is extant in simFossilRecordMethods.}
+
+\item{maxStepTime}{When rates are time-dependent (i.e. when parameters 'D' or 'T' are used in equations input for one of
+the four rate arguments), then protocol used by \code{simFossilRecord} of drawing waiting times to the next event could
+produce a serious mismatch of resulting process to the defined model, because the possibility of new events is only
+considered at the end of these waiting times. Instead, any time a waiting time greater than \code{maxStepTime} is
+selected, then instead \emph{no} event occurs and a time-step equal to \code{maxStepTime} occurs instead, thus effectively
+discretizing the progression of time in the simulations run by \code{simFossilRecord}. Decreasing this value will increase
+accuracy (as the timescale is effectively more discretized) but increase computation time, as the computer will need
+to stop and check rates to see if an event happened more often. Users should toggle this value relative to the time-dependent
+rate equations they input, relative to the rate of change in rates expected in time-dependent rates.}
 
 \item{shiftRoot4TimeSlice}{Should the dating of events be shifted, so that the
 date given for \code{sliceTime} is now 0, or should the dates not be shifted,
@@ -86,6 +100,8 @@ names (thus sorting cryptic taxa together) rather than by taxon ID number
 \item{plot}{If TRUE, plots the diversity curves of accepted simulations,
 including both the diversity curve of the true number of taxa and the
 diversity curve for the 'observed' (sampled) number of taxa.}
+
+\item{minTimeStep}{}
 }
 \value{
 A list object composed
@@ -100,7 +116,7 @@ A complete birth-death-sampling branching simulator that captures morphological-
 of lineages, as is typically discussed in models of paleontological data. This function
 allows for the use of precise point constraints to condition simulation run acceptance and
 can interpret complex character strings given as rate values for use in modeling
-complex process
+complex processes of diversification and sampling.
 }
 \details{
 \code{simFossilRecord} simulates a birth-death-sampling branching process (ala Foote, 1997, 2000;
@@ -497,8 +513,22 @@ if(anyLive){
 David W. Bapst, inspired by code written by Peter Smits.
 }
 \references{
+Foote, M. 1997. Estimating Taxonomic Durations and Preservation
+Probability. Paleobiology 23(3):278-300.
+
+Gavryushkina, A., D. Welch, T. Stadler, and A. J. Drummond. 2014. Bayesian Inference
+of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. PLoS Comput Biol
+10(12):e1003919.
+
 Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary
 Models. \emph{Systematic Biology} \bold{59}(4):465--476.
+
+Heath, T. A., J. P. Huelsenbeck, and T. Stadler. 2014. The fossilized birth-death process
+for coherent calibration of divergence-time estimates. Proceedings of the National Academy
+of Sciences 111(29):E2957-E2966.
+
+Stadler, T. 2009. On incomplete sampling under birth-death models and connections to the
+sampling-based coalescent. Journal of Theoretical Biology 261(1):58-66.
 }
 \seealso{
 #' \code{\link{simFossilRecordMethods}}

@@ -182,7 +182,7 @@ tree$root.time<-10
 plot(tree,no.margin=FALSE)
 axisPhylo()
 
-#
+# now a series of tests, dropping various tips
 (test<-dropPaleoTip(tree,"A")$root.time) # =7
 (test[2]<-dropPaleoTip(tree,"B")$root.time) # =10
 (test[3]<-dropPaleoTip(tree,"C")$root.time) # =10
@@ -191,7 +191,8 @@ axisPhylo()
 (test[6]<-dropPaleoTip(tree,c("B","C"))$root.time) # =10
 (test[7]<-dropPaleoTip(tree,c("A","C"))$root.time) # =7
 (test[8]<-dropPaleoTip(tree,c("A","D"))$root.time) # =7
-#
+
+# is it all good? if not, fail so paleotree fails...
 if(!identical(test,c(7,10,10,10,5,10,7,7))){stop("fixRootTime fails!")}
 
 

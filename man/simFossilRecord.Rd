@@ -35,7 +35,8 @@ found more typically in the biological literature (e.g. Stadler, 2009; Heath et 
 \item{prop.cryptic,prop.bifurc}{These parameters control (respectively) the proportion of branching events that have
 morphological differentiation, versus those that are cryptic (\code{prop.cryptic}) and the proportion of morphological
 branching events that are bifurcating, as opposed to budding. Both of these proportions must be a number between 0 and 1.
-By default, both are set to zero, meaning all branching events are events of budding cladogenesis.}
+By default, both are set to zero, meaning all branching events are events of budding cladogenesis. See description of
+the available models of morphological differentiation in the \emph{Description} section.}
 
 \item{modern.samp.prob}{The probability that a taxon is sampled at the modern time
 (or, for \code{timeSliceFossilRecord}, the time at which the simulation data is
@@ -45,12 +46,14 @@ day (to the \code{sliceTime}) are sampled, if 0, none are.}
 \item{startTaxa}{Number of initital taxa to begin a simulation with. All will have the simulation start date
 listed as their time of origination.}
 
-\item{nruns}{Number of simulation datasets to accept, save and output.}
+\item{nruns}{Number of simulation datasets to accept, save and output. If \code{nruns = 1}, output will be a single
+object of class 'fossilRecordSimulation', and if \code{nruns} is greater than 1, a list will be output composed of
+\code{nruns} objects of class 'fossilRecordSimulation'.}
 
 \item{totalTime,nTotalTaxa,nExtant,nSamp}{These arguments represent stopping and
 acceptance conditions for simulation runs. They are respectively \code{totalTime}, the
 total length of the simulation in time-units, \code{nTotalTaxa}, the total number of taxa
-over evolutionary history in the clade, \code{nExtant}, the total number of extant taxa at
+over the past evolutionary history of the clade, \code{nExtant}, the total number of extant taxa at
 the end of the simulation and \code{nSamp} the total number of sampled taxa (not counting extant
 taxa sampled at the modern day). These are used to determine when to end simulation runs, and whether to accept
 or reject them as output. They can be input as a vector of two numbers, representing minimum
@@ -58,7 +61,8 @@ and maximum values of a range for accepted simulation runs (i.e. the simulation 
 1000 time-steps, by default), or as a single number, representing a point condition (i.e. if
 \code{nSamp = 100} then the only simulation runs with exactly 100 taxa sampled will be output).
 Note that it is easy to set combinations of parameters and run conditions that are impossible
-to produce satisfactory input under, in which case \code{simFossilRecord} would run in a nonstop loop.}
+to produce satisfactory input under, in which case \code{simFossilRecord} would run in a nonstop loop.
+How cryptic taxa are counted for the sake of these conditions is controlled by argument \code{count.cryptic}.}
 
 \item{tolerance}{A small number which defines a tiny interval for the sake of placing run-sampling dates before events and
 for use in determining whether a taxon is extant in simFossilRecordMethods.}
@@ -102,12 +106,52 @@ including both the diversity curve of the true number of taxa and the
 diversity curve for the 'observed' (sampled) number of taxa.}
 }
 \value{
-A list object composed
-of multiple elements, each of which is data for 'one taxon', with the first
-element being a distinctive six-element vector composed of numbers, corresponding
-to the six numbers in a \code{simFossilTaxa} matrix, with the following field names:
+\code{simFossilRecord} returns either a single object of class 'fossilRecordSimulation'
+or a list of multiple such objects, depending on whether \code{nruns} was 1 or more.
 
-\code{taxon.id ancestor.id orig.time ext.time still.alive looks.like}
+An object of class 'fossilRecordSimulation' consists of a list object composed of multiple
+elements, each of which is data for 'one taxon'. Each data element for each taxon is itself
+a list, composed of two elements: the first describes vital information about the taxon unit,
+and the second describes the sampling times of each taxon.
+
+The first element of the list (named \code{$taxa.data}) is a distinctive six-element
+vector composed of numbers (some are nominally integers, but not all, so all are stored
+as double-precision integers) with the following field names:
+
+\describe{
+\item{\code{taxon.id}}{The ID number of this particular taxon-unit.}
+\item{\code{ancestor.id}}{The ID number of the ancestral taxon-unit.
+The initial taxa in a simulation will be listed with \code{NA} as their ancestor.}
+\item{\code{orig.time}}{True time of origination for a taxon-unit in absolute time.}
+\item{\code{ext.time}}{True time of extinction for a taxon-unit in absolute time.
+Extant taxa will be listed with an \code{ext.time} of the run-end time of the
+simulation run, which for simulations with extant taxa is 0 by default (but this
+may be modified using argument \code{shiftRoot4TimeSlice}).}
+\item{\code{still.alive}}{Indicates whether a taxon-unit is 'still alive' or not:
+'1' indicates the taxon-unit is extant, '0' indicates the taxon-unit is extinct}
+\item{\code{looks.like}}{The ID number of the first morphotaxon in a dataset that
+'looks like' this taxon-unit; i.e. belongs to the same multi-lineage cryptic
+complex. Taxa that are morphologically distinct from any previous lineage will
+have their \code{taxon.id} match their \code{looks.like}. Thus, this column
+is rather uninformative unless cryptic cladogenesis occurred in a simulation.}}
+
+The second element for each taxon-unit is a vector of sampling times, creatively
+named \code{$sampling.times}, with each value representing a data in absolute time
+when that taxon was sampled in the simulated fossil record. If a taxon was never
+sampled, this vector is an empty numeric vector of \code{length = 0}.
+
+As is typical for paleontological uses of absolute time, absolute time in these
+simulations is always decreasing toward the modern; i.e. an absolute date of 50
+means a point in time which is 50 time-units before the present-day, if the
+present-day is zero (the default, but see argument \code{shiftRoot4TimeSlice}).
+
+Each individual element of a 'fossilRecordSimulation' list object is named, generally of
+the form "t1" and "t2", where the number is the \code{taxon.id}. Cryptic taxa are instead
+named in the form of "t1.2" and "t5.3", where the first number is the taxon which they are a
+cryptic descendant of (\code{looks.like}) and the second number, after the period, is
+the order of appearance of lineage units in that cryptic complex. For example, for
+"t5.3",  the first number is the \code{taxon.id} and the second number communicates
+that this is the third lineage to appear in this cryptic complex.
 }
 \description{
 A complete birth-death-sampling branching simulator that captures morphological-taxon identity
@@ -117,47 +161,128 @@ can interpret complex character strings given as rate values for use in modeling
 complex processes of diversification and sampling.
 }
 \details{
-\code{simFossilRecord} simulates a birth-death-sampling branching process (ala Foote, 1997, 2000;
-Stadler, 2010) in which lineages of organisms may branch, go extinct or be sampled
+\code{simFossilRecord} simulates a birth-death-sampling branching process (ala Foote, 1997,
+ 2000; Stadler, 2009) in which lineages of organisms may branch, go extinct or be sampled
 thought a continuous time-interval, with the occurrence of these events
 modeled as Poisson process controlled by some set of instantaneous rates.
 This model is ultimately based on the birth-death model (Kendall, 1948; Nee, 2006),
-which is widely implemented in many R package. Unlike other such typical branching
+which is widely implemented in many R packages. Unlike other such typical branching
 simulators, this function enmeshes the lineage units within explicit models of how
-lineages are morphologically differentiated. This is key to allow comparison
+lineages are morphologically differentiated (Bapst, 2013). This is key to allow comparison
 to datasets from the fossil record, as morphotaxa are the basic
-units of paleontological estimates of diversity and phylogenetics. In particular,
-this means that \code{simFossilRecord} allows for multiple types of branching
-events as well as for a fourth event-type, anagenetic morphological change
-(also modelled as a Poisson process with some instantaneous rate).
+units of paleontological diversity estimates and phylogenetic analyses.
+
+\emph{Models of Morphological Differentiation and Branching (Cladogenesis and Anagenesis)}
+
+These models of morphological differentiation do not involve the direct simulation of
+morphological traits. Instead, morphotaxon identity is used as a proxy of the
+distinctiveness of lineages on morphological grounds, as if there was some hypothetical
+paleontologist attempting to taxonomically sort collections of specimens of these simulated
+lineages. Two lineages are either identical, and thus share the same morphotaxon identity,
+or they are distinct, and thus have separate morphotaxon identities. Morphological
+differentiation is assumed to be an instantaneous process for the purposes of this model,
+such that no intermediate could be uncovered.
+
+Specifically, \code{simFossilRecord} allows for three types of binary branching events
+(here grouped under the term 'cladogenesis': 'budding cladogenesis', 'bifurcating
+cladogenesis' and 'cryptic cladogenesis', as well as for a fourth event-type, 'anagenesis'
+(see Wagner and Erwin, 1995; Foote, 1996, and Bapst, 2013, for further details). Budding,
+bifurcation and cryptic cladogenetic events all share in common that a single geneological
+lineage splits into two descendant lineages, but differ in the morphological differentiation
+of these child lineages relative to their parent. Under budding cladogenesis, only one of the
+child lineages becomes morphologically distinguishable from the parent, and thus the ancestral
+morphotaxon persists through the branching event as the un-differtiated child lineage. Under
+bifurcating cladogenesis, both child lineages become immediately distinct from the ancestor,
+and thus two new morphotaxa appear while the ancestor terminates in an event known as
+'pseudoextinction'. Crytic cladogenesis has no morphological differentiation: both child lineages
+are presumed to be indistinct from the ancestor and from each other, which means a hypothetical
+differentiation independent of any branching, such that a morphotaxon instanteously transitions
+to a new morphotaxon identity, resulting in the pseudoextinction of the ancestral morphotaxon
+and the immediate 'pseudospeciation' of the child morphotaxon. The two morphotaxa do not overlap
+in time at all, as modeled here (contra to the models described by Ezard et al., 2012). For ease
+of following these cryptic lineages, cryptic cladogenetic events are treated in terms of data
+structure similarly to budding cladogenetic events, with one child lineage treated as a
+persistance of the ancestral lineage, and the other as a new morphologically indistinguishable lineage.
+
+The occurrence of the various models is controlled by multiple arguments of \code{simFossilRecord}.
+The overall instantaneous rate of branching (cladogenesis) is controlled by argument \code{p}, and
+the proportion of each type of cladogenesis controlled by arguments \code{prop.bifurc} and
+\code{prop.cryptic}. \code{prop.cryptic} controls the overall probability that any branching event
+will be cryptic versus involving any morphological differentiation (budding or bifurcating). If
+\code{prop.cryptic = 1}, all branching events will be cryptic cladogenesis, and if
+\code{prop.cryptic = 0}, all branching events will involve morphological differentiation and none
+will be cryptic. \code{prop.bifurc} controls how many branching events that involve morphological
+differentiation (i.e. the inverse of \code{prop.cryptic}) are bifurcating, as opposed to budding
+cladogenesis.  If \code{prop.bifurc = 1}, all morphologically-differentiating branching events will
+be bifurcating cladogenesis, and if \code{prop.bifurc = 0}, all morphologically-differentiating
+branching events will be budding cladogenesis. Thus, for example, the probability of a given
+cladogenesis event being budding is given by \code{(1 - prop.cryptic) * (1 - prop.bifurc)}. By default,
+\code{prop.cryptic = 0} and \code{prop.bifurc = 0}, so all branching events by default will be
+instances of budding cladogenesis. Anagenesis is completely independent of these, controlled as its
+own Poisson process with an instantaneous rated defined by the argument \code{anag.rate}. By default,
+this rate is set to zero and thus there is no anagenetic events by default.
+
+\emph{Stopping Conditions and Acceptance Criteria for Simulations}
+
+How forward-time simulations are generated, halted and whether they are accepted
+or not for output is a critical component of simulation design.
+Most uses of \code{simFossilRecord} will involve iteratively
+generating and analyzing multiple simulation runs. Runs are only
+accepted for output if they meet the conditioning criteria defined
+in the arguments, either matching point constraints or falling
+within range constraints. However, this requires separating the processes of
+halting simulation runs and accepting a run for output, particularly to avoid bias
+related to statistical sampling issues.
 
 Hartmann et al. (2011) recently discovered a potential statistical artifact
 when branching simulations are conditioned on some number of taxa.
-Previously, within paleotree, this was accounted for in \code{simFossilTaxa} by
+Previously, within \code{paleotree}, this was accounted for in \code{simFossilTaxa} by
 a complex arrangement of minimum and maximum constraints, and an (incorrect)
 presumption that allowing simulations to continue for a short distance after
 constraints were reached. This strategy is not applied here. Instead,
 \code{simFossilRecord} applies the General Sampling Algorithm presented
 by Hartmann et al. (or at least, a close variant). A simulation continues until
 extinction or some maximum time-constraint is reached, evaluated for intervals
-that match the set run conditions (e.g. nExtant, nTotalTime) and, if some
+that match the set run conditions (e.g. \code{nExtant}, \code{nTotalTime}) and, if some
 interval or set of intervals matches the run conditions, a date is randomly sampled
 from within this interval/intervals. The simulation is then cut at this date using
 the \code{timeSliceFossilRecord} function, and saved as an accepted run.
 The simulation data is otherwise discarded and then a new simulation initiated
 (thus, at most, only one simulated dataset is accepted from one simulation run).
+
+Thus, accepted simulations runs should reflect unbiased samples of evolutionary
+histories that precisely match the input constraints, which can be very precise,
+unlike how stopping and acceptance conditions were handled in the previous
+\code{simFossilTaxa} function. Of course, selecting very precise constraints that
+are very unlikely or impossible given other model parameters may take considerable
+computation time to find acceptable simulation runs, or effectively never find any
+acceptable simulation runs.
+
+\emph{On Timescale Used in Output}
+
+Dates given in the output are on an reversed absolute time-scale; i.e. time
+decreases going from the past to the future, as is typical in paleontological
+uses of time (as time before present) and as for most function in package
+\code{paleotree}. The endpoints of the time-scale are decided by details of the
+simulation and can be modified by several arguments. By default (with
+\code{shiftRoot4TimeSlice = "withExtantOnly"}), any simulation run that is accepted
+with extant taxa will have zero as the \emph{end-time} (i.e. when those taxa are
+extant), as zero is the typical time assigned to the modern day in empirical studies.
+If a simulation ends with all taxa extinct, however, then instead the \emph{start-time}
+of a run (i.e. when the run initiates with starting taxa) will be maximum value
+assigned to the conditioning argument \code{totalTime}. If \code{shiftRoot4TimeSlice = FALSE}
+then the \emph{start-time} of the run will always be this maximum value for
+\code{totalTime}, and any extant taxa will stop at some time greater than zero.
 }
 \examples{
 set.seed(2)
 
-#a quick birth-death-sampling simulation with 1 run, 100 taxa
+# quick birth-death-sampling run with 1 run, 50 taxa
+
 record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
 	nTotalTaxa=50, plot=TRUE)
 
-###################################################################
-
 \donttest{
-
 # examining multiple runs of simulations
 
 #example of repeated pure birth simulations over 50 time-units
@@ -527,24 +652,52 @@ if(anyLive){
 David W. Bapst, inspired by code written by Peter Smits.
 }
 \references{
+Bapst, D. W. 2013. When Can Clades Be Potentially Resolved with
+Morphology? \emph{PLoS ONE} 8(4):e62312.
+
+Foote, M. 1996 On the Probability of Ancestors in the Fossil
+Record. \emph{Paleobiology} \bold{22}(2):141--151.
+
 Foote, M. 1997. Estimating Taxonomic Durations and Preservation
-Probability. Paleobiology 23(3):278-300.
+Probability. \emph{Paleobiology} 23(3):278-300.
+
+Foote, M. 2000. Origination and extinction components of taxonomic diversity:
+general problems. Pp. 74-102. In D. H. Erwin, and S. L. Wing, eds. \emph{Deep Time:
+Paleobiology's Perspective.} The Paleontological Society, Lawrence, Kansas.
 
 Gavryushkina, A., D. Welch, T. Stadler, and A. J. Drummond. 2014. Bayesian Inference
-of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. PLoS Comput Biol
+of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. \emph{PLoS Comput Biol.}
 10(12):e1003919.
 
 Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary
 Models. \emph{Systematic Biology} \bold{59}(4):465--476.
 
 Heath, T. A., J. P. Huelsenbeck, and T. Stadler. 2014. The fossilized birth-death process
-for coherent calibration of divergence-time estimates. Proceedings of the National Academy
-of Sciences 111(29):E2957-E2966.
+for coherent calibration of divergence-time estimates. \emph{Proceedings of the National Academy
+of Sciences} 111(29):E2957-E2966.
+
+Kendall, D. G. 1948 On the Generalized "Birth-and-Death" Process. \emph{The
+Annals of Mathematical Statistics} \bold{19}(1):1--15.
+
+Nee, S. 2006 Birth-Death Models in Macroevolution. \emph{Annual Review of
+Ecology, Evolution, and Systematics} \bold{37}(1):1--17.
+
+Solow, A. R., and W. Smith. 1997 On Fossil Preservation and the
+Stratigraphic Ranges of Taxa. \emph{Paleobiology} \bold{23}(3):271--277.
 
 Stadler, T. 2009. On incomplete sampling under birth-death models and connections to the
-sampling-based coalescent. Journal of Theoretical Biology 261(1):58-66.
+sampling-based coalescent. \emph{Journal of Theoretical Biology} 261(1):58-66.
+
+Wagner, P. J., and D. H. Erwin. 1995. Phylogenetic patterns as tests of speciation models.
+Pp. 87-122. In D. H. Erwin, and R. L. Anstey, eds. \emph{New approaches to speciation in the
+fossil record.} Columbia University Press, New York.
 }
 \seealso{
-#' \code{\link{simFossilRecordMethods}}
+\code{\link{simFossilRecordMethods}}
+
+This function essentially replaces and adds to all functionality of the
+\code{paleotree} functions \code{simFossilTaxa}, \code{simFossilTaxaSRCond},
+\code{simPaleoTrees}, as well as the combined used of \code{simFossilTaxa}
+and \code{sampleRanges} for some models of sampling.
 }
 

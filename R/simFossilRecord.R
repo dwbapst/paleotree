@@ -278,7 +278,7 @@
 #' Morphology? \emph{PLoS ONE} 8(4):e62312.
 #'
 #' Ezard, T. H. G., P. N. Pearson, T. Aze, and A. Purvis. 2012. The meaning of birth
-#' and death (in macroevolutionary birth–death models). \emph{Biology Letters} 8(1):139-142.
+#' and death (in macroevolutionary birth-death models). \emph{Biology Letters} 8(1):139-142.
 #'
 #' Foote, M. 1996 On the Probability of Ancestors in the Fossil
 #' Record. \emph{Paleobiology} \bold{22}(2):141--151.

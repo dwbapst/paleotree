@@ -1005,21 +1005,7 @@ simFossilRecord<-function(
 		#
 		results[[i]]<-taxa
 		if(plot){
-			taxaConvert<-fossilRecord2fossilTaxa(fossilRecord=taxa)
-			#taxicDivCont(taxaConvert,int.length=0.2)
-			#are any sampled?
-			areSampled<-whichSampled(taxa)
-			if(length(areSampled)>0){
-				fossilRanges<-fossilRecord2fossilRanges(fossilRecord=taxa, merge.cryptic=TRUE, ranges.only = TRUE)
-				curveList<-list(taxaConvert,fossilRanges)
-				#if(i==5 & nruns==1000){browser()}
-				multiDiv(curveList,plotMultCurves=TRUE,
-					divPalette=c("black","red"),divLineType=c(1,2),main="")
-				legend("topleft",legend=c("True Richness", "Sampled Richness"),
-					col=c("black","red"),lty=c(1,2))
-			}else{ #none sampled
-				taxicDivCont(taxaConvert,int.length=0.2)
-				}
+			divCurveFossilRecordSim(fossilRecord=taxa)
 			if(nruns>1){
 				title(paste0("Run Number ",i," of ",nruns))
 				}

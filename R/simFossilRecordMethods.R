@@ -63,7 +63,7 @@
 #' @return
 #' Depends on the function and the arguments given. See Details.
 
-#' @aliases timeSliceFossilRecord fossilRecord2fossilTaxa fossilRecord2fossilRanges
+#' @aliases timeSliceFossilRecord fossilRecord2fossilTaxa fossilRecord2fossilRanges 
 
 #' @seealso
 #' \code{\link{simFossilRecord}}
@@ -72,11 +72,8 @@
 #' David W. Bapst.
 
 #' @examples
-#'
-#' set.seed(444)
-#' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
-#' 	nTotalTaxa=c(20,30) ,nExtant=0, plot=TRUE)
-#'
+#' #set.seed(44)
+
 
 
 #' @rdname simFossilRecordMethods
@@ -216,6 +213,7 @@ fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.onl
 	return(result)
 	}
 
+	
 # don't export
 checkFossilRecord<-function(fossilRecord){
 	if(!inherits(fossilRecord,"fossilRecordSimulation")){

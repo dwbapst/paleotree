@@ -194,8 +194,13 @@ make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=
 		#UNLIKE getSampProbDisc and getSampRateCont, there are no moving time-windows
 		#in fact, this was probably a bad idea to begin with
 	#drop.extant drops ALL taxa that survive to the modern (i.e. truncated ranges)
-	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
-		}else{stop("timeData not of matrix or data.frame format")}}
+	if(!inherits(timeData,"matrix")){
+		if(inherits(timeData,"data.frame")){
+			timeData<-as.matrix(timeData)
+		}else{
+			stop("timeData not of matrix or data.frame format")
+			}
+		}
 	#drop unsampled taxa (i.e. NAs)
 	naDroppers<-is.na(timeData[,1]) | is.na(timeData[,2])
 	if(any(naDroppers)){

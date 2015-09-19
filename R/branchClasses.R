@@ -49,7 +49,7 @@
 branchClasses<-function(tree,whichExtant=NULL,tol=0.01){
 	#names will be time of origin for each branch
 	#require(ape)
-	if(!is(tree,"phylo")){stop("tree is not of class phylo")}
+	if(!inherits(tree,"phylo")){stop("tree is not of class phylo")}
 	dists<-dist.nodes(tree)[Ntip(tree)+1,]
 	if(is.null(whichExtant)){
 		dists1<-dists[1:Ntip(tree)]

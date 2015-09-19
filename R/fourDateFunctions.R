@@ -64,8 +64,12 @@ timeList2fourDate<-function(timeList){
 	if(!is(timeList,"list")){stop("timeList is not a list?")}
 	if(!(length(timeList)==2)){stop("timeList is not length=2")}
 	timeList<-lapply(timeList,as.matrix)
-	if(!all(sapply(timeList,is,class2="matrix"))){stop("timeList elements are not matrices")}
-	if(!all(sapply(timeList,function(x) ncol(x)==2))){stop("timeList matrices do not have two columns")}
+	if(!all(sapply(timeList,inherits,what="matrix"))){
+		stop("timeList elements are not matrices")
+		}
+	if(!all(sapply(timeList,function(x) ncol(x)==2))){
+		stop("timeList matrices do not have two columns")
+		}
 	firstInt<-t(sapply(timeList[[2]][,1],function(x) timeList[[1]][x,]))
 	lastInt<-t(sapply(timeList[[2]][,2],function(x) timeList[[1]][x,]))
 	fourDate<-cbind(firstInt,lastInt)

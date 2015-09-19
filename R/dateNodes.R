@@ -60,6 +60,10 @@
 #' @export
 dateNodes<-function(tree,rootAge=tree$root.time,labelDates=FALSE,tolerance=0.001){
 	#based on date.nodes by Graeme Lloyd, but using dist.nodes
+	#checks
+	if(!inherits(tree,"phylo")){
+		stop("tree must be of class 'phylo'")
+		}
 	#test that it has edge lengths
 	if(is.null(tree$edge.length)){stop("tree does not appear to have edge lengths?")}
 	nodeRelTimes<-dist.nodes(tree)[,Ntip(tree)+1]

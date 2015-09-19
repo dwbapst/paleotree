@@ -79,7 +79,9 @@ expandTaxonTree<-function(taxonTree,taxaData,collapse=NULL,keepBrLen=FALSE,plot=
 	#taxonTree<-rtree(10);taxonTree$tip.label<-as.character(1:10);collapse<-sample(taxonTree$tip.label,5)
 	#taxaData<-as.character(sample(1:10,100,replace=TRUE));names(taxaData)<-paste("t",1:100,sep="")
 	#require(ape)
-	if(!is(taxonTree, "phylo")){stop("taxonTree is not of class phylo")}
+	if(!inherits(taxonTree, "phylo")){
+		stop("taxonTree is not of class phylo")
+		}
 	if(any(is.na(taxaData))){stop("some values of taxonData missing!!")}
 	if(!is.null(collapse) & keepBrLen){
 		message("Warning: collapsed branch lengths turned to zero when keepBrLen is TRUE!")}

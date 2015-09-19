@@ -256,8 +256,13 @@ getSampRateCont<-function(timeData,n_tbins=1,grp1=NA,grp2=NA,threshold=0.1,est_o
 		}			
 	}
 	#########################
-	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
-		}else{stop("timeData not of matrix or data.frame format")}}
+	if(!inherits(timeData,"matrix")){
+		if(inherits(timeData,"data.frame")){
+			timeData<-as.matrix(timeData)
+		}else{
+			stop("timeData not of matrix or data.frame format")
+			}
+		}
 	#get rid of any NAs
 	if(length(grp1)>1){
 		if(length(grp1)!=nrow(timeData)){stop("grp1 is not same length as timeData")}

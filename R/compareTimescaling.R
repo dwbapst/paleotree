@@ -111,10 +111,14 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 		#08-02-12: Allows multiple trees2 to be multiple trees
 			#will produce a matrix, each row is a tree in tree2, each column a different but commonly shared clade
 	#require(ape)
-	if(!is(tree1, "phylo")){stop("tree1 is not of class phylo")}
+	if(!inherits(tree1, "phylo")){
+		stop("tree1 is not of class phylo")
+		}
 	tree1orig<-tree1
-	if(!is(tree2, "phylo")){
-		if(!is(tree2, "multiPhylo")){stop("tree2 is not of class phylo or multiphylo")}
+	if(!inherits(tree2, "phylo")){
+		if(!inherits(tree2, "multiPhylo")){
+			stop("tree2 is not of class phylo or multiphylo")
+			}
 		trees2<-tree2
 	}else{		#if it isn't multiphylo, make it into one!
 		trees2<-list(tree2)
@@ -202,8 +206,8 @@ compareNodeAges<-function(tree1,tree2,dropUnshared=FALSE){
 compareTermBranches<-function(tree1,tree2){
 	#output vector of shifts in terminal branch lengths
 	#require(ape)
-	if(!is(tree1, "phylo")){stop("tree1 is not of class phylo")}
-	if(!is(tree2, "phylo")){stop("tree2 is not of class phylo")}
+	if(!inherits(tree1, "phylo")){stop("tree1 is not of class phylo")}
+	if(!inherits(tree2, "phylo")){stop("tree2 is not of class phylo")}
 	tree1<-drop.tip(tree1,tree1$tip.label[is.na(match(tree1$tip.label,tree2$tip.label))])
 	tree2<-drop.tip(tree2,tree2$tip.label[is.na(match(tree2$tip.label,tree1$tip.label))])
 	term1<-tree1$edge.length[tree1$edge[,2]<=Ntip(tree1)]

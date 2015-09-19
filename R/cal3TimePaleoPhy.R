@@ -468,9 +468,14 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 	#
 	#require(ape)#;require(phangorn)
 
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
-	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
-		}else{stop("timeData not of matrix or data.frame format")}}
+	if(!inherits(tree, "phylo")){stop("tree is not of class phylo")}
+	if(!inherits(timeData,"matrix")){
+		if(inherits(timeData,"data.frame")){
+			timeData<-as.matrix(timeData)
+		}else{
+			stop("timeData not of matrix or data.frame format")
+			}
+		}
 	if(!any(dateTreatment==c("firstLast","minMax","randObs"))){
 		stop("dateTreatment must be one of 'firstLast', 'minMax' or 'randObs'!")}
 	if(dateTreatment=="randObs" & FAD.only){stop("FAD.only=TRUE and dateTreatment='randObs' are conflicting arguments")}
@@ -868,11 +873,23 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		adj.obs.wt=TRUE,root.max=200,step.size=0.1,randres=FALSE,noisyDrop=TRUE,plot=FALSE){
 	#see the bin_cal3 function for more notation...
 	#require(ape)
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
-	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
-		}else{stop("timeList[[1]] not of matrix or data.frame format")}}
-	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])
-		}else{stop("timeList[[2]] not of matrix or data.frame format")}}
+	if(!inherits(tree, "phylo")){
+		stop("tree is not of class phylo")
+		}
+	if(!inherits(timeList[[1]],"matrix")){
+		if(inherits(timeList[[1]],"data.frame")){
+			timeList[[1]]<-as.matrix(timeList[[1]])
+		}else{
+			stop("timeList[[1]] not of matrix or data.frame format")
+			}
+			}
+	if(!inherits(timeList[[2]],"matrix")){
+		if(inherits(timeList[[2]],"data.frame")){
+			timeList[[2]]<-as.matrix(timeList[[2]])
+		}else{
+			stop("timeList[[2]] not of matrix or data.frame format")
+			}
+		}
 	if(dateTreatment=="minMax"){stop("Instead of dateTreatment='minMax', please use argument point.occur instead in bin_ functions or use sites argument")}
 	if(!any(dateTreatment==c("firstLast","randObs"))){
 		stop("dateTreatment must be one of 'firstLast' or 'randObs'!")}

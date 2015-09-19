@@ -90,7 +90,7 @@ degradeTree<-function(tree,prop_collapse=NULL,nCollapse=NULL,node.depth=NA,leave
 	#collapses a given proportion of internal edges, creating polytomies
 		#node.depth conditions on depth of edge in tree
 			# 1 removes more shallow nodes, 0 removes deeper nodes
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
+	if(!inherits(tree, "phylo")){stop("tree is not of class phylo")}
 	if(is.null(nCollapse) & is.null(prop_collapse)){
 		stop("One of either 'prop_collapse' or 'nCollapse' must be provided")}
 	if(!is.null(nCollapse)){
@@ -128,7 +128,9 @@ degradeTree<-function(tree,prop_collapse=NULL,nCollapse=NULL,node.depth=NA,leave
 #' @rdname degradeTree
 #' @export 
 collapseNodes<-function(tree,nodeID,collapseType,leave.zlb=FALSE){
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
+	if(!inherits(tree, "phylo")){
+		stop("tree is not of class phylo")
+		}
 	if(!all(nodeID>0) | !all(nodeID<(Ntip(tree)+Nnode(tree)+1))){
 		stop("some nodeID values outside the range of tip and node IDs")}
 	if(!all(nodeID>Ntip(tree))){

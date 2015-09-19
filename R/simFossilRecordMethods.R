@@ -1,17 +1,32 @@
 #' Methods for Editing or Converting Output from simFossilRecord
 #'
 #' These are a set of functions available for manipulating, translating
-#' and editing the output data objects from function \code{simFossilRecord}.
+#' and editing the objects of class \code{fossilRecordSimulation} output
+#' from function \code{simFossilRecord}.
 
 #' @name simFossilRecordMethods
 
 #' @details
-#' These functions exist to manipulate output from \code{simFossilRecord},
-#' particularly so that they can be interfaced with functions in library
-#' \code{paleotree} in the same way that output from the
-#' (legacy) function \code{simFossilTaxa} was used.
-
-#' @inheritParams sampleRanges
+#' These functions exist to manipulate \code{fossilRecordSimulation} objects
+#' output from \code{simFossilRecord}, particularly so that they can be interfaced
+#' with functions in library \code{paleotree} in the same way that output from the
+#' legacy simulation function \code{simFossilTaxa} was used.
+#'
+#' \code{timeSliceFossilRecord} takes a given \code{fossilRecordSimulation} object
+#' and 'slices' the data to remove any events that occur after the given
+#' \code{sliceTime} and make it so any taxa still alive as of \code{sliceTime}
+#' are now listed as extant.
+#'
+#' \code{fossilRecord2fossilTaxa} converts a \code{fossilRecordSimulation} object
+#' to the flat table format of taxon data as was originally output by \code{simFossilTaxa}
+#' simulations, and can be taken as input by a number of \code{paleotree} functions such as
+#' \code{sampleRanges},\code{taxa2phylo} and \code{taxa2cladogram}.
+#'
+#' \code{fossilRecord2fossilRanges} converts a \code{fossilRecordSimulation} object
+#' to the flat table format of observed taxon ranges, as is typically output by processing
+#' simulation output (particularly from \code{simFossilTaxa}) with \code{paleotree} function
+#' \code{sampleRanges}.
+#'
 
 #' @param fossilRecord A list object output by \code{simFossilRecord}, often composed
 #' of multiple elements, each of which is data for 'one taxon', with the first
@@ -29,15 +44,24 @@
 #' determined by having ranges that overlap within \code{tolerance} of \code{sliceTime}.
 
 #' @param tolerance A small number which sets a range around the \code{sliceTime} within
-#' which taxa will be considered extant.
+#' which taxa will be considered extant for the purposes of output.
 
 #' @param modern.samp.prob The probability that a taxon is sampled at the modern time
 #' (or, for \code{timeSliceFossilRecord}, the time at which the simulation data is
 #' slice). Must be a number between 0 and 1. If 1, all taxa that survive to the modern
 #' day (to the \code{sliceTime}) are sampled, if 0, none are.
 
+#' @param merge.cryptic If \code{TRUE}, sampling events for cryptic taxon-units (i.e.
+#' those in the same cryptic complex) will be merged into sampling events for a single
+#' taxon-unit (with the name of the first taxon in that cryptic complex).
+ 
+#' @param ranges.only If \code{TRUE} (the default), \code{fossilRecord2fossilRanges}
+#' will return the dates of the first and last sampled occurrences of each taxon-unit
+#' (i.e. the stratigraphic range of each taxon). If \code{FALSE}, instead a list will be
+#' output, with each element being a vector of dates for all sampling events of each taxon-unit.
+
 #' @return
-#' Depends on the function.
+#' Depends on the function and the arguments given. See Details.
 
 #' @aliases timeSliceFossilRecord fossilRecord2fossilTaxa fossilRecord2fossilRanges
 
@@ -53,8 +77,6 @@
 #' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
 #' 	nTotalTaxa=c(20,30) ,nExtant=0, plot=TRUE)
 #'
-
-
 
 
 #' @rdname simFossilRecordMethods

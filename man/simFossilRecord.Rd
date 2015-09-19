@@ -47,8 +47,8 @@ day (to the \code{sliceTime}) are sampled, if 0, none are.}
 listed as their time of origination.}
 
 \item{nruns}{Number of simulation datasets to accept, save and output. If \code{nruns = 1}, output will be a single
-object of class 'fossilRecordSimulation', and if \code{nruns} is greater than 1, a list will be output composed of
-\code{nruns} objects of class 'fossilRecordSimulation'.}
+object of class \code{fossilRecordSimulation}, and if \code{nruns} is greater than 1, a list will be output composed of
+\code{nruns} objects of class \code{fossilRecordSimulation}.}
 
 \item{totalTime,nTotalTaxa,nExtant,nSamp}{These arguments represent stopping and
 acceptance conditions for simulation runs. They are respectively \code{totalTime}, the
@@ -106,10 +106,10 @@ including both the diversity curve of the true number of taxa and the
 diversity curve for the 'observed' (sampled) number of taxa.}
 }
 \value{
-\code{simFossilRecord} returns either a single object of class 'fossilRecordSimulation'
+\code{simFossilRecord} returns either a single object of class \code{fossilRecordSimulation}
 or a list of multiple such objects, depending on whether \code{nruns} was 1 or more.
 
-An object of class 'fossilRecordSimulation' consists of a list object composed of multiple
+An object of class \code{fossilRecordSimulation} consists of a list object composed of multiple
 elements, each of which is data for 'one taxon'. Each data element for each taxon is itself
 a list, composed of two elements: the first describes vital information about the taxon unit,
 and the second describes the sampling times of each taxon.
@@ -145,7 +145,7 @@ simulations is always decreasing toward the modern; i.e. an absolute date of 50
 means a point in time which is 50 time-units before the present-day, if the
 present-day is zero (the default, but see argument \code{shiftRoot4TimeSlice}).
 
-Each individual element of a 'fossilRecordSimulation' list object is named, generally of
+Each individual element of a \code{fossilRecordSimulation} list object is named, generally of
 the form "t1" and "t2", where the number is the \code{taxon.id}. Cryptic taxa are instead
 named in the form of "t1.2" and "t5.3", where the first number is the taxon which they are a
 cryptic descendant of (\code{looks.like}) and the second number, after the period, is
@@ -203,6 +203,9 @@ in time at all, as modeled here (contra to the models described by Ezard et al.,
 of following these cryptic lineages, cryptic cladogenetic events are treated in terms of data
 structure similarly to budding cladogenetic events, with one child lineage treated as a
 persistance of the ancestral lineage, and the other as a new morphologically indistinguishable lineage.
+This model of cryptic cladogenesis is ultimately based on the hierarchical birth-death model used
+by many authors for modeling patterns across paraphyletic higher taxa and the lower taxon units within
+them (e.g. Patzkowsky, 1995; Foote, 2012).
 
 The occurrence of the various models is controlled by multiple arguments of \code{simFossilRecord}.
 The overall instantaneous rate of branching (cladogenesis) is controlled by argument \code{p}, and
@@ -655,6 +658,9 @@ David W. Bapst, inspired by code written by Peter Smits.
 Bapst, D. W. 2013. When Can Clades Be Potentially Resolved with
 Morphology? \emph{PLoS ONE} 8(4):e62312.
 
+Ezard, T. H. G., P. N. Pearson, T. Aze, and A. Purvis. 2012. The meaning of birth
+and death (in macroevolutionary birth–death models). \emph{Biology Letters} 8(1):139-142.
+
 Foote, M. 1996 On the Probability of Ancestors in the Fossil
 Record. \emph{Paleobiology} \bold{22}(2):141--151.
 
@@ -664,6 +670,8 @@ Probability. \emph{Paleobiology} 23(3):278-300.
 Foote, M. 2000. Origination and extinction components of taxonomic diversity:
 general problems. Pp. 74-102. In D. H. Erwin, and S. L. Wing, eds. \emph{Deep Time:
 Paleobiology's Perspective.} The Paleontological Society, Lawrence, Kansas.
+
+Foote, M. 2012. Evolutionary dynamics of taxonomic structure. \emph{Biology Letters} 8(1):135-138.
 
 Gavryushkina, A., D. Welch, T. Stadler, and A. J. Drummond. 2014. Bayesian Inference
 of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. \emph{PLoS Comput Biol.}
@@ -681,6 +689,9 @@ Annals of Mathematical Statistics} \bold{19}(1):1--15.
 
 Nee, S. 2006 Birth-Death Models in Macroevolution. \emph{Annual Review of
 Ecology, Evolution, and Systematics} \bold{37}(1):1--17.
+
+Patzkowsky, M. E. 1995. A Hierarchical Branching Model of Evolutionary Radiations.
+\emph{Paleobiology} 21(4):440-460.
 
 Solow, A. R., and W. Smith. 1997 On Fossil Preservation and the
 Stratigraphic Ranges of Taxa. \emph{Paleobiology} \bold{23}(3):271--277.

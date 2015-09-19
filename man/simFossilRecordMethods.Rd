@@ -37,26 +37,45 @@ slice). Must be a number between 0 and 1. If 1, all taxa that survive to the mod
 day (to the \code{sliceTime}) are sampled, if 0, none are.}
 
 \item{tolerance}{A small number which sets a range around the \code{sliceTime} within
-which taxa will be considered extant.}
+which taxa will be considered extant for the purposes of output.}
 
-\item{merge.cryptic}{If TRUE, sampling events for cryptic species will be
-merged into one taxon.}
+\item{merge.cryptic}{If \code{TRUE}, sampling events for cryptic taxon-units (i.e.
+those in the same cryptic complex) will be merged into sampling events for a single
+taxon-unit (with the name of the first taxon in that cryptic complex).}
 
-\item{ranges.only}{If TRUE, gives taxon first and last occurrences only. If
-FALSE, gives the time of all sampling events as a list.}
+\item{ranges.only}{If \code{TRUE} (the default), \code{fossilRecord2fossilRanges}
+will return the dates of the first and last sampled occurrences of each taxon-unit
+(i.e. the stratigraphic range of each taxon). If \code{FALSE}, instead a list will be
+output, with each element being a vector of dates for all sampling events of each taxon-unit.}
 }
 \value{
-Depends on the function.
+Depends on the function and the arguments given. See Details.
 }
 \description{
 These are a set of functions available for manipulating, translating
-and editing the output data objects from function \code{simFossilRecord}.
+and editing the objects of class \code{fossilRecordSimulation} output
+from function \code{simFossilRecord}.
 }
 \details{
-These functions exist to manipulate output from \code{simFossilRecord},
-particularly so that they can be interfaced with functions in library
-\code{paleotree} in the same way that output from the
-(legacy) function \code{simFossilTaxa} was used.
+These functions exist to manipulate \code{fossilRecordSimulation} objects
+output from \code{simFossilRecord}, particularly so that they can be interfaced
+with functions in library \code{paleotree} in the same way that output from the
+legacy simulation function \code{simFossilTaxa} was used.
+
+\code{timeSliceFossilRecord} takes a given \code{fossilRecordSimulation} object
+and 'slices' the data to remove any events that occur after the given
+\code{sliceTime} and make it so any taxa still alive as of \code{sliceTime}
+are now listed as extant.
+
+\code{fossilRecord2fossilTaxa} converts a \code{fossilRecordSimulation} object
+to the flat table format of taxon data as was originally output by \code{simFossilTaxa}
+simulations, and can be taken as input by a number of \code{paleotree} functions such as
+\code{sampleRanges},\code{taxa2phylo} and \code{taxa2cladogram}.
+
+\code{fossilRecord2fossilRanges} converts a \code{fossilRecordSimulation} object
+to the flat table format of observed taxon ranges, as is typically output by processing
+simulation output (particularly from \code{simFossilTaxa}) with \code{paleotree} function
+\code{sampleRanges}.
 }
 \examples{
 set.seed(444)

@@ -66,7 +66,9 @@ timeSliceTree<-function(ttree,sliceTime,drop.extinct=FALSE,plot=TRUE){
 			#a warning will be issued if this is assumed
 		#extinct tips will be dropped if drop.extinct=TRUE
 	#require(ape)
-	if(!is(ttree, "phylo")){stop("ttree is not of class phylo")}
+	if(!inherits(ttree, "phylo")){
+		stop("ttree is not of class phylo")
+		}
 	if(is.null(ttree$root.time)){
 		ttree$root.time<-max(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])
 		message("Warning: no ttree$root.time! Assuming latest tip is at present (time=0)")

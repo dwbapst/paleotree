@@ -100,7 +100,7 @@
 #' occurring at the modern day (i.e. being functionally identical as occurring at 0 time).
 
 #' @return 
-#' A function of class "paleotreeFunc", which takes vector equal to the number
+#' A function of class "paleotreeFunc", which takes a vector equal to the number
 #' of parameters and returns the *negative* log likelihood (for use with optim and
 #' similar optimizing functions, which attempt to minimize support values). See the
 #' functions listed at \code{\link{modelMethods}} for manipulating and examining

@@ -268,7 +268,10 @@ dropZLB<-function(tree){
 	#drops terminal branches that are zero length
 		#adjusts tree$root.time if necessary
 	#require(ape)
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
+	#checks
+	if(!inherits(tree,"phylo")){
+		stop("tree must be of class 'phylo'")
+		}
 	drop_e<-(tree$edge[,2]<(Ntip(tree)+1)) & (tree$edge.length==0)
 	drop_t<-(tree$edge[,2])[drop_e]
 	if((Ntip(tree)-length(drop_t))>1){
@@ -284,7 +287,10 @@ dropZLB<-function(tree){
 dropExtinct<-function(tree,tol=0.01,ignore.root.time=FALSE){
 	#drop all terminal taxa that are less than 0.001 from the modern
 	#require(ape)
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
+	#checks
+	if(!inherits(tree,"phylo")){
+		stop("tree must be of class 'phylo'")
+		}
 	if(is.null(tree$root.time)){
 		message("No tree$root.time: Assuming latest tip is at present (time=0)")
 		}
@@ -308,7 +314,10 @@ dropExtinct<-function(tree,tol=0.01,ignore.root.time=FALSE){
 dropExtant<-function(tree,tol=0.01){
 	#drop all terminal taxa that are more than 0.001 from the modern
 	#require(ape)
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
+	#checks
+	if(!inherits(tree,"phylo")){
+		stop("tree must be of class 'phylo'")
+		}
 	if(is.null(tree$root.time)){
 		message("Warning: no tree$root.time! Assuming latest tip is at present (time=0)")
 		}
@@ -331,7 +340,11 @@ dropExtant<-function(tree,tol=0.01){
 #' @export
 addTermBranchLength<-function(tree,addtime=0.001){
 	#require(ape)
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
+	#checks
+	if(!inherits(tree,"phylo")){
+		stop("tree must be of class 'phylo'")
+		}
+
 	tree$edge.length[tree$edge[,2]<(Ntip(tree)+1)]<-tree$edge.length[tree$edge[,2]<(Ntip(tree)+1)]+addtime
 	if(any(tree$edge.length<0)){stop("tree has negative branch lengths!")}
 	if(!is.null(tree$root.time)){tree$root.time<-tree$root.time+addtime}
@@ -348,8 +361,10 @@ fixRootTime<-function(treeOrig,treeNew,consistentDepth=TRUE,nodeAgeTransfer=TRUE
 	#	}
 	#
 	#require(ape)
-	if(!is(treeOrig, "phylo")){stop("treeOrig is not of class phylo")}
-	if(!is(treeNew, "phylo")){stop("treeNew is not of class phylo")}
+	if(!inherits(treeOrig, "phylo")){
+		stop("treeOrig is not of class phylo")}
+	if(!inherits(treeNew, "phylo")){
+		stop("treeNew is not of class phylo")}
 	if(is.null(treeOrig$root.time)){
 		stop("ERROR: treeOrig passed to fixRootTime with no $root.time??")}
 	#also need a warning message if taxa present in treeNew that aren't in treeOrig

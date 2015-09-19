@@ -196,7 +196,7 @@ pullOccListData<-function(occList){
 	#is occList a list
 	if(!is.list(occList)){stop("occList is not a list?")}
 	#are all elements of occList matrices
-	if(!(all(sapply(occList,is,class2="data.frame")) | all(sapply(occList,is,class2="matrix")))){
+	if(!(all(sapply(occList,inherits,what="data.frame")) | all(sapply(occList,inherits,what="matrix")))){
 		stop("All elements of occList must be all of type data.frame or type matrix")}
 	#pull first list entry as an example to check with
 	exOcc<-occList[[1]]

@@ -183,8 +183,12 @@ resolveTreeChar<-function(tree, trait, orderedChar=FALSE, stateBias=NULL, iterat
 			stop("stateBias cannot be used in analyses for unordered characters")
 			}}
 	#check iterative
-	if(!is.logical(iterative)){stop("iterative must be a logical class element")}
-	if(length(iterative)!=1){stop("iterative must be a single logical element")}
+	if(!is.logical(iterative)){
+		stop("iterative must be a logical class element")
+		}
+	if(length(iterative)!=1){
+		stop("iterative must be a single logical element")
+		}
 	#now run the resolution mechanism function, possibly in a loop
 	if(iterative){
 		tree2<-tree

@@ -186,7 +186,9 @@ cleanNewPhylo<-function(tree){ 		#,reorderTree=TRUE
 			}
 		#
 		#CHECKS
-		if(class(tree)!="phylo"){stop("Must be class 'phylo'")}
+		if(!inherits(tree,"phylo")){
+			stop("tree must be of class 'phylo'")
+			}
 		if(any(is.na(match(c("edge","tip.label","Nnode"),names(tree))))){
 			stop("Missing key required elements of a 'phylo' object")}
 		oldNtip<-length(tree$tip.label)

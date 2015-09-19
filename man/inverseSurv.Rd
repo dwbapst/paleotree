@@ -69,7 +69,7 @@ can be safely set to 1.}
 \item{drop.extant}{Drops all extant taxa from a dataset, w}
 }
 \value{
-A function of class "paleotreeFunc", which takes vector equal to the number
+A function of class "paleotreeFunc", which takes a vector equal to the number
 of parameters and returns the *negative* log likelihood (for use with optim and
 similar optimizing functions, which attempt to minimize support values). See the
 functions listed at \code{\link{modelMethods}} for manipulating and examining

@@ -535,10 +535,18 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 	#timeData<-runif(10,30,200);timeData<-cbind(timeData,timeData-runif(10,1,20));rownames(timeData)<-tree$tip.label
 	#node.mins<-runif(9,50,300)
 	#require(ape)	
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
-	if(class(timeData)!="matrix"){if(class(timeData)=="data.frame"){timeData<-as.matrix(timeData)
-		}else{stop("timeData not of matrix or data.frame format")}}
-	if(class(tree$tip.label)!="character"){stop("tree tip labels are not a character vector")}
+	if(!inherits(tree, "phylo")){
+		stop("tree is not of class phylo")}
+	if(!inherits(timeData,"matrix")){
+		if(inherits(timeData,"data.frame")){
+			timeData<-as.matrix(timeData)
+		}else{
+			stop("timeData not of matrix or data.frame format")
+			}
+		}
+	if(!is.character(tree$tip.label)){
+		stop("tree tip labels are not a character vector")
+		}
 	if(ntrees<1){stop("ntrees<1")}
 	if(!any(dateTreatment==c("firstLast","minMax","randObs"))){
 		stop("dateTreatment must be one of 'firstLast', 'minMax' or 'randObs'!")}
@@ -736,11 +744,23 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,
 	#type="basic";vartime=NULL;ntrees=1;nonstoch.bin=FALSE;randres=FALSE;timeres=FALSE
 	#sites=NULL;point.occur=FALSE;add.term=FALSE;inc.term.adj=FALSE;rand.obs=FALSE;node.mins=NULL;plot=FALSE
 	#require(ape)
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
-	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
-		}else{stop("timeList[[1]] not of matrix or data.frame format")}}
-	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])
-		}else{stop("timeList[[2]] not of matrix or data.frame format")}}
+	if(!inherits(tree, "phylo")){
+		stop("tree is not of class phylo")
+		}
+	if(!inherits(timeList[[1]],"matrix")){
+		if(inherits(timeList[[1]],"data.frame")){
+			timeList[[1]]<-as.matrix(timeList[[1]])
+		}else{
+			stop("timeList[[1]] not of matrix or data.frame format")
+			}
+		}
+	if(!inherits(timeList[[2]],"matrix")){
+		if(inherits(timeList[[2]],"data.frame")){
+			timeList[[2]]<-as.matrix(timeList[[2]])
+		}else{
+			stop("timeList[[2]] not of matrix or data.frame format")
+			}
+		}
 	if(ntrees==1 & !nonstoch.bin){
 		message("Warning: Do not interpret a single tree; dates are stochastically pulled from uniform distributions")}
 	if(ntrees<1){stop("ntrees<1")}

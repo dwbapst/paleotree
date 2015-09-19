@@ -127,10 +127,20 @@ perCapitaRates<-function(timeList,plot=TRUE,logRates=FALSE,drop.extant=FALSE,isE
 		#timeList<-rangesDisc;int.times=NULL;plot=TRUE;plotLogRates=FALSE;timelims=NULL
 			#drop.extant=FALSE;isExtant=NULL;split.int=TRUE
 	#
-	if(class(timeList[[1]])!="matrix"){if(class(timeList[[1]])=="data.frame"){timeList[[1]]<-as.matrix(timeList[[1]])
-		}else{stop("timeList[[1]] not of matrix or data.frame format")}}
-	if(class(timeList[[2]])!="matrix"){if(class(timeList[[2]])=="data.frame"){timeList[[2]]<-as.matrix(timeList[[2]])
-		}else{stop("timeList[[2]] not of matrix or data.frame format")}}
+	if(!inherits(timeList[[1]],"matrix")){
+		if(inherits(timeList[[1]],"data.frame")){
+			timeList[[1]]<-as.matrix(timeList[[1]])
+		}else{
+			stop("timeList[[1]] not of matrix or data.frame format")
+			}
+		}
+	if(!inherits(timeList[[2]],"matrix")){
+		if(inherits(timeList[[2]],"data.frame")){
+			timeList[[2]]<-as.matrix(timeList[[2]])
+		}else{
+			stop("timeList[[2]] not of matrix or data.frame format")
+			}
+		}
 	intMat<-timeList[[1]]	#the intervals the DATA is given in
 	timeData<-timeList[[2]]
 	timeData<-timeData[!is.na(timeData[,1]),,drop=FALSE]

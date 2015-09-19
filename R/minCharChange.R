@@ -448,8 +448,12 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL,
 	if(!is.vector(trait) | !is.character(trait)){
 		stop("trait must be vector of state data for a single character, that can be coerced to type 'character'")}
 	#check orderedChar
-	if(!is.logical(orderedChar)){stop("orderedChar must be a logical class element")}
-	if(length(orderedChar)!=1){stop("orderedChar must be a single logical element")}
+	if(!is.logical(orderedChar)){
+		stop("orderedChar must be a logical class element")
+		}
+	if(length(orderedChar)!=1){
+		stop("orderedChar must be a single logical element")
+		}
 	#return error if cost is not null and type=ACCTRAN
 	if(type=="ACCTRAN" & !is.null(cost)){
 		stop("cost matrix is inapplicable if ACCTRAN algorithm is used")}

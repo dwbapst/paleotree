@@ -42,6 +42,10 @@
 
 #' @export perfectParsCharTree
 perfectParsCharTree<-function(tree,nchar){
+	#checks
+	if(!inherits(tree,"phylo")){
+		stop("tree must be of class 'phylo'")
+		}
 	#simulate a perfect character dataset (parsimony informative binary chars) for a given tree
 	charMat<-matrix(0,Ntip(tree),nchar)
 	rownames(charMat)<-tree$tip.label

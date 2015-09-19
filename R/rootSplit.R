@@ -20,7 +20,10 @@
 #' @export rootSplit
 rootSplit<-function(tree){
 	#returns a list with the daughter taxa of the two clades at the root split
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
+	#checks
+	if(!inherits(tree,"phylo")){
+		stop("tree must be of class 'phylo'")
+		}
 	tips<-lapply(tree$edge[tree$edge[,1]==(Ntip(tree)+1),2],function(zz) 
 		if(zz>Ntip(tree)){tree$tip.label[prop.part(tree)[[zz-Ntip(tree)]]]
 			}else{tree$tip.label[zz]})

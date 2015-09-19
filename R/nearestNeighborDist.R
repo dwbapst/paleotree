@@ -81,7 +81,7 @@
 nearestNeighborDist<-function(distMat){
    #returns a vector of NNDs for each taxon in a distance matrix
    #this function is included in paleotree mainly for pedagogical use
-   if(!class(distMat)=="dist"){
+   if(!inherits(distMat,"dist")){
       if(is.matrix(distMat)){
          if(all(diag(distMat)!=0)){
             stop("Diagonal is nonzero, may be a similarity matrix, not a distance matrix")}

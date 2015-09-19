@@ -45,7 +45,10 @@
 #' @export plotTraitgram
 plotTraitgram<-function(trait,tree,trait.name="'trait'",conf.int=TRUE,lwd=1.5){
 	#traitgram plotted using ML ASR from geiger (or ace() from ape if ci=TRUE)
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
+	#checks
+	if(!inherits(tree,"phylo")){
+		stop("tree must be of class 'phylo'")
+		}
 	#sort trait, if not sorted already
 	if(is.null(names(trait))){
 		message("No names for trait data, assuming in same order as tree$tip.label")

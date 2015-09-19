@@ -70,7 +70,9 @@ minBranchLength<-function(tree, mbl){
 	#require(phangorn)
 	#test arguments
 	#tree - a tree with edge lengths
-	if(!is(tree, "phylo")){stop("tree is not of class phylo")}
+	if(!inherits(tree, "phylo")){
+		stop("tree is not of class phylo")
+		}
 	if(is.null(tree$edge.length)){stop("Tree has no edge lengths")}
 	timetree<-tree
 	#mbl - a single numeric value

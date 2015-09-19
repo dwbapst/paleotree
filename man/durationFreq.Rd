@@ -57,7 +57,7 @@ begins and ends at 0 time. This interval is always automatically removed prior
 to the calculation intermediary data for fitting likelihood functions.}
 }
 \value{
-A function of class "paleotreeFunc", which takes vector equal to the number
+A function of class "paleotreeFunc", which takes a vector equal to the number
 of parameters and returns the *negative* log likelihood (for use with optim and
 similar optimizing functions, which attempt to minimize support values). See the
 functions listed at \code{\link{modelMethods}} for manipulating and examining

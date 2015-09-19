@@ -21,7 +21,7 @@
 depthRainbow<-function(tree){
 	#plots a tree with edges color-coded to depth
 	if(!inherits(tree, "phylo")){
-		stop("tree  23t of class phylo")
+		stop("tree isn't of class phylo")
 		}
 	tree<-ladderize(tree)
 	ndepth<-dist.nodes(tree)[,Ntip(tree)+1]

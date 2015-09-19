@@ -131,6 +131,7 @@ timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FAL
 				}
 			fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]]-sliceTime
 			}
+		modernTime<-0
 	# if shiftRoot4TimeSlice=FALSE, then simply replace all extant taxa with
 		# LADs at sliceTime and score as extant
 	}else{
@@ -139,6 +140,7 @@ timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FAL
 				fossilRecord[[i]][[1]][4:5]<-c(sliceTime,1)
 				}
 			}
+		modernTime<-sliceTime
 		}
 	#
 	# sample at modern based on modern.samp.prob
@@ -146,9 +148,10 @@ timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FAL
 	nLive<-length(whichExtant)
 	liveSampled<-as.logical(rbinom(n=nLive, size=1, prob=modern.samp.prob))
 	whichSampled<-whichExtant[liveSampled]
+	
 	#add sampling event at modern
 	for(i in whichSampled){
-		fossilRecord[[i]][[2]]<-c(fossilRecord[[i]][[2]],0)
+		fossilRecord[[i]][[2]]<-c(fossilRecord[[i]][[2]],modernTime)
 		}
 	#
 	# make sure it has the right class

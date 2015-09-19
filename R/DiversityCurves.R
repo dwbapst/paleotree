@@ -273,7 +273,7 @@ taxicDivDisc<-function(timeList,int.times=NULL,drop.singletons=FALSE,plot=TRUE,p
 			stop("timeList[[1]] not of matrix or data.frame format")
 			}
 		}
-	if(!inheirts(timeList[[2]],"matrix")){
+	if(!inherits(timeList[[2]],"matrix")){
 		if(inherits(timeList[[2]],"data.frame")){
 			timeList[[2]]<-as.matrix(timeList[[2]])
 		}else{

@@ -66,11 +66,15 @@
 #' cladogenesis.  If \code{prop.bifurc = 1}, all morphologically-differentiating branching events will
 #' be bifurcating cladogenesis, and if \code{prop.bifurc = 0}, all morphologically-differentiating
 #' branching events will be budding cladogenesis. Thus, for example, the probability of a given
-#' cladogenesis event being budding is given by \code{(1 - prop.cryptic) * (1 - prop.bifurc)}. By default,
+#' cladogenesis event being budding is given by:
+#' 
+#'  \code{Prob(budding cladogenesis at a branching event) = (1 - prop.cryptic) * (1 - prop.bifurc)}
+#' 
+#' By default,
 #' \code{prop.cryptic = 0} and \code{prop.bifurc = 0}, so all branching events by default will be
 #' instances of budding cladogenesis. Anagenesis is completely independent of these, controlled as its
 #' own Poisson process with an instantaneous rated defined by the argument \code{anag.rate}. By default,
-#' this rate is set to zero and thus there is no anagenetic events by default.
+#' this rate is set to zero and thus there is no anagenetic events without user intervention.
 #'
 #' \emph{Stopping Conditions and Acceptance Criteria for Simulations}
 #'
@@ -115,12 +119,12 @@
 #' uses of time (as time before present) and as for most function in package
 #' \code{paleotree}. The endpoints of the time-scale are decided by details of the
 #' simulation and can be modified by several arguments. By default (with
-#' \code{shiftRoot4TimeSlice = "withExtantOnly"}), any simulation run that is accepted
+#' \code{shiftRoot4TimeSlice =} \code{"withExtantOnly"}), any simulation run that is accepted
 #' with extant taxa will have zero as the \emph{end-time} (i.e. when those taxa are
 #' extant), as zero is the typical time assigned to the modern day in empirical studies.
 #' If a simulation ends with all taxa extinct, however, then instead the \emph{start-time}
 #' of a run (i.e. when the run initiates with starting taxa) will be maximum value
-#' assigned to the conditioning argument \code{totalTime}. If \code{shiftRoot4TimeSlice = FALSE}
+#' assigned to the conditioning argument \code{totalTime}. If \code{shiftRoot4TimeSlice =} \code{FALSE}
 #' then the \emph{start-time} of the run will always be this maximum value for
 #' \code{totalTime}, and any extant taxa will stop at some time greater than zero.
 #'
@@ -160,7 +164,7 @@
 
 #' @param negRatesAsZero A logical. Should rates calculated as a negative number cause the simulation to fail
 #' with an error message (\code{ = FALSE}) or should these be treated as zero (\code{"= TRUE"}, the default). This
-#' is equivalent to saying that the \code{ rate.as.used = max(0, rate.as.given) }.
+#' is equivalent to saying that the \code{rate.as.used =} \code{max(0, rate.as.given)}.
 
 #' @param prop.cryptic,prop.bifurc These parameters control (respectively) the proportion of branching events that have
 #' morphological differentiation, versus those that are cryptic (\code{prop.cryptic}) and the proportion of morphological

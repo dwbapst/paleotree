@@ -1,4 +1,4 @@
-Version - 2.5 -
+Version - 2.5 - 09-20-15
 -Added argument APIversion to makePBDBtaxonTree which allows a user to control which version of the API is called when argument solveMissing=queryPBDB. Current default is "1.1", this will need to be updated when PBDB API 1.2 becomes public
 -Added some safety checks to degradeTree
 -Added function equation2function which converts a character string containing the right-hand side of a single-line equation (like from class formula) to an R function with arguments corresponding the parameters in the input equation.
@@ -26,7 +26,10 @@ Version - 2.5 -
 -Modified taxa2phylo so root.time is added before plotting
 -Removed erroneous, incorrect references to Hartmann et al. 2011 from simFossilTaxa; this effect is now properly accounted for by simFossilRecord
 -Added function createMrBayesConstraints to convert a topology to a list of topological constraint commands for MrBayes
--
+-Changed many cases where classes of objects are checked to use inherits(), not is() or class()=="", both of which are less preferred methods
+-Added function simFossilRecord, a large number of unexported functions and several minor exported helper functions listed under simFossilRecordMethods
+	-simFossilRecord is a complex, elaborate piece of software for fast, precise simulation of fossil records under a birth-death-sampling process, with a wide range of models of morphological differentiation allowed, and a wide range of forms for rates to be defined as with respect to several key parameters
+	-Current intention is to remove simFossilTaxa and related functions in next version *and* port simFossilRecord to its own package, simultaneously with the release of he *next* CRAN version of paleotree (2.6), as well as remove some other older, redundant functions. This will require considerable modification of examples in paleotree.
 
 Version - 2.4 - 05-01-15
 -Modified timePaleoPhy help file to clarify 'these are not realistic time-scaling functions' statement and correcting an 'either' to 'neither' in the description of argument 'ntrees'

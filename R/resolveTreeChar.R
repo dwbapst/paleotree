@@ -78,6 +78,8 @@
 
 #' @examples
 #' 
+#' \donttest{
+#' 
 #' # let's write a quick&dirty ancestral trait plotting function
 #' 
 #'  quickAncPlot<-function(tree,trait,cex,orderedChar=FALSE,type="MPR",cost=NULL){
@@ -160,7 +162,8 @@
 #' 
 #' layout(1)
 #' 
-#' 
+#' }
+#'
 
 #' @name resolveTreeChar
 #' @rdname resolveTreeChar

@@ -38,15 +38,15 @@
 #' @param data A list where each element is a dataset, formatted to be input in
 #' one of the diversity curve functions listed in \code{\link{DiversityCurves}}.
 
-#' @param plot If TRUE, the median diversity curve is plotted.
+#' @param plot If \code{TRUE}, the median diversity curve is plotted.
 
 #' @param results The output of a previous run of multiDiv for replotting.
 
-#' @param plotMultCurves If TRUE, each individual diversity curve is plotted
+#' @param plotMultCurves If \code{TRUE}, each individual diversity curve is plotted
 #' rather than the median diversity curve and 95 percent quantiles. FALSE by
 #' default.
 
-#' @param multRainbow If TRUE and plotMultCurves are both TRUE, each line is
+#' @param multRainbow If \code{TRUE} and plotMultCurves are both \code{TRUE}, each line is
 #' plotted as a different, randomized color using the function 'rainbow'. If
 #' FALSE, each line is plotted as a black line. This argument is ignored if
 #' divPalette is supplied.
@@ -57,7 +57,7 @@
 #' supplied.
 
 #' @param divLineType Used to determine line type (\code{lty}) of the
-#' diversity curves plotted when \code{plotMultCurves = TRUE}. Default
+#' diversity curves plotted when \code{plotMultCurves =} \code{TRUE}. Default
 #' is \code{lty = 1} for all curves. Must be either length of 1 or 
 #' exact length as number of diversity curves.
 

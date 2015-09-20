@@ -22,7 +22,7 @@ one of the diversity curve functions listed in \code{\link{DiversityCurves}}.}
 \item{int.length}{The length of intervals used to make the diversity curve.
 Ignored if int.times is given.}
 
-\item{plot}{If TRUE, the median diversity curve is plotted.}
+\item{plot}{If \code{TRUE}, the median diversity curve is plotted.}
 
 \item{split.int}{For discrete time data, should calculated/input intervals
 be split at discrete time interval boundaries? If FALSE, can create apparent
@@ -49,11 +49,11 @@ length two as for 'xlim' in the basic R function plot. Time axes will be plotted
 times for calculating the diversity curve. If NULL, calculated internally.
 If given, the argument split.int and int.length are ignored.}
 
-\item{plotMultCurves}{If TRUE, each individual diversity curve is plotted
+\item{plotMultCurves}{If \code{TRUE}, each individual diversity curve is plotted
 rather than the median diversity curve and 95 percent quantiles. FALSE by
 default.}
 
-\item{multRainbow}{If TRUE and plotMultCurves are both TRUE, each line is
+\item{multRainbow}{If \code{TRUE} and plotMultCurves are both \code{TRUE}, each line is
 plotted as a different, randomized color using the function 'rainbow'. If
 FALSE, each line is plotted as a black line. This argument is ignored if
 divPalette is supplied.}
@@ -64,7 +64,7 @@ over multRainbow. Must be the same length as the number of diversity curves
 supplied.}
 
 \item{divLineType}{Used to determine line type (\code{lty}) of the
-diversity curves plotted when \code{plotMultCurves = TRUE}. Default
+diversity curves plotted when \code{plotMultCurves =} \code{TRUE}. Default
 is \code{lty = 1} for all curves. Must be either length of 1 or
 exact length as number of diversity curves.}
 

@@ -7,9 +7,8 @@
 #' with commonly used optimizing functions.
 #'
 #' @details
-#' These functions effectively replace two older functions in paleotree,
-#' \code{\link{getSampRateCont}} and \code{\link{getSampProbDisc}}, which
-#' are otherwise retained in paleotree for historical purposes. The
+#' These functions effectively replace two older functions in paleotree, now removed,
+#' \code{getSampRateCont} and \code{getSampProbDisc}. The
 #' functions here do not offer the floating time interval options of
 #' their older siblings, but do allow for greater flexibility in defining
 #' constrains on parameter values. Differences in time intervals, or any

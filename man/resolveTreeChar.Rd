@@ -117,6 +117,8 @@ variable, and so the best option needs to be assessed based on the prior assumpt
 data and the performance of the dataset with the various arguments of this function.
 }
 \examples{
+\donttest{
+
 # let's write a quick&dirty ancestral trait plotting function
 
  quickAncPlot<-function(tree,trait,cex,orderedChar=FALSE,type="MPR",cost=NULL){
@@ -198,6 +200,8 @@ text(x=41,y=8,"unordered: ACCTRAN",cex=1.5)
 	# need to try them on your own
 
 layout(1)
+
+}
 }
 \author{
 David W. Bapst

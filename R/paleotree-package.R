@@ -86,9 +86,9 @@
 #' @importFrom phangorn Descendants Ancestors phyDat ancestral.pars
 #' @importFrom phytools bind.tip
 #' @importFrom graphics par layout plot hist lines legend polygon title axis
-#' @importFrom grDevices rainbow
+#' @importFrom grDevices rainbow dev.new
 #' @importFrom methods is
-#' @importFrom utils read.csv
+#' @importFrom utils read.csv type.convert
 
 
 NULL

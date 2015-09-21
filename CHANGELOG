@@ -1,3 +1,6 @@
+Version - 2.6 - 09-21-15
+-
+
 Version - 2.5 - 09-20-15
 -Added argument APIversion to makePBDBtaxonTree which allows a user to control which version of the API is called when argument solveMissing=queryPBDB. Current default is "1.1", this will need to be updated when PBDB API 1.2 becomes public
 -Added some safety checks to degradeTree

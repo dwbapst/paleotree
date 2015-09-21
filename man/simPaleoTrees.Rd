@@ -117,6 +117,7 @@ trees <- simPaleoTrees(p=0.1,q=0.1,r=0.5,ntrees=10,all.extinct=TRUE,maxtime=100,
 #number of tips
 sapply(trees,Ntip)
 
+\donttest{
 #simulate trees conditioned to have possible living taxa and perfect sampling at modern
 trees <- simPaleoTrees(p=0.1,q=0.1,r=0.5,ntrees=10,all.extinct=FALSE,maxtime=100,
     modern.samp.prob=TRUE,print.runs=TRUE,plot=TRUE)
@@ -130,6 +131,7 @@ trees <- simPaleoTrees(p=0.1,q=0.1,r=0.5,ntrees=10,all.extinct=TRUE,maxtime=100,
 sapply(trees,function(x) sum(sapply(x$ranges[!is.na(x$ranges)],length)))
 #remove any sampling events at t=0; shouldn't be any, so should be identical
 sapply(trees,function(x) sum(sapply(x$ranges[!is.na(x$ranges)],function(y) sum(y>0))))
+}
 }
 \seealso{
 \code{\link{simFossilTaxa}}, \code{\link{taxa2phylo}},

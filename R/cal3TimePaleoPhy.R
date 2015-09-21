@@ -355,7 +355,7 @@
 #' ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
 #'     sampRate=sRate,ntrees=1,anc.wt=0,plot=TRUE)
 #' 
-# \donttest{
+#' \donttest{
 #' #let's look at how three trees generated with very different time of obs. look
 #' ttreeFAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
 #'     FAD.only=TRUE,dateTreatment="firstLast",sampRate=sRate,ntrees=1,plot=TRUE)
@@ -371,7 +371,6 @@
 #' plot(ladderize(ttreeRand));text(5,5,"time.obs=Random",cex=1.5,pos=4)
 #' plot(ladderize(ttreeLAD));text(5,5,"time.obs=LAD",cex=1.5,pos=4)
 #' layout(1); par(parOrig)
-# }
 #' 
 #' #to get a fair sample of trees, let's increase ntrees
 #' ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
@@ -427,7 +426,6 @@
 #'     sampRate=sRate1,ntrees=1,nonstoch.bin=TRUE,plot=TRUE)
 #' phyloDiv(ttree1)
 #' 
-#' \donttest{
 #' #example with multiple values of anc.wt
 #' ancWt <- sample(0:1,nrow(rangesDisc[[2]]),replace=TRUE)
 #' names(ancWt)<-rownames(rangesDisc[[2]])

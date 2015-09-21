@@ -200,7 +200,9 @@
 #' \emph{Paleobiology} 31(1):6-20.
 
 #' @examples
-#' #let's simulate some taxon ranges from an imperfectly sampled fossil record
+#' \donttest{
+#' 
+#' # let's simulate some taxon ranges from an imperfectly sampled fossil record
 #' set.seed(444)
 #' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,
 #'       maxtime=1000, maxExtant=0)
@@ -221,7 +223,6 @@
 #' #plot the results
 #' constrFun(results$par, altMode=TRUE)
 #'
-#' \donttest{
 #' #unconstrained function with ALL of 225 parameters!!!
 #'     # this will take forever to converge, so it isn't run
 #' optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),

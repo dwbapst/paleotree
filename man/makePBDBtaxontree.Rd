@@ -149,6 +149,7 @@ nodelabels(rynchTree$node.label,adj=c(0,1/2))
 }
 
 ###################################
+\donttest{
 
 #let's try time-scaling the graptolite tree
 
@@ -177,6 +178,7 @@ timeTree<-bin_timePaleoPhy(graptTree,timeList=graptTimeGenus,
 
 #drops a lot of taxa; some of this is due to mispellings, etc
 
+}
 \dontrun{
 
 #make pretty plot with library strap

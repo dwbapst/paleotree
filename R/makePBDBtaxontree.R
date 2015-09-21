@@ -163,6 +163,7 @@
 #' }
 #' 
 #' ###################################
+#' \donttest{
 #' 
 #' #let's try time-scaling the graptolite tree
 #' 
@@ -191,6 +192,7 @@
 #' 
 #' #drops a lot of taxa; some of this is due to mispellings, etc
 #' 
+#' }
 #' \dontrun{
 #' 
 #' #make pretty plot with library strap

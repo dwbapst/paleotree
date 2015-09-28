@@ -228,11 +228,12 @@ fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.onl
 		# merge.cryptic = TRUE or FALSE
 		# ranges.only or sampling times?
 	# CHECKS
+	# browser()
 	checkResult<-checkFossilRecord(fossilRecord)
 	#
 	sampData<-lapply(fossilRecord,function(x) x[[2]]) 
 	#get sampOcc : separate out the sampling events
-	sampOcc<-sapply(fossilRecord,function(x) x[[2]])
+	sampOcc<-lapply(fossilRecord,function(x) x[[2]])
 	names(sampOcc)<-names(fossilRecord)
 	#merge cryptic taxa
 	if(merge.cryptic){

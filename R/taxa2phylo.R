@@ -297,6 +297,11 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 		# from the earliest tip to the root
 	first_obs_time<-max(taxad[,3:4])-min(obs,na.rm=TRUE)
 	tree$root.time<-first_obs_time+min(dist.nodes(tree)[1:Ntip(tree),Ntip(tree)+1])
+	#make it so that root.time-max node dist from root must be below zero
+	rootOffset<-tree$root.time-max(dist.nodes(tree)[,Ntip(tree)+1])
+	if(rootOffset<0){
+		tree$root.time<-tree$root.time-rootOffset
+		}
 	#plot
 	if(plot){
 		plot(ladderize(tree),show.tip.label=FALSE)

@@ -669,6 +669,12 @@
 #' 	nSamp=15, print.runs=TRUE, plot=TRUE)
 #' # still okay acceptance rates
 #'
+#' # we can be really odd and condition on having a single taxon
+#' set.seed(1)
+#' record <- simFossilRecord(p=0.1,
+#'	q=0.1, r=0.1, nTotalTaxa=1,
+#'	totalTime=c(10,20), plot=TRUE)
+#'
 #' ########################################################
 #' 
 #' # Simulations of entirely extinct taxa

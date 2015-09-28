@@ -250,7 +250,7 @@ fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.onl
 					stop("sampling data for taxa is not coercing correctly to a vector")}
 			}else{
 				#if its a cryptic taxon that didn't found the complex, erase its data
-				sampOcc<-NA
+				sampOcc[[i]]<-NA
 				}
 			}
 		}

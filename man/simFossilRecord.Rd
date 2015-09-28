@@ -526,6 +526,15 @@ record <- simFossilRecord(p=0.1, q=0.1, r=0.1,
 	nruns=1, nTotalTaxa=c(20,30), nExtant=0)
 tree<-taxa2phylo(fossilRecord2fossilTaxa(record),plot=TRUE)
 
+# merging cryptic taxa when all speciation is cryptic
+set.seed(1)
+record <- simFossilRecord(p=0.1,
+	q=0.1, r=0.1,
+	prop.crypt=1,
+	totalTime=50, plot=TRUE)
+# there looks like there is only a single taxon, but...
+length(record)	#actual number of cryptic lineages
+
 #############
 
 # playing with count.cryptic with simulations of pure cryptic speciation
@@ -622,6 +631,12 @@ record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
 	totalTime=c(50,100), nTotalTaxa=30, nExtant=10,
 	nSamp=15, print.runs=TRUE, plot=TRUE)
 # still okay acceptance rates
+
+# we can be really odd and condition on having a single taxon
+set.seed(1)
+record <- simFossilRecord(p=0.1,
+	q=0.1, r=0.1, nTotalTaxa=1,
+	totalTime=c(10,20), plot=TRUE)
 
 ########################################################
 

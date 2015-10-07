@@ -85,7 +85,7 @@ minBranchLength<-function(tree, mbl){
 		shortEdge<-(1:Nedge(timetree))[timetree$edge.length<mbl]
 		# pick the shortest one, if multiple of that length, pick first one
 		shortLength<-timetree$edge.length[shortEdge]
-		shortestLength<-shortEdge[shortLength==min(shortLength)])
+		shortestLength<-shortEdge[shortLength==min(shortLength)]
 		mom<-timetree$edge[shortestLength[1],1]
 		#make vector of every mom node that is ancestral
 		mom<-c(mom,Ancestors(timetree,mom))

@@ -81,9 +81,13 @@ minBranchLength<-function(tree, mbl){
 	#
 	#root_node<-Ntip(timetree)+1
 	while(any(timetree$edge.length<mbl)){
-		#pick one at random, make vector of every mom node that is ancestral
-		mom<-timetree$edge[((1:Nedge(timetree))[timetree$edge.length<mbl])
-			[sample(length((1:Nedge(timetree))[timetree$edge.length<mbl]),1)],1]
+		# get every edge that is short
+		shortEdge<-(1:Nedge(timetree))[timetree$edge.length<mbl]
+		# pick the shortest one, if multiple of that length, pick first one
+		shortLength<-timetree$edge.length[shortEdge]
+		shortestLength<-shortEdge[shortLength==min(shortLength)])
+		mom<-timetree$edge[shortestLength[1],1]
+		#make vector of every mom node that is ancestral
 		mom<-c(mom,Ancestors(timetree,mom))
 		debt<-mbl-min(timetree$edge.length[timetree$edge[,1]==mom[1]])
 		timetree$edge.length[mom[1]==timetree$edge[,1]]<-timetree$edge.length[mom[1]==timetree$edge[,1]] + debt[1]

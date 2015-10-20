@@ -28,7 +28,8 @@
 #' somewhat arbitrary; the actual morphotaxon present at that time might have
 #' been a different taxon. For simulated datasets, use taxa2phylo.
 
-#' @author David W. Bapst
+#' @author David W. Bapst, with modification of code by Klaus Schliep to avoid use of
+#' function \code{dist.nodes} which has difficulty with large trees.
 
 #' @seealso \code{\link{phyloDiv}}, \code{\link{dropExtinct}},
 #' \code{\link{dropExtant}}
@@ -70,33 +71,35 @@ timeSliceTree<-function(ttree,sliceTime,drop.extinct=FALSE,plot=TRUE){
 		stop("ttree is not of class phylo")
 		}
 	if(is.null(ttree$root.time)){
-		ttree$root.time<-max(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])
+		ttree$root.time<-max(node.depth.edgelength(ttree)[1:Ntip(ttree)])
 		message("Warning: no ttree$root.time! Assuming latest tip is at present (time=0)")
 		}
 	tslice<-ttree$root.time-sliceTime	#time from root to slice time
 	#first let's drop all edges that branch later than the slice
 	#make them all single lineages by dropping all but one taxon
-	dnode<-dist.nodes(ttree)[,Ntip(ttree)+1]
+	dnode<-node.depth.edgelength(ttree)
 	#identify the ancestor nodes of edges which cross the tslice
-	cedge<-which(sapply(1:Nedge(ttree),function(x) any(ttree$edge[x,1]==which(dnode<tslice))
-			& any(ttree$edge[x,2]==which(dnode>=tslice))))
+	cedge<-which((dnode[ ttree$edge[, 1] ] < tslice) & (dnode[ttree$edge[, 2] ]  >= tslice))
 	droppers<-numeric()
+	propPartTree
 	for(i in 1:length(cedge)){
 		desc<-ttree$edge[cedge[i],2]
 		if(desc>Ntip(ttree)){	#if an internal edge that goes past the tslice
-			desctip<-unlist(prop.part(ttree)[desc-Ntip(ttree)])	#drop all but one tip
+			desctip<-propPartTree)[[desc-Ntip(ttree)]]	#drop all but one tip
 			droppers<-c(droppers,desctip[-1])
 		}}
 	stree<-drop.tip(ttree,droppers)
 	#which edges cross over tslice?
-	dnode<-dist.nodes(stree)[,Ntip(stree)+1]
-	cedge<-sapply(1:Nedge(stree),function(x) any(stree$edge[x,2]==which(dnode>=tslice)))
+	dnode<-node.depth.edgelength(stree)
+	cedge<-(dnode[stree$edge[, 2] ]  >= tslice)
 	cnode_depth<-dnode[stree$edge[cedge,1]]
 	stree$edge.length[cedge]<-tslice-cnode_depth
 	stree$root.time<-ttree$root.time		#root.time shouldn't (can't?) change!
 	if(drop.extinct){
 		stree1<-dropExtinct(stree,ignore.root.time=TRUE)
-	}else{stree1<-stree}
+	}else{
+		stree1<-stree
+		}
 	if(plot){
 		layout(1:2)
 		plot(ladderize(ttree),show.tip.label=FALSE)

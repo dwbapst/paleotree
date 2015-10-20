@@ -294,9 +294,11 @@ dropExtinct<-function(tree,tol=0.01,ignore.root.time=FALSE){
 	if(is.null(tree$root.time)){
 		message("No tree$root.time: Assuming latest tip is at present (time=0)")
 		}
-	dnode<-dist.nodes(tree)[1:Ntip(tree),Ntip(tree)+1]
+	dnode<-node.depth.edgelength(tree)
 	dnode<-round(dnode,6)
-	if(!is.null(tree$root.time) & !ignore.root.time){if(round(tree$root.time,6)>max(dnode)){stop("all tips are extinct based on tree$root.time!")}}
+	if(!is.null(tree$root.time) & !ignore.root.time){
+		if(round(tree$root.time,6)>max(dnode)){
+		stop("all tips are extinct based on tree$root.time!")}}
 	droppers<-which((dnode+tol)<max(dnode))
 	if((Ntip(tree)-length(droppers))<2){stop("Less than 2 tips are extant on the tree!")}
 	stree<-drop.tip(tree,droppers)
@@ -321,7 +323,7 @@ dropExtant<-function(tree,tol=0.01){
 	if(is.null(tree$root.time)){
 		message("Warning: no tree$root.time! Assuming latest tip is at present (time=0)")
 		}
-	dnode<-dist.nodes(tree)[1:Ntip(tree),Ntip(tree)+1]
+	dnode<-node.depth.edgelength(tree)
 	dnode<-round(dnode,6)
 	if(!is.null(tree$root.time)){if(round(tree$root.time,6)>max(dnode)){stop("all tips are extinct based on tree$root.time!")}}
 	droppers<-which((dnode+tol)>max(dnode))
@@ -401,14 +403,12 @@ fixRootTime<-function(treeOrig,treeNew,consistentDepth=TRUE,nodeAgeTransfer=TRUE
 			# based on the change in total tree depth between treeOrig and treeNew, as measured between the root and
 			# the first matching taxon in both trees. The later is how fixRootTime functioned by default
 			# prior to paleotree v2.3.
-		orig_dist<-dist.nodes(treeOrig)[
-			which(treeNew$tip.label[1]==treeOrig$tip.label),Ntip(treeOrig)+1
-			]
-		new_dist<-dist.nodes(treeNew)[1,Ntip(treeNew)+1]
+		orig_dist<-node.depth.edgelength(treeOrig)[which(treeNew$tip.label[1]==treeOrig$tip.label)]
+		new_dist<-node.depth.edgelength(treeNew)[1]
 		treeNew$root.time<-treeOrig$root.time-(orig_dist-new_dist)
 		}
 	if(consistentDepth){
-		if(round(max(dist.nodes(treeNew)[, Ntip(treeNew) + 1]) - treeNew$root.time)>0){
+		if(round(max(node.depth.edgelength(treeNew)) - treeNew$root.time)>0){
 			stop("fixRootTime isn't fixing correctly, root.time less than max tip-to-root length!")}
 		}
 	return(treeNew)
@@ -456,7 +456,7 @@ bindPaleoTip<-function(tree, tipLabel, nodeAttach=NULL, tipAge=NULL,
 	# check root.time
 	if(is.null(tree$root.time)){
 		message("Warning: no tree$root.time! Setting root.time such that latest tip is at present (time=0)")
-		tree$root.time<-max(dist.nodes(tree)[,Ntip(tree)+1])
+		tree$root.time<-max(node.depth.edgelength(tree))
 		}
 	#
 	if(is.null(tree$edge.length)){stop("bindTipPaleo is for trees with edge lengths")}
@@ -464,7 +464,7 @@ bindPaleoTip<-function(tree, tipLabel, nodeAttach=NULL, tipAge=NULL,
 	if(is.null(edgeLength)){
 		if(!is.null(tipAge)){
 			#nodeHeight<-nodeheight(tree,nodeAttach)-position
-			nodeHeight<-dist.nodes(tree)[nodeAttach,Ntip(tree)+1]
+			nodeHeight<-node.depth.edgelength(tree)[nodeAttach]
 			modNodeHeight<-nodeHeight-positionBelow
 			newLength<-tree$root.time-tipAge-modNodeHeight
 			if(newLength<0){

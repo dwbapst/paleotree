@@ -85,7 +85,7 @@ timeSliceTree<-function(ttree,sliceTime,drop.extinct=FALSE,plot=TRUE){
 	for(i in 1:length(cedge)){
 		desc<-ttree$edge[cedge[i],2]
 		if(desc>Ntip(ttree)){	#if an internal edge that goes past the tslice
-			desctip<-propPartTree)[[desc-Ntip(ttree)]]	#drop all but one tip
+			desctip<-propPartTree[[desc-Ntip(ttree)]]	#drop all but one tip
 			droppers<-c(droppers,desctip[-1])
 		}}
 	stree<-drop.tip(ttree,droppers)

@@ -64,7 +64,8 @@ tree950 <- timeSliceTree(tree,sliceTime=950,plot=FALSE,drop.extinct=TRUE)
 phyloDiv(tree950,plotLogRich=TRUE)
 }
 \author{
-David W. Bapst
+David W. Bapst, with modification of code by Klaus Schliep to avoid use of
+function \code{dist.nodes} which has difficulty with large trees.
 }
 \seealso{
 \code{\link{phyloDiv}}, \code{\link{dropExtinct}},

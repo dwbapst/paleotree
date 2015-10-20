@@ -81,7 +81,7 @@ timeSliceTree<-function(ttree,sliceTime,drop.extinct=FALSE,plot=TRUE){
 	#identify the ancestor nodes of edges which cross the tslice
 	cedge<-which((dnode[ ttree$edge[, 1] ] < tslice) & (dnode[ttree$edge[, 2] ]  >= tslice))
 	droppers<-numeric()
-	propPartTree
+	propPartTree<-prop.part(ttree)
 	for(i in 1:length(cedge)){
 		desc<-ttree$edge[cedge[i],2]
 		if(desc>Ntip(ttree)){	#if an internal edge that goes past the tslice

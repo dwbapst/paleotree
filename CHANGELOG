@@ -3,7 +3,8 @@ Version - 2.6 - 09-21-15
 -Fixed issue with merging cryptic taxa in fossilRecord2fossilRanges
 -Discovered slight stochastic element in minBranchLength where order of edges mattered, and I apparently used sample() to choose the next edge, which means I was an idiot in 2011. Thanks to Manabu Sakamoto for reporting this very difficult to notice bug.
 -Made several improvements to timeSliceTree thanks to modified code from Klaus Schliep, particularly replacing use of dist.nodes for root-to-tip distances with node.depth.edgelength instead (much more efficient, much faster!)
-	-Made similar changes to all functions in modifyTerminalBranches based on this suggestions, including dropExtinct
+-Made similar changes to all functions in modifyTerminalBranches based on Klaus Schliep's suggestions, including dropExtinct
+-Replaced any instance where dist.nodes was used to get root-to-node distances with node.depth.edgelength throughout paleotree, including branchClasses, multiDiv, plotTraitgram, taxa2phylo, termTaxa, timePaleoPhy
 
 Version - 2.5 - 09-20-15
 -Added argument APIversion to makePBDBtaxonTree which allows a user to control which version of the API is called when argument solveMissing=queryPBDB. Current default is "1.1", this will need to be updated when PBDB API 1.2 becomes public

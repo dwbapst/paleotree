@@ -50,7 +50,7 @@ branchClasses<-function(tree,whichExtant=NULL,tol=0.01){
 	#names will be time of origin for each branch
 	#require(ape)
 	if(!inherits(tree,"phylo")){stop("tree is not of class phylo")}
-	dists<-dist.nodes(tree)[Ntip(tree)+1,]
+	dists<-node.depth.edgelength(tree)
 	if(is.null(whichExtant)){
 		dists1<-dists[1:Ntip(tree)]
 		if(is.null(tree$root.time)){modern<-max(dists1)}else{modern<-tree$root.time}

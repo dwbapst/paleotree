@@ -296,9 +296,9 @@ taxa2phylo<-function(taxad,obs_time=NULL,plot=FALSE){
 	#now, root.time should be the time of the first obs PLUS the distance
 		# from the earliest tip to the root
 	first_obs_time<-max(taxad[,3:4])-min(obs,na.rm=TRUE)
-	tree$root.time<-first_obs_time+min(dist.nodes(tree)[1:Ntip(tree),Ntip(tree)+1])
+	tree$root.time<-first_obs_time+min(node.depth.edgelength(tree)[1:Ntip(tree)])
 	#make it so that root.time-max node dist from root must be below zero
-	rootOffset<-tree$root.time-max(dist.nodes(tree)[,Ntip(tree)+1])
+	rootOffset<-tree$root.time-max(node.depth.edgelength(tree))
 	if(rootOffset<0){
 		tree$root.time<-tree$root.time-rootOffset
 		}

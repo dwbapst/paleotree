@@ -659,7 +659,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 			if(type=="equal"){
 				#Newest of the NEW 08-19-14 - the most logical choice
                 #get a vector of zero-length branches ordered by the number of nodes separating the edge from the root
-				zbr<-cbind(1:Nedge(ttree),-dist.nodes(unitLengthTree(ttree))[Ntip(ttree)+1,ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = # of nodes from root
+				zbr<-cbind(1:Nedge(ttree),-node.depth.edgelength(unitLengthTree(ttree))[ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = # of nodes from root
 				}
 			if(type=="equal_paleotree_legacy"){
 				#OLD
@@ -669,7 +669,7 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 			if(type=="equal_date.phylo_legacy"){
 				#NEW 02-03-04 
 				#get a TIME-TO-ROOT-ordered vector that identifies zero-length branches, as Graeme's DatePhylo originally worked prior to August 2014
-				zbr<-cbind(1:Nedge(ttree),dist.nodes(ttree)[Ntip(ttree)+1,ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = abs distance (time) from root
+				zbr<-cbind(1:Nedge(ttree),node.depth.edgelength(ttree)[ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = abs distance (time) from root
 				}
 			zbr<-zbr[ttree$edge.length==0,]						#Parses zbr to just zero-length branches
 			zbr<-zbr[order(zbr[,2]),1]							#order zbr by depth
@@ -702,11 +702,11 @@ timePaleoPhy<-function(tree,timeData,type="basic",vartime=NULL,ntrees=1,randres=
 		if(add.term){
 			#should be time of earliest LAD + distance of root from earliest tip
 			latestAge<-max(timeData[ttree$tip.label,2])
-			ttree$root.time<-latestAge+min(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])	
+			ttree$root.time<-latestAge+min(node.depth.edgelength(ttree)[1:Ntip(ttree)])	
 		}else{
 			#should be time of earliest FAD + distance of root from earliest tip
 			latestAge<-max(timeData[ttree$tip.label,1])
-			ttree$root.time<-latestAge+min(dist.nodes(ttree)[1:Ntip(ttree),Ntip(ttree)+1])	
+			ttree$root.time<-latestAge+min(node.depth.edgelength(ttree)[1:Ntip(ttree)])	
 			}
 		if(plot){
 			parOrig <- par(no.readonly=TRUE)

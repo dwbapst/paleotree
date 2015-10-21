@@ -56,8 +56,10 @@ plotTraitgram<-function(trait,tree,trait.name="'trait'",conf.int=TRUE,lwd=1.5){
 		trait<-trait[tree$tip.label]
 		}
 	#get root time
-	if(is.null(tree$root.time)){tree$root.time<-max(dist.nodes(tree)[Ntip(tree)+1,1:Ntip(tree)])}
-	times<-tree$root.time-dist.nodes(tree)[Ntip(tree)+1,]
+	if(is.null(tree$root.time)){
+		tree$root.time<-max(node.depth.edgelength(tree)[1:Ntip(tree)])
+		}
+	times<-tree$root.time-node.depth.edgelength(tree)
 	if(conf.int){
 		asr<-ace(trait,tree,method="pic")
 		tr1<-c(trait,asr$ace);edges<-tree$edge

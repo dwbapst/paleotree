@@ -29,7 +29,8 @@
 #' been a different taxon. For simulated datasets, use taxa2phylo.
 
 #' @author David W. Bapst, with modification of code by Klaus Schliep to avoid use of
-#' function \code{dist.nodes} which has difficulty with large trees.
+#' function \code{dist.nodes} which has difficulty with large trees and greatly
+#' benefiting function runtime.
 
 #' @seealso \code{\link{phyloDiv}}, \code{\link{dropExtinct}},
 #' \code{\link{dropExtant}}

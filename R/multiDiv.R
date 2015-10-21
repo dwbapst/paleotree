@@ -171,10 +171,10 @@ multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,drop
 			for(i in which(dclass1==3)){
 				ttree<-data[[i]]
 				if(is.null(ttree$root.time)){
-					ntime<-dist.nodes(ttree)[,Ntip(ttree)+1]
+					ntime<-node.depth.edgelength(ttree)
 					ntime<-max(ntime)-ntime
 				}else{
-					ntime<-dist.nodes(ttree)[,Ntip(ttree)+1]
+					ntime<-node.depth.edgelength(ttree)
 					ntime<-ttree$root.time-ntime
 					}
 				lims3<-c(lims3,c(min(ntime),max(ntime)))

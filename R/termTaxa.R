@@ -217,8 +217,8 @@ simTermTaxa<-function(ntaxa,sumRate=0.2){
 	termEdge<-sapply(tree$edge[,2],function(x) any(x==(1:ntaxa)))
 	#termAnc<-tree$edge[termEdge,1]
 	taxonDurations<-tree$edge.length[termEdge]
-	nodeDist<-dist.nodes(tree)
-	taxonLADs<-tree$root.time-nodeDist[ntaxa+1,1:ntaxa]
+	nodeDist<-node.depth.edgelength(tree)
+	taxonLADs<-tree$root.time-nodeDist[1:ntaxa]
 	taxonFADs<-taxonLADs+taxonDurations
 	taxonRanges<-cbind(taxonFADs,taxonLADs)
 	rownames(taxonRanges)<-tree$tip.label[tree$edge[termEdge,2]]
@@ -248,8 +248,8 @@ simTermTaxaAdvanced<-function(p=0.1,q=0.1,mintaxa=1,maxtaxa=1000,mintime=1,maxti
 	termNodes<-tree$edge[termEdge,2]
 	#termAnc<-tree$edge[termEdge,1]
 	taxonDurations<-tree$edge.length[termEdge]
-	nodeDist<-dist.nodes(tree)
-	taxonLADs<-tree$root.time-nodeDist[ntaxa+1,termNodes]
+	nodeDist<-node.depth.edgelength(tree)
+	taxonLADs<-tree$root.time-nodeDist[termNodes]
 	taxonFADs<-taxonLADs+taxonDurations
 	taxonRanges<-cbind(taxonFADs,taxonLADs)
 	rownames(taxonRanges)<-tree$tip.label[termNodes]
@@ -321,6 +321,6 @@ deadTree<-function(ntaxa,sumRate=0.2){
 	#require(ape)
 	tree<-rtree(ntaxa)
 	tree$edge.length<-rexp(ntaxa+ntaxa-2,sumRate)
-	tree$root.time<-max(dist.nodes(tree)[ntaxa+1,])+200
+	tree$root.time<-max(node.depth.edgelength(tree))+200
 	return(tree)
 	}

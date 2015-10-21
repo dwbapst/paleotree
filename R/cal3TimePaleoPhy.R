@@ -831,15 +831,15 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 		#now add root.time: because NO TIPS ARE DROPPED (due to anagenesis) can calculate this now
 			#must be calculated on LADs because the terminal ranges are added to the TREE!!!
 			#should be time of earliest LAD + distance of root from earliest tip
-		ktree$root.time<-max(timeData1[ktree$tip.label,2])+min(dist.nodes(ktree)[1:Ntip(ktree),Ntip(ktree)+1])	
+		ktree$root.time<-max(timeData1[ktree$tip.label,2])+min(node.depth.edgelength(ktree)[1:Ntip(ktree)])	
 		names(ktree$edge.length)<-names(ktree$tip.label)<-names(ktree$budd.tips)<-names(ktree$anag.tips)<-NULL
 		#stuff for checking if things are correct
 		tipdiffs<-cbind(	diff(sort(-timeData1[,2])),
-					diff(sort(dist.nodes(ktree)[1:Ntip(ktree),Ntip(ktree)+1])),
-					diff(sort(-timeData1[,2]))-diff(sort(dist.nodes(ktree)[1:Ntip(ktree),Ntip(ktree)+1])))	
+					diff(sort(node.depth.edgelength(ktree)[1:Ntip(ktree)])),
+					diff(sort(-timeData1[,2]))-diff(sort(node.depth.edgelength(ktree)[1:Ntip(ktree)])))	
 		test1<-all(tipdiffs[,3]<tolerance)
 		test2<-identical(names(sort(-timeData1[,2])),
-				ktree$tip.label[order(dist.nodes(ktree)[1:Ntip(ktree),Ntip(ktree)+1])])
+				ktree$tip.label[order(node.depth.edgelength(ktree)[1:Ntip(ktree)])])
 		if(length(unique(timeData1[,2]))<Ntip(tree)){
 			test2<-TRUE}	#test 2 does not work if any LADS are same
 		if(all(c(test1,test2))){

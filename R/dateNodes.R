@@ -66,7 +66,7 @@ dateNodes<-function(tree,rootAge=tree$root.time,labelDates=FALSE,tolerance=0.001
 		}
 	#test that it has edge lengths
 	if(is.null(tree$edge.length)){stop("tree does not appear to have edge lengths?")}
-	nodeRelTimes<-dist.nodes(tree)[,Ntip(tree)+1]
+	nodeRelTimes<-node.depth.edgelength(tree)
 	if(is.null(rootAge)){
 		rootAge <- max(nodeRelTimes)
 		message("Root age not given; treating tree as if latest tip was at modern day (time=0)")}

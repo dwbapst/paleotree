@@ -368,10 +368,10 @@ phyloDiv<-function(tree,int.length=0.1,int.times=NULL,plot=TRUE,plotLogRich=FALS
 	savetree<-ttree
 	if(!is.binary.tree(ttree) | !is.rooted(tree)){ttree<-multi2di(ttree)}
 	if(is.null(ttree$root.time)){
-		ntime<-dist.nodes(ttree)[,Ntip(ttree)+1]
+		ntime<-node.depth.edgelength(ttree)
 		ntime<-max(ntime)-ntime
 	}else{
-		ntime<-dist.nodes(ttree)[,Ntip(ttree)+1]
+		ntime<-node.depth.edgelength(ttree)
 		ntime<-ttree$root.time-ntime
 		ntime<-round(ntime,6)
 		if(min(ntime)<0){stop("tree$root.time is less than total depth of tree!")}

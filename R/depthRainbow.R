@@ -24,7 +24,7 @@ depthRainbow<-function(tree){
 		stop("tree isn't of class phylo")
 		}
 	tree<-ladderize(tree)
-	ndepth<-dist.nodes(tree)[,Ntip(tree)+1]
+	ndepth<-node.depth.edgelength(tree)
 	#nodelabels(ceiling(ndepth[(Ntip(tree):Nedge(tree))+1]),node=(Ntip(tree):Nedge(tree))+1)
 	edepth<-ceiling((ndepth[(Ntip(tree):Nedge(tree))+1])[tree$edge[,1]-Ntip(tree)])+1
 	col_edge<-rainbow(max(edepth))[edepth]

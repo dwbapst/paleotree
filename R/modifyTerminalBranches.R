@@ -294,7 +294,7 @@ dropExtinct<-function(tree,tol=0.01,ignore.root.time=FALSE){
 	if(is.null(tree$root.time)){
 		message("No tree$root.time: Assuming latest tip is at present (time=0)")
 		}
-	dnode<-node.depth.edgelength(tree)
+	dnode<-node.depth.edgelength(tree)[1:Ntip(tree)]
 	dnode<-round(dnode,6)
 	if(!is.null(tree$root.time) & !ignore.root.time){
 		if(round(tree$root.time,6)>max(dnode)){
@@ -323,7 +323,7 @@ dropExtant<-function(tree,tol=0.01){
 	if(is.null(tree$root.time)){
 		message("Warning: no tree$root.time! Assuming latest tip is at present (time=0)")
 		}
-	dnode<-node.depth.edgelength(tree)
+	dnode<-node.depth.edgelength(tree)[1:Ntip(tree)]
 	dnode<-round(dnode,6)
 	if(!is.null(tree$root.time)){if(round(tree$root.time,6)>max(dnode)){stop("all tips are extinct based on tree$root.time!")}}
 	droppers<-which((dnode+tol)>max(dnode))

@@ -59,7 +59,7 @@
 
 #' @export
 dateNodes<-function(tree,rootAge=tree$root.time,labelDates=FALSE,tolerance=0.001){
-	#based on date.nodes by Graeme Lloyd, but using dist.nodes
+	#based on date.nodes by Graeme Lloyd, but using node.depth.edgelength
 	#checks
 	if(!inherits(tree,"phylo")){
 		stop("tree must be of class 'phylo'")

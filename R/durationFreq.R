@@ -1,8 +1,8 @@
 #' Models of Sampling and Extinction for Taxonomic Duration Datasets
 #'
 #' These functions construct likelihood models of the observed frequency
-#' of taxon durations, given either in discrete (make_durationFreqDisc) 
-#' or continuous time (make_durationFreqCont). These models can then be
+#' of taxon durations, given either in discrete (\code{make_durationFreqDisc}) 
+#' or continuous time (\code{make_durationFreqCont}). These models can then be
 #' constrained using functions available in this package and/or analyzed 
 #' with commonly used optimizing functions.
 #'
@@ -25,7 +25,7 @@
 #' the contrary, relative time is in intervals with non-zero integers that
 #' increase sequentially beginning with 1, from earliest to oldest.
 #'
-#' For make_durationFreqDisc, the intervals in timeList should be
+#' For \code{make_durationFreqDisc}, the intervals in timeList should be
 #' non-overlapping sequential intervals of roughly equal length. These
 #' should be in relative time as described above, so the earliest interval
 #' should be 1 and the numbering should increase as the intervals go up with
@@ -113,7 +113,7 @@
 #' by default creates a function with parameters named 'q.1' and 'r.1', while
 #' make_durationFreqDisc creates a function with parameters named 'q.1' and 'R.1'.
 #'
-#' Note that the 'q' parameters estimated by make_durationFreqDisc is scaled to 
+#' Note that the 'q' parameters estimated by \code{make_durationFreqDisc} is scaled to 
 #' per lineage intervals and not to per lineage time-units. If intervals are the same length, this
 #' can be easily corrected by multiplying 1 by the interval length. It is unclear
 #' how to treat uneven intervals and I urge workers to consider multiple strategies.
@@ -127,11 +127,11 @@
 #' @author David W. Bapst
 
 #' @seealso
-#' See the original implementation of these methods at 
-#' \code{\link{getSampRateCont}} and \code{\link{getSampProbDisc}}. 
-#'
-#' Also see \code{\link{freqRat}}, \code{\link{sRate2sProb}},
+#' See \code{\link{freqRat}}, \code{\link{sRate2sProb}},
 #' \code{\link{qsRate2Comp}} \code{\link{sProb2sRate}} and \code{\link{qsProb2Comp}}.
+#
+# See the original implementation of these methods at 
+# \code{\link{getSampRateCont}} and \code{\link{getSampProbDisc}}. 
 
 #' @references 
 #' Foote, M. 1997 Estimating Taxonomic Durations and Preservation
@@ -150,9 +150,11 @@
 #' #note that we made interval lengths = 1: 
 #'  	# thus q (per int) = q (per time) for make_durationFreqDisc
 #' 
-#' #old ways of doing it
+#' dontrun{
+#' #old ways of doing it (defunct as of paleotree version 2.6)
 #' getSampRateCont(rangesCont)
 #' getSampProbDisc(rangesDisc)
+#' }
 #' 
 #' #new ways of doing it
 #'     # we can constrain our functions

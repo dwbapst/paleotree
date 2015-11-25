@@ -229,7 +229,7 @@ as estimated by various other function in the paleotree package. See
 getSampRateCont for more details. If you have the per-time unit sampling
 probability ('R' as opposed to 'r') look at the sampling parameter
 conversion functions also included in this package. Most datasets will
-probably use getSampProbDisc and sProb2sRate prior to using this function,
+probably use \code{make_durationFreqDisc} and \code{sProb2sRate} prior to using this function,
 as shown in an example below.
 
 The branching and extinction rate are the 'per-capita' instantaneous
@@ -250,7 +250,7 @@ three rates simultaneously would be to apply likelihood methods developed by
 Foote (2002) to forward and reverse survivorship curves. Note that only one
 of these three suggested methods is implemented in paleotree: estimating the
 sampling and extinction rates from the distribution of taxon durations via
-getSampRateCont and getSampProbDisc.
+\code{make_durationFreqCont} and \code{make_durationFreqDisc}.
 
 By default, the cal3 functions will consider that ancestor-descendant
 relationships may exist among the given taxa, under a budding cladogenetic
@@ -350,12 +350,14 @@ rangesCont <- sampleRanges(taxa,r=0.5)
 cladogram <- taxa2cladogram(taxa,plot=TRUE)
 #this library allows one to use rate calibrated type time-scaling methods (Bapst, in prep.)
 #to use these, we need an estimate of the sampling rate (we set it to 0.5 above)
-SRres <- getSampRateCont(rangesCont)
-sRate <- SRres[[2]][2]
+likFun<-make_durationFreqCont(rangesCont)
+spRes<-optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
+      method="L-BFGS-B",control=list(maxit=1000000))
+sRate <- SRres[[1]][2]
 # we also need extinction rate and branching rate
    # we can get extRate from getSampRateCont too
 #we'll assume extRate=brRate (ala Foote et al., 1999); may not always be a good assumption
-divRate<-SRres[[2]][1]
+divRate<-SRres[[1]][1]
 #now let's try cal3TimePaleoPhy, which timescales using a sampling rate to calibrate
 #This can also resolve polytomies based on sampling rates, with some stochastic decisions
 ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
@@ -421,14 +423,16 @@ cladogram <- taxa2cladogram(taxa,plot=TRUE)
 #Now let's use binTimeData to bin in intervals of 1 time unit
 rangesDisc <- binTimeData(rangesCont,int.length=1)
 #we can do something very similar for the discrete time data (can be a bit slow)
-SPres <- getSampProbDisc(rangesDisc)
-sProb <- SPres[[2]][2]
+likFun<-make_durationFreqDisc(rangesDisc)
+spRes<-optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
+      method="L-BFGS-B",control=list(maxit=1000000))
+sProb <- spRes[[1]][2]
 #but that's the sampling PROBABILITY per bin, not the instantaneous rate of change
 #we can use sProb2sRate() to get the rate. We'll need to also tell it the int.length
 sRate1 <- sProb2sRate(sProb,int.length=1)
 #we also need extinction rate and branching rate (see above)
     #need to divide by int.length...
-divRate<-SPres[[2]][1]/1
+divRate<-spRes[[1]][1]/1
 #estimates that r=0.3... kind of low (simulated sampling rate is 0.5)
 #Note: for real data, you may need to use an average int.length (no constant length)
 ttree <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,

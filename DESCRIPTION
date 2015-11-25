@@ -17,7 +17,7 @@ Imports:
     utils
 ByteCompile: TRUE
 Maintainer: David W. Bapst <dwbapst@gmail.com>
-Description: paleotree is an R library for transforming, time-scaling, and
+Description: This package provides tools for transforming, time-scaling, and
     modifying phylogenies containing extinct (i.e. fossil) lineages. In particular,
     most users are interested in the functions timePaleoPhy, bin_timePaleoPhy,
     cal3TimePaleoPhy and bin_cal3TimePaleoPhy, which time-scale cladograms of

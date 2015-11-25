@@ -96,7 +96,9 @@ pokeTree<-parentChild2taxonTree(pokexample_bad2)
 # note that we should even be able to do this with ancestor-descendent pairs from
 	 # simulated datasets from simFossilTaxa, like so:
 set.seed(444)
-taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+nTotalTaxa=c(30,40), nExtant=0)
+taxa<-fossilRecord2fossilTaxa(record)
 # need to reorder the columns so parents (ancestors) first, then children 
 parentChild2taxonTree(taxa[,2:1])
 # now note that it issues a warning that the input wasn't type character

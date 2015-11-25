@@ -40,7 +40,9 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' taxa<-simFossilTaxa(0.1,0.1,mintaxa=100)
+#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+#'	nTotalTaxa=c(100,200))
+#' taxa<-fossilRecord2fossilTaxa(record)
 #' tree<-taxa2cladogram(taxa)
 #' ranges<-sampleRanges(taxa,r=0.5)
 #' tree1<-timeLadderTree(tree,ranges)

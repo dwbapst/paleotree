@@ -90,7 +90,7 @@
 #'
 #' Hartmann et al. (2011) recently discovered a potential statistical artifact
 #' when branching simulations are conditioned on some number of taxa.
-#' Previously, within \code{paleotree}, this was accounted for in \code{simFossilTaxa} by
+#' Previously within \code{paleotree}, this was accounted for in the deprecated function \code{simFossilTaxa} by
 #' a complex arrangement of minimum and maximum constraints, and an (incorrect)
 #' presumption that allowing simulations to continue for a short distance after
 #' constraints were reached. This strategy is not applied here. Instead,
@@ -106,7 +106,7 @@
 #'
 #' Thus, accepted simulations runs should reflect unbiased samples of evolutionary
 #' histories that precisely match the input constraints, which can be very precise,
-#' unlike how stopping and acceptance conditions were handled in the previous
+#' unlike how stopping and acceptance conditions were handled in the previous (deprecated)
 #' \code{simFossilTaxa} function. Of course, selecting very precise constraints that
 #' are very unlikely or impossible given other model parameters may take considerable
 #' computation time to find acceptable simulation runs, or effectively never find any
@@ -270,7 +270,7 @@
 #' \code{\link{simFossilRecordMethods}}
 #'
 #' This function essentially replaces and adds to all functionality of the
-#' \code{paleotree} functions \code{simFossilTaxa}, \code{simFossilTaxaSRCond},
+#' deprecated \code{paleotree} functions \code{simFossilTaxa}, \code{simFossilTaxaSRCond},
 #' \code{simPaleoTrees}, as well as the combined used of \code{simFossilTaxa}
 #' and \code{sampleRanges} for some models of sampling. 
 

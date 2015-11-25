@@ -144,7 +144,9 @@ resulting tree is output.
 
 set.seed(444)
 #Simulate some fossil ranges with simFossilTaxa
-taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+nTotalTaxa=c(30,40), nExtant=0)
+taxa<-fossilRecord2fossilTaxa(record)
 #simulate a fossil record with imperfect sampling with sampleRanges
 rangesCont<-sampleRanges(taxa,r=0.5)
 #Now let's make a tree using taxa2phylo
@@ -157,7 +159,9 @@ layout(1)
 
 #example using dropExtinct and dropExtant
 set.seed(444)
-taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=40,maxtime=1000,maxExtant=20)
+record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+nTotalTaxa=c(30,40), nExtant=c(10,20))
+taxa<-fossilRecord2fossilTaxa(record)
 tree<-taxa2phylo(taxa)
 phyloDiv(tree)
 tree1 <- dropExtinct(tree)

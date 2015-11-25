@@ -109,8 +109,8 @@
 
 
 #' @param taxad A two-column matrix of per-taxon ranges. The five-column matrix
-#' output of simFossilTaxa can also be supplied, which will be common in
-#' simulation usages.
+#' output of \code{simFossilRecord}, post transformation with \code{fossilRecord2fossilTaxa}
+#' can also be supplied, which will be common in simulation usages.
 
 #' @param r Instantaneous average sampling rate per lineage time units; given
 #' as a vector of length one or length equal to the number of taxa
@@ -154,7 +154,7 @@
 #' corresponding to a different taxon in the input. Elements that are NA are
 #' unsampled taxa.
 #' @author David W. Bapst
-#' @seealso \code{\link{simFossilTaxa}}, \code{\link{binTimeData}}
+#' @seealso \code{\link{simFossilRecord}}, \code{\link{binTimeData}}
 #' @references Foote, M. 1997 Estimating Taxonomic Durations and Preservation
 #' Probability. \emph{Paleobiology} \bold{23}(3):278--300.
 #' 
@@ -164,7 +164,9 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+#'	nTotalTaxa=c(30,40), nExtant=0)
+#' taxa<-fossilRecord2fossilTaxa(record)
 #' layout(1:2)
 #' #let's see what the 'true' diversity curve looks like in this case
 #' taxicDivCont(taxa)

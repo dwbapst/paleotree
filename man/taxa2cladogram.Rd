@@ -8,7 +8,7 @@ taxa2cladogram(taxad, drop.cryptic = FALSE, plot = FALSE)
 }
 \arguments{
 \item{taxad}{A five-column matrix of taxonomic data, as output by
-simFossilTaxa}
+\code{simFossilRecord}, after transformation with function \code{fossilRecord2fossilTaxa}.}
 
 \item{drop.cryptic}{Should cryptic species be dropped (except for the
 first)? Not dropped by default.}
@@ -18,7 +18,6 @@ first)? Not dropped by default.}
 \value{
 The resulting phylogeny without branch lengths is output as an
 object of class phylo.
-
 The tip labels are the rownames from the simulation input; see simFossiltaxa
 documentation for details.
 }
@@ -54,7 +53,7 @@ ancestor-descendant relationships will have many of these, as some ancestors
 must have more than one descendant for the clade to diversify, as noted by
 Wagner and Erwin, 1995.
 
-If there are cryptic taxa present in the output from simFossilTaxa, these
+If there are cryptic taxa present in the output from \code{simFossilRecord}, these
 and any of their morphologically distinguishable descendants are collapsed
 into a polytomy to simulate the expected pattern of lack of phylogenetic
 resolution. In addition to this merging, cryptic taxa can be dropped via the
@@ -67,8 +66,10 @@ the simulated data is retained.
 \examples{
 
 set.seed(444)
-taxa<-simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
-#let's use taxa2cladogram() to get the 'ideal' cladogram of the taxa
+record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+nTotalTaxa=c(30,40), nExtant=0)
+taxa<-fossilRecord2fossilTaxa(record)
+#let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
 layout(1:2)
 cladogram<-taxa2cladogram(taxa,plot=TRUE)
 #compare the "real" time-scaled tree of taxon last occurrences (taxa2phylo) 
@@ -76,8 +77,9 @@ cladogram<-taxa2cladogram(taxa,plot=TRUE)
 tree<-taxa2phylo(taxa,plot=TRUE)
 
 #testing with cryptic speciation
-taxaCrypt<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=10,maxtaxa=20,
-    maxtime=1000,maxExtant=0)
+recordCrypt<-simFossilRecord(p=0.1, q=0.1, prop.cryptic=0.5, nruns=1,
+nTotalTaxa=c(30,40), nExtant=0)
+taxaCrypt<-fossilRecord2fossilTaxa(recordCrypt)
 layout(1:2)
 parOrig<-par(no.readonly=TRUE)
 par(mar=c(0,0,0,0))
@@ -103,6 +105,6 @@ models. New approaches to speciation in the fossil record. Columbia
 University Press, New York:87-122.
 }
 \seealso{
-\code{\link{simFossilTaxa}}, \code{\link{taxa2phylo}}
+\code{\link{simFossilRecord}}, \code{\link{taxa2phylo}}, \link{fossilRecord2fossilTaxa}
 }
 

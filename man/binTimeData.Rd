@@ -66,9 +66,11 @@ NA).
 }
 \examples{
 
-#Simulate some fossil ranges with simFossilTaxa
+#Simulate some fossil ranges with simFossilRecord
 set.seed(444)
-taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+nTotalTaxa=c(30,40), nExtant=0)
+taxa<-fossilRecord2fossilTaxa(record)
 #simulate a fossil record with imperfect sampling with sampleRanges()
 rangesCont <- sampleRanges(taxa,r=0.5)
 #Now let's use binTimeData() to bin in intervals of 1 time unit
@@ -85,7 +87,9 @@ taxicDivDisc(rangesDisc1,int.times=equalDiscInt[,1:2])
 
 #example with extant taxa
 set.seed(444)
-taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000)
+record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+nTotalTaxa=c(30,40))
+taxa<-fossilRecord2fossilTaxa(record)
 #simulate a fossil record with imperfect sampling with sampleRanges()
 rangesCont <- sampleRanges(taxa,r=0.5,,modern.samp.prob=1)
 #Now let's use binTimeData() to bin in intervals of 1 time unit
@@ -103,7 +107,7 @@ taxicDivDisc(rangesDisc1)
 David W. Bapst
 }
 \seealso{
-\code{\link{simFossilTaxa}}, \code{\link{sampleRanges}},
+\code{\link{simFossilRecord}}, \code{\link{sampleRanges}},
 \code{\link{taxicDivCont}}
 }
 

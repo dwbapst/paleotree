@@ -338,13 +338,13 @@
 #' #this library allows one to use rate calibrated type time-scaling methods (Bapst, in prep.)
 #' #to use these, we need an estimate of the sampling rate (we set it to 0.5 above)
 #' likFun<-make_durationFreqCont(rangesCont)
-#' spRes<-optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
+#' srRes<-optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
 #'       method="L-BFGS-B",control=list(maxit=1000000))
-#' sRate <- SRres[[1]][2]
+#' sRate <- srRes[[1]][2]
 #' # we also need extinction rate and branching rate
 #'    # we can get extRate from getSampRateCont too
 #' #we'll assume extRate=brRate (ala Foote et al., 1999); may not always be a good assumption
-#' divRate<-SRres[[1]][1]
+#' divRate<-srRes[[1]][1]
 #' #now let's try cal3TimePaleoPhy, which timescales using a sampling rate to calibrate
 #' #This can also resolve polytomies based on sampling rates, with some stochastic decisions
 #' ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,

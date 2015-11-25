@@ -52,9 +52,11 @@ found in single intervals to the exclusion of longer-ranging taxa (see the examp
 of the randomized seqTimeList procedure and such solutions should probably be ignored.
 }
 \examples{
-#Simulate some fossil ranges with simFossilTaxa
+#Simulate some fossil ranges with simFossilRecord
 set.seed(444)
-taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=60,maxtaxa=80,maxtime=1000,maxExtant=0)
+record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+nTotalTaxa=c(60,80), nExtant=0)
+taxa<-fossilRecord2fossilTaxa(record)
 #simulate a fossil record with imperfect sampling with sampleRanges()
 rangesCont <- sampleRanges(taxa,r=0.1)
 

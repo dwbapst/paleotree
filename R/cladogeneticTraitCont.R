@@ -1,17 +1,18 @@
 #' Simulate Cladogenetic Trait Evolution
 #' 
 #' This function simulates trait evolution at each speciation/branching event
-#' in a matrix output from simFossilTaxa.
+#' in a matrix output from \code{simFossilRecord}, after transformation with
+#' \code{fossilRecord2fossilTaxa}.
 #' 
 #' @details This function simulates continuous trait evolution where change occurs under
 #' a Brownian model, but only at events that create new distinct morphotaxa
 #' (i.e. species as recognized in the fossil record), either branching events
 #' or anagenesis (pseudospeciation). These are the types of morphological
-#' differentiation which can be simulated in the function simFossilTaxa. This
+#' differentiation which can be simulated in the function \code{simFossilRecord}. This
 #' is sometimes referred to as cladogenetic or speciation trait evolution and
 #' is related to Puncuated Equilibrium theory. Anagenestic shifts aren't
 #' cladogenetic events per se (no branching!), so perhaps the best way to this
-#' of this function is it allows traits to change anytime simFossilTaxa created
+#' of this function is it allows traits to change anytime \code{simFossilRecord} created
 #' a new 'morphotaxon' in a simulation.
 #' 
 #' Importantly, trait changes only occur at the base of 'new' species, thus
@@ -23,7 +24,7 @@
 #' divergence occurred on both daughter lineages at each node. (This has been
 #' the standard approach for simulating cladogenetic trait change on trees).
 #' 
-#' Cryptic taxa generated with prop.cryptic in simFossilTaxa will not differ at
+#' Cryptic taxa generated with \code{prop.cryptic} in \code{simFossilRecord} will not differ at
 #' all in trait values. These species will all be identical.
 #' 
 #' See this link for additional details:
@@ -42,7 +43,7 @@
 #' being the taxa IDs (column 1 of the input) with a 't' pasted (as with rtree
 #' in the ape library).
 #' @author David W. Bapst
-#' @seealso \code{\link{simFossilTaxa}},
+#' @seealso \code{\link{simFossilRecord}},
 #' 
 #' This function is similar to Brownian motion simulation functions such as
 #' \code{rTraitCont} in ape, \code{sim.char} in geiger and \code{fastBM} in
@@ -56,14 +57,17 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=30,maxtime=1000,plot=TRUE)
+#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+#'	nTotalTaxa=c(30,1000), plot=TRUE)
+#' taxa<-fossilRecord2fossilTaxa(record)
 #' trait <- cladogeneticTraitCont(taxa)
 #' tree <- taxa2phylo(taxa)
 #' plotTraitgram(trait,tree,conf.int=FALSE)
 #' 
 #' #with cryptic speciation
-#' taxa <- simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=30,maxtime=1000,
-#'   plot=TRUE)
+#' record<-simFossilRecord(p=0.1, q=0.1, prop.cryptic=0.5, 
+#'	nruns=1, nTotalTaxa=c(30,1000), plot=TRUE)
+#' taxa<-fossilRecord2fossilTaxa(record)
 #' trait <- cladogeneticTraitCont(taxa)
 #' tree <- taxa2phylo(taxa)
 #' plotTraitgram(trait,tree,conf.int=FALSE)

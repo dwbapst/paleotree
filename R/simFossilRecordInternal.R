@@ -154,7 +154,7 @@ initiateTaxa<-function(startTaxa,time){
 newTaxon<-function(newID,ancID,time,looksLike){
 	#creates an entirely new just-originated taxon
 	#store taxa as a list structure
-		# $taxa.data, exactly like output from simFossilTaxa
+		# $taxa.data, exactly like 'taxa' output from fossilRecord2fossilTaxa
 	taxaData<-c(newID,ancID,time,NA,1,looksLike)
 	names(taxaData)<- c('taxon.id','ancestor.id','orig.time','ext.time','still.alive','looks.like')
 	# $sampling.times = times of sampling events for this taxon

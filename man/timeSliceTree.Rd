@@ -48,7 +48,9 @@ dropExtinct.
    #to simulate doing extant-only phylogeny studies 
    #of diversification...in the past!
 set.seed(444)
-taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+nTotalTaxa=c(30,40), nExtant=0)
+taxa<-fossilRecord2fossilTaxa(record)
 taxicDivCont(taxa)
 #that's the whole diversity curve
 

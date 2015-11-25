@@ -137,7 +137,9 @@
 #'
 #' #simulation examples
 #' set.seed(444)
-#' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+#'	nTotalTaxa=c(30,40), nExtant=0)
+#' taxa<-fossilRecord2fossilTaxa(record)
 #' #let's see what the 'true' diversity curve looks like in this case
 #' #plot the FADs and LADs with taxicDivCont()
 #' taxicDivCont(taxa)
@@ -167,7 +169,9 @@
 #'  #to simulate doing molecular-phylogeny studies 
 #'  #of diversification...in the past
 #' set.seed(444)
-#' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+#'	nTotalTaxa=c(30,40), nExtant=0)
+#' taxa<-fossilRecord2fossilTaxa(record)
 #' taxicDivCont(taxa)
 #' #that's the whole diversity curve
 #' #with timeSliceTree we could look at the lineage accumulation curve 
@@ -183,7 +187,9 @@
 #' 
 #' #an example of a 'spiky' diversity curve and why split.int is a good thing
 #' set.seed(444)
-#' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+#'	nTotalTaxa=c(30,40), nExtant=0)
+#' taxa<-fossilRecord2fossilTaxa(record)
 #' taxaDiv <- taxicDivCont(taxa)
 #' #simulate a fossil record with imperfect sampling with sampleRanges()
 #' rangesCont <- sampleRanges(taxa,r=0.5)

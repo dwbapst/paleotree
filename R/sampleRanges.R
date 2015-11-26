@@ -53,7 +53,8 @@
 #' 
 #' Note that the modeling of sampling in this function is independent and
 #' secondary of the actual simulation of the ranges, which are (generally)
-#' produced by the models of simFossilTaxa. Thus, 'hat-shaped range
+#' produced by the models of simFossilRecord with argument \code{r}
+#' (sampling rate) not set. Thus, 'hat-shaped range
 #' distributions' are only contained within single morphotaxa; they do not
 #' cross multiple morphotaxa in the case of anagenesis. Cryptic taxa each have
 #' their own hat and do not share a single hat; by default the ranges of
@@ -195,14 +196,15 @@
 #' 
 #' #testing with cryptic speciation
 #' layout(1)
-#' taxaCrypt <- simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=20,maxtaxa=30,
-#'   maxtime=1000,maxExtant=0,plot=TRUE)
+#' record<-simFossilRecord(p=0.1, q=0.1, prop.cryptic=0.5, nruns=1,
+#'	nTotalTaxa=c(20,30), nExtant=0)
 #' rangesCrypt <- sampleRanges(taxaCrypt,r=0.5)
 #' taxicDivCont(rangesCrypt)
 #' 
 #' #an example of hat-shaped models (beta distributions) when there are live taxa
 #' set.seed(444)
-#' taxaLive<-simFossilTaxa(p=0.1,q=0.05,mintaxa=5,plot=FALSE)
+#' record<-simFossilRecord(p=0.1, q=0.05, nruns=1,
+#'	nTotalTaxa=c(5,100),nExtant=c(10,100))
 #' #with end-points of live taxa at random points in the hat
 #' rangesLive<-sampleRanges(taxaLive,r=0.1,alpha=4,beta=4,randLiveHat=TRUE,plot=TRUE)
 #' #with all taxa end-points at end-point of hat

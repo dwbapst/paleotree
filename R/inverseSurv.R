@@ -246,7 +246,9 @@ make_inverseSurv<-function(timeList,groups=NULL,p_cont=TRUE,q_cont=TRUE,
 	#Nb is a nuisance parameter; all parameters scale to Nb, and usually set arbitrary to 1
 	#examples
 		#library(paleotree);set.seed(444)
-		#taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000)
+		#record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+		#	nTotalTaxa=c(30,40), nExtant=0)
+		#taxa<-fossilRecord2fossilTaxa(record)
 		#rangesCont <- sampleRanges(taxa,r=0.5,,modern.samp.prob=1)
 		#timeList <- binTimeData(rangesCont,int.length=1)
 		#PA_n<-"fixed";p_cont=T;q_cont=F

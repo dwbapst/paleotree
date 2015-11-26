@@ -123,7 +123,7 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' #Simulate some fossil ranges with simFossilTaxa
+#' #Simulate some fossil ranges with simFossilRecord
 #' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
 #'	nTotalTaxa=c(30,40), nExtant=0)
 #' taxa<-fossilRecord2fossilTaxa(record)

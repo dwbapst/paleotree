@@ -19,8 +19,8 @@ phyloDiv(tree, int.length = 0.1, int.times = NULL, plot = TRUE,
 }
 \arguments{
 \item{timeData}{Two-column matrix giving the per-taxon first and last
-appearances in absolute time. The matrices output by simFossilTaxa can also
-be supplied to taxicDivCont.}
+appearances in absolute time. The simulated data tables output by \code{fossilRecord2fossilTaxa}
+following simulation with \code{simFossilRecord} can also be supplied to \code{taxicDivCont}.}
 
 \item{int.length}{The length of intervals used to make the diversity curve.
 Ignored if int.times is given.}
@@ -39,7 +39,8 @@ length two as for 'xlim' in the basic R function plot. Time axes will be plotted
 \emph{exactly} to these values.}
 
 \item{drop.cryptic}{If TRUE, cryptic taxa are merged to form one taxon for
-estimating taxon curves. Only works for objects from simFossilTaxa.}
+estimating taxon curves. Only works for objects from \code{simFossilRecord}
+via \code{fossilRecord2fossilTaxa}.}
 
 \item{timeList}{A list composed of two matrices, giving interval start and end 
 dates and taxon first and last occurrences within those intervals. See details.}

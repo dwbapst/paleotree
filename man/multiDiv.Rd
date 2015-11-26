@@ -32,7 +32,8 @@ artifacts in calculating the diversity curve. See below.}
 input tree for phylogenetic datasets, before calculating standing diversity.}
 
 \item{drop.cryptic}{If TRUE, cryptic taxa are merged to form one taxon for
-estimating taxon curves. Only works for objects from simFossilTaxa.}
+estimating taxon curves. Only works for objects from \code{simFossilRecord}
+via \code{fossilRecord2fossilTaxa}.}
 
 \item{extant.adjust}{Amount of time to be added to extend start time for
 (0,0) bins for extant taxa, so that the that 'time interval' doesn't appear 
@@ -94,12 +95,13 @@ input datasets are continuous-time taxic ranges, discrete-time (binned
 interval) taxic ranges or phylogenetic trees, as long as they are formatted
 as required by the respective diversity curve functions. A list that
 contains a mix of data types is entirely acceptable. A list of matrices
-output by simFossilTaxa is allowable, and treated as input for taxicDivCont.
+output from \code{fossilRecord2fossilTaxa}, via simulation with \code{simFossilRecord}
+is allowable, and treated as input for \code{taxicDivCont}.
 Data of an unknown type gives back an error.
 
 The argument split.int splits intervals, if and only if discrete interval
 time data is included among the datasets. See the help file for taxicDivDisc
-to see an explanation of why split.int=TRUE by default is probably a good
+to see an explanation of why \code{split.int = TRUE} by default is probably a good
 thing.
 
 As with many functions in the paleotree library, absolute time is always
@@ -137,25 +139,28 @@ multiDiv(ttrees)
 #uncertainty in diversity history is solely due to 
    #the random resolution of polytomies
 
-#multiDiv can also take output from simFossilTaxa
-#what do many simulations run under some conditions 'look' like on average?
+#multiDiv can also take output from simFossilRecord, via fossilRecord2fossilTaxa
+#what do many simulations run under some set of conditions 'look' like on average?
 set.seed(444)
-taxa <- simFossilTaxa(p=0.3, q=0.1, nruns=20, maxtime=20, maxtaxa=100,
-     plot=TRUE, min.cond=FALSE)
+record<-simFossilRecord(p=0.3, q=0.1, nruns=20,
+nTotalTaxa=c(20,100), plot=TRUE)
+taxa<-fossilRecord2fossilTaxa(record)
 multiDiv(taxa)
 #increasing cone of diversity! 
 #Even better on a log scale:
 multiDiv(taxa, plotLogRich=TRUE)
 
-#pure-birth example with simFossilTaxa
+#pure-birth example with simFossilRecord
 #note that conditioning is tricky
-taxa <- simFossilTaxa(p=0.1, q=0, mintime=10, mintaxa=10, maxtime=50, maxtaxa=50,
-    nruns=10, plot=TRUE)
+record<-simFossilRecord(p=0.1, q=0, nruns=10,
+nTotalTaxa=c(10,1000), totalTime=50)
+taxa<-fossilRecord2fossilTaxa(record)
 multiDiv(taxa,plotLogRich=TRUE)
 
 #compare many discrete diversity curves
-taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=20,maxtime=20,
-    mintaxa=10,maxtaxa=100,plot=FALSE,min.cond=FALSE)
+record<-simFossilRecord(p=0.1, q=0.1, nruns=20,
+nTotalTaxa=c(10,100),totalTime=c(1,20))
+taxa<-fossilRecord2fossilTaxa(record)
 multiDiv(lapply(taxa,function(x) binTimeData(sampleRanges(x, r=0.5,
     min.taxa=1), int.length=1)))
 

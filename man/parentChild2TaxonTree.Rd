@@ -94,7 +94,7 @@ pokeTree<-parentChild2taxonTree(pokexample_bad2)
 
 
 # note that we should even be able to do this with ancestor-descendent pairs from
-	 # simulated datasets from simFossilTaxa, like so:
+	 # simulated datasets from simFossilRecord, like so:
 set.seed(444)
 record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
 nTotalTaxa=c(30,40), nExtant=0)

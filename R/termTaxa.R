@@ -3,9 +3,9 @@
 #' This function simulates the diversification of clades composed of
 #' monophyletic terminal taxa, which are distinguished in a fashion completely
 #' alternative to way taxa are defined in the simulation functions
-#' simFossilTaxa, taxa2cladogram and taxa2phylo.
+#' \code{simFossilRecord}, \code{taxa2cladogram} and \code{taxa2phylo}.
 #' 
-#' deadTree generates a time-scaled topology for an entirely extinct clade of a
+#' \code{deadTree} generates a time-scaled topology for an entirely extinct clade of a
 #' specific number of tip taxa. Because the clade is extinct and assumed to
 #' have gone extinct in the distant past, many details of typical birth-death
 #' simulators can be ignored. If a generated clade is already conditioned upon
@@ -28,7 +28,7 @@
 #' on a tree such as this will almost certainly give estimates of equal
 #' branching and extinction rates, just because all taxa are extinct.
 #' 
-#' simTermTaxa produces 'terminal-taxon' datasets; datasets of clades where the
+#' \code{simTermTaxa} produces 'terminal-taxon' datasets; datasets of clades where the
 #' set of distinguishable taxa are defined as intrinsically monophyletic. (In
 #' version 1.6, I referred to this as the 'candle' mode, so named from the
 #' 'candling' horticultural practice and the visual conceptualization of the

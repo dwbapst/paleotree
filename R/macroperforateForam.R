@@ -130,8 +130,8 @@
 #' dim(foramAMb)
 #' dim(foramALb)
 #' 
-#' #Need to convert these to same format as simFossilTaxa output.
-#' 	#simFossilTaxa output has 6 columns...
+#' #Need to convert these to same format as fossilRecord2fossilTaxa output.
+#' 	#those 'taxa' tables has 6 columns:
 #' 	#taxon.id ancestor.id orig.time ext.time still.alive looks.like
 #' 
 #' #for the purposes of this, we'll make taxon.id=looks.like
@@ -229,7 +229,7 @@
 #' checkFoLo(foramALb)
 #' 
 #' #cool, but do all ancestors appear before their descendents?
-#' 	# easier to check unified simFossilTaxa format here
+#' 	# easier to check unified fossilRecord2fossilTaxa format here
 #' 
 #' checkAncOrder<-function(taxa){
 #' 	#get ancestor's first occurrence
@@ -252,8 +252,8 @@
 #' 	# and the first occurrence of descendents?
 #' 	# (shall we call these 'stratophenetic ghost branches'?!)
 #' 	# These shouldn't be problematic, but do they occur in this data?
-#' # After all, simFossilTaxa output was designed for fully observed
-#' 	#simulated fossil records with no gaps.
+#' # After all, fossilRecord2fossilTaxa output tables are designed for
+#' 	   # fully observed simulated fossil records with no gaps.
 #' 
 #' sumAncDescGap<-function(taxa){
 #' 	#get ancestor's last occurrence

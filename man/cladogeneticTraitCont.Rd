@@ -8,7 +8,8 @@ cladogeneticTraitCont(taxa, rate = 1, meanChange = 0, rootTrait = 0)
 }
 \arguments{
 \item{taxa}{A five-column matrix of taxonomic data, as output by
-simFossilTaxa}
+\code{fossilRecord2fossilTaxa} after simulation with \code{simFossilRecord}
+(or via the deprecated function \code{simFossilTaxa})}
 
 \item{rate}{rate of trait change; variance of evolutionary change
 distribution per speciation event}

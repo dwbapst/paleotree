@@ -70,8 +70,8 @@
 #' @aliases taxicDivCont taxicDivDisc phyloDiv
 
 #' @param timeData Two-column matrix giving the per-taxon first and last
-#' appearances in absolute time. The matrices output by simFossilTaxa can also
-#' be supplied to taxicDivCont.
+#' appearances in absolute time. The simulated data tables output by \code{fossilRecord2fossilTaxa}
+#' following simulation with \code{simFossilRecord} can also be supplied to \code{taxicDivCont}.
 
 #' @param timeList A list composed of two matrices, giving interval start and end 
 #' dates and taxon first and last occurrences within those intervals. See details.
@@ -90,7 +90,8 @@
 #' @param plotLogRich If TRUE, taxic diversity is plotted on log scale.
 
 #' @param drop.cryptic If TRUE, cryptic taxa are merged to form one taxon for
-#' estimating taxon curves. Only works for objects from simFossilTaxa.
+#' estimating taxon curves. Only works for objects from \code{simFossilRecord}
+#' via \code{fossilRecord2fossilTaxa}.
 
 #' @param drop.singletons If TRUE, taxa confined to a single interval will be
 #' dropped prior to the diversity curve calculation. This is sometimes done if

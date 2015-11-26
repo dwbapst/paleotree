@@ -12,7 +12,8 @@ divCurveFossilRecordSim(fossilRecord, merge.cryptic = TRUE,
 \item{fossilRecord}{A list object output by \code{simFossilRecord}, often composed
 of multiple elements, each of which is data for 'one taxon', with the first
 element being a distinctive six-element vector composed of numbers, corresponding
-to the six numbers in a \code{simFossilTaxa} matrix.}
+to the six variable tables by \code{fossilRecord2fossilTaxa} after simulating with
+\code{simFossilRecord} (originally produced by deprecated function \code{simFossilTaxa}).}
 
 \item{merge.cryptic}{If \code{TRUE}, cryptic taxon-units (i.e.
 those in the same cryptic complex) will be merged into single taxa for the

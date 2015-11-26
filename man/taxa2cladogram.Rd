@@ -18,8 +18,9 @@ first)? Not dropped by default.}
 \value{
 The resulting phylogeny without branch lengths is output as an
 object of class phylo.
-The tip labels are the rownames from the simulation input; see simFossiltaxa
-documentation for details.
+
+The tip labels are the rownames from the simulation input; see documentation
+for \code{simFossilRecord} and \code{fossilRecord2fossilTaxa} documentation for details.
 }
 \description{
 Convert ancestor-descendant relationships of taxa into an 'ideal' unscaled

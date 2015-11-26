@@ -8,7 +8,7 @@ taxa2phylo(taxad, obs_time = NULL, plot = FALSE)
 }
 \arguments{
 \item{taxad}{A five-column matrix of taxonomic data, as output by
-simFossilTaxa}
+\code{fossilRecord2fossilTaxa} via simulations produced using \code{simFossilRecord}}
 
 \item{obs_time}{A vector of per-taxon times of observation which must be in
 the same order of taxa as in the object taxad; if NULL, the LADs (column 4)
@@ -21,8 +21,8 @@ The resulting phylogeny with branch lengths is output as an object
 of class phylo. This function will output trees with the element $root.time,
 which is the time of the root divergence in absolute time.
 
-The tip labels are the rownames from the simulation input; see simFossiltaxa
-documentation for details.
+The tip labels are the rownames from the simulation input; see documentation
+for \code{simFossilRecord} and \code{fossilRecord2fossilTaxa} documentation for details.
 }
 \description{
 Converts temporal and ancestor-descendant relationships of taxa into a
@@ -69,12 +69,14 @@ phylogenetic branches.
 Unlike taxa2cladogram, this function does not merge cryptic taxa in output
 from simFossilTaxa and I do not offer an option to secondarily drop them.
 The tip labels should provide the necessary information for users to drop
-such taxa, however. See simFossilTaxa.
+such taxa, however. See \link{simFossilRecord}.
 }
 \examples{
 
 set.seed(444)
-taxa<-simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,maxtime=1000,maxExtant=0)
+record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
+nTotalTaxa=c(30,40), nExtant=0)
+taxa<-fossilRecord2fossilTaxa(record)
 #let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
 tree<-taxa2phylo(taxa)
 phyloDiv(tree)
@@ -86,8 +88,9 @@ phyloDiv(tree,drop.ZLB=FALSE)
 #note that it drops taxa which were never sampled!
 
 #testing with cryptic speciation
-taxaCrypt<-simFossilTaxa(p=0.1,q=0.1,prop.cryptic=0.5,nruns=1,mintaxa=10,maxtaxa=20,
-    maxtime=1000,maxExtant=0)
+record<-simFossilRecord(p=0.1, q=0.1, prop.cryptic=0.5, nruns=1,
+nTotalTaxa=c(30,40), nExtant=0)
+taxaCrypt<-fossilRecord2fossilTaxa(record)
 treeCrypt<-taxa2phylo(taxaCrypt)
 layout(1)
 plot(treeCrypt)
@@ -98,6 +101,6 @@ axisPhylo()
 David W. Bapst
 }
 \seealso{
-\code{\link{simFossilTaxa}}, \code{\link{taxa2cladogram}}
+\code{\link{simFossilRecord}}, \code{\link{taxa2cladogram}}, \link{fossilRecord2fossilTaxa}
 }
 

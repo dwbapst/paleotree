@@ -31,18 +31,25 @@
 #' http://nemagraptus.blogspot.com/2012/03/simulating-budding-cladogenetictrait.html
 #' 
 #' @param taxa A five-column matrix of taxonomic data, as output by
-#' simFossilTaxa
+#' \code{fossilRecord2fossilTaxa} after simulation with \code{simFossilRecord}
+#' (or via the deprecated function \code{simFossilTaxa})
+
 #' @param rate rate of trait change; variance of evolutionary change
 #' distribution per speciation event
+
 #' @param meanChange Mean change per speciation event. Default is 0; change to
 #' simulate 'active' speciational trends, where the expected change at each
 #' speciational event is non-zero.
+
 #' @param rootTrait The trait value of the first taxon in the dataset; set to 0
 #' by default.
+
 #' @return Retuns a vector of trait values for each taxon, with value names
 #' being the taxa IDs (column 1 of the input) with a 't' pasted (as with rtree
 #' in the ape library).
+
 #' @author David W. Bapst
+
 #' @seealso \code{\link{simFossilRecord}},
 #' 
 #' This function is similar to Brownian motion simulation functions such as
@@ -54,6 +61,7 @@
 #' functions; together with BM simulation functions, they would be expected to
 #' have a similar effect as this function (when cladogenesis is 'bifurcating'
 #' and not 'budding'; see above).
+
 #' @examples
 #' 
 #' set.seed(444)
@@ -72,9 +80,10 @@
 #' tree <- taxa2phylo(taxa)
 #' plotTraitgram(trait,tree,conf.int=FALSE)
 #' 
+
 #' @export cladogeneticTraitCont
 cladogeneticTraitCont<-function(taxa,rate=1,meanChange=0,rootTrait=0){
-	#simulate speciational trait evolution for datasets from simFossilTaxa
+	#simulate speciational trait evolution for datasets from simFossilRecord
 	#idiot proofing
 	taxa<-taxa[order(taxa[,1]),]
 	if(any(taxa[-1,2]>=taxa[-1,1])){stop("Ancestors have higher IDs than Descendants?")}

@@ -66,8 +66,9 @@ DO use this function when doing simulations and you want to make a tree of
 the 'true' history, such as for simulating trait evolution along
 phylogenetic branches.
 
-Unlike taxa2cladogram, this function does not merge cryptic taxa in output
-from simFossilTaxa and I do not offer an option to secondarily drop them.
+Unlike \code{taxa2cladogram}, this function does not merge cryptic taxa in output
+from \code{simFossilRecord} (via \code{fossilRecord2fossilTaxa})
+and I do not offer an option to secondarily drop them.
 The tip labels should provide the necessary information for users to drop
 such taxa, however. See \link{simFossilRecord}.
 }

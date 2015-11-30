@@ -56,8 +56,8 @@ divCurveFossilRecordSim<-function(fossilRecord,merge.cryptic=TRUE,plotLegend=TRU
 	#
 	taxaConvert<-fossilRecord2fossilTaxa(fossilRecord=fossilRecord)
 	#taxicDivCont(taxaConvert,int.length=0.2)
-	#are any sampled?
-	areSampled<-whichSampled(fossilRecord)
+	#are any sampled AT NOT THE PRESENT?
+	areSampled<-whichSampledInPast(fossilRecord)
 	if(length(areSampled)>0){
 		fossilRanges<-fossilRecord2fossilRanges(fossilRecord=fossilRecord, 
 			merge.cryptic=merge.cryptic, ranges.only = TRUE)

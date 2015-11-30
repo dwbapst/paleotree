@@ -61,17 +61,17 @@ minimum conditions in addition.}
 TermTaxaRes}
 }
 \value{
-deadTree gives time-scaled phylo object, with a $root.time element.
+\code{deadTree} gives time-scaled phylo object, with a $root.time element.
 As discussed above, the result is always an extinct phylogeny of exactly
-ntaxa.
+\code{ntaxa}.
 
-simTermTaxa and simTermTaxaAdvanced both produce a list with two components:
-$taxonRanges which is a two-column matrix where each row gives the true
-first and last appearance of observable taxa and $tree which is a
+\code{simTermTaxa} and \code{simTermTaxaAdvanced} both produce a list with two components:
+\code{$taxonRanges} which is a two-column matrix where each row gives the true
+first and last appearance of observable taxa and \code{$tree} which is a
 time-scaled phylogeny with end-points at the true last appearance time of
 taxa.
 
-trueTermTaxaTree produces a time-scaled tree as a phylo object, which
+\code{trueTermTaxaTree} produces a time-scaled tree as a phylo object, which
 describes the relationships of populations at the times of observation given
 in the time.obs argument.
 }
@@ -132,25 +132,27 @@ Because the set of observable taxa is a limited subset of the true evolution
 history, the true taxon ranges are not a faithful reproduction of the true
 diversity curve. See an example below.
 
-simTermTaxa uses deadTree to make a phylogeny, so the only datasets produced
-are of extinct clades.simTermTaxaAdvanced is an alternative to simTermTaxa
-which uses simFossilTaxa to generate the underlying pattern of evolutionary
-relationships and not deadTree. The arguments are thus extremely similar to
-simFossilTaxa. In particular, simTermTaxaAdvanced can be used to produce
-simulated datasets which have extant taxa. In particular for these datasets,
-if
+\code{simTermTaxa} uses \code{deadTree} to make a phylogeny, so the only datasets produced
+are of extinct clades. \code{simTermTaxaAdvanced} is an alternative to \code{simTermTaxa}
+which uses \code{simFossilRecord} to generate the underlying pattern of evolutionary
+relationships and not \code{deadTree}. The arguments are thus similar to
+\code{simFossilRecord}, with some differences (as \code{simTermTaxaAdvanced}
+originally called the deprecated function \code{simFossilTaxa}).
+In particular, \code{simTermTaxaAdvanced} can be used to produce
+simulated datasets which have extant taxa.
 
-trueTermTaxaTree is analagous to the function of taxa2phylo, in that it
+\code{trueTermTaxaTree} is analagous to the function of \code{taxa2phylo}, in that it
 outputs the time-scaled-phylogeny for a terminal-taxon dataset for some
-times of observations. Unlike with the use of taxa2phylo on the output on
-simFossilTaxa, there is no need to use trueTermTaxaTree to obtain the true
+times of observations. Unlike with the use of \code{taxa2phylo} on the output on
+\code{simFossilRecord} (via \code{fossilRecord2fossilTaxa},
+there is no need to use \code{trueTermTaxaTree} to obtain the true
 phylogeny when times of extinction are the times of observation; just get
-the $tree element from the result output by simTermTaxa.
+the \code{$tree} element from the result output by \code{simTermTaxa}.
 
-Also unlike with taxa2phylo, the cladistic topology of relationships among
+Also unlike with \code{taxa2phylo}, the cladistic topology of relationships among
 morphotaxa never changes as a function of time of observation. For obtaining
 the 'ideal cladogram' of relationships among the terminal taxa, merely take
-the $tree element of the output from simtermTaxaData and remove the branch
+the $tree element of the output from \code{simtermTaxaData} and remove the branch
 lengths (see below for an example).
 
 As with many functions in the paleotree library, absolute time is always
@@ -202,7 +204,7 @@ tree1<-trueTermTaxaTree(termTaxaRes,FADs)
 plot(tree1);axisPhylo()
 
 #can condition on sampling some average number of taxa
-#analagous to simFossilTaxa_SRcond
+#analagous to deprecated function simFossilTaxa_SRcond
 r<-0.1
 avgtaxa<-50
 sumRate<-0.2
@@ -219,7 +221,8 @@ termTaxaRes<-simTermTaxa(ntaxa=ntaxa_orig,sumRate=sumRate)
 #with min.cond
 termTaxaRes<-simTermTaxaAdvanced(p=0.1,q=0.1,mintaxa=50,
     maxtaxa=100,maxtime=100,minExtant=10,maxExtant=20,min.cond=TRUE)
-#notice that arguments are similar to simFossilTaxa
+#notice that arguments are similar to simFossilRecord
+	# and somewhat more similar to deprecated function simFossilTaxa ;P
 plot(termTaxaRes$tree)
 Ntip(termTaxaRes$tree)
 
@@ -243,7 +246,7 @@ with R (Second Edition).} New York: Springer.
 deadtree is simply a wraper of the function \code{rtree} in ape.
 
 For a very different way of simulating diversification in the fossil record,
-see \code{\link{simFossilTaxa}}, \code{\link{taxa2phylo}} and
-\code{\link{taxa2cladogram}}.
+see \code{\link{simFossilRecord}}, \code{\link{fossilRecord2fossilTaxa}},
+\code{\link{taxa2phylo}} and \code{\link{taxa2cladogram}}.
 }
 

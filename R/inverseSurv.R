@@ -204,8 +204,9 @@
 #' 
 #' # let's simulate some taxon ranges from an imperfectly sampled fossil record
 #' set.seed(444)
-#' taxa <- simFossilTaxa(p=0.1,q=0.1,nruns=1,mintaxa=20,maxtaxa=30,
-#'       maxtime=1000, maxExtant=0)
+#' record <- simFossilRecord(p=0.1, q=0.1, nruns=1,
+#'	nTotalTaxa=c(30,40), nExtant=0)
+#' taxa <- fossilRecord2fossilTaxa(record)
 #' rangesCont <- sampleRanges(taxa,r=0.5)
 #' #bin the ranges into discrete time intervals
 #' rangesDisc <- binTimeData(rangesCont,int.length=5)

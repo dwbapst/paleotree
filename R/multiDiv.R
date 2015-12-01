@@ -105,9 +105,9 @@
 #' #multiDiv can also take output from simFossilRecord, via fossilRecord2fossilTaxa
 #' #what do many simulations run under some set of conditions 'look' like on average?
 #' set.seed(444)
-#' record<-simFossilRecord(p=0.3, q=0.1, nruns=20,
+#' records<-simFossilRecord(p=0.3, q=0.1, nruns=20,
 #'	nTotalTaxa=c(20,100), plot=TRUE)
-#' taxa<-fossilRecord2fossilTaxa(record)
+#' taxa<-sapply(records,fossilRecord2fossilTaxa)
 #' multiDiv(taxa)
 #' #increasing cone of diversity! 
 #' #Even better on a log scale:

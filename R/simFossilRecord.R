@@ -272,7 +272,7 @@
 #' This function essentially replaces and adds to all functionality of the
 #' deprecated \code{paleotree} functions \code{simFossilTaxa}, \code{simFossilTaxaSRCond},
 #' \code{simPaleoTrees}, as well as the combined used of \code{simFossilTaxa}
-#' and \code{sampleRanges} for some models of sampling. 
+#' and \code{sampleRanges} for most models of sampling. 
 
 #' @author 
 #' David W. Bapst, inspired by code written by Peter Smits.

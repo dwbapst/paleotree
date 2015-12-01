@@ -115,8 +115,9 @@
 #' ntaxa<-freqRats<-numeric()
 #' for(i in 1:length(r)){
 #' 	#assuming budding model
-#' 	taxa<-simFossilTaxa_SRCond(r=r[i],avgtaxa=20,p=0.1,q=0.1,maxExtant=0)
-#' 	ranges<-sampleRanges(taxa,r=r[i])
+#' 	record<-simFossilRecord(p=0.1, q=0.1, r=r[i], nruns=1,
+#' 		nSamp=c(15,25), nExtant=0, plot=TRUE)
+#' 	ranges<-fossilRecord2fossilRanges(record)
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
 #' 	freqRats[i]<-freqRat(timeList)
@@ -134,8 +135,9 @@
 #' ntaxa<-freqRats<-numeric()
 #' for(i in 1:length(r)){
 #' 	#assuming budding model
-#' 	taxa<-simFossilTaxa_SRCond(r=r[i],avgtaxa=100,p=0.1,q=0.1,maxExtant=0)
-#' 	ranges<-sampleRanges(taxa,r=r[i])
+#' 	record<-simFossilRecord(p=0.1, q=0.1, r=r[i], nruns=1,
+#' 		nSamp=c(80,150), nExtant=0, plot=TRUE)
+#' 	ranges<-fossilRecord2fossilRanges(record)
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
 #' 	freqRats[i]<-freqRat(timeList)
@@ -154,8 +156,9 @@
 #' ntaxa<-freqRats<-numeric()
 #' for(i in 1:length(r)){
 #' 	#assuming budding model
-#' 	taxa<-simFossilTaxa_SRCond(r=r[i],avgtaxa=100,p=0.1,q=0.1,maxExtant=0)
-#' 	ranges<-sampleRanges(taxa,r=r[i])
+#' 	record<-simFossilRecord(p=0.1, q=0.1, r=r[i], nruns=1,
+#' 		nSamp=c(80,150), nExtant=0, plot=TRUE)
+#' 	ranges<-fossilRecord2fossilRanges(record)
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
 #' 	freqRats[i]<-freqRat(timeList)
@@ -171,8 +174,9 @@
 #' ntaxa<-freqRats<-numeric()
 #' for(i in 1:length(r)){
 #' 	#assuming budding model
-#' 	taxa<-simFossilTaxa_SRCond(r=r[i],avgtaxa=20,p=0.1,q=0.1,maxExtant=0)
-#' 	ranges<-sampleRanges(taxa,r=r[i])
+#' 	record<-simFossilRecord(p=0.1, q=0.1, r=r[i], nruns=1,
+#' 		nSamp=c(15,25), nExtant=0, plot=TRUE)
+#' 	ranges<-fossilRecord2fossilRanges(record)
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
 #' 	freqRats[i]<-freqRat(timeList)
@@ -191,8 +195,9 @@
 #' ntaxa<-ML_sampProb<-numeric()
 #' for(i in 1:length(r)){
 #' 	#assuming budding model
-#' 	taxa<-simFossilTaxa_SRCond(r=r[i],avgtaxa=20,p=0.1,q=0.1,maxExtant=0)
-#' 	ranges<-sampleRanges(taxa,r=r[i])
+#' 	record<-simFossilRecord(p=0.1, q=0.1, r=r[i], nruns=1,
+#' 		nSamp=c(15,25), nExtant=0, plot=TRUE)
+#' 	ranges<-fossilRecord2fossilRanges(record)
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
 #'  likFun<-make_durationFreqDisc(timeList)
@@ -210,8 +215,9 @@
 #' ntaxa<-ML_sampProb<-numeric()
 #' for(i in 1:length(r)){
 #' 	#assuming budding model
-#' 	taxa<-simFossilTaxa_SRCond(r=r[i],avgtaxa=100,p=0.1,q=0.1,maxExtant=0)
-#' 	ranges<-sampleRanges(taxa,r=r[i])
+#' 	record<-simFossilRecord(p=0.1, q=0.1, r=r[i], nruns=1,
+#' 		nSamp=c(80,150), nExtant=0, plot=TRUE)
+#' 	ranges<-fossilRecord2fossilRanges(record)
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
 #'  likFun<-make_durationFreqDisc(timeList)

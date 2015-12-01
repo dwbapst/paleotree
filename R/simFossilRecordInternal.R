@@ -532,23 +532,3 @@ testFinal<-function(taxa,timePassed,runConditions,count.cryptic){
 	return(finalVitals)
 	}		
 	
-whichSampledInPast<-function(taxa){
-	#which taxa are sampled prior to the modern?
-	areSamp<-sapply(taxa,function(x) length(x[[2]])>0)
-	#are there any extant taxa
-	nExtant<-length(whichLive(taxa))
-	if(sum(areSamp)>0 & nExtant>0){
-		#identify modern time
-			# assuming that latest sampling time of extant taxa is modernTime
-		possModernTime<-min(sapply(taxa[whichLive(taxa)],function(x) x[[2]]))
-		sampOnce<-sapply(taxa,function(x) length(x[[2]])==1)
-		sampModernOnly<-sapply(taxa,function(x)
-			if(length(x[[2]]==1)){
-				x[[2]]==possModernTime
-			}else{
-				FALSE
-				})
-		}
-	res<-which(whichSamp & !sampModernOnly)
-	return(res)
-	}

@@ -31,7 +31,7 @@
 #' @param fossilRecord A list object output by \code{simFossilRecord}, often composed
 #' of multiple elements, each of which is data for 'one taxon', with the first
 #' element being a distinctive six-element vector composed of numbers, corresponding
-#' to the six fields in tables output by the now-deprecated function \code{simFossilTaxa}.
+#' to the six fields in tables output by the deprecated function \code{simFossilTaxa}.
 
 #' @param sliceTime The date to slice the \code{simFossilRecord} output at, given
 #' in time-units before the modern, on the same scale as the input \code{fossilRecord}.

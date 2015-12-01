@@ -91,6 +91,6 @@ whichSampledInPast<-function(taxa){
 				FALSE
 				})
 		}
-	res<-which(whichSamp & !sampModernOnly)
+	res<-which(arehSamp & !sampModernOnly)
 	return(res)
 	}

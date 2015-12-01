@@ -49,11 +49,13 @@
 #' 
 #' The sampling rate used by cal3 methods is the instantaneous sampling rate,
 #' as estimated by various other function in the paleotree package. See
-#' getSampRateCont for more details. If you have the per-time unit sampling
+#' \code{\link{make_durationFreqCont}} for more details.
+#' If you have the per-time unit sampling
 #' probability ('R' as opposed to 'r') look at the sampling parameter
-#' conversion functions also included in this package. Most datasets will
-#' probably use \code{make_durationFreqDisc} and \code{sProb2sRate} prior to using this function,
-#' as shown in an example below.
+#' conversion functions also included in this package
+#' (e.g. \code{\link{sProb2sRate}}). Most datasets will probably use
+#' \code{\link{make_durationFreqDisc}} and \code{sProb2sRate}
+#' prior to using this function, as shown in an example below.
 #' 
 #' The branching and extinction rate are the 'per-capita' instantaneous
 #' origination/extinction rates for the taxic level of the tips of the tree
@@ -71,7 +73,7 @@
 #' what is done for the examples below.) A third option for calculating all
 #' three rates simultaneously would be to apply likelihood methods developed by
 #' Foote (2002) to forward and reverse survivorship curves. Note that only one
-#' of these three suggested methods is implemented in paleotree: estimating the
+#' of these three suggested methods is implemented in \code{paleotree}: estimating the
 #' sampling and extinction rates from the distribution of taxon durations via
 #' \code{make_durationFreqCont} and \code{make_durationFreqDisc}.
 #' 
@@ -80,15 +82,15 @@
 #' or anagenetic modes. Which tips are designated as which is given by two
 #' additional elements added to the output tree, $budd.tips (taxa designated as
 #' ancestors via budding cladogenesis) and $anag.tips (taxa designated as
-#' ancestors via anagenesis). This can be turned off by setting anc.wt=0. As
+#' ancestors via anagenesis). This can be turned off by setting \code{anc.wt = 0}. As
 #' this function may infer anagenetic relationships during time-scaling, this
 #' can create zero-length terminal branches in the output. Use
 #' \code{\link{dropZLB}} to get rid of these before doing analyses of lineage
 #' diversification.
 #' 
-#' Unlike timePaleoPhy, cal3 methods will always resolve polytomies. In
+#' Unlike \code{timePaleoPhy}, cal3 methods will always resolve polytomies. In
 #' general, this is done using the rate calibrated algorithm, although if
-#' argument randres=TRUE, polytomies will be randomly resolved with uniform
+#' argument \code{randres = TRUE}, polytomies will be randomly resolved with uniform
 #' probability, ala multi2di from ape. Also, cal3 will always add the terminal
 #' ranges of taxa. However, because of the ability to infer potential
 #' ancestor-descendant relationships, the length of terminal branches may be
@@ -100,28 +102,28 @@
 #' with their consensus trees, as opposed to using the set of most parsimonious
 #' trees. Comparing the results of these two approaches may be very revealing.
 #' 
-#' Like timePaleoPhy, cal3TimePaleoPhy is designed for direct application to datasets 
+#' Like \code{timePaleoPhy}, \code{cal3TimePaleoPhy} is designed for direct application to datasets 
 #' where taxon first and last appearances are precisely known in continuous time, with 
 #' no stratigraphic uncertainty. This is an uncommon form of data to have from the fossil record, 
 #' although not an impossible form (micropaleontologists often have very precise 
-#' range charts, for example). This means that most users SHOULD NOT use cal3TimePaleoPhy directly, 
+#' range charts, for example). This means that most users \emph{should not} use \code{cal3TimePaleoPhy} directly, 
 #' unless they have written their own code to deal with stratigraphic uncertainty. For
 #' some groups, the more typical 'first' and 'last' dates represent the minimum
 #' and maximum absolute ages for the fossil collections that a taxon is known
 #' is known from. Presumably, the first and last appearances of that taxon in
 #' the fossil record is at unknown dates within these bounds. These should not
-#' be mistaken as the FADs and LADs desired by cal3TimePaleoPhy, as cal3TimePaleoPhy 
+#' be mistaken as the FADs and LADs desired by \code{cal3TimePaleoPhy}, as \code{cal3TimePaleoPhy} 
 #' will use the earliest dates provided to calibrate node ages, which is either
 #' an overly conservative approach to time-scaling or fairly nonsensical.
 #'
-#' Alternatively to using cal3TimePaleoPhy, bin_cal3TimePaleoPhy is a wrapper of 
-#' cal3TimePaleoPhy which produces timescaled trees for datasets which only have 
+#' Alternatively to using \code{cal3TimePaleoPhy}, \code{bin_cal3TimePaleoPhy} is a wrapper of 
+#' \code{cal3TimePaleoPhy} which produces timescaled trees for datasets which only have 
 #' interval data available. For each output tree, taxon first and last appearance 
 #' dates are placed within their listed intervals under a uniform distribution. 
 #' Thus, a large sample of time-scaled trees will approximate the uncertainty in 
 #' the actual timing of the FADs and LADs. 
 #'
-#' The input timeList object can have overlapping (i.e. non-sequential) intervals,
+#' The input \code{timeList} object can have overlapping (i.e. non-sequential) intervals,
 #' and intervals of uneven size. Taxa alive in the modern should be listed as last 
 #' occurring in a time interval that begins at time 0 and ends at time 0. If taxa 
 #' occur only in single collections (i.e. their first and last appearance in the 
@@ -131,15 +133,15 @@
 #' in time, with some positive duration. The sites matrix can be used to force
 #' only a portion of taxa to have simultaneous first and last appearances.
 #'
-#' By setting the argument nonstoch.bin to TRUE in bin_cal3TimePaleoPhy, the
+#' By setting the argument \code{nonstoch.bin} to \code{TRUE} in \code{bin_cal3TimePaleoPhy}, the
 #' dates are NOT stochastically pulled from uniform bins but instead FADs are
 #' assigned to the earliest time of whichever interval they were placed in and
 #' LADs are placed at the most recent time in their placed interval. This
 #' option may be useful for plotting. The sites argument becomes arbitrary if
-#' nonstoch.bin is TRUE.
+#' nonstoch.bin is \code{TRUE}.
 #' 
-#' If timeData or the elements of timeList are actually data.frames (as output
-#' by read.csv or read.table), these will be coerced to a matrix.
+#' If \code{timeData} or the elements of \code{timeList} are actually data frames (as output
+#' by \code{read.csv} or \code{read.table}), these will be coerced to a matrix.
 #' 
 #' A tutorial for applying the time-scaling functions in paleotree,
 #' particularly the cal3 method, along with an example using real (graptolite)
@@ -302,7 +304,7 @@
 #' @author David W. Bapst
 
 #' @seealso \code{\link{timePaleoPhy}}, \code{\link{binTimeData}},
-#' \code{\link{getSampRateCont}}, \code{\link{multi2di}}
+#' \code{\link{make_durationFreqCont}}, \code{sProb2sRate}, \code{\link{multi2di}}
 
 #' @references 
 #' Bapst, D. W. 2013. A stochastic rate-calibrated method for time-scaling

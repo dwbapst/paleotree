@@ -78,11 +78,12 @@ whichSampledInPast<-function(taxa){
 	#which taxa are sampled prior to the modern?
 	areSamp<-sapply(taxa,function(x) length(x[[2]])>0)
 	#are there any extant taxa
-	nExtant<-length(whichLive(taxa))
+	areLive<-which(sapply(taxa,function(x) x[[1]][5]==1))
+	nExtant<-length(areLive)
 	if(sum(areSamp)>0 & nExtant>0){
 		#identify modern time
 			# assuming that latest sampling time of extant taxa is modernTime
-		possModernTime<-min(unlist(sapply(taxa[whichLive(taxa)],function(x) x[[2]])))
+		possModernTime<-min(unlist(sapply(taxa[areLive],function(x) x[[2]])))
 		sampOnce<-sapply(taxa,function(x) length(x[[2]])==1)
 		sampModernOnly<-sapply(taxa,function(x)
 			if(length(x[[2]]==1)){

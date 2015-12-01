@@ -152,15 +152,15 @@ multiDiv(taxa, plotLogRich=TRUE)
 
 #pure-birth example with simFossilRecord
 #note that conditioning is tricky
-record<-simFossilRecord(p=0.1, q=0, nruns=10,
+records<-simFossilRecord(p=0.1, q=0, nruns=10,
 nTotalTaxa=c(10,1000), totalTime=50)
-taxa<-fossilRecord2fossilTaxa(record)
+taxa<-sapply(records,fossilRecord2fossilTaxa)
 multiDiv(taxa,plotLogRich=TRUE)
 
 #compare many discrete diversity curves
-record<-simFossilRecord(p=0.1, q=0.1, nruns=20,
+records<-simFossilRecord(p=0.1, q=0.1, nruns=20,
 nTotalTaxa=c(10,100),totalTime=c(1,20))
-taxa<-fossilRecord2fossilTaxa(record)
+taxa<-sapply(records,fossilRecord2fossilTaxa)
 multiDiv(lapply(taxa,function(x) binTimeData(sampleRanges(x, r=0.5,
     min.taxa=1), int.length=1)))
 

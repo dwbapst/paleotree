@@ -199,15 +199,17 @@ taxicDivCont(rangesCont1)
 
 #testing with cryptic speciation
 layout(1)
-record<-simFossilRecord(p=0.1, q=0.1, prop.cryptic=0.5, nruns=1,
+recordCrypt<-simFossilRecord(p=0.1, q=0.1, prop.cryptic=0.5, nruns=1,
 nTotalTaxa=c(20,30), nExtant=0)
+taxaCrypt<-fossilRecord2fossilTaxa(recordCrypt)
 rangesCrypt <- sampleRanges(taxaCrypt,r=0.5)
 taxicDivCont(rangesCrypt)
 
 #an example of hat-shaped models (beta distributions) when there are live taxa
 set.seed(444)
-record<-simFossilRecord(p=0.1, q=0.05, nruns=1,
+recordLive<-simFossilRecord(p=0.1, q=0.05, nruns=1,
 nTotalTaxa=c(5,100),nExtant=c(10,100))
+taxaLive<-fossilRecord2fossilTaxa(recordLive)
 #with end-points of live taxa at random points in the hat
 rangesLive<-sampleRanges(taxaLive,r=0.1,alpha=4,beta=4,randLiveHat=TRUE,plot=TRUE)
 #with all taxa end-points at end-point of hat

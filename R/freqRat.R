@@ -249,7 +249,13 @@ freqRat<-function(timeData,calcExtinction=FALSE,plot=FALSE){
 	f3<-sumDur[3]
 	freqRat<-(f2^2)/(f1*f3)
 	names(freqRat)<-"freqRat"
-	if(freqRat>1){message("Warning: Frequency distribution of input range data appears to violate model assumptions, producing an impossible freqRat greater than 1")}
+	if(is.nan(freqRat)){
+		message("Warning: Frequency distribution of input range data appears to violate model assumptions, producing a freqRat of zero over zero (NA)")
+	}else{
+		if(freqRat>1){
+			message("Warning: Frequency distribution of input range data appears to violate model assumptions, producing an impossible freqRat greater than 1")
+			}
+		}
 	#calculate extinction rate (rate of lineages going extinct per lineage, per interval)
 	if(calcExtinction){
 		logSD<-log(sumDur[-1])

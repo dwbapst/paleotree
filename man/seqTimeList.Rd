@@ -62,8 +62,8 @@ rangesCont <- sampleRanges(taxa,r=0.1)
 
 #Now let's use binTimeData to get ranges in discrete overlapping intervals
     #via pre-set intervals input
-presetIntervals <- cbind(c(1000,995,990,980,970,960,950,940,930,905),
-    c(995,989,960,975,960,950,930,930,900,885))
+presetIntervals <- cbind(c(1000,995,990,980,970,975,960,950,940,930,900,890,888,879,875),
+  c(995,989,960,975,960,950,930,930,930,900,895,888,880,875,870))
 rangesDisc1 <- binTimeData(rangesCont,int.times=presetIntervals)
 
 seqLists<-seqTimeList(rangesDisc1,nruns=10)
@@ -77,7 +77,7 @@ sapply(seqLists$timeLists,freqRat)
 
 freqRat(seqLists$timeLists[[4]],plot=TRUE)
 
-#too few taxa of two orthree interval durations for the ratio to work properly
+#too few taxa of two or three interval durations for the ratio to work properly
     #perhaps ignore these estimates
 
 #with weighted selection of intervals

@@ -90,7 +90,9 @@ whichSampledInPast<-function(taxa){
 			}else{
 				FALSE
 				})
+		res<-which(areSamp & !sampModernOnly)
+	}else{
+		res<-which(areSamp)
 		}
-	res<-which(areSamp & !sampModernOnly)
 	return(res)
 	}

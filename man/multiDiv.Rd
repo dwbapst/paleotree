@@ -119,7 +119,7 @@ the standard error.
 
 set.seed(444)
 record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
-nTotalTaxa=c(30,40), nExtant=0)
+	nTotalTaxa=c(30,40), nExtant=0)
 taxa<-fossilRecord2fossilTaxa(record)
 rangesCont <- sampleRanges(taxa, r=0.5)
 rangesDisc <- binTimeData(rangesCont, int.length=1)
@@ -142,8 +142,8 @@ multiDiv(ttrees)
 #multiDiv can also take output from simFossilRecord, via fossilRecord2fossilTaxa
 #what do many simulations run under some set of conditions 'look' like on average?
 set.seed(444)
-records<-simFossilRecord(p=0.3, q=0.1, nruns=20,
-nTotalTaxa=c(20,100), plot=TRUE)
+records<-simFossilRecord(p=0.1, q=0.1, nruns=10,
+ totalTime=30, plot=TRUE)
 taxa<-sapply(records,fossilRecord2fossilTaxa)
 multiDiv(taxa)
 #increasing cone of diversity! 
@@ -152,17 +152,17 @@ multiDiv(taxa, plotLogRich=TRUE)
 
 #pure-birth example with simFossilRecord
 #note that conditioning is tricky
-records<-simFossilRecord(p=0.1, q=0, nruns=10,
-nTotalTaxa=c(10,1000), totalTime=50)
-taxa<-sapply(records,fossilRecord2fossilTaxa)
-multiDiv(taxa,plotLogRich=TRUE)
+set.seed(444)
+recordsPB<-simFossilRecord(p=0.1, q=0, nruns=10,
+ totalTime=30,plot=TRUE)
+taxaPB<-sapply(recordsPB,fossilRecord2fossilTaxa)
+multiDiv(taxaPB,plotLogRich=TRUE)
 
 #compare many discrete diversity curves
-records<-simFossilRecord(p=0.1, q=0.1, nruns=20,
-nTotalTaxa=c(10,100),totalTime=c(1,20))
-taxa<-sapply(records,fossilRecord2fossilTaxa)
-multiDiv(lapply(taxa,function(x) binTimeData(sampleRanges(x, r=0.5,
-    min.taxa=1), int.length=1)))
+discreteRanges<-lapply(taxa,function(x)
+	binTimeData(sampleRanges(x, r=0.5,
+    		min.taxa=1), int.length=7))
+multiDiv(discreteRanges)
 
 layout(1)
 

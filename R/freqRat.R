@@ -201,11 +201,13 @@
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
 #'  likFun<-make_durationFreqDisc(timeList)
-#'  ML_sampProb[i]<-optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
+#'  ML_sampProb[i]<-optim(parInit(likFun),likFun,
+#' 		lower=parLower(likFun),upper=parUpper(likFun),
 #'      method="L-BFGS-B",control=list(maxit=1000000))[[1]][2]
 #' 	}
 #' plot(R,ML_sampProb);abline(0,1)
-#' #Not so great due to likelihood surface ridges, but it returns values between 0-1
+#' # Not so great due to likelihood surface ridges
+#'  # but it returns values between 0-1
 #' 
 #' #how good is the ML method at 100 taxa, 1 time-unit bins?
 #' set.seed(444)
@@ -221,7 +223,8 @@
 #' 	timeList<-binTimeData(ranges,int.length=int.length)
 #' 	ntaxa[i]<-nrow(timeList[[2]])
 #'  likFun<-make_durationFreqDisc(timeList)
-#'  ML_sampProb[i]<-optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
+#'  ML_sampProb[i]<-optim(parInit(likFun),likFun,
+#' 		lower=parLower(likFun),upper=parUpper(likFun),
 #'      method="L-BFGS-B",control=list(maxit=1000000))[[1]][2]
 #' 	}
 #' plot(R,ML_sampProb);abline(0,1)

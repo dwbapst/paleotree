@@ -22,7 +22,7 @@ pure anagenetic within-lineage change ("anagenesis"; i.e. Foote's 'phyletic chan
 mode is "budding".}
 
 \item{analysis}{The type of analysis to be performed, either the probability of sampling direct
-descendants or of sampling indirect descendants.}
+descendants (\code{"directDesc"}) or of sampling indirect descendants (\code{"indirectDesc"}).}
 
 \item{Mmax}{The maximum number of direct descendants (M) to sum over in the function, which
 is ideally meant to be a sum from zero to infinity, like nrep. Unfortunately,
@@ -53,15 +53,17 @@ details. Mode of differentiation can also be varied
 for three different models, see the argument \code{mode}.
 
 This probability is calculated including the probability that extinction might
-occur before any descendants are produced. Thus, if p=q, the probability of 
+occur before any descendants are produced. Thus, if \code{p = q}, the probability of 
 a taxon going extinct before it produces any descendants will be 0.5, which 
-means that even when sampling is perfect (R=1, meaning completeness of 
+means that even when sampling is perfect (\code{R = 1}, meaning completeness of 
 100%) the probability of a taxon being an ancestor of another sampled taxon
 can be no higher than 0.5. See Foote (1996) for a graphic depiction of this
 non-intuitive ceiling. For reasons (probably?) having to do with finite
 approximations of infinite summations, values close to perfect sampling
 may have values slightly higher than this ceiling, which is also apparent
-visually in the figures in Foote (1996).
+visually in the figures in Foote (1996). Thus, values higher than 0.5 when p=q
+should be discounted, and in general when sampling rate is high, results should
+be treated cautiously as overestimates.
 }
 \examples{
 #examples, run at very low nrep for sake of speed (examples need to be fast)
@@ -74,9 +76,9 @@ probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis="directDesc",n
 probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="directDesc",nrep=100)
 
 #probability of having sampled indirect descendants of a taxon
-probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis="directDesc",nrep=100)	#default
-probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis="directDesc",nrep=100)
-probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="directDesc",nrep=100)
+probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis="indirectDesc",nrep=100)	#default
+probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis="indirectDesc",nrep=100)
+probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="indirectDesc",nrep=100)
 
 }
 \references{

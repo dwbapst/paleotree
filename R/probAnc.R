@@ -19,20 +19,22 @@
 #' for three different models, see the argument \code{mode}.
 #'
 #' This probability is calculated including the probability that extinction might
-#' occur before any descendants are produced. Thus, if p=q, the probability of 
+#' occur before any descendants are produced. Thus, if \code{p = q}, the probability of 
 #' a taxon going extinct before it produces any descendants will be 0.5, which 
-#' means that even when sampling is perfect (R=1, meaning completeness of 
+#' means that even when sampling is perfect (\code{R = 1}, meaning completeness of 
 #' 100%) the probability of a taxon being an ancestor of another sampled taxon
 #' can be no higher than 0.5. See Foote (1996) for a graphic depiction of this
 #' non-intuitive ceiling. For reasons (probably?) having to do with finite
 #' approximations of infinite summations, values close to perfect sampling
 #' may have values slightly higher than this ceiling, which is also apparent
-#' visually in the figures in Foote (1996).
+#' visually in the figures in Foote (1996). Thus, values higher than 0.5 when p=q
+#' should be discounted, and in general when sampling rate is high, results should
+#' be treated cautiously as overestimates.
 
 #' @inheritParams SamplingConv
 
 #' @param analysis The type of analysis to be performed, either the probability of sampling direct
-#' descendants or of sampling indirect descendants.
+#' descendants (\code{"directDesc"}) or of sampling indirect descendants (\code{"indirectDesc"}).
 
 #' @param Mmax The maximum number of direct descendants (M) to sum over in the function, which
 #' is ideally meant to be a sum from zero to infinity, like nrep. Unfortunately,
@@ -56,10 +58,11 @@
 #' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="directDesc",nrep=100)
 #'
 #' #probability of having sampled indirect descendants of a taxon
-#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis="directDesc",nrep=100)	#default
-#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis="directDesc",nrep=100)
-#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="directDesc",nrep=100)
+#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis="indirectDesc",nrep=100)	#default
+#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis="indirectDesc",nrep=100)
+#' probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="indirectDesc",nrep=100)
 #'
+
 #'@export
 probAnc<-function(p,q,R,mode="budding",analysis="directDesc",Mmax=85,nrep=10000){
 	#see Foote, 1996	
@@ -86,8 +89,12 @@ probAnc<-function(p,q,R,mode="budding",analysis="directDesc",Mmax=85,nrep=10000)
 		Pp<-qsProb2Comp(R=R,p=p,q=q,mode=mode)
 		#functions dependent on mode
 		if(mode=="budding"){
-			Pd<-function(p,q,Ti){exp(-q*(Ti-1))-exp(-q*Ti)}
-			PN<-function(p,q,Ti,Ni){(exp(-p*Ti)*((p*Ti)^Ni))/factorial(Ni)}
+			Pd<-function(p,q,Ti){
+				exp(-q*(Ti-1))-exp(-q*Ti)
+				}
+			PN<-function(p,q,Ti,Ni){
+				(exp(-p*Ti)*((p*Ti)^Ni))/factorial(Ni)
+				}
 			#should approximate 2*(p/q)*Pp when R and p are both <<1
 			#approx<-2*(p/q)*Pp
 			maxN<-100
@@ -163,7 +170,12 @@ probAnc<-function(p,q,R,mode="budding",analysis="directDesc",Mmax=85,nrep=10000)
 				}
 			}
 		}
+	if(any(is.nan(res))){
+		message("Input parameters and nrep produce NaN values, which are replaced with zeroes. May want to decrease nrep to see if returned estimate holds.")
+		res[is.nan(res)]<-0
+		}
 	res<-sum(res)
 	names(res)<-NULL
 	return(res)
 	}
+	

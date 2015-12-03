@@ -1,3 +1,8 @@
+Version - 2.7 - 
+-Modified probAnc documetentation so that indirect descendant examples are shown
+-Modified probAnc so that calculated NaN values are replaced with zero and a message is printed
+-
+
 Version - 2.6 - 12-01-15
 -Fixed an issued with fossilRecord2fossilRanges where a dataset with a single taxon resulted in a fatal error regarding an attempt to replace more elements than already exists
 -Fixed issue with merging cryptic taxa in fossilRecord2fossilRanges

@@ -171,11 +171,17 @@ probAnc<-function(p,q,R,mode="budding",analysis="directDesc",Mmax=85,nrep=10000)
 			}
 		}
 	if(any(is.nan(res))){
-		message("Input parameters and nrep produce NaN values, which are replaced with zeroes. May want to decrease nrep to see if returned estimate holds.")
+		message("Input parameters and nrep produce NaN values, which are replaced with zeroes.")
+		message("May want to decrease nrep to see if returned estimate holds.")
 		res[is.nan(res)]<-0
 		}
 	res<-sum(res)
 	names(res)<-NULL
+	if(res>0.5 & p==q){
+		message("Treat result with caution: if p = q, then prob of a taxon being an ancestor should be no greater than 0.5.")
+		message("Values higher than 0.5 result from limits of finite calculates, particularly with high sampling probabilities.")
+		message("See documentation.")
+		}
 	return(res)
 	}
 	

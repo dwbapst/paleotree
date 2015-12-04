@@ -146,7 +146,7 @@
 #' See documentation for argument \code{negRatesAsZero} about the treatment of rates that decrease below zero.
 #' Notation of branching, extinction and sampling rates as \code{p, q, r} 
 #' follows what is typical for the paleobiology literature (e.g. Foote, 1997), not the  Greek letters \code{lambda, mu, phi}
-#' found more typically in the biological literature (e.g. Stadler, 2009; Heath et al., 2014; Gavrykushina et al., 2014).
+#' found more typically in the biological literature (e.g. Stadler, 2009; Heath et al., 2014; Gavryushkina et al., 2014).
 
 #' @param totalTime,nTotalTaxa,nExtant,nSamp These arguments represent stopping and
 #' acceptance conditions for simulation runs. They are respectively \code{totalTime}, the

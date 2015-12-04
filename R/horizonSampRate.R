@@ -29,7 +29,7 @@
 #' be supplied.
 
 #' @param durations A vector of precise durations in continuous time, with the
-#' length equal to the number of taxa. If not suppliedthis is calculated from
+#' length equal to the number of taxa. If not supplied, this is calculated from
 #' SampOcc, which must be supplied.
 
 #' @param nCollections A vector of integers representing the number of
@@ -82,11 +82,39 @@ horizonSampRate<-function(sampOcc=NULL,durations=NULL,nCollections=NULL){
 	#input is a list, with each element a taxon, consisting of n sampling occurrences
 		#just like sampleRanges(data,ranges.only=FALSE)
 	if(is.null(durations) & is.null(nCollections)){
+		if(is.null(sampOcc)){
+			stop("No input data supplied!")}
 		if(!is.list(sampOcc)){
-			stop("sampOcc isn't a list of species occurrences")}
+			stop("sampOcc is supplied but in't a list of species occurrences")}
 		sampOcc<-sampOcc[!is.na(sampOcc)]
 		nCollections<-sapply(sampOcc,length)
 		durations<-sapply(sampOcc,max)-sapply(sampOcc,min)
+		names(durations)<-names(nCollections)<-names(sampOcc)
+		}
+	#check lengths
+	if(length(durations)!=length(nCollections)){
+		stop("durations and nCollections are not the same length")
+		}
+	#check names
+	if(is.null(names(durations)) | is.null(names(nCollections))){
+		message("Input data lacks names, assuming ")
+	}else{
+		# check that names are the same, if not re-sort and re-check
+		if(!identical(names(durations),names(nCollections))){
+			message("Attempting to reorder durations and nCollections so names match")
+			nCollections<-sapply(names(durations),function(x) 
+				nCollections[names(nCollections)==x]
+				)
+			if(is.list(nCollections)){
+				stop("Multiple matches of names on durations to names on nCollections")
+				}
+			if(length(durations)!=length(nCollections)){
+				stop("durations and nCollections do not contain the same set of taxa, based on input names")
+				}
+			if(!identical(names(durations),names(nCollections))){
+				stop("names still not matching after resorting")
+				}
+			}
 		}
 	if(is.null(durations) | is.null(nCollections)){
 		stop("durations and nCollections have to be both supplied, if one is given")}

@@ -15,7 +15,7 @@ to be ordered. If not supplied, the elements durations and nCollections must
 be supplied.}
 
 \item{durations}{A vector of precise durations in continuous time, with the
-length equal to the number of taxa. If not suppliedthis is calculated from
+length equal to the number of taxa. If not supplied, this is calculated from
 SampOcc, which must be supplied.}
 
 \item{nCollections}{A vector of integers representing the number of

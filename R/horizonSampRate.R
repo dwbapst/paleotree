@@ -102,9 +102,14 @@ horizonSampRate<-function(sampOcc=NULL,durations=NULL,nCollections=NULL){
 		# check that names are the same, if not re-sort and re-check
 		if(!identical(names(durations),names(nCollections))){
 			message("Attempting to reorder durations and nCollections so names match")
-			nCollections<-sapply(names(durations),function(x) 
-				nCollections[names(nCollections)==x]
-				)
+			nCollections<-sapply(names(durations), USE.NAMES = FALSE, function(x){ 
+				matches<-names(nCollections)==x
+				if(sum(matches)==1){
+					nCollections[matches]
+				}else{
+					stop("Name matches between durations and nCollections are not one-to-one")
+					}
+				})
 			if(is.list(nCollections)){
 				stop("Multiple matches of names on durations to names on nCollections")
 				}

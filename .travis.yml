@@ -3,6 +3,10 @@
 language: r
 sudo: required
 
+#because of phangorn
+bioc_packages:
+   - Biostrings
+
 # Be strict when checking our package
 warnings_are_errors: true
 

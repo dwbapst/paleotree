@@ -20,7 +20,7 @@
 #' interval times matrix (see below) will be sorted from first to last.
 #' 
 #' This function is SPECIFICALLY for simulating the effect of having a discrete
-#' timescale for analyses using simulations. This function should not be used
+#' time-scale for analyses using simulations. This function should not be used
 #' for non-simulations uses, such as binning temporal occurrences for analyses
 #' of real data. In those case, the temporal ranges (which, in real data, will
 #' probably be given as discrete time intervals) should already be tabulated

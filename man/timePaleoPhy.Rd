@@ -3,7 +3,7 @@
 \name{timePaleoPhy}
 \alias{bin_timePaleoPhy}
 \alias{timePaleoPhy}
-\title{Typical ‘a posteriori’ Time-Scaling Approaches For Paleontological Phylogenies}
+\title{Typical 'a posteriori' Time-Scaling Approaches For Paleontological Phylogenies}
 \usage{
 timePaleoPhy(tree, timeData, type = "basic", vartime = NULL, ntrees = 1,
   randres = FALSE, timeres = FALSE, add.term = FALSE,
@@ -170,11 +170,11 @@ divergence dates, users should investigate other time-scaling methods such as \c
 \emph{Time-Scaling Methods}
 
 These functions are an attempt to unify and collect previously used and
-discussed ‘a posteriori’ methods for time-scaling phylogenies of fossil taxa.
+discussed 'a posteriori' methods for time-scaling phylogenies of fossil taxa.
 Unfortunately, it can be difficult to attribute some time-scaling methods to
 specific references in the literature.
 
-There are five main ‘a posteriori’ approaches that can be used by \code{timePaleoPhy}. Four of these
+There are five main a posteriori approaches that can be used by \code{timePaleoPhy}. Four of these
 main types use some value of absolute time, chosen a priori, to time-scale the tree.
 This is handled by the argument \code{vartime}, which is NULL by default and unused
 for type "basic".
@@ -304,10 +304,10 @@ By setting the argument nonstoch.bin to TRUE for \code{bin_timePaleoPhy}, the da
 stochastically pulled from uniform bins but instead FADs are assigned to the
 earliest time of whichever interval they were placed in and LADs are placed
 at the most recent time in their placed interval. This option may be useful
-for plotting. The sites argument becomes arbitrary if nonstoch.bin is TRUE.
+for plotting. The sites argument becomes arbitrary if \code{nonstoch.bin = TRUE}.
 
-If timeData or the elements of timeList are actually data.frames (as output
-by read.csv or read.table), these will be coerced to a matrix.
+If \code{timeData} or the elements of \code{timeList} are actually \code{data.frames} (as output
+by \code{read.csv} or \code{read.table}), these will be coerced to a matrix.
 
 \emph{Tutorial} 
 
@@ -498,6 +498,6 @@ evolutionary patterns. Blackwell Scientific, Oxford.
 For an alternative time-scaling function, which includes the 'ruta' method
 that weights the time-scaling of branches by estimates of character change
 along with implementations of the 'basic' and 'equal' methods described here,
-please see function code/{DatePhylo} in package code/{strap}.
+please see function \code{DatePhylo} in package \code{strap}.
 }
 

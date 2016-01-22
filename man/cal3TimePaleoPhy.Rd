@@ -4,7 +4,7 @@
 \alias{bin_cal3TimePaleoPhy}
 \alias{cal3}
 \alias{cal3TimePaleoPhy}
-\title{Three Rate Calibrated ‘a posteriori’ Time-Scaling of Paleo-Phylogenies}
+\title{Three Rate Calibrated 'a posteriori' Time-Scaling of Paleo-Phylogenies}
 \usage{
 cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1,
   anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
@@ -178,7 +178,7 @@ pseudo-timeData matrix.)
 \description{
 Time-scales an unscaled cladogram of fossil taxa, using information on their
 ranges and estimates of the instantaneous rates of branching, extinction and
-sampling. The output is a sample of timescaled trees, as resulting from a
+sampling. The output is a sample of a posteriori time-scaled trees, as resulting from a
 stochastic algorithm which samples observed gaps in the fossil record with
 weights calculated based on the input rate estimates. This function also
 uses the three-rate calibrated time-scaling algorithm to stochastically
@@ -186,7 +186,7 @@ resolve polytomies and infer potential ancestor-descendant relationships,
 simultaneous with the time-scaling treatment.
 }
 \details{
-The three-rate calibrated ("cal3") algorithm time-scales trees ‘a posteriori’ by
+The three-rate calibrated ("cal3") algorithm time-scales trees a posteriori by
 stochastically picking node divergence times relative to a probability
 distribution of expected waiting times between speciation and first
 appearance in the fossil record. This algorithm is extended to apply to

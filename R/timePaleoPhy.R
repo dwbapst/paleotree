@@ -1,4 +1,4 @@
-#' Typical ‘a posteriori’ Time-Scaling Approaches For Paleontological Phylogenies
+#' Typical 'a posteriori' Time-Scaling Approaches For Paleontological Phylogenies
 #' 
 #' Time-scales an unscaled cladogram of fossil taxa using information on their
 #' temporal ranges, using various methods. Also can resolve polytomies randomly
@@ -13,11 +13,11 @@
 #' \emph{Time-Scaling Methods}
 #'
 #' These functions are an attempt to unify and collect previously used and
-#' discussed ‘a posteriori’ methods for time-scaling phylogenies of fossil taxa.
+#' discussed 'a posteriori' methods for time-scaling phylogenies of fossil taxa.
 #' Unfortunately, it can be difficult to attribute some time-scaling methods to
 #' specific references in the literature.
 #' 
-#' There are five main ‘a posteriori’ approaches that can be used by \code{timePaleoPhy}. Four of these
+#' There are five main a posteriori approaches that can be used by \code{timePaleoPhy}. Four of these
 #' main types use some value of absolute time, chosen a priori, to time-scale the tree.
 #' This is handled by the argument \code{vartime}, which is NULL by default and unused
 #' for type "basic".
@@ -131,7 +131,7 @@
 #' \emph{Interpretation of Taxon Ages in bin_timePaleoPhy}
 #'
 #' As an alternative to using \code{timePaleoPhy}, \code{bin_timePaleoPhy} is a wrapper of 
-#' \code{timePaleoPhy} which produces timescaled trees for datasets which only have 
+#' \code{timePaleoPhy} which produces time-scaled trees for datasets which only have 
 #' interval data available. For each output tree, taxon first and last appearance 
 #' dates are placed within their listed intervals under a uniform distribution. 
 #' Thus, a large sample of time-scaled trees will approximate the uncertainty in 
@@ -154,10 +154,10 @@
 #' stochastically pulled from uniform bins but instead FADs are assigned to the
 #' earliest time of whichever interval they were placed in and LADs are placed
 #' at the most recent time in their placed interval. This option may be useful
-#' for plotting. The sites argument becomes arbitrary if nonstoch.bin is TRUE.
+#' for plotting. The sites argument becomes arbitrary if \code{nonstoch.bin = TRUE}.
 #' 
-#' If timeData or the elements of timeList are actually data.frames (as output
-#' by read.csv or read.table), these will be coerced to a matrix.
+#' If \code{timeData} or the elements of \code{timeList} are actually \code{data.frames} (as output
+#' by \code{read.csv} or \code{read.table}), these will be coerced to a matrix.
 #'
 #' \emph{Tutorial} 
 #'
@@ -338,7 +338,7 @@
 #' For an alternative time-scaling function, which includes the 'ruta' method
 #' that weights the time-scaling of branches by estimates of character change
 #' along with implementations of the 'basic' and 'equal' methods described here,
-#' please see function code/{DatePhylo} in package code/{strap}.
+#' please see function \code{DatePhylo} in package \code{strap}.
 
 #' @references 
 #' Bapst, D. W. 2013. A stochastic rate-calibrated method for time-scaling
@@ -474,7 +474,7 @@
 #' ttree2 <- timePaleoPhy(cladoDrop,rangesCont,type="basic",
 #'    	randres=TRUE,node.mins=nodeDates,plot=TRUE)
 #' 
-#' #Using bin_timePaleoPhy to timescale with discrete interval data
+#' #Using bin_timePaleoPhy to time-scale with discrete interval data
 #' #first let's use binTimeData() to bin in intervals of 1 time unit
 #' rangesDisc <- binTimeData(rangesCont,int.length=1)
 #' ttreeB1 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,randres=TRUE,

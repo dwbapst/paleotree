@@ -2,7 +2,7 @@ Package: paleotree
 Type: Package
 Version: 2.7
 Title: Paleontological and Phylogenetic Analyses of Evolution
-Date: 2015-12-01
+Date: 2016-01-22
 Author: David W. Bapst
 Depends:
     R (>= 3.0.0),
@@ -17,7 +17,7 @@ Imports:
     utils
 ByteCompile: TRUE
 Maintainer: David W. Bapst <dwbapst@gmail.com>
-Description: Provides tools for transforming, ‘a posteriori’ time-scaling, and
+Description: Provides tools for transforming, a posteriori time-scaling, and
     modifying phylogenies containing extinct (i.e. fossil) lineages. In particular,
     most users are interested in the functions timePaleoPhy, bin_timePaleoPhy,
     cal3TimePaleoPhy and bin_cal3TimePaleoPhy, which a posteriori time-scale cladograms of

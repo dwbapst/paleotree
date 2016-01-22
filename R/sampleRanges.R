@@ -243,7 +243,7 @@ sampleRanges<-function(taxad,r,alpha=1,beta=1,rTimeRatio=1,modern.samp.prob=1,mi
 	#sample ranges using a taxad matrix as input 
 	#if (ranges.only=TRUE): outputs matrix of FADs/LADs, with NAs for unsampled taxa
 	#if (ranges.only=FALSE): outputs per-species list with vectors of dates where that species was sampled
-		#ranges and occurance are output on a BACKWORD-moving timescale as expected for paleo data
+		#ranges and occurance are output on a BACKWORD-moving time-scale as expected for paleo data
 	#if modern.samp.prob=1, then all still-living taxa (taxa at 0 for LAD) are ALWAYS last observed at zero
 		#this approximates the fact that we think the present-day living biota is almost perfectly sampled
 			#(well, relative to the modern)

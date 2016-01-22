@@ -1,6 +1,6 @@
-#' Timescaling of Paleo-Phylogenies
+#' Typical ‘a posteriori’ Time-Scaling Approaches For Paleontological Phylogenies
 #' 
-#' Timescales an unscaled cladogram of fossil taxa using information on their
+#' Time-scales an unscaled cladogram of fossil taxa using information on their
 #' temporal ranges, using various methods. Also can resolve polytomies randomly
 #' and output samples of randomly-resolved trees. As simple methods of time-scaling
 #' phylogenies of fossil taxa can have biasing effects on macroevolutionary analyses
@@ -13,11 +13,11 @@
 #' \emph{Time-Scaling Methods}
 #'
 #' These functions are an attempt to unify and collect previously used and
-#' discussed methods for time-scaling phylogenies of fossil taxa.
+#' discussed ‘a posteriori’ methods for time-scaling phylogenies of fossil taxa.
 #' Unfortunately, it can be difficult to attribute some time-scaling methods to
 #' specific references in the literature.
 #' 
-#' There are five main method types that can be used by \code{timePaleoPhy}. Four of these
+#' There are five main ‘a posteriori’ approaches that can be used by \code{timePaleoPhy}. Four of these
 #' main types use some value of absolute time, chosen a priori, to time-scale the tree.
 #' This is handled by the argument \code{vartime}, which is NULL by default and unused
 #' for type "basic".
@@ -84,14 +84,14 @@
 #' 
 #' These functions cannot time-scale branches relative to reconstructed
 #' character changes along branches, as used by Lloyd et al. (2012). Please
-#' see \code{DatePhylo} in R package {strap} for this functionality.
+#' see \code{DatePhylo} in R package \code{strap} for this functionality.
 #' 
 #' These functions will intuitively drop taxa from the tree with NA for range
-#' or are missing from timeData or timeList. Taxa dropped from the tree will be
+#' or are missing from \code{timeData} or \code{timeList}. Taxa dropped from the tree will be
 #' will be listed in a message output to the user. The same is done for taxa in
-#' the timeList object not listed in the tree..
+#' the \code{timeList} object not listed in the tree.
 #' 
-#' As with many functions in the paleotree library, absolute time is always
+#' As with many functions in the \code{paleotree} library, absolute time is always
 #' decreasing, i.e. the present day is zero.
 #'
 #' As of August 2014, please note that the branch-ordering algorithm used in 'equal' has changed
@@ -168,7 +168,7 @@
 
 #' @aliases timePaleoPhy bin_timePaleoPhy
 
-#' @param tree An unscaled cladogram of fossil taxa, of class 'phylo'. Tip labels
+#' @param tree An unscaled cladogram of fossil taxa, of class \code{phylo}. Tip labels
 #' must match the taxon labels in the respective temporal data.
 
 #' @param timeData Two-column matrix of first and last occurrences in absolute
@@ -192,44 +192,44 @@
 #' identical time-scaled trees.
 
 #' @param randres Should polytomies be randomly resolved? By default,
-#' timePaleoPhy does not resolve polytomies, instead outputting a time-scaled
-#' tree that is only as resolved as the input tree. If randres=T, then
+#' \code{timePaleoPhy} does not resolve polytomies, instead outputting a time-scaled
+#' tree that is only as resolved as the input tree. If \code{randres = T}, then
 #' polytomies will be randomly resolved using \code{\link{multi2di}} from the
-#' package ape. If randres=T and ntrees=1, a warning is printed that users
+#' package ape. If \code{randres = T} and \code{ntrees = 1}, a warning is printed that users
 #' should analyze multiple randomly-resolved trees, rather than a single such
 #' tree, although a tree is still output.
 
 #' @param timeres Should polytomies be resolved relative to the order of
-#' appearance of lineages? By default, timePaleoPhy does not resolve
+#' appearance of lineages? By default, \code{timePaleoPhy} does not resolve
 #' polytomies, instead outputting a time-scaled tree that is only as resolved
-#' as the input tree. If timeres=T, then polytomies will be resolved with
+#' as the input tree. If \code{timeres = T}, then polytomies will be resolved with
 #' respect to time using the paleotree function \code{\link{timeLadderTree}}.
 #' See that functions help page for more information; the result of time-order
 #' resolving of polytomies generally does not differ across multiple uses,
 #' unlike use of \code{multi2di}.
 
-#' @param add.term If true, adds terminal ranges.By default, this function will
+#' @param add.term If true, adds terminal ranges. By default, this function will
 #' not add the ranges of taxa when time-scaling a tree, so that the tips
 #' correspond temporally to the first appearance datums of the given taxa. If
-#' add.term=T, then the 'terminal ranges' of the taxa are added to the tips
+#' \code{add.term = T}, then the 'terminal ranges' of the taxa are added to the tips
 #' after tree is time-scaled, such that the tips now correspond to the last
 #' appearance datums.
 
 #' @param inc.term.adj If true, includes terminal ranges in branch length
 #' estimates for the various adjustment of branch lengths under all methods
 #' except 'basic' (i.e. a terminal length branch will not be treated as zero
-#' length is this argument is TRUE if the taxon at this tip has a non-zero
-#' duration). By default, this argument is FALSE and this function will not
+#' length is this argument is \code{TRUE} if the taxon at this tip has a non-zero
+#' duration). By default, this argument is \code{FALSE} and this function will not
 #' include the ranges of taxa when adjusting branch lengths, so that
 #' zero-length branches before first appearance times will be extended. An
-#' error is returned if this argument is true but type="basic" or
-#' add.term=FALSE, as this argument is inconsistent with those argument
+#' error is returned if this argument is true but \code{type = "basic"} or
+#' \code{add.term = FALSE}, as this argument is inconsistent with those argument
 #' options.
 
 #' @param dateTreatment This argument controls the interpretation of timeData. The default setting
 #' 'firstLast' treats the dates in timeData as a column of precise first and last appearances,
 #' such that first appearances will be used to date nodes and last appearances will only be
-#' called on if \code{add.term=TRUE}. A second option, added by great demand, is 'minMax' which
+#' called on if \code{add.term = TRUE}. A second option, added by great demand, is 'minMax' which
 #' treats these dates as minimum and maximum bounds on single point dates. Under this option,
 #' all taxa in the analysis will be treated as being point dates, such that the first appearance
 #' is also the last. These dates will be pulled under a uniform distribution. If 'minMax' is used,
@@ -282,16 +282,16 @@
 #' is used, if a user has a specific date they'd like to constrain the root to, they should use
 #' \code{node.mins} instead because the result is more predictable.
 
-#' @param noisyDrop If TRUE (the default), any taxa dropped from tree due to not
+#' @param noisyDrop If \code{TRUE} (the default), any taxa dropped from tree due to not
 #' having a matching entry in the time data will be listed in a system message.
 
-#' @param plot If true, plots the input and output phylogenies.
+#' @param plot If \code{TRUE}, plots the input and output phylogenies.
 
 #' @param timeList A list composed of two matrices giving interval times and
 #' taxon appearance dates. The rownames of the second matrix should be the taxon IDs,
-#' identical to the tip.labels for tree. See details.
+#' identical to the \code{tip.labels} for tree. See details.
 
-#' @param nonstoch.bin If true, dates are not stochastically pulled from
+#' @param nonstoch.bin If \code{TRUE}, dates are not stochastically pulled from
 #' uniform distributions. See below for more details.
 
 #' @param sites Optional two column matrix, composed of site IDs for taxon FADs
@@ -311,17 +311,17 @@
 #' recovered from a single bed/horizon, such as a Lagerstatten.
 
 #' @return The output of these functions is a time-scaled tree or set of
-#' time-scaled trees, of either class phylo or multiphylo, depending on the
+#' time-scaled trees, of either class \code{phylo} or \code{multiphylo}, depending on the
 #' argument ntrees. All trees are output with an element $root.time. This is
 #' the time of the root on the tree and is important for comparing patterns
 #' across trees. Note that the $root.time element is defined relative to the
 #' earliest first appearance date, and thus later tips may seem to occur in
 #' the distant future under the 'aba' and 'zbla' time-scaling methods.
 #' 
-#' Trees created with bin_timePaleoPhy will output with some additional
+#' Trees created with \code{bin_timePaleoPhy} will output with some additional
 #' elements, in particular $ranges.used, a matrix which records the
 #' continuous-time ranges generated for time-scaling each tree. (Essentially a
-#' pseudo-timeData matrix.)
+#' pseudo-\code{timeData} matrix.)
 
 #' @note Please account for stratigraphic uncertainty in your analysis.
 #' Unless you have exceptionally resolved data, select an appropriate option in

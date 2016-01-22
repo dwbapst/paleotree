@@ -4,7 +4,7 @@
 \alias{bin_cal3TimePaleoPhy}
 \alias{cal3}
 \alias{cal3TimePaleoPhy}
-\title{Three Rate Calibrated Timescaling of Paleo-Phylogenies}
+\title{Three Rate Calibrated ‘a posteriori’ Time-Scaling of Paleo-Phylogenies}
 \usage{
 cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1,
   anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
@@ -19,7 +19,7 @@ bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
   noisyDrop = TRUE, plot = FALSE)
 }
 \arguments{
-\item{tree}{An unscaled cladogram of fossil taxa, of class 'phylo'. Tip labels
+\item{tree}{An unscaled cladogram of fossil taxa, of class \code{phylo}. Tip labels
 must match the taxon labels in the respective temporal data.}
 
 \item{timeData}{Two-column matrix of first and last occurrences in absolute
@@ -116,7 +116,7 @@ node ages.}
 rather than using the cal3 algorithm to weight the resolution of polytomies 
 relative to sampling in the fossil record?}
 
-\item{noisyDrop}{If TRUE (the default), any taxa dropped from tree due to not
+\item{noisyDrop}{If \code{TRUE} (the default), any taxa dropped from tree due to not
 having a matching entry in the time data will be listed in a system message.}
 
 \item{tolerance}{Acceptable amount of shift in tip dates from dates listed
@@ -134,7 +134,7 @@ cal3-timescaled phylogenies}
 
 \item{timeList}{A list composed of two matrices giving interval times and
 taxon appearance dates. The rownames of the second matrix should be the taxon IDs,
-identical to the tip.labels for tree. See details.}
+identical to the \code{tip.labels} for tree. See details.}
 
 \item{nonstoch.bin}{If true, dates are not stochastically pulled from
 uniform distributions. See below for more details.}
@@ -176,7 +176,7 @@ continuous-time ranges generated for time-scaling each tree. (Essentially a
 pseudo-timeData matrix.)
 }
 \description{
-Timescales an unscaled cladogram of fossil taxa, using information on their
+Time-scales an unscaled cladogram of fossil taxa, using information on their
 ranges and estimates of the instantaneous rates of branching, extinction and
 sampling. The output is a sample of timescaled trees, as resulting from a
 stochastic algorithm which samples observed gaps in the fossil record with
@@ -186,7 +186,7 @@ resolve polytomies and infer potential ancestor-descendant relationships,
 simultaneous with the time-scaling treatment.
 }
 \details{
-The three-rate calibrated ("cal3") algorithm time-scales trees by
+The three-rate calibrated ("cal3") algorithm time-scales trees ‘a posteriori’ by
 stochastically picking node divergence times relative to a probability
 distribution of expected waiting times between speciation and first
 appearance in the fossil record. This algorithm is extended to apply to

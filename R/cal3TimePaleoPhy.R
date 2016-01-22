@@ -1,6 +1,6 @@
-#' Three Rate Calibrated Timescaling of Paleo-Phylogenies
+#' Three Rate Calibrated ‘a posteriori’ Time-Scaling of Paleo-Phylogenies
 #' 
-#' Timescales an unscaled cladogram of fossil taxa, using information on their
+#' Time-scales an unscaled cladogram of fossil taxa, using information on their
 #' ranges and estimates of the instantaneous rates of branching, extinction and
 #' sampling. The output is a sample of timescaled trees, as resulting from a
 #' stochastic algorithm which samples observed gaps in the fossil record with
@@ -9,7 +9,7 @@
 #' resolve polytomies and infer potential ancestor-descendant relationships,
 #' simultaneous with the time-scaling treatment.
 #' 
-#' @details The three-rate calibrated ("cal3") algorithm time-scales trees by
+#' @details The three-rate calibrated ("cal3") algorithm time-scales trees ‘a posteriori’ by
 #' stochastically picking node divergence times relative to a probability
 #' distribution of expected waiting times between speciation and first
 #' appearance in the fossil record. This algorithm is extended to apply to

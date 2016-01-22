@@ -4,32 +4,40 @@
 \alias{plotTraitgram}
 \title{Plot a Traitgram for Continuous Traits}
 \usage{
-plotTraitgram(trait, tree, trait.name = "'trait'", conf.int = TRUE,
-  lwd = 1.5)
+plotTraitgram(trait, tree, main = "", conf.int = TRUE, lwd = 1.5)
 }
 \arguments{
-\item{trait}{a vector of continuous trait values}
+\item{trait}{A vector of continuous trait values. If the length of \code{trait}
+is equal to the number of tips and number of nodes, than it is presumed internal
+node values are given. If the length of \code{trait} is equal to the number of tips
+of \code{tree} then these will be treated as tip values and ancestral trait reconstruction
+will be used to reconstruct the missing ancestral values. If \code{trait} is not
+named, or if internal node values are given, then values will be presumed to be in
+the order of tip/node numbering in \code{tree$edge}, which for tips is the same as
+the ordering in \code{tree$tip.label}.}
 
-\item{tree}{a phylo object}
+\item{tree}{A \code{phylo} object.}
 
-\item{trait.name}{The name of the trait plotted, used for the figure's main
-title}
+\item{main}{Main title of traitgram plot.}
 
-\item{conf.int}{if true, confidence intervals are plotted}
+\item{conf.int}{If \code{TRUE} (the default), confidence intervals are plotted.}
 
-\item{lwd}{The line width used for the figure}
+\item{lwd}{The line width used for branches in the figure.}
 }
 \value{
-Returns no value, just plots the traitgram.
+Return no value, just plot the traitgram.
 }
 \description{
-This function uses maximum-likelihood ancestral trait estimation to plot a
-'traitgram' (Ackerly, 2009) given a tree and a set of continuous trait
+\code{plotTraitgram} plots a traitgram showing the evolution of a continuous trait.
+If node values are not given (i.e. the data is empirical data collected from tips,
+rather than simulated data), maximum-likelihood ancestral trait estimation is used
+to calculate node values. (Ackerly, 2009) given a tree and a set of continuous trait
 values.
 }
 \details{
-By default, this function uses \code{\link{ace}} from the library ape to
-reconstruct ancestral traits and confidence intervals using the PIC method.
+By default, this function will use \code{\link{ace}} from the library \code{ape} to
+reconstruct ancestral traits and confidence intervals using the PIC method, if internal
+node values (i.e. ancestral node values) are not given.
 
 As with many functions in the paleotree library, absolute time is always
 decreasing, i.e. the present day is zero.
@@ -51,6 +59,11 @@ plotTraitgram(trait,tree,conf.int=FALSE)
 #now, with
 plotTraitgram(trait,tree)
 #not much confidence, eh?
+
+# plotting simulated data
+    # with values for ancestral nodes as input
+trait <- rTraitCont(tree, ancestor=TRUE)
+plotTraitgram(tree=tree,trait=trait)
 
 }
 \author{

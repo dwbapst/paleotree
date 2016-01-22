@@ -129,8 +129,9 @@ console and to graphic devices an enormous number of messages, plots and
 anciliary information that may be useful or entirely useless to figuring
 out what is going wrong.}
 
-\item{plot}{If true, plots the input, "basic" timescaled and output
-cal3-timescaled phylogenies}
+\item{plot}{If true, plots the input, "basic" time-scaled phylogeny (an
+intermediary step in the algorithm) and the output
+cal3 time-scaled phylogeny.}
 
 \item{timeList}{A list composed of two matrices giving interval times and
 taxon appearance dates. The rownames of the second matrix should be the taxon IDs,
@@ -192,10 +193,10 @@ distribution of expected waiting times between speciation and first
 appearance in the fossil record. This algorithm is extended to apply to
 resolving polytomies and designating possible ancestor-descendant
 relationships. The full details of this method, its sister method the
-sampling-rate-calibrated timescaling method and the details of the algorithm
+sampling-rate-calibrated time-scaling method and the details of the algorithm
 will be given in Bapst (in prep for Paleobiology).
 
-Briefly, cal3 timescaling is done by examining each node separately, moving
+Briefly, cal3 time-scaling is done by examining each node separately, moving
 from the root upwards. Ages of branching nodes are constrained below by the
 ages of the nodes below them (except the root; hence the need for the
 root.max argument) and constrained above by the first appearance dates
@@ -236,7 +237,7 @@ prior to using this function, as shown in an example below.
 
 The branching and extinction rate are the 'per-capita' instantaneous
 origination/extinction rates for the taxic level of the tips of the tree
-being time-scaled. Any user of the cal3 timescaling method has multiple
+being time-scaled. Any user of the cal3 time-scaling method has multiple
 options for estimating these rates. One is to separately calculate the
 per-capita rates (following the equations in Foote, 2001) across multiple
 intervals and take the mean for each rate. A second, less preferred option,
@@ -294,7 +295,7 @@ will use the earliest dates provided to calibrate node ages, which is either
 an overly conservative approach to time-scaling or fairly nonsensical.
 
 Alternatively to using \code{cal3TimePaleoPhy}, \code{bin_cal3TimePaleoPhy} is a wrapper of 
-\code{cal3TimePaleoPhy} which produces timescaled trees for datasets which only have 
+\code{cal3TimePaleoPhy} which produces time-scaled trees for datasets which only have 
 interval data available. For each output tree, taxon first and last appearance 
 dates are placed within their listed intervals under a uniform distribution. 
 Thus, a large sample of time-scaled trees will approximate the uncertainty in 
@@ -331,7 +332,7 @@ Most importantly, please note the stochastic element of the three
 rate-calibrated time-scaling methods. These do not use traditional
 optimization methods, but instead draw divergence times from a distribution
 defined by the probability of intervals of unobserved evolutionary history.
-This means analyses MUST be done over many cal3-timescaled trees for
+This means analyses MUST be done over many cal3 time-scaled trees for
 analytical rigor! No one tree is correct.
 
 Similarly, please account for stratigraphic uncertainty in your analysis.
@@ -362,7 +363,7 @@ sRate <- srRes[[1]][2]
    # we can get extRate from getSampRateCont too
 #we'll assume extRate=brRate (ala Foote et al., 1999); may not always be a good assumption
 divRate<-srRes[[1]][1]
-#now let's try cal3TimePaleoPhy, which timescales using a sampling rate to calibrate
+#now let's try cal3TimePaleoPhy, which time-scales using a sampling rate to calibrate
 #This can also resolve polytomies based on sampling rates, with some stochastic decisions
 ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
     sampRate=sRate,ntrees=1,plot=TRUE)

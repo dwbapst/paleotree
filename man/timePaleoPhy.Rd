@@ -281,7 +281,7 @@ clarity.
 \emph{Interpretation of Taxon Ages in bin_timePaleoPhy}
 
 As an alternative to using \code{timePaleoPhy}, \code{bin_timePaleoPhy} is a wrapper of 
-\code{timePaleoPhy} which produces timescaled trees for datasets which only have 
+\code{timePaleoPhy} which produces time-scaled trees for datasets which only have 
 interval data available. For each output tree, taxon first and last appearance 
 dates are placed within their listed intervals under a uniform distribution. 
 Thus, a large sample of time-scaled trees will approximate the uncertainty in 
@@ -427,7 +427,7 @@ ttree1 <- timePaleoPhy(cladoDrop,rangesCont,type="basic",
 ttree2 <- timePaleoPhy(cladoDrop,rangesCont,type="basic",
    	randres=TRUE,node.mins=nodeDates,plot=TRUE)
 
-#Using bin_timePaleoPhy to timescale with discrete interval data
+#Using bin_timePaleoPhy to time-scale with discrete interval data
 #first let's use binTimeData() to bin in intervals of 1 time unit
 rangesDisc <- binTimeData(rangesCont,int.length=1)
 ttreeB1 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,randres=TRUE,

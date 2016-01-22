@@ -73,7 +73,7 @@ produce a serious mismatch of resulting process to the defined model, because th
 considered at the end of these waiting times. Instead, any time a waiting time greater than \code{maxStepTime} is
 selected, then instead \emph{no} event occurs and a time-step equal to \code{maxStepTime} occurs instead, thus effectively
 discretizing the progression of time in the simulations run by \code{simFossilRecord}. Decreasing this value will increase
-accuracy (as the timescale is effectively more discretized) but increase computation time, as the computer will need
+accuracy (as the time-scale is effectively more discretized) but increase computation time, as the computer will need
 to stop and check rates to see if an event happened more often. Users should toggle this value relative to the time-dependent
 rate equations they input, relative to the rate of change in rates expected in time-dependent rates.}
 
@@ -265,7 +265,7 @@ are very unlikely or impossible given other model parameters may take considerab
 computation time to find acceptable simulation runs, or effectively never find any
 acceptable simulation runs.
 
-\emph{On Timescale Used in Output}
+\emph{On Time-Scale Used in Output}
 
 Dates given in the output are on an reversed absolute time-scale; i.e. time
 decreases going from the past to the future, as is typical in paleontological

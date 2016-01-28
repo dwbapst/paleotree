@@ -18,9 +18,9 @@ be supplied.}
 length equal to the number of taxa. If not supplied, this is calculated from
 \code{SampOcc}, which must be supplied.}
 
-\item{\code{nCollections}}{A vector of integers representing the number of
+\item{nCollections}{A vector of integers representing the number of
 collections for each taxon in the input durations. If not supplied
-this is calculated from SampOcc, which must be supplied.}
+this is calculated from \code{SampOcc}, which must be supplied.}
 }
 \value{
 Returns the instantaneous sampling (in per lineage*time-units) as a

@@ -30,3 +30,5 @@ As of 01/13/15, the paleotree repository was restructured so the package no long
 This code is authored by David Bapst and offered under CC0.
 
 The current total number of downloads of the paleotree package from the RStudio CRAN mirror is: [![Number of Downloads](http://cranlogs.r-pkg.org/badges/grand-total/paleotree)](https://github.com/metacran/cranlogs.app)
+
+[![Research software impact](http://depsy.org/api/package/cran/paleotree/badge.svg)](http://depsy.org/package/r/paleotree)

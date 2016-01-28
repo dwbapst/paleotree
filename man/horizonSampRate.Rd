@@ -11,19 +11,19 @@ horizonSampRate(sampOcc = NULL, durations = NULL, nCollections = NULL)
 and each element of the list being a numerical vector with the length equal
 to the number of collections for each taxon, and each value equal to the
 precise date of that fossil's time of collection. These dates do not need
-to be ordered. If not supplied, the elements durations and nCollections must
+to be ordered. If not supplied, the elements \code{durations} and \code{nCollections} must
 be supplied.}
 
 \item{durations}{A vector of precise durations in continuous time, with the
 length equal to the number of taxa. If not supplied, this is calculated from
-SampOcc, which must be supplied.}
+\code{SampOcc}, which must be supplied.}
 
-\item{nCollections}{A vector of integers representing the number of
+\item{\code{nCollections}}{A vector of integers representing the number of
 collections for each taxon in the input durations. If not supplied
 this is calculated from SampOcc, which must be supplied.}
 }
 \value{
-Returns the instantaneous sampling (in lineage*time-units) as a
+Returns the instantaneous sampling (in per lineage*time-units) as a
 single numerical value. Note that this is the instantaneous sampling
 rate and not the probability of sampling a taxon per interval.
 }
@@ -31,11 +31,11 @@ rate and not the probability of sampling a taxon per interval.
 This function implements the exact maximum likelihood estimator for the
 instantaneous sampling rate from Solow and Smith (1997, Paleobiology),
 which is based on the relationship between the number of collections for a
-set of tax and their durations (known precisely in continuous time).
+set of taxa and their durations (known precisely in continuous time).
 }
 \details{
-Given a dataset of taxa with a vector N, representing the number of
-collections for each taxon, and a vector D, giving the precise duration
+Given a dataset of taxa with a vector \eqn{N}, representing the number of
+collections for each taxon, and a vector \eqn{D}, giving the precise duration
 for each taxon, we can use the following maximum likelihood estimator from
 Solow and Smith (1997) to obtain the instantaneous sampling rate:
 

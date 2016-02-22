@@ -13,10 +13,11 @@ cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1,
   diagnosticMode = FALSE, plot = FALSE)
 
 bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
-  nonstoch.bin = FALSE, sites = NULL, point.occur = FALSE, anc.wt = 1,
-  node.mins = NULL, dateTreatment = "firstLast", FAD.only = FALSE,
-  adj.obs.wt = TRUE, root.max = 200, step.size = 0.1, randres = FALSE,
-  noisyDrop = TRUE, plot = FALSE)
+  anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
+  FAD.only = FALSE, sites = NULL, point.occur = FALSE,
+  nonstoch.bin = FALSE, adj.obs.wt = TRUE, root.max = 200,
+  step.size = 0.1, randres = FALSE, noisyDrop = TRUE, tolerance = 1e-04,
+  diagnosticMode = FALSE, plot = FALSE)
 }
 \arguments{
 \item{tree}{An unscaled cladogram of fossil taxa, of class \code{phylo}. Tip labels
@@ -137,9 +138,6 @@ cal3 time-scaled phylogeny.}
 taxon appearance dates. The rownames of the second matrix should be the taxon IDs,
 identical to the \code{tip.labels} for tree. See details.}
 
-\item{nonstoch.bin}{If true, dates are not stochastically pulled from
-uniform distributions. See below for more details.}
-
 \item{sites}{Optional two column matrix, composed of site IDs for taxon FADs
 and LADs. The sites argument allows users to constrain the placement of
 dates by restricting multiple fossil taxa whose FADs or LADs are from the
@@ -155,6 +153,9 @@ events.}
 which forces all FADs and LADs to equal each other. This should be used when
 all taxa are only known from single 'point occurrences', i.e. each is only
 recovered from a single bed/horizon, such as a Lagerstatten.}
+
+\item{nonstoch.bin}{If true, dates are not stochastically pulled from
+uniform distributions. See below for more details.}
 }
 \value{
 The output of these functions is a time-scaled tree or set of

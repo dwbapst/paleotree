@@ -3,6 +3,7 @@ Version - 2.7 -
 -Modified probAnc so that calculated NaN values are replaced with zero and a message is printed
 -Added name and length checks to horizonSampRate, and code to resort names so they match if not input correctly
 -Modified plotTraitgram to allow input of simulated node values, edited and clarified documentation and examples
+-Small changes to order of arguments in bin_cal3TimePaleoPhy
 -
 
 Version - 2.6 - 12-01-15

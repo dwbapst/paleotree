@@ -879,9 +879,12 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 
 #' @rdname cal3TimePaleoPhy
 #' @export
-bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,nonstoch.bin=FALSE,
-		sites=NULL,point.occur=FALSE,anc.wt=1,node.mins=NULL,dateTreatment="firstLast",FAD.only=FALSE,
-		adj.obs.wt=TRUE,root.max=200,step.size=0.1,randres=FALSE,noisyDrop=TRUE,plot=FALSE){
+bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,
+	ntrees=1, anc.wt=1, node.mins=NULL, dateTreatment="firstLast",
+	FAD.only=FALSE,sites=NULL,point.occur=FALSE,nonstoch.bin=FALSE,
+	adj.obs.wt=TRUE,root.max=200,step.size=0.1,
+	randres=FALSE,noisyDrop=TRUE,
+	tolerance=0.0001, diagnosticMode=FALSE, plot=FALSE){
 	#see the bin_cal3 function for more notation...
 	#require(ape)
 	if(!inherits(tree, "phylo")){
@@ -992,9 +995,13 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,ntrees=1,no
 		rownames(timeData)<-rownames(timeList[[2]])
 		#if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
 		#if(FAD.only){timeData[,2]<-timeData[,1]}
-		tree2<-suppressMessages(cal3TimePaleoPhy(tree,timeData,brRate=brRate,extRate=extRate,sampRate=sampRate,
-			ntrees=1,anc.wt=anc.wt,node.mins=node.mins,adj.obs.wt=adj.obs.wt,root.max=root.max,step.size=step.size,
-			FAD.only=FAD.only,dateTreatment=dateTreatment,randres=randres,plot=plot))
+		tree2<-suppressMessages(
+			cal3TimePaleoPhy(tree,timeData,brRate=brRate,extRate=extRate,sampRate=sampRate,
+				ntrees=1,anc.wt=anc.wt,node.mins=node.mins,adj.obs.wt=adj.obs.wt,
+				root.max=root.max,step.size=step.size,
+				FAD.only=FAD.only,dateTreatment=dateTreatment,randres=randres,
+				tolerance=tolerance,diagnosticMode=diagnosticMode,plot=plot)
+			)
 		colnames(timeData)<-c("FAD","LAD")
 		tree2$ranges.used<-timeData
 		names(tree2$edge.length)<-NULL

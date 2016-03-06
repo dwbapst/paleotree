@@ -199,6 +199,9 @@
 #' @param print.runs If TRUE, prints the proportion of simulations accepted for
 #' output to the terminal.
 
+#' @param maxAttempts Number of simulation attempts allowed before the simulation process
+#' is halted with an error message. Default is \code{Inf}.
+
 #' @param plot If TRUE, plots the diversity curves of accepted simulations,
 #' including both the diversity curve of the true number of taxa and the
 #' diversity curve for the 'observed' (sampled) number of taxa.
@@ -725,7 +728,7 @@ simFossilRecord<-function(
 	# model parameters
 	#
 	p, q, r=0, anag.rate=0, prop.bifurc=0, prop.cryptic=0,
-	modern.samp.prob=1, startTaxa=1, nruns=1,
+	modern.samp.prob=1, startTaxa=1, nruns=1, maxAttempts=Inf,
 
 	# run conditions can be given as vectors of length 1 or length 2 (= min,max)
 	#
@@ -772,8 +775,8 @@ simFossilRecord<-function(
 	#ARGUMENT CHECKING
 	#
 	# number of starting taxa and runs must be at least 1
-	if(nruns<1){
-		stop("nruns must be at least 1")}
+	if(nruns<1 | maxAttempts<1){
+		stop("nruns and maxAttempts must be at least 1")}
 	if(startTaxa<1){
 		stop("startTaxa must be at least 1")}
 	#nruns, starting taxa must be integer values
@@ -851,6 +854,11 @@ simFossilRecord<-function(
 		accept<-FALSE
 		while(!accept){
 			ntries<-ntries+1
+			#test that haven't exceeded maximum number of attempts
+			if(ntries>maxAttempts){
+				stop(paste("Maximum number of attempts",maxAttempts
+					,"has been exceeded with only",i,"runs successful."))
+				}
 			#
 			#initiate the taxa dataset
 			timePassed<-0

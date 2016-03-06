@@ -6,11 +6,11 @@
 \usage{
 simFossilRecord(p, q, r = 0, anag.rate = 0, prop.bifurc = 0,
   prop.cryptic = 0, modern.samp.prob = 1, startTaxa = 1, nruns = 1,
-  totalTime = c(0, 1000), nTotalTaxa = c(1, 1000), nExtant = c(0, 1000),
-  nSamp = c(0, 1000), tolerance = 10^-4, maxStepTime = 0.01,
-  shiftRoot4TimeSlice = "withExtantOnly", count.cryptic = FALSE,
-  negRatesAsZero = TRUE, print.runs = FALSE, sortNames = FALSE,
-  plot = FALSE)
+  maxAttempts = Inf, totalTime = c(0, 1000), nTotalTaxa = c(1, 1000),
+  nExtant = c(0, 1000), nSamp = c(0, 1000), tolerance = 10^-4,
+  maxStepTime = 0.01, shiftRoot4TimeSlice = "withExtantOnly",
+  count.cryptic = FALSE, negRatesAsZero = TRUE, print.runs = FALSE,
+  sortNames = FALSE, plot = FALSE)
 }
 \arguments{
 \item{p, q, r, anag.rate}{These parameters control the instantaneous ('per-capita') rates of branching, extinction,
@@ -49,6 +49,9 @@ listed as their time of origination.}
 \item{nruns}{Number of simulation datasets to accept, save and output. If \code{nruns = 1}, output will be a single
 object of class \code{fossilRecordSimulation}, and if \code{nruns} is greater than 1, a list will be output composed of
 \code{nruns} objects of class \code{fossilRecordSimulation}.}
+
+\item{maxAttempts}{Number of simulation attempts allowed before the simulation process
+is halted with an error message. Default is \code{Inf}.}
 
 \item{totalTime, nTotalTaxa, nExtant, nSamp}{These arguments represent stopping and
 acceptance conditions for simulation runs. They are respectively \code{totalTime}, the

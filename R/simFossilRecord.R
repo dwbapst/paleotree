@@ -857,7 +857,7 @@ simFossilRecord<-function(
 			#test that haven't exceeded maximum number of attempts
 			if(ntries>maxAttempts){
 				stop(paste0("Maximum number of attempts (",maxAttempts,
-					") has been exceeded with only ",i," run(s) successful."))
+					") has been exceeded with only ",i-1," run(s) successful."))
 				}
 			#
 			#initiate the taxa dataset

@@ -25,8 +25,16 @@ Once installed, you can check the version number of your paleotree install using
 
 	packageVersion("paleotree")
 
-As of 01/13/15, the paleotree repository was restructured so the package no longer sat within a subdirectory. An old directory composed of deprecated, previously public functions (more than a year old) was removed.
+If you use paleotree in your research, you can cite my paper describing paleotree in Methods in Ecology and Evolution:
 
+	Bapst, D.W. 2012. paleotree: an R package for paleontological and phylogenetic analyses of evolution. Methods in Ecology and Evolution. 3: 803-807. doi: 10.1111/j.2041-210X.2012.00223.x
+	
+	http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00223.x/abstract
+	
+You can also call the citation for paleotree from within R, using the citation function:
+	
+	citation("paleotree")
+	
 This code is authored by David Bapst and offered under CC0.
 
 The current total number of downloads of the paleotree package from the RStudio CRAN mirror is: [![Number of Downloads](http://cranlogs.r-pkg.org/badges/grand-total/paleotree)](https://github.com/metacran/cranlogs.app)

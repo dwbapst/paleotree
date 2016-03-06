@@ -23,6 +23,9 @@ and phylogenetic varieties.
 # get the package version of paleotree
 packageVersion("paleotree")
 
+# get the citation for paleotree
+citation("paleotree")
+
 ##Simulate some fossil ranges with simFossilRecord
 set.seed(444);
 record<-simFossilRecord(p=0.1, q=0.1, nruns=1,

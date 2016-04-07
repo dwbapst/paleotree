@@ -451,6 +451,14 @@ ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRa
     sampRate=sRate1,ntrees=1,nonstoch.bin=TRUE,plot=TRUE)
 phyloDiv(ttree1)
 
+# testing node.mins in bin_cal3TimePaleoPhy
+ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate=divRate,extRate=divRate,
+    sampRate=sRate1,ntrees=1,node.mins=nodeDates,plot=TRUE)
+# with randres=TRUE
+ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate=divRate,extRate=divRate,
+    sampRate=sRate1,ntrees=1,randres=TRUE,node.mins=nodeDates,plot=TRUE)
+
+
 #example with multiple values of anc.wt
 ancWt <- sample(0:1,nrow(rangesDisc[[2]]),replace=TRUE)
 names(ancWt)<-rownames(rangesDisc[[2]])

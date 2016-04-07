@@ -202,7 +202,7 @@
 #' @param timeres Should polytomies be resolved relative to the order of
 #' appearance of lineages? By default, \code{timePaleoPhy} does not resolve
 #' polytomies, instead outputting a time-scaled tree that is only as resolved
-#' as the input tree. If \code{timeres = T}, then polytomies will be resolved with
+#' as the input tree. If \code{timeres = TRUE}, then polytomies will be resolved with
 #' respect to time using the paleotree function \code{\link{timeLadderTree}}.
 #' See that functions help page for more information; the result of time-order
 #' resolving of polytomies generally does not differ across multiple uses,
@@ -489,6 +489,13 @@
 #' ttreeB3 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,
 #'     nonstoch.bin=TRUE,randres=TRUE,add.term=TRUE,plot=FALSE)
 #' phyloDiv(ttreeB3)
+#'
+#' # testing node.mins in bin_timePaleoPhy
+#' ttree <- bin_timePaleoPhy(cladoDrop,rangesDisc,type="basic",ntrees=1,
+#'     add.term=TRUE,randres=FALSE,node.mins=nodeDates,plot=TRUE)
+#' # with randres = TRUE
+#' ttree <- bin_timePaleoPhy(cladoDrop,rangesDisc,type="basic",ntrees=1,
+#'     add.term=TRUE,randres=TRUE,node.mins=nodeDates,plot=TRUE)
 #' 
 #' \donttest{
 #' #simple three taxon example for testing inc.term.adj
@@ -844,19 +851,17 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,
 			timeData<-cbind(siteTime[sites[,1],1],siteTime[sites[,2],2])
 			}
 		rownames(timeData)<-rownames(timeList[[2]])
-		#if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
-		tree1<-tree
-		if(!is.binary.tree(tree) | !is.rooted(tree)){
-			if(randres){tree1<-multi2di(tree)}
-			if(timeres){tree1<-timeLadderTree(tree,timeData)}	
-			}
-		tree2<-suppressMessages(timePaleoPhy(tree1,timeData,type=type,vartime=vartime,ntrees=1,
-			randres=FALSE,add.term=add.term,inc.term.adj=inc.term.adj,dateTreatment=dateTreatment,
+		# okay now send to timePaleoPhy
+		tree1<-suppressMessages(timePaleoPhy(tree=tree,timeData=timeData,
+			type=type,vartime=vartime,ntrees=1,
+			randres=randres,time.res=time.res,
+			add.term=add.term,inc.term.adj=inc.term.adj,
+			dateTreatment=dateTreatment,
 			node.mins=node.mins,plot=plot))
 		colnames(timeData)<-c("FAD","LAD")
-		tree2$ranges.used<-timeData
-		names(tree2$edge.length)<-NULL
-		ttrees[[ntrb]]<-tree2
+		tree1$ranges.used<-timeData
+		names(tree1$edge.length)<-NULL
+		ttrees[[ntrb]]<-tree1
 		}
 	if(ntrees==1){ttrees<-ttrees[[1]]}
 	return(ttrees)

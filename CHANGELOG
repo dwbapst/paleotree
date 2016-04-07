@@ -5,6 +5,7 @@ Version - 2.7 -
 -Modified plotTraitgram to allow input of simulated node values, edited and clarified documentation and examples
 -Small changes to order of arguments in bin_cal3TimePaleoPhy
 -Added argument maxAttempts to simFossilRecord so that simFossilRecord will end after some number of failed attempts. Default is Inf. Thanks W. Andrew Barr for this suggestion in issue #1!
+-Added example for bin_timePaleoPhy with minimum node ages AND random resolution of polytomies
 -
 
 Version - 2.6 - 12-01-15

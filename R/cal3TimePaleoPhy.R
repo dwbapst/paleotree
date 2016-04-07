@@ -542,9 +542,15 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 	Ps<-sapply(tree$tip.label,function(x) pqr2Ps(brRate[x],extRate[x],sampRate[x]))
 	names(Ps)<-tree$tip.label
 	#timescale with timePaleoPhy to get "basic" timetree
-	ttree1<-timePaleoPhy(tree,timeData,type="basic",node.mins=node.mins,add.term=FALSE,inc.term.adj=FALSE)
+	ttree1<-timePaleoPhy(tree=tree,timeData=timeData,
+		type="basic",dateTreatment="firstLast",
+		node.mins=node.mins,add.term=FALSE,inc.term.adj=FALSE)
 	#identify which nodes are min-locked; make sure to update when resolving polytomies
-	if(length(node.mins)>0){locked_nodes<-which(!is.na(node.mins))++Ntip(tree)}else{locked_nodes<-NA}
+	if(length(node.mins)>0){
+		locked_nodes<-which(!is.na(node.mins))+Ntip(tree)
+	}else{
+		locked_nodes<-NA
+		}
 	ttree1<-collapse.singles(ttree1)
 	ttrees<-rmtree(ntrees,3)
 	sampledLogLike<-numeric()

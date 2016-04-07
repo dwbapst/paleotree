@@ -51,7 +51,7 @@ tree, although a tree is still output.}
 \item{timeres}{Should polytomies be resolved relative to the order of
 appearance of lineages? By default, \code{timePaleoPhy} does not resolve
 polytomies, instead outputting a time-scaled tree that is only as resolved
-as the input tree. If \code{timeres = T}, then polytomies will be resolved with
+as the input tree. If \code{timeres = TRUE}, then polytomies will be resolved with
 respect to time using the paleotree function \code{\link{timeLadderTree}}.
 See that functions help page for more information; the result of time-order
 resolving of polytomies generally does not differ across multiple uses,
@@ -442,6 +442,13 @@ phyloDiv(ttreeB2)
 ttreeB3 <- bin_timePaleoPhy(cladogram,rangesDisc,type="basic",ntrees=1,
     nonstoch.bin=TRUE,randres=TRUE,add.term=TRUE,plot=FALSE)
 phyloDiv(ttreeB3)
+
+# testing node.mins in bin_timePaleoPhy
+ttree <- bin_timePaleoPhy(cladoDrop,rangesDisc,type="basic",ntrees=1,
+    add.term=TRUE,randres=FALSE,node.mins=nodeDates,plot=TRUE)
+# with randres = TRUE
+ttree <- bin_timePaleoPhy(cladoDrop,rangesDisc,type="basic",ntrees=1,
+    add.term=TRUE,randres=TRUE,node.mins=nodeDates,plot=TRUE)
 
 \donttest{
 #simple three taxon example for testing inc.term.adj

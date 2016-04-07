@@ -436,6 +436,14 @@
 #' ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,
 #'     sampRate=sRate1,ntrees=1,nonstoch.bin=TRUE,plot=TRUE)
 #' phyloDiv(ttree1)
+#'
+#' # testing node.mins in bin_cal3TimePaleoPhy
+#' ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate=divRate,extRate=divRate,
+#'     sampRate=sRate1,ntrees=1,node.mins=nodeDates,plot=TRUE)
+#' # with randres=TRUE
+#' ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate=divRate,extRate=divRate,
+#'     sampRate=sRate1,ntrees=1,randres=TRUE,node.mins=nodeDates,plot=TRUE)
+#' 
 #' 
 #' #example with multiple values of anc.wt
 #' ancWt <- sample(0:1,nrow(rangesDisc[[2]]),replace=TRUE)
@@ -547,9 +555,9 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 		node.mins=node.mins,add.term=FALSE,inc.term.adj=FALSE)
 	#identify which nodes are min-locked; make sure to update when resolving polytomies
 	if(length(node.mins)>0){
-		locked_nodes<-which(!is.na(node.mins))+Ntip(tree)
+		locked_nodesOrig<-which(!is.na(node.mins))+Ntip(tree)
 	}else{
-		locked_nodes<-NA
+		locked_nodesOrig<-NA
 		}
 	ttree1<-collapse.singles(ttree1)
 	ttrees<-rmtree(ntrees,3)
@@ -571,8 +579,22 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 				}
 			timeData1<-cbind(timeData,0)
 			}
-		ktree<-ttree1
-		if(randres){ktree<-multi2di(ktree)}
+		# now randomly resolve if randres
+		if(randres & (!is.binary.tree(ttree1) | !is.rooted(ttree1))){
+			ktree<-multi2di(ttree1)
+			# need to updated node locks if any node.mins given
+			if(!identical(locked_nodesOrig,NA)){
+				origDesc<-lapply(prop.part(ttree1),function(x) sort(ttree1$tip.label[x]))
+				treeDesc<-lapply(prop.part(ktree),function(x) sort(ktree$tip.label[x]))
+				node_changes<-match(origDesc,treeDesc)
+				locked_nodes<-node_changes[locked_nodesOrig]
+			}else{
+				locked_nodes<-locked_nodesOrig
+				}
+		}else{
+			ktree<-ttree1
+			locked_nodes<-locked_nodesOrig
+			}
 		nodes<-(1:Nnode(ktree))+Ntip(ktree)		#get a vector of all internal nodes	
 		nodes<-nodes[order(-node.depth(ktree)[-(1:Ntip(ktree))])]	#order by depth
 		anags<-character();budds<-character();nAdjZip<-0

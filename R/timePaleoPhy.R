@@ -854,7 +854,7 @@ bin_timePaleoPhy<-function(tree,timeList,type="basic",vartime=NULL,ntrees=1,
 		# okay now send to timePaleoPhy
 		tree1<-suppressMessages(timePaleoPhy(tree=tree,timeData=timeData,
 			type=type,vartime=vartime,ntrees=1,
-			randres=randres,time.res=time.res,
+			randres=randres,timeres=timeres,
 			add.term=add.term,inc.term.adj=inc.term.adj,
 			dateTreatment=dateTreatment,
 			node.mins=node.mins,plot=plot))

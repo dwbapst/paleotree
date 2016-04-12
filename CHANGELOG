@@ -1,4 +1,4 @@
-Version - 2.7 - 
+Version - 2.7 - 04-12-16
 -Modified probAnc documetentation so that indirect descendant examples are shown
 -Modified probAnc so that calculated NaN values are replaced with zero and a message is printed
 -Added name and length checks to horizonSampRate, and code to resort names so they match if not input correctly
@@ -8,7 +8,6 @@ Version - 2.7 -
 -Added example for bin_timePaleoPhy with minimum node ages AND random resolution of polytomies
 -Fixed bug pointed out by Armin Elsler of Bristol, that randomly resolving polytomies and setting minimum node ages with bin_timePaleoPhy led to an error, due to bin_timePaleoPhy resolving polytomies before sending to timePaleoPhy (which leads to errors)
 -Modified cal3TimePaleoPhy so that if randres=TRUE and node age minimums were used, that node age locks were applied to the correct nodes post random resolution of polytomies
--
 
 Version - 2.6 - 12-01-15
 -Fixed an issued with fossilRecord2fossilRanges where a dataset with a single taxon resulted in a fatal error regarding an attempt to replace more elements than already exists

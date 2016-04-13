@@ -1,3 +1,6 @@
+Version - 2.8 - 
+-
+
 Version - 2.7 - 04-12-16
 -Modified probAnc documetentation so that indirect descendant examples are shown
 -Modified probAnc so that calculated NaN values are replaced with zero and a message is printed

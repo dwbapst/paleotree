@@ -401,7 +401,8 @@ layout(matrix(1:9,3,3))
 parOrig <- par(no.readonly=TRUE)
 par(mar=c(0,0,0,0))
 for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label=FALSE)}
-layout(1); par(parOrig)
+layout(1)
+par(parOrig)
 #they are all a bit different!
 
 #can plot the median diversity curve with multiDiv

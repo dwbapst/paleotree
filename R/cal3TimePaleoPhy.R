@@ -974,8 +974,14 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,
 			}
 		}	
 	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
-	if(any(is.na(timeList[[2]]))){
-		stop("Weird NAs in Data??")}
+	#
+	if(ncol(timeList[[1]])!=2 | ncol(timeList[[2]])!=2){
+		stop("Both timeList[[1]] and timeList[[2]] should have only two columns")}
+	if(any(is.na(timeList[[1]])) | any(is.na(timeList[[2]]))){
+		stop("Unexpected NAs in timeList")}
+	if(any(is.character(timeList[[1]])) | any(is.character(timeList[[2]]))){
+		stop("Unexpected character-type data in timeList")}
+	#
 	if(any(apply(timeList[[1]],1,diff)>0)){
 		stop("timeList[[1]] not in intervals in time relative to modern")}
 	if(any(timeList[[1]][,2]<0)){

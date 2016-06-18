@@ -1,5 +1,6 @@
 Version - 2.8 - 
 -Added additional checks so that helpful error messages are given if species names are accidentally left in as a column in timeList for bin_cal3TimePaleoPhy and bin_timePaleoPhy, thanks Victoria Arbour for this bug report
+-Added informative error message if sliceTime is later in time than the lattest tip (thanks Graeme Lloyd for reporting this)
 -
 
 Version - 2.7 - 04-12-16

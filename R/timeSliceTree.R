@@ -83,6 +83,9 @@ timeSliceTree<-function(ttree,sliceTime,drop.extinct=FALSE,plot=TRUE){
 	dnode<-node.depth.edgelength(ttree)
 	#identify the ancestor nodes of edges which cross the tslice
 	cedge<-which((dnode[ ttree$edge[, 1] ] < tslice) & (dnode[ttree$edge[, 2] ]  >= tslice))
+	# test that slice time isn't past the latest tip
+	if(length(cedge)==0){
+		stop("sliceTime is later than latest tip")}
 	droppers<-numeric()
 	propPartTree<-prop.part(ttree)
 	for(i in 1:length(cedge)){

@@ -14,9 +14,7 @@
 #' distribution of expected waiting times between speciation and first
 #' appearance in the fossil record. This algorithm is extended to apply to
 #' resolving polytomies and designating possible ancestor-descendant
-#' relationships. The full details of this method, its sister method the
-#' sampling-rate-calibrated time-scaling method and the details of the algorithm
-#' will be given in Bapst (in prep for Paleobiology).
+#' relationships. The full details of this method are provided in Bapst (2013, MEE).
 #' 
 #' Briefly, cal3 time-scaling is done by examining each node separately, moving
 #' from the root upwards. Ages of branching nodes are constrained below by the
@@ -297,15 +295,16 @@
 #'
 #' Similarly, please account for stratigraphic uncertainty in your analysis.
 #' Unless you have exceptionally resolved data, use a wrapper with the cal3
-#' function, either the provided bin_cal3TimePaleoPhy or code a wrapper
+#' function, either the provided \code{bin_cal3TimePaleoPhy} or code a wrapper
 #' function of your own that accounts for stratigraphic uncertainty in 
 #' your dataset. Remember that the FADs (earliest dates) given to timePaleoPhy
 #'  will *always* be used to calibrate node ages!
 
 #' @author David W. Bapst
 
-#' @seealso \code{\link{timePaleoPhy}}, \code{\link{binTimeData}},
-#' \code{\link{make_durationFreqCont}}, \code{sProb2sRate}, \code{\link{multi2di}}
+#' @seealso \code{\link{timePaleoPhy}}, 
+#' \code{\link{make_durationFreqCont}}, \code{\link{pqr2Ps}},
+#' \code{\link{sProb2sRate}}, \code{\link{multi2di}}
 
 #' @references 
 #' Bapst, D. W. 2013. A stochastic rate-calibrated method for time-scaling
@@ -882,8 +881,10 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 		test1<-all(tipdiffs[,3]<tolerance)
 		test2<-identical(names(sort(-timeData1[,2])),
 				ktree$tip.label[order(node.depth.edgelength(ktree)[1:Ntip(ktree)])])
+		#test 2 does not work if any LADS are same
 		if(length(unique(timeData1[,2]))<Ntip(tree)){
-			test2<-TRUE}	#test 2 does not work if any LADS are same
+			test2<-TRUE
+			}	
 		if(all(c(test1,test2))){
 			ktree$test<-"passed"
 		}else{

@@ -193,9 +193,7 @@ stochastically picking node divergence times relative to a probability
 distribution of expected waiting times between speciation and first
 appearance in the fossil record. This algorithm is extended to apply to
 resolving polytomies and designating possible ancestor-descendant
-relationships. The full details of this method, its sister method the
-sampling-rate-calibrated time-scaling method and the details of the algorithm
-will be given in Bapst (in prep for Paleobiology).
+relationships. The full details of this method are provided in Bapst (2013, MEE).
 
 Briefly, cal3 time-scaling is done by examining each node separately, moving
 from the root upwards. Ages of branching nodes are constrained below by the
@@ -338,7 +336,7 @@ analytical rigor! No one tree is correct.
 
 Similarly, please account for stratigraphic uncertainty in your analysis.
 Unless you have exceptionally resolved data, use a wrapper with the cal3
-function, either the provided bin_cal3TimePaleoPhy or code a wrapper
+function, either the provided \code{bin_cal3TimePaleoPhy} or code a wrapper
 function of your own that accounts for stratigraphic uncertainty in 
 your dataset. Remember that the FADs (earliest dates) given to timePaleoPhy
  will *always* be used to calibrate node ages!
@@ -494,7 +492,8 @@ Stanley, S. M. 1979. Macroevolution: Patterns and Process. W. H. Freeman,
 Co., San Francisco.
 }
 \seealso{
-\code{\link{timePaleoPhy}}, \code{\link{binTimeData}},
-\code{\link{make_durationFreqCont}}, \code{sProb2sRate}, \code{\link{multi2di}}
+\code{\link{timePaleoPhy}}, 
+\code{\link{make_durationFreqCont}}, \code{\link{pqr2Ps}},
+\code{\link{sProb2sRate}}, \code{\link{multi2di}}
 }
 

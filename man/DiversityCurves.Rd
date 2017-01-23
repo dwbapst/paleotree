@@ -35,8 +35,8 @@ If given, the argument split.int and int.length are ignored.}
 
 \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only
 affects plotting. Given as either NULL (the default) or as a vector of
-length two as for 'xlim' in the basic R function plot. Time axes will be plotted
-\emph{exactly} to these values.}
+length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
+will be plotted \emph{exactly} to these values.}
 
 \item{drop.cryptic}{If TRUE, cryptic taxa are merged to form one taxon for
 estimating taxon curves. Only works for objects from \code{simFossilRecord}

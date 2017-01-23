@@ -7,13 +7,13 @@
 \usage{
 multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE,
   drop.ZLB = TRUE, drop.cryptic = FALSE, extant.adjust = 0.01,
-  plotLogRich = FALSE, timelims = NULL, int.times = NULL,
-  plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL,
-  divLineType = 1, main = NULL)
+  plotLogRich = FALSE, yAxisLims = NULL, timelims = NULL,
+  int.times = NULL, plotMultCurves = FALSE, multRainbow = TRUE,
+  divPalette = NULL, divLineType = 1, main = NULL)
 
 plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL,
-  plotMultCurves = FALSE, multRainbow = TRUE, divPalette = NULL,
-  divLineType = 1, main = NULL)
+  yAxisLims = NULL, plotMultCurves = FALSE, multRainbow = TRUE,
+  divPalette = NULL, divLineType = 1, main = NULL)
 }
 \arguments{
 \item{data}{A list where each element is a dataset, formatted to be input in
@@ -41,10 +41,16 @@ to have an infinitely small width.}
 
 \item{plotLogRich}{If TRUE, taxic diversity is plotted on log scale.}
 
+\item{yAxisLims}{Limits for the y (i.e. richness) axis on the plotted diversity curves. Only
+affects plotting. Given as either NULL (the default) or as a vector of
+length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
+will be plotted \emph{exactly} to these values. The minimum value must be more than 1 if
+\code{plotLogRich = TRUE}.}
+
 \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only
 affects plotting. Given as either NULL (the default) or as a vector of
-length two as for 'xlim' in the basic R function plot. Time axes will be plotted
-\emph{exactly} to these values.}
+length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
+will be plotted \emph{exactly} to these values.}
 
 \item{int.times}{An optional two-column matrix of the interval start and end
 times for calculating the diversity curve. If NULL, calculated internally.

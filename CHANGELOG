@@ -3,6 +3,7 @@ Version - 2.8 -
 -Added informative error message if sliceTime is later in time than the lattest tip (thanks Graeme Lloyd for reporting this)
 -Merged two taxa due to an accidental taxon name mis-spelling in the kanto dataset
 -Fixed a missing line in the example code for perCapitaRates
+-Added argument 'yAxisLims' to multiDiv functions so that the y axis (richness) can be constrained by the user, thanks to Robin Beck for suggestion (01-23-17)
 -
 
 Version - 2.7 - 04-12-16

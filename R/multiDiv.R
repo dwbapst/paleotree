@@ -47,6 +47,12 @@
 #' rather than the median diversity curve and 95 percent quantiles. FALSE by
 #' default.
 
+#' @param yAxisLims Limits for the y (i.e. richness) axis on the plotted diversity curves. Only
+#' affects plotting. Given as either NULL (the default) or as a vector of
+#' length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
+#' will be plotted \emph{exactly} to these values. The minimum value must be more than 1 if
+#' \code{plotLogRich = TRUE}.
+
 #' @param multRainbow If \code{TRUE} and plotMultCurves are both \code{TRUE}, each line is
 #' plotted as a different, randomized color using the function 'rainbow'. If
 #' FALSE, each line is plotted as a black line. This argument is ignored if
@@ -134,7 +140,7 @@
 #' @rdname multiDiv
 #' @export
 multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,drop.cryptic=FALSE,
-	extant.adjust=0.01,plotLogRich=FALSE,timelims=NULL,int.times=NULL,
+	extant.adjust=0.01,plotLogRich=FALSE,yAxisLims=NULL,timelims=NULL,int.times=NULL,
 	plotMultCurves=FALSE,multRainbow=TRUE,divPalette=NULL,divLineType=1,main=NULL){
 	#lines up a bunch of taxic or phylo objects and calculates diversity curves simulataneously
 		#across all their objects; intuits the type of object without being told
@@ -233,16 +239,30 @@ multiDiv<-function(data,int.length=1,plot=TRUE,split.int=TRUE,drop.ZLB=TRUE,drop
 	q2<-apply(div,1,quantile,probs=0.975)	#the high quantile
 	median.curve<-cbind(median=median,low.95.quantile=q1,high.95.quantile=q2)
 	res<-list(int.times=int.times,div.counts=div,median.curve=median.curve)
-	if(plot){plotMultiDiv(res,plotLogRich=plotLogRich,timelims=timelims,
+	if(plot){
+		plotMultiDiv(
+		res,plotLogRich=plotLogRich,timelims=timelims,yAxisLims=yAxisLims,
 		plotMultCurves=plotMultCurves,multRainbow=multRainbow,
-		divPalette=divPalette,divLineType=divLineType,main=main)}
+		divPalette=divPalette,divLineType=divLineType,main=main
+		)}
 	return(invisible(res))
 	}
 
 #' @rdname multiDiv
 #' @export	
-plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FALSE,
+plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,
+		yAxisLims=NULL,plotMultCurves=FALSE,
 		multRainbow=TRUE,divPalette=NULL,divLineType=1,main=NULL){
+	if(!is.null(timelims)){if(length(timelims)!=2){
+		stop("if given, timelims should be a vector of length 2")}}
+	if(!is.null(yAxisLims)){
+		if(length(yAxisLims)!=2){
+			stop("if given, yAxisLims should be a vector of length 2")
+			}
+		if(plotLogRich & min(yAxisLims)<1){
+			stop("if richness is plotted on a log scale, minimum axis value must be >=1")
+			}
+		}
 	#plots the median diversity curve for a multiDiv() result
 	int.start<-results[[1]][,1]
 	int.end<-results[[1]][,2]
@@ -256,15 +276,25 @@ plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FA
 		times1<-sort(times1)
 		#set up the general plotting window
 		if(plotLogRich){
-			y_lim<-c(min(divs1[divs1>=1]),max(divs1[divs1>=1]))
-			plot(times1[divs1[,1]>0],divs1[divs1[,1]>0,1],type="n",ylim=y_lim,log="y",
+			if(is.null(yAxisLims)){
+				y_lim<-c(min(divs1[divs1>=1]),max(divs1[divs1>=1]))
+			}else{
+				y_lim<-yAxisLims
+				}
+			plot(times1[divs1[,1]>0],divs1[divs1[,1]>0,1],type="n",
+				ylim=y_lim,log="y",
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Log Lineage/Taxic Richness",
 				main=)
 		}else{
-			y_lim<-c(min(divs1),max(divs1))
-			plot(times1,divs1[,1],type="n",ylim=y_lim,
+			if(is.null(yAxisLims)){
+				y_lim<-c(min(divs1),max(divs1))
+			}else{
+				y_lim<-yAxisLims
+				}
+			plot(times1,divs1[,1],type="n",
+				ylim=y_lim,
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Lineage/Taxic Richness",
@@ -288,16 +318,27 @@ plotMultiDiv<-function(results,plotLogRich=FALSE,timelims=NULL,plotMultCurves=FA
 		mdiv1<-rbind(mdiv,mdiv)[order(times1),]
 		times1<-sort(times1)
 		if(plotLogRich){
-			mdiv1[mdiv1[,2]<1,2]<-1;mdiv1[mdiv1[,3]<1,3]<-1
-			y_lim<-c(min(mdiv1[mdiv1>=1]),max(mdiv1[mdiv1>=1]))
-			plot(times1[mdiv1[,3]>0],mdiv1[mdiv1[,3]>0,3],type="n",ylim=y_lim,log="y",
+			mdiv1[mdiv1[,2]<1,2]<-1
+			mdiv1[mdiv1[,3]<1,3]<-1
+			if(is.null(yAxisLims)){
+				y_lim<-c(min(mdiv1[mdiv1>=1]),max(mdiv1[mdiv1>=1]))
+			}else{
+				y_lim<-yAxisLims
+				}
+			plot(times1[mdiv1[,3]>0],mdiv1[mdiv1[,3]>0,3],type="n",
+				ylim=y_lim,log="y",
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Log Lineage/Taxic Richness",
 				main=main)
 		}else{
-			y_lim<-c(min(mdiv1),max(mdiv1))
-			plot(times1,mdiv1[,3],type="n",ylim=y_lim,
+			if(is.null(yAxisLims)){
+				y_lim<-c(min(mdiv1),max(mdiv1))
+			}else{
+				y_lim<-yAxisLims
+				}
+			plot(times1,mdiv1[,3],type="n",
+				ylim=y_lim,
 				xlim=if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
 				xaxs=if(is.null(timelims)){"r"}else{"i"},
 				xlab="Time (Before Present)",ylab="Lineage/Taxic Richness",

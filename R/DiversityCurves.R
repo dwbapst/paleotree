@@ -101,8 +101,8 @@
 
 #' @param timelims Limits for the x (time) axis for diversity curve plots. Only
 #' affects plotting. Given as either NULL (the default) or as a vector of
-#' length two as for 'xlim' in the basic R function plot. Time axes will be plotted
-#' \emph{exactly} to these values.
+#' length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
+#' will be plotted \emph{exactly} to these values.
 
 #' @param extant.adjust Amount of time to be added to extend start time for
 #' (0,0) bins for extant taxa, so that the that 'time interval' doesn't appear 

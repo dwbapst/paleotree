@@ -34,7 +34,9 @@
 #' are ouput as a series of character strings.
 
 #' @author
-#' David W. Bapst, with some inspiration from Graham Slater.
+#' David W. Bapst, with some inspiration from Graham Slater. This code was 
+#' produced as part of a project funded by National Science Foundation
+#' grant EAR-1147537 to S. J. Carlson.
 
 #' @references
 #' Slater, G. J. 2013. Phylogenetic evidence for a shift in the mode of mammalian

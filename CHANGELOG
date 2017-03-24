@@ -1,9 +1,12 @@
 Version - 2.8 - 
 -Added additional checks so that helpful error messages are given if species names are accidentally left in as a column in timeList for bin_cal3TimePaleoPhy and bin_timePaleoPhy, thanks Victoria Arbour for this bug report
--Added informative error message if sliceTime is later in time than the lattest tip (thanks Graeme Lloyd for reporting this)
+-Added informative error message if sliceTime is later in time than the lattest (most recent) tip (thanks Graeme Lloyd for reporting this)
 -Merged two taxa due to an accidental taxon name mis-spelling in the kanto dataset
 -Fixed a missing line in the example code for perCapitaRates
 -Added argument 'yAxisLims' to multiDiv functions so that the y axis (richness) can be constrained by the user, thanks to Robin Beck for suggestion (01-23-17)
+-Added examples of using simFossilRecord with randomly-sampled rate variation, thanks to Laura Soul for making me realize I'd already made this possible! (03-20-17)
+-Small edit to createMrBayesConstraints documentation
+-Added example of a two-way cluster analysis (sensu Miller 1988) to examples for kanto data, based on code provided by Max Christie (Thanks!)
 -
 
 Version - 2.7 - 04-12-16

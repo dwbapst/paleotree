@@ -507,6 +507,42 @@
 #' multiDiv(records,plotMultCurves=TRUE)
 #' # creates runs full of short lived taxa
 #' 
+#' # Some more stuff to do with rate formulae!
+#' 
+#' # The formulae input method for rates allows
+#' 	# for the rate to be a random variable
+#' 
+#' # For example, we could constantly redraw
+#'  		# the branching rate from an exponential
+#' 
+#' record<-simFossilRecord(p="rexp(n=1,rate=10)", q=0.1, r=0.1, nruns=1,
+#' 	nTotalTaxa=50, plot=TRUE)
+#' 
+#' # Setting up specific time-variable rates can be laborious though
+#' 	# e.g. one rate during this 10 unit interval, 
+#' 		# another during this interval, etc
+#' 	# The problem is setting this up within a fixed function
+#' 
+#' # Worked Example
+#' # What if we want to draw a new rate from a
+#' 	# lognormal distribution every 10 time units?
+#' 
+#' # Need to randomly draw these rates *before* running simFossilTaxa
+#' # This means also that we will need to individually do each simFossilTaxa run
+#' 	# since the rates are drawn outside of simFossilTaxa
+#' 
+#' # Get some reasonable log normal rates:
+#' rates<-0.1+rlnorm(100,meanlog=1,sdlog=1)/100
+#' 
+#' # Now paste it into a formulae that describes a function that
+#' 	# will change the rate output every 10 time units
+#' rateEquation<-paste0("c(",paste0(rates,collapse=","),")[1+(T%/%10)]")
+#' 
+#' # and let's run it
+#' record <- simFossilRecord(p=rateEquation, q=0.1, r=0.1, nruns=1,
+#' 	totalTime=c(30,40), plot=TRUE)
+#' 
+#'  
 #' ##########################################################
 #' 
 #' # Speciation Modes

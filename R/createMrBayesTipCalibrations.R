@@ -70,31 +70,36 @@
 
 #' @seealso createMrBayesConstraints
 
-
 #' @examples
-
-# load retiolitid dataset
-data(retiolitinae)
-
-
-# uniform prior, with a 10 million year offset for
-	# the expected tree age from the earliest first appearance
-
-createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-	ageConstraintType="uniformRange", treeAgeOffset=10)
-
-
-
+#'
+#' # load retiolitid dataset
+#' data(retiolitinae)
+#' 
+#' # uniform prior, with a 10 million year offset for
+#' 	# the expected tree age from the earliest first appearance
+#' 
+#' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
+#' 	ageConstraintType="uniformRange", treeAgeOffset=10)
+#' 
+#' # fixed prior, at the earliest bound for the first appearance
+#' 
+#' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
+#' 	ageConstraintType="fixedDateEarlier", treeAgeOffset=10)
+#' 
+#' # fixed prior, sampled from between the bounds on the last appearance
+#' 	# you should probably never do this, fyi
+#' 
+#' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
+#' 	ageConstraintType="fixedDateRandom", treeAgeOffset=10)
+#' 
 #' 
 #' \dontrun{
 #' 
-#' createMrBayesTipCalibrations()
-
-,file="tipCalibrations.txt")
-
+#' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
+#' 	ageConstraintType="uniformRange", treeAgeOffset=10, file="tipCalibrations.txt")
 #' 
 #' }
-
+#' 
 
 
 #' @name createMrBayesTipCalibrations
@@ -176,17 +181,17 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	#
 	if(ageConstraintType=="fixedDateEarlier"){
 		# use lower bound for selected age of appearance
-		tipTimes<-tipTimes[,1]
+		tipTimes<-tipTimes[,1,drop=FALSE]
 		timeType<-"fixed"
 		}
 	if(ageConstraintType=="fixedDateLatter"){	
 		# use upper bound for selected age of appearance
-		tipTimes<-tipTimes[,2]
+		tipTimes<-tipTimes[,2,drop=FALSE]
 		timeType<-"fixed"
 		}
 	if(ageConstraintType=="fixedDateRandom"){	
 		# random drawn from a uniform distribution
-		tipTimes<-t(apply(tipTimes,1,function(x) runif(1,x[1],x[2])))
+		tipTimes<-t(t(apply(tipTimes,1,function(x) runif(1,x[2],x[1]))))
 		timeType<-"fixed"
 		}
 	if(ageConstraintType=="uniformRange"){
@@ -240,9 +245,9 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	finalBlock<-c(dateBlock,"",treeAgeBlock)
 	#
 	if(!is.null(file)){
-		write(finalText,file)
+		write(finalBlock,file)
 	}else{
-		return(finalText)
+		return(finalBlock)
 		}
 	}
 

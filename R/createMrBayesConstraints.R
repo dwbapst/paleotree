@@ -27,7 +27,7 @@
 
 #' @param file Filename (possibly with path) as a character string
 #' to a file which will be overwritten with the output constraint lines.
-#' If not null, not constraint lines are output to the console.
+#' If not null, constraint lines are printed in the console.
 
 #' @return
 #' If argument \code{file} is \code{NULL}, then the constrain commands

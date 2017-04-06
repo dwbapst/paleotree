@@ -7,6 +7,7 @@ Version - 2.8 -
 -Added examples of using simFossilRecord with randomly-sampled rate variation, thanks to Laura Soul for making me realize I'd already made this possible! (03-20-17)
 -Small edit to createMrBayesConstraints documentation
 -Added example of a two-way cluster analysis (sensu Miller 1988) to examples for kanto data, based on code provided by Max Christie (Thanks!)
+-Added new function: createMrBayesTipCalibrations, which creates a block of MrBayes codes for calibrating tip ages in a tip-dating analysis
 -
 
 Version - 2.7 - 04-12-16

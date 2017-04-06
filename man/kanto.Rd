@@ -73,6 +73,15 @@ plot(kantoPIE,dominance)
 
 
 \dontrun{
+#######################
+# Some Cool Ecology Stuff With Other Packages
+
+# basically all the analyses & visualizations
+		#for ecology in R that I think are awesome
+
+
+###########################
+#Ordination (PCO, DCA)
 
 #get bray-curtis distances
 library(vegan)
@@ -85,7 +94,7 @@ scores <- pcoRes$vectors
 plot(scores,type="n")
 text(labels=rownames(kanto),scores[,1],scores[,2],cex=0.5)
 
-#the way the power plant the the pokemon tower converge
+#the way the power plant and the pokemon tower converge
 	# is very suspicious: may be distortion due to a long gradient
 
 #do a DCA instead with vegan's decorana
@@ -103,7 +112,7 @@ plot(dcaRes,cex=0.5,display="species")
 
 #well, that's pretty cool
 
-
+#######################
 #get the nearest neighbor for each site based on pair-wise rho coefficients
 rhoNeighbor<-apply(rhoCoeff,1,function(x)
 	rownames(kanto)[tail(order(x,na.last=NA),1)])
@@ -119,7 +128,81 @@ plot(NNlist)
 #arrows point at the nearest neighbor of each sample
 	# based on maximum Spearman rho correlation
 
-#testing for differences between groups of sites
+##################################
+# Two Way Cluster With Heatmap
+
+# This example based on code provided by Max Christie
+
+# load pheatmap library for this example
+library(pheatmap) 
+
+# get distance matrices for sites and taxa
+	# based on bray-curtis dist
+	# standardized to total abundance
+
+# standardize site matrix to relative abundance
+siteStand <- decostand(kanto, method = "total")
+# site distance matrix (Bray-Curtis)
+siteDist <- vegdist(siteStand, "bray", diag = TRUE)
+
+# standardize taxa matrix to relative abundance
+taxaStand <- decostand(t(kanto), method = "total")
+# taxa distance matrix (Bray-Curtis)
+taxaDist <- vegdist(taxaStand, "bray", diag = TRUE)
+
+### Need to set graphic parameters for table
+
+# Check out range of values for relative abundance
+# hist(myStand) # none get very high...
+
+# number of breaks: number of colors for heatmap
+nBreaks<-15
+
+# set underValue
+	# anything below this counts as not appearing
+	# at that site for visualization purposes
+underValue<- min(siteStand[siteStand>0])-min(siteStand[siteStand>0])/10
+# set overValue (max relative abundance)
+overValue<-max(siteStand)
+# you can set your breaks to any sequence you want
+	# and they don't have to be the same length.  
+	# You can do this manually too.
+# here we added a 0 to 'underValue' bin to 
+	# the heatmap, making this bin essentially 0.
+colorBreaks <- c(0,seq(underValue,max(siteStand), 
+	by = max(siteStand)/(nBreaks-1)))
+# here we used the function rainbow to create a vector of colors.  
+	# You can set these colors yourself too.  
+# It is important that this vector is one element 
+	# less than the myBreaks vector
+rainColors <- rainbow(nBreaks) 
+# now we can add "white" onto the vector, 
+	# this will be the first color bin, 
+	# which we're going to set to be (essentially) 0.  
+rainColors <- c("white", rainColors) 
+# If you don't add white, taxa at 0 abundance get colored in
+
+### Plot the 2-Way Cluster
+
+# heatmap, with user-set colors
+# feed the function a distance matrix we wanted to use.  
+	#siteDist and taxaDist made above by vegdist (bray-curtis)
+# scale is the relative abundance, let's label it as such
+
+
+dev.new(width=10)
+#for some reason, mtext() doesn't recognize pheatmap as plot.new
+plot.new(width=7) 
+pheatmap(siteStand, color = rainColors, breaks = colorBreaks, 
+	clustering_method = "ward.D", 
+	clustering_distance_rows = siteDist, 
+	clustering_distance_cols = taxaDist)
+mtext("Relative Abundance",side=4,line=-1.4,adj=0.95)
+
+# pretty cool looking!
+
+##############################
+## Testing for differences between groups of sites
 
 #is there a difference between routes and non-routes
 groups<-rep(0,nrow(kanto))

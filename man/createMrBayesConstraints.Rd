@@ -19,7 +19,7 @@ defining an outgroup.}
 
 \item{file}{Filename (possibly with path) as a character string
 to a file which will be overwritten with the output constraint lines.
-If not null, not constraint lines are output to the console.}
+If not null, constraint lines are printed in the console.}
 }
 \value{
 If argument \code{file} is \code{NULL}, then the constrain commands
@@ -54,7 +54,9 @@ createMrBayesConstraints(tree,file="topoConstraints.txt")
 }
 }
 \author{
-David W. Bapst, with some inspiration from Graham Slater.
+David W. Bapst, with some inspiration from Graham Slater. This code was 
+produced as part of a project funded by National Science Foundation
+grant EAR-1147537 to S. J. Carlson.
 }
 \references{
 Slater, G. J. 2013. Phylogenetic evidence for a shift in the mode of mammalian

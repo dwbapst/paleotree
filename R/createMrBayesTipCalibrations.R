@@ -90,7 +90,7 @@
 #' 	# you should probably never do this, fyi
 #' 
 #' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-#' 	ageCalibrationtType="fixedDateRandom", treeAgeOffset=10)
+#' 	ageCalibrationType="fixedDateRandom", treeAgeOffset=10)
 #' 
 #' 
 #' \dontrun{

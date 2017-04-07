@@ -4,7 +4,7 @@
 \alias{createMrBayesTipCalibrations}
 \title{Construct A Block of Tip Age Calibrations for Use with Tip-Dating Analyses in MrBayes}
 \usage{
-createMrBayesTipCalibrations(tipTimes, ageConstraintType,
+createMrBayesTipCalibrations(tipTimes, ageCalibrationType,
   whichAppearance = "first", treeAgeOffset, minTreeAge = NULL,
   file = NULL)
 }
@@ -21,6 +21,17 @@ dates should not be entered as a two column matrix, as this will instead be inte
 as uncertainty bounds on a single occurrence. Instead, either select which you want to
 use for tip-dates and give a 1-column matrix, or repeat (and collate) the columns, so that
 the first and last appearances has uncertainty bounds of zero.}
+
+\item{ageCalibrationType}{This argument decides how age calibrations are defined, 
+and currently allows for four options: \code{"fixedDateEarlier"} which fixes tip
+ages at the earlier (lower) bound for the selected age of appearance (see argument
+\code{whichAppearance} for how that selection is made), \code{"fixedDateLatter"}
+which fixes the date to the latter (upper) bound of the selected age of appearance,
+\code{"fixedDateRandom"} which fixes tips to a date that is randomly drawn from a
+uniform distribution bounded by the upper and lower bounds on the selected age of
+appearance, or (the recommended option) \code{"uniformRange"} which places a uniform
+prior on the age of the tip, bounded by the latest and earliest (upper and lower)
+bounds on the the selected age.}
 
 \item{whichAppearance}{Which appearance date of the taxa should be used:
 their \code{'first'} or their \code{'last'} appearance date? The default
@@ -43,17 +54,6 @@ whatever the oldest tip age used is.}
 \item{file}{Filename (possibly with path) as a character string
 to a file which will be overwritten with the output tip age calibrations.
 If not null, tip calibration commands are output to the console.}
-
-\item{ageConstrainType}{This argument decides how age calibrations are defined, 
-and currently allows for four options: \code{"fixedDateEarlier"} which fixes tip
-ages at the earlier (lower) bound for the selected age of appearance (see argument
-\code{whichAppearance} for how that selection is made), \code{"fixedDateLatter"}
-which fixes the date to the latter (upper) bound of the selected age of appearance,
-\code{"fixedDateRandom"} which fixes tips to a date that is randomly drawn from a
-uniform distribution bounded by the upper and lower bounds on the selected age of
-appearance, or (the recommended option) \code{"uniformRange"} which places a uniform
-prior on the age of the tip, bounded by the latest and earliest (upper and lower)
-bounds on the the selected age.}
 }
 \value{
 If argument \code{file} is \code{NULL}, then the tip age commands
@@ -83,24 +83,24 @@ data(retiolitinae)
 	# the expected tree age from the earliest first appearance
 
 createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-	ageConstraintType="uniformRange", treeAgeOffset=10)
+	ageCalibrationType="uniformRange", treeAgeOffset=10)
 
 # fixed prior, at the earliest bound for the first appearance
 
 createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-	ageConstraintType="fixedDateEarlier", treeAgeOffset=10)
+	ageCalibrationType="fixedDateEarlier", treeAgeOffset=10)
 
 # fixed prior, sampled from between the bounds on the last appearance
 	# you should probably never do this, fyi
 
 createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-	ageConstraintType="fixedDateRandom", treeAgeOffset=10)
+	ageCalibrationtType="fixedDateRandom", treeAgeOffset=10)
 
 
 \dontrun{
 
 createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-	ageConstraintType="uniformRange", treeAgeOffset=10, file="tipCalibrations.txt")
+	ageCalibrationType="uniformRange", treeAgeOffset=10, file="tipCalibrations.txt")
 
 }
 

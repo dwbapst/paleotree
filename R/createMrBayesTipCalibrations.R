@@ -33,7 +33,7 @@
 #' appearance date means that tips will be constrained to occur before their
 #' last occurrence, and thus could occur long after their first occurrence (!).
 
-#' @param ageConstrainType This argument decides how age calibrations are defined, 
+#' @param ageCalibrationType This argument decides how age calibrations are defined, 
 #' and currently allows for four options: \code{"fixedDateEarlier"} which fixes tip
 #' ages at the earlier (lower) bound for the selected age of appearance (see argument
 #' \code{whichAppearance} for how that selection is made), \code{"fixedDateLatter"}
@@ -79,24 +79,24 @@
 #' 	# the expected tree age from the earliest first appearance
 #' 
 #' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-#' 	ageConstraintType="uniformRange", treeAgeOffset=10)
+#' 	ageCalibrationType="uniformRange", treeAgeOffset=10)
 #' 
 #' # fixed prior, at the earliest bound for the first appearance
 #' 
 #' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-#' 	ageConstraintType="fixedDateEarlier", treeAgeOffset=10)
+#' 	ageCalibrationType="fixedDateEarlier", treeAgeOffset=10)
 #' 
 #' # fixed prior, sampled from between the bounds on the last appearance
 #' 	# you should probably never do this, fyi
 #' 
 #' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-#' 	ageConstraintType="fixedDateRandom", treeAgeOffset=10)
+#' 	ageCalibrationtType="fixedDateRandom", treeAgeOffset=10)
 #' 
 #' 
 #' \dontrun{
 #' 
 #' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-#' 	ageConstraintType="uniformRange", treeAgeOffset=10, file="tipCalibrations.txt")
+#' 	ageCalibrationType="uniformRange", treeAgeOffset=10, file="tipCalibrations.txt")
 #' 
 #' }
 #' 
@@ -106,12 +106,12 @@
 #' @rdname createMrBayesTipCalibrations
 #' @export
 createMrBayesTipCalibrations<-function(tipTimes,
-	ageConstraintType,whichAppearance="first",
+	ageCalibrationType,whichAppearance="first",
 	treeAgeOffset,minTreeAge=NULL,file=NULL){
 	#
 	#
-	if(length(ageConstraintType)!=1){
-		stop("argument ageConstraintType must be of length 1")
+	if(length(ageCalibrationType)!=1){
+		stop("argument ageCalibrationType must be of length 1")
 		}
 	if(length(whichAppearance)!=1){
 		stop("argument whichAppearance must be of length 1")
@@ -119,10 +119,10 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	if(all(whichAppearance!=c("first","last"))){
 		stop("argument whichAppearance must be one of 'first' or 'last'")
 		}
-	if(all(ageConstraintType!=c(
+	if(all(ageCalibrationType!=c(
 		"fixedDateEarlier","fixedDateLatter",
 		"fixedDateRandom","uniformRange"))){
-			stop('argument ageConstraintType must be one of 
+			stop('argument ageCalibrationType must be one of 
 				"fixedDateEarlier", "fixedDateLatter", "fixedDateRandom", or "uniformRange"')
 		}
 	#
@@ -146,10 +146,10 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	#
 	# check for things the user is unlikely to want to do
 	if(ncol(tipTimes)==1){
-		if(ageConstraintType!="fixedDateEarlier"){
+		if(ageCalibrationType!="fixedDateEarlier"){
 			stop("You appear to be supplying a single point occurrence per taxon.
 				There isn't any uncertainty or upper bounds on ages, so 
-				ageConstraintType should be set to 'fixedDateEarlier'")
+				ageCalibrationType should be set to 'fixedDateEarlier'")
 			}
 		}
 	####################################################################
@@ -179,28 +179,28 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	# select times
 	# for converting to fixed or uniform age ranges
 	#
-	if(ageConstraintType=="fixedDateEarlier"){
+	if(ageCalibrationType=="fixedDateEarlier"){
 		# use lower bound for selected age of appearance
 		tipTimes<-tipTimes[,1,drop=FALSE]
 		timeType<-"fixed"
 		}
-	if(ageConstraintType=="fixedDateLatter"){	
+	if(ageCalibrationType=="fixedDateLatter"){	
 		# use upper bound for selected age of appearance
 		tipTimes<-tipTimes[,2,drop=FALSE]
 		timeType<-"fixed"
 		}
-	if(ageConstraintType=="fixedDateRandom"){	
+	if(ageCalibrationType=="fixedDateRandom"){	
 		# random drawn from a uniform distribution
 		tipTimes<-t(t(apply(tipTimes,1,function(x) runif(1,x[2],x[1]))))
 		timeType<-"fixed"
 		}
-	if(ageConstraintType=="uniformRange"){
+	if(ageCalibrationType=="uniformRange"){
 		# if uniform, don't need to edit tipTimes
 		timeType<-"uniform"
 		}
 	# check
 	if(all(timeType!=c("fixed","uniform"))){
-		stop("Problem when selecting ages. ageConstraintType argument incorrect?")
+		stop("Problem when selecting ages. ageCalibrationType argument incorrect?")
 		}
 	# 
 	##############################################

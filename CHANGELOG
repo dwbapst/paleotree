@@ -1,4 +1,9 @@
-Version - 2.8 - 
+Version - 2.9 - 
+-Bumped up version number, to reflect ongoing development over a long period without CRAN release. (CRAN release coming soon.)
+-
+
+
+Version - 2.8 - 04-06-17 (Not Released to CRAN)
 -Added additional checks so that helpful error messages are given if species names are accidentally left in as a column in timeList for bin_cal3TimePaleoPhy and bin_timePaleoPhy, thanks Victoria Arbour for this bug report
 -Added informative error message if sliceTime is later in time than the lattest (most recent) tip (thanks Graeme Lloyd for reporting this)
 -Merged two taxa due to an accidental taxon name mis-spelling in the kanto dataset
@@ -8,7 +13,6 @@ Version - 2.8 -
 -Small edit to createMrBayesConstraints documentation
 -Added example of a two-way cluster analysis (sensu Miller 1988) to examples for kanto data, based on code provided by Max Christie (Thanks!)
 -Added new function: createMrBayesTipCalibrations, which creates a block of MrBayes codes for calibrating tip ages in a tip-dating analysis
--
 
 Version - 2.7 - 04-12-16
 -Modified probAnc documetentation so that indirect descendant examples are shown

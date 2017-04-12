@@ -4,7 +4,8 @@
 \alias{createMrBayesConstraints}
 \title{Transform a Topology into a Set of Constraint Commands for MrBayes}
 \usage{
-createMrBayesConstraints(tree, partial = TRUE, file = NULL)
+createMrBayesConstraints(tree, partial = TRUE, file = NULL,
+  includeIngroupConstraint = FALSE)
 }
 \arguments{
 \item{tree}{An object of class \code{phylo}.}
@@ -20,6 +21,12 @@ defining an outgroup.}
 \item{file}{Filename (possibly with path) as a character string
 to a file which will be overwritten with the output constraint lines.
 If not null, constraint lines are printed in the console.}
+
+\item{includeIngroupConstraint}{When writing the \code{prset} line, 
+should a group named 'ingroup' be included, which presumes an ingroup
+constraint was defined by the user for sake or rooting the tree? This is
+mainly used for use with other \code{paleotree} functions for automating
+tip-dating analyses.}
 }
 \value{
 If argument \code{file} is \code{NULL}, then the constrain commands

@@ -29,6 +29,12 @@
 #' to a file which will be overwritten with the output constraint lines.
 #' If not null, constraint lines are printed in the console.
 
+#' @param includeIngroupConstraint When writing the \code{prset} line, 
+#' should a group named 'ingroup' be included, which presumes an ingroup
+#' constraint was defined by the user for sake or rooting the tree? This is
+#' mainly used for use with other \code{paleotree} functions for automating
+#' tip-dating analyses.
+
 #' @return
 #' If argument \code{file} is \code{NULL}, then the constrain commands
 #' are ouput as a series of character strings.
@@ -58,7 +64,8 @@
 #' @name createMrBayesConstraints
 #' @rdname createMrBayesConstraints
 #' @export
-createMrBayesConstraints<-function(tree,partial=TRUE,file=NULL){
+createMrBayesConstraints<-function(tree,partial=TRUE,file=NULL,
+		includeIngroupConstraint=FALSE){
 	#checks
 	if(!inherits(tree,"phylo")){
 		stop("tree must be of class 'phylo'")
@@ -93,8 +100,13 @@ createMrBayesConstraints<-function(tree,partial=TRUE,file=NULL){
 	#########################################################
 	# create prset line
 	constList<-paste0("node",1:length(splits),collapse=",")
-	prsetLine<-paste0("prset topologypr = constraints(",
-		constList,");")
+	if(includeIngroupConstraint){
+		prsetLine<-paste0("prset topologypr = constraints(",
+			constList,",ingroup);")
+	}else{
+		prsetLine<-paste0("prset topologypr = constraints(",
+			constList,");")
+		}
 	#
 	############################################################
 	#

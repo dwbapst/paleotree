@@ -1,5 +1,6 @@
 Version - 2.9 - 
 -Bumped up version number, to reflect ongoing development over a long period without CRAN release. (CRAN release coming soon.)
+-Added function createMrBayesTipDatingNexus, which creates a full NEXUS script for doing tip-dating analyses in MrBayes
 -
 
 

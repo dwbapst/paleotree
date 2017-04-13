@@ -70,4 +70,7 @@ Slater, G. J. 2013. Phylogenetic evidence for a shift in the mode of mammalian
 body size evolution at the Cretaceous-Palaeogene boundary.
 \emph{Methods in Ecology and Evolution} 4(8):734-744.
 }
+\seealso{
+\code{\link{createMrBayesTipDatingNexus}}, \code{\link{createMrBayesTipCalibrations}}
+}
 

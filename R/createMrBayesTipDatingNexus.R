@@ -1,5 +1,6 @@
-#' @details
-
+#' Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes
+#'
+#' 
 
 
 
@@ -16,16 +17,33 @@
 
 #' @inheritParams createMrBayesConstraints createMrBayesTipCalibrations
 
-#' @param
+#' @param outgroupTaxa
+
+#' @param origNexusFile Filename (possibly with path) as a character
+#' string leading to a NEXUS text file, presumably containing a matrix
+#' of character date formateed for MrBayes. If supplied
+#' (it does not need to be supplied), the listed file is read as a text file, and
+#' concatenated with the MrBayes script produced by this function, so as to reproduce. 
+
+#' @param newFile Filename (possibly with path) as a character string
+#' leading to a file which will be overwritten with the output tip age calibrations.
+#' If \code{NULL}, tip calibration commands are output to the console.
+
+#' @param createEmptyMorphMat
+
+#' @param runName The name of the run, used for naming the log files. 
+#' If not set, the name will be taken from the name given for outputting
+#' the NEXUS script (\code{newFile}). If \code{newFile} is not given, and
+#' \code{runName} is not set by the user, the default run name will be  "new_run_paleotree".
+
+#' @param doNotRun=FALSE
 
 
 
 
 
-
-
-
-#' @param treeConstraints An object of class \code{phylo}, from which the set topological constraints are derived, as
+#' @param treeConstraints An object of class \code{phylo}, 
+#' from which (if \code{treeConstraints} is supplied) the set topological constraints are derived, as
 #' as described for argument \code{tree} for function \code{createMrBayesConstraints}.
 
 
@@ -96,7 +114,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 			stop("Somehow have taxa missing from either tipTimes or treeConstraint")
 			}
 		if(!identical(sort(taxaTipTimes),sort(taxaTree))){
-			stop("Nope, taxa in tipTimes and on treeConstraint STILL not identical!!"){
+			stop("Nope, taxa in tipTimes and on treeConstraint STILL not identical!!")
 			}
 		}
 	taxonnames<-taxaTipTimes
@@ -182,11 +200,12 @@ makeIngroupConstraintMrB<-function(outgroupTaxa,allTaxa){
 	if(any(notPresent)){
 		stop(paste("Following outgroup taxa not present in input tipTimes",
 			paste(outgroupTaxa[notPresent],collapse=" ")))
+		}
 	#############################################
 	# get the ingroup taxa
 	inGroup<-allTaxa[sapply(allTaxa,function(x) all(x!=outgroupTaxa))]
 	# check that there are SOME ingroup
-	if(length(inGroup)<2)){
+	if(length(inGroup)<2){
 		stop("Less than two taxa are in the ingroup??")
 		}
 	# make ingroup block

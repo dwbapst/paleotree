@@ -20,7 +20,7 @@ defining an outgroup.}
 
 \item{file}{Filename (possibly with path) as a character string
 to a file which will be overwritten with the output constraint lines.
-If not null, constraint lines are printed in the console.}
+If \code{NULL}, constraint lines are printed in the console.}
 
 \item{includeIngroupConstraint}{When writing the \code{prset} line, 
 should a group named 'ingroup' be included, which presumes an ingroup

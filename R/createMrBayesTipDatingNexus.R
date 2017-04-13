@@ -74,6 +74,9 @@
 #' \emph{Systematic Biology} 65(2):228-249. 
 
 #' @examples
+#'
+#' # load retiolitid dataset
+#' data(retiolitinae)
 
 
 

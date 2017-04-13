@@ -53,7 +53,7 @@ whatever the oldest tip age used is.}
 
 \item{file}{Filename (possibly with path) as a character string
 to a file which will be overwritten with the output tip age calibrations.
-If not null, tip calibration commands are output to the console.}
+If \code{NULL}, tip calibration commands are output to the console.}
 }
 \value{
 If argument \code{file} is \code{NULL}, then the tip age commands
@@ -108,6 +108,11 @@ createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
 \author{
 David W. Bapst. This code was produced as part of a project 
 funded by National Science Foundation grant EAR-1147537 to S. J. Carlson.
+}
+\references{
+Zhang, C., T. Stadler, S. Klopfstein, T. A. Heath, and F. Ronquist. 2016. 
+Total-Evidence Dating under the Fossilized Birth–Death Process.
+\emph{Systematic Biology} 65(2):228-249.
 }
 \seealso{
 \code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipDatingNexus}}

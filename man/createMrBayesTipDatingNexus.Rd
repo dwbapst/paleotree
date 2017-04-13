@@ -2,6 +2,7 @@
 % Please edit documentation in R/createMrBayesTipDatingNexus.R
 \name{createMrBayesTipDatingNexus}
 \alias{createMrBayesTipDatingNexus}
+\title{Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes}
 \usage{
 createMrBayesTipDatingNexus(tipTimes, outgroupTaxa, treeConstraints = NULL,
   ageCalibrationType, whichAppearance = "first", treeAgeOffset,
@@ -10,20 +11,65 @@ createMrBayesTipDatingNexus(tipTimes, outgroupTaxa, treeConstraints = NULL,
   doNotRun = FALSE)
 }
 \arguments{
-\item{treeConstraints}{An object of class \code{phylo}, from which the set topological constraints are derived, as
+\item{outgroupTaxa}{A set of taxa which designate the outgroup; all taxa not listed
+in the outgroup will be constrained to be a monophyletic ingroup, for sake of rooting
+the resulting dated tree.  This outgroup selection should not disagree with any of the
+relationships on \code{treeConstraint}, if such is supplied.}
+
+\item{treeConstraints}{An object of class \code{phylo}, 
+from which (if \code{treeConstraints} is supplied) the set topological constraints are derived, as
 as described for argument \code{tree} for function \code{createMrBayesConstraints}.}
+
+\item{origNexusFile}{Filename (possibly with path) as a character
+string leading to a NEXUS text file, presumably containing a matrix
+of character date formateed for MrBayes. If supplied
+(it does not need to be supplied), the listed file is read as a text file, and
+concatenated with the MrBayes script produced by this function, so as to reproduce. 
+Note that the taxa in this NEXUS file are \emph{NOT} checked against the user
+input \code{tipTimes} and \code{treeConstraints}, so it is up to the user to
+ensure the taxa are the same across the three data sources.}
+
+\item{newFile}{Filename (possibly with path) as a character string
+leading to a file which will be overwritten with the output tip age calibrations.
+If \code{NULL}, tip calibration commands are output to the console.}
+
+\item{createEmptyMorphMat}{If \code{origNexusFile} is not specified (meaning there is no
+prior character matrix for these}
+
+\item{runName}{The name of the run, used for naming the log files. 
+If not set, the name will be taken from the name given for outputting
+the NEXUS script (\code{newFile}). If \code{newFile} is not given, and
+\code{runName} is not set by the user, the default run name will be  "new_run_paleotree".}
+
+\item{doNotRun}{If \code{TRUE}, the commands that cause a script to automatically begin running in 
+MrBayes will be left out. Useful for troubleshooting initial runs of scripts for non-fatal errors and
+warnings (such as ignored constraints). Default for this argument is \code{FALSE}.}
 
 \item{createEmptyMorphMat}{If origNexusFile is not supplied, should an empty NEXUS block formatted
 for use with MrBayes, be created using the list of taxa in tipTimes? Default is TRUE.}
-
-\item{treeConstraints}{}
 }
 \value{
 If argument \code{newFile} is \code{NULL}, then the text of the 
 generated NEXUS script is ouput to the console as a series of character strings.
 }
+\description{
+Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes
+}
 \details{
-The taxa listed in \code{tipTimes} must match the taxa in \code{treeConstraints}.
+The taxa listed in \code{tipTimes} must match the taxa in \code{treeConstraints}, if such is supplied. The taxa in \code{outgroupTaxa}
+must be contained within this same set of taxa, and should not contradict relationships on \code{treeConstraint}. The taxa in any
+character matrix given in \code{origNexusFile} is \code{not} checked against these two sources: it is up to the user to ensure the same
+taxa are found in all three.
+
+Note that because
+the same set of taxa must be contained in both inputs, relationships are constrained as 'hard' constraints, rather than 'partial' constraints,
+which allows some taxa to float across a partially fixed topology. See the documentation for \code{\link{createMrBayesConstraints}},
+for more details.
+}
+\examples{
+
+# load retiolitid dataset
+data(retiolitinae)
 }
 \author{
 David W. Bapst

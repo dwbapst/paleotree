@@ -44,6 +44,9 @@
 #' produced as part of a project funded by National Science Foundation
 #' grant EAR-1147537 to S. J. Carlson.
 
+#' @seealso
+#' \code{\link{createMrBayesTipDatingNexus}}, \code{\link{createMrBayesTipCalibrations}}
+
 #' @references
 #' Slater, G. J. 2013. Phylogenetic evidence for a shift in the mode of mammalian
 #' body size evolution at the Cretaceous-Palaeogene boundary.

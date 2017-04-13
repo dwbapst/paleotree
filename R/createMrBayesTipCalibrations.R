@@ -68,7 +68,8 @@
 #' David W. Bapst. This code was produced as part of a project 
 #' funded by National Science Foundation grant EAR-1147537 to S. J. Carlson.
 
-#' @seealso createMrBayesConstraints
+#' @seealso 
+#' \code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipDatingNexus}}
 
 #' @examples
 #'

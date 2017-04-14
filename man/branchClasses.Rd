@@ -59,4 +59,3 @@ for(x in 1:length(brlenRes)){
 
 layout(1)
 }
-

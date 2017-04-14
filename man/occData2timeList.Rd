@@ -133,11 +133,10 @@ sum(abs(dateChange))
 
 layout(1)
 }
-\author{
-David W. Bapst, with the 'dateRange' algorithm suggested by Jon Marcot.
-}
 \seealso{
 \code{\link{taxonSortPBDBocc}}, \code{\link{plotOccData}} and the
 example graptolite dataset at \code{\link{graptPBDB}}
 }
-
+\author{
+David W. Bapst, with the 'dateRange' algorithm suggested by Jon Marcot.
+}

@@ -231,4 +231,3 @@ anova(ft)
 
 }
 \keyword{datasets}
-

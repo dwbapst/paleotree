@@ -233,9 +233,6 @@ plot(R,ML_sampProb);abline(0,1)
 }
 
 }
-\author{
-David W. Bapst
-}
 \references{
 Foote, M. 1997 Estimating Taxonomic Durations and Preservation
 Probability. \emph{Paleobiology} \bold{23}(3):278--300.
@@ -247,4 +244,6 @@ ranges of taxa. \emph{Paleobiology} \bold{22}(2):121--140.
 Model fitting methods in \code{\link{make_durationFreqDisc}} and \code{\link{make_durationFreqCont}}. 
 Also see conversion methods in \code{\link{sProb2sRate}}, \code{\link{qsProb2Comp}}
 }
-
+\author{
+David W. Bapst
+}

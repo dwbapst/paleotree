@@ -63,10 +63,9 @@ dateNodes(tree1,rootAge=NULL)
    #some of these will be hideously long
 dateNodes(tree1,labelDates=TRUE)
 }
-\author{
-David W. Bapst, based on a function originally written by Graeme Lloyd.
-}
 \seealso{
 \code{\link{compareTimescaling}}
 }
-
+\author{
+David W. Bapst, based on a function originally written by Graeme Lloyd.
+}

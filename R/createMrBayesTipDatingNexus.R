@@ -1,7 +1,7 @@
 #' Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes
 #'
 #' This function is meant to expedite the creation of NEXUS files formatted
-#' for performing tip-dating analyses in the popular phylogenetics software MrBayes,
+#' for performing tip-dating analyses in the popular phylogenetics software \emph{MrBayes},
 #' particularly clock-less tip-dating analyses executed with 'empty' morphological matrices
 #' (i.e. where all taxa ae coded for a single missing character), although a pre-existing
 #' morphological matrix can also be input by the user (see argument \code{origNexusFile}).
@@ -15,7 +15,7 @@
 #' allowing users to choose between fixed calibrations or uniform priors that approximate stratigraphic uncertainty.
 #' In addition, a user may supply a tree which is then converted into a series of hard topological
 #' constraints (via function \code{\link{createMrBayesConstraints}}, or a path to a text file
-#' presumed to be a NEXUS file containing character data formatted for use with MrBayes.
+#' presumed to be a NEXUS file containing character data formatted for use with \emph{MrBayes}.
 #'
 #' The resulting full NEXUS script is output as a set of character strings either
 #' printed to the R console, or output to file which is then overwritten.
@@ -35,7 +35,7 @@
 #' See the documentation for \code{\link{createMrBayesConstraints}},
 #' for more details.
 
-#' @inheritParams createMrBayesConstraints createMrBayesTipCalibrations
+#' @inheritParams createMrBayesTipCalibrations
 
 #' @param outgroupTaxa A vector of type 'character', containing taxon names designating the outgroup.
 #'  All taxa not listed in the outgroup will be constrained to be a monophyletic ingroup, for sake of rooting
@@ -44,9 +44,9 @@
 
 #' @param origNexusFile Filename (possibly with path) as a character
 #' string leading to a NEXUS text file, presumably containing a matrix
-#' of character date formateed for MrBayes. If supplied
+#' of character date formateed for \emph{MrBayes}. If supplied
 #' (it does not need to be supplied), the listed file is read as a text file, and
-#' concatenated with the MrBayes script produced by this function, so as to reproduce. 
+#' concatenated with the \emph{MrBayes} script produced by this function, so as to reproduce. 
 #' Note that the taxa in this NEXUS file are \emph{NOT} checked against the user
 #' input \code{tipTimes} and \code{treeConstraints}, so it is up to the user to
 #' ensure the taxa are the same across the three data sources.
@@ -57,7 +57,7 @@
 
 #' @param createEmptyMorphMat If \code{origNexusFile} is not specified (implying there is no
 #' pre-existing morphological character matrix for this dataset), then an 'empty' NEXUS-formatted matrix will be
-#' appended to the set of MrBayes commands if this command is \code{TRUE} (the default). This
+#' appended to the set of \emph{MrBayes} commands if this command is \code{TRUE} (the default). This
 #' 'empty' matrix will have each taxon in \code{tipTimes} coded for a single missing character
 #' (i.e., '?'). This allows tip-dating analyses with hard topological constraints, and ages
 #' determined entirely by the fossilized birth-death prior, with no impact from a
@@ -69,7 +69,7 @@
 #' \code{runName} is not set by the user, the default run name will be  "new_run_paleotree".
 
 #' @param doNotRun If \code{TRUE}, the commands that cause a script to automatically begin running in 
-#' MrBayes will be left out. Useful for troubleshooting initial runs of scripts for non-fatal errors and
+#' \emph{MrBayes} will be left out. Useful for troubleshooting initial runs of scripts for non-fatal errors and
 #' warnings (such as ignored constraints). Default for this argument is \code{FALSE}.
 
 #' @param treeConstraints An object of class \code{phylo}, 
@@ -86,6 +86,11 @@
 #' @author
 #' David W. Bapst. This code was produced as part of a project 
 #' funded by National Science Foundation grant EAR-1147537 to S. J. Carlson.
+#'
+#' The basic \emph{MrBayes} commands utilized in the output script are a collection
+#' of best practices taken from studying NEXUS files supplied by April Wright,
+#' William Gearty, Graham Slater, Davey Wright, and
+#' guided by the recommendations of Matzke and Wright, 2016 in Biol. Lett.
 
 #' @references
 #' The basic fundamentals of tip-dating, and tip-dating with the fossilized
@@ -98,6 +103,12 @@
 #' Zhang, C., T. Stadler, S. Klopfstein, T. A. Heath, and F. Ronquist. 2016. 
 #' Total-Evidence Dating under the Fossilized Birth–Death Process.
 #' \emph{Systematic Biology} 65(2):228-249. 
+#'
+#' For recommended best practices in tip-dating analyses, please see:
+#'
+#' Matzke, N. J., and A. Wright. 2016. Inferring node dates from tip dates
+#' in fossil Canidae: the importance of tree priors. \emph{Biology Letters} 12(8).
+
 
 #' @examples
 #' # hi

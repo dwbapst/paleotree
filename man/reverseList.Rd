@@ -42,4 +42,3 @@ reverseList(list1,simplify=TRUE)
 \author{
 David W. Bapst
 }
-

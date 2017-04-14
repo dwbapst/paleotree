@@ -2,9 +2,32 @@
 % Please edit documentation in R/modelMethods.R
 \name{modelMethods}
 \alias{modelMethods}
+\alias{parnames}
+\alias{parbounds}
+\alias{parbounds.constrained}
+\alias{parbounds.paleotreeFunc}
 \alias{parInit}
 \alias{parInit.constrained}
 \alias{parInit.paleotreeFunc}
+\alias{parLower}
+\alias{parLower.constrained}
+\alias{parLower.paleotreeFunc}
+\alias{parnames.constrained}
+\alias{parnames.paleotreeFunc}
+\alias{parUpper}
+\alias{parUpper.constrained}
+\alias{parUpper.paleotreeFunc}
+\alias{parnames.paleotreeFunc}
+\alias{parnames.constrained}
+\alias{parnames<-}
+\alias{parnames<-.constrained}
+\alias{parnames<-.paleotreeFunc}
+\alias{parbounds}
+\alias{parbounds.paleotreeFunc}
+\alias{parbounds.constrained}
+\alias{parbounds<-}
+\alias{parbounds<-.constrained}
+\alias{parbounds<-.paleotreeFunc}
 \alias{parLower}
 \alias{parLower.constrained}
 \alias{parLower.paleotreeFunc}
@@ -17,18 +40,9 @@
 \alias{parUpper<-}
 \alias{parUpper<-.constrained}
 \alias{parUpper<-.paleotreeFunc}
-\alias{parbounds}
-\alias{parbounds.constrained}
-\alias{parbounds.paleotreeFunc}
-\alias{parbounds<-}
-\alias{parbounds<-.constrained}
-\alias{parbounds<-.paleotreeFunc}
-\alias{parnames}
-\alias{parnames.constrained}
-\alias{parnames.paleotreeFunc}
-\alias{parnames<-}
-\alias{parnames<-.constrained}
-\alias{parnames<-.paleotreeFunc}
+\alias{parInit}
+\alias{parInit.constrained}
+\alias{parInit.paleotreeFunc}
 \title{Model Function Methods: Parameter Names, Bounds and Initial Values}
 \usage{
 parnames(x, ...)
@@ -173,13 +187,12 @@ parInit(constrainFun)
 #but cannot rename parameter for constrained function!
 
 }
+\seealso{
+These model methods were introduced to interact with the new model framework introduced in
+paleotree v1.9, in particular to interface with \code{\link{constrainParPaleo}}.
+}
 \author{
 These functions are strongly based on or inspired by the \code{argnames} functions
 provided for handling models in Rich Fitzjohn's library \code{diversitree}, but
 the functions presented here are derviations written by David Bapst.
 }
-\seealso{
-These model methods were introduced to interact with the new model framework introduced in
-paleotree v1.9, in particular to interface with \code{\link{constrainParPaleo}}.
-}
-

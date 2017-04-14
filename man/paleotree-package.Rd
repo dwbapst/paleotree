@@ -2,8 +2,8 @@
 % Please edit documentation in R/paleotree-package.R
 \docType{package}
 \name{paleotree-package}
-\alias{paleotree}
 \alias{paleotree-package}
+\alias{paleotree}
 \title{paleotree: Paleontological and Phylogenetic Analyses of Evolution}
 \description{
 Analyzes, time-scales and simulates phylogenies of extinct/fossil lineages,
@@ -63,11 +63,6 @@ ttree <- timePaleoPhy(cladogram,rangesCont,type="basic",add.term=TRUE,plot=TRUE)
 phyloDiv(ttree)
 
 }
-\author{
-David W. Bapst
-
-Maintainer: David W. Bapst <dwbapst@gmail.com>
-}
 \references{
 Bapst, D.W. 2012. paleotree: an R package for paleontological
 and phylogenetic analyses of evolution. \emph{Methods in Ecology and
@@ -89,4 +84,8 @@ This package relies extensively on the phylogenetic toolkit and
 standards offered by the \code{\link[ape:ape-package]{ape}} package, and hence
 lists this package as a depends, so it is loaded simultaneously.
 }
+\author{
+David W. Bapst
 
+Maintainer: David W. Bapst <dwbapst@gmail.com>
+}

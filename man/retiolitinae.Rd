@@ -2,10 +2,10 @@
 % Please edit documentation in R/retiolitinae.R
 \docType{data}
 \name{retiolitinae}
-\alias{retioChar}
+\alias{retiolitinae}
 \alias{retioRanges}
 \alias{retioTree}
-\alias{retiolitinae}
+\alias{retioChar}
 \title{Cladogram and Range Data for the Retiolitinae}
 \format{This dataset is composed of three objects:
 
@@ -80,4 +80,3 @@ phyloDiv(ttree)
 For more example graptolite datasets, see \code{\link{graptDisparity}}
 }
 \keyword{datasets}
-

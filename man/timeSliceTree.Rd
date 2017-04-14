@@ -67,11 +67,6 @@ tree950 <- timeSliceTree(tree,sliceTime=950,plot=FALSE,drop.extinct=TRUE)
 phyloDiv(tree950,plotLogRich=TRUE)
 
 }
-\author{
-David W. Bapst, with modification of code by Klaus Schliep to avoid use of
-function \code{dist.nodes} which has difficulty with large trees and greatly
-benefiting function runtime.
-}
 \seealso{
 \code{\link{phyloDiv}}, \code{\link{dropExtinct}},
 \code{\link{dropExtant}}
@@ -80,4 +75,8 @@ Also see the function treeSlice in the library phytools, which will slice a
 tree at some point in and return all the subtrees which remain after the
 slicing time. (Effectively the reverse of timeSliceTree.)
 }
-
+\author{
+David W. Bapst, with modification of code by Klaus Schliep to avoid use of
+function \code{dist.nodes} which has difficulty with large trees and greatly
+benefiting function runtime.
+}

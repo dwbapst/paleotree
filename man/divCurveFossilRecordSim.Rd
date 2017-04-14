@@ -53,10 +53,9 @@ record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
 divCurveFossilRecordSim(record)
 
 }
-\author{
-David W. Bapst
-}
 \seealso{
 \code{\link{simFossilRecord}}
 }
-
+\author{
+David W. Bapst
+}

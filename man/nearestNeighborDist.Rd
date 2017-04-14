@@ -61,9 +61,6 @@ groupNND
    #need to bring in temporal info to test that
 
 }
-\author{
-David W. Bapst
-}
 \references{
 Bapst, D. W., P. C. Bullock, M. J. Melchin, H. D. Sheets, 
 and C. E. Mitchell. 2012. Graptoloid diversity and disparity 
@@ -81,4 +78,6 @@ Foote, M. 1990. Nearest-neighbor analysis of trilobite morphospace.
 \seealso{
 For the example dataset used in examples, see \code{\link{graptDisparity}}
 }
-
+\author{
+David W. Bapst
+}

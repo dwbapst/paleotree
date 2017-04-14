@@ -110,4 +110,3 @@ main="MajRule_24charX12Taxa_wBiostratChar")
 
 }
 \keyword{datasets}
-

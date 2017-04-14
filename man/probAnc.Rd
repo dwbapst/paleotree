@@ -88,4 +88,3 @@ Record. \emph{Paleobiology} \bold{22}(2):141--151.
 \seealso{
 \code{\link{SamplingConv}}
 }
-

@@ -94,9 +94,6 @@ par(parOrig)
 layout(1) 
 
 }
-\author{
-David W. Bapst
-}
 \references{
 Foote, M. 1996 On the Probability of Ancestors in the Fossil
 Record. \emph{Paleobiology} \bold{22}(2):141-151.
@@ -108,4 +105,6 @@ University Press, New York:87-122.
 \seealso{
 \code{\link{simFossilRecord}}, \code{\link{taxa2phylo}}, \link{fossilRecord2fossilTaxa}
 }
-
+\author{
+David W. Bapst
+}

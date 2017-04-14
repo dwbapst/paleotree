@@ -89,12 +89,11 @@ sapply(seqLists$timeLists,freqRat)
 
 #didn't have much effect in this simulated example
 }
-\author{
-David W. Bapst
-}
 \seealso{
 Resulting time-lists can be analyzed with \code{\link{freqRat}}, \code{\link{durationFreq}}, etc.
 
 Additionally, \code{\link{binTimeData}} can be useful for simulating interval data.
 }
-
+\author{
+David W. Bapst
+}

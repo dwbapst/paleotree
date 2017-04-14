@@ -4,6 +4,7 @@
 \alias{durationFreq}
 \alias{make_durationFreqCont}
 \alias{make_durationFreqDisc}
+\alias{make_durationFreqDisc}
 \title{Models of Sampling and Extinction for Taxonomic Duration Datasets}
 \usage{
 make_durationFreqCont(timeData, groups = NULL, drop.extant = TRUE,
@@ -172,9 +173,6 @@ optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
    # gets further away from true generating value, r = 0.5 (geesh!)
    # but this *is* a small dataset...
 }
-\author{
-David W. Bapst
-}
 \references{
 Foote, M. 1997 Estimating Taxonomic Durations and Preservation
 Probability. \emph{Paleobiology} \bold{23}(3):278--300.
@@ -186,4 +184,6 @@ ranges of taxa. \emph{Paleobiology} \bold{22}(2):121--140.
 See \code{\link{freqRat}}, \code{\link{sRate2sProb}},
 \code{\link{qsRate2Comp}} \code{\link{sProb2sRate}} and \code{\link{qsProb2Comp}}.
 }
-
+\author{
+David W. Bapst
+}

@@ -32,4 +32,3 @@ rootSplit(tree)
 \author{
 David W. Bapst
 }
-

@@ -63,12 +63,11 @@ plot(tree2,show.tip.label=FALSE);axisPhylo()
 
 layout(1)
 }
-\author{
-David W. Bapst
-}
 \seealso{
 This function was originally an internal piece of \code{\link{timePaleoPhy}}, which implements the minimum branch
 length time-scaling method along with others, which may be what you're looking for
 (instead of this miscellaneous function).
 }
-
+\author{
+David W. Bapst
+}

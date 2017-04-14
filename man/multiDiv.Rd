@@ -3,6 +3,7 @@
 \name{multiDiv}
 \alias{multiDiv}
 \alias{plotMultiDiv}
+\alias{plotMultiDiv}
 \title{Calculating Diversity Curves Across Multiple Datasets}
 \usage{
 multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE,
@@ -181,4 +182,3 @@ Also see the function LTT.average.root in the package TreeSim, which
 calculates an average LTT curve for multiple phylogenies, the functions
 mltt.plot in ape and ltt in phytools.
 }
-

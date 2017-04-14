@@ -99,10 +99,9 @@ plot(treeCrypt)
 axisPhylo()
 
 }
-\author{
-David W. Bapst
-}
 \seealso{
 \code{\link{simFossilRecord}}, \code{\link{taxa2cladogram}}, \link{fossilRecord2fossilTaxa}
 }
-
+\author{
+David W. Bapst
+}

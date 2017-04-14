@@ -711,9 +711,6 @@ stop("Runs have extant taxa under conditioning for none?")
 }
 
 }
-\author{
-David W. Bapst, inspired by code written by Peter Smits.
-}
 \references{
 Bapst, D. W. 2013. When Can Clades Be Potentially Resolved with
 Morphology? \emph{PLoS ONE} 8(4):e62312.
@@ -771,4 +768,6 @@ deprecated \code{paleotree} functions \code{simFossilTaxa}, \code{simFossilTaxaS
 \code{simPaleoTrees}, as well as the combined used of \code{simFossilTaxa}
 and \code{sampleRanges} for most models of sampling.
 }
-
+\author{
+David W. Bapst, inspired by code written by Peter Smits.
+}

@@ -2,11 +2,11 @@
 % Please edit documentation in R/macroperforateForam.R
 \docType{data}
 \name{macroperforateForam}
-\alias{foramAL}
-\alias{foramALb}
-\alias{foramAM}
-\alias{foramAMb}
 \alias{macroperforateForam}
+\alias{foramAL}
+\alias{foramAM}
+\alias{foramALb}
+\alias{foramAMb}
 \title{Ancestor-Descendant Relationships for Macroperforate Foraminifera, from Aze et al. (2011)}
 \format{The 'foramAM' and 'foramAL' tables include budding taxon units
 for morphospecies and lineages respective, with four columns:
@@ -370,4 +370,3 @@ Strotz, L. C., and A. P. Allen. 2013. Reply to Aze et al.: Distinguishing specia
 multiple lines of evidence. \emph{Proceedings of the National Academy of Sciences} 110(32):E2947-E2947.
 }
 \keyword{datasets}
-

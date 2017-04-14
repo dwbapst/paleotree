@@ -1,8 +1,9 @@
 #' Construct A Block of Tip Age Calibrations for Use with Tip-Dating Analyses in MrBayes
 #' 
-#' Takes a set of tip ages given as either a matrix of precise ages
-#' (in several forms, see below) and outputs a set of tip age calibrations
-#' for use with tip-dating analyses (sensu Zhang et al., 2016) in the popular phylogenetics program \emph{MrBayes}.
+#' Takes a set of tip ages (in several possible forms, see below),
+#' and outputs a set of tip age calibrations
+#' for use with tip-dating analyses (sensu Zhang et al., 2016)
+#' in the popular phylogenetics program \emph{MrBayes}.
 #' These calibrations are printed as a set of character strings, as well as a 
 #' line placing an offset exponential prior on the tree age, either
 #' printed in the R console or in a named text file, which can be used as
@@ -11,7 +12,7 @@
 
 #' @details
 #' Beware: some combinations of arguments might not make sense for your data.
-#'
+#' 
 #' (But that's always true, isn't it?)
 
 #' @param tipTimes This input may be either a timeList object (i.e. a list of length 2, 

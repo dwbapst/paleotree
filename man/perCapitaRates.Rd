@@ -128,4 +128,3 @@ Kansas.
 \seealso{
 \code{\link{DiversityCurves}}, \code{\link{SamplingConv}}
 }
-

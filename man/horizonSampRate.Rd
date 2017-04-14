@@ -83,4 +83,3 @@ ranges alone to estimate sampling parameters, implemented in
 Also see the conversion functions for sampling parameters at
 \code{\link{SamplingConv}}.
 }
-

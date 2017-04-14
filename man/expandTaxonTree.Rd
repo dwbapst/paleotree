@@ -75,9 +75,6 @@ coll <- sample(taxtr$tip.label,3)		#what to collapse?
 expandTaxonTree(taxonTree=taxtr,taxaData=taxd,collapse=coll,plot=TRUE)
 
 }
-\author{
-David W. Bapst
-}
 \references{
 Friedman, M. 2009 Ecomorphological selectivity among marine
 teleost fishes during the end-Cretaceous extinction. \emph{Proceedings of
@@ -89,4 +86,6 @@ phylogenetics. \emph{Molecular Ecology Notes} \bold{5}(1):181--183.
 \seealso{
 \code{\link{multi2di}}, \code{\link{bind.tree}}
 }
-
+\author{
+David W. Bapst
+}

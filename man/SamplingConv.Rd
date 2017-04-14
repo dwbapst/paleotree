@@ -2,11 +2,15 @@
 % Please edit documentation in R/SamplingConv.R
 \name{SamplingConv}
 \alias{SamplingConv}
+\alias{sProb2sRate}
+\alias{sRate2sProb}
 \alias{pqsRate2sProb}
 \alias{qsProb2Comp}
 \alias{qsRate2Comp}
-\alias{sProb2sRate}
 \alias{sRate2sProb}
+\alias{pqsRate2sProb}
+\alias{qsProb2Comp}
+\alias{qsRate2Comp}
 \title{Converting Sampling Estimates}
 \usage{
 sProb2sRate(R, int.length = 1)
@@ -91,9 +95,6 @@ qsProb2Comp(R=0.1,q=0.1,mode="bifurcating")
 
 qsRate2Comp(r=0.1,q=0.1)
 }
-\author{
-David W. Bapst, with advice from Michael Foote.
-}
 \references{
 Foote, M. 1996 On the Probability of Ancestors in the Fossil
 Record. \emph{Paleobiology} \bold{22}(2):141--151.
@@ -116,4 +117,6 @@ Stratigraphic Ranges of Taxa. \emph{Paleobiology} \bold{23}(3):271--277.
 \code{\link{sampleRanges}}, \code{\link{make_durationFreqDisc}}, \code{\link{make_durationFreqCont}},
  \code{\link{probAnc}}, \code{\link{pqr2Ps}}.
 }
-
+\author{
+David W. Bapst, with advice from Michael Foote.
+}

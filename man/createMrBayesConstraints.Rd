@@ -25,8 +25,8 @@ If \code{NULL}, constraint lines are printed in the console.}
 \item{includeIngroupConstraint}{When writing the \code{prset} line, 
 should a group named 'ingroup' be included, which presumes an ingroup
 constraint was defined by the user for sake or rooting the tree? This is
-mainly used for use with other \code{paleotree} functions for automating
-tip-dating analyses.}
+mainly used for use with \code{paleotree} function \code{createMrBayesTIpDatingNexus} for automating
+the construction of tip-dating analyses, which must constrain the ingroup.}
 }
 \value{
 If argument \code{file} is \code{NULL}, then the constrain commands
@@ -60,11 +60,6 @@ createMrBayesConstraints(tree,file="topoConstraints.txt")
 
 }
 }
-\author{
-David W. Bapst, with some inspiration from Graham Slater. This code was 
-produced as part of a project funded by National Science Foundation
-grant EAR-1147537 to S. J. Carlson.
-}
 \references{
 Slater, G. J. 2013. Phylogenetic evidence for a shift in the mode of mammalian
 body size evolution at the Cretaceous-Palaeogene boundary.
@@ -73,4 +68,8 @@ body size evolution at the Cretaceous-Palaeogene boundary.
 \seealso{
 \code{\link{createMrBayesTipDatingNexus}}, \code{\link{createMrBayesTipCalibrations}}
 }
-
+\author{
+David W. Bapst, with some inspiration from Graham Slater. This code was 
+produced as part of a project funded by National Science Foundation
+grant EAR-1147537 to S. J. Carlson.
+}

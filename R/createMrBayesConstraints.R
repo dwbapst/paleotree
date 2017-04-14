@@ -32,8 +32,8 @@
 #' @param includeIngroupConstraint When writing the \code{prset} line, 
 #' should a group named 'ingroup' be included, which presumes an ingroup
 #' constraint was defined by the user for sake or rooting the tree? This is
-#' mainly used for use with other \code{paleotree} functions for automating
-#' tip-dating analyses.
+#' mainly used for use with \code{paleotree} function \code{createMrBayesTIpDatingNexus} for automating
+#' the construction of tip-dating analyses, which must constrain the ingroup.
 
 #' @return
 #' If argument \code{file} is \code{NULL}, then the constrain commands

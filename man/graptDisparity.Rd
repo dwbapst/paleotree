@@ -2,10 +2,10 @@
 % Please edit documentation in R/graptDisparity.R
 \docType{data}
 \name{graptDisparity}
-\alias{graptCharMatrix}
 \alias{graptDisparity}
-\alias{graptDistMat}
+\alias{graptCharMatrix}
 \alias{graptRanges}
+\alias{graptDistMat}
 \title{Morphlogical Character and Range Data for late Ordovician and Early Silurian Graptoloidea}
 \format{This dataset is composed of three objects: 
 
@@ -210,4 +210,3 @@ This data was added mainly to provide an example dataset
 for \code{\link{nearestNeighborDist}}
 }
 \keyword{datasets}
-

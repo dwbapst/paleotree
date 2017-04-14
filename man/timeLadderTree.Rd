@@ -64,10 +64,9 @@ axisPhylo()
 layout(1)
 
 }
-\author{
-David W. Bapst
-}
 \seealso{
 \code{\link{di2multi}}
 }
-
+\author{
+David W. Bapst
+}

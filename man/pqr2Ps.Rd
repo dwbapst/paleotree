@@ -69,15 +69,6 @@ pqr2Ps(p=0.1,q=0.1,r=0.1,useExact=TRUE)
 #with inexact solution
 pqr2Ps(p=0.1,q=0.1,r=0.1,useExact=TRUE)
 }
-\author{
-This function is entirely the product of a joint effort between the package author
-(David W. Bapst), Emily A. King and Matthew W. Pennell. In particular, Emily King
-solved a nasty bit of calculus to get the inexact solution and later re-derived
-the function with a quadratic methodology to get the exact solution. Some elements
-of the underlying random walk model were provided by S. Nalayanan (a user on the
-website stackexchange.com) who assisted with a handy bit of math involving Catalan
-numbers.
-}
 \references{
 Bapst, D. W., E. A. King and M. W. Pennell. In prep. Probability models
 for branch lengths of paleontological phylogenies.
@@ -89,4 +80,12 @@ phylogenies of fossil taxa. \emph{Methods in Ecology and Evolution}.
 \seealso{
 \code{\link{SamplingConv}}
 }
-
+\author{
+This function is entirely the product of a joint effort between the package author
+(David W. Bapst), Emily A. King and Matthew W. Pennell. In particular, Emily King
+solved a nasty bit of calculus to get the inexact solution and later re-derived
+the function with a quadratic methodology to get the exact solution. Some elements
+of the underlying random walk model were provided by S. Nalayanan (a user on the
+website stackexchange.com) who assisted with a handy bit of math involving Catalan
+numbers.
+}

@@ -205,9 +205,6 @@ layout(1)
 }
 
 }
-\author{
-David W. Bapst
-}
 \references{
 Hanazawa, M., H. Narushima, and N. Minaka. 1995. Generating most parsimonious reconstructions on
 a tree: A generalization of the Farris-Swofford-Maddison method. Discrete Applied Mathematics
@@ -225,4 +222,6 @@ Wagner parsimony. Mathematical Biosciences 87(2):199-229.
 \code{\link{ancPropStateMat}} which is used internally by this function. This function was
 intentionally designed for use with \code{\link{minCharChange}}.
 }
-
+\author{
+David W. Bapst
+}

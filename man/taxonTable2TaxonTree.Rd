@@ -56,10 +56,9 @@ pokeTree<-taxonTable2taxonTree(pokeTable)
 plot(pokeTree);nodelabels(pokeTree$node.label)
 
 }
-\author{
-David W. Bapst
-}
 \seealso{
 \code{\link{makePBDBtaxonTree}}, \code{\link{parentChild2taxonTree}}
 }
-
+\author{
+David W. Bapst
+}

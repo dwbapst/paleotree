@@ -37,4 +37,3 @@ see \code{\link{timePaleoPhy}}
 See also \code{speciationalTree} in the package geiger, which does
 essentially the same thing as unitLengthTree.
 }
-

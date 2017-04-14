@@ -69,11 +69,10 @@ plotOccData(occGenus)
    #age uncertainties on them!
 
 }
-\author{
-David W. Bapst
-}
 \seealso{
 \code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}} 
 and the example graptolite dataset at \code{\link{graptPBDB}}
 }
-
+\author{
+David W. Bapst
+}

@@ -66,9 +66,6 @@ trait <- rTraitCont(tree, ancestor=TRUE)
 plotTraitgram(tree=tree,trait=trait)
 
 }
-\author{
-David W. Bapst
-}
 \references{
 Ackerly, D. 2009 Conservatism and diversification of plant
 functional traits: Evolutionary rates versus phylogenetic signal.
@@ -81,4 +78,6 @@ functional traits: Evolutionary rates versus phylogenetic signal.
 Also see the functions \code{traitgram} in the library picante and
 \code{phenogram} in the library phytools.
 }
-
+\author{
+David W. Bapst
+}

@@ -77,9 +77,6 @@ tree <- taxa2phylo(taxa)
 plotTraitgram(trait,tree,conf.int=FALSE)
 
 }
-\author{
-David W. Bapst
-}
 \seealso{
 \code{\link{simFossilRecord}},
 
@@ -93,4 +90,6 @@ functions; together with BM simulation functions, they would be expected to
 have a similar effect as this function (when cladogenesis is 'bifurcating'
 and not 'budding'; see above).
 }
-
+\author{
+David W. Bapst
+}

@@ -49,4 +49,3 @@ foo(stegosaur=5,P=0.3)
 \author{
 David W. Bapst
 }
-

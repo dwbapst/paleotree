@@ -189,9 +189,6 @@ nodelabels(timeTree$node.label,cex=0.5)
 }
 
 }
-\author{
-David W. Bapst
-}
 \references{
 Soul, L. C., and M. Friedman. In Press. Taxonomy and Phylogeny Can Yield
 Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology} 
@@ -207,4 +204,6 @@ and users should consult their manual pages for additional details:
 Other functions for manipulating PBDB data can be found at \code{\link{taxonSortPBDBocc}},
 \code{\link{occData2timeList}}, and the example data at \code{\link{graptPBDB}}.
 }
-
+\author{
+David W. Bapst
+}

@@ -105,10 +105,9 @@ parentChild2taxonTree(taxa[,2:1])
    # and it will be coerced to be such
 
 }
-\author{
-David W. Bapst
-}
 \seealso{
 \code{\link{makePBDBtaxonTree}}, \code{\link{taxonTable2taxonTree}}
 }
-
+\author{
+David W. Bapst
+}

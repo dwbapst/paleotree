@@ -241,9 +241,6 @@ summary(replicate(100,sum(!is.na(sampleRanges(taxa,r=0.5,alt.method=TRUE)[,1])))
 }
 
 }
-\author{
-David W. Bapst
-}
 \references{
 Foote, M. 1997 Estimating Taxonomic Durations and Preservation
 Probability. \emph{Paleobiology} \bold{23}(3):278--300.
@@ -255,4 +252,6 @@ Record? \emph{Systematic Biology} \bold{59}(6):646--659.
 \seealso{
 \code{\link{simFossilRecord}}, \code{\link{binTimeData}}
 }
-
+\author{
+David W. Bapst
+}

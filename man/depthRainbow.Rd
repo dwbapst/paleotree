@@ -30,4 +30,3 @@ tree <- rtree(500)
 depthRainbow(tree)
 
 }
-

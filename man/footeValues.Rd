@@ -89,9 +89,6 @@ footeValues(rate,rate,rate,q_cont=FALSE)
 #all pulsed
 footeValues(rate,rate,rate,p_cont=FALSE,q_cont=FALSE) 
 }
-\author{
-David W. Bapst, with advice from Michael Foote.
-}
 \references{
 Foote, M. 2001. Inferring temporal patterns of preservation, origination, and 
 extinction from taxonomic survivorship analysis. \emph{Paleobiology} 27(4):602-630.
@@ -105,4 +102,6 @@ a New Approach. \emph{The Journal of Geology} 111(6):752-753.
 Foote, M. 2005. Pulsed origination and extinction in the marine realm.
 \emph{Paleobiology} 31(1):6-20.
 }
-
+\author{
+David W. Bapst, with advice from Michael Foote.
+}

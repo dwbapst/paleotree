@@ -103,11 +103,10 @@ rangesDisc1 <- binTimeData(rangesCont,int.times=presetIntervals)
 taxicDivDisc(rangesDisc1)
 
 }
-\author{
-David W. Bapst
-}
 \seealso{
 \code{\link{simFossilRecord}}, \code{\link{sampleRanges}},
 \code{\link{taxicDivCont}}
 }
-
+\author{
+David W. Bapst
+}

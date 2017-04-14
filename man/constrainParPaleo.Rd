@@ -243,11 +243,6 @@ constrainFun <- constrainParPaleo(likFun,r.match~q.match)
 parnames(constrainFun)
 
 }
-\author{
-This function (and even this help file!) was originally written by Rich
-Fitzjohn for his library \code{diversitree}, and subsequently rewritten
-and modified by David Bapst.
-}
 \references{
 FitzJohn, R. G. 2012. Diversitree: comparative phylogenetic analyses of
 diversification in R. \emph{Methods in Ecology and Evolution} 3(6):1084-1092.
@@ -256,4 +251,8 @@ diversification in R. \emph{Methods in Ecology and Evolution} 3(6):1084-1092.
 As noted above, this function is based on (but does not depend on) the
 function \code{constrain} from the library \code{diversitree}.
 }
-
+\author{
+This function (and even this help file!) was originally written by Rich
+Fitzjohn for his library \code{diversitree}, and subsequently rewritten
+and modified by David Bapst.
+}

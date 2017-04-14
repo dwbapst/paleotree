@@ -37,4 +37,3 @@ should write their own optim function.
 \seealso{
 \code{\link{constrainParPaleo}} and \code{\link{modelMethods}}
 }
-

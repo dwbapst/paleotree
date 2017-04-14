@@ -50,4 +50,3 @@ perfectParsCharTree(retioTree,nchar=20)
 \author{
 David W. Bapst
 }
-

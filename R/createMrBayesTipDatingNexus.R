@@ -76,6 +76,18 @@
 #' from which (if \code{treeConstraints} is supplied) the set topological constraints are derived, as
 #' as described for argument \code{tree} for function \code{createMrBayesConstraints}.
 
+#' @note 
+#' This function allows a user to take an undated phylogenetic tree in R, and a set of age estimates
+#' for the taxa on that tree, and produce a posterior sample of dated trees using the MCMCMC in \emph{MrBayes},
+#' while treating an 'empty' morphological matrix as an uninformative set of missing characters.
+#' This 'clock-less tip-dating' approach is essentially an alternative to the \emph{cal3} method in paleotree, 
+#' sharing the same fundamental theoretical model (a version of the fossilized birth-death model), but
+#' with a better algorithm. 
+
+#' #' # the above is essentially cal3 with a better algorithm,
+#' 		# and no need for a priori rate estimates
+#' # just need a tree and age estimates for the tips!
+
 #' @return
 #' If argument \code{newFile} is \code{NULL}, then the text of the 
 #' generated NEXUS script is ouput to the console as a series of character strings.
@@ -111,7 +123,79 @@
 
 
 #' @examples
-#' # hi
+#'
+#' # let's do some examples
+#' 
+#' # load retiolitid dataset
+#' data(retiolitinae)
+#' 
+#' # let's try making a NEXUS file!
+#' 
+#' # Use a uniform prior, with a 10 million year offset for
+#' 	# the expected tree age from the earliest first appearance
+#' # set average tree age to be 10 Ma earlier than first FAD
+#' 
+#' outgroupRetio<-"Rotaretiolites" # sister to all other included taxa
+#' 
+#' # the following will create a NEXUS file with an 'empty' morph matrix
+#' 	# with the only topological constraint on ingroup monophyly
+#' 	# Probably shouldn't do this: leaves too much to the FBD prior
+#' 
+#' source("D:\\dave\\workspace\\paleotree\\R\\createMrBayesTipDatingNexus.R")
+#' 
+#' # with doNotRun set to TRUE for troubleshooting
+#' 
+#' createMrBayesTipDatingNexus(tipTimes=retioRanges,
+#' 		outgroupTaxa=outgroupRetio,treeConstraints=NULL,
+#' 		ageCalibrationType="uniformRange",whichAppearance="first",
+#' 		treeAgeOffset=10,	newFile=NULL,	
+#' 		origNexusFile=NULL,createEmptyMorphMat=TRUE,
+#' 		runName="retio_dating",doNotRun=TRUE)
+#' 
+#' # let's try it with a tree for topological constraints
+#' 
+#' # let's set doNotRun to FALSE
+#' 
+#' createMrBayesTipDatingNexus(tipTimes=retioRanges,
+#' 		outgroupTaxa=outgroupRetio,treeConstraints=retioTree,
+#' 		ageCalibrationType="uniformRange",whichAppearance="first",
+#' 		treeAgeOffset=10,	newFile=NULL,	
+#' 		origNexusFile=NULL,createEmptyMorphMat=TRUE,
+#' 		runName="retio_dating",doNotRun=FALSE)
+#' 
+#' # the above is essentially cal3 with a better algorithm,
+#' 		# and no need for a priori rate estimates
+#' # just need a tree and age estimates for the tips!
+#' 
+#' #############################################################################
+#' # some more variations for testing purposes
+#' 
+#' # no morph matrix supplied or generated
+#' 	# you'll need to manually append to an existing NEXUS file
+#' createMrBayesTipDatingNexus(tipTimes=retioRanges,
+#' 		outgroupTaxa=outgroupRetio,treeConstraints=retioTree,
+#' 		ageCalibrationType="uniformRange",whichAppearance="first",
+#' 		treeAgeOffset=10,	newFile=NULL,	
+#' 		origNexusFile=NULL,createEmptyMorphMat=FALSE,
+#' 		runName="retio_dating",doNotRun=TRUE)
+#' 
+#' \dontrun{
+#' 
+#' # let's actually try writing an example with topological constraints
+#' 	# to file and see what happens
+#' 
+#' # here's my super secret MrBayes directory
+#' file<-"D:\\dave\\workspace\\mrbayes\\exampleRetio.nex"
+#' 
+#' createMrBayesTipDatingNexus(tipTimes=retioRanges,
+#' 		outgroupTaxa=outgroupRetio,treeConstraints=retioTree,
+#' 		ageCalibrationType="uniformRange",whichAppearance="first",
+#' 		treeAgeOffset=10,	newFile=file,	
+#' 		origNexusFile=NULL,createEmptyMorphMat=TRUE,
+#' 		runName="retio_dating",doNotRun=FALSE)
+#' 
+#' }
+#' 
 
 
 
@@ -122,7 +206,7 @@
 #' @export
 createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL,
 							ageCalibrationType,whichAppearance="first",treeAgeOffset,minTreeAge=NULL,
-							origNexusFile=NULL,newFile=NULL,createEmptyMorphMat=TRUE,
+							origNexusFile=NULL,createEmptyMorphMat=TRUE,newFile=NULL,
 							runName="new_run_paleotree",doNotRun=FALSE){
 	################################################################################################
 	#         # a whopper of a function
@@ -133,12 +217,15 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 		# all taxa in input treeConstraints must be in tipTimes (and vice versa)
 		# origNexusFile is *not* checked
 	if(is.list(tipTimes)){
-		taxaTipTimes<-rownames(tipTimes[[1]])
+		taxaTipTimes<-rownames(tipTimes[[2]])
 		}else{
 		taxaTipTimes<-rownames(tipTimes)
 		}
 	if(!is.null(treeConstraints)){
-		taxaTree<-treeConstraints$tip.labels
+		if(!is(retioTree,"phylo")){
+			stop("treeConstraint must be a phylogeny object of type 'phylo'")
+			}
+		taxaTree<-treeConstraints$tip.label
 		# check both
 		missingTip<-taxaTipTimes[sapply(taxaTipTimes,function(x) all(x!=taxaTree))]
 		missingTree<-taxaTree[sapply(taxaTree,function(x) all(x!=taxaTipTimes))]
@@ -193,7 +280,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 		}
 	#
 	# get age calibration block
-	ageCalibrations<-createMrBayesTipCalibrations<-function(tipTimes=tipTimes,
+	ageCalibrations<-createMrBayesTipCalibrations(tipTimes=tipTimes,
 			ageCalibrationType=ageCalibrationType,whichAppearance=whichAppearance,
 			treeAgeOffset=treeAgeOffset,minTreeAge=minTreeAge,file=NULL)
 	#
@@ -205,7 +292,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 	# combine morph matrix block with MrBayes command block
 	finalText<-c(morphNexus,MrBayesBlock)
 	if(!is.null(newFile)){
-		write(finalText,file)
+		write(x=finalText,file=newFile)
 	}else{
 		return(finalText)
 		}

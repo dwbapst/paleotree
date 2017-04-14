@@ -11,8 +11,21 @@ createMrBayesTipDatingNexus(tipTimes, outgroupTaxa, treeConstraints = NULL,
   doNotRun = FALSE)
 }
 \arguments{
-\item{outgroupTaxa}{A set of taxa which designate the outgroup; all taxa not listed
-in the outgroup will be constrained to be a monophyletic ingroup, for sake of rooting
+\item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
+composed of a table of interval upper and lower time boundaries (i.e. earlier and latter bounds), and 
+a table of first and last intervals for taxa) or a matrix with rownames
+for taxa as you want listed in the MrBayes block, with either one, two
+or four columns containing ages (respectively) for point occurences with
+precise dates (for a single column), uncertainty bounds on a point occurrence
+(for two columns), or uncertainty bounds on the first and
+last occurrence (for four columns). Note that precise first and last occurrence
+dates should not be entered as a two column matrix, as this will instead be interpreted
+as uncertainty bounds on a single occurrence. Instead, either select which you want to
+use for tip-dates and give a 1-column matrix, or repeat (and collate) the columns, so that
+the first and last appearances has uncertainty bounds of zero.}
+
+\item{outgroupTaxa}{A vector of type 'character', containing taxon names designating the outgroup.
+ All taxa not listed in the outgroup will be constrained to be a monophyletic ingroup, for sake of rooting
 the resulting dated tree.  This outgroup selection should not disagree with any of the
 relationships on \code{treeConstraint}, if such is supplied.}
 
@@ -20,11 +33,40 @@ relationships on \code{treeConstraint}, if such is supplied.}
 from which (if \code{treeConstraints} is supplied) the set topological constraints are derived, as
 as described for argument \code{tree} for function \code{createMrBayesConstraints}.}
 
+\item{ageCalibrationType}{This argument decides how age calibrations are defined, 
+and currently allows for four options: \code{"fixedDateEarlier"} which fixes tip
+ages at the earlier (lower) bound for the selected age of appearance (see argument
+\code{whichAppearance} for how that selection is made), \code{"fixedDateLatter"}
+which fixes the date to the latter (upper) bound of the selected age of appearance,
+\code{"fixedDateRandom"} which fixes tips to a date that is randomly drawn from a
+uniform distribution bounded by the upper and lower bounds on the selected age of
+appearance, or (the recommended option) \code{"uniformRange"} which places a uniform
+prior on the age of the tip, bounded by the latest and earliest (upper and lower)
+bounds on the the selected age.}
+
+\item{whichAppearance}{Which appearance date of the taxa should be used:
+their \code{'first'} or their \code{'last'} appearance date? The default
+option is to use the 'first' appearance date. Note that use of the last
+appearance date means that tips will be constrained to occur before their
+last occurrence, and thus could occur long after their first occurrence (!).}
+
+\item{treeAgeOffset}{A parameter given by the user controlling the offset 
+between the minimum and expected tree age prior. mean tree age for the
+offset exponential prior on tree age will be set to the minimum tree age, 
+plus this offset value. Thus, an offset of 10 million years would equate to a prior
+assuming that the expected tree age is around 10 million years before the minimum age.}
+
+\item{minTreeAge}{if \code{NULL} (the default), then minTreeAge will
+be set as the oldest date among the tip age used (those used being
+determine by user choices (or oldest bound on a tip age). Otherwise,
+the user can supply their own minimum tree, which must be greater than
+whatever the oldest tip age used is.}
+
 \item{origNexusFile}{Filename (possibly with path) as a character
 string leading to a NEXUS text file, presumably containing a matrix
-of character date formateed for MrBayes. If supplied
+of character date formateed for \emph{MrBayes}. If supplied
 (it does not need to be supplied), the listed file is read as a text file, and
-concatenated with the MrBayes script produced by this function, so as to reproduce. 
+concatenated with the \emph{MrBayes} script produced by this function, so as to reproduce. 
 Note that the taxa in this NEXUS file are \emph{NOT} checked against the user
 input \code{tipTimes} and \code{treeConstraints}, so it is up to the user to
 ensure the taxa are the same across the three data sources.}
@@ -33,8 +75,13 @@ ensure the taxa are the same across the three data sources.}
 leading to a file which will be overwritten with the output tip age calibrations.
 If \code{NULL}, tip calibration commands are output to the console.}
 
-\item{createEmptyMorphMat}{If \code{origNexusFile} is not specified (meaning there is no
-prior character matrix for these}
+\item{createEmptyMorphMat}{If \code{origNexusFile} is not specified (implying there is no
+pre-existing morphological character matrix for this dataset), then an 'empty' NEXUS-formatted matrix will be
+appended to the set of \emph{MrBayes} commands if this command is \code{TRUE} (the default). This
+'empty' matrix will have each taxon in \code{tipTimes} coded for a single missing character
+(i.e., '?'). This allows tip-dating analyses with hard topological constraints, and ages
+determined entirely by the fossilized birth-death prior, with no impact from a
+presupposed morphological clock (thus a 'clock-less analysis').}
 
 \item{runName}{The name of the run, used for naming the log files. 
 If not set, the name will be taken from the name given for outputting
@@ -42,51 +89,79 @@ the NEXUS script (\code{newFile}). If \code{newFile} is not given, and
 \code{runName} is not set by the user, the default run name will be  "new_run_paleotree".}
 
 \item{doNotRun}{If \code{TRUE}, the commands that cause a script to automatically begin running in 
-MrBayes will be left out. Useful for troubleshooting initial runs of scripts for non-fatal errors and
+\emph{MrBayes} will be left out. Useful for troubleshooting initial runs of scripts for non-fatal errors and
 warnings (such as ignored constraints). Default for this argument is \code{FALSE}.}
-
-\item{createEmptyMorphMat}{If origNexusFile is not supplied, should an empty NEXUS block formatted
-for use with MrBayes, be created using the list of taxa in tipTimes? Default is TRUE.}
 }
 \value{
 If argument \code{newFile} is \code{NULL}, then the text of the 
 generated NEXUS script is ouput to the console as a series of character strings.
 }
 \description{
-Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes
+This function is meant to expedite the creation of NEXUS files formatted
+for performing tip-dating analyses in the popular phylogenetics software \emph{MrBayes},
+particularly clock-less tip-dating analyses executed with 'empty' morphological matrices
+(i.e. where all taxa ae coded for a single missing character), although a pre-existing
+morphological matrix can also be input by the user (see argument \code{origNexusFile}).
 }
 \details{
-The taxa listed in \code{tipTimes} must match the taxa in \code{treeConstraints}, if such is supplied. The taxa in \code{outgroupTaxa}
-must be contained within this same set of taxa, and should not contradict relationships on \code{treeConstraint}. The taxa in any
-character matrix given in \code{origNexusFile} is \code{not} checked against these two sources: it is up to the user to ensure the same
+The minimum required input for this function is a data set of tip ages (in various formats),
+which are used to construct age calibrations commands on the tip taxa 
+(via paleotree function \code{\link{createMrBayesTipCalibrations}}), and a set
+of taxa designated as the outgroup, which is then converted into a command constraining
+th monophyly on the ingroup taxa, which is presumed to be all taxa \emph{not} listed in the outgroup.
+Many of the options available with \code{\link{createMrBayesTipCalibrations}} are available with this function,
+allowing users to choose between fixed calibrations or uniform priors that approximate stratigraphic uncertainty.
+In addition, a user may supply a tree which is then converted into a series of hard topological
+constraints (via function \code{\link{createMrBayesConstraints}}, or a path to a text file
+presumed to be a NEXUS file containing character data formatted for use with \emph{MrBayes}.
+
+The resulting full NEXUS script is output as a set of character strings either
+printed to the R console, or output to file which is then overwritten.
+
+
+The taxa listed in \code{tipTimes} must match the taxa in 
+\code{treeConstraints}, if such is supplied. The taxa in \code{outgroupTaxa}
+must be contained within this same set of taxa, and should not contradict
+relationships on \code{treeConstraint}. The taxa in any
+character matrix given in \code{origNexusFile} is \code{not} checked against
+these two sources: it is up to the user to ensure the same
 taxa are found in all three.
 
-Note that because
-the same set of taxa must be contained in both inputs, relationships are constrained as 'hard' constraints, rather than 'partial' constraints,
-which allows some taxa to float across a partially fixed topology. See the documentation for \code{\link{createMrBayesConstraints}},
+Note that because the same set of taxa must be contained in both inputs, 
+relationships are constrained as 'hard' constraints, rather than 'partial' constraints,
+which allows some taxa to float across a partially fixed topology. 
+See the documentation for \code{\link{createMrBayesConstraints}},
 for more details.
 }
 \examples{
-
-# load retiolitid dataset
-data(retiolitinae)
-}
-\author{
-David W. Bapst
+# hi
 }
 \references{
 The basic fundamentals of tip-dating, and tip-dating with the fossilized
-birth-death model are introduced in these two papers:
+birth-death model are introduced in these two papers: 
 
 Ronquist, F., S. Klopfstein, L. Vilhelmsen, S. Schulmeister, D. L. Murray,
 and A. P. Rasnitsyn. 2012. A Total-Evidence Approach to Dating with Fossils,
 Applied to the Early Radiation of the Hymenoptera. \emph{Systematic Biology} 61(6):973-999.
 
 Zhang, C., T. Stadler, S. Klopfstein, T. A. Heath, and F. Ronquist. 2016. 
-Total-Evidence Dating under the Fossilized Birth–Death Process.
-\emph{Systematic Biology} 65(2):228-249.
+Total-Evidence Dating under the Fossilized Birth-Death Process.
+\emph{Systematic Biology} 65(2):228-249. 
+
+For recommended best practices in tip-dating analyses, please see:
+
+Matzke, N. J., and A. Wright. 2016. Inferring node dates from tip dates
+in fossil Canidae: the importance of tree priors. \emph{Biology Letters} 12(8).
 }
 \seealso{
-\code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesConstraints}}
+\code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipCalibrations}}
 }
+\author{
+David W. Bapst. This code was produced as part of a project 
+funded by National Science Foundation grant EAR-1147537 to S. J. Carlson.
 
+The basic \emph{MrBayes} commands utilized in the output script are a collection
+of best practices taken from studying NEXUS files supplied by April Wright,
+William Gearty, Graham Slater, Davey Wright, and
+guided by the recommendations of Matzke and Wright, 2016 in Biol. Lett.
+}

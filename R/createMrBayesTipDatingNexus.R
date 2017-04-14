@@ -1,11 +1,11 @@
 #' Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes
-#'
+#' 
 #' This function is meant to expedite the creation of NEXUS files formatted
 #' for performing tip-dating analyses in the popular phylogenetics software \emph{MrBayes},
 #' particularly clock-less tip-dating analyses executed with 'empty' morphological matrices
 #' (i.e. where all taxa ae coded for a single missing character), although a pre-existing
 #' morphological matrix can also be input by the user (see argument \code{origNexusFile}).
-#'
+#' 
 #' The minimum required input for this function is a data set of tip ages (in various formats),
 #' which are used to construct age calibrations commands on the tip taxa 
 #' (via paleotree function \code{\link{createMrBayesTipCalibrations}}), and a set
@@ -16,7 +16,7 @@
 #' In addition, a user may supply a tree which is then converted into a series of hard topological
 #' constraints (via function \code{\link{createMrBayesConstraints}}, or a path to a text file
 #' presumed to be a NEXUS file containing character data formatted for use with \emph{MrBayes}.
-#'
+#' 
 #' The resulting full NEXUS script is output as a set of character strings either
 #' printed to the R console, or output to file which is then overwritten.
 
@@ -28,7 +28,7 @@
 #' character matrix given in \code{origNexusFile} is \code{not} checked against
 #' these two sources: it is up to the user to ensure the same
 #' taxa are found in all three.
-#'
+#' 
 #' Note that because the same set of taxa must be contained in both inputs, 
 #' relationships are constrained as 'hard' constraints, rather than 'partial' constraints,
 #' which allows some taxa to float across a partially fixed topology. 
@@ -86,7 +86,7 @@
 #' @author
 #' David W. Bapst. This code was produced as part of a project 
 #' funded by National Science Foundation grant EAR-1147537 to S. J. Carlson.
-#'
+#' 
 #' The basic \emph{MrBayes} commands utilized in the output script are a collection
 #' of best practices taken from studying NEXUS files supplied by April Wright,
 #' William Gearty, Graham Slater, Davey Wright, and
@@ -94,18 +94,18 @@
 
 #' @references
 #' The basic fundamentals of tip-dating, and tip-dating with the fossilized
-#' birth-death model are introduced in these two papers:
-#'
+#' birth-death model are introduced in these two papers: 
+#' 
 #' Ronquist, F., S. Klopfstein, L. Vilhelmsen, S. Schulmeister, D. L. Murray,
 #' and A. P. Rasnitsyn. 2012. A Total-Evidence Approach to Dating with Fossils,
 #' Applied to the Early Radiation of the Hymenoptera. \emph{Systematic Biology} 61(6):973-999.
-#'
+#' 
 #' Zhang, C., T. Stadler, S. Klopfstein, T. A. Heath, and F. Ronquist. 2016. 
-#' Total-Evidence Dating under the Fossilized Birth–Death Process.
+#' Total-Evidence Dating under the Fossilized Birth-Death Process.
 #' \emph{Systematic Biology} 65(2):228-249. 
-#'
+#' 
 #' For recommended best practices in tip-dating analyses, please see:
-#'
+#' 
 #' Matzke, N. J., and A. Wright. 2016. Inferring node dates from tip dates
 #' in fossil Canidae: the importance of tree priors. \emph{Biology Letters} 12(8).
 

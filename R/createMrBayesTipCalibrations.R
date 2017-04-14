@@ -71,14 +71,14 @@
 
 #' @references
 #' Zhang, C., T. Stadler, S. Klopfstein, T. A. Heath, and F. Ronquist. 2016. 
-#' Total-Evidence Dating under the Fossilized Birth–Death Process.
+#' Total-Evidence Dating under the Fossilized Birth-Death Process.
 #' \emph{Systematic Biology} 65(2):228-249. 
 
 #' @seealso 
 #' \code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipDatingNexus}}
 
 #' @examples
-#'
+#' 
 #' # load retiolitid dataset
 #' data(retiolitinae)
 #' 

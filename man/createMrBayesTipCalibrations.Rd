@@ -60,9 +60,10 @@ If argument \code{file} is \code{NULL}, then the tip age commands
 are ouput as a series of character strings.
 }
 \description{
-Takes a set of tip ages given as either a matrix of precise ages
-(in several forms, see below) and outputs a set of tip age calibrations
-for use with tip-dating analyses (sensu Zhang et al., 2016) in the popular phylogenetics program \emph{MrBayes}.
+Takes a set of tip ages (in several possible forms, see below),
+and outputs a set of tip age calibrations
+for use with tip-dating analyses (sensu Zhang et al., 2016)
+in the popular phylogenetics program \emph{MrBayes}.
 These calibrations are printed as a set of character strings, as well as a 
 line placing an offset exponential prior on the tree age, either
 printed in the R console or in a named text file, which can be used as
@@ -105,16 +106,15 @@ createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
 }
 
 }
-\author{
-David W. Bapst. This code was produced as part of a project 
-funded by National Science Foundation grant EAR-1147537 to S. J. Carlson.
-}
 \references{
 Zhang, C., T. Stadler, S. Klopfstein, T. A. Heath, and F. Ronquist. 2016. 
-Total-Evidence Dating under the Fossilized Birth–Death Process.
+Total-Evidence Dating under the Fossilized Birth-Death Process.
 \emph{Systematic Biology} 65(2):228-249.
 }
 \seealso{
 \code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipDatingNexus}}
 }
-
+\author{
+David W. Bapst. This code was produced as part of a project 
+funded by National Science Foundation grant EAR-1147537 to S. J. Carlson.
+}

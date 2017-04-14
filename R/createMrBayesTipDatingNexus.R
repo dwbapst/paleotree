@@ -141,9 +141,7 @@
 #' # the following will create a NEXUS file with an 'empty' morph matrix
 #' 	# with the only topological constraint on ingroup monophyly
 #' 	# Probably shouldn't do this: leaves too much to the FBD prior
-#' 
-#' source("D:\\dave\\workspace\\paleotree\\R\\createMrBayesTipDatingNexus.R")
-#' 
+#'  
 #' # with doNotRun set to TRUE for troubleshooting
 #' 
 #' createMrBayesTipDatingNexus(tipTimes=retioRanges,

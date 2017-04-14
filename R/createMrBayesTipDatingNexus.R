@@ -1,22 +1,44 @@
 #' Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes
 #'
-#' 
+#' This function is meant to expedite the creation of NEXUS files formatted
+#' for performing tip-dating analyses in the popular phylogenetics software MrBayes,
+#' particularly clock-less tip-dating analyses executed with 'empty' morphological matrices
+#' (i.e. where all taxa ae coded for a single missing character), although a pre-existing
+#' morphological matrix can also be input by the user (see argument \code{origNexusFile}).
+#'
+#' The minimum required input for this function is a data set of tip ages (in various formats),
+#' which are used to construct age calibrations commands on the tip taxa 
+#' (via paleotree function \code{\link{createMrBayesTipCalibrations}}), and a set
+#' of taxa designated as the outgroup, which is then converted into a command constraining
+#' th monophyly on the ingroup taxa, which is presumed to be all taxa \emph{not} listed in the outgroup.
+#' Many of the options available with \code{\link{createMrBayesTipCalibrations}} are available with this function,
+#' allowing users to choose between fixed calibrations or uniform priors that approximate stratigraphic uncertainty.
+#' In addition, a user may supply a tree which is then converted into a series of hard topological
+#' constraints (via function \code{\link{createMrBayesConstraints}}, or a path to a text file
+#' presumed to be a NEXUS file containing character data formatted for use with MrBayes.
+#'
+#' The resulting full NEXUS script is output as a set of character strings either
+#' printed to the R console, or output to file which is then overwritten.
 
 #' @details
-#' The taxa listed in \code{tipTimes} must match the taxa in \code{treeConstraints}, if such is supplied. The taxa in \code{outgroupTaxa}
-#' must be contained within this same set of taxa, and should not contradict relationships on \code{treeConstraint}. The taxa in any
-#' character matrix given in \code{origNexusFile} is \code{not} checked against these two sources: it is up to the user to ensure the same
+#' The taxa listed in \code{tipTimes} must match the taxa in 
+#' \code{treeConstraints}, if such is supplied. The taxa in \code{outgroupTaxa}
+#' must be contained within this same set of taxa, and should not contradict
+#' relationships on \code{treeConstraint}. The taxa in any
+#' character matrix given in \code{origNexusFile} is \code{not} checked against
+#' these two sources: it is up to the user to ensure the same
 #' taxa are found in all three.
 #'
-#' Note that because
-#' the same set of taxa must be contained in both inputs, relationships are constrained as 'hard' constraints, rather than 'partial' constraints,
-#' which allows some taxa to float across a partially fixed topology. See the documentation for \code{\link{createMrBayesConstraints}},
+#' Note that because the same set of taxa must be contained in both inputs, 
+#' relationships are constrained as 'hard' constraints, rather than 'partial' constraints,
+#' which allows some taxa to float across a partially fixed topology. 
+#' See the documentation for \code{\link{createMrBayesConstraints}},
 #' for more details.
 
 #' @inheritParams createMrBayesConstraints createMrBayesTipCalibrations
 
-#' @param outgroupTaxa A set of taxa which designate the outgroup; all taxa not listed
-#' in the outgroup will be constrained to be a monophyletic ingroup, for sake of rooting
+#' @param outgroupTaxa A vector of type 'character', containing taxon names designating the outgroup.
+#'  All taxa not listed in the outgroup will be constrained to be a monophyletic ingroup, for sake of rooting
 #' the resulting dated tree.  This outgroup selection should not disagree with any of the
 #' relationships on \code{treeConstraint}, if such is supplied.
 
@@ -33,8 +55,13 @@
 #' leading to a file which will be overwritten with the output tip age calibrations.
 #' If \code{NULL}, tip calibration commands are output to the console.
 
-#' @param createEmptyMorphMat If \code{origNexusFile} is not specified (meaning there is no
-#' prior character matrix for these
+#' @param createEmptyMorphMat If \code{origNexusFile} is not specified (implying there is no
+#' pre-existing morphological character matrix for this dataset), then an 'empty' NEXUS-formatted matrix will be
+#' appended to the set of MrBayes commands if this command is \code{TRUE} (the default). This
+#' 'empty' matrix will have each taxon in \code{tipTimes} coded for a single missing character
+#' (i.e., '?'). This allows tip-dating analyses with hard topological constraints, and ages
+#' determined entirely by the fossilized birth-death prior, with no impact from a
+#' presupposed morphological clock (thus a 'clock-less analysis').
 
 #' @param runName The name of the run, used for naming the log files. 
 #' If not set, the name will be taken from the name given for outputting
@@ -49,17 +76,16 @@
 #' from which (if \code{treeConstraints} is supplied) the set topological constraints are derived, as
 #' as described for argument \code{tree} for function \code{createMrBayesConstraints}.
 
-#' @param createEmptyMorphMat If origNexusFile is not supplied, should an empty NEXUS block formatted
-#' for use with MrBayes, be created using the list of taxa in tipTimes? Default is TRUE.
-
 #' @return
 #' If argument \code{newFile} is \code{NULL}, then the text of the 
 #' generated NEXUS script is ouput to the console as a series of character strings.
 
 #' @seealso
-#' \code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesConstraints}}
+#' \code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipCalibrations}}
 
-#' @author David W. Bapst
+#' @author
+#' David W. Bapst. This code was produced as part of a project 
+#' funded by National Science Foundation grant EAR-1147537 to S. J. Carlson.
 
 #' @references
 #' The basic fundamentals of tip-dating, and tip-dating with the fossilized
@@ -74,9 +100,8 @@
 #' \emph{Systematic Biology} 65(2):228-249. 
 
 #' @examples
-#'
-#' # load retiolitid dataset
-#' data(retiolitinae)
+#' # hi
+
 
 
 

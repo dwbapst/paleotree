@@ -6,9 +6,8 @@
 \usage{
 createMrBayesTipDatingNexus(tipTimes, outgroupTaxa, treeConstraints = NULL,
   ageCalibrationType, whichAppearance = "first", treeAgeOffset,
-  minTreeAge = NULL, origNexusFile = NULL, newFile = NULL,
-  createEmptyMorphMat = TRUE, runName = "new_run_paleotree",
-  doNotRun = FALSE)
+  minTreeAge = NULL, origNexusFile = NULL, createEmptyMorphMat = TRUE,
+  newFile = NULL, runName = "new_run_paleotree", doNotRun = FALSE)
 }
 \arguments{
 \item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
@@ -71,10 +70,6 @@ Note that the taxa in this NEXUS file are \emph{NOT} checked against the user
 input \code{tipTimes} and \code{treeConstraints}, so it is up to the user to
 ensure the taxa are the same across the three data sources.}
 
-\item{newFile}{Filename (possibly with path) as a character string
-leading to a file which will be overwritten with the output tip age calibrations.
-If \code{NULL}, tip calibration commands are output to the console.}
-
 \item{createEmptyMorphMat}{If \code{origNexusFile} is not specified (implying there is no
 pre-existing morphological character matrix for this dataset), then an 'empty' NEXUS-formatted matrix will be
 appended to the set of \emph{MrBayes} commands if this command is \code{TRUE} (the default). This
@@ -82,6 +77,10 @@ appended to the set of \emph{MrBayes} commands if this command is \code{TRUE} (t
 (i.e., '?'). This allows tip-dating analyses with hard topological constraints, and ages
 determined entirely by the fossilized birth-death prior, with no impact from a
 presupposed morphological clock (thus a 'clock-less analysis').}
+
+\item{newFile}{Filename (possibly with path) as a character string
+leading to a file which will be overwritten with the output tip age calibrations.
+If \code{NULL}, tip calibration commands are output to the console.}
 
 \item{runName}{The name of the run, used for naming the log files. 
 If not set, the name will be taken from the name given for outputting
@@ -133,8 +132,93 @@ which allows some taxa to float across a partially fixed topology.
 See the documentation for \code{\link{createMrBayesConstraints}},
 for more details.
 }
+\note{
+This function allows a user to take an undated phylogenetic tree in R, and a set of age estimates
+for the taxa on that tree, and produce a posterior sample of dated trees using the MCMCMC in \emph{MrBayes},
+while treating an 'empty' morphological matrix as an uninformative set of missing characters.
+This 'clock-less tip-dating' approach is essentially an alternative to the \emph{cal3} method in paleotree, 
+sharing the same fundamental theoretical model (a version of the fossilized birth-death model), but
+with a better algorithm that considers the whole tree simultaneously, rather than evaluating each node
+individually, from the root up to the tips (as \emph{cal3} does it, and which may cause artifacts). 
+That said, \emph{cal3} still has a few advantages: tip-dating as of April 2017 still only treats OTUs as
+point observations, contained in a single time-point, while cal3 can consider taxa as having durations with
+first and last occurrences. This means it may be more straightforward to assess the extent of budding cladogenesis
+patterns of ancestor-descendant relationships in \emph{cal3}, than in tip-dating.
+}
 \examples{
-# hi
+
+# let's do some examples
+
+# load retiolitid dataset
+data(retiolitinae)
+
+# let's try making a NEXUS file!
+
+# Use a uniform prior, with a 10 million year offset for
+	# the expected tree age from the earliest first appearance
+# set average tree age to be 10 Ma earlier than first FAD
+
+outgroupRetio<-"Rotaretiolites" # sister to all other included taxa
+
+# the following will create a NEXUS file with an 'empty' morph matrix
+	# with the only topological constraint on ingroup monophyly
+	# Probably shouldn't do this: leaves too much to the FBD prior
+
+source("D:\\\\dave\\\\workspace\\\\paleotree\\\\R\\\\createMrBayesTipDatingNexus.R")
+
+# with doNotRun set to TRUE for troubleshooting
+
+createMrBayesTipDatingNexus(tipTimes=retioRanges,
+		outgroupTaxa=outgroupRetio,treeConstraints=NULL,
+		ageCalibrationType="uniformRange",whichAppearance="first",
+		treeAgeOffset=10,	newFile=NULL,	
+		origNexusFile=NULL,createEmptyMorphMat=TRUE,
+		runName="retio_dating",doNotRun=TRUE)
+
+# let's try it with a tree for topological constraints
+
+# let's set doNotRun to FALSE
+
+createMrBayesTipDatingNexus(tipTimes=retioRanges,
+		outgroupTaxa=outgroupRetio,treeConstraints=retioTree,
+		ageCalibrationType="uniformRange",whichAppearance="first",
+		treeAgeOffset=10,	newFile=NULL,	
+		origNexusFile=NULL,createEmptyMorphMat=TRUE,
+		runName="retio_dating",doNotRun=FALSE)
+
+# the above is essentially cal3 with a better algorithm,
+		# and no need for a priori rate estimates
+# just need a tree and age estimates for the tips!
+
+#############################################################################
+# some more variations for testing purposes
+
+# no morph matrix supplied or generated
+	# you'll need to manually append to an existing NEXUS file
+createMrBayesTipDatingNexus(tipTimes=retioRanges,
+		outgroupTaxa=outgroupRetio,treeConstraints=retioTree,
+		ageCalibrationType="uniformRange",whichAppearance="first",
+		treeAgeOffset=10,	newFile=NULL,	
+		origNexusFile=NULL,createEmptyMorphMat=FALSE,
+		runName="retio_dating",doNotRun=TRUE)
+
+\dontrun{
+
+# let's actually try writing an example with topological constraints
+	# to file and see what happens
+
+# here's my super secret MrBayes directory
+file<-"D:\\\\dave\\\\workspace\\\\mrbayes\\\\exampleRetio.nex"
+
+createMrBayesTipDatingNexus(tipTimes=retioRanges,
+		outgroupTaxa=outgroupRetio,treeConstraints=retioTree,
+		ageCalibrationType="uniformRange",whichAppearance="first",
+		treeAgeOffset=10,	newFile=file,	
+		origNexusFile=NULL,createEmptyMorphMat=TRUE,
+		runName="retio_dating",doNotRun=FALSE)
+
+}
+
 }
 \references{
 The basic fundamentals of tip-dating, and tip-dating with the fossilized
@@ -154,7 +238,7 @@ Matzke, N. J., and A. Wright. 2016. Inferring node dates from tip dates
 in fossil Canidae: the importance of tree priors. \emph{Biology Letters} 12(8).
 }
 \seealso{
-\code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipCalibrations}}
+\code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipCalibrations}}, , \code{\link{cal3}}
 }
 \author{
 David W. Bapst. This code was produced as part of a project 

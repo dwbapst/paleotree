@@ -82,18 +82,19 @@
 #' while treating an 'empty' morphological matrix as an uninformative set of missing characters.
 #' This 'clock-less tip-dating' approach is essentially an alternative to the \emph{cal3} method in paleotree, 
 #' sharing the same fundamental theoretical model (a version of the fossilized birth-death model), but
-#' with a better algorithm. 
-
-#' #' # the above is essentially cal3 with a better algorithm,
-#' 		# and no need for a priori rate estimates
-#' # just need a tree and age estimates for the tips!
+#' with a better algorithm that considers the whole tree simultaneously, rather than evaluating each node
+#' individually, from the root up to the tips (as \emph{cal3} does it, and which may cause artifacts). 
+#' That said, \emph{cal3} still has a few advantages: tip-dating as of April 2017 still only treats OTUs as
+#' point observations, contained in a single time-point, while cal3 can consider taxa as having durations with
+#' first and last occurrences. This means it may be more straightforward to assess the extent of budding cladogenesis
+#' patterns of ancestor-descendant relationships in \emph{cal3}, than in tip-dating.
 
 #' @return
 #' If argument \code{newFile} is \code{NULL}, then the text of the 
 #' generated NEXUS script is ouput to the console as a series of character strings.
 
 #' @seealso
-#' \code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipCalibrations}}
+#' \code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipCalibrations}}, , \code{\link{cal3}}
 
 #' @author
 #' David W. Bapst. This code was produced as part of a project 

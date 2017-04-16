@@ -76,6 +76,14 @@
 #' from which (if \code{treeConstraints} is supplied) the set topological constraints are derived, as
 #' as described for argument \code{tree} for function \code{createMrBayesConstraints}.
 
+#' @param morphModel This argument can be used to switch between two end-member models of 
+#' morphological evolution in MrBayes, named 'strong' and 'relaxed'. The default is a model
+#'  which makes very 'strong' assumptions about the process of morphological evolution,
+#' while the 'relaxed' alternative allows for considerably more heterogeneity in the rate
+#' of morphological evolution across characters, and in the forward and reverse transition
+#' rates between states. Note that in both cases, the character data is assumed to be filtered
+#' to only parsimony-informative characters, without autapomorphies.
+
 #' @note 
 #' This function allows a user to take an undated phylogenetic tree in R, and a set of age estimates
 #' for the taxa on that tree, and produce a posterior sample of dated trees using the MCMCMC in \emph{MrBayes},
@@ -197,13 +205,10 @@
 #' 
 
 
-
-
-
 #' @name createMrBayesTipDatingNexus
 #' @rdname createMrBayesTipDatingNexus
 #' @export
-createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL,
+createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL,morphModel="strong",
 							ageCalibrationType,whichAppearance="first",treeAgeOffset,minTreeAge=NULL,
 							origNexusFile=NULL,createEmptyMorphMat=TRUE,newFile=NULL,
 							runName="new_run_paleotree",doNotRun=FALSE){
@@ -242,6 +247,23 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 		}
 	taxonnames<-taxaTipTimes
 	#
+	# check other arguments
+	if(length(morphModel)!=1){
+		stop("morphModel must be of length 1")
+		}
+	if(all(morphModel!=c("relaxed","strong"))){
+		stop("morphModel must be one 'relaxed' or 'strong'")
+		}
+	if(morphModel=="relaxed" & is.null(origNexusFile)){
+		warning("Why are you relaxing the morphological model without supplying an original matrix with origNexusFile? I hope you know what you are doing.")
+		}
+	# eh, origNexusFile might be a connection...
+	#if(length(origNexusFile)!=1){
+	#	stop("origNexusFile must be of length 1") 
+	#	}
+	if(length(createEmptyMorphMat)!=1 | !is.logical(createEmptyMorphMat)){
+		stop("createEmpthyMorphMat must be  of length 1, and either TRUE or FALSE")
+		}
 	#####################################################################
 	# get original Nexus file (or create an empty morph matrix
 	if(!is.null(origNexusFile)){
@@ -286,7 +308,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 	# make the final MrBayes Block
 	MrBayesBlock<-makeMrBayesBlock(logBlock=logfileline,ingroupBlock=ingroupConstraint,
 		ageBlock=ageCalibrations,constraintBlock=topologicalConstraints,
-		doNotRun=doNotRun)
+		morphModel=morphModel,doNotRun=doNotRun)
 	###############################################
 	# combine morph matrix block with MrBayes command block
 	finalText<-c(morphNexus,MrBayesBlock)
@@ -312,6 +334,9 @@ makeIngroupConstraintMrB<-function(outgroupTaxa,allTaxa){
 		# as being monophyletic
 	################################################
 	# checks
+	if(length(outgroupTaxa)<1){
+		stop("outgroupTaxa must be of length 1 or greater")
+		}
 	if(!is.character(outgroupTaxa) | !is.vector(outgroupTaxa)){
 		stop("outgroupTaxa must be a vector of type character")
 		}	
@@ -371,7 +396,11 @@ makeEmptyMorphNexusMrB<-function(taxonNames){
 
 ##########################################################################################################################################
 
-makeMrBayesBlock<-function(logBlock,ingroupBlock,ageBlock,constraintBlock,doNotRun=FALSE){
+
+
+makeMrBayesBlock<-function(logBlock,ingroupBlock,ageBlock,
+							constraintBlock,morphModel="strong",doNotRun=FALSE){
+#########################################################################################						
 	###
 	### # what follows will look very messy due to its untabbed nature
 	### # I'm so sorry - dwb
@@ -392,7 +421,22 @@ block2<-"
 [DATA]
 
 [edits to taxon or character selection go here]
-	
+			
+[CONSTRAIN MONOPHYLY OF INGROUP]
+
+	[constrain all members of the ingroup to be monophyletic]
+"
+#######################################################################
+block3<-"	
+[TOPOLOGICALCONSTRAINTS FOR ADDITIONAL NODES]
+
+	[[EXAMPLE]
+    constraint node1 = t1 t2 t3;
+    constraint node2 = t4 t5;
+	prset topologypr = constraints(ingroup,node1,node2); [need to include ingroup]]
+"
+##############################################################################
+morphModelBlock_Strong<-"
 
 [CHARACTER MODELS]
 	
@@ -408,20 +452,27 @@ block2<-"
 		prset symdirihyperpr=fixed(infinity);		
 		[prset symdirihyperpr=uniform(1,10);      [this range seems to avoid divide by zero error]]
 
-		
-[CONSTRAIN MONOPHYLY OF INGROUP]
-
-	[constrain all members of the ingroup to be monophyletic]
 "
-#######################################################################
-block3<-"	
-[TOPOLOGICALCONSTRAINTS FOR ADDITIONAL NODES]
 
-	[[EXAMPLE]
-    constraint node1 = t1 t2 t3;
-    constraint node2 = t4 t5;
-	prset topologypr = constraints(ingroup,node1,node2); [need to include ingroup]]
+morphModelBlock_Relaxed<-"
+
+[CHARACTER MODELS]
+	
+[morphology model settings]
+	[make the number of beta categories for stationary frequencies 4 (the default)]
+	[default: use pars-informative coding]
+	
+	[set coding and rates - default below maximizes information content]
+		[lset  nbetacat=5 rates=equal Coding=informative; [equal rate variation]]
+		lset  nbetacat=5 rates=gamma Coding=informative;   [gamma distributed rate variation]
+			[gamma distributed rates may cause divide by zero problems with non-fixed symdiri]
+	[symdirhyperpr prior, fixed vs. variable]	
+		[prset symdirihyperpr=fixed(infinity);]		
+		prset symdirihyperpr=uniform(1,10);      [this range seems to avoid divide by zero error]
+
 "
+
+
 #############################################################################
 block4<-"
 [TIP AND TREE AGE CALIBRATIONS] 
@@ -490,8 +541,16 @@ runBlock<-"
 	if(doNotRun){
 		runBlock<-" "
 		}
+	if(morphModel=="strong"){
+		morphModelBlock<-morphModelBlock_Strong
+		}
+	if(morphModel=="relaxed"){
+		morphModelBlock<-morphModelBlock_Relaxed
+		}
+	####################
 	finalBlock<-c(block1,logBlock,block2,ingroupBlock,block3,
-		constraintBlock,block4,ageBlock,block5,runBlock," ","end;")
+		constraintBlock,morphModelBlock,block4,
+		ageBlock,block5,runBlock," ","end;")
 	return(finalBlock)
 	}
 

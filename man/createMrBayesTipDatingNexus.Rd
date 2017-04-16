@@ -5,9 +5,10 @@
 \title{Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes}
 \usage{
 createMrBayesTipDatingNexus(tipTimes, outgroupTaxa, treeConstraints = NULL,
-  ageCalibrationType, whichAppearance = "first", treeAgeOffset,
-  minTreeAge = NULL, origNexusFile = NULL, createEmptyMorphMat = TRUE,
-  newFile = NULL, runName = "new_run_paleotree", doNotRun = FALSE)
+  morphModel = "strong", ageCalibrationType, whichAppearance = "first",
+  treeAgeOffset, minTreeAge = NULL, origNexusFile = NULL,
+  createEmptyMorphMat = TRUE, newFile = NULL,
+  runName = "new_run_paleotree", doNotRun = FALSE)
 }
 \arguments{
 \item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
@@ -31,6 +32,14 @@ relationships on \code{treeConstraint}, if such is supplied.}
 \item{treeConstraints}{An object of class \code{phylo}, 
 from which (if \code{treeConstraints} is supplied) the set topological constraints are derived, as
 as described for argument \code{tree} for function \code{createMrBayesConstraints}.}
+
+\item{morphModel}{This argument can be used to switch between two end-member models of 
+morphological evolution in MrBayes, named 'strong' and 'relaxed'. The default is a model
+ which makes very 'strong' assumptions about the process of morphological evolution,
+while the 'relaxed' alternative allows for considerably more heterogeneity in the rate
+of morphological evolution across characters, and in the forward and reverse transition
+rates between states. Note that in both cases, the character data is assumed to be filtered
+to only parsimony-informative characters, without autapomorphies.}
 
 \item{ageCalibrationType}{This argument decides how age calibrations are defined, 
 and currently allows for four options: \code{"fixedDateEarlier"} which fixes tip

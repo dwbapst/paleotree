@@ -132,6 +132,14 @@ createMrBayesTipCalibrations<-function(tipTimes,
 			stop('argument ageCalibrationType must be one of 
 				"fixedDateEarlier", "fixedDateLatter", "fixedDateRandom", or "uniformRange"')
 		}
+	if(length(treeAgeOffset)!=1){
+		stop("treeAgeOffset must be of length 1")
+		}
+	if(!is.null(minTreeAge)){
+		if(length(minTreeAge)!=1){
+			stop("minTreeAge must be of length 1")
+			}
+		}
 	#
 	############################################
 	# format tipTimes

@@ -226,8 +226,8 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 		taxaTipTimes<-rownames(tipTimes)
 		}
 	if(!is.null(treeConstraints)){
-		if(!is(retioTree,"phylo")){
-			stop("treeConstraint must be a phylogeny object of type 'phylo'")
+		if(!is(treeConstraints,"phylo")){
+			stop("treeConstraints must be a phylogeny object of type 'phylo'")
 			}
 		taxaTree<-treeConstraints$tip.label
 		# check both
@@ -532,9 +532,11 @@ runBlock<-"
 [RUN]
 	mcmc;
 	sump;
+	
 	[Given this is a dating analysis, should really use MCCT,not summary trees]
 		[I guess best summary tree though is allcompat?]
-	sumt contype=allcompat; 
+	[sumt contype=allcompat; ]    [allcompat has issues with sampled ancestors]
+	
 	log stop;
 "
 ######################################################

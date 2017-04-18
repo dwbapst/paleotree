@@ -84,6 +84,10 @@
 #' rates between states. Note that in both cases, the character data is assumed to be filtered
 #' to only parsimony-informative characters, without autapomorphies.
 
+#' @param cleanNames If \code{TRUE} (the default), then special characters
+#' (currently, thsi only contains the forward-slashes: '/') are removed from
+#' taxon names before construction of the NEXUS file.
+
 #' @note 
 #' This function allows a user to take an undated phylogenetic tree in R, and a set of age estimates
 #' for the taxa on that tree, and produce a posterior sample of dated trees using the MCMCMC in \emph{MrBayes},
@@ -211,7 +215,7 @@
 createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL,morphModel="strong",
 							ageCalibrationType,whichAppearance="first",treeAgeOffset,minTreeAge=NULL,
 							origNexusFile=NULL,createEmptyMorphMat=TRUE,newFile=NULL,
-							runName="new_run_paleotree",doNotRun=FALSE){
+							runName="new_run_paleotree",doNotRun=FALSE,cleanNames=TRUE){
 	################################################################################################
 	#         # a whopper of a function
 	#
@@ -245,7 +249,30 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 			stop("Nope, taxa in tipTimes and on treeConstraint STILL not identical!!")
 			}
 		}
-	taxonnames<-taxaTipTimes
+	# create 'clean' version of taxon names - remove all '/' 
+	cleanTaxonNames<-taxaTipTimes
+	if(length(unique(cleanTaxonNames))==length(cleanTaxonNames)){
+		stop("Some taxon names were identical duplicates")
+		}
+	if(cleanNames){
+		cleanTaxonNames<-gsub("/","",cleanTaxonNames)
+		# check that unique
+		if(length(unique(cleanTaxonNames))==length(cleanTaxonNames)){
+			stop("Some taxon names were identical duplicates when special character (/) was removed")
+			}
+		# gsub("[^A-Za-z0-9]", "", a) # removes every character except letters and numbers - only use if dire (i.e. backslashes)
+		#
+		if(is.list(tipTimes)){
+			rownames(tipTimes[[2]])<--gsub("/","",rownames(tipTimes[[2]]))
+		}else{
+			rownames(tipTimes)<--gsub("/","",rownames(tipTimes))
+			}	
+		#
+		if(!is.null(treeConstraints)){
+			treeConstraints$tip.label<-gsub("/","",treeConstraints$tip.label)
+		}
+	#
+	taxonnames<-cleanTaxonNames
 	#
 	# check other arguments
 	if(length(morphModel)!=1){

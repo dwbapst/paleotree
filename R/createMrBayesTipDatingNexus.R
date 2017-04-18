@@ -263,9 +263,9 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 		# gsub("[^A-Za-z0-9]", "", a) # removes every character except letters and numbers - only use if dire (i.e. backslashes)
 		#
 		if(is.list(tipTimes)){
-			rownames(tipTimes[[2]])<--gsub("/","",rownames(tipTimes[[2]]))
+			rownames(tipTimes[[2]])<-gsub("/","",rownames(tipTimes[[2]]))
 		}else{
-			rownames(tipTimes)<--gsub("/","",rownames(tipTimes))
+			rownames(tipTimes)<-gsub("/","",rownames(tipTimes))
 			}	
 		#
 		if(!is.null(treeConstraints)){

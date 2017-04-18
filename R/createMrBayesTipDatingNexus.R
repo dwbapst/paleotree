@@ -251,13 +251,13 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 		}
 	# create 'clean' version of taxon names - remove all '/' 
 	cleanTaxonNames<-taxaTipTimes
-	if(length(unique(cleanTaxonNames))==length(cleanTaxonNames)){
+	if(length(unique(cleanTaxonNames))!=length(cleanTaxonNames)){
 		stop("Some taxon names were identical duplicates")
 		}
 	if(cleanNames){
 		cleanTaxonNames<-gsub("/","",cleanTaxonNames)
 		# check that unique
-		if(length(unique(cleanTaxonNames))==length(cleanTaxonNames)){
+		if(length(unique(cleanTaxonNames))!=length(cleanTaxonNames)){
 			stop("Some taxon names were identical duplicates when special character (/) was removed")
 			}
 		# gsub("[^A-Za-z0-9]", "", a) # removes every character except letters and numbers - only use if dire (i.e. backslashes)

@@ -270,6 +270,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 		#
 		if(!is.null(treeConstraints)){
 			treeConstraints$tip.label<-gsub("/","",treeConstraints$tip.label)
+			}
 		}
 	#
 	taxonnames<-cleanTaxonNames

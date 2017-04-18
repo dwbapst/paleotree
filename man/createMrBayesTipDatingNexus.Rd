@@ -8,7 +8,7 @@ createMrBayesTipDatingNexus(tipTimes, outgroupTaxa, treeConstraints = NULL,
   morphModel = "strong", ageCalibrationType, whichAppearance = "first",
   treeAgeOffset, minTreeAge = NULL, origNexusFile = NULL,
   createEmptyMorphMat = TRUE, newFile = NULL,
-  runName = "new_run_paleotree", doNotRun = FALSE)
+  runName = "new_run_paleotree", doNotRun = FALSE, cleanNames = TRUE)
 }
 \arguments{
 \item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
@@ -99,6 +99,10 @@ the NEXUS script (\code{newFile}). If \code{newFile} is not given, and
 \item{doNotRun}{If \code{TRUE}, the commands that cause a script to automatically begin running in 
 \emph{MrBayes} will be left out. Useful for troubleshooting initial runs of scripts for non-fatal errors and
 warnings (such as ignored constraints). Default for this argument is \code{FALSE}.}
+
+\item{cleanNames}{If \code{TRUE} (the default), then special characters
+(currently, thsi only contains the forward-slashes: '/') are removed from
+taxon names before construction of the NEXUS file.}
 }
 \value{
 If argument \code{newFile} is \code{NULL}, then the text of the 

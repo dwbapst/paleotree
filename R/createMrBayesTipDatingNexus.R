@@ -208,7 +208,19 @@
 #' }
 #' 
 
+## TO DO !!
+#
+# -Need to check that ingroup constraint isn't on treeConstraints, and if so, delete it
+	# actually maybe just make it so no ingroup constraint is defined if treeConstraint is defined - presumably its already part of provided tree!!
+# -Add check to tip-Calibrate which makes sure age data is correctly ordered before using it
+	# related - cannot use uniform calibration is min==max, must use fixed!
+# -Need to write code so that users are forced by default to constrain at least one taxon to a precise time (an anchor taxon), for sake of accurately dating tree on absolute time-scale
+# have function print command for pasting into MrBayes to execute: 
+	# e.g. ' Execute "C://fossil data/myNexus.nex" '
+#
+# -Need a way to get MCCT, tree-sample
 
+#' @aliases tipdating
 #' @name createMrBayesTipDatingNexus
 #' @rdname createMrBayesTipDatingNexus
 #' @export
@@ -217,13 +229,17 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 							origNexusFile=NULL,createEmptyMorphMat=TRUE,newFile=NULL,
 							runName="new_run_paleotree",doNotRun=FALSE,cleanNames=TRUE){
 	################################################################################################
-	#         # a whopper of a function
+	#         # a wooper of a function
+	#
+	# 	#...should add ASCII art of a really cool wooper here
 	#
 	#################################################################################################
 	# CHECK TAXON NAMES
 	# taxa in tipTimes is king
 		# all taxa in input treeConstraints must be in tipTimes (and vice versa)
 		# origNexusFile is *not* checked
+	if(is.data.frame(tipTimes)){
+		tipTimes<-as.matrix(tipTimes)}
 	if(is.list(tipTimes)){
 		taxaTipTimes<-rownames(tipTimes[[2]])
 		}else{

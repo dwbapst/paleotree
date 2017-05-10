@@ -57,6 +57,11 @@
 #' the user can supply their own minimum tree, which must be greater than
 #' whatever the oldest tip age used is.
 
+#' @param collapseUniform MrBayes doesn't like uniform age priors where the maximum and
+#' minimum age are identical (i.e. its actually a fixed age). Thus, by default, this functon
+#' will treat any taxon ages where the maximum and minimum are identical as a fixed age, and
+#' will override setting \code{ageCalibrationType = "uniformRange"} for those dates.
+
 #' @param file Filename (possibly with path) as a character string
 #' to a file which will be overwritten with the output tip age calibrations.
 #' If \code{NULL}, tip calibration commands are output to the console.
@@ -114,7 +119,7 @@
 #' @export
 createMrBayesTipCalibrations<-function(tipTimes,
 	ageCalibrationType,whichAppearance="first",
-	treeAgeOffset,minTreeAge=NULL,file=NULL){
+	treeAgeOffset,minTreeAge=NULL,collapseUniform=TRUE,file=NULL){
 	#
 	#
 	if(length(ageCalibrationType)!=1){
@@ -230,10 +235,17 @@ createMrBayesTipCalibrations<-function(tipTimes,
 		# of appearance to place uniform prior on tip age
 	if(timeType=="uniform"){
 		# format uniform age block - two ages per taxon
-		dateBlock<-sapply(1:nrow(tipTimes),function(i)
-			paste0("calibrate ",rownames(tipTimes)[i],
-				" = uniform (",tipTimes[i,2],
-				", ",tipTimes[i,1],");"))
+		dateBlock<-sapply(1:nrow(tipTimes),function(i){
+			if(identical(tipTimes[i,2],tipTimes[i,1]) & collapseUniform){
+				# MrBayes doesn't like uniform ranges with the same max and min
+				paste0("calibrate ",rownames(tipTimes)[i],
+					" = fixed (",tipTimes[i,1],");")
+			}else{
+				paste0("calibrate ",rownames(tipTimes)[i],
+					" = uniform (",tipTimes[i,2],
+					", ",tipTimes[i,1],");")
+				}
+			})
 		}
 	#####################################################
 	#need to create tree age prior

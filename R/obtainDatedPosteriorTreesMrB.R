@@ -1,6 +1,8 @@
-#' @details
+#' Get the Sample of Posterior Trees from a Dated Phylogenetic Analysis with MrBayes (Or a Summary Tree, such as the MCCT)
+#' 
+#' 
 
-#' @inheritParams
+#' @details
 
 
 
@@ -10,9 +12,14 @@
 
 # number of runs in MrBayes, default is 2
 
-#' @param runfile A filename in the current directory, or a path to a file that is either a .p or .t file from a MrBayes analysis. This filename and path will be used for finding additional 
+#' @param runfile A filename in the current directory, or a path to a file that is either a .p 
+#' or .t file from a MrBayes analysis. This filename and path will be used for finding additional 
+#' .t and .p files, via the \code{nRuns} settings and assuming that files are in the
+#' same directory \emph{and} these files are named under
+#' typical MrBayes file naming conventions. (In other words, if you've renamed your .p or .t files,
+#' this function probably won't be able to find them,.)
 
-#' @param nRuns 
+#' @param nRuns The number of runs 
 
 #' @param burnin 
 

@@ -88,6 +88,10 @@
 #' (currently, thsi only contains the forward-slashes: '/') are removed from
 #' taxon names before construction of the NEXUS file.
 
+#' @param printExecute If \code{TRUE} (the default) and if output is directed to a \code{newFile}
+#' (i.e. a \code{newFile) is specified), a line for pasting into MrBayes for executing the newly created file
+#' will be messaged to the terminal.
+
 #' @note 
 #' This function allows a user to take an undated phylogenetic tree in R, and a set of age estimates
 #' for the taxa on that tree, and produce a posterior sample of dated trees using the MCMCMC in \emph{MrBayes},
@@ -212,13 +216,10 @@
 #
 # -Need to check that ingroup constraint isn't on treeConstraints, and if so, delete it
 	# actually maybe just make it so no ingroup constraint is defined if treeConstraint is defined - presumably its already part of provided tree!!
-# -Add check to tip-Calibrate which makes sure age data is correctly ordered before using it
-	# related - cannot use uniform calibration is min==max, must use fixed!
-# -Need to write code so that users are forced by default to constrain at least one taxon to a precise time (an anchor taxon), for sake of accurately dating tree on absolute time-scale
-# have function print command for pasting into MrBayes to execute: 
-	# e.g. ' Execute "C://fossil data/myNexus.nex" '
-#
-# -Need a way to get MCCT, tree-sample
+# need to read the NEXUS file so can duplicate taxa for FAD/LAD/etc
+
+
+
 
 #' @aliases tipdating
 #' @name createMrBayesTipDatingNexus
@@ -226,8 +227,8 @@
 #' @export
 createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL,morphModel="strong",
 							ageCalibrationType,whichAppearance="first",treeAgeOffset,minTreeAge=NULL,
-							origNexusFile=NULL,createEmptyMorphMat=TRUE,newFile=NULL,
-							runName="new_run_paleotree",doNotRun=FALSE,cleanNames=TRUE){
+							collapseUniform=TRUE,origNexusFile=NULL,createEmptyMorphMat=TRUE,newFile=NULL,
+							runName="new_run_paleotree",doNotRun=FALSE,cleanNames=TRUE,printExecute=TRUE){
 	################################################################################################
 	#         # a wooper of a function
 	#
@@ -347,7 +348,8 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 	# get age calibration block
 	ageCalibrations<-createMrBayesTipCalibrations(tipTimes=tipTimes,
 			ageCalibrationType=ageCalibrationType,whichAppearance=whichAppearance,
-			treeAgeOffset=treeAgeOffset,minTreeAge=minTreeAge,file=NULL)
+			treeAgeOffset=treeAgeOffset,minTreeAge=minTreeAge,
+			collapseUniform=collapseUniform,file=NULL)
 	#
 	# make the final MrBayes Block
 	MrBayesBlock<-makeMrBayesBlock(logBlock=logfileline,ingroupBlock=ingroupConstraint,
@@ -358,6 +360,12 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 	finalText<-c(morphNexus,MrBayesBlock)
 	if(!is.null(newFile)){
 		write(x=finalText,file=newFile)
+		if(printExecute){
+			# have function print command for pasting into MrBayes to execute: 
+				# e.g. ' Execute "C://fossil data/myNexus.nex" '
+			message("Now go to MrBayes and paste in this line:")
+			message(paste0('Execute "',normalizePath(newFile),'";'))
+			}
 	}else{
 		return(finalText)
 		}

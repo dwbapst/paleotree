@@ -27,11 +27,22 @@
 
 #' @param file Filename (possibly with path) as a character string
 #' leading to a file which will be overwritten with the output trees (or summary tree),
-#' rather than being directly returned by this function.
+#' as a NEXUS file. If \code{NULL} (the default), the output will
+#' instead be directly returned by this function.
 
 
 #' @return
-#' Returns either a single phylo object (the maximum clade 
+#' Depending on argument \code{file}, this output is either
+#' returned directly, or instead written out in NEXUS format via
+#' ape's \code{write.NEXUS} function to an external file. The output
+#' will consist either of multiple trees sampled from the post-burnin posterior,
+#' or will consist of a single phylogeny (a summary tree, either the MCCT or the MAP).
+#' 
+#' Users are warned that the resulting dated trees will not have \code{$root.time} elements
+#' for comparison against an absolute time-scale. Most functions for phylogenetics in R (and
+#' elsewhere) will instead presume that the latest tip will be at time 0 (the modern), which
+#' may be wrong if you are using \code{paleotree} for \emph{paleontological} datasets.
+#'
 
 #' @aliases
 

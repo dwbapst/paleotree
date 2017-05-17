@@ -77,8 +77,9 @@
 #' as described for argument \code{tree} for function \code{createMrBayesConstraints}.
 
 #' @param morphModel This argument can be used to switch between two end-member models of 
-#' morphological evolution in MrBayes, named 'strong' and 'relaxed'. The default is a model
-#'  which makes very 'strong' assumptions about the process of morphological evolution,
+#' morphological evolution in MrBayes, here named 'strong' and 'relaxed', for the 'strong assumptions'
+#' and 'relaxed assumptions' models described by Bapst, Schreiber and Carlson (Systematic Biology).
+#' The default is a model which makes very 'strong' assumptions about the process of morphological evolution,
 #' while the 'relaxed' alternative allows for considerably more heterogeneity in the rate
 #' of morphological evolution across characters, and in the forward and reverse transition
 #' rates between states. Note that in both cases, the character data is assumed to be filtered
@@ -137,6 +138,13 @@
 #' 
 #' Matzke, N. J., and A. Wright. 2016. Inferring node dates from tip dates
 #' in fossil Canidae: the importance of tree priors. \emph{Biology Letters} 12(8).
+#'
+#' The rationale behind the two alternative morphological models are described in more detail here:
+#' 
+#' Bapst, D. W., H. A. Schreiber, and S. J. Carlson. In press. Combined analysis of extant Rhynchonellida
+#' (Brachiopoda) using morphological and molecular data. \emph{Systematic Biology} doi: 10.1093/sysbio/syx049
+#' 
+
 
 
 #' @examples

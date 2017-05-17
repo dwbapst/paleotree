@@ -114,7 +114,6 @@
 #' }
 #' 
 
-# -Need to write code so that users are forced by default to constrain at least one taxon to a precise time (an anchor taxon) for sake of accurately dating tree on absolute time-scale
 
 
 #' @name createMrBayesTipCalibrations
@@ -239,6 +238,19 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	if(timeType=="uniform"){
 		# format uniform age block - two ages per taxon
 		dateBlock<-sapply(1:nrow(tipTimes),function(i){
+			# -Need to write code so that users are forced by default to constrain at least one
+			# taxon to a precise time (an anchor taxon) for sake of accurately dating tree on absolute time-scale
+			
+#' @param anchorTaxon This argument may be a logical (default is \code{TRUE}, or a character string of length = 1.
+#' If \code{ageCalibrationType = "uniformRange"}, MrBayes will do a tip-dating analysis with uniform age uncertainties on 
+#' all taxa (if such uncertainties exist; see \code{collapseUniform}). However, MrBayes does not record how each tree sits on an absolute time-scale,
+#' so if the placement of \emph{every} tip is uncertain, lining up multiple dated trees sampled from the posterior (where each tip's true age might
+#' differ) could be a nightmare to back-calculate, if not impossible. Thus, if \code{ageCalibrationType = "uniformRange"}, and there are no tip taxa given
+#' fixed dates due to \code{collapseUniform} (i.e. all of the tip ages have a range of uncertainty on them), then a particular taxon
+#' will be selected and given a fixed date equal to its earliest appearance time for its respective \code{whichAppearance}. This taxon can either be indicated by
+#' the user
+
+		
 			if(identical(tipTimes[i,2],tipTimes[i,1]) & collapseUniform){
 				# MrBayes doesn't like uniform ranges with the same max and min
 					# -Add check to tip-Calibrate which makes sure age data is correctly ordered before using it

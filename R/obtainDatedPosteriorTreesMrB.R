@@ -25,7 +25,9 @@
 
 #' @param outputTrees 
 
-#' @param file 
+#' @param file Filename (possibly with path) as a character string
+#' leading to a file which will be overwritten with the output trees (or summary tree),
+#' rather than being directly returned by this function.
 
 
 #' @return

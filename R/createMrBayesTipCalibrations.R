@@ -237,7 +237,58 @@ createMrBayesTipCalibrations<-function(tipTimes,
 		# of appearance to place uniform prior on tip age
 	if(timeType=="uniform"){
 		# format uniform age block - two ages per taxon
+		# figure out which taxa will need to be fixed
+		if(collapseUniform){
+			fixCollapse<-sapply(1:nrow(tipTimes),function(x)
+				identical(tipTimes[x,2],tipTimes[x,1]))
+		}else{
+			fixCollapse<-rep(FALSE,nrow(tipTimes)
+			}
+		if(pickFix){
+			if(!any(fixCollapse)){
+				fixCollapse<-fixCollapse[1]
+				}
+			}
+		
+
+		if(is.logical(anchorTaxon)){
+			if(length(anchorTaxon)!=1){
+				stop("anchorTaxon must be of length 1 if a logical")
+				}
+			pickFix<-anchorTaxon
+		}else{
+			if(!is.character(anchorTaxon)){
+				stop("anchorTaxon must be of type character if not ")
+				}
+			
+			}
+		
+			
+		
+		if(identical(TRUE,anchorTaxon)){
+			}
+		if(identical(FALSE,anchorTaxon)){
+			}	
+
+			
+		if(any())
+			
+		if(length(anchorTaxon)>1){
+			if(any(!is.character(anchorTaxon))){
+				}
+			}
+			
+		if(is.TRUE(anchorTaxon)){
+			}
+		if(is.FALSE(anchorTaxon)){
+			}
+
+			
 		dateBlock<-sapply(1:nrow(tipTimes),function(i){
+		
+		pickFix
+		
+		
 			# -Need to write code so that users are forced by default to constrain at least one
 			# taxon to a precise time (an anchor taxon) for sake of accurately dating tree on absolute time-scale
 			
@@ -251,7 +302,7 @@ createMrBayesTipCalibrations<-function(tipTimes,
 #' the user
 
 		
-			if(identical(tipTimes[i,2],tipTimes[i,1]) & collapseUniform){
+			if( & collapseUniform){
 				# MrBayes doesn't like uniform ranges with the same max and min
 					# -Add check to tip-Calibrate which makes sure age data is correctly ordered before using it
 				# related - cannot use uniform calibration is min==max, must use fixed!

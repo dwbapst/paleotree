@@ -44,7 +44,6 @@
 #' may be wrong if you are using \code{paleotree} for \emph{paleontological} datasets.
 #'
 
-#' @aliases
 
 #' @seealso
 #' \code{\link{maxCladeCred}}

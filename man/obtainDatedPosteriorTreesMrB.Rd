@@ -77,7 +77,7 @@ MCCT<-obtainDatedPosteriorTreesMrB(
 
 }
 \seealso{
-\code{\link{phangorn::maxCladeCred}} in package phangorn
+\code{\link[phangorn]{maxCladeCred}} in package phangorn
 }
 \author{
 David Bapst, with rescaling of raw output

@@ -117,7 +117,7 @@ Bapst, D. W., H. A. Schreiber, and S. J. Carlson. In press. Combined analysis of
 (Brachiopoda) using morphological and molecular data. \emph{Systematic Biology} doi: 10.1093/sysbio/syx049
 }
 \seealso{
-See \code{phangorn}'s function for calculating the Robinson-Foulds distance: \code{\link{phangorn::treedist}}
+See \code{phangorn}'s function for calculating the Robinson-Foulds distance: \code{\link[phangorn]{treedist}}
 }
 \author{
 David W. Bapst. This code was produced as part of a project 

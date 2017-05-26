@@ -73,12 +73,12 @@ treedist(treeA,treeB)
 # let's simulate the worst resolved tree possible: a star tree
 treeC<-stree(30)
 
+\dontrun{
 # plot the tanglegram between A and C
 plot(cophylo(treeA,treeC))
 
 # however the RF distance is *not* zero
 # even though the only difference is a difference in resolution
-\dontrun{
 treedist(treeA,treeC)
 }
 

@@ -228,7 +228,6 @@
 
 
 
-
 #' @aliases tipdating
 #' @name createMrBayesTipDatingNexus
 #' @rdname createMrBayesTipDatingNexus

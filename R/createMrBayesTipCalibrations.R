@@ -199,8 +199,10 @@ createMrBayesTipCalibrations<-function(tipTimes,
 		}
 	if(is.logical(anchorTaxon)){
 		pickFix<-anchorTaxon
-		if(anchorTaxon){
+		if(anchorTaxon & ageCalibrationType=="uniformRange"){
 			anchorTaxon<-taxonNames[1]
+			message(paste0("anchorTaxon not user-defined, forcing ",
+				taxonNames[1]," to be a fixed tip age"))
 		}else{
 			anchorTaxon<-NULL
 			}

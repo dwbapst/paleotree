@@ -2,15 +2,15 @@ Package: paleotree
 Type: Package
 Version: 2.9
 Title: Paleontological and Phylogenetic Analyses of Evolution
-Date: 2017-04-06
+Date: 2017-05-26
 Author: David W. Bapst
 Depends:
     R (>= 3.0.0),
-    ape (>= 3.2)
+    ape (>= 4.1)
 Imports:
-    phangorn (>= 1.99.12),
+    phangorn (>= 2.0.0),
     stats,
-    phytools,
+    phytools (>= 0.6-00),
     graphics,
     grDevices,
     methods,

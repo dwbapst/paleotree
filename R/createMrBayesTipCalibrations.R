@@ -223,6 +223,14 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	if(ncol(tipTimes)==1){
 		tipTimes<-cbind(tipTimes,tipTimes,tipTimes,tipTimes)
 		}
+	# -Add check to tip-Calibrate which makes sure age data is correctly ordered before using it
+	misorderedTimes<-apply(tipTimes,1,function(z) any(diff(z)>0))
+	if(any(misorderedTimes)){
+		stop(paste0("dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
+			paste0(rownames(tipTimes)[misorderedTimes],collapse=" ")))
+		}
+	#####################################################################
+	# filter for whichAppearance
 	# choose either the first or last appearance times
 		# (these will likely often be identical)
 	if(whichAppearance=="first"){
@@ -278,12 +286,16 @@ createMrBayesTipCalibrations<-function(tipTimes,
 		# format uniform age block - two ages per taxon
 		# figure out which taxa will need to be fixed
 		if(collapseUniform){
+			# MrBayes doesn't like uniform ranges with the same max and min
+					# related - cannot use uniform calibration is min==max, must use fixed!
 			fixCollapse<-sapply(1:nrow(tipTimes),function(x)
 				identical(tipTimes[x,2],tipTimes[x,1]))
 		}else{
 			fixCollapse<-rep(FALSE,nrow(tipTimes))
 			}
 		# fix anchor taxon
+			# -Need to write code so that users are forced by default to constrain at least one
+			# taxon to a precise time (an anchor taxon) for sake of accurately dating tree on absolute time-scale
 		if(pickFix){
 			if(!any(fixCollapse)){
 				fixCollapse[rownames(tipTimes)==anchorTaxon]<-TRUE
@@ -293,39 +305,23 @@ createMrBayesTipCalibrations<-function(tipTimes,
 				fixCollapse[rownames(tipTimes)==anchorTaxon]<-TRUE
 				}
 			}
-
-		
-
-		
-			
-		
-
-
-
-			
-		dateBlock<-sapply(1:nrow(tipTimes),function(i){
-		
-		pickFix
-		
-		
-			# -Need to write code so that users are forced by default to constrain at least one
-			# taxon to a precise time (an anchor taxon) for sake of accurately dating tree on absolute time-scale
-			
-
-
-		
-			if( & collapseUniform){
-				# MrBayes doesn't like uniform ranges with the same max and min
-					# -Add check to tip-Calibrate which makes sure age data is correctly ordered before using it
-				# related - cannot use uniform calibration is min==max, must use fixed!
-				paste0("calibrate ",rownames(tipTimes)[i],
+		# now actually write the date block!
+		dateBlock<-character(nrow(tipTimes)	
+		for(i in 1:length(dateBlock)){
+			if(fixCollapse[i]){
+				dateBlock[i]<-paste0("calibrate ",rownames(tipTimes)[i],
 					" = fixed (",tipTimes[i,1],");")
 			}else{
-				paste0("calibrate ",rownames(tipTimes)[i],
+				dateBlock[i]<-paste0("calibrate ",rownames(tipTimes)[i],
 					" = uniform (",tipTimes[i,2],
 					", ",tipTimes[i,1],");")
 				}
-			})
+				
+		
+		
+			}
+
+
 			
 		# write line indicating fixed taxa
 		if(){

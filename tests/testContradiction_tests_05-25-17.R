@@ -1,4 +1,7 @@
 # test for hidden function testContradiction
+
+library(paleotree)
+
 test<-c(
   paleotree:::testContradiction(c("A","B"),c("A","B")), #should be FALSE (no contradiction)
   paleotree:::testContradiction(c("A","B"),c("C","D")), #should be FALSE

@@ -1,13 +1,15 @@
 #' Get the Sample of Posterior Trees from a Dated Phylogenetic Analysis with MrBayes (Or a Summary Tree, such as the MCCT)
 #' 
-#' 
+#' MrBayes is not great for getting samples of dated posterior phylogenies, or for obtaining certain summary trees from
+#' the posterior (specifically the MCCT and MAP, which are specfic trees in the posterior). This is because the tree
+#' samples as returned are scaled relative to rate parameters in a separate file. This function attempts to automate
+#' the handling of multiple files (both .t tree files and .p parameter files), as well as multiple files
+#' associated with separate runs, to obtain samples of posterior trees, or summary trees such as the MCCT or MAP.
 
 #' @details
-
-
-
-
-
+#' This function is most useful for dealing with dating analyses in MrBayes, particularly when tip-dating
+#' a tree with fossil taxa, as the half-compatibility and all-compatibility summary trees offered by the
+#' 'sumt' command in MrBayes can hae issues properly portraying summary trees from such datasets.
 
 #' @param runfile A filename in the current directory, or a path to a file that is either a .p 
 #' or .t file from a MrBayes analysis. This filename and path will be used for finding additional 

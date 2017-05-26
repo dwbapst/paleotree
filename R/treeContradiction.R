@@ -1,15 +1,44 @@
-
-
+#' Measure the Contradiction Difference Between Two Phylogenetic Topologies
+#' 
+#' An alternative measure of pair-wise dissimilarity between two tree topologies which ignores differences in phylogenetic
+#' resolution between the two, unlike typical metrics (such as Robinson-Foulds distance). The metric essentially counts up
+#' the number of splits on both trees that are directly contradicted by a split on the contrasting topology (treating both
+#' as unrooted). By default, this 'contradiction difference' value is then scaled to between 0 and 1, by dividing by the total number
+#' of splits that could have been contradicted across both trees ( 2 * (Number of shared tips - 2) ). On this scaled, 0 represents
+#' no conflicting relationshps and 1 reflects two entirely conflicting topologies, similar to the rescaling in Colless's consensus fork index.
+#'
 
 #' @details
+#' Algorithmically, conflicting splits are identified by counting the number of splits
+#' (via \code{ape}'s \code{prop.part}) on one tree that disagree with at least one split
+#' on the other tree: for example, split (AB)CD would be contradicted by split (AC)BD. To
+#' put it another way, all we need to test for is whether the taxa segregated by that split
+#' were found to be more closely related to some other taxa, not so segregated by the
+#' considered split. 
+#' 
+#' This metric was designed mainly for use with trees that differ in their resolution, particularly when it is necessary
+#' to compare between summary trees (such as consensus trees of half-compatibility summaries) from separate phylogenetic analyses.
+#' Note that comparing summary trees can be problematic in some instances, and users should carefully consider their 
+#' question of interest, and whether it may be more ideal to consider whole samples of trees (e.g., the posterior sample, or the sample of
+#' most parsimonious trees).
+#' 
+#' The contradiction difference is \emph{not} a metric distance: most notably, the triangle inequality is not held and thus
+#' the 'space' it describes between topologies is not a metric space. This can be shown most simply when considering any two
+#' different but fully-resolve topologies and a third topology that is a star tree. The star tree will have a zero pair-wise
+#' CD with either fully-resolved phylogeny, but there will be a positive CD between the fully-resolved trees. An example of
+#' this is shown in the examples below.
+#' 
+#' The CD also suggest very large differences when small numbers of taxa shift greatly across the tree, a property shared by
+#' many other typical tree comparisons, such as RF distances. See examples below.
 
-#' @inheritParams
+#' @param tree1,tree2 Two phylogenies, with the same number of tips and an identical set of tip labels, both of class \code{phylo}. 
 
-#' @param
+#' @param rescale A logical.  If \{FALSE}, the raw number of contradicted splits across both trees is reported.
+#' If \code{TRUE} (the default), the contradiction difference value is returned rescaled to the total number
+#' of splits across both input trees that could have contradicted.
 
 #' @return
-
-#' @aliases
+#' The contradiction difference between two trees is reported as a single numeric variable.
 
 #' @seealso
 #' See \code{phangorn}'s function for calculating the Robinson-Foulds distance: \code{\link{phangorn::treedist}}

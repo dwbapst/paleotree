@@ -114,6 +114,10 @@ warnings (such as ignored constraints). Default for this argument is \code{FALSE
 \item{cleanNames}{If \code{TRUE} (the default), then special characters
 (currently, thsi only contains the forward-slashes: '/') are removed from
 taxon names before construction of the NEXUS file.}
+
+\item{printExecute}{If \code{TRUE} (the default) and if output is directed to a \code{newFile}
+(i.e. a \code{newFile} is specified), a line for pasting into MrBayes for executing the newly created file
+will be messaged to the terminal.}
 }
 \value{
 If argument \code{newFile} is \code{NULL}, then the text of the 

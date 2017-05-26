@@ -316,17 +316,16 @@ createMrBayesTipCalibrations<-function(tipTimes,
 					" = uniform (",tipTimes[i,2],
 					", ",tipTimes[i,1],");")
 				}
-				
-		
-		
 			}
-
-
-			
 		# write line indicating fixed taxa
-		if(){
+		if(any(fixCollapse)){
+			fixedLine<-paste("[These taxa had fixed tip ages:",
+				paste0(rownames(tipTimes)[fixCollapse],collapse=" "),"]")
+		}else{
+			fixedLine<-" "
 			}
-			
+		# attach to date block
+		dateBlock<-c(dateBlock<fixedLine)
 		}
 	#####################################################
 	#need to create tree age prior

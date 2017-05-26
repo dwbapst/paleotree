@@ -33,7 +33,7 @@
 
 #' @param tree1,tree2 Two phylogenies, with the same number of tips and an identical set of tip labels, both of class \code{phylo}. 
 
-#' @param rescale A logical.  If \{FALSE}, the raw number of contradicted splits across both trees is reported.
+#' @param rescale A logical.  If \code{FALSE}, the raw number of contradicted splits across both trees is reported.
 #' If \code{TRUE} (the default), the contradiction difference value is returned rescaled to the total number
 #' of splits across both input trees that could have contradicted.
 

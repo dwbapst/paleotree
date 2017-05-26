@@ -6,29 +6,36 @@
 
 
 
-# pick either a .p or .t file; can be either. Used for getting path. 
-# all needed .p and .t files must be in the same directory as this file
 
 
-# number of runs in MrBayes, default is 2
 
 #' @param runfile A filename in the current directory, or a path to a file that is either a .p 
 #' or .t file from a MrBayes analysis. This filename and path will be used for finding additional 
 #' .t and .p files, via the \code{nRuns} settings and assuming that files are in the
 #' same directory \emph{and} these files are named under
 #' typical MrBayes file naming conventions. (In other words, if you've renamed your .p or .t files,
-#' this function probably won't be able to find them,.)
+#' this function probably won't be able to find them.)
 
 #' @param nRuns The number of runs in your analysis. This variable is used for figuring out what 
 #' filenames will be searched for: specify less runs than reality and some runs won't be included.
 #' Specify too many, and this function will throw an error when it cannot find files it expects
-#' but do not exist.
+#' but do not exist. The default for this argument (two runs) is based on the default number of runs in MrBayes.
 
 #' @param burnin The fraction of trees sampled in the posterior discarded  and not returned
 #' by this function directly, nor included in calculation of summary trees. Must be a numeric
 #' value greater than 0 and less than 1.
 
-#' @param outputTrees 
+#' @param outputTrees Determines the output trees produced; for format of output, see section
+#' on returned Value below. Must be of length one, and either \code{"all"},
+#' which means all trees from the post-burnin posterior will
+#' returned, a number greater than zero, which will be the number of trees
+#' randomly sampled from across the post-burning posterior and returned,
+#' or \code{"MCCT"} and \code{"MAP"}, which stand for 'maximum clade compatibility tree'
+#' and 'maximum a posteri tree' respectively. The MAP is the single tree from the post-burnin
+#' posterior with the highest marginal likelihood. The MCCT is the single tree from the post-burnin
+#' posterior which contains clades with the highest product of posterior probabilities for its
+#' component clades. Thus, the MAP is the best overall tree, while the MCCT may be the best
+#' tree for summaring topological support.
 
 #' @param file Filename (possibly with path) as a character string
 #' leading to a file which will be overwritten with the output trees (or summary tree),
@@ -90,6 +97,9 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,outputTrees,fi
 		stop("burnin must be a value between 0 and 1")
 		}
 	# Load tree, paramater and mcmc files produced by MrBayes
+	#
+	# # pick either a .p or .t file; can be either. Used for getting path. 
+	# all needed .p and .t files must be in the same directory as this file
 	#
 	# take indicated file and get the basic run name
 	runPath<-strsplit(runFile,split="\\.run")[[1]]

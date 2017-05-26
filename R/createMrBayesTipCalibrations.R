@@ -306,7 +306,7 @@ createMrBayesTipCalibrations<-function(tipTimes,
 				}
 			}
 		# now actually write the date block!
-		dateBlock<-character(nrow(tipTimes)	
+		dateBlock<-character(nrow(tipTimes))	
 		for(i in 1:length(dateBlock)){
 			if(fixCollapse[i]){
 				dateBlock[i]<-paste0("calibrate ",rownames(tipTimes)[i],

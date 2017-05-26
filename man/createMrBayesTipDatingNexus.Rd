@@ -2,13 +2,15 @@
 % Please edit documentation in R/createMrBayesTipDatingNexus.R
 \name{createMrBayesTipDatingNexus}
 \alias{createMrBayesTipDatingNexus}
+\alias{tipdating}
 \title{Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes}
 \usage{
 createMrBayesTipDatingNexus(tipTimes, outgroupTaxa, treeConstraints = NULL,
   morphModel = "strong", ageCalibrationType, whichAppearance = "first",
-  treeAgeOffset, minTreeAge = NULL, origNexusFile = NULL,
-  createEmptyMorphMat = TRUE, newFile = NULL,
-  runName = "new_run_paleotree", doNotRun = FALSE, cleanNames = TRUE)
+  treeAgeOffset, minTreeAge = NULL, collapseUniform = TRUE,
+  origNexusFile = NULL, createEmptyMorphMat = TRUE, newFile = NULL,
+  runName = "new_run_paleotree", doNotRun = FALSE, cleanNames = TRUE,
+  printExecute = TRUE)
 }
 \arguments{
 \item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
@@ -34,8 +36,9 @@ from which (if \code{treeConstraints} is supplied) the set topological constrain
 as described for argument \code{tree} for function \code{createMrBayesConstraints}.}
 
 \item{morphModel}{This argument can be used to switch between two end-member models of 
-morphological evolution in MrBayes, named 'strong' and 'relaxed'. The default is a model
- which makes very 'strong' assumptions about the process of morphological evolution,
+morphological evolution in MrBayes, here named 'strong' and 'relaxed', for the 'strong assumptions'
+and 'relaxed assumptions' models described by Bapst, Schreiber and Carlson (Systematic Biology).
+The default is a model which makes very 'strong' assumptions about the process of morphological evolution,
 while the 'relaxed' alternative allows for considerably more heterogeneity in the rate
 of morphological evolution across characters, and in the forward and reverse transition
 rates between states. Note that in both cases, the character data is assumed to be filtered
@@ -69,6 +72,14 @@ be set as the oldest date among the tip age used (those used being
 determine by user choices (or oldest bound on a tip age). Otherwise,
 the user can supply their own minimum tree, which must be greater than
 whatever the oldest tip age used is.}
+
+\item{collapseUniform}{MrBayes won't accept uniform age priors where the maximum and
+minimum age are identical (i.e. its actually a fixed age). Thus, if this argument
+is \code{TRUE} (the default), this functon
+will treat any taxon ages where the maximum and minimum are identical as a fixed age, and
+will override setting \code{ageCalibrationType = "uniformRange"} for those dates.
+All taxa with their ages set to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
+are returned as a list within a commented line of the returned MrBayes block.}
 
 \item{origNexusFile}{Filename (possibly with path) as a character
 string leading to a NEXUS text file, presumably containing a matrix
@@ -247,6 +258,11 @@ For recommended best practices in tip-dating analyses, please see:
 
 Matzke, N. J., and A. Wright. 2016. Inferring node dates from tip dates
 in fossil Canidae: the importance of tree priors. \emph{Biology Letters} 12(8).
+
+The rationale behind the two alternative morphological models are described in more detail here:
+
+Bapst, D. W., H. A. Schreiber, and S. J. Carlson. In press. Combined analysis of extant Rhynchonellida
+(Brachiopoda) using morphological and molecular data. \emph{Systematic Biology} doi: 10.1093/sysbio/syx049
 }
 \seealso{
 \code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipCalibrations}}, , \code{\link{cal3}}

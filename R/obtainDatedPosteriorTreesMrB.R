@@ -11,7 +11,7 @@
 #' a tree with fossil taxa, as the half-compatibility and all-compatibility summary trees offered by the
 #' 'sumt' command in MrBayes can hae issues properly portraying summary trees from such datasets.
 
-#' @param runfile A filename in the current directory, or a path to a file that is either a .p 
+#' @param runFile A filename in the current directory, or a path to a file that is either a .p 
 #' or .t file from a MrBayes analysis. This filename and path will be used for finding additional 
 #' .t and .p files, via the \code{nRuns} settings and assuming that files are in the
 #' same directory \emph{and} these files are named under

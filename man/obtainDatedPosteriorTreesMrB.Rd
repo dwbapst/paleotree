@@ -8,6 +8,13 @@ obtainDatedPosteriorTreesMrB(runFile, nRuns = 2, burnin = 0.5, outputTrees,
   file = NULL)
 }
 \arguments{
+\item{runFile}{A filename in the current directory, or a path to a file that is either a .p 
+or .t file from a MrBayes analysis. This filename and path will be used for finding additional 
+.t and .p files, via the \code{nRuns} settings and assuming that files are in the
+same directory \emph{and} these files are named under
+typical MrBayes file naming conventions. (In other words, if you've renamed your .p or .t files,
+this function probably won't be able to find them.)}
+
 \item{nRuns}{The number of runs in your analysis. This variable is used for figuring out what 
 filenames will be searched for: specify less runs than reality and some runs won't be included.
 Specify too many, and this function will throw an error when it cannot find files it expects
@@ -33,13 +40,6 @@ tree for summaring topological support.}
 leading to a file which will be overwritten with the output trees (or summary tree),
 as a NEXUS file. If \code{NULL} (the default), the output will
 instead be directly returned by this function.}
-
-\item{runfile}{A filename in the current directory, or a path to a file that is either a .p 
-or .t file from a MrBayes analysis. This filename and path will be used for finding additional 
-.t and .p files, via the \code{nRuns} settings and assuming that files are in the
-same directory \emph{and} these files are named under
-typical MrBayes file naming conventions. (In other words, if you've renamed your .p or .t files,
-this function probably won't be able to find them.)}
 }
 \value{
 Depending on argument \code{file}, this output is either

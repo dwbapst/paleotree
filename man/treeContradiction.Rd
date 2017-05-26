@@ -101,7 +101,11 @@ treeContradiction(treeA,treeB)  # should be non-zero distance
 # an example
 treeAA<-read.tree(text="(A,(B,(C,(D,(E,F)))));")
 treeBB<-read.tree(text="(E,(B,(C,(D,(A,F)))));")
+
+\dontrun{
 plot(cophylo(treeAA,treeBB))
+}
+
 treeContradiction(treeAA,treeBB)
 
 \dontrun{

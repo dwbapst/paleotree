@@ -8,9 +8,9 @@
 createMrBayesTipDatingNexus(tipTimes, outgroupTaxa, treeConstraints = NULL,
   morphModel = "strong", ageCalibrationType, whichAppearance = "first",
   treeAgeOffset, minTreeAge = NULL, collapseUniform = TRUE,
-  origNexusFile = NULL, createEmptyMorphMat = TRUE, newFile = NULL,
-  runName = "new_run_paleotree", doNotRun = FALSE, cleanNames = TRUE,
-  printExecute = TRUE)
+  anchorTaxon = TRUE, origNexusFile = NULL, createEmptyMorphMat = TRUE,
+  newFile = NULL, runName = "new_run_paleotree", doNotRun = FALSE,
+  cleanNames = TRUE, printExecute = TRUE)
 }
 \arguments{
 \item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
@@ -80,6 +80,17 @@ will treat any taxon ages where the maximum and minimum are identical as a fixed
 will override setting \code{ageCalibrationType = "uniformRange"} for those dates.
 All taxa with their ages set to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
 are returned as a list within a commented line of the returned MrBayes block.}
+
+\item{anchorTaxon}{This argument may be a logical (default is \code{TRUE}, or a character string of length = 1.
+This argument has no effect if \code{ageCalibrationType} is not set to "uniformRange", but the argument may still be evaluated.
+If \code{ageCalibrationType = "uniformRange"}, MrBayes will do a tip-dating analysis with uniform age uncertainties on 
+all taxa (if such uncertainties exist; see \code{collapseUniform}). However, MrBayes does not record how each tree sits on an absolute time-scale,
+so if the placement of \emph{every} tip is uncertain, lining up multiple dated trees sampled from the posterior (where each tip's true age might
+differ) could be a nightmare to back-calculate, if not impossible. Thus, if \code{ageCalibrationType = "uniformRange"}, and there are no tip taxa given
+fixed dates due to \code{collapseUniform} (i.e. all of the tip ages have a range of uncertainty on them), then a particular taxon
+will be selected and given a fixed date equal to its earliest appearance time for its respective \code{whichAppearance}. This taxon can either be indicated by
+the user or instead the first taxon listed in \code{tipTimes} will be arbitrary selected. All taxa with their ages set
+to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform} are returned as a list within a commented line of the returned MrBayes block.}
 
 \item{origNexusFile}{Filename (possibly with path) as a character
 string leading to a NEXUS text file, presumably containing a matrix

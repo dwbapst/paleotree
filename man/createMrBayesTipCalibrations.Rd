@@ -6,7 +6,7 @@
 \usage{
 createMrBayesTipCalibrations(tipTimes, ageCalibrationType,
   whichAppearance = "first", treeAgeOffset, minTreeAge = NULL,
-  collapseUniform = TRUE, file = NULL)
+  collapseUniform = TRUE, anchorTaxon = TRUE, file = NULL)
 }
 \arguments{
 \item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
@@ -59,10 +59,6 @@ will override setting \code{ageCalibrationType = "uniformRange"} for those dates
 All taxa with their ages set to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
 are returned as a list within a commented line of the returned MrBayes block.}
 
-\item{file}{Filename (possibly with path) as a character string
-to a file which will be overwritten with the output tip age calibrations.
-If \code{NULL}, tip calibration commands are output to the console.}
-
 \item{anchorTaxon}{This argument may be a logical (default is \code{TRUE}, or a character string of length = 1.
 This argument has no effect if \code{ageCalibrationType} is not set to "uniformRange", but the argument may still be evaluated.
 If \code{ageCalibrationType = "uniformRange"}, MrBayes will do a tip-dating analysis with uniform age uncertainties on 
@@ -73,6 +69,10 @@ fixed dates due to \code{collapseUniform} (i.e. all of the tip ages have a range
 will be selected and given a fixed date equal to its earliest appearance time for its respective \code{whichAppearance}. This taxon can either be indicated by
 the user or instead the first taxon listed in \code{tipTimes} will be arbitrary selected. All taxa with their ages set
 to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform} are returned as a list within a commented line of the returned MrBayes block.}
+
+\item{file}{Filename (possibly with path) as a character string
+to a file which will be overwritten with the output tip age calibrations.
+If \code{NULL}, tip calibration commands are output to the console.}
 }
 \value{
 If argument \code{file} is \code{NULL}, then the tip age commands

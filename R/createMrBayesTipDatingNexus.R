@@ -235,7 +235,7 @@
 #' @export
 createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL,morphModel="strong",
 							ageCalibrationType,whichAppearance="first",treeAgeOffset,minTreeAge=NULL,
-							collapseUniform=TRUE,origNexusFile=NULL,createEmptyMorphMat=TRUE,newFile=NULL,
+							collapseUniform=TRUE,anchorTaxon=TRUE,origNexusFile=NULL,createEmptyMorphMat=TRUE,newFile=NULL,
 							runName="new_run_paleotree",doNotRun=FALSE,cleanNames=TRUE,printExecute=TRUE){
 	################################################################################################
 	#         # a wooper of a function ... here's some ASCII from 'Psyduck'
@@ -389,7 +389,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 	ageCalibrations<-createMrBayesTipCalibrations(tipTimes=tipTimes,
 			ageCalibrationType=ageCalibrationType,whichAppearance=whichAppearance,
 			treeAgeOffset=treeAgeOffset,minTreeAge=minTreeAge,
-			collapseUniform=collapseUniform,file=NULL)
+			collapseUniform=collapseUniform,anchorTaxon=anchorTaxon,file=NULL)
 	#
 	# make the final MrBayes Block
 	MrBayesBlock<-makeMrBayesBlock(logBlock=logfileline,ingroupBlock=ingroupConstraint,

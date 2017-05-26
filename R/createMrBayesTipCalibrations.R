@@ -137,7 +137,8 @@
 #' @export
 createMrBayesTipCalibrations<-function(tipTimes,
 	ageCalibrationType,whichAppearance="first",
-	treeAgeOffset,minTreeAge=NULL,collapseUniform=TRUE,file=NULL){
+	treeAgeOffset,minTreeAge=NULL,
+	collapseUniform=TRUE,anchorTaxon=TRUE,file=NULL){
 	#
 	#
 	if(length(ageCalibrationType)!=1){

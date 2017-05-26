@@ -19,9 +19,14 @@
 #' typical MrBayes file naming conventions. (In other words, if you've renamed your .p or .t files,
 #' this function probably won't be able to find them,.)
 
-#' @param nRuns The number of runs 
+#' @param nRuns The number of runs in your analysis. This variable is used for figuring out what 
+#' filenames will be searched for: specify less runs than reality and some runs won't be included.
+#' Specify too many, and this function will throw an error when it cannot find files it expects
+#' but do not exist.
 
-#' @param burnin 
+#' @param burnin The fraction of trees sampled in the posterior discarded  and not returned
+#' by this function directly, nor included in calculation of summary trees. Must be a numeric
+#' value greater than 0 and less than 1.
 
 #' @param outputTrees 
 
@@ -46,7 +51,7 @@
 
 
 #' @seealso
-#' \code{\link{maxCladeCred}}
+#' \code{\link{phangorn::maxCladeCred}} in package phangorn
 
 #' @author
 #' David Bapst, with rescaling of raw output
@@ -58,7 +63,7 @@
 #' MCCT<-obtainDatedPosteriorTreesMrB(
 #'  	runFile="C:\\myTipDatingAnalysis\\MrB_run_fossil_05-10-17.nex.run1.t",
 #'  	nRuns=2,burnin=0.5,
-#' 	outputTrees="MCCT",file=NULL)
+#' 		outputTrees="MCCT",file=NULL)
 #' 
 #' }
 #'

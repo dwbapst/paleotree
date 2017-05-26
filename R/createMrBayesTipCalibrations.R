@@ -225,13 +225,13 @@ createMrBayesTipCalibrations<-function(tipTimes,
 		tipTimes<-cbind(tipTimes,tipTimes,tipTimes,tipTimes)
 		}
 	# -Add check to tip-Calibrate which makes sure age data is correctly ordered before using it
-	misorderedTimes<-apply(tipTimes,1,function(z) any(diff(z[,1:2])>0))
+	misorderedTimes<-apply(tipTimes,1,function(z) any(diff(z[1:2])>0))
 	if(any(misorderedTimes)){
 		stop(paste0("dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
 			paste0(rownames(tipTimes)[misorderedTimes],collapse=" ")))
 		}
 	#and the other pair of dates
-	misorderedTimes<-apply(tipTimes,1,function(z) any(diff(z[,3:4])>0))
+	misorderedTimes<-apply(tipTimes,1,function(z) any(diff(z[3:4])>0))
 	if(any(misorderedTimes)){
 		stop(paste0("dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
 			paste0(rownames(tipTimes)[misorderedTimes],collapse=" ")))

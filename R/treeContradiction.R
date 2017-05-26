@@ -41,7 +41,7 @@
 #' The contradiction difference between two trees is reported as a single numeric variable.
 
 #' @seealso
-#' See \code{phangorn}'s function for calculating the Robinson-Foulds distance: \code{\link{phangorn::treedist}}
+#' See \code{phangorn}'s function for calculating the Robinson-Foulds distance: \code{\link[phangorn]{treedist}}
 
 #' @author
 #' David W. Bapst. This code was produced as part of a project 

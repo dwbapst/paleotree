@@ -93,7 +93,7 @@
 #' @importFrom graphics par layout plot hist lines legend polygon title axis
 #' @importFrom grDevices rainbow dev.new
 #' @importFrom methods is
-#' @importFrom utils read.csv type.convert
+#' @importFrom utils read.csv type.convert read.table
 
 
 NULL

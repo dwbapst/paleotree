@@ -62,6 +62,19 @@
 #' is \code{TRUE} (the default), this functon
 #' will treat any taxon ages where the maximum and minimum are identical as a fixed age, and
 #' will override setting \code{ageCalibrationType = "uniformRange"} for those dates.
+#' All taxa with their ages set to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
+#' are returned as a list within a commented line of the returned MrBayes block.
+
+#' @param anchorTaxon This argument may be a logical (default is \code{TRUE}, or a character string of length = 1.
+#' This argument has no effect if \code{ageCalibrationType} is not set to "uniformRange", but the argument may still be evaluated.
+#' If \code{ageCalibrationType = "uniformRange"}, MrBayes will do a tip-dating analysis with uniform age uncertainties on 
+#' all taxa (if such uncertainties exist; see \code{collapseUniform}). However, MrBayes does not record how each tree sits on an absolute time-scale,
+#' so if the placement of \emph{every} tip is uncertain, lining up multiple dated trees sampled from the posterior (where each tip's true age might
+#' differ) could be a nightmare to back-calculate, if not impossible. Thus, if \code{ageCalibrationType = "uniformRange"}, and there are no tip taxa given
+#' fixed dates due to \code{collapseUniform} (i.e. all of the tip ages have a range of uncertainty on them), then a particular taxon
+#' will be selected and given a fixed date equal to its earliest appearance time for its respective \code{whichAppearance}. This taxon can either be indicated by
+#' the user or instead the first taxon listed in \code{tipTimes} will be arbitrary selected. All taxa with their ages set
+#' to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform} are returned as a list within a commented line of the returned MrBayes block.
 
 #' @param file Filename (possibly with path) as a character string
 #' to a file which will be overwritten with the output tip age calibrations.
@@ -70,6 +83,9 @@
 #' @return
 #' If argument \code{file} is \code{NULL}, then the tip age commands
 #' are ouput as a series of character strings.
+#' 
+#' All taxa with their ages set to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
+#' are returned as a list within a commented line of the returned MrBayes block.
 
 #' @author
 #' David W. Bapst. This code was produced as part of a project 
@@ -147,6 +163,7 @@ createMrBayesTipCalibrations<-function(tipTimes,
 			stop("minTreeAge must be of length 1")
 			}
 		}
+	
 	#
 	############################################
 	# format tipTimes
@@ -172,6 +189,28 @@ createMrBayesTipCalibrations<-function(tipTimes,
 			stop("You appear to be supplying a single point occurrence per taxon.
 				There isn't any uncertainty or upper bounds on ages, so 
 				ageCalibrationType should be set to 'fixedDateEarlier'")
+			}
+		}
+	###########################################
+	# test anchorTaxon
+	if(length(anchorTaxon)!=1){
+		stop("anchorTaxon must be of length 1")
+		}
+	if(is.logical(anchorTaxon)){
+		pickFix<-anchorTaxon
+		if(anchorTaxon){
+			anchorTaxon<-taxonNames[1]
+		}else{
+			anchorTaxon<-NULL
+			}
+	}else{
+		if(!is.character(anchorTaxon)){
+			stop("anchorTaxon must be of type character if not logical")
+			}
+		pickFix<-FALSE
+		# test that its a real taxon
+		if(!any(anchorTaxon==taxonNames)){
+			stop("anchorTaxon appears to be a taxon name, but not found among rownames (presumed taxon names) in tipTimes")
 			}
 		}
 	####################################################################
@@ -242,46 +281,26 @@ createMrBayesTipCalibrations<-function(tipTimes,
 			fixCollapse<-sapply(1:nrow(tipTimes),function(x)
 				identical(tipTimes[x,2],tipTimes[x,1]))
 		}else{
-			fixCollapse<-rep(FALSE,nrow(tipTimes)
+			fixCollapse<-rep(FALSE,nrow(tipTimes))
 			}
+		# fix anchor taxon
 		if(pickFix){
 			if(!any(fixCollapse)){
-				fixCollapse<-fixCollapse[1]
+				fixCollapse[rownames(tipTimes)==anchorTaxon]<-TRUE
 				}
-			}
-		
-
-		if(is.logical(anchorTaxon)){
-			if(length(anchorTaxon)!=1){
-				stop("anchorTaxon must be of length 1 if a logical")
-				}
-			pickFix<-anchorTaxon
 		}else{
-			if(!is.character(anchorTaxon)){
-				stop("anchorTaxon must be of type character if not ")
+			if(!is.null(anchorTaxon)){
+				fixCollapse[rownames(tipTimes)==anchorTaxon]<-TRUE
 				}
-			
 			}
-		
-			
-		
-		if(identical(TRUE,anchorTaxon)){
-			}
-		if(identical(FALSE,anchorTaxon)){
-			}	
 
+		
+
+		
 			
-		if(any())
-			
-		if(length(anchorTaxon)>1){
-			if(any(!is.character(anchorTaxon))){
-				}
-			}
-			
-		if(is.TRUE(anchorTaxon)){
-			}
-		if(is.FALSE(anchorTaxon)){
-			}
+		
+
+
 
 			
 		dateBlock<-sapply(1:nrow(tipTimes),function(i){
@@ -292,14 +311,7 @@ createMrBayesTipCalibrations<-function(tipTimes,
 			# -Need to write code so that users are forced by default to constrain at least one
 			# taxon to a precise time (an anchor taxon) for sake of accurately dating tree on absolute time-scale
 			
-#' @param anchorTaxon This argument may be a logical (default is \code{TRUE}, or a character string of length = 1.
-#' If \code{ageCalibrationType = "uniformRange"}, MrBayes will do a tip-dating analysis with uniform age uncertainties on 
-#' all taxa (if such uncertainties exist; see \code{collapseUniform}). However, MrBayes does not record how each tree sits on an absolute time-scale,
-#' so if the placement of \emph{every} tip is uncertain, lining up multiple dated trees sampled from the posterior (where each tip's true age might
-#' differ) could be a nightmare to back-calculate, if not impossible. Thus, if \code{ageCalibrationType = "uniformRange"}, and there are no tip taxa given
-#' fixed dates due to \code{collapseUniform} (i.e. all of the tip ages have a range of uncertainty on them), then a particular taxon
-#' will be selected and given a fixed date equal to its earliest appearance time for its respective \code{whichAppearance}. This taxon can either be indicated by
-#' the user
+
 
 		
 			if( & collapseUniform){
@@ -314,6 +326,11 @@ createMrBayesTipCalibrations<-function(tipTimes,
 					", ",tipTimes[i,1],");")
 				}
 			})
+			
+		# write line indicating fixed taxa
+		if(){
+			}
+			
 		}
 	#####################################################
 	#need to create tree age prior

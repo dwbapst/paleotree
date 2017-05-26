@@ -5,27 +5,29 @@
 #' particularly clock-less tip-dating analyses executed with 'empty' morphological matrices
 #' (i.e. where all taxa ae coded for a single missing character), although a pre-existing
 #' morphological matrix can also be input by the user (see argument \code{origNexusFile}).
-#' 
-#' The minimum required input for this function is a data set of tip ages (in various formats),
-#' which are used to construct age calibrations commands on the tip taxa 
-#' (via paleotree function \code{\link{createMrBayesTipCalibrations}}), and a set
-#' of taxa designated as the outgroup, which is then converted into a command constraining
-#' th monophyly on the ingroup taxa, which is presumed to be all taxa \emph{not} listed in the outgroup.
-#' Many of the options available with \code{\link{createMrBayesTipCalibrations}} are available with this function,
-#' allowing users to choose between fixed calibrations or uniform priors that approximate stratigraphic uncertainty.
-#' In addition, a user may supply a tree which is then converted into a series of hard topological
-#' constraints (via function \code{\link{createMrBayesConstraints}}, or a path to a text file
-#' presumed to be a NEXUS file containing character data formatted for use with \emph{MrBayes}.
-#' 
 #' The resulting full NEXUS script is output as a set of character strings either
 #' printed to the R console, or output to file which is then overwritten.
+#' 
+#' Users must supply a data set of tip ages (in various formats),
+#' which are used to construct age calibrations commands on the tip taxa 
+#' (via paleotree function \code{\link{createMrBayesTipCalibrations}}). 
+#' The user must also supply some topological constraint: 
+#' either a set of taxa designated as the outgroup, which is then converted into a command constraining
+#' th monophyly on the ingroup taxa, which is presumed to be all taxa \emph{not} listed in the outgroup. 
+#' Alterantively, a ser may supply a tree which is then converted into a series of hard topological
+#' constraints (via function \code{\link{createMrBayesConstraints}}. Both types of topological constraints
+#' cannot be applied. Many of the options available with \code{\link{createMrBayesTipCalibrations}} are available with this function,
+#' allowing users to choose between fixed calibrations or uniform priors that approximate stratigraphic uncertainty.
+#' In addition, the user may also supply a path to a text file
+#' presumed to be a NEXUS file containing character data formatted for use with \emph{MrBayes}.
+#' 
+
 
 #' @details
 #' The taxa listed in \code{tipTimes} must match the taxa in 
-#' \code{treeConstraints}, if such is supplied. The taxa in \code{outgroupTaxa}
-#' must be contained within this same set of taxa, and should not contradict
-#' relationships on \code{treeConstraint}. The taxa in any
-#' character matrix given in \code{origNexusFile} is \code{not} checked against
+#' \code{treeConstraints}, if such is supplied. If supplied, the taxa in \code{outgroupTaxa}
+#' must be contained within this same set of taxa. The taxa in any
+#' character matrix given in \code{origNexusFile} is \emph{not} checked against
 #' these two sources: it is up to the user to ensure the same
 #' taxa are found in all three.
 #' 
@@ -39,14 +41,17 @@
 
 #' @param outgroupTaxa A vector of type 'character', containing taxon names designating the outgroup.
 #'  All taxa not listed in the outgroup will be constrained to be a monophyletic ingroup, for sake of rooting
-#' the resulting dated tree.  This outgroup selection should not disagree with any of the
-#' relationships on \code{treeConstraint}, if such is supplied.
+#' the resulting dated tree.
+#' Either \code{treeConstraints} or \code{outgroupTaxa} must be defined, but \emph{not both}. 
+#' If the outgroup-ingroup split is not present on the supplied \code{treeConstraints}, add that split to \code{treeConstraints} manually.
+
 
 #' @param origNexusFile Filename (possibly with path) as a character
 #' string leading to a NEXUS text file, presumably containing a matrix
 #' of character date formateed for \emph{MrBayes}. If supplied
 #' (it does not need to be supplied), the listed file is read as a text file, and
-#' concatenated with the \emph{MrBayes} script produced by this function, so as to reproduce. 
+#' concatenated with the \emph{MrBayes} script produced by this function, so as to
+#' reproduce the original NEXUS matrix for executing in MrBayes. 
 #' Note that the taxa in this NEXUS file are \emph{NOT} checked against the user
 #' input \code{tipTimes} and \code{treeConstraints}, so it is up to the user to
 #' ensure the taxa are the same across the three data sources.
@@ -74,7 +79,9 @@
 
 #' @param treeConstraints An object of class \code{phylo}, 
 #' from which (if \code{treeConstraints} is supplied) the set topological constraints are derived, as
-#' as described for argument \code{tree} for function \code{createMrBayesConstraints}.
+#' as described for argument \code{tree} for function \code{createMrBayesConstraints}. 
+#' Either \code{treeConstraints} or \code{outgroupTaxa} must be defined, but \emph{not both}.
+#' If the outgroup-ingroup split is not present on the supplied \code{treeConstraints}, add that split to \code{treeConstraints} manually.
 
 #' @param morphModel This argument can be used to switch between two end-member models of 
 #' morphological evolution in MrBayes, here named 'strong' and 'relaxed', for the 'strong assumptions'
@@ -176,11 +183,11 @@
 #' 		runName="retio_dating",doNotRun=TRUE)
 #' 
 #' # let's try it with a tree for topological constraints
-#' 
-#' # let's set doNotRun to FALSE
+#'      # this requires setting outgroupTaxa to NULL
+#' # let's also set doNotRun to FALSE
 #' 
 #' createMrBayesTipDatingNexus(tipTimes=retioRanges,
-#' 		outgroupTaxa=outgroupRetio,treeConstraints=retioTree,
+#' 		outgroupTaxa=NULL,treeConstraints=retioTree,
 #' 		ageCalibrationType="uniformRange",whichAppearance="first",
 #' 		treeAgeOffset=10,	newFile=NULL,	
 #' 		origNexusFile=NULL,createEmptyMorphMat=TRUE,
@@ -196,7 +203,7 @@
 #' # no morph matrix supplied or generated
 #' 	# you'll need to manually append to an existing NEXUS file
 #' createMrBayesTipDatingNexus(tipTimes=retioRanges,
-#' 		outgroupTaxa=outgroupRetio,treeConstraints=retioTree,
+#' 		outgroupTaxa=NULL,treeConstraints=retioTree,
 #' 		ageCalibrationType="uniformRange",whichAppearance="first",
 #' 		treeAgeOffset=10,	newFile=NULL,	
 #' 		origNexusFile=NULL,createEmptyMorphMat=FALSE,
@@ -211,7 +218,7 @@
 #' file<-"D:\\dave\\workspace\\mrbayes\\exampleRetio.nex"
 #' 
 #' createMrBayesTipDatingNexus(tipTimes=retioRanges,
-#' 		outgroupTaxa=outgroupRetio,treeConstraints=retioTree,
+#' 		outgroupTaxa=NULL,treeConstraints=retioTree,
 #' 		ageCalibrationType="uniformRange",whichAppearance="first",
 #' 		treeAgeOffset=10,	newFile=file,	
 #' 		origNexusFile=NULL,createEmptyMorphMat=TRUE,
@@ -221,18 +228,22 @@
 #' 
 
 ## TO DO !!
-#
-# -Need to check that ingroup constraint isn't on treeConstraints, and if so, delete it
-	# actually maybe just make it so no ingroup constraint is defined if treeConstraint is defined - presumably its already part of provided tree!!
+# function for scaling posterior trees to absolute time (get root.time)
+
 # need to read the NEXUS file so can duplicate taxa for FAD/LAD/etc
 
+	# scan NEXUS, cut at 'NTAX=' and 'MATRIX'
+
+
+# provide new whichAppearance options: 'firstLast', 'rangeThrough'
+		# rangeThrough will require checking tipTimes for sequential intervals
 
 
 #' @aliases tipdating
 #' @name createMrBayesTipDatingNexus
 #' @rdname createMrBayesTipDatingNexus
 #' @export
-createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL,morphModel="strong",
+createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints=NULL,morphModel="strong",
 							ageCalibrationType,whichAppearance="first",treeAgeOffset,minTreeAge=NULL,
 							collapseUniform=TRUE,anchorTaxon=TRUE,origNexusFile=NULL,createEmptyMorphMat=TRUE,newFile=NULL,
 							runName="new_run_paleotree",doNotRun=FALSE,cleanNames=TRUE,printExecute=TRUE){
@@ -274,6 +285,17 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 	#                                @@@@
 	#
 	#################################################################################################
+	# -Need to check that ingroup constraint isn't on treeConstraints, and if so, delete it
+		# actually maybe just make it so no ingroup constraint is defined if treeConstraint is defined - presumably its already part of provided tree!!
+	# outgroupTaxa and treeConstraints - one and only one must be defined
+	if(is.null(outgroupTaxa) & is.null(treeConstraints)){
+		stop("Either outgroupTaxa or treeConstraints must be provided for a tip-dating analysis")
+		}
+	if(!is.null(outgroupTaxa) & !is.null(treeConstraints)){
+		stop("Only one of outgroupTaxa or treeConstraints can be provided. 
+		If the ingroup monophyly is not enforced on the provided treeConstraints, please add this split to treeConstraints")
+		}	
+	##################################################################################
 	# CHECK TAXON NAMES
 	# taxa in tipTimes is king
 		# all taxa in input treeConstraints must be in tipTimes (and vice versa)
@@ -373,8 +395,12 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa,treeConstraints=NULL
 	logfileline<-paste0('log start filename="',runName,'.out" replace;')
 	########################################################
 	#	
-	# get the ingroup constraint
-	ingroupConstraint<-makeIngroupConstraintMrB(outgroupTaxa=outgroupTaxa,allTaxa=taxonnames)	
+	if(is.null(treeConstraints)){
+		# get the ingroup constraint
+		ingroupConstraint<-makeIngroupConstraintMrB(outgroupTaxa=outgroupTaxa,allTaxa=taxonnames)
+	}else{
+		ingroupConstraint<-" "
+		}
 	#
 	# get topological constraints, if given in input
 	if(!is.null(treeConstraints)){
@@ -519,7 +545,7 @@ block2<-"
 "
 #######################################################################
 block3<-"	
-[TOPOLOGICALCONSTRAINTS FOR ADDITIONAL NODES]
+[TOPOLOGICAL CONSTRAINTS FOR ADDITIONAL NODES]
 
 	[[EXAMPLE]
     constraint node1 = t1 t2 t3;

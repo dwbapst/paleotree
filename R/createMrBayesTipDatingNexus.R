@@ -5,6 +5,7 @@
 #' particularly clock-less tip-dating analyses executed with 'empty' morphological matrices
 #' (i.e. where all taxa ae coded for a single missing character), although a pre-existing
 #' morphological matrix can also be input by the user (see argument \code{origNexusFile}).
+#' Under some options, this pre-existing matrix may be edited by this function.
 #' The resulting full NEXUS script is output as a set of character strings either
 #' printed to the R console, or output to file which is then overwritten.
 #' 
@@ -26,12 +27,11 @@
 #' @details
 #' The taxa listed in \code{tipTimes} must match the taxa in 
 #' \code{treeConstraints}, if such is supplied. If supplied, the taxa in \code{outgroupTaxa}
-#' must be contained within this same set of taxa. The taxa in any
-#' character matrix given in \code{origNexusFile} is \emph{not} checked against
-#' these two sources: it is up to the user to ensure the same
-#' taxa are found in all three.
+#' must be contained within this same set of taxa. These all must have matches
+#' in the set of taxa in \code{origNexusFile}, if provided and
+#' if \code{parseOriginalNexus} is \code{TRUE}.
 #' 
-#' Note that because the same set of taxa must be contained in both inputs, 
+#' Note that because the same set of taxa must be contained in all inputs, 
 #' relationships are constrained as 'hard' constraints, rather than 'partial' constraints,
 #' which allows some taxa to float across a partially fixed topology. 
 #' See the documentation for \code{\link{createMrBayesConstraints}},
@@ -46,15 +46,7 @@
 #' If the outgroup-ingroup split is not present on the supplied \code{treeConstraints}, add that split to \code{treeConstraints} manually.
 
 
-#' @param origNexusFile Filename (possibly with path) as a character
-#' string leading to a NEXUS text file, presumably containing a matrix
-#' of character date formateed for \emph{MrBayes}. If supplied
-#' (it does not need to be supplied), the listed file is read as a text file, and
-#' concatenated with the \emph{MrBayes} script produced by this function, so as to
-#' reproduce the original NEXUS matrix for executing in MrBayes. 
-#' Note that the taxa in this NEXUS file are \emph{NOT} checked against the user
-#' input \code{tipTimes} and \code{treeConstraints}, so it is up to the user to
-#' ensure the taxa are the same across the three data sources.
+
 
 #' @param newFile Filename (possibly with path) as a character string
 #' leading to a file which will be overwritten with the output tip age calibrations.
@@ -229,15 +221,40 @@
 
 ## TO DO !!
 # function for scaling posterior trees to absolute time (get root.time)
-
+#
 # need to read the NEXUS file so can duplicate taxa for FAD/LAD/etc
-
-	# scan NEXUS, cut at 'NTAX=' and 'MATRIX'
 
 
 # provide new whichAppearance options: 'firstLast', 'rangeThrough'
 		# rangeThrough will require checking tipTimes for sequential intervals
 
+		
+
+
+#' @param whichAppearance Which appearance date of the taxa should be used:
+#' their \code{'first'} or their \code{'last'} appearance date? The default
+#' option is to use the 'first' appearance date. Note that use of the last
+#' appearance date means that tips will be constrained to occur before their
+#' last occurrence, and thus could occur long after their first occurrence (!).		
+		
+#' @param origNexusFile Filename (possibly with path) as a character
+#' string leading to a NEXUS text file, presumably containing a matrix
+#' of character date formateed for \emph{MrBayes}. If supplied
+#' (it does not need to be supplied), the listed file is read as a text file, and
+#' concatenated with the \emph{MrBayes} script produced by this function, so as to
+#' reproduce the original NEXUS matrix for executing in MrBayes. 
+#' Note that the taxa in this NEXUS file are \emph{NOT} checked against the user
+#' input \code{tipTimes} and \code{treeConstraints}, so it is up to the user to
+#' ensure the taxa are the same across the three data sources.		
+		
+#' @param parseOriginalNexus If \code{TRUE} (the default), the original NEXUS file is parsed and the original 
+
+The taxa in any
+#' character matrix given in \code{origNexusFile} is \emph{not} checked against
+#' these two sources: it is up to the user to ensure the same
+#' taxa are found in all three.
+
+if()
 
 #' @aliases tipdating
 #' @name createMrBayesTipDatingNexus
@@ -245,7 +262,8 @@
 #' @export
 createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints=NULL,morphModel="strong",
 							ageCalibrationType,whichAppearance="first",treeAgeOffset,minTreeAge=NULL,
-							collapseUniform=TRUE,anchorTaxon=TRUE,origNexusFile=NULL,createEmptyMorphMat=TRUE,newFile=NULL,
+							collapseUniform=TRUE,anchorTaxon=TRUE,
+							newFile=NULL,origNexusFile=NULL,parseOriginalNexus=TRUE,createEmptyMorphMat=TRUE,
 							runName="new_run_paleotree",doNotRun=FALSE,cleanNames=TRUE,printExecute=TRUE){
 	################################################################################################
 	#         # a wooper of a function ... here's some ASCII from 'Psyduck'
@@ -296,6 +314,15 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		If the ingroup monophyly is not enforced on the provided treeConstraints, please add this split to treeConstraints")
 		}	
 	##################################################################################
+	if(parseOriginalNexus){
+	
+	}else{
+		<-parseNexusFile(origNexusFile=origNexusFile,asIs=TRUE)
+		}
+	
+	
+	
+	####################################################################################
 	# CHECK TAXON NAMES
 	# taxa in tipTimes is king
 		# all taxa in input treeConstraints must be in tipTimes (and vice versa)
@@ -327,12 +354,18 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 			stop("Nope, taxa in tipTimes and on treeConstraint STILL not identical!!")
 			}
 		}
-	# create 'clean' version of taxon names - remove all '/' 
+	# test if consistent with from origNexusFile
+	
+	
+	
+	#########################################################
+	# cleaning taxon names
 	cleanTaxonNames<-taxaTipTimes
 	if(length(unique(cleanTaxonNames))!=length(cleanTaxonNames)){
 		stop("Some taxon names were identical duplicates")
 		}
 	if(cleanNames){
+		# create 'clean' version of taxon names - remove all '/' 
 		cleanTaxonNames<-gsub("/","",cleanTaxonNames)
 		# check that unique
 		if(length(unique(cleanTaxonNames))!=length(cleanTaxonNames)){
@@ -350,9 +383,13 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 			treeConstraints$tip.label<-gsub("/","",treeConstraints$tip.label)
 			}
 		}
+	###################################################################
+	# get final taxon name list
+	
 	#
 	taxonnames<-cleanTaxonNames
 	#
+	#################################################################
 	# check other arguments
 	if(length(morphModel)!=1){
 		stop("morphModel must be of length 1")
@@ -371,9 +408,12 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		stop("createEmpthyMorphMat must be  of length 1, and either TRUE or FALSE")
 		}
 	#####################################################################
-	# get original Nexus file (or create an empty morph matrix
+	# remake original Nexus file, or create an empty morph matrix
 	if(!is.null(origNexusFile)){
-		morphNexus<-readLines(con=origNexusFile,warn=FALSE)
+		
+		
+		
+		
 	}else{
 		if(createEmptyMorphMat){
 			morphNexus<-makeEmptyMorphNexusMrB(taxonNames=taxonnames)
@@ -673,5 +713,128 @@ runBlock<-"
 	return(finalBlock)
 	}
 
+###################################################################################################
+
+
+
+
+
+parseNexusFile<-function(origNexusFile=origNexusFile,asIs=TRUE){
+	# if asIs, then the morph Nexus never gets broken down or parsed beyond being scanned
+	morphNexusAsIs<-readLines(con=origNexusFile,warn=FALSE)
+	if(!asIs){
+		# cleaner form based on ape's read.nexus.data
+		morphNexus<-scan(file=origNexusFile,what = character(), sep = "\n",
+			quiet = TRUE, comment.char = "[", strip.white = TRUE)
+		#
+		# find the NTAX line
+		ntaxLine<-grepl(morphNexus,pattern="\\bNTAX",ignore.case=TRUE)
+		if(sum(ntaxLine)>1){
+			stop("More than one line containing 'NTAX' found in the provided NEXUS file")}
+		if(sum(ntaxLine)<1){
+			stop("No line containing 'NTAX' found in the provided NEXUS file")}
+		# get number of taxa (more regexp borrowed from read.nexus.data)
+		oldNtax<-as.numeric(sub("(.+?)(ntax\\s*\\=\\s*)(\\d+)(.+)", 
+			"\\3", morphNexus[ntaxLine], perl = TRUE, ignore.case = TRUE))
+		# get other pieces of ntax line
+		ntaxLineFirst<-sub("(.+?)(ntax\\s*\\=\\s*)(\\d+)(.+)", 
+			"\\1\\2", morphNexus[ntaxLine], perl = TRUE, ignore.case = TRUE)
+		ntaxLineLast<-sub("(.+?)(ntax\\s*\\=\\s*)(\\d+)(.+)", 
+			"\\4", morphNexus[ntaxLine], perl = TRUE, ignore.case = TRUE)
+		#
+		# find the matrix line
+		matrixLine<-grepl(morphNexus,pattern="\\bMATRIX",ignore.case=TRUE)
+		if(sum(matrixLine)>1){
+			stop("More than one line containing 'MATRIX' found in the provided NEXUS file")
+			}
+		if(sum(matrixLine)<1){
+			stop("No line containing 'MATRIX' found in the provided NEXUS file")
+			}
+		#
+		# find the next semi-colon line
+		matrixEnd<-(which(matrixLine):length(morphNexus))[
+			grepl(morphNexus[which(matrixLine):length(morphNexus)],
+				pattern=";")][1]
+		if(length(matrixEnd)!=1){
+			stop("Cannot find semicolon on line following 'MATRIX' line in NEXUS file")
+			}
+		############################################
+		# get Header 1 - start to line right before ntax
+		headerOne<-morphNexus[1:(which(ntaxLine)-1)]
+		# get header 2 - line right after ntax to MATRIX
+		headerTwo<-morphNexus[(which(ntaxLine)+1):which(matrixLine)]
+		# get footer - new semicolon line, + semicolon+1 to end
+		footer<-c(";",morphNexus[(matrixEnd+1):length(morphNexus)])
+		#####################################################################
+		# get taxon data
+		#
+		# isolate the lines after matrix, to semicolon
+		taxonLines<-morphNexus[(which(matrixLine)+1):matrixEnd]
+		# remove semicolon only lines
+		taxonLines<-gsub(";","",taxonLines)
+		taxonLines<-taxonLines[taxonLines!=""]
+		taxonLines<-gsub("\t"," ",taxonLines)
+		# NOW it should be equal to number of taxa 
+			# (note if character across multiple lines, would be problematic...)
+		if(length(taxonLines)!=oldNtax){
+			stop("The number of apparent lines in the matrix of the input NEXUS file doesn't match the given NTAX in the header of that file")
+			}
+		# 
+		# now to get the taxon names and character codings
+		taxonData<-regmatches(taxonLines, regexpr(" ", taxonLines), invert = TRUE)
+		# clean of whitespace - actually this really isn't necessary
+		#taxonData<-lapply(taxonData,sapply,function(z) gsub(pattern=" ",replacement="",z))
+		#taxonData<-lapply(taxonData,sapply,function(z) gsub(pattern="\\t",replacement="",z))
+		# get names
+		taxonNames<-sapply(taxonData,function(z) z[[1]])
+		charData<-sapply(taxonData,function(z) z[[2]])
+		#
+		#########################################
+		# make a function
+		#
+		remakeDataBlockFun<-function(newTaxaTable,taxonNames=taxonNames,charData=charData,
+					ntaxLineFirst=ntaxLineFirst,ntaxLineLast=ntaxLineLast,
+				headerOne=headerOne,headerTwo=headerTwo,footer=footer){
+			# given data on new taxa (with old taxa), rebuild NEXUS block
+			# input: a matrix with column 1 = new taxon names
+				# column 2 = old taxon names
+			# identify all old taxa
+			origMatch<-sapply(newTaxaTable[,2],function(x) which(x==taxonNames))
+			if(is.list(origMatch)){
+				stop("more than one match of taxon names when remaking data NEXUS block")
+				}
+			# test that all old taxa are in taxonNames
+			if(any(is.na(origMatch))){
+				stop("No match for original taxon name when remaking data NEXUS block")
+				}
+			###############################
+			# make the new character matrix lines
+			newData<-cbind(newTaxaTable[,1],charData[origMatch])
+			newTaxonBlock<-apply(newData,1,function(x) paste0(x[1],"  ",x[2]))
+			##################
+			# make the new block
+			#
+			# get new ntax line with new ntax
+			newNtaxValue<-nrow(newTaxaTable)
+			newNtaxLine<-paste0(ntaxLineFirst," ",newNtaxValue," ",ntaxLineLast)
+			# make new block
+			newBlock<-c(headerOne,newNtaxLine,headerTwo,
+				"",newTaxonBlock,"",footer)
+			return(newBlock)
+			}
+		#
+		#if NOT asIs, need to output names, and a function for rebuilding NEXUS file
+		res<-list(taxonNames=taxonNames,remakeDataBlockFun=remakeDataBlockFun,morphNexusAsIs=morphNexusAsIs)
+	}else{
+		#if just asIs
+		res<-morphNexusAsIs
+		}
+	return(res)
+	}
+
+
+origNexusFile<-"D:\\dave\\workspace\\mrbayes\\mat.nex"
+parseNexusFile(origNexusFile=origNexusFile,asIs=TRUE)
+parseNexusFile(origNexusFile,asIs=FALSE)
 
 

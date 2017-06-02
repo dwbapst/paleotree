@@ -235,7 +235,17 @@
 #' their \code{'first'} or their \code{'last'} appearance date? The default
 #' option is to use the 'first' appearance date. Note that use of the last
 #' appearance date means that tips will be constrained to occur before their
-#' last occurrence, and thus could occur long after their first occurrence (!).		
+#' last occurrence, and thus could occur long after their first occurrence (!).
+#' In addition, \code{createMrBayesTipDatingNexus} allows for two
+#' options for this argument that are in addition to those offered by
+#' \link{\code{createMrBayesTipCalibrations}}. Both of these options will duplicate 
+#' the taxa in the inputs multiple times, modifying their OTU labels, thus allowing
+#' multiple occurrences of long-lived morphotaxa to be listed as multiple OTUs
+#' arrayed across their stratigraphic duration. If 
+#' \code{whichAppearance = firstLast}, taxa will be duplicated so each taxon is
+#' listed as occurring twice: once at their first appearanced, and a second time at
+#' their last appearance. When \code{ageCalibrationType} 
+#' 		
 		
 #' @param origNexusFile Filename (possibly with path) as a character
 #' string leading to a NEXUS text file, presumably containing a matrix
@@ -247,9 +257,15 @@
 #' input \code{tipTimes} and \code{treeConstraints}, so it is up to the user to
 #' ensure the taxa are the same across the three data sources.		
 		
-#' @param parseOriginalNexus If \code{TRUE} (the default), the original NEXUS file is parsed and the original 
+#' @param parseOriginalNexus If \code{TRUE} (the default), the original NEXUS file is parsed and 
+#' the taxon names listed within in the matrix are compared against the other inputs
+#' for matching (completely, across all inputs). However, some NEXUS files may not parse correctly
+#' (particularly if character data for taxa stretches across more than a single line in the matrix).
+#' This may necessitate setting this argument to \code{FALSE}, which will instead do a straight scan
+#' of the NEXUS matrix without parsing it, and without checking the taxon names against other outputs.
+#' Some options for \code{whichAppearance} will not be available, however.
 
-The taxa in any
+#' The taxa in any
 #' character matrix given in \code{origNexusFile} is \emph{not} checked against
 #' these two sources: it is up to the user to ensure the same
 #' taxa are found in all three.

@@ -337,39 +337,37 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 	# provide new whichAppearance options: 'firstLast', 'rangeThrough'
 		# rangeThrough will require checking tipTimes for sequential intervals
 	if(any(whichAppearance == c("firstLast","rangeThrough"))){
-			multOTU<-TRUE
+		multOTU<-TRUE		
+		if(is.null(origNexusFile)){
+#			stop('"A NEXUS file must be supplied if whichAppearance is "firstLast" or "rangeThrough"')
+			if(parseOriginalNexus){
+				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=FALSE)
+			}else{
+				stop("Cannot use an option for multiple OTUs if you don't parse your NEXUS file")
+				}
 			}
-			
-			
-	if(!is.null(origNexusFile)){		
-	if(parseOriginalNexus){
-		
 	}else{
-		if(multOTU){
-			stop("Cannot use an option for multiple OTUs if you don't parse your NEXUS file")}
-		<-parseNexusFile(origNexusFile=origNexusFile,asIs=TRUE)
+		# if not multOTU
+		if(!is.null(origNexusFile)){
+			if(parseOriginalNexus){
+				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=FALSE)
+			}else{
+				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=TRUE)
+				}
+			}	
 		}
-		
-		}
-	
-
-
-if(whichAppearance = "rangeThrough"){
-
-# If the input tipTimes is not a list of length = 2, however, the function will 
-# return an error under this option. 
-
-# also require checking for sequential intervals
-
-	}
-
-
-if(whichAppearance = "firstLast"){
-
-	}
-		
-	
-	
+	if(is.null(origNexusFile)){
+			nexusData<-NULL
+			}
+	# CHECK rangethrough option
+	if(whichAppearance = "rangeThrough"){
+		# If the input tipTimes is not a list of length = 2, however, the function will 
+		# return an error under this option. 
+			# also require checking for sequential intervals
+		if(!isTimeListSequential(tipTimes)){
+			stop("tipTimes must be a sequential timeList format")
+			}
+		}	
 	####################################################################################
 	# CHECK TAXON NAMES
 	# taxa in tipTimes is king
@@ -402,10 +400,50 @@ if(whichAppearance = "firstLast"){
 			stop("Nope, taxa in tipTimes and on treeConstraint STILL not identical!!")
 			}
 		}
-	# test if consistent with from origNexusFile
-	
-	
-	
+	#
+	# test if all outgroupTaxa are in the tip age taxon names
+	if(!is.null(outgroupTaxa)){
+		missingOutgroup<-outgroupTaxa[sapply(outgroupTaxa,function(x) all(x!=taxaTipTimes))]
+		if(length(missingOutgroup)>0){
+			stop(paste0("Following outgroup taxa have no match in tipTimes: ",
+				paste0(missingOutgroup,collapse=" ")))
+			}
+		}
+	#
+	# test if consistent with from origNexusFile, if parsed
+	if(parseOriginalNexus & !is.null(origNexusFile)){
+		nexusTaxa<-nexusData$taxonNames
+		missingTip<-taxaTipTimes[sapply(taxaTipTimes,function(x) all(x!=nexusTaxa))]
+		missingNexus<-nexusTaxa[sapply(nexusTaxa,function(x) all(x!=taxaTipTimes))]
+		if(length(c(missingTip,missingNexus))>0){
+			stop(paste0("Following taxa in tipTimes not found in NEXUS file: ",paste0(missingTip,collapse=" "),
+				"\nFollowing taxa in NEXUS file not found in tipTimes: ",paste0(missingNexus,collapse=" ")))
+			}
+		if(length(nexusTaxa)!=length(taxaTipTimes)){
+			stop("Somehow have taxa missing from either tipTimes or the original NEXUS file")
+			}
+		if(!identical(sort(taxaTipTimes),sort(taxaTree))){
+			stop("Nope, taxa in tipTimes and in original NEXUS file STILL not identical!!")
+			}
+		}	
+	#################################################################
+	# check other arguments
+	if(length(morphModel)!=1){
+		stop("morphModel must be of length 1")
+		}
+	if(all(morphModel!=c("relaxed","strong"))){
+		stop("morphModel must be one 'relaxed' or 'strong'")
+		}
+	if(morphModel=="relaxed" & is.null(origNexusFile)){
+		warning("Why are you relaxing the morphological model without supplying an original matrix with origNexusFile? I hope you know what you are doing.")
+		}
+	# eh, origNexusFile might be a connection...
+	#if(length(origNexusFile)!=1){
+	#	stop("origNexusFile must be of length 1") 
+	#	}
+	if(length(createEmptyMorphMat)!=1 | !is.logical(createEmptyMorphMat)){
+		stop("createEmpthyMorphMat must be  of length 1, and either TRUE or FALSE")
+		}
 	#########################################################
 	# cleaning taxon names
 	cleanTaxonNames<-taxaTipTimes
@@ -427,33 +465,57 @@ if(whichAppearance = "firstLast"){
 			rownames(tipTimes)<-gsub("/","",rownames(tipTimes))
 			}	
 		#
+		if(!is.null(outgroupTaxa)){
+			outgroupTaxa<-<-gsub("/","",outgroupTaxa)
+			}
+		#
 		if(!is.null(treeConstraints)){
 			treeConstraints$tip.label<-gsub("/","",treeConstraints$tip.label)
 			}
+		#
+		if(parseOriginalNexus & !is.null(origNexusFile)){
+			nexusTaxa<-<-gsub("/","",nexusTaxa)
+			}
+		#
 		}
 	###################################################################
 	# get final taxon name list
-	
-	#
-	taxonnames<-cleanTaxonNames
-	#
-	#################################################################
-	# check other arguments
-	if(length(morphModel)!=1){
-		stop("morphModel must be of length 1")
-		}
-	if(all(morphModel!=c("relaxed","strong"))){
-		stop("morphModel must be one 'relaxed' or 'strong'")
-		}
-	if(morphModel=="relaxed" & is.null(origNexusFile)){
-		warning("Why are you relaxing the morphological model without supplying an original matrix with origNexusFile? I hope you know what you are doing.")
-		}
-	# eh, origNexusFile might be a connection...
-	#if(length(origNexusFile)!=1){
-	#	stop("origNexusFile must be of length 1") 
-	#	}
-	if(length(createEmptyMorphMat)!=1 | !is.logical(createEmptyMorphMat)){
-		stop("createEmpthyMorphMat must be  of length 1, and either TRUE or FALSE")
+	if(multOTU){
+		if(whichAppearance = "rangeThrough"){
+			# for each taxon in tipTimes, figure out intervals they range through
+				# and then multiply this taxon in the tip data, the tree/root constraints and NEXUS data block
+			#
+			
+			
+			for(i in 1:length(taxon)
+			
+			# count number of range-through intervals, get dates and new names
+			
+
+			
+			
+			}
+		if(whichAppearance = "firstLast"){
+			# okay for almost all inputs
+			
+			}
+		# create new timeData that is two date uncertainties
+
+		# create new tree constraints, if such exisits
+			# replace original tip with multiple taxa, collapse so not monophyletic
+		if!is.null(treeConstraint)
+		expandTaxonTree
+			
+		# fix outgroupTaxa, if exists
+		if(!is.null(outgroupTaxa)){
+			
+			}
+			
+		# fix NEXUS matrix
+		
+
+	}else{
+		taxonnames<-cleanTaxonNames
 		}
 	#####################################################################
 	# remake original Nexus file, or create an empty morph matrix
@@ -766,123 +828,5 @@ runBlock<-"
 
 
 
-
-parseNexusFile<-function(origNexusFile=origNexusFile,asIs=TRUE){
-	# if asIs, then the morph Nexus never gets broken down or parsed beyond being scanned
-	morphNexusAsIs<-readLines(con=origNexusFile,warn=FALSE)
-	if(!asIs){
-		# cleaner form based on ape's read.nexus.data
-		morphNexus<-scan(file=origNexusFile,what = character(), sep = "\n",
-			quiet = TRUE, comment.char = "[", strip.white = TRUE)
-		#
-		# find the NTAX line
-		ntaxLine<-grepl(morphNexus,pattern="\\bNTAX",ignore.case=TRUE)
-		if(sum(ntaxLine)>1){
-			stop("More than one line containing 'NTAX' found in the provided NEXUS file")}
-		if(sum(ntaxLine)<1){
-			stop("No line containing 'NTAX' found in the provided NEXUS file")}
-		# get number of taxa (more regexp borrowed from read.nexus.data)
-		oldNtax<-as.numeric(sub("(.+?)(ntax\\s*\\=\\s*)(\\d+)(.+)", 
-			"\\3", morphNexus[ntaxLine], perl = TRUE, ignore.case = TRUE))
-		# get other pieces of ntax line
-		ntaxLineFirst<-sub("(.+?)(ntax\\s*\\=\\s*)(\\d+)(.+)", 
-			"\\1\\2", morphNexus[ntaxLine], perl = TRUE, ignore.case = TRUE)
-		ntaxLineLast<-sub("(.+?)(ntax\\s*\\=\\s*)(\\d+)(.+)", 
-			"\\4", morphNexus[ntaxLine], perl = TRUE, ignore.case = TRUE)
-		#
-		# find the matrix line
-		matrixLine<-grepl(morphNexus,pattern="\\bMATRIX",ignore.case=TRUE)
-		if(sum(matrixLine)>1){
-			stop("More than one line containing 'MATRIX' found in the provided NEXUS file")
-			}
-		if(sum(matrixLine)<1){
-			stop("No line containing 'MATRIX' found in the provided NEXUS file")
-			}
-		#
-		# find the next semi-colon line
-		matrixEnd<-(which(matrixLine):length(morphNexus))[
-			grepl(morphNexus[which(matrixLine):length(morphNexus)],
-				pattern=";")][1]
-		if(length(matrixEnd)!=1){
-			stop("Cannot find semicolon on line following 'MATRIX' line in NEXUS file")
-			}
-		############################################
-		# get Header 1 - start to line right before ntax
-		headerOne<-morphNexus[1:(which(ntaxLine)-1)]
-		# get header 2 - line right after ntax to MATRIX
-		headerTwo<-morphNexus[(which(ntaxLine)+1):which(matrixLine)]
-		# get footer - new semicolon line, + semicolon+1 to end
-		footer<-c(";",morphNexus[(matrixEnd+1):length(morphNexus)])
-		#####################################################################
-		# get taxon data
-		#
-		# isolate the lines after matrix, to semicolon
-		taxonLines<-morphNexus[(which(matrixLine)+1):matrixEnd]
-		# remove semicolon only lines
-		taxonLines<-gsub(";","",taxonLines)
-		taxonLines<-taxonLines[taxonLines!=""]
-		taxonLines<-gsub("\t"," ",taxonLines)
-		# NOW it should be equal to number of taxa 
-			# (note if character across multiple lines, would be problematic...)
-		if(length(taxonLines)!=oldNtax){
-			stop("The number of apparent lines in the matrix of the input NEXUS file doesn't match the given NTAX in the header of that file")
-			}
-		# 
-		# now to get the taxon names and character codings
-		taxonData<-regmatches(taxonLines, regexpr(" ", taxonLines), invert = TRUE)
-		# clean of whitespace - actually this really isn't necessary
-		#taxonData<-lapply(taxonData,sapply,function(z) gsub(pattern=" ",replacement="",z))
-		#taxonData<-lapply(taxonData,sapply,function(z) gsub(pattern="\\t",replacement="",z))
-		# get names
-		taxonNames<-sapply(taxonData,function(z) z[[1]])
-		charData<-sapply(taxonData,function(z) z[[2]])
-		#
-		#########################################
-		# make a function
-		#
-		remakeDataBlockFun<-function(newTaxaTable,taxonNames=taxonNames,charData=charData,
-					ntaxLineFirst=ntaxLineFirst,ntaxLineLast=ntaxLineLast,
-				headerOne=headerOne,headerTwo=headerTwo,footer=footer){
-			# given data on new taxa (with old taxa), rebuild NEXUS block
-			# input: a matrix with column 1 = new taxon names
-				# column 2 = old taxon names
-			# identify all old taxa
-			origMatch<-sapply(newTaxaTable[,2],function(x) which(x==taxonNames))
-			if(is.list(origMatch)){
-				stop("more than one match of taxon names when remaking data NEXUS block")
-				}
-			# test that all old taxa are in taxonNames
-			if(any(is.na(origMatch))){
-				stop("No match for original taxon name when remaking data NEXUS block")
-				}
-			###############################
-			# make the new character matrix lines
-			newData<-cbind(newTaxaTable[,1],charData[origMatch])
-			newTaxonBlock<-apply(newData,1,function(x) paste0(x[1],"  ",x[2]))
-			##################
-			# make the new block
-			#
-			# get new ntax line with new ntax
-			newNtaxValue<-nrow(newTaxaTable)
-			newNtaxLine<-paste0(ntaxLineFirst," ",newNtaxValue," ",ntaxLineLast)
-			# make new block
-			newBlock<-c(headerOne,newNtaxLine,headerTwo,
-				"",newTaxonBlock,"",footer)
-			return(newBlock)
-			}
-		#
-		#if NOT asIs, need to output names, and a function for rebuilding NEXUS file
-		res<-list(taxonNames=taxonNames,remakeDataBlockFun=remakeDataBlockFun,morphNexusAsIs=morphNexusAsIs)
-	}else{
-		#if just asIs
-		res<-morphNexusAsIs
-		}
-	return(res)
-	}
-
-
-origNexusFile<-"D:\\dave\\workspace\\mrbayes\\mat.nex"
-parseNexusFile(origNexusFile=origNexusFile,asIs=TRUE)
-parseNexusFile(origNexusFile,asIs=FALSE)
 
 

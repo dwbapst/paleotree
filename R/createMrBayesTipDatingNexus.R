@@ -224,10 +224,6 @@
 #
 # need to read the NEXUS file so can duplicate taxa for FAD/LAD/etc
 
-
-# provide new whichAppearance options: 'firstLast', 'rangeThrough'
-		# rangeThrough will require checking tipTimes for sequential intervals
-
 		
 
 
@@ -242,11 +238,20 @@
 #' the taxa in the inputs multiple times, modifying their OTU labels, thus allowing
 #' multiple occurrences of long-lived morphotaxa to be listed as multiple OTUs
 #' arrayed across their stratigraphic duration. If 
-#' \code{whichAppearance = firstLast}, taxa will be duplicated so each taxon is
+#' \code{whichAppearance = "firstLast"}, taxa will be duplicated so each taxon is
 #' listed as occurring twice: once at their first appearanced, and a second time at
-#' their last appearance. When \code{ageCalibrationType} 
-#' 		
-		
+#' their last appearance. Note that if a taxon first and last appears in the same interval,
+#' and \code{ageCalibrationType = "uniformRange"}, then
+#' the resulting posterior trees may place the OTU assigned to the last occurrence before the
+#' first occurrence in temporal order (but the assignment, in that case, was entirely
+#' arbitrary). When \code{whichAppearance = "rangeThrough"}, each taxon will be
+#' duplicated into as many OTUs as each
+#' interval that a taxon ranges through (in a timeList format, see other
+#' paleotree functions), with the corresponding age uncertainties for those intervals.
+#' If the input tipTimes is not a list of length = 2, however, the function will 
+#' return an error under this option. 
+
+
 #' @param origNexusFile Filename (possibly with path) as a character
 #' string leading to a NEXUS text file, presumably containing a matrix
 #' of character date formateed for \emph{MrBayes}. If supplied
@@ -259,16 +264,15 @@
 		
 #' @param parseOriginalNexus If \code{TRUE} (the default), the original NEXUS file is parsed and 
 #' the taxon names listed within in the matrix are compared against the other inputs
-#' for matching (completely, across all inputs). However, some NEXUS files may not parse correctly
+#' for matching (completely, across all inputs that include taxon names). 
+#' Thus, it is up to the user to ensure the same
+#' taxa are found in all inputs. However, some NEXUS files may not parse correctly
 #' (particularly if character data for taxa stretches across more than a single line in the matrix).
 #' This may necessitate setting this argument to \code{FALSE}, which will instead do a straight scan
 #' of the NEXUS matrix without parsing it, and without checking the taxon names against other outputs.
 #' Some options for \code{whichAppearance} will not be available, however.
 
-#' The taxa in any
-#' character matrix given in \code{origNexusFile} is \emph{not} checked against
-#' these two sources: it is up to the user to ensure the same
-#' taxa are found in all three.
+
 
 if()
 
@@ -282,7 +286,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 							newFile=NULL,origNexusFile=NULL,parseOriginalNexus=TRUE,createEmptyMorphMat=TRUE,
 							runName="new_run_paleotree",doNotRun=FALSE,cleanNames=TRUE,printExecute=TRUE){
 	################################################################################################
-	#         # a wooper of a function ... here's some ASCII from 'Psyduck'
+	#         # a wooper of a function ... here's some ASCII from artist 'Psyduck'
 	#
 	#                       =@@@@@@                         
 	#                     =@@.......@@@                      
@@ -330,12 +334,40 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		If the ingroup monophyly is not enforced on the provided treeConstraints, please add this split to treeConstraints")
 		}	
 	##################################################################################
+	# provide new whichAppearance options: 'firstLast', 'rangeThrough'
+		# rangeThrough will require checking tipTimes for sequential intervals
+	if(any(whichAppearance == c("firstLast","rangeThrough"))){
+			multOTU<-TRUE
+			}
+			
+			
+	if(!is.null(origNexusFile)){		
 	if(parseOriginalNexus){
-	
+		
 	}else{
+		if(multOTU){
+			stop("Cannot use an option for multiple OTUs if you don't parse your NEXUS file")}
 		<-parseNexusFile(origNexusFile=origNexusFile,asIs=TRUE)
 		}
+		
+		}
 	
+
+
+if(whichAppearance = "rangeThrough"){
+
+# If the input tipTimes is not a list of length = 2, however, the function will 
+# return an error under this option. 
+
+# also require checking for sequential intervals
+
+	}
+
+
+if(whichAppearance = "firstLast"){
+
+	}
+		
 	
 	
 	####################################################################################

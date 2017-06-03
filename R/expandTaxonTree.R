@@ -36,25 +36,34 @@
 #' effects. If 'collapse' is not null and keepBrLen is true, a warning is
 #' issued that the output probably won't make much sense at all.
 #' 
+
 #' @param taxonTree A phylo object where tips represent higher taxa
+
 #' @param taxaData Character vector of higher taxa, with elements names equal
 #' to the lower taxa. See below.
+
 #' @param collapse Character vector of non-monophyletic higher taxa to be
 #' collapsed
+
 #' @param keepBrLen Logical, decides if branch lengths should be kept or
 #' discarded. FALSE by default. See details below.
+
 #' @param plot If true, plots a comparison between input and output trees
 #' @return Outputs the modified tree as an object of class phylo, with the
 #' higher-level taxa expanded into polytomies and the lower-level taxa as the
 #' tip labels.
+
 #' @author David W. Bapst
+
 #' @seealso \code{\link{multi2di}}, \code{\link{bind.tree}}
+
 #' @references Friedman, M. 2009 Ecomorphological selectivity among marine
 #' teleost fishes during the end-Cretaceous extinction. \emph{Proceedings of
 #' the National Academy of Sciences} \bold{106}(13):5218--5223.
 #' 
 #' Webb, C. O., and M. J. Donoghue. 2005 Phylomatic: tree assembly for applied
 #' phylogenetics. \emph{Molecular Ecology Notes} \bold{5}(1):181--183.
+
 #' @examples
 #' 
 #' set.seed(444)
@@ -65,6 +74,7 @@
 #' coll <- sample(taxtr$tip.label,3)		#what to collapse?
 #' expandTaxonTree(taxonTree=taxtr,taxaData=taxd,collapse=coll,plot=TRUE)
 #' 
+
 #' @export expandTaxonTree
 expandTaxonTree<-function(taxonTree,taxaData,collapse=NULL,keepBrLen=FALSE,plot=FALSE){
 	#this function takes a higher-level taxon tree and

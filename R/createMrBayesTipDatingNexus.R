@@ -46,6 +46,50 @@
 #' If the outgroup-ingroup split is not present on the supplied \code{treeConstraints}, add that split to \code{treeConstraints} manually.
 
 
+#' @param whichAppearance Which appearance date of the taxa should be used:
+#' their \code{'first'} or their \code{'last'} appearance date? The default
+#' option is to use the 'first' appearance date. Note that use of the last
+#' appearance date means that tips will be constrained to occur before their
+#' last occurrence, and thus could occur long after their first occurrence (!).
+#' In addition, \code{createMrBayesTipDatingNexus} allows for two
+#' options for this argument that are in addition to those offered by
+#' \link{\code{createMrBayesTipCalibrations}}. Both of these options will duplicate 
+#' the taxa in the inputs multiple times, modifying their OTU labels, thus allowing
+#' multiple occurrences of long-lived morphotaxa to be listed as multiple OTUs
+#' arrayed across their stratigraphic duration. If 
+#' \code{whichAppearance = "firstLast"}, taxa will be duplicated so each taxon is
+#' listed as occurring twice: once at their first appearanced, and a second time at
+#' their last appearance. Note that if a taxon first and last appears in the same interval,
+#' and \code{ageCalibrationType = "uniformRange"}, then
+#' the resulting posterior trees may place the OTU assigned to the last occurrence before the
+#' first occurrence in temporal order (but the assignment, in that case, was entirely
+#' arbitrary). When \code{whichAppearance = "rangeThrough"}, each taxon will be
+#' duplicated into as many OTUs as each
+#' interval that a taxon ranges through (in a timeList format, see other
+#' paleotree functions), with the corresponding age uncertainties for those intervals.
+#' If the input tipTimes is not a list of length = 2, however, the function will 
+#' return an error under this option. 
+
+
+#' @param origNexusFile Filename (possibly with path) as a character
+#' string leading to a NEXUS text file, presumably containing a matrix
+#' of character date formateed for \emph{MrBayes}. If supplied
+#' (it does not need to be supplied), the listed file is read as a text file, and
+#' concatenated with the \emph{MrBayes} script produced by this function, so as to
+#' reproduce the original NEXUS matrix for executing in MrBayes. 
+#' Note that the taxa in this NEXUS file are \emph{NOT} checked against the user
+#' input \code{tipTimes} and \code{treeConstraints}, so it is up to the user to
+#' ensure the taxa are the same across the three data sources.		
+		
+#' @param parseOriginalNexus If \code{TRUE} (the default), the original NEXUS file is parsed and 
+#' the taxon names listed within in the matrix are compared against the other inputs
+#' for matching (completely, across all inputs that include taxon names). 
+#' Thus, it is up to the user to ensure the same
+#' taxa are found in all inputs. However, some NEXUS files may not parse correctly
+#' (particularly if character data for taxa stretches across more than a single line in the matrix).
+#' This may necessitate setting this argument to \code{FALSE}, which will instead do a straight scan
+#' of the NEXUS matrix without parsing it, and without checking the taxon names against other outputs.
+#' Some options for \code{whichAppearance} will not be available, however.
 
 
 #' @param newFile Filename (possibly with path) as a character string
@@ -222,59 +266,8 @@
 ## TO DO !!
 # function for scaling posterior trees to absolute time (get root.time)
 #
-# need to read the NEXUS file so can duplicate taxa for FAD/LAD/etc
-
-		
 
 
-#' @param whichAppearance Which appearance date of the taxa should be used:
-#' their \code{'first'} or their \code{'last'} appearance date? The default
-#' option is to use the 'first' appearance date. Note that use of the last
-#' appearance date means that tips will be constrained to occur before their
-#' last occurrence, and thus could occur long after their first occurrence (!).
-#' In addition, \code{createMrBayesTipDatingNexus} allows for two
-#' options for this argument that are in addition to those offered by
-#' \link{\code{createMrBayesTipCalibrations}}. Both of these options will duplicate 
-#' the taxa in the inputs multiple times, modifying their OTU labels, thus allowing
-#' multiple occurrences of long-lived morphotaxa to be listed as multiple OTUs
-#' arrayed across their stratigraphic duration. If 
-#' \code{whichAppearance = "firstLast"}, taxa will be duplicated so each taxon is
-#' listed as occurring twice: once at their first appearanced, and a second time at
-#' their last appearance. Note that if a taxon first and last appears in the same interval,
-#' and \code{ageCalibrationType = "uniformRange"}, then
-#' the resulting posterior trees may place the OTU assigned to the last occurrence before the
-#' first occurrence in temporal order (but the assignment, in that case, was entirely
-#' arbitrary). When \code{whichAppearance = "rangeThrough"}, each taxon will be
-#' duplicated into as many OTUs as each
-#' interval that a taxon ranges through (in a timeList format, see other
-#' paleotree functions), with the corresponding age uncertainties for those intervals.
-#' If the input tipTimes is not a list of length = 2, however, the function will 
-#' return an error under this option. 
-
-
-#' @param origNexusFile Filename (possibly with path) as a character
-#' string leading to a NEXUS text file, presumably containing a matrix
-#' of character date formateed for \emph{MrBayes}. If supplied
-#' (it does not need to be supplied), the listed file is read as a text file, and
-#' concatenated with the \emph{MrBayes} script produced by this function, so as to
-#' reproduce the original NEXUS matrix for executing in MrBayes. 
-#' Note that the taxa in this NEXUS file are \emph{NOT} checked against the user
-#' input \code{tipTimes} and \code{treeConstraints}, so it is up to the user to
-#' ensure the taxa are the same across the three data sources.		
-		
-#' @param parseOriginalNexus If \code{TRUE} (the default), the original NEXUS file is parsed and 
-#' the taxon names listed within in the matrix are compared against the other inputs
-#' for matching (completely, across all inputs that include taxon names). 
-#' Thus, it is up to the user to ensure the same
-#' taxa are found in all inputs. However, some NEXUS files may not parse correctly
-#' (particularly if character data for taxa stretches across more than a single line in the matrix).
-#' This may necessitate setting this argument to \code{FALSE}, which will instead do a straight scan
-#' of the NEXUS matrix without parsing it, and without checking the taxon names against other outputs.
-#' Some options for \code{whichAppearance} will not be available, however.
-
-
-
-if()
 
 #' @aliases tipdating
 #' @name createMrBayesTipDatingNexus
@@ -509,40 +502,42 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 				rawIntervals<-tipTimes[[2]][i,]
 				intervalMatrix<- tipTimes[[1]][rawIntervals,,drop=FALSE]
 				# get new names, using interval names
-				newNames<-paste0(origName,c("_A","_B"))
+				newNames<-paste0(origName,c("_Fint","_Lint"))
 				newOTU<-rbind(newOTU,cbind(newNames,origName,intervalMatrix))
 				}
 			newOTU<-newOTU[-1,]
-			}
-			
-			}
-		# create new timeData that is two date uncertainties
-		
-		
+			}	
+		# create new tipTimes that is two date uncertainties
+		tipTimes<-newOTU[3,4]
+		rownames(tipTimes)<-newOTU[,1]		
 		# create new tree constraints, if such exisits
 			# replace original tip with multiple taxa, collapse so not monophyletic
-		if!is.null(treeConstraint)
-		expandTaxonTree
-			
+		if(!is.null(treeConstraint)){
+			treeTaxaExpand<-newOTU[,2]
+			names(treeTaxaExpand)<-newOTU[,1]
+			treeConstraints<-expandTaxonTree(taxonTree=treeConstraints,
+				treeData=treeTaxaExpand ,collapse= newOTU[,2])				
+			}
 		# fix outgroupTaxa, if exists
 		if(!is.null(outgroupTaxa)){
-			
-			}
-			
+			newOutgroupOTU<-sapply(newOTU[,2],function(x) any(x==outgroupTaxa))
+			outgroupTaxa<-newOTU[newOutgroupOTU,1]
+			}	
 		# fix NEXUS matrix
-		
-
+		if(parseOriginalNexus & !is.null(origNexusFile)){
+			# given data on new taxa (with old taxa), rebuild NEXUS block
+			# input: a matrix with column 1 = new taxon names
+				# column 2 = old taxon names
+			# need to tell it that the taxon names have change (possibly) due to cleaning
+			morphNexus<-remakeDataBlockFun(newTaxaTable=newOTU[,1:2],
+				taxonNames=cleanTaxonNames)
+			}		
 	}else{
 		taxonnames<-cleanTaxonNames
 		}
 	#####################################################################
-	# remake original Nexus file, or create an empty morph matrix
-	if(!is.null(origNexusFile)){
-		
-		
-		
-		
-	}else{
+	# create an empty morph matrix if necessary
+	if(is.null(origNexusFile)){
 		if(createEmptyMorphMat){
 			morphNexus<-makeEmptyMorphNexusMrB(taxonNames=taxonnames)
 		}else{

@@ -72,9 +72,7 @@ parseNexusFile<-function(origNexusFile=origNexusFile,asIs=TRUE){
 		#########################################
 		# make a function
 		#
-		remakeDataBlockFun<-function(newTaxaTable,taxonNames=taxonNames,charData=charData,
-					ntaxLineFirst=ntaxLineFirst,ntaxLineLast=ntaxLineLast,
-				headerOne=headerOne,headerTwo=headerTwo,footer=footer){
+		remakeDataBlockFun<-function(newTaxaTable,taxonNames){
 			# given data on new taxa (with old taxa), rebuild NEXUS block
 			# input: a matrix with column 1 = new taxon names
 				# column 2 = old taxon names

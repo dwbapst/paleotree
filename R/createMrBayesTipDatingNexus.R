@@ -264,9 +264,7 @@
 #' 
 
 ## TO DO !!
-# function for scaling posterior trees to absolute time (get root.time)
-#
-
+# function for counting number of sampled ancestors, paraphyletic ancestors (budding)
 
 
 #' @aliases tipdating

@@ -437,10 +437,10 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 	if(morphModel=="relaxed" & is.null(origNexusFile)){
 		warning("Why are you relaxing the morphological model without supplying an original matrix with origNexusFile? I hope you know what you are doing.")
 		}
-	# eh, origNexusFile might be a connection...
-	#if(length(origNexusFile)!=1){
-	#	stop("origNexusFile must be of length 1") 
-	#	}
+	#
+	# note: origNexusFile might be a connection - cannot test for length 1
+	#
+	#
 	if(length(createEmptyMorphMat)!=1 | !is.logical(createEmptyMorphMat)){
 		stop("createEmpthyMorphMat must be  of length 1, and either TRUE or FALSE")
 		}
@@ -485,22 +485,40 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 			# for each taxon in tipTimes, figure out intervals they range through
 				# and then multiply this taxon in the tip data, the tree/root constraints and NEXUS data block
 			#
-			
-			
-			for(i in 1:length(taxon)
-			
-			# count number of range-through intervals, get dates and new names
-			
-
-			
-			
+			newOTU<-matrix(,1,4)
+			for(i in 1:nrow(tipTimes[[2]])){
+				# count number of range-through intervals, get dates and new names
+				origName<-rownames(tipTimes[[2]])[i]
+				# raw interval IDs assuming sequential timeList
+				rawIntervals<-tipTimes[[2]][i,1]:tipTimes[[2]][i,2]
+				intervalMatrix<- tipTimes[[1]][rawIntervals,,drop=FALSE]
+				# get new names, using interval names
+				newNames<-paste0(origName,"_",rownames(intervalMatrix))
+				newOTU<-rbind(newOTU,cbind(newNames,origName,intervalMatrix))
+				}
+			newOTU<-newOTU[-1,]
 			}
 		if(whichAppearance = "firstLast"){
 			# okay for almost all inputs
+			#
+			newOTU<-matrix(,1,4)
+			for(i in 1:nrow(tipTimes[[2]])){
+				# count number of range-through intervals, get dates and new names
+				origName<-rownames(tipTimes[[2]])[i]
+				# raw interval IDs for FAD and LAD
+				rawIntervals<-tipTimes[[2]][i,]
+				intervalMatrix<- tipTimes[[1]][rawIntervals,,drop=FALSE]
+				# get new names, using interval names
+				newNames<-paste0(origName,c("_A","_B"))
+				newOTU<-rbind(newOTU,cbind(newNames,origName,intervalMatrix))
+				}
+			newOTU<-newOTU[-1,]
+			}
 			
 			}
 		# create new timeData that is two date uncertainties
-
+		
+		
 		# create new tree constraints, if such exisits
 			# replace original tip with multiple taxa, collapse so not monophyletic
 		if!is.null(treeConstraint)

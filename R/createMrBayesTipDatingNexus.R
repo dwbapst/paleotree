@@ -353,7 +353,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 			nexusData<-NULL
 			}
 	# CHECK rangethrough option
-	if(whichAppearance = "rangeThrough"){
+	if(whichAppearance == "rangeThrough"){
 		# If the input tipTimes is not a list of length = 2, however, the function will 
 		# return an error under this option. 
 			# also require checking for sequential intervals
@@ -459,7 +459,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 			}	
 		#
 		if(!is.null(outgroupTaxa)){
-			outgroupTaxa<-<-gsub("/","",outgroupTaxa)
+			outgroupTaxa<-gsub("/","",outgroupTaxa)
 			}
 		#
 		if(!is.null(treeConstraints)){
@@ -467,14 +467,14 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 			}
 		#
 		if(parseOriginalNexus & !is.null(origNexusFile)){
-			nexusTaxa<-<-gsub("/","",nexusTaxa)
+			nexusTaxa<-gsub("/","",nexusTaxa)
 			}
 		#
 		}
 	###################################################################
 	# get final taxon name list
 	if(multOTU){
-		if(whichAppearance = "rangeThrough"){
+		if(whichAppearance == "rangeThrough"){
 			# for each taxon in tipTimes, figure out intervals they range through
 				# and then multiply this taxon in the tip data, the tree/root constraints and NEXUS data block
 			#
@@ -491,7 +491,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 				}
 			newOTU<-newOTU[-1,]
 			}
-		if(whichAppearance = "firstLast"){
+		if(whichAppearance == "firstLast"){
 			# okay for almost all inputs
 			#
 			newOTU<-matrix(,1,4)

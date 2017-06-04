@@ -8,10 +8,10 @@
 createMrBayesTipDatingNexus(tipTimes, outgroupTaxa = NULL,
   treeConstraints = NULL, morphModel = "strong", ageCalibrationType,
   whichAppearance = "first", treeAgeOffset, minTreeAge = NULL,
-  collapseUniform = TRUE, anchorTaxon = TRUE, origNexusFile = NULL,
-  createEmptyMorphMat = TRUE, newFile = NULL,
-  runName = "new_run_paleotree", doNotRun = FALSE, cleanNames = TRUE,
-  printExecute = TRUE)
+  collapseUniform = TRUE, anchorTaxon = TRUE, newFile = NULL,
+  origNexusFile = NULL, parseOriginalNexus = TRUE,
+  createEmptyMorphMat = TRUE, runName = "new_run_paleotree",
+  doNotRun = FALSE, cleanNames = TRUE, printExecute = TRUE)
 }
 \arguments{
 \item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
@@ -63,7 +63,25 @@ bounds on the the selected age.}
 their \code{'first'} or their \code{'last'} appearance date? The default
 option is to use the 'first' appearance date. Note that use of the last
 appearance date means that tips will be constrained to occur before their
-last occurrence, and thus could occur long after their first occurrence (!).}
+last occurrence, and thus could occur long after their first occurrence (!).
+In addition, \code{createMrBayesTipDatingNexus} allows for two
+options for this argument that are in addition to those offered by
+\link{\code{createMrBayesTipCalibrations}}. Both of these options will duplicate 
+the taxa in the inputs multiple times, modifying their OTU labels, thus allowing
+multiple occurrences of long-lived morphotaxa to be listed as multiple OTUs
+arrayed across their stratigraphic duration. If 
+\code{whichAppearance = "firstLast"}, taxa will be duplicated so each taxon is
+listed as occurring twice: once at their first appearanced, and a second time at
+their last appearance. Note that if a taxon first and last appears in the same interval,
+and \code{ageCalibrationType = "uniformRange"}, then
+the resulting posterior trees may place the OTU assigned to the last occurrence before the
+first occurrence in temporal order (but the assignment, in that case, was entirely
+arbitrary). When \code{whichAppearance = "rangeThrough"}, each taxon will be
+duplicated into as many OTUs as each
+interval that a taxon ranges through (in a timeList format, see other
+paleotree functions), with the corresponding age uncertainties for those intervals.
+If the input tipTimes is not a list of length = 2, however, the function will 
+return an error under this option.}
 
 \item{treeAgeOffset}{A parameter given by the user controlling the offset 
 between the minimum and expected tree age prior. mean tree age for the
@@ -96,6 +114,10 @@ will be selected and given a fixed date equal to its earliest appearance time fo
 the user or instead the first taxon listed in \code{tipTimes} will be arbitrary selected. All taxa with their ages set
 to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform} are returned as a list within a commented line of the returned MrBayes block.}
 
+\item{newFile}{Filename (possibly with path) as a character string
+leading to a file which will be overwritten with the output tip age calibrations.
+If \code{NULL}, tip calibration commands are output to the console.}
+
 \item{origNexusFile}{Filename (possibly with path) as a character
 string leading to a NEXUS text file, presumably containing a matrix
 of character date formateed for \emph{MrBayes}. If supplied
@@ -106,6 +128,16 @@ Note that the taxa in this NEXUS file are \emph{NOT} checked against the user
 input \code{tipTimes} and \code{treeConstraints}, so it is up to the user to
 ensure the taxa are the same across the three data sources.}
 
+\item{parseOriginalNexus}{If \code{TRUE} (the default), the original NEXUS file is parsed and 
+the taxon names listed within in the matrix are compared against the other inputs
+for matching (completely, across all inputs that include taxon names). 
+Thus, it is up to the user to ensure the same
+taxa are found in all inputs. However, some NEXUS files may not parse correctly
+(particularly if character data for taxa stretches across more than a single line in the matrix).
+This may necessitate setting this argument to \code{FALSE}, which will instead do a straight scan
+of the NEXUS matrix without parsing it, and without checking the taxon names against other outputs.
+Some options for \code{whichAppearance} will not be available, however.}
+
 \item{createEmptyMorphMat}{If \code{origNexusFile} is not specified (implying there is no
 pre-existing morphological character matrix for this dataset), then an 'empty' NEXUS-formatted matrix will be
 appended to the set of \emph{MrBayes} commands if this command is \code{TRUE} (the default). This
@@ -113,10 +145,6 @@ appended to the set of \emph{MrBayes} commands if this command is \code{TRUE} (t
 (i.e., '?'). This allows tip-dating analyses with hard topological constraints, and ages
 determined entirely by the fossilized birth-death prior, with no impact from a
 presupposed morphological clock (thus a 'clock-less analysis').}
-
-\item{newFile}{Filename (possibly with path) as a character string
-leading to a file which will be overwritten with the output tip age calibrations.
-If \code{NULL}, tip calibration commands are output to the console.}
 
 \item{runName}{The name of the run, used for naming the log files. 
 If not set, the name will be taken from the name given for outputting
@@ -145,6 +173,7 @@ for performing tip-dating analyses in the popular phylogenetics software \emph{M
 particularly clock-less tip-dating analyses executed with 'empty' morphological matrices
 (i.e. where all taxa ae coded for a single missing character), although a pre-existing
 morphological matrix can also be input by the user (see argument \code{origNexusFile}).
+Under some options, this pre-existing matrix may be edited by this function.
 The resulting full NEXUS script is output as a set of character strings either
 printed to the R console, or output to file which is then overwritten.
 }
@@ -165,12 +194,11 @@ presumed to be a NEXUS file containing character data formatted for use with \em
 
 The taxa listed in \code{tipTimes} must match the taxa in 
 \code{treeConstraints}, if such is supplied. If supplied, the taxa in \code{outgroupTaxa}
-must be contained within this same set of taxa. The taxa in any
-character matrix given in \code{origNexusFile} is \emph{not} checked against
-these two sources: it is up to the user to ensure the same
-taxa are found in all three.
+must be contained within this same set of taxa. These all must have matches
+in the set of taxa in \code{origNexusFile}, if provided and
+if \code{parseOriginalNexus} is \code{TRUE}.
 
-Note that because the same set of taxa must be contained in both inputs, 
+Note that because the same set of taxa must be contained in all inputs, 
 relationships are constrained as 'hard' constraints, rather than 'partial' constraints,
 which allows some taxa to float across a partially fixed topology. 
 See the documentation for \code{\link{createMrBayesConstraints}},

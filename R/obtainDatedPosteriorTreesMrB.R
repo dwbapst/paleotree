@@ -27,6 +27,17 @@
 #' by this function directly, nor included in calculation of summary trees. Must be a numeric
 #' value greater than 0 and less than 1.
 
+#' @param getFixedTimes If \code{TRUE}, this function will also look for, scan, and parse an
+#' associated NEXUS file. Ignoring any commented lines (ie. anything between "[   ]" ), commands
+#' for fixing taxa will be identifiedd, parsed and returned to the user, either as a message
+#' pinted to the R console if output is read to a file, or as a attribute named 'fixed ages'
+#' if output as an R object (formatted as a two-column table of OTU names and their respective fixed ages).
+
+#' @param originalNexusFile Filename (and possibly path too) to the original NEXUS file for this analysis.
+#' Only tried if \code{getFixedAgesNexus = TRUE}. If \code{NULL} (the default), then this function will
+#' instead try to find a NEXUS file with the same name as implied by the filename used in other inputs. If
+#' this file cannot be found, the function will fail.
+	
 #' @param outputTrees Determines the output trees produced; for format of output, see section
 #' on returned Value below. Must be of length one, and either \code{"all"},
 #' which means all trees from the post-burnin posterior will
@@ -43,7 +54,6 @@
 #' leading to a file which will be overwritten with the output trees (or summary tree),
 #' as a NEXUS file. If \code{NULL} (the default), the output will
 #' instead be directly returned by this function.
-
 
 #' @return
 #' Depending on argument \code{file}, this output is either
@@ -82,7 +92,9 @@
 #' @name obtainDatedPosteriorTreesMrB
 #' @rdname obtainDatedPosteriorTreesMrB
 #' @export
-obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,outputTrees,file=NULL){
+obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
+	getFixedTimes=FALSE,originalNexusFile=NULL,
+	outputTrees,file=NULL){
 	#checks
 	if(length(outputTrees)!=1){
 		stop("outputTrees must be of length 1")
@@ -125,6 +137,31 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,outputTrees,fi
 			stop("Parameter data and tree data not of the same length")
 			}
 		}
+	####################################
+	#	
+	# @param getFixedAges If \code{TRUE}, this function will also look for, scan, and parse an
+	# associated NEXUS file. Ignoring any commented lines (ie. anything between "[   ]" ), commands
+	# for fixing taxa will be identifiedd, parsed and returned to the user, either as a message
+	# pinted to the R console if output is read to a file, or as a attribute named 'fixed ages'
+	# if output as an R object (formatted as a two-column table of OTU names and their respective fixed ages).
+	# The search for the NEXUS file is controlled with argument \code{originalNexusFile}
+	
+	#
+		
+	if(getFixedAges){
+		if(is.null(originalNexusFile){
+			# file name, if presuming shares run name with 
+			originalNexusFile<-paste0(runPath,".nex")
+			}
+		getMrBFixedAgesFromNexus()
+	
+
+
+
+	
+		
+		}
+		
 	####################
 	#
 	# Specify sample start based on burnin - here 50%

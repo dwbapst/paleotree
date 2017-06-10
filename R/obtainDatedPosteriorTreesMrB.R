@@ -32,11 +32,16 @@
 #' for fixing taxa will be identifiedd, parsed and returned to the user, either as a message
 #' pinted to the R console if output is read to a file, or as a attribute named 'fixed ages'
 #' if output as an R object (formatted as a two-column table of OTU names and their respective fixed ages).
+#' Please note: this code contains a while() loop in it for removing nested series of
+#' square brackets (i.e. treated as comments in NEXUS files) then files with
+#' ridicuously nested series of brackets may cause this code to take a while
+#' to complete, or may even cause it to hang.
 
 #' @param originalNexusFile Filename (and possibly path too) to the original NEXUS file for this analysis.
 #' Only tried if \code{getFixedAgesNexus = TRUE}. If \code{NULL} (the default), then this function will
 #' instead try to find a NEXUS file with the same name as implied by the filename used in other inputs. If
-#' this file cannot be found, the function will fail.
+#' this file cannot be found, the function will fail. 
+
 	
 #' @param outputTrees Determines the output trees produced; for format of output, see section
 #' on returned Value below. Must be of length one, and either \code{"all"},
@@ -145,23 +150,20 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 	# pinted to the R console if output is read to a file, or as a attribute named 'fixed ages'
 	# if output as an R object (formatted as a two-column table of OTU names and their respective fixed ages).
 	# The search for the NEXUS file is controlled with argument \code{originalNexusFile}
-	
+	#
+	# Please note: this has a while() loop in it for removing nested series of
+	# square brackets (i.e. treated as comments in NEXUS files) then files with
+	# ridicuously nested series of brackets may cause this code to take a while
+	# to complete, or may even cause it to hang.
 	#
 		
 	if(getFixedAges){
-		if(is.null(originalNexusFile){
+		if(is.null(originalNexusFile)){
 			# file name, if presuming shares run name with 
 			originalNexusFile<-paste0(runPath,".nex")
 			}
-		getMrBFixedAgesFromNexus()
-	
-
-
-
-	
-		
+		fixedTable<-getMrBFixedAgesFromNexus(originalNexusFile)
 		}
-		
 	####################
 	#
 	# Specify sample start based on burnin - here 50%

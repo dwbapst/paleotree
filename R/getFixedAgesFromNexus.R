@@ -6,19 +6,20 @@
 	# if output as an R object (formatted as a two-column table of OTU names and their respective fixed ages).
 	# The search for the NEXUS file is controlled with argument \code{originalNexusFile}
 
+# Please note: this has a while() loop in it for removing nested series of
+# square brackets (i.e. treated as comments in NEXUS files) then files with
+# ridicuously nested series of brackets may cause this code to take a while
+# to complete, or may even cause it to hang.
+
 
 
 getMrBFixedAgesFromNexus<-function(origNexusFile){
-
-			
-		origNexusFile<-"D:\\dave\\research\\0 devonian terebrat tip dating\\terebratDev_FAD-LAD_05-08-17.nex"
-
-
+	#		
+	#
 	# get the nexus file
 	origNexus<-scan(file=origNexusFile,what = character(), #sep = "\n",
 		quiet = TRUE, comment.char = "[", strip.white = TRUE)
-
-
+	#
 	origNexus <- readChar(origNexusFile, file.info(origNexusFile)$size)
 	# remove white space
 	origNexus<-gsub(origNexus,pattern=" ",replacement="")
@@ -28,7 +29,6 @@ getMrBFixedAgesFromNexus<-function(origNexusFile){
 		origNexus<-gsub(origNexus,pattern="\\[[^\\[\\]]*\\]",replacement="",
 			perl=TRUE)
 		}
-
 	# split at new lines
 	origNexus<-unlist(strsplit(x=origNexus,split="\r",fixed=TRUE))
 	origNexus<-unlist(strsplit(x=origNexus,split="\n",fixed=TRUE))
@@ -46,11 +46,14 @@ getMrBFixedAgesFromNexus<-function(origNexusFile){
 	hasFixed<-gsub(x=hasFixed,pattern="fixed\\(",replacement="")
 	# remove ;]
 	hasFixed<-gsub(x=hasFixed,pattern="\\);",replacement="")
-	fixedTable<-strsplit(hasFixed,split="=")
-	sapply(fixedTable,function(x) x)
-	
-	
-	fixedTable<-
-		
+	fixedList<-strsplit(hasFixed,split="=")
+	fixedMatrix<-matrix(sapply(fixedList,function(x) x),,2,byrow=TRUE)
+	fixedTable<-as.data.frame(fixedMatrix)
+	fixedTable[,2]<-as.numeric(fixedMatrix[,2])
+	colnames(fixedTable)<-c("OTUname","fixedAge")
 	return(fixedTable)
 	}
+
+## Example for testing
+# origNexusFile<-"D:\\dave\\research\\0 devonian terebrat tip dating\\terebratDev_FAD-LAD_05-08-17.nex"
+# getMrBFixedAgesFromNexus(origNexusFile)

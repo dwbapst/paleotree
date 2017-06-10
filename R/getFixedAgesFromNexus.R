@@ -1,10 +1,19 @@
 
-	# @param getFixedAgesNexus If \code{TRUE}, this function will also look for, scan, and parse an
-	# associated NEXUS file. Ignoring any commented lines (ie. anything between "[   ]" ), commands
-	# for fixing taxa will be identifiedd, parsed and returned to the user, either as a message
-	# pinted to the R console if output is read to a file, or as a attribute named 'fixed ages'
-	# if output as an R object (formatted as a two-column table of OTU names and their respective fixed ages).
-	# The search for the NEXUS file is controlled with argument \code{originalNexusFile}
+
+
+# @param originalNexusFile Filename (and possibly path too) to the original NEXUS file for this analysis.
+
+
+
+# this function will look for, scan, and parse an
+	# associated NEXUS file. 
+	
+	
+# Ignoring any commented lines (ie. anything between "[   ]" ), commands
+# for fixing taxa will be identified, parsed and returned to the user, either as a message
+# pinted to the R console if output is read to a file, or as a attribute named 'fixed ages'
+# if output as an R object (formatted as a two-column table of OTU names and their respective fixed ages).
+# The search for the NEXUS file is controlled with argument \code{originalNexusFile}
 
 # Please note: this has a while() loop in it for removing nested series of
 # square brackets (i.e. treated as comments in NEXUS files) then files with

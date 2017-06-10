@@ -6,8 +6,8 @@
 #
 
 
-
-absTimescaleFossilMrB<-function(){
+kiko<-'
+absTimescaleFossilMrB<-function(trees,fixedAges=attr(trees,"fixedTable"){
 	
 
 
@@ -52,3 +52,5 @@ treesMrBtime<-lapply(treesMrB,setRootAgeZanz)
 
 	
 	}
+
+'

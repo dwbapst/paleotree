@@ -163,6 +163,8 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 			originalNexusFile<-paste0(runPath,".nex")
 			}
 		fixedTable<-getMrBFixedAgesFromNexus(originalNexusFile)
+	}else{
+		fixedTable<-NULL
 		}
 	####################
 	#
@@ -246,7 +248,13 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 	########################################
 	if(!is.null(file)){
 		write.nexus(outTree, file=file)
+		if(!is.null(fixedTable)){
+			print(fixedTable)
+			}
 	}else{
+		if(!is.null(fixedTable)){
+			attr(outTree,"fixedTable")<-fixedTable
+			}
 		return(outTree)
 		}
 	}

@@ -4,7 +4,8 @@
 \alias{obtainDatedPosteriorTreesMrB}
 \title{Get the Sample of Posterior Trees from a Dated Phylogenetic Analysis with MrBayes (Or a Summary Tree, such as the MCCT)}
 \usage{
-obtainDatedPosteriorTreesMrB(runFile, nRuns = 2, burnin = 0.5, outputTrees,
+obtainDatedPosteriorTreesMrB(runFile, nRuns = 2, burnin = 0.5,
+  getFixedTimes = FALSE, originalNexusFile = NULL, outputTrees,
   file = NULL)
 }
 \arguments{
@@ -23,6 +24,21 @@ but do not exist. The default for this argument (two runs) is based on the defau
 \item{burnin}{The fraction of trees sampled in the posterior discarded  and not returned
 by this function directly, nor included in calculation of summary trees. Must be a numeric
 value greater than 0 and less than 1.}
+
+\item{getFixedTimes}{If \code{TRUE}, this function will also look for, scan, and parse an
+associated NEXUS file. Ignoring any commented lines (ie. anything between "[   ]" ), commands
+for fixing taxa will be identifiedd, parsed and returned to the user, either as a message
+pinted to the R console if output is read to a file, or as a attribute named 'fixed ages'
+if output as an R object (formatted as a two-column table of OTU names and their respective fixed ages).
+Please note: this code contains a while() loop in it for removing nested series of
+square brackets (i.e. treated as comments in NEXUS files) then files with
+ridicuously nested series of brackets may cause this code to take a while
+to complete, or may even cause it to hang.}
+
+\item{originalNexusFile}{Filename (and possibly path too) to the original NEXUS file for this analysis.
+Only tried if \code{getFixedAgesNexus = TRUE}. If \code{NULL} (the default), then this function will
+instead try to find a NEXUS file with the same name as implied by the filename used in other inputs. If
+this file cannot be found, the function will fail.}
 
 \item{outputTrees}{Determines the output trees produced; for format of output, see section
 on returned Value below. Must be of length one, and either \code{"all"},

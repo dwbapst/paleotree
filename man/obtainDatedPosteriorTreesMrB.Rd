@@ -36,7 +36,7 @@ ridicuously nested series of brackets may cause this code to take a while
 to complete, or may even cause it to hang.}
 
 \item{originalNexusFile}{Filename (and possibly path too) to the original NEXUS file for this analysis.
-Only tried if \code{getFixedAgesNexus = TRUE}. If \code{NULL} (the default), then this function will
+Only tried if \code{getFixedTimes = TRUE}. If \code{NULL} (the default), then this function will
 instead try to find a NEXUS file with the same name as implied by the filename used in other inputs. If
 this file cannot be found, the function will fail.}
 

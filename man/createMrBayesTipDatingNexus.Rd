@@ -66,7 +66,7 @@ appearance date means that tips will be constrained to occur before their
 last occurrence, and thus could occur long after their first occurrence (!).
 In addition, \code{createMrBayesTipDatingNexus} allows for two
 options for this argument that are in addition to those offered by
-\link{\code{createMrBayesTipCalibrations}}. Both of these options will duplicate 
+\code{\link{createMrBayesTipCalibrations}}. Both of these options will duplicate 
 the taxa in the inputs multiple times, modifying their OTU labels, thus allowing
 multiple occurrences of long-lived morphotaxa to be listed as multiple OTUs
 arrayed across their stratigraphic duration. If 

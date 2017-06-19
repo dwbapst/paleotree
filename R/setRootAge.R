@@ -22,14 +22,14 @@
 
 #' @param fixedAges A table of fixed ages for tip taxa, generally as a dataframe where the
 #' first column is of type character, and the second column is of type numeric. =Such a table is automatically
-#' generated as an attribute of the output from \link{\code{obtainDatedPosteriorTreesMrB}}, 
+#' generated as an attribute of the output from \code{\link{obtainDatedPosteriorTreesMrB}}, 
 #' when argument \code{getFixedTimes = TRUE}.
 
 #' @return
 #' The input tree is output, with a new \code{$root.time} element.
 
 #' @seealso
-#' See argument \link{\code{obtainDatedPosteriorTreesMrB}}
+#' See argument \code{\link{obtainDatedPosteriorTreesMrB}}
 
 #' @author David W. Bapst
 

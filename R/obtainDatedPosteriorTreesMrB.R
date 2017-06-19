@@ -38,7 +38,7 @@
 #' to complete, or may even cause it to hang.
 
 #' @param originalNexusFile Filename (and possibly path too) to the original NEXUS file for this analysis.
-#' Only tried if \code{getFixedAgesNexus = TRUE}. If \code{NULL} (the default), then this function will
+#' Only tried if \code{getFixedTimes = TRUE}. If \code{NULL} (the default), then this function will
 #' instead try to find a NEXUS file with the same name as implied by the filename used in other inputs. If
 #' this file cannot be found, the function will fail. 
 
@@ -144,7 +144,7 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 		}
 	####################################
 	#	
-	# @param getFixedAges If \code{TRUE}, this function will also look for, scan, and parse an
+	# @param getFixedTimes If \code{TRUE}, this function will also look for, scan, and parse an
 	# associated NEXUS file. Ignoring any commented lines (ie. anything between "[   ]" ), commands
 	# for fixing taxa will be identifiedd, parsed and returned to the user, either as a message
 	# pinted to the R console if output is read to a file, or as a attribute named 'fixed ages'
@@ -157,7 +157,7 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 	# to complete, or may even cause it to hang.
 	#
 		
-	if(getFixedAges){
+	if(getFixedTimes){
 		if(is.null(originalNexusFile)){
 			# file name, if presuming shares run name with 
 			originalNexusFile<-paste0(runPath,".nex")

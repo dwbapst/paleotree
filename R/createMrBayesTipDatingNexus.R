@@ -333,12 +333,14 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 #			stop('"A NEXUS file must be supplied if whichAppearance is "firstLast" or "rangeThrough"')
 			if(parseOriginalNexus){
 				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=FALSE)
+				remakeDataBlockFun<-nexusData$remakeDataBlockFun
 			}else{
 				stop("Cannot use an option for multiple OTUs if you don't parse your NEXUS file")
 				}
 			}
 	}else{
 		# if not multOTU
+		multOTU<-FALSE
 		if(!is.null(origNexusFile)){
 			if(parseOriginalNexus){
 				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=FALSE)
@@ -382,13 +384,13 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		# stop if length>0
 		if(length(c(missingTip,missingTree))>0){
 			stop(paste0("Following taxa in tipTimes not found on treeConstraints: ",paste0(missingTip,collapse=" "),
-				"\nFollowing taxa on treeConstraint not found in tipTimes: ",paste0(missingTree,collapse=" ")))
+				"\nFollowing taxa on treeConstraints not found in tipTimes: ",paste0(missingTree,collapse=" ")))
 			}
 		if(length(taxaTree)!=length(taxaTipTimes)){
-			stop("Somehow have taxa missing from either tipTimes or treeConstraint")
+			stop("Somehow have taxa missing from either tipTimes or treeConstraints")
 			}
 		if(!identical(sort(taxaTipTimes),sort(taxaTree))){
-			stop("Nope, taxa in tipTimes and on treeConstraint STILL not identical!!")
+			stop("Nope, taxa in tipTimes and on treeConstraints STILL not identical!!")
 			}
 		}
 	#
@@ -510,11 +512,11 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		rownames(tipTimes)<-newOTU[,1]		
 		# create new tree constraints, if such exisits
 			# replace original tip with multiple taxa, collapse so not monophyletic
-		if(!is.null(treeConstraint)){
+		if(!is.null(treeConstraints)){
 			treeTaxaExpand<-newOTU[,2]
 			names(treeTaxaExpand)<-newOTU[,1]
 			treeConstraints<-expandTaxonTree(taxonTree=treeConstraints,
-				treeData=treeTaxaExpand ,collapse= newOTU[,2])				
+				taxaData=treeTaxaExpand ,collapse= newOTU[,2])				
 			}
 		# fix outgroupTaxa, if exists
 		if(!is.null(outgroupTaxa)){

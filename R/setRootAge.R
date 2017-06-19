@@ -35,8 +35,15 @@
 
 #' @examples
 #'
+#' set.seed(444)
+#' tree<-rtree(10)
+#' tipAges<-cbind(c("t1","t2"), c(15,10))
 #' 
-
+#' absTimeTree<-setRootAge(tree=tree,tipAges)
+#' 
+#' plot(absTimeTree)
+#' axisPhylo()
+#' 
 
 
 #' @name setRootAge

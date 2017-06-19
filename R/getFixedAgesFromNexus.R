@@ -21,6 +21,11 @@
 # to complete, or may even cause it to hang.
 
 
+## Example for testing
+# origNexusFile<-"D:\\dave\\research\\0 devonian terebrat tip dating\\terebratDev_FAD-LAD_05-08-17.nex"
+# getMrBFixedAgesFromNexus(origNexusFile)
+
+
 
 getMrBFixedAgesFromNexus<-function(origNexusFile){
 	#		
@@ -63,6 +68,3 @@ getMrBFixedAgesFromNexus<-function(origNexusFile){
 	return(fixedTable)
 	}
 
-## Example for testing
-# origNexusFile<-"D:\\dave\\research\\0 devonian terebrat tip dating\\terebratDev_FAD-LAD_05-08-17.nex"
-# getMrBFixedAgesFromNexus(origNexusFile)

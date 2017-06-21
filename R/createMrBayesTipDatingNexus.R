@@ -545,6 +545,8 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 				taxonNames=cleanTaxonNames)
 			}
 		taxonnames<-newOTU[,1]
+		# change whichAppearance
+		whichAppearance<-"first"
 	}else{
 		taxonnames<-cleanTaxonNames
 		}

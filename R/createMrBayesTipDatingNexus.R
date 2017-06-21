@@ -522,7 +522,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		# create new tipTimes that is two date uncertainties
 		tipTimes<-newOTU[,3:4]
 		rownames(tipTimes)<-newOTU[,1]		
-		# create new tree constraints, if such exisits
+		# create new tree constraints, if such exists
 			# replace original tip with multiple taxa, collapse so not monophyletic
 		if(!is.null(treeConstraints)){
 			treeTaxaExpand<-newOTU[,2]
@@ -543,7 +543,8 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 			# need to tell it that the taxon names have change (possibly) due to cleaning
 			morphNexus<-remakeDataBlockFun(newTaxaTable=newOTU[,1:2],
 				taxonNames=cleanTaxonNames)
-			}		
+			}
+		taxonnames<-newOTU[,1]
 	}else{
 		taxonnames<-cleanTaxonNames
 		}

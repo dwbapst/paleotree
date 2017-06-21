@@ -275,7 +275,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 							ageCalibrationType,whichAppearance="first",treeAgeOffset,minTreeAge=NULL,
 							collapseUniform=TRUE,anchorTaxon=TRUE,
 							newFile=NULL,origNexusFile=NULL,parseOriginalNexus=TRUE,createEmptyMorphMat=TRUE,
-							runName="new_run_paleotree",doNotRun=FALSE,cleanNames=TRUE,printExecute=TRUE){
+							runName=NULL,doNotRun=FALSE,cleanNames=TRUE,printExecute=TRUE){
 	################################################################################################
 	#         # a wooper of a function ... here's some ASCII from artist 'Psyduck'
 	#
@@ -331,6 +331,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		multOTU<-TRUE		
 		if(is.null(origNexusFile)){
 #			stop('"A NEXUS file must be supplied if whichAppearance is "firstLast" or "rangeThrough"')
+		}else{
 			if(parseOriginalNexus){
 				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=FALSE)
 				remakeDataBlockFun<-nexusData$remakeDataBlockFun
@@ -548,7 +549,8 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 	# get runName if not supplied
 	if(is.null(runName)){
 		if(is.null(newFile)){
-			stop("runName must be supplied if name of new file is not designated")
+			#stop("runName must be supplied if name of new file is not designated")
+			runName<-"new_run_paleotree"
 			}
 		# get run name - everything after the last / or \\
 		runName<-rev(strsplit(newFile,split="\\\\")[[1]])[1]

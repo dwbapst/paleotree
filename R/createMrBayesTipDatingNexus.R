@@ -314,6 +314,19 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 	#                                @@@@
 	#
 	#################################################################################################
+	# make sure tipTimes is not a data.frame
+	if(is.data.frame(tipTimes)){
+		tipTimes<-as.matrix(tipTimes)}
+		}
+	if(is.list(tipTimes)){
+		if(length(tipTimes)==2){
+			tipTimes[[1]]<-as.matrix(tipTimes[[1]])
+			tipTimes[[2]]<-as.matrix(tipTimes[[2]])
+		}else{
+			stop("why is tipTimes a list of not length 2?")
+			}
+		}
+	##################################################################################################
 	# -Need to check that ingroup constraint isn't on treeConstraints, and if so, delete it
 		# actually maybe just make it so no ingroup constraint is defined if treeConstraint is defined - presumably its already part of provided tree!!
 	# outgroupTaxa and treeConstraints - one and only one must be defined
@@ -366,9 +379,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 	# CHECK TAXON NAMES
 	# taxa in tipTimes is king
 		# all taxa in input treeConstraints must be in tipTimes (and vice versa)
-		# origNexusFile is *not* checked
-	if(is.data.frame(tipTimes)){
-		tipTimes<-as.matrix(tipTimes)}
+		# origNexusFile *is* checked
 	if(is.list(tipTimes)){
 		taxaTipTimes<-rownames(tipTimes[[2]])
 		}else{

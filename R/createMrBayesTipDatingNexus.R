@@ -279,7 +279,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 							ageCalibrationType,whichAppearance="first",treeAgeOffset,minTreeAge=NULL,
 							collapseUniform=TRUE,anchorTaxon=TRUE,
 							newFile=NULL,origNexusFile=NULL,parseOriginalNexus=TRUE,createEmptyMorphMat=TRUE,
-							runName=NULL,morphModel="strong",ngen=100000000,doNotRun=FALSE,
+							runName=NULL,morphModel="strong",ngen="100000000",doNotRun=FALSE,
 							cleanNames=TRUE,printExecute=TRUE){
 	################################################################################################
 	#         # a wooper of a function ... here's some ASCII from artist 'Psyduck'
@@ -446,6 +446,9 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		}
 	if(morphModel=="relaxed" & is.null(origNexusFile)){
 		warning("Why are you relaxing the morphological model without supplying an original matrix with origNexusFile? I hope you know what you are doing.")
+		}
+	if(!is.character(ngen)){
+		stop("ngen must be type character; it turns out R is terrible at converting large numbers to text")
 		}
 	#
 	# note: origNexusFile might be a connection - cannot test for length 1
@@ -852,10 +855,12 @@ runBlock<-"
 	if(morphModel=="relaxed"){
 		morphModelBlock<-morphModelBlock_Relaxed
 		}
+	# insert ngen
+	block5<-paste0(block5a,ngen,block5b)
 	####################
 	finalBlock<-c(block1,logBlock,block2,ingroupBlock,block3,
 		constraintBlock,morphModelBlock,block4,
-		ageBlock,block5a,ngen,block5b,runBlock," ","end;")
+		ageBlock,block5,runBlock," ","end;")
 	return(finalBlock)
 	}
 

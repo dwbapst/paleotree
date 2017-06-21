@@ -136,6 +136,10 @@
 #' (i.e. a \code{newFile} is specified), a line for pasting into MrBayes for executing the newly created file
 #' will be messaged to the terminal.
 
+#' @param ngen Number of generations to set the MCMCMC to run for.
+#' Default (\code{ngen = 100000000}) is very high.
+
+
 #' @note 
 #' This function allows a user to take an undated phylogenetic tree in R, and a set of age estimates
 #' for the taxa on that tree, and produce a posterior sample of dated trees using the MCMCMC in \emph{MrBayes},
@@ -271,11 +275,12 @@
 #' @name createMrBayesTipDatingNexus
 #' @rdname createMrBayesTipDatingNexus
 #' @export
-createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints=NULL,morphModel="strong",
+createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints=NULL,
 							ageCalibrationType,whichAppearance="first",treeAgeOffset,minTreeAge=NULL,
 							collapseUniform=TRUE,anchorTaxon=TRUE,
 							newFile=NULL,origNexusFile=NULL,parseOriginalNexus=TRUE,createEmptyMorphMat=TRUE,
-							runName=NULL,doNotRun=FALSE,cleanNames=TRUE,printExecute=TRUE){
+							runName=NULL,morphModel="strong",ngen=100000000,doNotRun=FALSE,
+							cleanNames=TRUE,printExecute=TRUE){
 	################################################################################################
 	#         # a wooper of a function ... here's some ASCII from artist 'Psyduck'
 	#
@@ -598,7 +603,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 	# make the final MrBayes Block
 	MrBayesBlock<-makeMrBayesBlock(logBlock=logfileline,ingroupBlock=ingroupConstraint,
 		ageBlock=ageCalibrations,constraintBlock=topologicalConstraints,
-		morphModel=morphModel,doNotRun=doNotRun)
+		morphModel=morphModel,ngen=ngen,doNotRun=doNotRun)
 	###############################################
 	# combine morph matrix block with MrBayes command block
 	finalText<-c(morphNexus,MrBayesBlock)
@@ -695,7 +700,7 @@ makeEmptyMorphNexusMrB<-function(taxonNames){
 
 
 makeMrBayesBlock<-function(logBlock,ingroupBlock,ageBlock,
-							constraintBlock,morphModel="strong",doNotRun=FALSE){
+							constraintBlock,morphModel="strong",ngen=100000000,doNotRun=FALSE){
 #########################################################################################						
 	###
 	### # what follows will look very messy due to its untabbed nature
@@ -788,7 +793,7 @@ block4<-"
 			
 "
 ##########################################################################
-block5<-"	
+block5a<-"	
 [FOSSILIZED BIRTH DEATH MODEL & ASSOCIATED PARAMETERS]
 
     prset brlenspr=clock:fossilization;
@@ -819,7 +824,9 @@ block5<-"
 [RUN SETTINGS]
 
 [FYI burnin settings for one command sets burnin settings for all]
-	mcmcp ngen=100000000 relburnin=yes burninfrac=0.5 printfreq=1000 samplefreq=1000 nchains=4 nruns=2 savebrlens=yes;    
+	mcmcp ngen="
+	
+block5b<-" relburnin=yes burninfrac=0.5 printfreq=1000 samplefreq=1000 nchains=4 nruns=2 savebrlens=yes;    
 	set seed=4;
 "
 ###################################################################
@@ -848,7 +855,7 @@ runBlock<-"
 	####################
 	finalBlock<-c(block1,logBlock,block2,ingroupBlock,block3,
 		constraintBlock,morphModelBlock,block4,
-		ageBlock,block5,runBlock," ","end;")
+		ageBlock,block5a,ngen,block5b,runBlock," ","end;")
 	return(finalBlock)
 	}
 

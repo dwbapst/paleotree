@@ -6,11 +6,11 @@
 \title{Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes}
 \usage{
 createMrBayesTipDatingNexus(tipTimes, outgroupTaxa = NULL,
-  treeConstraints = NULL, morphModel = "strong", ageCalibrationType,
-  whichAppearance = "first", treeAgeOffset, minTreeAge = NULL,
-  collapseUniform = TRUE, anchorTaxon = TRUE, newFile = NULL,
-  origNexusFile = NULL, parseOriginalNexus = TRUE,
-  createEmptyMorphMat = TRUE, runName = NULL, doNotRun = FALSE,
+  treeConstraints = NULL, ageCalibrationType, whichAppearance = "first",
+  treeAgeOffset, minTreeAge = NULL, collapseUniform = TRUE,
+  anchorTaxon = TRUE, newFile = NULL, origNexusFile = NULL,
+  parseOriginalNexus = TRUE, createEmptyMorphMat = TRUE, runName = NULL,
+  morphModel = "strong", ngen = 1e+08, doNotRun = FALSE,
   cleanNames = TRUE, printExecute = TRUE)
 }
 \arguments{
@@ -38,15 +38,6 @@ from which (if \code{treeConstraints} is supplied) the set topological constrain
 as described for argument \code{tree} for function \code{createMrBayesConstraints}. 
 Either \code{treeConstraints} or \code{outgroupTaxa} must be defined, but \emph{not both}.
 If the outgroup-ingroup split is not present on the supplied \code{treeConstraints}, add that split to \code{treeConstraints} manually.}
-
-\item{morphModel}{This argument can be used to switch between two end-member models of 
-morphological evolution in MrBayes, here named 'strong' and 'relaxed', for the 'strong assumptions'
-and 'relaxed assumptions' models described by Bapst, Schreiber and Carlson (Systematic Biology).
-The default is a model which makes very 'strong' assumptions about the process of morphological evolution,
-while the 'relaxed' alternative allows for considerably more heterogeneity in the rate
-of morphological evolution across characters, and in the forward and reverse transition
-rates between states. Note that in both cases, the character data is assumed to be filtered
-to only parsimony-informative characters, without autapomorphies.}
 
 \item{ageCalibrationType}{This argument decides how age calibrations are defined, 
 and currently allows for four options: \code{"fixedDateEarlier"} which fixes tip
@@ -150,6 +141,18 @@ presupposed morphological clock (thus a 'clock-less analysis').}
 If not set, the name will be taken from the name given for outputting
 the NEXUS script (\code{newFile}). If \code{newFile} is not given, and
 \code{runName} is not set by the user, the default run name will be  "new_run_paleotree".}
+
+\item{morphModel}{This argument can be used to switch between two end-member models of 
+morphological evolution in MrBayes, here named 'strong' and 'relaxed', for the 'strong assumptions'
+and 'relaxed assumptions' models described by Bapst, Schreiber and Carlson (Systematic Biology).
+The default is a model which makes very 'strong' assumptions about the process of morphological evolution,
+while the 'relaxed' alternative allows for considerably more heterogeneity in the rate
+of morphological evolution across characters, and in the forward and reverse transition
+rates between states. Note that in both cases, the character data is assumed to be filtered
+to only parsimony-informative characters, without autapomorphies.}
+
+\item{ngen}{Number of generations to set the MCMCMC to run for.
+Default (\code{ngen = 100000000}) is very high.}
 
 \item{doNotRun}{If \code{TRUE}, the commands that cause a script to automatically begin running in 
 \emph{MrBayes} will be left out. Useful for troubleshooting initial runs of scripts for non-fatal errors and

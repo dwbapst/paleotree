@@ -316,7 +316,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 	#################################################################################################
 	# make sure tipTimes is not a data.frame
 	if(is.data.frame(tipTimes)){
-		tipTimes<-as.matrix(tipTimes)}
+		tipTimes<-as.matrix(tipTimes)
 		}
 	if(is.list(tipTimes)){
 		if(length(tipTimes)==2){

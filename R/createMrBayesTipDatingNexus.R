@@ -416,7 +416,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		if(length(nexusTaxa)!=length(taxaTipTimes)){
 			stop("Somehow have taxa missing from either tipTimes or the original NEXUS file")
 			}
-		if(!identical(sort(taxaTipTimes),sort(nexusTree))){
+		if(!identical(sort(taxaTipTimes),sort(nexusTaxa))){
 			stop("Nope, taxa in tipTimes and in original NEXUS file STILL not identical!!")
 			}
 		}	

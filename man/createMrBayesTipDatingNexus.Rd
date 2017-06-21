@@ -10,8 +10,8 @@ createMrBayesTipDatingNexus(tipTimes, outgroupTaxa = NULL,
   whichAppearance = "first", treeAgeOffset, minTreeAge = NULL,
   collapseUniform = TRUE, anchorTaxon = TRUE, newFile = NULL,
   origNexusFile = NULL, parseOriginalNexus = TRUE,
-  createEmptyMorphMat = TRUE, runName = "new_run_paleotree",
-  doNotRun = FALSE, cleanNames = TRUE, printExecute = TRUE)
+  createEmptyMorphMat = TRUE, runName = NULL, doNotRun = FALSE,
+  cleanNames = TRUE, printExecute = TRUE)
 }
 \arguments{
 \item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 

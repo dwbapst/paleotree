@@ -360,7 +360,7 @@ createMrBayesTipCalibrations<-function(tipTimes,
 			fixedLine<-" "
 			}
 		# attach to date block
-		dateBlock<-c(dateBlock<fixedLine)
+		dateBlock<-c(dateBlock,fixedLine)
 		}
 	#####################################################
 	#need to create tree age prior

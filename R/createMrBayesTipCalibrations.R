@@ -142,6 +142,20 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	collapseUniform=TRUE,anchorTaxon=TRUE,file=NULL){
 	#
 	#
+	#################################################################################################
+	# make sure tipTimes is not a data.frame
+	if(is.data.frame(tipTimes)){
+		tipTimes<-as.matrix(tipTimes)
+		}
+	if(is.list(tipTimes)){
+		if(length(tipTimes)==2){
+			tipTimes[[1]]<-as.matrix(tipTimes[[1]])
+			tipTimes[[2]]<-as.matrix(tipTimes[[2]])
+		}else{
+			stop("why is tipTimes a list of not length 2?")
+			}
+		}
+	#######################################################################################
 	if(length(ageCalibrationType)!=1){
 		stop("argument ageCalibrationType must be of length 1")
 		}
@@ -227,14 +241,24 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	if(ncol(tipTimes)==1){
 		tipTimes<-cbind(tipTimes,tipTimes,tipTimes,tipTimes)
 		}
+	# check that tipTimes is now a matrix with 4 columns
+	if(!is.matrix(tipTimes)){
+		stop("tipTimes not coercing to matrix properly")
+		}
+	if(ncol(tipTimes)!=4){
+		stop("tipTimes not coercing to four column format correctly")
+		}
+	if(!is.numeric(tipTimes)){
+		stop("tipTimes not coercing to type numeric properly")
+		}
 	# -Add check to tip-Calibrate which makes sure age data is correctly ordered before using it
-	misorderedTimes<-apply(tipTimes,1,function(z) any(diff(z[1:2])>0))
+	misorderedTimes<-apply(tipTimes,1,function(z) diff(z[1:2]))>0
 	if(any(misorderedTimes)){
 		stop(paste0("dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
 			paste0(rownames(tipTimes)[misorderedTimes],collapse=" ")))
 		}
 	#and the other pair of dates
-	misorderedTimes<-apply(tipTimes,1,function(z) any(diff(z[3:4])>0))
+	misorderedTimes<-apply(tipTimes,1,function(z) diff(z[3:4]))>0
 	if(any(misorderedTimes)){
 		stop(paste0("dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
 			paste0(rownames(tipTimes)[misorderedTimes],collapse=" ")))

@@ -192,7 +192,12 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	if(!is.matrix(tipTimes)){
 		stop("tipTimes must be of type matrix, or a list with a length of 2")
 		}
-	tipTimes<-apply(tipTimes,2,as.numeric)
+	# coerce to numeric
+	if(!is.numeric(tipTimes)){
+		tipTimes2<-apply(tipTimes,2,as.numeric)
+		rownames(tipTimes2)<-rownames(tipTimes)
+		tipTimes<-tipTimes2
+		}
 	# must be a table with 1, 2 or 4 columns
 	if(all(ncol(tipTimes)!=c(1,2,4))){
 		stop("tipTimes must have 1 or 2 or 4 columns")

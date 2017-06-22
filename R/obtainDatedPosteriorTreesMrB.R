@@ -156,11 +156,11 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 	# ridicuously nested series of brackets may cause this code to take a while
 	# to complete, or may even cause it to hang.
 	#
-		
 	if(getFixedTimes){
 		if(is.null(originalNexusFile)){
 			# file name, if presuming shares run name with 
-			originalNexusFile<-paste0(runPath,".nex")
+			#originalNexusFile<-paste0(runPath,".nex")
+			originalNexusFile<-runPath
 			}
 		fixedTable<-getMrBFixedAgesFromNexus(originalNexusFile)
 	}else{

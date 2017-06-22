@@ -258,8 +258,9 @@ createMrBayesTipCalibrations<-function(tipTimes,
 		stop("tipTimes not coercing to type numeric properly")
 		}
 	# -Add check to tip-Calibrate which makes sure age data is correctly ordered before using it
-	misorderedTimes<-apply(tipTimes,1,function(z) diff(z[1:2]))>0
+	misorderedTimes<-apply(tipTimes,1,function(z) diff(z[1:2]))>0.0001
 	if(any(misorderedTimes)){
+		print(tipTimes)
 		stop(paste0("dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
 			paste0(rownames(tipTimes)[misorderedTimes],collapse=" ")))
 		}

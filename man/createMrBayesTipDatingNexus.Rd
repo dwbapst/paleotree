@@ -10,7 +10,7 @@ createMrBayesTipDatingNexus(tipTimes, outgroupTaxa = NULL,
   treeAgeOffset, minTreeAge = NULL, collapseUniform = TRUE,
   anchorTaxon = TRUE, newFile = NULL, origNexusFile = NULL,
   parseOriginalNexus = TRUE, createEmptyMorphMat = TRUE, runName = NULL,
-  morphModel = "strong", ngen = 1e+08, doNotRun = FALSE,
+  morphModel = "strong", ngen = "100000000", doNotRun = FALSE,
   cleanNames = TRUE, printExecute = TRUE)
 }
 \arguments{

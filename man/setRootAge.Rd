@@ -13,6 +13,8 @@ setRootAge(tree, fixedAges = NULL)
 first column is of type character, and the second column is of type numeric. =Such a table is automatically
 generated as an attribute of the output from \code{\link{obtainDatedPosteriorTreesMrB}}, 
 when argument \code{getFixedTimes = TRUE}.}
+
+\item{trees}{A list of type "multiPhylo" consisting of multiple phylogenetic trees with branch lengths.}
 }
 \value{
 The input tree is output, with a new \code{$root.time} element.
@@ -20,7 +22,8 @@ The input tree is output, with a new \code{$root.time} element.
 \description{
 This function uses a table of fixed dates for operational-taxon-units (tip taxa) to calculate the absolute
 age of the root divergence for a tree with branch lengths, and then appends this root age to the tree
-as a \code{$root.time} element, and then outputs the tree..
+as a \code{$root.time} element, and then outputs the tree. Function \code{setRootAges} is a wrapper for
+\code{setRootAge} for use with multiple trees in a "multiPhylo" object.
 }
 \details{
 Trees of fossil taxa come with one issue rarely encountered by those dealing with molecular

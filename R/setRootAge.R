@@ -2,7 +2,8 @@
 #' 
 #' This function uses a table of fixed dates for operational-taxon-units (tip taxa) to calculate the absolute
 #' age of the root divergence for a tree with branch lengths, and then appends this root age to the tree
-#' as a \code{$root.time} element, and then outputs the tree..
+#' as a \code{$root.time} element, and then outputs the tree. Function \code{setRootAges} is a wrapper for
+#' \code{setRootAge} for use with multiple trees in a "multiPhylo" object.
 
 #' @details
 #' Trees of fossil taxa come with one issue rarely encountered by those dealing with molecular
@@ -19,6 +20,8 @@
 #' 
 
 #' @param tree A phylogeny with branch lengths of type "phylo".
+
+#' @param trees A list of type "multiPhylo" consisting of multiple phylogenetic trees with branch lengths.
 
 #' @param fixedAges A table of fixed ages for tip taxa, generally as a dataframe where the
 #' first column is of type character, and the second column is of type numeric. =Such a table is automatically
@@ -83,4 +86,23 @@ setRootAge<-function(tree,fixedAges=NULL){
 	tree$root.time<-youngTipDepth+youngDate	
 	return(tree)
 	}
-
+	
+#' @export
+setRootAges<-function(trees,fixedAges=NULL){
+	if(!is(trees,"multiPhylo")){
+		stop("trees must be of type multiPhylo")
+		}
+	if(!is.list(trees)){
+		stop("trees must be of type multiPhylo")
+		}
+	#
+	for(i in 1:length(trees)){
+		tree<-trees[[i]]
+		if(!is.null(attr(trees,"fixedTable"))){
+			attr(tree,"fixedTable")<-attr(trees,"fixedTable")
+			}
+		trees[[i]]<-setRootAge(tree=tree,fixedAges=fixedAges)
+		}
+	#
+	return(trees)
+	}

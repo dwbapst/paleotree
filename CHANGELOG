@@ -4,6 +4,7 @@ Version - 2.9 -
 -Added function obtainDatedPosteriorTreesMrB, which will get the dated trees from the posterior of a MrBayes analysis (or provide an otherwise difficult to obtain summary tree)
 -Added function treeContradiction, which gives the contradiction difference (CD) value between two topologies, as described in Bapst et al. in press (Syst Biol)
 -Added function setRootAge which will add a $root.time element to a tree, given a set of ages for tip taxa, using the age for the youngest matching taxon name
+-Added function setRootAges for setting root ages for a set of many trees
 -
 
 

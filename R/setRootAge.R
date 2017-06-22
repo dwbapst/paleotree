@@ -86,7 +86,8 @@ setRootAge<-function(tree,fixedAges=NULL){
 	tree$root.time<-youngTipDepth+youngDate	
 	return(tree)
 	}
-	
+
+#' @rdname setRootAge
 #' @export
 setRootAges<-function(trees,fixedAges=NULL){
 	if(!is(trees,"multiPhylo")){

@@ -2,9 +2,12 @@
 % Please edit documentation in R/setRootAge.R
 \name{setRootAge}
 \alias{setRootAge}
+\alias{setRootAges}
 \title{Place a Non-Ultrametric Tree of Fossil Taxa on Abslute Time}
 \usage{
 setRootAge(tree, fixedAges = NULL)
+
+setRootAges(trees, fixedAges = NULL)
 }
 \arguments{
 \item{tree}{A phylogeny with branch lengths of type "phylo".}

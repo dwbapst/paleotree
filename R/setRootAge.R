@@ -80,10 +80,12 @@ setRootAge<-function(tree,fixedAges=NULL){
 	fixedAges<-fixedAges[!missingAge]
 	fixedTaxa<-fixedTaxa[!missingAge]
 	# get first taxon at youngest age
-	youngest<-fixedAges==min(fixedAges)[1]
+	youngest<-which(fixedAges==min(fixedAges))[1]
 	youngDate<-fixedAges[youngest]
-	youngTipDepth<-node.depth.edgelength(tree)[taxaTree==fixedTaxa[youngest]]
+	youngTipDepth<-node.depth.edgelength(tree)[1:Ntip(tree)][taxaTree==fixedTaxa[youngest]]
 	tree$root.time<-youngTipDepth+youngDate	
+	if(length(tree$root.time)>1){
+		stop("Multiple root.time elements calculated??!")}
 	return(tree)
 	}
 

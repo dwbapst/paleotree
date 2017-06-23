@@ -81,3 +81,5 @@ branchClasses<-function(tree,whichExtant=NULL,tol=0.01){
 		names(brlen.dead)<-depths[dead.edges]
 	list(brlen.all=brlen.all,brlen.int=brlen.int,brlen.live=brlen.live,brlen.dead=brlen.dead)
 	}
+	
+	

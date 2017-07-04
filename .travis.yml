@@ -12,6 +12,13 @@ warnings_are_errors: true
 
 # r_check_args: --as-cran --run-donttest 
 
+# for code coverage
+r_packages:
+  - covr
+
+after_success:
+  - Rscript -e 'library(covr); codecov()'
+
 ###########
 #OLD: brought back due to r-travis not failing bad builds
 

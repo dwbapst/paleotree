@@ -5,7 +5,7 @@
 #' the number of splits on both trees that are directly contradicted by a split on the contrasting topology (treating both
 #' as unrooted). By default, this 'contradiction difference' value is then scaled to between 0 and 1, by dividing by the total number
 #' of splits that could have been contradicted across both trees ( 2 * (Number of shared tips - 2) ). On this scaled, 0 represents
-#' no conflicting relationshps and 1 reflects two entirely conflicting topologies, similar to the rescaling in Colless's consensus fork index.
+#' no conflicting relationships and 1 reflects two entirely conflicting topologies, similar to the rescaling in Colless's consensus fork index.
 #'
 
 #' @details

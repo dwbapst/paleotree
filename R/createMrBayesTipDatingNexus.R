@@ -3,7 +3,7 @@
 #' This function is meant to expedite the creation of NEXUS files formatted
 #' for performing tip-dating analyses in the popular phylogenetics software \emph{MrBayes},
 #' particularly clock-less tip-dating analyses executed with 'empty' morphological matrices
-#' (i.e. where all taxa ae coded for a single missing character), although a pre-existing
+#' (i.e. where all taxa are coded for a single missing character), although a pre-existing
 #' morphological matrix can also be input by the user (see argument \code{origNexusFile}).
 #' Under some options, this pre-existing matrix may be edited by this function.
 #' The resulting full NEXUS script is output as a set of character strings either
@@ -15,7 +15,7 @@
 #' The user must also supply some topological constraint: 
 #' either a set of taxa designated as the outgroup, which is then converted into a command constraining
 #' th monophyly on the ingroup taxa, which is presumed to be all taxa \emph{not} listed in the outgroup. 
-#' Alterantively, a ser may supply a tree which is then converted into a series of hard topological
+#' Alternatively, a user may supply a tree which is then converted into a series of hard topological
 #' constraints (via function \code{\link{createMrBayesConstraints}}. Both types of topological constraints
 #' cannot be applied. Many of the options available with \code{\link{createMrBayesTipCalibrations}} are available with this function,
 #' allowing users to choose between fixed calibrations or uniform priors that approximate stratigraphic uncertainty.
@@ -58,7 +58,7 @@
 #' multiple occurrences of long-lived morphotaxa to be listed as multiple OTUs
 #' arrayed across their stratigraphic duration. If 
 #' \code{whichAppearance = "firstLast"}, taxa will be duplicated so each taxon is
-#' listed as occurring twice: once at their first appearanced, and a second time at
+#' listed as occurring twice: once at their first appearance, and a second time at
 #' their last appearance. Note that if a taxon first and last appears in the same interval,
 #' and \code{ageCalibrationType = "uniformRange"}, then
 #' the resulting posterior trees may place the OTU assigned to the last occurrence before the
@@ -73,7 +73,7 @@
 
 #' @param origNexusFile Filename (possibly with path) as a character
 #' string leading to a NEXUS text file, presumably containing a matrix
-#' of character date formateed for \emph{MrBayes}. If supplied
+#' of character date formated for \emph{MrBayes}. If supplied
 #' (it does not need to be supplied), the listed file is read as a text file, and
 #' concatenated with the \emph{MrBayes} script produced by this function, so as to
 #' reproduce the original NEXUS matrix for executing in MrBayes. 
@@ -129,7 +129,7 @@
 #' to only parsimony-informative characters, without autapomorphies.
 
 #' @param cleanNames If \code{TRUE} (the default), then special characters
-#' (currently, thsi only contains the forward-slashes: '/') are removed from
+#' (currently, this only contains the forward-slashes: '/') are removed from
 #' taxon names before construction of the NEXUS file.
 
 #' @param printExecute If \code{TRUE} (the default) and if output is directed to a \code{newFile}
@@ -155,7 +155,7 @@
 
 #' @return
 #' If argument \code{newFile} is \code{NULL}, then the text of the 
-#' generated NEXUS script is ouput to the console as a series of character strings.
+#' generated NEXUS script is output to the console as a series of character strings.
 
 #' @seealso
 #' \code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipCalibrations}}, , \code{\link{cal3}}

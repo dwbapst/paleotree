@@ -39,7 +39,7 @@
 #' @param stateBias This argument controls how \code{resolveTreeChar} handles ancestral node reconstructions that have
 #' multiple states competing for the maximum weight of any state (i.e. if states 0 and 1 both have 0.4 of the weight). The
 #' default, where \code{stateBias = NULL} causes uncertainty at nodes among states to be treated as a single 'group' identical
-#' to any states within it. Essentially, this means that for the example polytomy where the ancestor hax maximum weight for both 0 and 1, 
+#' to any states within it. Essentially, this means that for the example polytomy where the ancestor has maximum weight for both 0 and 1, 
 #' any child nodes with 0, 1 or both of these states will be considered to have an identical state for the purpose of grouping nodes
 #' for the purpose of further resolving polytomies. If and only if \code{orderedChar = TRUE}, then additional options of
 #' \code{stateBias = 'primitive'} and \code{stateBias = 'derived'} become available, which instead force uncertain node

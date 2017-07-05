@@ -37,7 +37,7 @@
 
 #' @return
 #' If argument \code{file} is \code{NULL}, then the constrain commands
-#' are ouput as a series of character strings.
+#' are output as a series of character strings.
 
 #' @author
 #' David W. Bapst, with some inspiration from Graham Slater. This code was 

@@ -1,7 +1,7 @@
 #' Get the Sample of Posterior Trees from a Dated Phylogenetic Analysis with MrBayes (Or a Summary Tree, such as the MCCT)
 #' 
 #' MrBayes is not great for getting samples of dated posterior phylogenies, or for obtaining certain summary trees from
-#' the posterior (specifically the MCCT and MAP, which are specfic trees in the posterior). This is because the tree
+#' the posterior (specifically the MCCT and MAP, which are specific trees in the posterior). This is because the tree
 #' samples as returned are scaled relative to rate parameters in a separate file. This function attempts to automate
 #' the handling of multiple files (both .t tree files and .p parameter files), as well as multiple files
 #' associated with separate runs, to obtain samples of posterior trees, or summary trees such as the MCCT or MAP.
@@ -9,13 +9,13 @@
 #' @details
 #' This function is most useful for dealing with dating analyses in MrBayes, particularly when tip-dating
 #' a tree with fossil taxa, as the half-compatibility and all-compatibility summary trees offered by the
-#' 'sumt' command in MrBayes can hae issues properly portraying summary trees from such datasets.
+#' 'sumt' command in MrBayes can have issues properly portraying summary trees from such datasets.
 
 #' @param runFile A filename in the current directory, or a path to a file that is either a .p 
 #' or .t file from a MrBayes analysis. This filename and path will be used for finding additional 
 #' .t and .p files, via the \code{nRuns} settings and assuming that files are in the
 #' same directory \emph{and} these files are named under
-#' typical MrBayes file naming conventions. (In other words, if you've renamed your .p or .t files,
+#' typical MrBayes file naming conventions. (In other words, if you have renamed your .p or .t files,
 #' this function probably won't be able to find them.)
 
 #' @param nRuns The number of runs in your analysis. This variable is used for figuring out what 
@@ -53,7 +53,7 @@
 #' posterior with the highest marginal likelihood. The MCCT is the single tree from the post-burnin
 #' posterior which contains clades with the highest product of posterior probabilities for its
 #' component clades. Thus, the MAP is the best overall tree, while the MCCT may be the best
-#' tree for summaring topological support.
+#' tree for summarizing topological support.
 
 #' @param file Filename (possibly with path) as a character string
 #' leading to a file which will be overwritten with the output trees (or summary tree),
@@ -147,13 +147,13 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 	# @param getFixedTimes If \code{TRUE}, this function will also look for, scan, and parse an
 	# associated NEXUS file. Ignoring any commented lines (ie. anything between "[   ]" ), commands
 	# for fixing taxa will be identifiedd, parsed and returned to the user, either as a message
-	# pinted to the R console if output is read to a file, or as a attribute named 'fixed ages'
+	# printed to the R console if output is read to a file, or as a attribute named 'fixed ages'
 	# if output as an R object (formatted as a two-column table of OTU names and their respective fixed ages).
 	# The search for the NEXUS file is controlled with argument \code{originalNexusFile}
 	#
 	# Please note: this has a while() loop in it for removing nested series of
 	# square brackets (i.e. treated as comments in NEXUS files) then files with
-	# ridicuously nested series of brackets may cause this code to take a while
+	# extremely nested series of brackets may cause this code to take a while
 	# to complete, or may even cause it to hang.
 	#
 	if(getFixedTimes){

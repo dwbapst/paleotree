@@ -105,7 +105,7 @@
 #' will be plotted \emph{exactly} to these values.
 
 #' @param extant.adjust Amount of time to be added to extend start time for
-#' (0,0) bins for extant taxa, so that the that 'time interval' doesn't appear 
+#' (0,0) bins for extant taxa, so that the that 'time interval' does not appear 
 #' to have an infinitely small width.
 
 #' @param split.int For discrete time data, should calculated/input intervals

@@ -1,8 +1,8 @@
 Package: paleotree
 Type: Package
-Version: 3.0
+Version: 3.0.0
 Title: Paleontological and Phylogenetic Analyses of Evolution
-Date: 2017-07-03
+Date: 2017-07-04
 Author: David W. Bapst
 Depends:
     R (>= 3.0.0),
@@ -37,5 +37,5 @@ Description: Provides tools for transforming, a posteriori time-scaling, and
     time-scaled phylogenies or unscaled cladograms that reflect the relationships
     among taxon units.
 License: CC0
-URL: https://github.com/dwbapst/paleotree , http://webpages.sdsmt.edu/~dbapst/
+URL: https://github.com/dwbapst/paleotree
 RoxygenNote: 6.0.1

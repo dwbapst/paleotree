@@ -1,4 +1,4 @@
-Version - 2.9 (Designated as 3.0 at CRAN release - 07-03-17)
+Version - 2.9 (Designated as 3.0.0 at CRAN release - 07-04-17)
 -Bumped up version number, to reflect ongoing development over a long period without CRAN release. (CRAN release coming soon.)
 -Added function createMrBayesTipDatingNexus, which creates a full NEXUS script for doing tip-dating analyses in MrBayes
 -Added function obtainDatedPosteriorTreesMrB, which will get the dated trees from the posterior of a MrBayes analysis (or provide an otherwise difficult to obtain summary tree)

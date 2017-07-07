@@ -6,8 +6,8 @@
 #' consistent with the parameters of the input equation as written.
 
 #' @details
-#' This simple little function is rather hacky but seems to get the job done, for a
-#' functionality that doesn't seem to be present elsewhere in R.
+#' This simple little function is rather 'hacky' but seems to get the job done, for a
+#' functionality that does not seem to be otherwise exist elsewhere in R.
 
 #' @param equation The right-hand-side (RHS) of an equation, given as a character string.
 #' If not of type character, \code{equation2function} attempts to coerce \code{equation} to

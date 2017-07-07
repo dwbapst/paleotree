@@ -37,7 +37,7 @@
 #' \code{pairwiseSpearmanRho} returns Spearman rho correlation coefficients
 #' based on the rank abundances of taxa (columns) within sites (rows) from
 #' the input matrix, by internally wrapping the function \code{cor.test}.
-#' It allows for various options that ultimatically allow
+#' It allows for various options that automatically allow
 #' for dropping taxa not shared between two sites (the default), as well as
 #' several other options. This allows the rho coefficient to behave like the
 #' Bray-Curtis distance, in that it is not affected by the number of taxa absent
@@ -53,7 +53,7 @@
 #' and upper triangle of the matrix. Otherwise, a full matrix is returned (by default)
 #' if the \code{asDistance} argument is not enabled. 
 #'
-#' \code{HurlbertPIE} provides the Probability of Interspecific Encounter metric for
+#' \code{HurlbertPIE} provides the 'Probability of Interspecific Encounter' metric for
 #' relative community abundance data, a commonly used metric for evenness of community
 #' abundance data based on derivations in Hurlbert (1971). An optional argument allows
 #' users to apply Hurlbert's PIE to only a subselection of the most abundant taxa.

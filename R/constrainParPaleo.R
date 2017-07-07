@@ -1,4 +1,4 @@
-#' Constrain Parameters for a Model Function from paleotree
+f#' Constrain Parameters for a Model Function from paleotree
 #'
 #' This function constrains a model to make submodels with fewer parameters,
 #' using a structure and syntax taken from the function \code{constrain}
@@ -47,7 +47,7 @@
 #'
 #' This forked paleotree version of constrain has two additional features,
 #' both introduced to aid in constraining models with a high number of 
-#' repetitive parameters. (I didn't invent these models, don't shoot the messenger.)
+#' repetitive parameters. (I did not invent these models, so don't shoot the messenger.)
 #'
 #' First, it allows nuanced control over the constraining of many
 #' parameters simultaneously, using the 'all' and 'match' descriptors. This
@@ -94,7 +94,7 @@
 #'
 #' The 'match' term is similar, allowing parameter values from the same group
 #' to be quickly matched and made equivalent. These 'match' terms must have a
-#' matching (hah!) term both in the corresponding LHS and RHS of the formula.
+#' matching (cue laughter) term both in the corresponding LHS and RHS of the formula.
 #' For example, consider 'x.match~y.match' where there are six parameters: x.1,
 #' x.2, x.3, y.1, y.2 and y.3. This will effectively constrain x.1~y.1, x.2~y.2
 #' and x.3~y.3. This is efficient for cases where we have some parameters that

@@ -59,7 +59,7 @@
 #' @author
 #' These functions are strongly based on or inspired by the \code{argnames} functions
 #' provided for handling models in Rich Fitzjohn's library \code{diversitree}, but
-#' the functions presented here are derviations written by David Bapst.
+#' the functions presented here are derivations written by David Bapst.
 
 #' @examples
 #' #example with make_durationFreqCont

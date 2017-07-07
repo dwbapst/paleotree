@@ -89,7 +89,7 @@
 #' Unlike \code{timePaleoPhy}, cal3 methods will always resolve polytomies. In
 #' general, this is done using the rate calibrated algorithm, although if
 #' argument \code{randres = TRUE}, polytomies will be randomly resolved with uniform
-#' probability, ala multi2di from ape. Also, cal3 will always add the terminal
+#' probability, ala \code{multi2di} from ape. Also, cal3 will always add the terminal
 #' ranges of taxa. However, because of the ability to infer potential
 #' ancestor-descendant relationships, the length of terminal branches may be
 #' shorter than taxon ranges themselves, as budding may have occurred during
@@ -152,13 +152,13 @@
 
 #' @inheritParams timePaleoPhy
 
-#' @param brRate Either a single estimate of the instanteous rate of branching
+#' @param brRate Either a single estimate of the instantaneous rate of branching
 #' (also known as the 'per-capita' origination rate, or speciation rate if
 #' taxonomic level of interest is species) or a vector of per-taxon estimates
-#' @param extRate Either a single estimate of the instanteous extinction rate
+#' @param extRate Either a single estimate of the instantaneous extinction rate
 #' (also known as the 'per-capita' extinction rate) or a vector of per-taxon
 #' estimates
-#' @param sampRate Either a single estimate of the instanteous sampling rate or
+#' @param sampRate Either a single estimate of the instantaneous sampling rate or
 #' a vector of per-taxon estimates
 
 #' @param ntrees Number of time-scaled trees to output
@@ -235,10 +235,10 @@
 #' @param adj.obs.wt If the time of observation are before the LAD of a taxon,
 #' should the weight of the time of observation be adjusted to account for the
 #' known observed history of the taxon which occurs AFTER the time of
-#' observation? Should only have an effect if time of observation ISN'T the
+#' observation? Should only have an effect if time of observation \emph{IS NOT} the
 #' LAD, if times of observation for a potential ancestor are earlier than the
 #' first appearance of their potential descendants and if the ancestral weights
-#' for taxa aren't set to zero (so there can be potential ancestors).
+#' for taxa are not set to zero (so there can be potential ancestors).
 
 #' @param root.max Maximum time before the first FAD that the root can be
 #' pushed back to.
@@ -246,7 +246,7 @@
 #' @param step.size Step size of increments used in zipper algorithm to assign
 #' node ages.
 
-#' @param randres Should polytomies be randomly resolved using multi2di in ape
+#' @param randres Should polytomies be randomly resolved using \code{multi2di} in ape
 #' rather than using the cal3 algorithm to weight the resolution of polytomies 
 #' relative to sampling in the fossil record?
 
@@ -261,7 +261,7 @@
 
 #' @param diagnosticMode If \code{TRUE}, \code{cal3timePaleoPhy} will return to the
 #' console and to graphic devices an enormous number of messages, plots and
-#' anciliary information that may be useful or entirely useless to figuring
+#' ancilliary information that may be useful or entirely useless to figuring
 #' out what is going wrong.
 
 #' @param nonstoch.bin If true, dates are not stochastically pulled from

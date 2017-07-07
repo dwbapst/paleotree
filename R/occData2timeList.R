@@ -32,7 +32,7 @@
 
 #' \item{"zoneOverlap"}{This option is an attempt to mimic the stratigraphic range algorithm used by PBDB Classic
 #' which "finds the oldest base that is older than at least part of all the intervals and the
-#' youngest that is younger than at least part of all the intervals" (pers.comm., J. Alroy). 
+#' youngest that is younger than at least part of all the intervals" (personal communication, J. Alroy). 
 #' This is a somewhat more complex case as we are trying to obtain a \code{timeList} object.
 #' So, for calculating the bounds of the first interval a taxon occurs in, the \code{zoneOverlap}
 #' algorithm looks for all occurrences that overlap with the age range of the earliest-most occurrence
@@ -49,7 +49,7 @@
 #' range probably describe a very similar first and last appearance (FADs and LADs), and thus picks the
 #' occurrence with bounds that extends the taxonomic range the least. However, this does come with a downside
 #' that if these occurrences are not essentially repeated attempts to capture the same FAD or LAD, then the
-#' zone-of-overlap algorithm isn't an accurate depiction of the uncertainty in the ages. The true biological
+#' zone-of-overlap algorithm is not an accurate depiction of the uncertainty in the ages. The true biological
 #' range of a taxon might be well outside the bounds obtained using the zone-of-overlap algorithm. A more
 #' conservative approach is the \code{"dateRange"} algorithm which finds the smallest possible bounds on the
 #' endpoints of a taxon's range without ignoring uncertainty from any particular set of occurrences.} }

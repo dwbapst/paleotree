@@ -22,7 +22,7 @@
 #' taxa (i.e., if the last interval is the Holocene and the group is
 #' still alive, the probability of sampling them later is probably 1...).
 #' Should be a value of 0 to 1, NULL, or can be simply "fixed", the default option.
-#' This default "fixed" option allows make_inverseSurv to decide the value
+#' This default "fixed" option allows \code{make_inverseSurv} to decide the value
 #' based on whether there is a modern interval (i.e. an interval that is 
 #' \code{c(0,0)}) or not: if there is one, then \code{PA_n=1}, if not, 
 #' then \code{PA_n=0}. If NULL, PA_n is treated as an additional free
@@ -82,7 +82,7 @@
 #'
 #' Groupings follow the parameter names, separated by periods; by default, the
 #' parameters will be placed in groups corresponding to the discrete intervals
-#' in the input timeList, such that make_inverseSurv will create a function with
+#' in the input timeList, such that \code{make_inverseSurv} will create a function with
 #' parameters 'p.1', 'q.1' and 'r.1' for interval 1; 'p.2', 'q.2' and 'r.2' for
 #' interval 2 and so on. Additional groupings given by the user are listed after 
 #' this first set (e.g. 'p.1.2.2').
@@ -116,7 +116,7 @@
 #' from the given parameters. The other arguments augment the calculation and plotting
 #' of rates.
 #'
-#' To summarize, a function output by inverseSurv has the following arguments:
+#' To summarize, a function output by \code{inverseSurv} has the following arguments:
 #' 
 #' \describe{
 #'  \item{par}{A vector of parameters, the same length as the number of parameters needed.
@@ -138,7 +138,7 @@
 #' continuous-time process (i.e. p_cont=TRUE and q_cont=TRUE for p and q, respectively,
 #' while r is always per lineage-time units). Otherwise, the respective rate will be in
 #' units per lineage-interval. If ratesPerInt is TRUE instead, then \emph{all} rates, even
-#' rates modelled as continuous-time process, will be returned as per lineage-interval rates,
+#' rates modeled as continuous-time process, will be returned as per lineage-interval rates,
 #' even the sampling rate r.}
 
 #'  \item{logRates}{If FALSE (the default) rates are plotted on a linear scale. If TRUE,

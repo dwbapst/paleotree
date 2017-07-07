@@ -70,7 +70,8 @@
 #' of categories for taxa. Taxonomic membership in different groups is indicated
 #' by numeric values. For example, a dataset could have a 'groups' matrix composed
 #' of a column representing thin and thick shelled taxa, coded 1 and 2 respectively,
-#' while the second column indicates whether taxa live in coastal, shelfal or deep
+#' while the second column indicates whether taxa live in coastal,
+#' outer continental shelf, or deep
 #' marine settings, coded 1-3 respectively. Different combinations of groups will
 #' be treated as having independent sampling and extinction parameters in the
 #' default analysis, for example, thinly-shelled deep marine species will have

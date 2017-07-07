@@ -11,12 +11,13 @@
 #'
 #' This function is mainly of use for modeling internode branch lengths in a phylogeny including fossil taxa.
 
-#' @param tree A time-scaled phylogeny to be analysed, as an object of class phylo, ideally with a $root.time element as is
+#' @param tree A time-scaled phylogeny to be analyzed, as an object of class phylo, ideally with a $root.time element as is
 #' typical for paleotree output phylogenies. If $root.time is not present, the most recent tips will be interpreted as 
 #' being at the modern day (i.e. 0 time-units before present).
 
 #' @param whichExtant A logical vector with length equal to number of tips in the tree. TRUE indicates a taxon that is extant
-#' at the moden day. If present 
+#' at the modern day, while FALSE equates to extinction. If present, this vector is used
+#' for determining which taxa are extant, and which are extinct.
 
 #' @param tol Tolerance used to distinguish extant taxa, if whichExtant is not provided, to avoid issues with number rounding. Taxa within tol of 
 #' the modern day will be considered extant.

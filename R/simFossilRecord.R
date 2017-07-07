@@ -1,4 +1,4 @@
-#' Full-Scale Simulations of the Fossil Record with Birth, Death and Sampling of Morphotaxa
+f#' Full-Scale Simulations of the Fossil Record with Birth, Death and Sampling of Morphotaxa
 #'
 #' A complete birth-death-sampling branching simulator that captures morphological-taxon identity
 #' of lineages, as is typically discussed in models of paleontological data. This function
@@ -37,10 +37,11 @@
 #' lineage splits into two descendant lineages, but differ in the morphological differentiation
 #' of these child lineages relative to their parent. Under budding cladogenesis, only one of the
 #' child lineages becomes morphologically distinguishable from the parent, and thus the ancestral
-#' morphotaxon persists through the branching event as the un-differtiated child lineage. Under
+#' morphotaxon persists through the branching event as the child lineage that does \emph{not}
+#' differentiate. Under
 #' bifurcating cladogenesis, both child lineages become immediately distinct from the ancestor,
 #' and thus two new morphotaxa appear while the ancestor terminates in an event known as
-#' 'pseudoextinction'. Crytic cladogenesis has no morphological differentiation: both child lineages
+#' 'pseudoextinction'. Cryptic cladogenesis has no morphological differentiation: both child lineages
 #' are presumed to be indistinct from the ancestor and from each other, which means a hypothetical
 #" paleontologist would not observe that branching had occurred at all. Anagenesis is morphological
 #' differentiation independent of any branching, such that a morphotaxon instanteously transitions
@@ -49,7 +50,7 @@
 #' in time at all, as modeled here (contra to the models described by Ezard et al., 2012). For ease
 #' of following these cryptic lineages, cryptic cladogenetic events are treated in terms of data
 #' structure similarly to budding cladogenetic events, with one child lineage treated as a
-#' persistance of the ancestral lineage, and the other as a new morphologically indistinguishable lineage.
+#' persistence of the ancestral lineage, and the other as a new morphologically indistinguishable lineage.
 #' This model of cryptic cladogenesis is ultimately based on the hierarchical birth-death model used
 #' by many authors for modeling patterns across paraphyletic higher taxa and the lower taxon units within
 #' them (e.g. Patzkowsky, 1995; Foote, 2012).
@@ -189,7 +190,7 @@
 #' object of class \code{fossilRecordSimulation}, and if \code{nruns} is greater than 1, a list will be output composed of
 #' \code{nruns} objects of class \code{fossilRecordSimulation}. 
 
-#' @param startTaxa Number of initital taxa to begin a simulation with. All will have the simulation start date
+#' @param startTaxa Number of initial taxa to begin a simulation with. All will have the simulation start date
 #' listed as their time of origination.
 
 #' @param sortNames If TRUE, output taxonomic lists are sorted by the taxon
@@ -300,7 +301,7 @@
 #' Foote, M. 2012. Evolutionary dynamics of taxonomic structure. \emph{Biology Letters} 8(1):135-138.
 #'
 #' Gavryushkina, A., D. Welch, T. Stadler, and A. J. Drummond. 2014. Bayesian Inference
-#' of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. \emph{PLoS Comput Biol.}
+#' of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. \emph{PLoS.Comput.Biol.}
 #' 10(12):e1003919.
 #'
 #' Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary

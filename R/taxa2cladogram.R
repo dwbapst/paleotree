@@ -7,10 +7,10 @@
 #' @details
 #' This function simulates an ideal cladistic process, where the relationships
 #' of a set of morphologically static taxa is resolved into a set of nested
-#' hierarchial relationships (a standard cladogram), as much as would be
+#' hierarchical relationships (a standard cladogram), as much as would be
 #' expected given the input relationships among those taxa. taxa2cladogram uses
 #' information on the ancestor-descendant relationships of a bunch of taxa and
-#' constructs an unscaled cladogram of the hierarcially-nesting relationships
+#' constructs an unscaled cladogram of the hierarchically-nesting relationships
 #' among those taxa. There's no actual cladistics going on, this is just a
 #' simulation of that process. If there is any chance that a set of taxa could
 #' be resolved into a set of nested relationships given their
@@ -37,7 +37,7 @@
 #' resolution. In addition to this merging, cryptic taxa can be dropped via the
 #' argument drop.cryptic, such that only the first 'species' of each cryptic
 #' taxon assemblage is listed among the tip taxa (what we would actually expect
-#' to obtain, as wouldn't recognize cryptic taxa as different OTUs). By
+#' to obtain, as we would not recognize cryptic taxa to be treated as different OTUs). By
 #' default, cryptic taxa are not dropped so that the same number of taxa as in
 #' the simulated data is retained.
  

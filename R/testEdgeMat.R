@@ -27,7 +27,7 @@
 
 #' @author 
 #' David W. Bapst, with a large number of tests incorporated from Emmanuel Paradis's checkValidPhylo function,
-#' provided at his github repo here, which was released GPL v>2:
+#' provided at his github repository here, which was released GPL v>2:
 #' 
 #' https://github.com/emmanuelparadis/checkValidPhylo
 

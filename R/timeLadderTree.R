@@ -27,9 +27,9 @@
 
 #' @param tree A phylo object
 
-#' @param timeData Two-column matrix of per-taxon first and last occurrances in
-#' absolute continous time
-
+#' @param timeData Two-column matrix of per-taxon first and last occurrences in
+#' absolute continuous time
+s
 #' @return Returns the modified tree as an object of class phylo, with no edge
 #' lengths.
 

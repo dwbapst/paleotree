@@ -11,10 +11,10 @@
 #' time-scaled relationships of the populations present at those dates. This is
 #' the tactic used by taxa2phylo.
 #' 
-#' By default, the dates selected ('obs-time' argument) are the last occurances
+#' By default, the dates selected ('obs-time' argument) are the last occurences
 #' of the taxon, so a simple use of this function will produce a time-scaled
-#' tree which describes the relaitonships of the populations present at the
-#' last occurance of each taxon in the sampled data. Alternatively, obs_time
+#' tree which describes the relationships of the populations present at the
+#' last occurence of each taxon in the sampled data. Alternatively, obs_time
 #' can be supplied with different dates within the taxon ranges.
 #' 
 #' All data relating to when static morpho-taxa appear or disappear in the

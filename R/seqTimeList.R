@@ -5,7 +5,7 @@
 #' output as a new timeList object.
 
 #' @details
-#' Many analyses of diversification and sampling in the fossil record require a dataset composed of sequential non-overlappling intervals,
+#' Many analyses of diversification and sampling in the fossil record require a dataset composed of sequential non-overlapping intervals,
 #' but the nature of the geologic record often makes this difficult, with taxa from different regions, environments and sedimentary basins
 #' having first and last appearances placed in entirely in-congruent systems of chronostratigraphic intervals. While one option is to convert
 #' such occurrences to a single, global stratigraphic system, this may still result in overlapping intervals when fossil collections are poorly
@@ -22,7 +22,7 @@
 #'
 #' By default, solutions are searched for without consideration to the length of intervals used (i.e. the selection of intervals is 'unweighted').
 #' Alternatively, we can 'weight' selection toward the smallest intervals in the set, using the argument \code{weightSampling}. Smaller
-#' intervals presumably overlap less and thus should retain more taxa and intervals of more equal length. However, in practise with empirical datasets,
+#' intervals presumably overlap less and thus should retain more taxa and intervals of more equal length. However, in practice with empirical datasets,
 #' the package author finds these approaches do not seem to produce very different estimates.
 #'
 #' For some datasets, many solutions found using seqTimeList may return infinite sampling values. This is often due to saving too many taxa

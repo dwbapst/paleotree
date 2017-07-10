@@ -5,7 +5,8 @@ Version - 2.9 (Designated as 3.0.0 at CRAN release - 07-04-17)
 -Added function treeContradiction, which gives the contradiction difference (CD) value between two topologies, as described in Bapst et al. in press (Syst Biol)
 -Added function setRootAge which will add a $root.time element to a tree, given a set of ages for tip taxa, using the age for the youngest matching taxon name
 -Added function setRootAges for setting root ages for a set of many trees as a multiPhylo object
-
+-Tried changing changelog.txt to .md, then changed it back
+-
 
 Version - 2.8 - 04-06-17 (Not Released to CRAN)
 -Added additional checks so that helpful error messages are given if species names are accidentally left in as a column in timeList for bin_cal3TimePaleoPhy and bin_timePaleoPhy, thanks Victoria Arbour for this bug report

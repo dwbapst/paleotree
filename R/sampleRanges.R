@@ -154,7 +154,7 @@
 #' matrix of first and last appearances in absolute time. NAs mean the taxon
 #' was never sampled in the simulation.
 #' 
-#' If \code{ranges.only| is FALSE (the default), the output is a list, where each
+#' If \code{ranges.only = FALSE} (the default), the output is a list, where each
 #' element is a vector of sampling events the timing of sampling events, each
 #' corresponding to a different taxon in the input. Elements that are \code{NA} are
 #' unsampled taxa.

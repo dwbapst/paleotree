@@ -61,11 +61,11 @@ multiple phylogenies, the output will be a matrix, with each row
 representing a different tree and each column a different clade shared
 between at least some subset of the trees in tree2 and the tree in tree1.
 values in the matrix are the changes in clade ages between from tree1 (as
-baseline) to tree2, with NA values representing a clade that isn't contained
+baseline) to tree2, with NA values representing a clade that is not contained
 in the tree represented by that row (but is contained in tree1 and at least
 one other tree in tree2). The matrix can be reduced to only those clades
 shared by all trees input via the argument dropUnshared. Note that this
-function distinguishes clades based on their shared taxa, and cannot infere
+function distinguishes clades based on their shared taxa, and cannot so infer
 that two clades might be identical if it were not for single taxon within
 the crown of one considered clade, despite that such a difference should
 probably have no effect on compare a node divergence date. Users should

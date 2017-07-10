@@ -1,4 +1,4 @@
-f#' Full-Scale Simulations of the Fossil Record with Birth, Death and Sampling of Morphotaxa
+#' Full-Scale Simulations of the Fossil Record with Birth, Death and Sampling of Morphotaxa
 #'
 #' A complete birth-death-sampling branching simulator that captures morphological-taxon identity
 #' of lineages, as is typically discussed in models of paleontological data. This function

@@ -13,7 +13,7 @@ optimPaleo(modelFun)
 Returns the results from using optim.
 }
 \description{
-This function is a deliberately simplistic automater for the function
+This function is a deliberately simplistic automation wrapper for the function
 \code{\link{optim}} and the use of the "L-BFGS-B" optimizing method,
 with initial parameter values and bounds provided with \code{\link{parInit}},
 \code{\link{parLower}} and \code{\link{parUpper}}. It is mainly provided here

@@ -28,8 +28,8 @@ creates an R function which calls the variables within as arguments and returns 
 consistent with the parameters of the input equation as written.
 }
 \details{
-This simple little function is rather hacky but seems to get the job done, for a
-functionality that doesn't seem to be present elsewhere in R.
+This simple little function is rather 'hacky' but seems to get the job done, for a
+functionality that does not seem to be otherwise exist elsewhere in R.
 }
 \examples{
 # some simple examples

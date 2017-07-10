@@ -26,8 +26,8 @@ Aze, T., T. H. G. Ezard, A. Purvis, H. K. Coxall, D. R. M. Stewart,
 planktonic foraminifera from fossil data. \emph{Biological Reviews} 86(4):900-927.
 }
 \description{
-An example dataset of ancestor-descendent relationships and first and last appearance dates for
-a set of macroperforate Foramanifera, taken from the supplemental materials of Aze et al. (2011).
+An example dataset of ancestor-descendant relationships and first and last appearance dates for
+a set of macroperforate Foraminifera, taken from the supplemental materials of Aze et al. (2011).
 This dataset is included here primarily for testing functions \code{parentChild2taxonTree}
 and \code{taxa2phylo}.
 }
@@ -36,11 +36,11 @@ This example dataset is composed of four tables, each containing information
 on the ancestor-descendant relationships and first and last appearances of
 species of macroperforate foraminifera species from the fossil record.
 Each of the four tables are for the same set of taxa, but divide and
-concatanate the included foram species in four different ways, relating to
+concatenate the included foram species in four different ways, relating to
 the use of morpospecies versus combined anagenetic lineages (see Ezard et
-al., 2012), and whether taxa are retained as units related by budding-cladogensis
+al., 2012), and whether taxa are retained as units related by budding-cladogenesis
 or the splitting of taxa at branching points to create a fully 'bifurcating' set
-of relationships, independent of ancestral morphotaxon persistance through branching
+of relationships, independent of ancestral morphotaxon persistence through branching
 events. See the examples section for more details.
 }
 \examples{
@@ -200,7 +200,7 @@ checkFoLo(foramAL)
 checkFoLo(foramAMb)
 checkFoLo(foramALb)
 
-#cool, but do all ancestors appear before their descendents?
+#cool, but do all ancestors appear before their descendants?
 	# easier to check unified fossilRecord2fossilTaxa format here
 
 checkAncOrder<-function(taxa){
@@ -221,7 +221,7 @@ checkAncOrder(taxaAMb)
 checkAncOrder(taxaALb)
 
 #now, are there gaps between the last occurrence of ancestors
-	# and the first occurrence of descendents?
+	# and the first occurrence of descendants?
 	# (shall we call these 'stratophenetic ghost branches'?!)
 	# These shouldn't be problematic, but do they occur in this data?
 # After all, fossilRecord2fossilTaxa output tables are designed for

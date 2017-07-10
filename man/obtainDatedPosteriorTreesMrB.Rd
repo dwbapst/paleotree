@@ -13,7 +13,7 @@ obtainDatedPosteriorTreesMrB(runFile, nRuns = 2, burnin = 0.5,
 or .t file from a MrBayes analysis. This filename and path will be used for finding additional 
 .t and .p files, via the \code{nRuns} settings and assuming that files are in the
 same directory \emph{and} these files are named under
-typical MrBayes file naming conventions. (In other words, if you've renamed your .p or .t files,
+typical MrBayes file naming conventions. (In other words, if you have renamed your .p or .t files,
 this function probably won't be able to find them.)}
 
 \item{nRuns}{The number of runs in your analysis. This variable is used for figuring out what 
@@ -50,7 +50,7 @@ and 'maximum a posteri tree' respectively. The MAP is the single tree from the p
 posterior with the highest marginal likelihood. The MCCT is the single tree from the post-burnin
 posterior which contains clades with the highest product of posterior probabilities for its
 component clades. Thus, the MAP is the best overall tree, while the MCCT may be the best
-tree for summaring topological support.}
+tree for summarizing topological support.}
 
 \item{file}{Filename (possibly with path) as a character string
 leading to a file which will be overwritten with the output trees (or summary tree),
@@ -71,7 +71,7 @@ may be wrong if you are using \code{paleotree} for \emph{paleontological} datase
 }
 \description{
 MrBayes is not great for getting samples of dated posterior phylogenies, or for obtaining certain summary trees from
-the posterior (specifically the MCCT and MAP, which are specfic trees in the posterior). This is because the tree
+the posterior (specifically the MCCT and MAP, which are specific trees in the posterior). This is because the tree
 samples as returned are scaled relative to rate parameters in a separate file. This function attempts to automate
 the handling of multiple files (both .t tree files and .p parameter files), as well as multiple files
 associated with separate runs, to obtain samples of posterior trees, or summary trees such as the MCCT or MAP.
@@ -79,7 +79,7 @@ associated with separate runs, to obtain samples of posterior trees, or summary 
 \details{
 This function is most useful for dealing with dating analyses in MrBayes, particularly when tip-dating
 a tree with fossil taxa, as the half-compatibility and all-compatibility summary trees offered by the
-'sumt' command in MrBayes can hae issues properly portraying summary trees from such datasets.
+'sumt' command in MrBayes can have issues properly portraying summary trees from such datasets.
 }
 \examples{
 \dontrun{

@@ -18,7 +18,7 @@ createMrBayesTipDatingNexus(tipTimes, outgroupTaxa = NULL,
 composed of a table of interval upper and lower time boundaries (i.e. earlier and latter bounds), and 
 a table of first and last intervals for taxa) or a matrix with rownames
 for taxa as you want listed in the MrBayes block, with either one, two
-or four columns containing ages (respectively) for point occurences with
+or four columns containing ages (respectively) for point occurrences with
 precise dates (for a single column), uncertainty bounds on a point occurrence
 (for two columns), or uncertainty bounds on the first and
 last occurrence (for four columns). Note that precise first and last occurrence
@@ -62,7 +62,7 @@ the taxa in the inputs multiple times, modifying their OTU labels, thus allowing
 multiple occurrences of long-lived morphotaxa to be listed as multiple OTUs
 arrayed across their stratigraphic duration. If 
 \code{whichAppearance = "firstLast"}, taxa will be duplicated so each taxon is
-listed as occurring twice: once at their first appearanced, and a second time at
+listed as occurring twice: once at their first appearance, and a second time at
 their last appearance. Note that if a taxon first and last appears in the same interval,
 and \code{ageCalibrationType = "uniformRange"}, then
 the resulting posterior trees may place the OTU assigned to the last occurrence before the
@@ -88,7 +88,7 @@ whatever the oldest tip age used is.}
 
 \item{collapseUniform}{MrBayes won't accept uniform age priors where the maximum and
 minimum age are identical (i.e. its actually a fixed age). Thus, if this argument
-is \code{TRUE} (the default), this functon
+is \code{TRUE} (the default), this function
 will treat any taxon ages where the maximum and minimum are identical as a fixed age, and
 will override setting \code{ageCalibrationType = "uniformRange"} for those dates.
 All taxa with their ages set to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
@@ -111,7 +111,7 @@ If \code{NULL}, tip calibration commands are output to the console.}
 
 \item{origNexusFile}{Filename (possibly with path) as a character
 string leading to a NEXUS text file, presumably containing a matrix
-of character date formateed for \emph{MrBayes}. If supplied
+of character date formated for \emph{MrBayes}. If supplied
 (it does not need to be supplied), the listed file is read as a text file, and
 concatenated with the \emph{MrBayes} script produced by this function, so as to
 reproduce the original NEXUS matrix for executing in MrBayes. 
@@ -159,7 +159,7 @@ Default (\code{ngen = 100000000}) is very high.}
 warnings (such as ignored constraints). Default for this argument is \code{FALSE}.}
 
 \item{cleanNames}{If \code{TRUE} (the default), then special characters
-(currently, thsi only contains the forward-slashes: '/') are removed from
+(currently, this only contains the forward-slashes: '/') are removed from
 taxon names before construction of the NEXUS file.}
 
 \item{printExecute}{If \code{TRUE} (the default) and if output is directed to a \code{newFile}
@@ -168,13 +168,13 @@ will be messaged to the terminal.}
 }
 \value{
 If argument \code{newFile} is \code{NULL}, then the text of the 
-generated NEXUS script is ouput to the console as a series of character strings.
+generated NEXUS script is output to the console as a series of character strings.
 }
 \description{
 This function is meant to expedite the creation of NEXUS files formatted
 for performing tip-dating analyses in the popular phylogenetics software \emph{MrBayes},
 particularly clock-less tip-dating analyses executed with 'empty' morphological matrices
-(i.e. where all taxa ae coded for a single missing character), although a pre-existing
+(i.e. where all taxa are coded for a single missing character), although a pre-existing
 morphological matrix can also be input by the user (see argument \code{origNexusFile}).
 Under some options, this pre-existing matrix may be edited by this function.
 The resulting full NEXUS script is output as a set of character strings either
@@ -187,7 +187,7 @@ which are used to construct age calibrations commands on the tip taxa
 The user must also supply some topological constraint: 
 either a set of taxa designated as the outgroup, which is then converted into a command constraining
 th monophyly on the ingroup taxa, which is presumed to be all taxa \emph{not} listed in the outgroup. 
-Alterantively, a ser may supply a tree which is then converted into a series of hard topological
+Alternatively, a user may supply a tree which is then converted into a series of hard topological
 constraints (via function \code{\link{createMrBayesConstraints}}. Both types of topological constraints
 cannot be applied. Many of the options available with \code{\link{createMrBayesTipCalibrations}} are available with this function,
 allowing users to choose between fixed calibrations or uniform priors that approximate stratigraphic uncertainty.

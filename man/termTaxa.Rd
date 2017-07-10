@@ -103,7 +103,7 @@ process, new branch lengths are calculated as an exponential distribution
 with mean 1/sumRate, where sumRate represents the sum of the branching and
 extinction rates. Although as long as both the branching rate and extinction
 rates are more than zero, any non-ultrametric tree is possible, only when
-the two rates are non-zer and equal to each other will there be a high
+the two rates are non-zero and equal to each other will there be a high
 chance of getting an extinct clade with many tips. Any analyses one could do
 on a tree such as this will almost certainly give estimates of equal
 branching and extinction rates, just because all taxa are extinct.
@@ -144,7 +144,7 @@ originally called the deprecated function \code{simFossilTaxa}).
 In particular, \code{simTermTaxaAdvanced} can be used to produce
 simulated datasets which have extant taxa.
 
-\code{trueTermTaxaTree} is analagous to the function of \code{taxa2phylo}, in that it
+\code{trueTermTaxaTree} is analogous to the function of \code{taxa2phylo}, in that it
 outputs the time-scaled-phylogeny for a terminal-taxon dataset for some
 times of observations. Unlike with the use of \code{taxa2phylo} on the output on
 \code{simFossilRecord} (via \code{fossilRecord2fossilTaxa},
@@ -207,7 +207,7 @@ tree1<-trueTermTaxaTree(termTaxaRes,FADs)
 plot(tree1);axisPhylo()
 
 #can condition on sampling some average number of taxa
-#analagous to deprecated function simFossilTaxa_SRcond
+#analogous to deprecated function simFossilTaxa_SRcond
 r<-0.1
 avgtaxa<-50
 sumRate<-0.2
@@ -243,7 +243,7 @@ Paradis, E. (2012) \emph{Analysis of Phylogenetics and Evolution
 with R (Second Edition).} New York: Springer.
 }
 \seealso{
-deadtree is simply a wraper of the function \code{rtree} in ape.
+\code{deadtree} is simply a wrapper of the function \code{rtree} in ape.
 
 For a very different way of simulating diversification in the fossil record,
 see \code{\link{simFossilRecord}}, \code{\link{fossilRecord2fossilTaxa}},

@@ -43,7 +43,7 @@ the available models of morphological differentiation in the \emph{Description} 
 slice). Must be a number between 0 and 1. If 1, all taxa that survive to the modern
 day (to the \code{sliceTime}) are sampled, if 0, none are.}
 
-\item{startTaxa}{Number of initital taxa to begin a simulation with. All will have the simulation start date
+\item{startTaxa}{Number of initial taxa to begin a simulation with. All will have the simulation start date
 listed as their time of origination.}
 
 \item{nruns}{Number of simulation datasets to accept, save and output. If \code{nruns = 1}, output will be a single
@@ -194,10 +194,11 @@ bifurcation and cryptic cladogenetic events all share in common that a single ge
 lineage splits into two descendant lineages, but differ in the morphological differentiation
 of these child lineages relative to their parent. Under budding cladogenesis, only one of the
 child lineages becomes morphologically distinguishable from the parent, and thus the ancestral
-morphotaxon persists through the branching event as the un-differtiated child lineage. Under
+morphotaxon persists through the branching event as the child lineage that does \emph{not}
+differentiate. Under
 bifurcating cladogenesis, both child lineages become immediately distinct from the ancestor,
 and thus two new morphotaxa appear while the ancestor terminates in an event known as
-'pseudoextinction'. Crytic cladogenesis has no morphological differentiation: both child lineages
+'pseudoextinction'. Cryptic cladogenesis has no morphological differentiation: both child lineages
 are presumed to be indistinct from the ancestor and from each other, which means a hypothetical
 differentiation independent of any branching, such that a morphotaxon instanteously transitions
 to a new morphotaxon identity, resulting in the pseudoextinction of the ancestral morphotaxon
@@ -205,7 +206,7 @@ and the immediate 'pseudospeciation' of the child morphotaxon. The two morphotax
 in time at all, as modeled here (contra to the models described by Ezard et al., 2012). For ease
 of following these cryptic lineages, cryptic cladogenetic events are treated in terms of data
 structure similarly to budding cladogenetic events, with one child lineage treated as a
-persistance of the ancestral lineage, and the other as a new morphologically indistinguishable lineage.
+persistence of the ancestral lineage, and the other as a new morphologically indistinguishable lineage.
 This model of cryptic cladogenesis is ultimately based on the hierarchical birth-death model used
 by many authors for modeling patterns across paraphyletic higher taxa and the lower taxon units within
 them (e.g. Patzkowsky, 1995; Foote, 2012).
@@ -731,7 +732,7 @@ Paleobiology's Perspective.} The Paleontological Society, Lawrence, Kansas.
 Foote, M. 2012. Evolutionary dynamics of taxonomic structure. \emph{Biology Letters} 8(1):135-138.
 
 Gavryushkina, A., D. Welch, T. Stadler, and A. J. Drummond. 2014. Bayesian Inference
-of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. \emph{PLoS Comput Biol.}
+of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. \emph{PLoS.Comput.Biol.}
 10(12):e1003919.
 
 Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary

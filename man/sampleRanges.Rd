@@ -15,47 +15,37 @@ output of \code{simFossilRecord}, post transformation with \code{fossilRecord2fo
 can also be supplied, which will be common in simulation usages.}
 
 \item{r}{Instantaneous average sampling rate per lineage time units; given
-as a vector of length one or length equal to the number of taxa}
+as a vector of length one or length equal to the number of taxa.}
 
 \item{alpha}{Alpha parameter of beta distribution; given as a vector of
-length one or length equal to the number of taxa}
+length one or length equal to the number of taxa.}
 
 \item{beta}{Beta parameter of beta distribution; given as a vector of length
-one or length equal to the number of taxa}
+one or length equal to the number of taxa.}
 
 \item{rTimeRatio}{Ratio of most recent sampling rate over earliest sampling
-rate; given as a vector of length one or length equal to the number of taxa}
+rate; given as a vector of length one or length equal to the number of taxa.}
 
 \item{modern.samp.prob}{Probability of sampling living taxa at the present
 day (time=0), see below.}
 
 \item{min.taxa}{Minimum number of taxa sampled. The default is 2.}
 
-\item{ranges.only}{If TRUE, gives taxon first and last occurrences only. If
+\item{ranges.only}{If \code{TRUE}, gives taxon first and last occurrences only. If
 FALSE, gives the time of all sampling events as a list.}
 
 \item{minInt}{Minimum interval size used for simulating complex models}
 
-\item{merge.cryptic}{If TRUE, sampling events for cryptic species will be
+\item{merge.cryptic}{If \code{TRUE}, sampling events for cryptic species will be
 merged into one taxon.}
 
-\item{randLiveHat}{If TRUE, taxa still alive at modern day have the
+\item{randLiveHat}{If \code{TRUE}, taxa still alive at modern day have the
 end-point of their 'hat' chosen from a uniform distribution.}
 
-\item{alt.method}{If TRUE, use the alternative method of discretizing time
+\item{alt.method}{If \code{TRUE}, use the alternative method of discretizing time
 even if a simple model of sampling is being simulated.}
 
-\item{plot}{If TRUE, plots the sampling models for each taxon against time.}
-}
-\value{
-If ranges.only is TRUE, then the output is a two-column per-taxon
-matrix of first and last appearances in absolute time. NAs mean the taxon
-was never sampled in the simulation.
-
-If ranges.only is FALSE (the default), the output is a list, where each
-element is a vector of sampling events the timing of sampling events, each
-corresponding to a different taxon in the input. Elements that are NA are
-unsampled taxa.
+\item{plot}{If \code{TRUE}, plots the sampling models for each taxon against time.}
 }
 \description{
 A function for simulating the effect of incomplete sampling of the fossil
@@ -68,38 +58,40 @@ occurs as a Poisson process under a instantaneous sampling rate (r) which is
 homogeneous through time and across lineages (Foote, 1997). Under this model,
 the waiting times to sampling events are exponentially distributed, with an
 average waiting time of 1/r. This useful property allows sampling to be
-rapidly simulated for many taxa under this simple model in sampleRanges, by
+rapidly simulated for many taxa under this simple model in \code{sampleRanges}, by
 repeatedly drawing waiting times between sampling events from an exponential
-distribution. This is the model that is run when alpha, beta and
-rTimeRatio are set to 1.
+distribution. This is the model that is run when 
+\code{alpha}, \code{beta} and \code{rTimeRatio}.
 
 In addition to this simple model, sampleRanges also can consider a range of
-additional models, including the hatP and incP options of Liow et al.
+additional models, including the \emp{hatP} and \emph{incP} options of Liow et al.
 (2010). To describe the behavior of these models, users alter the default
-values for alpha, beta and rTimeRatio. These parameters, and r, can either
+values for \code{alpha}, \code{beta} and \code{rTimeRatio}.
+These parameters, and \code{r}, can either
 be a single value which describes the behavior of the entire dataset or as a
 vector, of same length as the number of taxa, which describes the per-taxon
-value.  When any rTimeRatio, alpha or beta value is not equal to one, then
+value.  When any \code{rTimeRatio}, alpha or beta value is not equal to one, then
 the sampling rate will vary across the duration of a taxon's temporal range.
 In general, setting alpha and beta equal to a value above 2 produce "hat" or
 bell-shaped curves where sampling rates peak at the midpoint of taxon
 ranges, while setting them unequal will produce asymmetric bell curves
 according to the beta function (Liow et al., 2010; Liow et al. set
-alpha=beta=4). rTimeRatio is the ratio of the sampling rate of the
+\code{alpha=4} and \code{beta=4}). \code{rTimeRatio} is the
+ratio of the sampling rate of the
 latest/most recent time divided by the earliest/oldest time.
 
 The input r values will be interpreted differently based on whether one r
 value or per-taxon values were used. If one value was input, then it is
 assumed that r represent the grand mean r for the entire dataset for purposes
-of time-varying r, such that if rTimeRatio is not equal to 1, taxa near the
+of time-varying r, such that if \code{rTimeRatio} is not equal to 1, taxa near the
 end and start of the dataset will have very different per-taxon mean
 sampling rate. If per-taxon values of r were input, then each r is consider
 the per-taxon mean sampling rate. These will not be changed, but any
 within-lineage variation is distributed so that the mean is still the input
-per-taxon value. This also changes the interpretation of rTimeRatio, such
-that when a single r value and rTimeRatio is given, it is assumed the ratio
+per-taxon value. This also changes the interpretation of \code{rTimeRatio}, such
+that when a single r value and \code{rTimeRatio} is given, it is assumed the ratio
 describes the change in sampling rates from the start of the dataset to the
-end, while if multiple values are given for either r or rTimeRatio will
+end, while if multiple values are given for either r or \code{rTimeRatio} will
 instead see the value as describing the ratio at the first and last times of
 each taxon. For the pure hat model, this interpretation of 'r' as a grand mean
 sampling means that taxa will have a sampling rate of 2*r at the mid-peak of their
@@ -107,7 +99,8 @@ range, which will have considerable implications for taxonomic incompleteness.
 
 The particular distinctions about these parameter values are important: all
 models simulated in sampleRanges are structured to be effectively nested
-inside a most general model with parameters r, alpha, beta and rTimeRatio.
+inside a most general model with parameters \code{r},
+\code{alpha}, \code{beta} and \code{rTimeRatio}.
 
 Note that the modeling of sampling in this function is independent and
 secondary of the actual simulation of the ranges, which are (generally)
@@ -125,8 +118,9 @@ et al., 2010). However, for still-living taxa at the modern day, it is
 unknown how much longer they may be alive (for memoryless Poisson models,
 there is no age-dependent extinction). The treatment of these taxa with
 regards to their 'hat' (i. e. the beta distribution) is controlled by randLivehat:
-when ranLiveHat=FALSE, the beta distribution is fit so that the last appearance of
-still-alive taxa at the modern day is treated as a last appearance for calculating the hat. When TRUE,
+when \code{ranLiveHat=FALSE}, the beta distribution is fit so that the last appearance of
+still-alive taxa at the modern day is treated as a last appearance for
+calculating the hat. When \code{TRUE},
 the default option, the still-alive taxa are considered to have gotten some
 distance between 0 and 1 through the beta distribution, as of the modern
 day. This point of progression is stochastically selected for each taxon by
@@ -149,17 +143,17 @@ examples below for a small test of this.
 As with many functions in the paleotree library, absolute time is always
 decreasing, i.e. the present day is zero.
 
-If min.taxa is set to zero, the simulation may produce output in which no
+If \code{min.taxa} is set to zero, the simulation may produce output in which no
 taxa were ever sampled.
 
-If modern.samp.prob is set to 1.0 (the default), then living taxa will
+If \code{modern.samp.prob} is set to 1.0 (the default), then living taxa will
 always be sampled at least at the present day (if there are any living
 taxa). If the probability is less than 1, they will be sampled with that
 probability at the modern day.
 
 By default, this function will merge sampling events from morphologically
 cryptic taxa, listing them as occurrences for the earliest member of that
-group. To change this behavior, set merge.cryptic to FALSE.
+group. To change this behavior, set \code{merge.cryptic = FALSE}.
 
 Conditioning on sampling some minimum number of taxa may create strange
 simulation results for some analyses, such as simulation analyses of

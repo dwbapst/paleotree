@@ -1,4 +1,4 @@
-f#' Constrain Parameters for a Model Function from paleotree
+#' Constrain Parameters for a Model Function from paleotree
 #'
 #' This function constrains a model to make submodels with fewer parameters,
 #' using a structure and syntax taken from the function \code{constrain}

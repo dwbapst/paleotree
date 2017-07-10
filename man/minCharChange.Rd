@@ -39,7 +39,7 @@ be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if 
 a cost matrix is given, as the only reason to use orderedChar is to produce a cost matrix automatically.}
 
 \item{type}{The parsimony algorithm applied by \code{ancestral.pars}, which can apply one of two:
-"MPR" (the default) is a relatively fast algorithm developed by Hamazawa et al. (1995) and Narushima
+"MPR" (the default) is a relatively fast algorithm developed by Hanazawa et al. (1995) and Narushima
 and Hanazawa (1997), which relies on reconstructing the states at each internal node by re-rooting at
 that node.  "ACCTRAN", the 'accelerated transitions' algorithm (Swofford and Maddison, 1987), favors
 character reversal over independent gains when there is ambiguity. The "ACCTRAN" option in
@@ -74,8 +74,8 @@ For example, a taxon coded as polymorphic for states 1 or 2, would be indicated 
 \code{polySymbol} is used to break up these strings and automatically construct a fitting \code{contrast} table
 for use with this data, including for ambiguous character state codings.}
 
-\item{contrast}{A matrix of type integer with cells of 0 and 1, where each row is labelled with a string value
-used for indicating character states in \code{trait}, and each column is labelled with the formal state label to
+\item{contrast}{A matrix of type integer with cells of 0 and 1, where each row is labeled with a string value
+used for indicating character states in \code{trait}, and each column is labeled with the formal state label to
 be used for assign taxa to particular character states. A value of 1 indicates that the respective coding string for
 that row should be interpreted as reflecting the character state listed for that column. A coding could reflect
 multiple states (such as might occur when taxa are polymorphic for some morphological character), so the sums of
@@ -117,7 +117,7 @@ of each other.}
 \item{\code{solutionArray}}{A three-dimensional array, where for each solution, we have a matrix with edges
 for rows and two columns indicating the ancestral and child nodes of that edge, with values indicating the
 states inferred for those nodes in a particular solution.}
-\item{\code{transitionArray}}{A labelled three-dimensional array where for each solution we have a symmetrical
+\item{\code{transitionArray}}{A labeled three-dimensional array where for each solution we have a symmetrical
 matrix with number of rows and columns equal to the number of character states, with values in each cell
 indicating the total number of transitions from one ancestral state (i.e. the rows) to a descendant state
 (i.e. the columns).}
@@ -311,7 +311,7 @@ Swofford, D. L., and W. P. Maddison. 1987. Reconstructing ancestral character st
 Wagner parsimony. Mathematical Biosciences 87(2):199-229.
 }
 \seealso{
-The functions described here are effectively wrapers of \code{phangorn}'s function
+The functions described here are effectively wrappers of \code{phangorn}'s function
 \code{ancestral.pars}.
 }
 \author{

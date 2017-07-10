@@ -18,7 +18,7 @@ various genera on the cladogram first and last appear in those graptolite zones.
 \item{\code{retioChar}}{A matrix containing binary presence-absence character states for these 22
 Retiolitinae genera for three characters which they vary in: the presence of extrathecal threads
 (note only one taxon lacks this character state), the presence of determinant growth and the
-secondary loss of a nema via resorbtion. Note these character do not vary within these genera.}
+secondary loss of a nema via resorption. Note these character do not vary within these genera.}
 }}
 \source{
 Source for cladogram and zonal ranges for genera: 

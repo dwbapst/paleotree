@@ -488,7 +488,7 @@ Laurin, M. 2004. The Evolution of Body Size, Cope's Rule and the Origin of
 Amniotes. \emph{Systematic Biology} 53(4):594-622.
 
 Lloyd, G. T., S. C. Wang, and S. L. Brusatte. 2012 Identifying Heterogeneity
-in Rates of Morphological Evolutio: Discrete Character Change in the
+in Rates of Morphological Evolution: Discrete Character Change in the
 Evolution of Lungfish(Sarcopterygii, Dipnoi). \emph{Evolution}
 \bold{66}(2):330--348.
 

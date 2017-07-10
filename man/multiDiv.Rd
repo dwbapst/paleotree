@@ -37,7 +37,7 @@ estimating taxon curves. Only works for objects from \code{simFossilRecord}
 via \code{fossilRecord2fossilTaxa}.}
 
 \item{extant.adjust}{Amount of time to be added to extend start time for
-(0,0) bins for extant taxa, so that the that 'time interval' doesn't appear 
+(0,0) bins for extant taxa, so that the that 'time interval' does not appear 
 to have an infinitely small width.}
 
 \item{plotLogRich}{If TRUE, taxic diversity is plotted on log scale.}
@@ -180,5 +180,5 @@ The diversity curve functions used include: \code{\link{phyloDiv}},
 
 Also see the function LTT.average.root in the package TreeSim, which
 calculates an average LTT curve for multiple phylogenies, the functions
-mltt.plot in ape and ltt in phytools.
+code{mltt.plot} in ape and code{ltt} in phytools.
 }

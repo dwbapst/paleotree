@@ -22,7 +22,7 @@ speciational event is non-zero.}
 by default.}
 }
 \value{
-Retuns a vector of trait values for each taxon, with value names
+Returns a vector of trait values for each taxon, with value names
 being the taxa IDs (column 1 of the input) with a 't' pasted (as with rtree
 in the ape library).
 }
@@ -38,7 +38,7 @@ a Brownian model, but only at events that create new distinct morphotaxa
 or anagenesis (pseudospeciation). These are the types of morphological
 differentiation which can be simulated in the function \code{simFossilRecord}. This
 is sometimes referred to as cladogenetic or speciation trait evolution and
-is related to Puncuated Equilibrium theory. Anagenestic shifts aren't
+is related to Punctuated Equilibrium theory. Anagenetic shifts are not
 cladogenetic events per se (no branching!), so perhaps the best way to this
 of this function is it allows traits to change anytime \code{simFossilRecord} created
 a new 'morphotaxon' in a simulation.

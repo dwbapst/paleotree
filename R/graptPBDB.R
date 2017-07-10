@@ -21,7 +21,7 @@
 
 #' @source 
 #' See examples for the full R code used to obtain the data from the API.
-#' You can find the Paleobiology Database at \link{http://paleobiodb.org}
+#' You can find the Paleobiology Database at \url{http://paleobiodb.org}
 #' 
 #' The occurrence data was entered by (in order of relative portion) P. Novack-Gottshall, M. Krause, M. Foote,
 #' A. Hendy, T. Hanson, M. Sommers and others. This same data was authorized mainly by A. Miller,

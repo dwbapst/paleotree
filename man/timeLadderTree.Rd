@@ -9,8 +9,8 @@ timeLadderTree(tree, timeData)
 \arguments{
 \item{tree}{A phylo object}
 
-\item{timeData}{Two-column matrix of per-taxon first and last occurrances in
-absolute continous time}
+\item{timeData}{Two-column matrix of per-taxon first and last occurrences in
+absolute continuous time.}
 }
 \value{
 Returns the modified tree as an object of class phylo, with no edge

@@ -20,7 +20,7 @@ any formal taxa, their occurrences are merged onto the formal taxa. This argumen
 has any appreciable effect when rank=species.}
 
 \item{cleanUncertain}{If TRUE (the default) any occurrences with an entry in the respective
-'resolution' field that is *not* found in the argument cleanResoValue will be removed from
+'resolution' field that is *not* found in the argument \code{cleanResoValue} will be removed from
 the dataset. These are assumed to be values indicating taxonomic uncertainty, i.e. 'cf.' or '?'.}
 
 \item{cleanResoValues}{The set of values that can be found in a 'resolution' field that do not
@@ -73,7 +73,7 @@ by default, as controlled by argument \code{cleanUncertain}. This is done by rem
 have an entry in \code{primary_reso} (was "\code{genus_reso}" in v1.1 API) when \code{rank} is a
 supraspecific level, and \code{species_reso} when rank=species, if that entry is not found in
 \code{cleanResoValues}. In some rare cases, when \code{onlyFormal=FALSE}, supraspecific taxon names may be
-returned in the output that have various 'cruft' attached, like 'n.sp'.
+returned in the output that have various 'cruft' attached, like 'n.sp.'.
 
 Empty values in the input data table ("") are converted to NAs, as they may be due to issues
 with using read.csv to convert API-downloaded data.

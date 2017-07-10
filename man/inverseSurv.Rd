@@ -26,7 +26,8 @@ to the number of taxa and the number of columns equal to the number of 'systems'
 of categories for taxa. Taxonomic membership in different groups is indicated
 by numeric values. For example, a dataset could have a 'groups' matrix composed
 of a column representing thin and thick shelled taxa, coded 1 and 2 respectively,
-while the second column indicates whether taxa live in coastal, shelfal or deep
+while the second column indicates whether taxa live in coastal,
+outer continental shelf, or deep
 marine settings, coded 1-3 respectively. Different combinations of groups will
 be treated as having independent sampling and extinction parameters in the
 default analysis, for example, thinly-shelled deep marine species will have
@@ -52,7 +53,7 @@ although more logically has the value of 1 when there are still extant
 taxa (i.e., if the last interval is the Holocene and the group is
 still alive, the probability of sampling them later is probably 1...).
 Should be a value of 0 to 1, NULL, or can be simply "fixed", the default option.
-This default "fixed" option allows make_inverseSurv to decide the value
+This default "fixed" option allows \code{make_inverseSurv} to decide the value
 based on whether there is a modern interval (i.e. an interval that is 
 \code{c(0,0)}) or not: if there is one, then \code{PA_n=1}, if not, 
 then \code{PA_n=0}. If NULL, PA_n is treated as an additional free
@@ -106,7 +107,7 @@ in the analysis, unlike the p, q, and r parameters (see below).
 
 Groupings follow the parameter names, separated by periods; by default, the
 parameters will be placed in groups corresponding to the discrete intervals
-in the input timeList, such that make_inverseSurv will create a function with
+in the input timeList, such that \code{make_inverseSurv} will create a function with
 parameters 'p.1', 'q.1' and 'r.1' for interval 1; 'p.2', 'q.2' and 'r.2' for
 interval 2 and so on. Additional groupings given by the user are listed after 
 this first set (e.g. 'p.1.2.2').
@@ -140,7 +141,7 @@ this alternative mode, instead of trying to estimate the negative log-likelihood
 from the given parameters. The other arguments augment the calculation and plotting
 of rates.
 
-To summarize, a function output by inverseSurv has the following arguments:
+To summarize, a function output by \code{inverseSurv} has the following arguments:
 
 \describe{
  \item{par}{A vector of parameters, the same length as the number of parameters needed.
@@ -159,7 +160,7 @@ be in units per lineage-time units, if those rates were being treated as rates f
 continuous-time process (i.e. p_cont=TRUE and q_cont=TRUE for p and q, respectively,
 while r is always per lineage-time units). Otherwise, the respective rate will be in
 units per lineage-interval. If ratesPerInt is TRUE instead, then \emph{all} rates, even
-rates modelled as continuous-time process, will be returned as per lineage-interval rates,
+rates modeled as continuous-time process, will be returned as per lineage-interval rates,
 even the sampling rate r.}
  \item{logRates}{If FALSE (the default) rates are plotted on a linear scale. If TRUE,
 rates are plotted on a vertical log axis.}

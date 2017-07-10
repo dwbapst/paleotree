@@ -13,7 +13,7 @@ createMrBayesTipCalibrations(tipTimes, ageCalibrationType,
 composed of a table of interval upper and lower time boundaries (i.e. earlier and latter bounds), and 
 a table of first and last intervals for taxa) or a matrix with rownames
 for taxa as you want listed in the MrBayes block, with either one, two
-or four columns containing ages (respectively) for point occurences with
+or four columns containing ages (respectively) for point occurrences with
 precise dates (for a single column), uncertainty bounds on a point occurrence
 (for two columns), or uncertainty bounds on the first and
 last occurrence (for four columns). Note that precise first and last occurrence
@@ -53,7 +53,7 @@ whatever the oldest tip age used is.}
 
 \item{collapseUniform}{MrBayes won't accept uniform age priors where the maximum and
 minimum age are identical (i.e. its actually a fixed age). Thus, if this argument
-is \code{TRUE} (the default), this functon
+is \code{TRUE} (the default), this function
 will treat any taxon ages where the maximum and minimum are identical as a fixed age, and
 will override setting \code{ageCalibrationType = "uniformRange"} for those dates.
 All taxa with their ages set to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
@@ -76,7 +76,7 @@ If \code{NULL}, tip calibration commands are output to the console.}
 }
 \value{
 If argument \code{file} is \code{NULL}, then the tip age commands
-are ouput as a series of character strings.
+are output as a series of character strings.
 
 All taxa with their ages set to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
 are returned as a list within a commented line of the returned MrBayes block.
@@ -95,7 +95,7 @@ commands in the \emph{MrBayes} block of a NEXUS file for use with
 \details{
 Beware: some combinations of arguments might not make sense for your data.
 
-(But that's always true, isn't it?)
+(But that's always true, is it not?)
 }
 \examples{
 

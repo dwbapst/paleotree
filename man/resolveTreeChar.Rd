@@ -31,7 +31,7 @@ a cost matrix is given manually.}
 \item{stateBias}{This argument controls how \code{resolveTreeChar} handles ancestral node reconstructions that have
 multiple states competing for the maximum weight of any state (i.e. if states 0 and 1 both have 0.4 of the weight). The
 default, where \code{stateBias = NULL} causes uncertainty at nodes among states to be treated as a single 'group' identical
-to any states within it. Essentially, this means that for the example polytomy where the ancestor hax maximum weight for both 0 and 1, 
+to any states within it. Essentially, this means that for the example polytomy where the ancestor has maximum weight for both 0 and 1, 
 any child nodes with 0, 1 or both of these states will be considered to have an identical state for the purpose of grouping nodes
 for the purpose of further resolving polytomies. If and only if \code{orderedChar = TRUE}, then additional options of
 \code{stateBias = 'primitive'} and \code{stateBias = 'derived'} become available, which instead force uncertain node
@@ -44,7 +44,7 @@ functionality across the entire tree until the number of nodes stabilizes. If FA
 time.}
 
 \item{type}{The parsimony algorithm applied by \code{ancestral.pars}, which can apply one of two:
-"MPR" (the default) is a relatively fast algorithm developed by Hamazawa et al. (1995) and Narushima
+"MPR" (the default) is a relatively fast algorithm developed by Hanazawa et al. (1995) and Narushima
 and Hanazawa (1997), which relies on reconstructing the states at each internal node by re-rooting at
 that node.  "ACCTRAN", the 'accelerated transitions' algorithm (Swofford and Maddison, 1987), favors
 character reversal over independent gains when there is ambiguity. The "ACCTRAN" option in
@@ -75,8 +75,8 @@ For example, a taxon coded as polymorphic for states 1 or 2, would be indicated 
 \code{polySymbol} is used to break up these strings and automatically construct a fitting \code{contrast} table
 for use with this data, including for ambiguous character state codings.}
 
-\item{contrast}{A matrix of type integer with cells of 0 and 1, where each row is labelled with a string value
-used for indicating character states in \code{trait}, and each column is labelled with the formal state label to
+\item{contrast}{A matrix of type integer with cells of 0 and 1, where each row is labeled with a string value
+used for indicating character states in \code{trait}, and each column is labeled with the formal state label to
 be used for assign taxa to particular character states. A value of 1 indicates that the respective coding string for
 that row should be interpreted as reflecting the character state listed for that column. A coding could reflect
 multiple states (such as might occur when taxa are polymorphic for some morphological character), so the sums of

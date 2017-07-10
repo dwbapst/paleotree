@@ -12,32 +12,32 @@ perCapitaRates(timeList, plot = TRUE, logRates = FALSE,
 \item{timeList}{A list composed of two matrices, giving interval start and end 
 dates and taxon first and last occurrences within those intervals. See details.}
 
-\item{plot}{If true, the per-capita origination and extinctions rates are 
+\item{plot}{If \code{TRUE}, the per-capita origination and extinctions rates are 
 plotted for each interval. Rates which cannot be calculated for an interval
 will not be plotted, thus appearing as a gap in the plotted graph. The
 author takes no responsibility for the aesthetics of this plot.}
 
-\item{logRates}{If true, rates plotted on log scale.}
+\item{logRates}{If \code{TRUE}, rates plotted on log scale.}
 
 \item{drop.extant}{Drops all extant taxa from a dataset before
 calculating per-capita origination and extinction rates.}
 
-\item{isExtant}{A vector of TRUE and FALSE values, same length as the
-number of taxa in the second matrix of timeList, where TRUE values indicate
+\item{isExtant}{A vector of \code{TRUE} and \code{FALSE} values, same length as the
+number of taxa in the second matrix of timeList, where \code{TRUE} values indicate
 taxa that are alive in the modern day (and thus are boundary crossers which
 leave the most recent interval). By default, this argument is NULL and instead
 which taxa are extant is inferred based on which taxa occur in an interval
 with start and end times both equal to zero. See details.}
 
-\item{jitter}{If TRUE (default) the extinction rate will be plotted slightly
+\item{jitter}{If \code{TRUE} (default) the extinction rate will be plotted slightly
 ahead of the origination rate on the time axis, so the two can be differentiated.}
 
 \item{legendPosition}{The position of a legend indicating which line is
 origination rate and which is extinction rate on the resulting plot. This
 is given as the possible positions for argument 'x' of the function 
-\code{\link{legend}}, and by default is "topleft", which will be generally
+\code{\link{legend}}, and by default is \code{"topleft"}, which will be generally
 useful if origination and extinction rates are initially low. If 
-legendPosition is NA, then a legend will not be plotted.}
+\code{legendPosition = NA}, then a legend will not be plotted.}
 }
 \value{
 This function will invisibly return a ten column matrix,
@@ -60,8 +60,9 @@ and extinction from paleontological range data, as described by Foote
 (2000). These values are the instantaneous rate of either type of event
 occurring per lineage time-units. Although Foote (2001) also presents a
 number of alternative rates collected from the prior literature such as
-the VanValen rate metrics, these are not implemented here, but could be
-estimated using the matrix invisibly output by this function.
+the 'Van Valen' rate metrics, these are not implemented here, but could be
+estimated using the matrix invisibly output by this function (See Foote,
+2000, for the relevant equations for calculating these).
 
 The timeList object should be a list composed of two matrices, the first
 matrix giving by-interval start and end times (in absolute time), the second

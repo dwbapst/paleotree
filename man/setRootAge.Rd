@@ -3,7 +3,7 @@
 \name{setRootAge}
 \alias{setRootAge}
 \alias{setRootAges}
-\title{Place a Non-Ultrametric Tree of Fossil Taxa on Abslute Time}
+\title{Place a Non-Ultrametric Tree of Fossil Taxa on Absolute Time}
 \usage{
 setRootAge(tree, fixedAges = NULL)
 
@@ -31,7 +31,7 @@ as a \code{$root.time} element, and then outputs the tree. Function \code{setRoo
 \details{
 Trees of fossil taxa come with one issue rarely encountered by those dealing with molecular
 phylogenies: the absolute timing of when tips and divergences is not certain. With the vast
-majority of molecular phylogenies, it cn be assumed the youngest tips occur at 0 time -- i.e.,
+majority of molecular phylogenies, it can be assumed the youngest tips occur at 0 time -- i.e.,
 the modern. This knowledge gives the tree an anchor for figuring out the absolute timing of events.
 Many programs and other software designed for depicting and analyzing phylogenetic hypotheses
 assumes such an apparent absolute time-scale (in R and elsewhere). A tree of Paleozoic brachiopods that include no

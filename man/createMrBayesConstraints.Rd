@@ -30,7 +30,7 @@ the construction of tip-dating analyses, which must constrain the ingroup.}
 }
 \value{
 If argument \code{file} is \code{NULL}, then the constrain commands
-are ouput as a series of character strings.
+are output as a series of character strings.
 }
 \description{
 Takes a phylogeny in the form of an object of class \code{phylo} and

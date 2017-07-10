@@ -64,7 +64,7 @@ distribution. This is the model that is run when
 \code{alpha}, \code{beta} and \code{rTimeRatio}.
 
 In addition to this simple model, sampleRanges also can consider a range of
-additional models, including the \emp{hatP} and \emph{incP} options of Liow et al.
+additional models, including the \emph{hatP} and \emph{incP} options of Liow et al.
 (2010). To describe the behavior of these models, users alter the default
 values for \code{alpha}, \code{beta} and \code{rTimeRatio}.
 These parameters, and \code{r}, can either

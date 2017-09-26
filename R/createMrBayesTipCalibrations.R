@@ -218,12 +218,13 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	if(length(anchorTaxon)!=1){
 		stop("anchorTaxon must be of length 1")
 		}
+	# is anchorTaxon a logical?
 	if(is.logical(anchorTaxon)){
 		pickFix<-anchorTaxon
+		# Does an anchorTaxon need to be picked?
 		if(anchorTaxon & ageCalibrationType=="uniformRange"){
+			# remember taxonNames[1] for later... might not become fixed though
 			anchorTaxon<-taxonNames[1]
-			message(paste0("anchorTaxon not user-defined, forcing ",
-				taxonNames[1]," to be a fixed tip age"))
 		}else{
 			anchorTaxon<-NULL
 			}
@@ -336,9 +337,11 @@ createMrBayesTipCalibrations<-function(tipTimes,
 			}
 		# fix anchor taxon
 			# -Need to write code so that users are forced by default to constrain at least one
-			# taxon to a precise time (an anchor taxon) for sake of accurately dating tree on absolute time-scale
+			# taxon to a precise time (an anchor taxon) for sake of accurately dating tree on absolute time-scale	
 		if(pickFix){
 			if(!any(fixCollapse)){
+				message(paste0("anchorTaxon not user-defined, forcing ",
+					anchorTaxon," to be a fixed tip age"))
 				fixCollapse[rownames(tipTimes)==anchorTaxon]<-TRUE
 				}
 		}else{

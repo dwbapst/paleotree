@@ -82,9 +82,9 @@
 #' 
 #' # let's write a quick&dirty ancestral trait plotting function
 #' 
-#'  quickAncPlot<-function(tree,trait,cex,orderedChar=FALSE,type="MPR",cost=NULL){
-#' 	ancData<-ancPropStateMat(tree=tree, trait=trait, orderedChar=orderedChar)
-#' 	ancCol<-(1:ncol(ancData))+1
+#' quickAncPlot<-function(tree, trait, cex, orderedChar=FALSE, type="MPR", cost=NULL){
+#' 	 ancData<-ancPropStateMat(tree=tree, trait=trait, orderedChar=orderedChar)
+#' 	 ancCol<-(1:ncol(ancData))+1
 #'  	plot(tree,show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
 #'  	tiplabels(pch=16,pie=ancData[(1:Ntip(tree)),],cex=cex,piecol=ancCol,
 #' 		col=0)

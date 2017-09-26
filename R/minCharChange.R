@@ -195,19 +195,19 @@
 #' 
 #' #unordered, MPR
 #' ancMPR<-ancPropStateMat(tree, trait=char, type="MPR")
-#' #unordered, ACCTRAN
-#' ancACCTRAN<-ancPropStateMat(tree, trait=char, type="ACCTRAN")
+#  #unordered, ACCTRAN
+#  ancACCTRAN<-ancPropStateMat(tree, trait=char, type="ACCTRAN")
 #' #ordered, MPR
 #' ancMPRord<-ancPropStateMat(tree, trait=char, orderedChar=TRUE, type="MPR")
 #' 
-#' #let's compare MPR versus ACCTRAN results
-#' layout(1:2)
-#' quickAncPlotter(tree,ancMPR,cex=0.3)
-#' text(x=8,y=15,"type='MPR'",cex=1.5)
-#' quickAncPlotter(tree,ancACCTRAN,cex=0.3)
-#' text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
-#' #MPR has much more uncertainty in node estimates
-#' 	#but that doesn't mean ACCTRAN is preferable
+#  #let's compare MPR versus ACCTRAN results
+#  layout(1:2)
+#  quickAncPlotter(tree,ancMPR,cex=0.3)
+#  text(x=8,y=15,"type='MPR'",cex=1.5)
+#  quickAncPlotter(tree,ancACCTRAN,cex=0.3)
+#  text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
+#  #MPR has much more uncertainty in node estimates
+#  	#but that doesn't mean ACCTRAN is preferable
 #'
 #' #let's compare unordered versus ordered under MPR
 #' layout(1:2)
@@ -232,8 +232,8 @@
 #' #estimating minimum number of transitions with MPR 
 #' minCharChange(tree,trait=char,type="MPR")
 #'
-#' #and now with ACCTRAN
-#' minCharChange(tree,trait=char,type="ACCTRAN")
+#  #and now with ACCTRAN
+#  minCharChange(tree,trait=char,type="ACCTRAN")
 #'
 #' #POLYMORPHISM IN CHARACTER DATA
 #' 

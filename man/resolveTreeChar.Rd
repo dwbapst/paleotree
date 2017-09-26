@@ -5,7 +5,7 @@
 \title{Resolve Polytomies Using Parsimony-Based Reconstruction of a Discrete Character}
 \usage{
 resolveTreeChar(tree, trait, orderedChar = FALSE, stateBias = NULL,
-  iterative = TRUE, type = "MPR", cost = NULL, ambiguity = c(NA, "?"),
+  iterative = TRUE, cost = NULL, ambiguity = c(NA, "?"),
   dropAmbiguity = FALSE, polySymbol = "&", contrast = NULL)
 }
 \arguments{
@@ -23,10 +23,7 @@ matrix of a linear, ordered character, and polytomies will be resolved so that l
 states will be placed into a nested ladder that reflects the ordered character. As with the unordered option,
 child nodes with a state equivalent to the ancestral node will remain in the polytomy, while more primitive
 or more derived states will be sorted into their own separate ladders composed of paraphyletic groups, ordered
-so to move 'away' state-by-state from the ancestral node's inferred character state.
-This option is not applicable if \code{type = "ACCTRAN"}, as cost matrices cannot
-be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if \code{orderedChar=TRUE} but
-a cost matrix is given manually.}
+so to move 'away' state-by-state from the ancestral node's inferred character state.}
 
 \item{stateBias}{This argument controls how \code{resolveTreeChar} handles ancestral node reconstructions that have
 multiple states competing for the maximum weight of any state (i.e. if states 0 and 1 both have 0.4 of the weight). The
@@ -43,18 +40,8 @@ character transitions against finding reversals.}
 functionality across the entire tree until the number of nodes stabilizes. If FALSE, polytomies are only passed a single
 time.}
 
-\item{type}{The parsimony algorithm applied by \code{ancestral.pars}, which can apply one of two:
-"MPR" (the default) is a relatively fast algorithm developed by Hanazawa et al. (1995) and Narushima
-and Hanazawa (1997), which relies on reconstructing the states at each internal node by re-rooting at
-that node.  "ACCTRAN", the 'accelerated transitions' algorithm (Swofford and Maddison, 1987), favors
-character reversal over independent gains when there is ambiguity. The "ACCTRAN" option in
-ancestral.pars avoids repeated rerooting of the tree to search for a smaller set of maximum-parsimony
-solutions that satisfy the ACCTRAN algorithm, but does so by assigning edge weights.
-As of phangorn v1.99-12, both of these algorithms apply
-the Sankoff parsimony algorithm, which allows multifurcations (polytomies).}
-
 \item{cost}{A matrix of the cost (i.e. number of steps) necessary to change between states of the input
-character trait. If NULL (the
+character trait. If \code{NULL} (the
 default), the character is assumed to be unordered with equal cost to change from any state to another.
 Cost matrices only impact the "MPR" algorithm; if a cost matrix is given but \code{type = "ACCTRAN"}, an error
 is issued.}
@@ -122,9 +109,9 @@ data and the performance of the dataset with the various arguments of this funct
 
 # let's write a quick&dirty ancestral trait plotting function
 
- quickAncPlot<-function(tree,trait,cex,orderedChar=FALSE,type="MPR",cost=NULL){
-	ancData<-ancPropStateMat(tree=tree, trait=trait, orderedChar=orderedChar)
-	ancCol<-(1:ncol(ancData))+1
+quickAncPlot<-function(tree, trait, cex, orderedChar=FALSE, type="MPR", cost=NULL){
+	 ancData<-ancPropStateMat(tree=tree, trait=trait, orderedChar=orderedChar)
+	 ancCol<-(1:ncol(ancData))+1
  	plot(tree,show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
  	tiplabels(pch=16,pie=ancData[(1:Ntip(tree)),],cex=cex,piecol=ancCol,
 		col=0)
@@ -147,8 +134,6 @@ treeUnord<-resolveTreeChar(tree,trait,orderedChar=FALSE)
 treeOrd<-resolveTreeChar(tree,trait,orderedChar=TRUE,stateBias=NULL)
 treeOrdPrim<-resolveTreeChar(tree,trait,orderedChar=TRUE,stateBias="primitive")
 treeOrdDer<-resolveTreeChar(tree,trait,orderedChar=TRUE,stateBias="derived")
-#and finally an unordered one with ACCTRAN
-treeACCTRAN<-resolveTreeChar(tree,trait,orderedChar=FALSE,type="ACCTRAN")
 
 #compare number of nodes
 Nnode(tree)			#original
@@ -190,12 +175,6 @@ quickAncPlot(treeOrdPrim,trait,orderedChar=TRUE,cex=0.3)
 text(x=40,y=11,"orderedChar=TRUE",cex=1.5)
 text(x=40,y=4,"biasStates='primitive'",cex=1.5)
 
-#let's compare unordered with MPR to unordered with ACCTRAN
-layout(1:2)
-quickAncPlot(treeUnord,trait,orderedChar=FALSE,type="MPR",cex=0.3)
-text(x=41,y=8,"unordered: MPR",cex=1.5)
-quickAncPlot(treeACCTRAN,trait,orderedChar=FALSE,type="ACCTRAN",cex=0.3)
-text(x=41,y=8,"unordered: ACCTRAN",cex=1.5)
 
 #these comparisons will differ greatly between datasets
 	# need to try them on your own

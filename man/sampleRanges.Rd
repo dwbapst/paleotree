@@ -47,6 +47,16 @@ even if a simple model of sampling is being simulated.}
 
 \item{plot}{If \code{TRUE}, plots the sampling models for each taxon against time.}
 }
+\value{
+If ranges.only is \code{TRUE}, then the output is a two-column per-taxon
+matrix of first and last appearances in absolute time. NAs mean the taxon
+was never sampled in the simulation.
+
+If \code{ranges.only = FALSE} (the default), the output is a list, where each
+element is a vector of sampling events the timing of sampling events, each
+corresponding to a different taxon in the input. Elements that are \code{NA} are
+unsampled taxa.
+}
 \description{
 A function for simulating the effect of incomplete sampling of the fossil
 record.

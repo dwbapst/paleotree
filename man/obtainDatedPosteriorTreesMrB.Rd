@@ -4,8 +4,8 @@
 \alias{obtainDatedPosteriorTreesMrB}
 \title{Get the Sample of Posterior Trees from a Dated Phylogenetic Analysis with MrBayes (Or a Summary Tree, such as the MCCT)}
 \usage{
-obtainDatedPosteriorTreesMrB(runFile, nRuns = 2, burnin = 0.5,
-  getFixedTimes = FALSE, originalNexusFile = NULL, outputTrees,
+obtainDatedPosteriorTreesMrB(runFile, nRuns = 2, burnin = 0.5, outputTrees,
+  labelPostProb = FALSE, getFixedTimes = FALSE, originalNexusFile = NULL,
   file = NULL)
 }
 \arguments{
@@ -25,6 +25,24 @@ but do not exist. The default for this argument (two runs) is based on the defau
 by this function directly, nor included in calculation of summary trees. Must be a numeric
 value greater than 0 and less than 1.}
 
+\item{outputTrees}{Determines the output trees produced; for format of output, see section
+on returned Value below. Must be of length one, and either \code{"all"},
+which means all trees from the post-burnin posterior will
+returned, a number greater than zero, which will be the number of trees
+randomly sampled from across the post-burning posterior and returned,
+or \code{"MCCT"} and \code{"MAP"}, which stand for 'maximum clade compatibility tree'
+and 'maximum a posteri tree' respectively. The MAP is the single tree from the post-burnin
+posterior with the highest marginal likelihood. The MCCT is the single tree from the post-burnin
+posterior which contains clades with the highest product of posterior probabilities for its
+component clades. Thus, the MAP is the best overall tree, while the MCCT may be the best
+tree for summarizing topological support.}
+
+\item{labelPostProb}{Logical. If \code{TRUE}, then nodes of the
+output tree will be labeled with their respective posterior 
+probabilities, as calculated based on the frequency of a clade
+occurring across the post-burnin posterior tree sample. If \code{FALSE},
+this is skipped.}
+
 \item{getFixedTimes}{If \code{TRUE}, this function will also look for, scan, and parse an
 associated NEXUS file. Ignoring any commented lines (ie. anything between "[   ]" ), commands
 for fixing taxa will be identified, parsed and returned to the user, either as a message
@@ -39,18 +57,6 @@ to complete, or may even cause it to hang.}
 Only tried if \code{getFixedTimes = TRUE}. If \code{NULL} (the default), then this function will
 instead try to find a NEXUS file with the same name as implied by the filename used in other inputs. If
 this file cannot be found, the function will fail.}
-
-\item{outputTrees}{Determines the output trees produced; for format of output, see section
-on returned Value below. Must be of length one, and either \code{"all"},
-which means all trees from the post-burnin posterior will
-returned, a number greater than zero, which will be the number of trees
-randomly sampled from across the post-burning posterior and returned,
-or \code{"MCCT"} and \code{"MAP"}, which stand for 'maximum clade compatibility tree'
-and 'maximum a posteri tree' respectively. The MAP is the single tree from the post-burnin
-posterior with the highest marginal likelihood. The MCCT is the single tree from the post-burnin
-posterior which contains clades with the highest product of posterior probabilities for its
-component clades. Thus, the MAP is the best overall tree, while the MCCT may be the best
-tree for summarizing topological support.}
 
 \item{file}{Filename (possibly with path) as a character string
 leading to a file which will be overwritten with the output trees (or summary tree),

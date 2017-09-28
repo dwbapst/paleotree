@@ -42,6 +42,11 @@
 #' instead try to find a NEXUS file with the same name as implied by the filename used in other inputs. If
 #' this file cannot be found, the function will fail. 
 
+#' @param labelPostProb Logical. If \code{TRUE}, then nodes of the
+#' output tree will be labeled with their respective posterior 
+#' probabilities, as calculated based on the frequency of a clade
+#' occurring across the post-burnin posterior tree sample. If \code{FALSE},
+#' this is skipped.
 	
 #' @param outputTrees Determines the output trees produced; for format of output, see section
 #' on returned Value below. Must be of length one, and either \code{"all"},
@@ -98,8 +103,9 @@
 #' @rdname obtainDatedPosteriorTreesMrB
 #' @export
 obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
+	outputTrees,labelPostProb=FALSE,
 	getFixedTimes=FALSE,originalNexusFile=NULL,
-	outputTrees,file=NULL){
+	file=NULL){
 	#checks
 	if(length(outputTrees)!=1){
 		stop("outputTrees must be of length 1")
@@ -109,7 +115,7 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 		}
 	if(is.numeric(outputTrees)){	
 		if(outputTrees<1){
-			stop("If numeric, outputTrees must be greater than 1")
+			stop("If numeric, outputTrees must be greater than 0")
 			}
 		}
 	if(burnin>1 | burnin<0){
@@ -220,6 +226,10 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 	#
 	if(outputTrees=="all"){
 		outTree<-lumpTrees
+		if(labelPostProb){
+			# assign posterior probabilities as node labels
+			outTree<-lapply(outTree,getPosteriorProbabiities,postBurninTrees=lumpTrees)
+			}
 		}
 	#
 	if(outputTrees=="MAP"){
@@ -227,11 +237,19 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 		LnPr<-sapply(lumpTrees,function(x) x$LnPr)
 		whichMAP<-which(LnPr==max(LnPr))
 		outTree<-lumpTrees[[whichMAP]]
+		if(labelPostProb){
+			# assign posterior probabilities as node labels
+			outTree<-getPosteriorProbabiities(tree=outTree,postBurninTrees=lumpTrees)
+			}
 		}
 	#
 	if(outputTrees=="MCCT"){
 		# turns out the MCCT isn't the tree with the highest likelihood
 		outTree<-phangorn::maxCladeCred(lumpTrees)
+		if(labelPostProb){
+			# assign posterior probabilities as node labels
+			outTree<-getPosteriorProbabiities(tree=outTree,postBurninTrees=lumpTrees)
+			}
 		}
 	#
 	if(is.numeric(outputTrees)){
@@ -244,6 +262,14 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 			}
 		whichOutput<-sample(length(lumpTrees),outputTrees,replace=FALSE)
 		outTree<-lumpTrees[whichOutput]
+		if(labelPostProb){
+			# assign posterior probabilities as node labels
+			if(outputTrees>1){
+				outTree<-lapply(outTree,getPosteriorProbabiities,postBurninTrees=lumpTrees)
+			}else{
+				outTree<-getPosteriorProbabiities(tree=outTree,postBurninTrees=lumpTrees)
+				}
+			}
 		}
 	########################################
 	if(!is.null(file)){
@@ -259,5 +285,10 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 		}
 	}
 
-
+getPosteriorProbabiities<-function(tree,postBurninTrees){
+	cladeFreq<-prop.clades(tree,postBurninTrees)
+	postProbs<-cladeFreq/length(postBurninTrees)
+	tree$node.label<-postProbs
+	return(tree)
+	}
 

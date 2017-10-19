@@ -1,6 +1,9 @@
+#' Dated Trees and Trait Data for Ammonites, Ceratopsians and Cervids from Raia et al. 2015
 
 #' @name RaiaCopesRule
+
 #' @rdname RaiaCopesRule
+
 #' @aliases RaiaCopesRule ceratopsianTreeRaia cervidTreeRaia ammoniteTreeRaia sutureComplexity shellSize ammoniteTraitsRaia
 
 #' @details
@@ -8,7 +11,7 @@
 #' species, as well as trait data (shell diameter and fractal complexity of the first suture) for the ammonite dataset,
 #' taken from the recent publication by Raia et al. (2015) in The American Naturalist. The goal of this paper was to
 #' examine the relationship between ornamental complexity and body size in three very different groups, but
-#' the datasets are very relatively large and useful for demonstrating
+#' the datasets are very relatively large and useful for demonstrating application of comparative methods to fossil trees.
 
 #' @format 
 #' The attached datasets consist of three phylogenetic trees as \code{phylo} objects, a \code{data.frame} consisting of
@@ -38,6 +41,7 @@
 #' @docType data
 
 #' @examples
+#' data(RaiaCopesRule)
 #' 
 #' # plotting trees
 #' plot(ladderize(ammoniteTreeRaia));axisPhylo()
@@ -234,3 +238,4 @@
 #' 
 #' }
 #' 
+NULL

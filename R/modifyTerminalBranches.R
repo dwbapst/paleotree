@@ -39,14 +39,14 @@
 #' in this help file.
 #'
 #' \code{dropPaleoTip} is a wrapper for ape's \code{\link{drop.tip}} which also modifies the
-#' \code{$root.time element if necessary, using \code{fixRootTime}. Similarly,
+#' \code{$root.time} element if necessary, using \code{fixRootTime}. Similarly,
 #' bindPaleoTip is a wrapper for phytool's \code{bind.tip} which allows tip age
-#' as input and modifies the \code{$root.time element if necessary (i.e. if a tip
+#' as input and modifies the \code{$root.time} element if necessary (i.e. if a tip
 #' is added to edge leading up to the root).
 #'
-#' Note that for \code{bindPaleoTip, tips added below the root are subtracted from
+#' Note that for \code{bindPaleoTip}, tips added below the root are subtracted from
 #' any existing \code{$root.edge} element,
-#' as per behavior of \code{link{bind.tip}} and \code{\link{bind.tree}.
+#' as per behavior of \code{link{bind.tip}} and \code{\link{bind.tree}}.
 #' However, \code{bindPaleoTip} will append a \code{$root.edge} of
 #' the appropriate value (i.e., root edge length)
 #' if one does not exist (or is not long enough) to avoid an error. After
@@ -58,7 +58,7 @@
 
 #' @param tree A phylogeny as a phylo object. \code{dropPaleoTip} requires this
 #' input object to also have a \code{tree$root.time} element. If not provided for
-#' bindPaleoTip, then the \code{$root.time} will be presumed to be such that the
+#' \code{bindPaleoTip}, then the \code{$root.time} will be presumed to be such that the
 #' furthest tip from the root is at \code{time = 0}.
 
 #' @param tol Tolerance for determining modern age; used for distinguishing

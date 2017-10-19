@@ -6,17 +6,32 @@
 #' @details
 #' Dated phylogenetic trees for fossil ammonite genera, fossil ceratopsian species and (both extinct and extant) cervid
 #' species, as well as trait data (shell diameter and fractal complexity of the first suture) for the ammonite dataset,
-#' taken from the recent publication by Raia et al.
+#' taken from the recent publication by Raia et al. (2015) in The American Naturalist. The goal of this paper was to
+#' examine the relationship between ornamental complexity and body size in three very different groups, but
+#' the datasets are very relatively large and useful for demonstrating
 
 #' @format 
 #' The attached datasets consist of three phylogenetic trees as \code{phylo} objects, a \code{data.frame} consisting of
 #' three traits for ammonites (the third trait is the log of stratigraphic duration), and the two physical traits (shell
 #' size and suture complexity) as seperate vectors, with taxon names.
+#' 
+#' It appears that the 
 
 #' @source 
+#' These datasets were taken from the following study:
+#' Raia, P., F. Passaro, F. Carotenuto, L. Maiorino, P. Piras, L. Teresi, S. Meiri,
+#' Y. Itescu, M. Novosolov, M. A. Baiano, R. Martínez, and M. Fortelius. 2015. Cope’s
+#' Rule and the Universal Scaling Law of Ornament Complexity. \emph{The American Naturalist}.
+#' 186(2):165-175.
+#' 
+#' And the corresponding Dryad repository:
+#' Raia P, Passaro F, Carotenuto F, Maiorino L, Piras P, Teresi L, Meiri S, Itescu Y, Novosolov
+#' M, Baiano MA, Martinez R, Fortelius M (2015) Data from: Cope’s rule and the universal
+#' scaling law of ornament complexity. \emph{Dryad Digital Repository}. (https://doi.org/10.5061/dryad.50dr8)
+#'
 
-
-# @seealso
+#' @seealso
+#' \code{\link{retiolitinae}}, \code{\link{macroperforateForam}}
 
 #' @keywords datasets
 

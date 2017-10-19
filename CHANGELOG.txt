@@ -7,7 +7,10 @@ Version - 2.9 (Designated as 3.0.0 at CRAN release - 07-04-17)
 -Added function setRootAges for setting root ages for a set of many trees as a multiPhylo object,
 -Tried changing changelog.txt to .md, then changed it back.
 -So, it turns out that ACCTRAN in phangorn was never converted from Fitch algorithm to Sankoff, and thus it was inappropriate for ACCTRAN to be applied to trees with multifurcations. This now results in an error if attempted by a user. Many apologies!
+-Added new dataset RaiaCopesRule, containing dated paleo-phylogenies for ammonite genera, ceratopsian species, and cervid species from Raia et al. 2015, along with ammonite trait data from same publication.
+-Fixed error with missing ingroup constraint in createMrBayesTipDatingNexus reported by Melanie Hopkins, thanks!
 -
+
 
 Version - 2.8 - 04-06-17 (Not Released to CRAN)
 -Added additional checks so that helpful error messages are given if species names are accidentally left in as a column in timeList for bin_cal3TimePaleoPhy and bin_timePaleoPhy, thanks Victoria Arbour for this bug report

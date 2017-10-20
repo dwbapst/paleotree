@@ -3,7 +3,7 @@
 #' These functions modify terminal branches or drop certain terminal branches
 #' based on various criteria.
 
-#' DropZLB drops tip-taxa that are attached to the tree via zero-length
+#' \code{DropZLB} drops tip-taxa that are attached to the tree via zero-length
 #' terminal branches ("ZLBs"). This is sometimes useful for paleo-trees, as
 #' various time-scaling methods often produce these ZLBs, taxa whose early
 #' appearance causes them to be functionally interpreted as ancestors in some
@@ -13,82 +13,85 @@
 #' a terminal zero-length branch; if you want to collapse internal zero-length
 #' branches, see the ape function \code{\link{di2multi}}.
 #' 
-#' DropExtinct drops all terminal branches which end before the modern (i.e.
-#' extinct taxa). DropExtant drops all terminal branches which end at the
+#' \code{DropExtinct} drops all terminal branches which end before the modern (i.e.
+#' extinct taxa). \code{DropExtant} drops all terminal branches which end at the
 #' modern (i.e. extant/still-living taxa). In both cases, the modern is defined
-#' based on tree$root.time if available, or the modern is inferred to be the
+#' based on \code{tree$root.time} if available, or the modern is inferred to be the
 #' point in time when the tip furthest from the root (the latest tip)
 #' terminates.
 #' 
-#' If the input tree has a $root.time element, as expected for most paleo-tree
-#' objects handled by this library, that root.time is adjusted if the relative
+#' If the input tree has a \code{$root.time} element, as expected for most paleo-tree
+#' objects handled by this library, that \code{$root.time} is adjusted if the relative
 #' time of the root divergence changes when terminal branches are dropped.
 #' Adjusted root.times are only given if the input tree has root.times.
 #' 
-#' addTermBranchLength adds an amount equal to the argument 'addtime' to the
-#' terminal branch lengths of the tree. If there is a $root.time element, this
-#' is increased by an amount equal to addtime. A negative amount can be input
+#' \code{addTermBranchLength} adds an amount equal to the argument \code{addtime} to the
+#' terminal branch lengths of the tree. If there is a \code{$root.time} element, this
+#' is increased by an amount equal to \code{addtime}. A negative amount can be input
 #' to reduce the length of terminal branches. However, if negative branch
 #' lengths are produced, the function fails and a warning is produced. This function
-#' does *not* call fixRootTime, so the root.time elements in the result tree may
+#' does \emph{not} call \code{fixRootTime}, so the root.time elements in the result tree may
 #' be nonsensical, particularly if negative amounts are input.
 #' 
 #' When a tree is modified, such as having tips dropped or branches extended,
-#' fixRootTime can be used to find the new $root.time. It is mainly used as a
+#' \code{fixRootTime} can be used to find the new \code{$root.time}. It is mainly used as a
 #' utility function called by a majority of the other functions discussed
 #' in this help file.
 #'
-#' dropPaleoTip is a wrapper for ape's \code{drop.tip} which also modifies the
-#' $root.time element if necessary, using \code{fixRootTime}. Similarly,
+#' \code{dropPaleoTip} is a wrapper for ape's \code{\link{drop.tip}} which also modifies the
+#' \code{$root.time} element if necessary, using \code{fixRootTime}. Similarly,
 #' bindPaleoTip is a wrapper for phytool's \code{bind.tip} which allows tip age
-#' as input and modifies the $root.time element if necessary (i.e. if a tip
+#' as input and modifies the \code{$root.time} element if necessary (i.e. if a tip
 #' is added to edge leading up to the root).
 #'
-#' Note that for bindPaleoTip, tips added below the root are subtracted from
-#' any existing $root.edge element, as per behavior of bind.tip and bind.tree.
-#' However, bindPaleoTip will append a $root.edge of the appropriate length
+#' Note that for \code{bindPaleoTip}, tips added below the root are subtracted from
+#' any existing \code{$root.edge} element,
+#' as per behavior of \code{link{bind.tip}} and \code{\link{bind.tree}}.
+#' However, \code{bindPaleoTip} will append a \code{$root.edge} of
+#' the appropriate value (i.e., root edge length)
 #' if one does not exist (or is not long enough) to avoid an error. After
-#' binding is finished, any $root.edge equal to 0 is removed before the
+#' binding is finished, any \code{$root.edge} equal to 0 is removed before the
 #' resulting tree is output.
 #' 
 
 #' @aliases dropZLB dropExtinct dropExtant addTermBranchLength fixRootTime
 
-#' @param tree A phylogeny as a phylo object. dropPaleoTip requires this
-#' input object to also have a $root.time element. If not provided for
-#' bindPaleoTip, then the root.time will be presumed to be such that the
-#' furthest tip from the root is at time=0.
+#' @param tree A phylogeny as a phylo object. \code{dropPaleoTip} requires this
+#' input object to also have a \code{tree$root.time} element. If not provided for
+#' \code{bindPaleoTip}, then the \code{$root.time} will be presumed to be such that the
+#' furthest tip from the root is at \code{time = 0}.
 
 #' @param tol Tolerance for determining modern age; used for distinguishing
-#' extinct from extant taxa. Tips which end within 'tol' of the furthest
+#' extinct from extant taxa. Tips which end within \code{tol} of the furthest
 #' distance from the root will be treated as 'extant' taxa for the purpose of
 #' keeping or dropping.
 
-#' @param ignore.root.time Ignore root.time in calculating which tips are
-#' extinct? root.time will still be adjusted
+#' @param ignore.root.time Ignore \code{tree$root.time} in calculating which tips are
+#' extinct? \code{tree$root.time} will still be adjusted,
+#' if the operation alters the \code{tree$root.time}.
 
 #' @param addtime Extra amount of time to add to all terminal branch lengths.
 
-#' @param treeOrig A phylo object of a time-scaled phylogeny with a $root.time
-#' element
+#' @param treeOrig A \code{phylo} object of a time-scaled phylogeny with a \code{$root.time}
+#' element.
 
-#' @param treeNew A phylo object containing a modified form of treeOrig (with
+#' @param treeNew A \code{phylo} object containing a modified form of \code{treeOrig} (with
 #' no extra tip taxa added, but possibly with some tip taxa removed).
 
-#' @param consistentDepth A logical, either TRUE or FALSE. If TRUE (the default)
+#' @param consistentDepth A logical, either \code{TRUE} or \code{FALSE}. If \code{TRUE} (the default)
 #' the tree's root-to-furthest-tip depth is tested to make sure this depth is
-#' not greater than the new root.time appended to the output tree.
+#' not greater than the new \code{$root.time} appended to the output tree.
 
-#' @param nodeAgeTransfer A logical. If TRUE, the root.time of the new tree is determined by
+#' @param nodeAgeTransfer A logical. If \code{TRUE}, the \code{$root.time} of the new tree is determined by
 #' comparing the clades of taxa between the two input trees. The new root age assigned is the age of
-#' (\emph{1}) the treeOrig clade that contains *all* taxa present in treeNew and, if the set of (1)
-#' contains multiple clades, (\emph{2}) the clade in the (1) set that contains the fewest taxa not in
-#' treeNew. If FALSE, the root.time assigned to treeNew is the root.time of treeOrig, adjusted
-#' based on the change in total tree depth between treeOrig and treeNew, as measured between the root and
-#' the first matching taxon in both trees. The later is how fixRootTime functioned by default
+#' (\emph{1}) the \code{treeOrig} clade that contains \emph{all} taxa present in \code{treeNew} and, if the set of (1)
+#' contains multiple clades, (\emph{2}) the clade in the first set that contains the fewest taxa not in
+#' \code{treeNew}. If \code{FALSE}, the \code{root.time} assigned to \code{treeNew} is the \code{$root.time} of \code{treeOrig}, adjusted
+#' based on the change in total tree depth between \code{treeOrig} and \code{treeNew}, as measured between the root and
+#' the first matching taxon in both trees. The later is how \code{fixRootTime} functioned by default
 #' prior to paleotree v2.3.
 
-#' @param ... additional arguments passed to dropPaleoTip are passed to drop.tip
+#' @param ... additional arguments passed to dropPaleoTip are passed to \code{\link{drop.tip}}.
 
 #' @param tipLabel A character string of \code{length = 1} containing the name of the new tip
 #' to be added to \code{tree}.
@@ -111,10 +114,10 @@
 #' for the new tip.
 
 #' @return Gives back a modified phylogeny as a phylo object, generally with a
-#' modified $root.time element.
+#' modified \code{$root.time} element.
 
-#' @author David W. Bapst. The functions dropTipPaleo and bindTipPaleo are modified imports of
-#' \code{drop.tip} and \code{bind.tip} from packages \code{ape} and \code{phytools}.
+#' @author David W. Bapst. The functions \code{dropTipPaleo} and \code{bindTipPaleo} are modified imports of
+#' \code{\link{drop.tip}} and \code{\link{bind.tip}} from packages \code{ape} and \code{phytools}.
 
 #' @seealso 
 #' \code{\link{compareTermBranches}}, \code{\link{phyloDiv}}, 

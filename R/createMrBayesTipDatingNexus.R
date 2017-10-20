@@ -333,7 +333,10 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		}
 	##################################################################################################
 	# -Need to check that ingroup constraint isn't on treeConstraints, and if so, delete it
-		# actually maybe just make it so no ingroup constraint is defined if treeConstraint is defined - presumably its already part of provided tree!!
+		# actually maybe just make it so no ingroup constraint is defined if treeConstraint is defined 
+			# - presumably its already part of provided tree!!
+		# no group on the tree can replicate the ingroup constraint - repeated topology constraints not allowed
+		# REALLY REALLY IMPORTANT - no ingroup should be referenced if a tree is given
 	# outgroupTaxa and treeConstraints - one and only one must be defined
 	if(is.null(outgroupTaxa) & is.null(treeConstraints)){
 		stop("Either outgroupTaxa or treeConstraints must be provided for a tip-dating analysis")
@@ -583,18 +586,14 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 	########################################################
 	#	
 	if(is.null(treeConstraints)){
-		# get the ingroup constraint
+		# get the ingroup constraint, as there is no tree
 		ingroupConstraint<-makeIngroupConstraintMrB(outgroupTaxa=outgroupTaxa,allTaxa=taxonnames)
-	}else{
-		ingroupConstraint<-" "
-		}
-	#
-	# get topological constraints, if given in input
-	if(!is.null(treeConstraints)){
-		topologicalConstraints<-createMrBayesConstraints(tree=treeConstraints,partial=FALSE,
-			file=NULL,includeIngroupConstraint=TRUE)
-	}else{
 		topologicalConstraints<-" "
+		}else{
+		# get topological constraints, if given in input, do not set ingroup
+		ingroupConstraint<-" "
+		topologicalConstraints<-createMrBayesConstraints(tree=treeConstraints,partial=FALSE,
+			file=NULL,includeIngroupConstraint=FALSE)		
 		}
 	#
 	# get age calibration block

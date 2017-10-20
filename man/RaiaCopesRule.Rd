@@ -172,6 +172,9 @@ ammoniteTreeRaia$tip.label[
 # now let's plot it
 plot(ladderize(ammoniteTreeRaia));axisPhylo()
 
+}
+\dontrun{
+
 # and let's load trait data from Raia et al. Appendix B:
  # FD = fractal dimension of first suture (suture complexity)
  # Log D = log of the mean shell diameter per genus (body size)
@@ -188,6 +191,8 @@ plotTraitgram(tree=multi2di(ammoniteTreeRaia), trait=sutureComplexity,
 plotTraitgram(tree=multi2di(ammoniteTreeRaia), trait=shellSize,
   conf.int=FALSE, main="Ammonite Shell Diameter")
 
+}
+\donttest{
 ########################################
 # ceratopsian species
 

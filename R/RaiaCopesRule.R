@@ -26,13 +26,13 @@
 #' @source 
 #' These datasets were taken from the following study:
 #' Raia, P., F. Passaro, F. Carotenuto, L. Maiorino, P. Piras, L. Teresi, S. Meiri,
-#' Y. Itescu, M. Novosolov, M. A. Baiano, R. Martínez, and M. Fortelius. 2015. Cope’s
+#' Y. Itescu, M. Novosolov, M. A. Baiano, R. Martinez, and M. Fortelius. 2015. Cope's
 #' Rule and the Universal Scaling Law of Ornament Complexity. \emph{The American Naturalist}.
 #' 186(2):165-175.
 #' 
 #' And the corresponding Dryad repository:
 #' Raia P, Passaro F, Carotenuto F, Maiorino L, Piras P, Teresi L, Meiri S, Itescu Y, Novosolov
-#' M, Baiano MA, Martinez R, Fortelius M (2015) Data from: Cope’s rule and the universal
+#' M, Baiano MA, Martinez R, Fortelius M (2015) Data from: Cope's rule and the universal
 #' scaling law of ornament complexity. \emph{Dryad Digital Repository}. (https://doi.org/10.5061/dryad.50dr8)
 #'
 

@@ -114,7 +114,6 @@
 #' Nnode(treeOrd)		#ordered, biasStates=NULL
 #' Nnode(treeOrdPrim)	#ordered, biasStates='primitive'
 #' Nnode(treeOrdDer)	#ordered, biasStates='derived'
-#' Nnode(treeACCTRAN)	#unordered, biasStates=NULL, ACCTRAN
 #' 
 #' #let's compare original tree with unordered-resolved tree
 #' layout(1:2)

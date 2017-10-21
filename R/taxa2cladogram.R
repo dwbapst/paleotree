@@ -67,7 +67,7 @@
 #' University Press, New York:87-122.
 
 #' @examples
-#' 
+#' \donttest{
 #' set.seed(444)
 #' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
 #'	nTotalTaxa=c(30,40), nExtant=0)
@@ -94,7 +94,9 @@
 #' #reset plotting
 #' par(parOrig)
 #' layout(1) 
-#' 
+#' }
+
+
 #' @export taxa2cladogram
 taxa2cladogram<-function(taxad,drop.cryptic=FALSE,plot=FALSE){
 	#take a taxad and turn it into an unscaled cladogram

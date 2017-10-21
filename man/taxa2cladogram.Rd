@@ -65,7 +65,7 @@ default, cryptic taxa are not dropped so that the same number of taxa as in
 the simulated data is retained.
 }
 \examples{
-
+\donttest{
 set.seed(444)
 record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
 nTotalTaxa=c(30,40), nExtant=0)
@@ -92,7 +92,7 @@ plot(cladoCrypt2)
 #reset plotting
 par(parOrig)
 layout(1) 
-
+}
 }
 \references{
 Foote, M. 1996 On the Probability of Ancestors in the Fossil

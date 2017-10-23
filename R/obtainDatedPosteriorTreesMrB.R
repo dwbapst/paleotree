@@ -275,6 +275,8 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 	if(!is.null(file)){
 		write.nexus(outTree, file=file)
 		if(!is.null(fixedTable)){
+			print("You may need to know which tip ages were fixed to a precise date")
+			print("in order to assign absolute dates to the tree, as follows:")
 			print(fixedTable)
 			}
 	}else{

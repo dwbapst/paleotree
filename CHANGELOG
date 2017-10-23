@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 Version - 3.0.1 - 
 -Post CRAN release version - adding Pete Wagner's functions relating to measuring character exhaustation.
 -
 
+=======
+>>>>>>> refs/remotes/origin/master
 Version - 3.0.0 - 10-20-17
 -Released to CRAN after a long hiatus from new CRAN releases.
 

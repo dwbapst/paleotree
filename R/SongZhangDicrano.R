@@ -39,25 +39,12 @@
 
 #' @examples
 #'
-#' \dontrun{
-#'
-#'  
-#'
-#' require(ape)
-#' require(phylobase)
-#' 
-#' charMatDicrano<-readNexus(file.choose(),type="data",SYMBOLS = " 0 1 2")
-#' 
-#' cladogramDicrano<-read.nexus(file.choose())
-#' 
-#' save(charMatDicrano,cladogramDicrano,file="SongZhangDicrano.rdata")
-#' 
-#' }
-#'
 #' data(SongZhangDicrano)
-#'
-#' # calculate a distance matrix from the character data
-#' char<-charMatDicrano
+#' 
+#' # Examining morphospace with a distance matrix
+#' 
+#' # calculate a distance matrix from the morph character data
+#' char<-charMatDicrano[,-22]	# remove strat character
 #' charDist<-matrix(,nrow(char),nrow(char))
 #' rownames(charDist)<-colnames(charDist)<-rownames(char)
 #' for(i in 1:nrow(char)){for(j in 1:nrow(char)){
@@ -74,17 +61,7 @@
 #' 	}}
 #' 
 #' #####
-#' # the following is mostly stolen from the example code for my graptDisparity dataset
-#' 
-#' #now, is the diagonal zero? (it should be)
-#' all(diag(charDist)==0)
-#' 
-#' #now, is the matrix symmetric? (it should be)
-#' isSymmetric(charDist)
-#' 
-#' #can apply cluster analysis
-#' clustRes <- hclust(as.dist(charDist))
-#' plot(clustRes)
+#' # PCO of character distance matrix
 #' 
 #' #can apply PCO (use lingoes correction to account for negative values
 #'    #resulting from non-euclidean matrix
@@ -110,5 +87,17 @@
 #' plot(cladogramDicrano,
 #'	main="MajRule_24charX12Taxa_wBiostratChar")
 #'
+#' ##############
 #'
+#' \dontrun{
+#' # Data was generated with following script:
+#' require(ape)
+#' require(phylobase)
+#' 
+#' charMatDicrano<-readNexus(file.choose(),type="data",SYMBOLS = " 0 1 2")
+#' 
+#' cladogramDicrano<-read.nexus(file.choose())
+#' 
+#' save(charMatDicrano,cladogramDicrano,file="SongZhangDicrano.rdata")
+#' }
 NULL

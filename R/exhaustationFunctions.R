@@ -1,12 +1,143 @@
-#### LOAD THESE ROUTINES!!!
+
+
+tree2mTree<-function(mtree){
+	# modify tree for use with exhaustation curve funs
+	#
+
+
+	# mtree is a matrix tree, where each row gives the descendants of node n
+	return(mtree)
+	}
+
+
+accioExhaustionCurve <- function(phyloTree,cdata,types,firstAppearances=1,missingCharValue="?",inapplicableValue="-",outgroup=1)	{
+	#
+	# sorry pete, but paleotree is camelCase... ;)
+	#
+	# rewrite ape's phylo format tree
+	### vtree is a vector tree, where each cell gives the ancestral HTU of the OTU or HTU
+	###		HTU's are nodes, with the basal HTU = nTips+1 (i.e., 13 for 12 taxa)
+	mtree <- accio_matrix_tree_from_ape_tree(phyloTree)	S
+	#
+	# based on routine used in Wagner (2000).  Uses simple parsimony optimization
+	#	and (if available) stratigraphic data to order branches and show how
+	#	many novel states appear with how many changes along each branch working
+	#	up the tree.
+	#	MODIFY to show number of characters triggered as well as # of states
+	nchar <- dim(cdata)[2]
+	char_history <- accio_minimum_steps_history(mtree,cdata,types,missingCharValue,inapplicableValue,outgroup)
+	if (length(firstAppearances)==1)	{
+		branch_order <- accio_patristic_distance_from_base(mtree)	# order branches from base of the tree
+		used_order <- branch_order + (1-(1:length(branch_order))/100)	# for ties, put nodes before otus
+		exhaust_order <- order(used_order,decreasing=FALSE)		# list branches in order
+	}else{
+		exhaust_order <- used_order <- accio_branch_order_with_stratigraphy(mtree,firstAppearances)
+		### insert ordering with stratigraphy here.	
+		}
+	#
+	branches <- max(mtree)
+	branch_derivs <- vector(length=branches)
+	for (b in 1:branches)
+		branch_derivs[b] <- sum(char_history$Changes[,1]==b)
+	# get relevant branches (non-zero length) in order of appearance
+	rel_branches <- exhaust_order[branch_derivs[exhaust_order]>0]
+	rb <- length(rel_branches)
+	#
+	char_deriv <- vector(length=nchar)
+	exhaust_matrix <- matrix(0,max(char_history$Changes[,2]),max(char_history$Changes[,3]))
+	found <- total_steps <- novel_chars <- novel_states <- 0
+	for (b in 1:rb)	{
+		br <- rel_branches[b]
+	#	br_ch <- sum(char_history$Changes[,1]==br)
+	#	if (br_ch>0)	{
+		local_change <- subset(char_history$Changes,char_history$Changes[,1]==br)
+		char_deriv[local_change[,2]] <- char_deriv[local_change[,2]]+1
+		novel_chars <- novel_chars + sum(char_deriv[local_change[,2]]==1)
+		for (d in 1:branch_derivs[br])	{
+			if (branch_derivs[br]>1)	{
+				ch <- local_change[d,2]
+				st <- local_change[d,3]
+				}	else	{
+				ch <- local_change[2]
+				st <- local_change[3]
+				}
+			exhaust_matrix[ch,st] <- exhaust_matrix[ch,st]+1
+			if (exhaust_matrix[ch,st]==1)	novel_states <- novel_states+1
+			}
+		total_steps <- total_steps+branch_derivs[br]
+		if (exhaust_order[b]<10)	{
+			if (max(mtree)<10)	{
+				brnm <- paste("br_",exhaust_order[b],sep="")
+				} else if (max(mtree<100))	{
+				brnm <- paste("br_0",exhaust_order[b],sep="")	
+			}else{
+				brnm <- paste("br_00",exhaust_order[b],sep="")	
+				}
+			}	else if (exhaust_order[b]<100)	{
+			if (max(mtree)<100){
+				brnm <- paste("br_",exhaust_order[b],sep="")	
+			}else{
+				brnm <- paste("br_0",exhaust_order[b],sep="")	
+				}				
+			}
+		if (b==1){
+			exhaustion <- c(total_steps,novel_states,novel_chars)
+			branch_names <- brnm
+		}else{
+			exhaustion <- rbind(exhaustion,c(total_steps,novel_states,novel_chars))
+			branch_names <- c(branch_names,brnm)
+			}
+		}
+	#
+	colnames(exhaustion) <- c("Steps","Novel_States","Novel_Characters")
+	rownames(exhaustion) <- branch_names
+	exhaust_output <- list(exhaustion,exhaust_matrix)
+	names(exhaust_output) <- c("Exhaustion","State_Derivations")
+	return(exhaust_output)
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################################
+
+# old stuff
+
+#ZERO  1e-323
+#MINEXPN <- 10^-10
+#MINNO = 5e-324
+#MAXNO = 1.797693e+308
+#gap <- inapplicableValue <- "-"
+#missingCharValue <- missing <- "?"
+#missingCharValue <- "?"		# replace "?" with "?"
+#inapplicableValue <- "-"			# replace "-" with "-"
+
+#############################################################
+
 #### ROUTINES TO READ DATA
 # read character matrix
 
-accio_data_from_nexus_file <- function(nexus_file_name, polymorphs=TRUE, UNKNOWN=-11, INAP=-22,label_char_cols=FALSE)	{
+accio_data_from_nexus_file <- function(nexus_file_name, polymorphs=TRUE,
+		 missingCharValue="?", inapplicableValue="-",label_char_cols=FALSE)	{
 	# nexus_file_name: name of nexus file (e.g., "Phacopidae_Snow_2000.nex")
 	# polymorphs: boolean, if TRUE, then recode "1,2" as "-21"; otherwise, treat as unknown
-	# UNKNOWN: value substituting for "?"
-	# INAP: value substituting for gap ("-")
+	# missingCharValue: value substituting for "?"
+	# inapplicableValue: value substituting for gap ("-")
 	nexus <- scan(file=nexus_file_name,what=character(),sep="\n")
 	gp_scr <- "-"
 	unkn_scr <- "?"
@@ -101,9 +232,9 @@ accio_data_from_nexus_file <- function(nexus_file_name, polymorphs=TRUE, UNKNOWN
 		while (j[i]==" " || j[i]=="\t")	i <- i+1
 		for (ch in 1:nchars)	{
 			if (j[i]==unkn_scr)	{
-				chmatrix[n,ch] <- UNKNOWN
+				chmatrix[n,ch] <- missingCharValue
 				}	else if (j[i]==gap_scr)	{
-				chmatrix[n,ch] <- INAP
+				chmatrix[n,ch] <- inapplicableValue
 				}	else if (j[i]=="(" || j[i]=="{" || j[i]=="[")	{
 				# polymorphic!
 				i <- i+1
@@ -131,8 +262,8 @@ accio_data_from_nexus_file <- function(nexus_file_name, polymorphs=TRUE, UNKNOWN
 	nstates <- vector(length=nchars)
 	for (ch in 1:nchars)	{
 		states <- sort(unique(chmatrix[,ch]))
-		states <- states[states!=UNKNOWN]
-		states <- states[states!=INAP]
+		states <- states[states!=missingCharValue]
+		states <- states[states!=inapplicableValue]
 		if (min(states)<0)	{
 			polys <- states[states<0]
 			for (p in 1:length(polys))	{
@@ -147,21 +278,29 @@ accio_data_from_nexus_file <- function(nexus_file_name, polymorphs=TRUE, UNKNOWN
 	outgroup <- -1
 	if (!is.na(match("BEGIN SETS;",nexus)))	{
 		tx_pt <- 1+match("BEGIN SETS;",nexus)	# look at taxon partitions
-		while (outgroup==-1 && nexusfile[tx_pt,1]=="\t" && nexusfile[tx_pt,2]=="T" && nexusfile[tx_pt,3]=="A" && nexusfile[tx_pt,4]=="X" && nexusfile[tx_pt,5]=="P" && nexusfile[tx_pt,6]=="A")	{
-			j <- strsplit(nexus[tx_pt],split=" ",fixed=TRUE)[[1]]
-			if (!is.na(match("Outgroup",j)))	{
-				otg <- match("Outgroup",j)+1
-				while (j[otg]==":" || j[otg]==" " || j[otg]=="")	otg <- otg+1
-				out <- strsplit(j[otg],split="",fixed=TRUE)[[1]]
-				a <- 1
-				outgroup <- 0
-				while (out[a]!="," && out[a]!=";")	{
-					outgroup <- (10*outgroup)+as.numeric(out[a])
-					a <- a+1
+		splitNexusTxPt<-strsplit(nexus[tx_pt],"")[[1]]
+		# below line refered 'nexusfile[tx_pt,]' changed to splitNexusTxPt
+		while (outgroup==-1 && splitNexusTxPt[1]=="\t" 
+			&& splitNexusTxPt[2]=="T" && splitNexusTxPt[3]=="A" 
+			&& splitNexusTxPt[4]=="X" && splitNexusTxPt[5]=="P" 
+			&& splitNexusTxPt[6]=="A")	{
+				j <- strsplit(nexus[tx_pt],split=" ",fixed=TRUE)[[1]]
+				if (!is.na(match("Outgroup",j)))	{
+					otg <- match("Outgroup",j)+1
+					while (j[otg]==":" || j[otg]==" " || j[otg]==""){
+						otg <- otg+1
+						}
+					out <- strsplit(j[otg],split="",fixed=TRUE)[[1]]
+					a <- 1
+					outgroup <- 0
+					while (out[a]!="," && out[a]!=";")	{
+						outgroup <- (10*outgroup)+as.numeric(out[a])
+						a <- a+1
+						}
 					}
+				tx_pt <- tx_pt+1
+				splitNexusTxPt<-strsplit(nexus[tx_pt],"")[[1]]
 				}
-			tx_pt <- tx_pt+1
-			}
 		}
 
 	if (!is.na(match("CHARSTATELABELS ",nexus_alt)))	{
@@ -227,7 +366,7 @@ accio_data_from_nexus_file <- function(nexus_file_name, polymorphs=TRUE, UNKNOWN
 	return(output)
 	}
 
-	# if A is used for state 10, then this will convert A -> 10
+# if A is used for state 10, then this will convert A -> 10
 convert_letter_state_to_numeric <- function(letterstate)  {
 	if (letterstate=="A") {	state <- 10
 		} else if (letterstate=="B") {	state <- 11
@@ -257,7 +396,8 @@ convert_letter_state_to_numeric <- function(letterstate)  {
 	return(state)
 	}
 
-## why no I or O?
+## why no I or O? (PJW)
+	# I have no idea, Pete (DWB)
 
 
 
@@ -354,92 +494,16 @@ accio_matrix_tree_from_vector_tree <- function(vector_tree)	{
 	return(matrix_tree)
 	}
 
+
 ### ROUTINES TO RECONSTRUCT CHARACTER CHANGE
-accio_exhaustion_curve <- function(mtree,cdata,types,FAs=1,UNKNOWN=-11,INAP=-22,outgroup=1)	{
-	# based on routine used in Wagner (2000).  Uses simple parsimony optimization
-	#	and (if available) stratigraphic data to order branches and show how
-	#	many novel states appear with how many changes along each branch working
-	#	up the tree.
-	#	MODIFY to show number of characters triggered as well as # of states
-	nchar <- dim(cdata)[2]
-	char_history <- accio_minimum_steps_history(mtree,cdata,types,UNKNOWN,INAP,outgroup)
-	if (length(FAs)==1)	{
-		branch_order <- accio_patristic_distance_from_base(mtree)	# order branches from base of the tree
-		used_order <- branch_order + (1-(1:length(branch_order))/100)	# for ties, put nodes before otus
-		exhaust_order <- order(used_order,decreasing=FALSE)		# list branches in order
-		}	else	{
-		exhaust_order <- used_order <- accio_branch_order_with_stratigraphy(mtree,FAs)
-		### insert ordering with stratigraphy here.	
-		}
-
-	branches <- max(mtree)
-	branch_derivs <- vector(length=branches)
-	for (b in 1:branches)
-		branch_derivs[b] <- sum(char_history$Changes[,1]==b)
-	# get relevant branches (non-zero length) in order of appearance
-	rel_branches <- exhaust_order[branch_derivs[exhaust_order]>0]
-	rb <- length(rel_branches)
-
-	char_deriv <- vector(length=nchar)
-	exhaust_matrix <- matrix(0,max(char_history$Changes[,2]),max(char_history$Changes[,3]))
-	found <- total_steps <- novel_chars <- novel_states <- 0
-	for (b in 1:rb)	{
-		br <- rel_branches[b]
-	#	br_ch <- sum(char_history$Changes[,1]==br)
-	#	if (br_ch>0)	{
-		local_change <- subset(char_history$Changes,char_history$Changes[,1]==br)
-		char_deriv[local_change[,2]] <- char_deriv[local_change[,2]]+1
-		novel_chars <- novel_chars + sum(char_deriv[local_change[,2]]==1)
-		for (d in 1:branch_derivs[br])	{
-			if (branch_derivs[br]>1)	{
-				ch <- local_change[d,2]
-				st <- local_change[d,3]
-				}	else	{
-				ch <- local_change[2]
-				st <- local_change[3]
-				}
-			exhaust_matrix[ch,st] <- exhaust_matrix[ch,st]+1
-			if (exhaust_matrix[ch,st]==1)	novel_states <- novel_states+1
-			}
-		total_steps <- total_steps+branch_derivs[br]
-		if (exhaust_order[b]<10)	{
-			if (max(mtree)<10)	{
-				brnm <- paste("br_",exhaust_order[b],sep="")
-				} else if (max(mtree<100))	{
-				brnm <- paste("br_0",exhaust_order[b],sep="")	
-				}	else	{
-				brnm <- paste("br_00",exhaust_order[b],sep="")	
-				}
-			}	else if (exhaust_order[b]<100)	{
-			if (max(mtree)<100)	{
-				brnm <- paste("br_",exhaust_order[b],sep="")	
-				}	else	{
-				brnm <- paste("br_0",exhaust_order[b],sep="")	
-				}				
-			}
-		if (b==1)	{
-			exhaustion <- c(total_steps,novel_states,novel_chars)
-			branch_names <- brnm
-			}	else	{
-			exhaustion <- rbind(exhaustion,c(total_steps,novel_states,novel_chars))
-			branch_names <- c(branch_names,brnm)
-			}
-		}
-
-	colnames(exhaustion) <- c("Steps","Novel_States","Novel_Characters")
-	rownames(exhaustion) <- branch_names
-	exhaust_output <- list(exhaustion,exhaust_matrix)
-	names(exhaust_output) <- c("Exhaustion","State_Derivations")
-	return(exhaust_output)
-	}
 
 # get history of character evolution implied by minimum steps
-accio_minimum_steps_history <- function(mtree,cdata,types,UNKNOWN=-11,INAP=-22,outgroup=1)	{
+accio_minimum_steps_history <- function(mtree,cdata,types,missingCharValue="?",inapplicableValue="-",outgroup=1)	{
 	# mtree: matrix tree, where each row gives the branches stemming from a node
 	# cdata: character data
 	# types: 1 for unordered, 0 for ordered
-	# UNKNOWN: numeric representation for "?"
-	# INAP: numeric representation for inapplicable or gap
+	# missingCharValue: numeric representation for "?"
+	# inapplicableValue: numeric representation for inapplicable or gap
 	# outgroup: the number of the outgroup taxon
 	otus <- dim(cdata)[1]
 	Nnodes <- dim(mtree)[1]
@@ -448,7 +512,7 @@ accio_minimum_steps_history <- function(mtree,cdata,types,UNKNOWN=-11,INAP=-22,o
 	for (c in 1:nchar)	{
 		cvector <- cdata[,c]
 		type <- types[c]
-		char_evolution <- Sankoff_character(mtree,cvector,type,UNKNOWN,INAP,outgroup)
+		char_evolution <- Sankoff_character(mtree,cvector,type,missingCharValue,inapplicableValue,outgroup)
 		steps[c] <- char_evolution$Steps
 		if (c==1)	{
 			full_matrix <- char_evolution$States
@@ -502,7 +566,7 @@ accio_minimum_steps_history <- function(mtree,cdata,types,UNKNOWN=-11,INAP=-22,o
 	}
 
 # get Sankoff matrix ancestral reconstructions
-Sankoff_character <- function(mtree,cvector,type=1,UNKNOWN=-11,INAP=-22,outgroup=1)	{
+Sankoff_character <- function(mtree,cvector,type=1,missingCharValue="?",inapplicableValue="-",outgroup=1)	{
 	# method for reconstructing ancestral conditions.
 	obs_states <- sort(unique(cvector[cvector>=0]))
 	ttl_states <- length(obs_states)
@@ -516,7 +580,7 @@ Sankoff_character <- function(mtree,cvector,type=1,UNKNOWN=-11,INAP=-22,outgroup
 			sankoff_matrix[s,st] <- 0
 			}	else	sankoff_matrix[s,] <- 0
 		}
-	cvector <- c(cvector,rep(UNKNOWN,Nnodes))
+	cvector <- c(cvector,rep(missingCharValue,Nnodes))
 	node_rich <- vector(length=Nnodes)
 	for (n in Nnodes:1)	{
 		missing <- gap <- 0
@@ -530,7 +594,7 @@ Sankoff_character <- function(mtree,cvector,type=1,UNKNOWN=-11,INAP=-22,outgroup
 			#### add something to deal with inapplicables here.
 			# list states that demand more than minimal change
 			sp <- mtree[n,s]
-			if (cvector[sp]!=INAP && cvector[sp]!=UNKNOWN)	{
+			if (cvector[sp]!=inapplicableValue && cvector[sp]!=missingCharValue)	{
 				#	we will add a step to each of these because if sankoff is:
 				#		0 1 1 for states 0, 1 & 2
 				#	then we need 1 step from either 1 or 2
@@ -544,17 +608,17 @@ Sankoff_character <- function(mtree,cvector,type=1,UNKNOWN=-11,INAP=-22,outgroup
 		#			sankoff_matrix[ht,add_step] <- sankoff_matrix[ht,add_step]+sankoff_matrix[sp,add_step]
 		#			sankoff_matrix[ht,]
 					}
-				}	else if (cvector[sp]==INAP)	{
+				}	else if (cvector[sp]==inapplicableValue)	{
 				gap <- gap+1
-				}	else if (cvector[sp]==UNKNOWN)	{
+				}	else if (cvector[sp]==missingCharValue)	{
 				missing <- missing+1
 				}
 			}
 		if (missing==f1)	{
-			cvector[ht] <- UNKNOWN
+			cvector[ht] <- missingCharValue
 			scored <- c(scored,ht)
 			}	else if (gap==f1)	{
-			cvector[ht] <- INAP
+			cvector[ht] <- inapplicableValue
 			scored <- c(scored,ht)
 			}	else if (sum(sankoff_matrix[ht,] %in% min(sankoff_matrix[ht,]))==1)	{
 			# see if we can fix a state
@@ -569,7 +633,7 @@ Sankoff_character <- function(mtree,cvector,type=1,UNKNOWN=-11,INAP=-22,outgroup
 	base <- otus+1
 	ch_steps <- min(sankoff_matrix[base,])
 
-	if (cvector[base]<0 && (cvector[base]!=UNKNOWN && cvector[base]!=INAP))	{
+	if (cvector[base]<0 && (cvector[base]!=missingCharValue && cvector[base]!=inapplicableValue))	{
 		#poss_starts <- (1:ttl_states)[sankoff_matrix[base,] %in% min(sankoff_matrix[base,])]
 		poss_starts <- unravel_polymorph(cvector[base])
 		# IF the designated outgroup is attached to the first node AND if it 
@@ -587,7 +651,7 @@ Sankoff_character <- function(mtree,cvector,type=1,UNKNOWN=-11,INAP=-22,outgroup
 	changes_above <- vector(length=Nnodes)
 	for (n in 1:Nnodes)	{
 		ht <- n+otus
-		if (cvector[ht]!=INAP && cvector[ht]!=UNKNOWN)	{
+		if (cvector[ht]!=inapplicableValue && cvector[ht]!=missingCharValue)	{
 			f1 <- node_rich[n]
 			# if all taxa are scored in mtree[n,]
 			if (sum(mtree[n,(1:f1)] %in% scored)<f1)	{
@@ -603,14 +667,14 @@ Sankoff_character <- function(mtree,cvector,type=1,UNKNOWN=-11,INAP=-22,outgroup
 					#	then go with that value
 					if(anc_st>=0 && (!is.na(match(anc_st,obs_states[sankoff_matrix[f2,] %in% min(sankoff_matrix[f2,])]))))	{
 						cvector[f2] <- anc_st
-						}	else if (anc_st<0 && (anc_st!=UNKNOWN && anc_st!=INAP))	{
+						}	else if (anc_st<0 && (anc_st!=missingCharValue && anc_st!=inapplicableValue))	{
 						anc_poss <- unravel_polymorph(anc_st)
 						f2_poss <- unravel_polymorph(cvector[f2])
 						reduced_poss <- f2_poss[f2_poss %in% anc_poss]
 						if (length(reduced_poss)==1)	{
 							cvector[ht] <- cvector[f2] <- reduced_poss
 							}	else	{
-		#					cvector[ht] <- cvector[f2] <- ravel_polymorph(reduced_poss)
+							#cvector[ht] <- cvector[f2] <- ravel_polymorph(reduced_poss)
 							# if it is still up in the air at this point, then you might as
 							#	well roll the dice!
 							cvector[f2] <- reduced_poss[ceiling(runif(1)/(1/length(reduced_poss)))]
@@ -629,12 +693,12 @@ Sankoff_character <- function(mtree,cvector,type=1,UNKNOWN=-11,INAP=-22,outgroup
 	cchanges <- rep(0,length(cvector))
 	for (n in 1:Nnodes)	{
 		ht <- otus+n
-		if (cvector[ht]!=UNKNOWN && cvector[ht]!=INAP)	{
+		if (cvector[ht]!=missingCharValue && cvector[ht]!=inapplicableValue)	{
 			f1 <- node_rich[n]
 			for (f in 1:f1)	{
 				f2 <- mtree[n,f]
 				if (cvector[f2] != cvector[ht])
-					if ((cvector[f2]!=UNKNOWN && cvector[f2]!=INAP) && (cvector[ht]!=UNKNOWN && cvector[ht]!=INAP))
+					if ((cvector[f2]!=missingCharValue && cvector[f2]!=inapplicableValue) && (cvector[ht]!=missingCharValue && cvector[ht]!=inapplicableValue))
 						# if both taxa are resolved, then this is easy
 						if (length(cvector[f2])==1 && length(cvector[ht])==1)
 							cchanges[f2] <- match(cvector[f2],obs_states)
@@ -655,10 +719,10 @@ ravel_polymorph <- function(polies)	{
 
 ### ROUTINES TO ORDER BRANCHES ON TREE
 # get order of branches from base of tree up, accounting for stratigraphy
-accio_branch_order_with_stratigraphy <- function(mtree,FAs)	{
+accio_branch_order_with_stratigraphy <- function(mtree,firstAppearances)	{
 	branch_order <- accio_patristic_distance_from_base(mtree)	# order branches from base of the tree
 	used_order <- branch_order + (1-(1:length(branch_order))/100)	# for ties, put nodes before otus
-	strat_order <- date_taxa_on_tree_simple(mtree,FAs)
+	strat_order <- date_taxa_on_tree_simple(mtree,firstAppearances)
 
 	tosort <- cbind(strat_order,used_order)
 	return(order(tosort[,1],tosort[,2],decreasing=FALSE))
@@ -692,31 +756,37 @@ accio_branch_order_with_stratigraphy <- function(mtree,FAs)	{
 	}
 
 # get simple dating of taxa on trees
-date_taxa_on_tree_simple<-function(atree,FAs)	{
+date_taxa_on_tree_simple<-function(atree,firstAppearances)	{
+	# warning - original code has mysterious variable 'vtree'
+		# was this a typo of 'atree'?? replaced
+	# vtree means 'vector tree', so I guess 'atree' should be a 'vtree' type object
+	### vtree is a vector tree, where each cell gives the ancestral HTU of the OTU or HTU
+	###		HTU's are nodes, with the basal HTU = notu+1 (i.e., 13 for 12 taxa)
+	#
 	ttus <- max(atree)	# total htus+otus
 	dates <- vector(length=ttus)
-	notu <- length(FAs)	# number of otus
+	notu <- length(firstAppearances)	# number of otus
 	if (length(dim(as.array(atree)))==1)	{
 		# routine if tree given as a single vector with ancestral
 		base <- notu+1
-		end<-max(FAs)
+		end<-max(firstAppearances)
 		for (nd in base:ttus)	dates[nd]<-end
 		for (sp in 1:notu)	{
-			if (vtree[sp]>0)	{
-				dates[sp]<-FAs[sp]
-				anc<-vtree[sp]
+			if (atree[sp]>0)	{ 	#vtree?
+				dates[sp]<-firstAppearances[sp]
+				anc<-atree[sp] 	#vtree?
 				if (dates[anc]>dates[sp])	dates[anc]<-dates[sp]
 				}	# this is to make sure that species excluded from the tree do not mess up analysis
 			}
 		for (nd in ttus:(base+1))	{
-			if (vtree[nd]>0)	{
-				anc<-vtree[nd]
+			if (atree[nd]>0)	{ 	#vtree?
+				anc<-atree[nd] 	#vtree?
 				if (dates[anc]>dates[nd])	dates[anc]<-dates[nd]
 				}	# this is to make sure that species excluded from the tree do not mess up analysis
 			}
 		} else	{
 		Nnodes <- dim(atree)[1]
-		dates[1:notu] <- FAs
+		dates[1:notu] <- firstAppearances
 		for (n in Nnodes:1)	{
 			f1 <- sum(atree[n,]>0)
 			ht <- n+notu
@@ -738,12 +808,12 @@ modified_AIC <- function(lnL,k,n)	{
 	return(aic_c)
 	}
 
-	# convert abundances to "Fisher plot" giving # taxa with 1…N Finds
-	fisher_plot <- function(finds)	{
+# convert abundances to "Fisher plot" giving # taxa with 1…N Finds
+fisher_plot <- function(finds)	{
 	return(hist(finds,breaks=(0:max(finds)),plot=FALSE)$counts)
 	}
 
-	create_quantile_vector<-function(N)	{
+create_quantile_vector<-function(N)	{
 	return(seq(1/(N+1),N/(N+1),by=1/(N+1)))
 	}
 
@@ -788,7 +858,8 @@ expected_exhaustion_curve <- function(rel_ab_dist, nstep, after3, C)	{
 	}
 
 # expected sampled
-expected_sampled_richness <- function(rel_ab_dist, nspec, S)	{
+# get the likelihood of observed numbers of taxa with 1…N finds given expected numbers of taxa with 1…N finds
+expected_sampled_richness <- function(rel_ab_dist, nspec, S, MINNO = 5e-324)	{
 	exp_find <- 0
 	for (t in 1:S)
 	#	exp_find <- c(exp_find,(1-dbinom(0,nspec,rel_ab_dist[t])))
@@ -796,10 +867,10 @@ expected_sampled_richness <- function(rel_ab_dist, nspec, S)	{
 		exp_find <- exp_find+(1-(1-rel_ab_dist[t])^nspec)
 	return(exp_find)
 	}
-	# get the likelihood of observed numbers of taxa with 1…N finds given expected numbers of taxa with 1…N finds
 
-	# get multinomial likelihood of distribution
-	distribution_loglikelihood_mul <- function(observed,expected,oS,hS)	{
+
+# get multinomial likelihood of distribution
+distribution_loglikelihood_mul <- function(observed,expected,oS,hS,MINNO = 5e-324)	{
 	#print(c(oS,hS))		# for debugging
 	mxfind <- length(observed)							# maximum finds observed
 	prop_expected <- expected[1:mxfind]/sum(expected)		# convert expected species to proportions
@@ -825,7 +896,7 @@ expected_sampled_richness <- function(rel_ab_dist, nspec, S)	{
 	}
 
 # find best model with just one frequency
-optimize_uniform_abundance <- function(counts)	{
+optimize_uniform_abundance <- function(counts, MAXNO = 1.797693e+308)	{
 	# written 2017-01-28
 	minS <- length(counts)
 	nspec <- sum(counts)
@@ -845,7 +916,7 @@ optimize_uniform_abundance <- function(counts)	{
 	}
 
 # some basic distributions
-geometric_distribution <- function(decay)	{
+geometric_distribution <- function(decay, MINEXPN = 10^-10)	{
 	#	rescale geometric to base rate r
 	if (decay>1)	decay <- (1/decay)
 	S <- round(1+((log(MINEXPN)-log(1-decay))/log(decay)))
@@ -855,7 +926,7 @@ geometric_distribution <- function(decay)	{
 	}
 
 # get log-likelihood of geometric given decay
-loglikelihood_geometric_rad <- function(decay,nspec,oS,observed)	{
+loglikelihood_geometric_rad <- function(decay,nspec,oS,observed, MINNO = 5e-324)	{
 	# p0[1]: r	# p0[2]: decay	# p0[3]: S
 	rel_ab_dist <- geometric_distribution(decay)		# basic exponential distribution
 	hS <- length(rel_ab_dist)
@@ -935,7 +1006,7 @@ loglikelihood_lognormal_rad_for_optim <- function(oS,nspec,rand_no,hS,observed,m
 	rel_ab_dist <- lognormal_distribution(mag=mag,S=hS)		# basic lognormal distribution
 	raw_expected <- expected_abundances(rel_ab_dist,nspec,S=hS)
 	#lnl <- abundance_distribution_loglikelihood_suf(observed,expected=raw_expected,oS=oS,hS=hS)
-	lnl <- distribution_loglikelihood_mul(observed,expected=raw_expected,oS,hS)
+	lnl <- distribution_loglikelihood_mul(observed,expected=raw_expected,oS=oS,hS=hS)
 	return(round(lnl,2))
 	}
 
@@ -945,10 +1016,13 @@ loglikelihood_lognormal_rad<-function(oS,nspec,mag,hS,observed)	{
 	#nspec<-0
 	#for (i in 1:length(observed))	nspec<-nspec+(i*observed[i])
 	#oS<-sum(observed)
-	#optim(p0,fn=bestuniformpresrate,method="L-BFGS-B", lower=minr, upper=maxr, control=cl, observed=observed, ncoll=ncoll)
+	#optim(p0,fn=bestuniformpresrate,method="L-BFGS-B", lower=minr, 
+	#	upper=maxr, control=cl, observed=observed, ncoll=ncoll)
 	rad<-lognormal_distribution(mag,S=hS)		# basic lognormal distribution
 	raw_expected<-expected_abundances(rad,nspec,S=hS)
-	lnl<-abundance_distribution_loglikelihood_suf(observed,expected=raw_expected,oS=oS,hS=hS)
+	# I suspect the following function is meant to be replaced, as in loglikelihood_lognormal_rad_for_optim
+	#lnl<-abundance_distribution_loglikelihood_suf(observed,expected=raw_expected,oS=oS,hS=hS)
+	lnl<-distribution_loglikelihood_mul(observed,expected=raw_expected,oS=oS,hS=hS)
 	return(lnl)
 	}
 
@@ -964,9 +1038,11 @@ optimize_lognormal_abundance_given_hS <- function(observed,counts,hS)	{
 	#inev <- mag <- exp(log(mxfinds/mnfinds)/(qnorm((hS-1)/(hS+1))-qnorm((hS-oS)/(hS+1))))
 	cl <- list(fnscale=-1)
 	rand_no <- (mag - mm[1])/(mm[2] - mm[1])
-	w <- optim(rand_no,loglikelihood_lognormal_rad_for_optim,,method="L-BFGS-B",oS=oS,nspec=nspec,hS=hS,observed=observed,min_mag=mm[1],max_mag=mm[2],lower=0,upper=1,control=cl)
+	w <- optim(rand_no,loglikelihood_lognormal_rad_for_optim,,method="L-BFGS-B",
+		oS=oS,nspec=nspec,hS=hS,observed=observed,min_mag=mm[1],max_mag=mm[2],lower=0,upper=1,control=cl)
 	w$par <- mm[1] + (w$par*(mm[2] - mm[1]))
-	#w <- optim(mag,fn=loglikelihood_lognormal_rad,method="L-BFGS-B",oS=oS,nspec=nspec,hS=hS,observed=observed,lower=mm[1],upper=mm[2],control=cl)
+	#w <- optim(mag,fn=loglikelihood_lognormal_rad,method="L-BFGS-B",oS=oS,nspec=nspec,hS=hS,
+	#	observed=observed,lower=mm[1],upper=mm[2],control=cl)
 	bH <- c(w$par,hS,w$value)
 	names(bH) <- c("Lognormal_magnitude", "Lognormal_S","Lognormal_log-likelihood")
 	return(bH)
@@ -1215,7 +1291,7 @@ gamma_distribution <- function(a, b, S)	{
 	}
 
 # get minimum alpha
-accio_minimum_alpha_for_gamma_one <- function(hS)	{
+accio_minimum_alpha_for_gamma_one <- function(hS, MINNO = 5e-324)	{
 	min_alpha <- 1
 	iS <- hS
 	while (iS==hS)	{
@@ -1227,14 +1303,14 @@ accio_minimum_alpha_for_gamma_one <- function(hS)	{
 	}
 
 # get log-likelihood for gamma
-loglikelihood_gamma_one_rad <- function(oS,nspec,alpha,hS,observed)	{
+loglikelihood_gamma_one_rad <- function(oS,nspec,alpha,hS,observed, MINNO = 5e-324, MAXNO = 1.797693e+308)	{
 	#print(c(log10(alpha),hS))
 	rel_ab_dist <- gamma_distribution(a=alpha,b=alpha,S=hS)		# basic lognormal distribution
 	#print(rel_ab_dist)
 	if (sum(rel_ab_dist>MINNO) == hS)	{
 		raw_expected <- expected_abundances(rel_ab_dist,nspec,S=hS)
 		#lnl <- abundance_distribution_loglikelihood_suf(observed,expected=raw_expected,oS=oS,hS=hS)
-		lnl <- distribution_loglikelihood_mul(observed,expected=raw_expected,oS,hS)
+		lnl <- distribution_loglikelihood_mul(observed,expected=raw_expected,oS=oS,hS=hS)
 		}	else	lnl <- -1*MAXNO
 	return(round(lnl,2))
 	}

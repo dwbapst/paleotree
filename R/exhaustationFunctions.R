@@ -1,35 +1,31 @@
 
 
-tree2mTree<-function(mtree){
-	# modify tree for use with exhaustation curve funs
-	#
 
-
-	# mtree is a matrix tree, where each row gives the descendants of node n
-	return(mtree)
-	}
-
-
-accioExhaustionCurve <- function(phyloTree,cdata,types,firstAppearances=1,missingCharValue="?",inapplicableValue="-",outgroup=1)	{
+accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
+	firstAppearances=NULL,missingCharValue="?",inapplicableValue="-")	{
 	#
 	# sorry pete, but paleotree is camelCase... ;)
 	#
 	# rewrite ape's phylo format tree
 	### vtree is a vector tree, where each cell gives the ancestral HTU of the OTU or HTU
 	###		HTU's are nodes, with the basal HTU = nTips+1 (i.e., 13 for 12 taxa)
-	mtree <- accio_matrix_tree_from_ape_tree(phyloTree)	S
+	mtree <- accio_matrix_tree_from_ape_tree(phyloTree)	
 	#
 	# based on routine used in Wagner (2000).  Uses simple parsimony optimization
 	#	and (if available) stratigraphic data to order branches and show how
 	#	many novel states appear with how many changes along each branch working
 	#	up the tree.
 	#	MODIFY to show number of characters triggered as well as # of states
-	nchar <- dim(cdata)[2]
-	char_history <- accio_minimum_steps_history(mtree,cdata,types,missingCharValue,inapplicableValue,outgroup)
-	if (length(firstAppearances)==1)	{
-		branch_order <- accio_patristic_distance_from_base(mtree)	# order branches from base of the tree
-		used_order <- branch_order + (1-(1:length(branch_order))/100)	# for ties, put nodes before otus
-		exhaust_order <- order(used_order,decreasing=FALSE)		# list branches in order
+	nchar <- dim(charData)[2]
+	char_history <- accio_minimum_steps_history(mtree=mtree,charData=charData,charTypes=charTypes,
+		missingCharValue=missingCharValue,inapplicableValue=inapplicableValue,outgroup=outgroup)
+	if (is.null(firstAppearances))	{
+		# order branches from base of the tree
+		branch_order <- accio_patristic_distance_from_base(mtree)	
+		# for ties, put nodes before otus
+		used_order <- branch_order + (1-(1:length(branch_order))/100)
+		# list branches in order	
+		exhaust_order <- order(used_order,decreasing=FALSE)		
 	}else{
 		exhaust_order <- used_order <- accio_branch_order_with_stratigraphy(mtree,firstAppearances)
 		### insert ordering with stratigraphy here.	
@@ -117,6 +113,8 @@ accioExhaustionCurve <- function(phyloTree,cdata,types,firstAppearances=1,missin
 ##############################################################
 
 # old stuff
+
+
 
 #ZERO  1e-323
 #MINEXPN <- 10^-10
@@ -498,20 +496,20 @@ accio_matrix_tree_from_vector_tree <- function(vector_tree)	{
 ### ROUTINES TO RECONSTRUCT CHARACTER CHANGE
 
 # get history of character evolution implied by minimum steps
-accio_minimum_steps_history <- function(mtree,cdata,types,missingCharValue="?",inapplicableValue="-",outgroup=1)	{
+accio_minimum_steps_history <- function(mtree,charData,charTypes,missingCharValue="?",inapplicableValue="-",outgroup=1)	{
 	# mtree: matrix tree, where each row gives the branches stemming from a node
-	# cdata: character data
-	# types: 1 for unordered, 0 for ordered
+	# charData: character data
+	# charTypes: 1 for unordered, 0 for ordered
 	# missingCharValue: numeric representation for "?"
 	# inapplicableValue: numeric representation for inapplicable or gap
 	# outgroup: the number of the outgroup taxon
-	otus <- dim(cdata)[1]
+	otus <- dim(charData)[1]
 	Nnodes <- dim(mtree)[1]
-	nchar <- dim(cdata)[2]
+	nchar <- dim(charData)[2]
 	steps <- vector(length=nchar)
 	for (c in 1:nchar)	{
-		cvector <- cdata[,c]
-		type <- types[c]
+		cvector <- charData[,c]
+		type <- charTypes[c]
 		char_evolution <- Sankoff_character(mtree,cvector,type,missingCharValue,inapplicableValue,outgroup)
 		steps[c] <- char_evolution$Steps
 		if (c==1)	{

@@ -6,7 +6,7 @@
 
 #' @name SongZhangDicrano
 #' @rdname SongZhangDicrano
-#' @aliases charMatDicrano cladogramDicranoX12 cladogramDicranoX12
+#' @aliases charMatDicrano cladogramDicranoX12 cladogramDicranoX13
 
 #' @details
 #' This example dataset is composed of a small cladistic character data for 13 taxa and 24 characters,

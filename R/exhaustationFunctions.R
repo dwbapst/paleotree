@@ -1,3 +1,29 @@
+#' Exhaustation of 
+
+
+#' @param phyloTree A phylogenetic tree of class \code{phylo} as used by package \code{ape}.
+
+#' @details
+
+#' @inheritParams
+
+#' @param
+
+#' @return
+
+#' @aliases
+
+#' @seealso
+
+#' @author David W. Bapst
+
+#' @references
+
+#' @examples
+
+
+#' 
+
 
 
 
@@ -54,12 +80,13 @@ nchar <- dim(charMat)[2]
 types <- rep(0,nchar)	# set character types to unordered (1)
 
 
-
-
 #the 'outgroup' is Exigraptus, first taxon listed in the matrix
-exhaustion_info <- accioExhaustionCurve(phyloTree,charMat,types,FAs,outgroup=1)
+exhaustionResults <- accioExhaustionCurve(phyloTree,charMat,types,FAs,outgroup=1)
 
 
+
+
+function(exhaustion_info,)
 
 exhaustion <- exhaustion_info$Exhaustion
 nstep <- max(exhaustion_info$Exhaustion[,1])
@@ -154,12 +181,11 @@ points(exhaustion[,1],exhaustion[,3],pch=21,bg="green",cex=1.25)
 
 
 
-'
 
 
-#' @param phyloTree A phylogenetic tree of class \code{phylo} as used by package \code{ape}.
-
-
+#' @name
+#' @rdname
+#' @export
 accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
 	firstAppearances=NULL,missingCharValue="?",inapplicableValue="-")	{
 	#
@@ -253,6 +279,47 @@ accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
 
 
 
+accioBestAcquisitionModel <- function(changes,models=c("exponential","gamma","lognormal","zipf"))	{
+	# get the best model based on change/derivation distributions
+	best_H <- best_uniform <- optimize_uniform_abundance(counts=changes)
+	best_model <- "uniform"
+	best_dist <- rep(1/as.numeric(best_H[1]),as.numeric(best_H[1]))
+	if (!is.na(match("exponential",models)))	{
+		best_exponential <- optimize_geometric_abundance(counts=changes)
+		if (best_exponential[length(best_exponential)] < best_H[length(best_H)])	{
+			best_H <- best_exponential
+			best_model <- "exponential"
+			best_dist <- geometric_distribution(decay=best_exponential[1])
+			}
+		}
+	if (!is.na(match("gamma",models)))	{
+		best_gamma1 <- optimize_gamma_one_abundance(counts=changes)
+		if (best_gamma1[length(best_gamma1)] < best_H[length(best_H)])	{
+			best_H <- best_gamma1
+			best_model <- "gamma"
+			best_dist <- gamma_distribution(a=best_gamma1[1],b=best_gamma1[1],S=best_gamma1[2])
+			}
+		}
+	if (!is.na(match("lognormal",models)))	{
+		best_lognormal <- optimize_lognormal_abundance(counts=changes)
+		if (best_lognormal[length(best_lognormal)] < best_H[length(best_H)])	{
+			best_H <- best_lognormal
+			best_model <- "lognormal"
+			best_dist <- lognormal_distribution(mag=best_lognormal[1],S=best_lognormal[2])
+			}
+		}
+	if (!is.na(match("zipf",models)))	{
+		best_zipf <- optimize_zipf_abundance(counts=changes)
+		if (best_zipf[length(best_zipf)] < best_H[length(best_H)])	{
+			best_H <- best_zipf
+			best_model <- "zipf"
+			best_dist <- zipf_distribution(zm=best_zipf[1],S=best_zipf[2])
+			}
+		}
+	output <- list(best_model,best_H,best_dist)
+	names(output) <- c("Best_Model","Best_Model_Parameters","Best_Distribution")
+	return(output)
+	}
 
 
 
@@ -1574,47 +1641,7 @@ optimize_gamma_one_abundance <- function(counts)	{
 	return(bH)
 	}
 
-# get the best model based on change/derivation distributions
-accio_best_acquisition_model <- function(changes,models=c("exponential","gamma","lognormal","zipf"))	{
-	best_H <- best_uniform <- optimize_uniform_abundance(counts=changes)
-	best_model <- "uniform"
-	best_dist <- rep(1/as.numeric(best_H[1]),as.numeric(best_H[1]))
-	if (!is.na(match("exponential",models)))	{
-		best_exponential <- optimize_geometric_abundance(counts=changes)
-		if (best_exponential[length(best_exponential)] < best_H[length(best_H)])	{
-			best_H <- best_exponential
-			best_model <- "exponential"
-			best_dist <- geometric_distribution(decay=best_exponential[1])
-			}
-		}
-	if (!is.na(match("gamma",models)))	{
-		best_gamma1 <- optimize_gamma_one_abundance(counts=changes)
-		if (best_gamma1[length(best_gamma1)] < best_H[length(best_H)])	{
-			best_H <- best_gamma1
-			best_model <- "gamma"
-			best_dist <- gamma_distribution(a=best_gamma1[1],b=best_gamma1[1],S=best_gamma1[2])
-			}
-		}
-	if (!is.na(match("lognormal",models)))	{
-		best_lognormal <- optimize_lognormal_abundance(counts=changes)
-		if (best_lognormal[length(best_lognormal)] < best_H[length(best_H)])	{
-			best_H <- best_lognormal
-			best_model <- "lognormal"
-			best_dist <- lognormal_distribution(mag=best_lognormal[1],S=best_lognormal[2])
-			}
-		}
-	if (!is.na(match("zipf",models)))	{
-		best_zipf <- optimize_zipf_abundance(counts=changes)
-		if (best_zipf[length(best_zipf)] < best_H[length(best_H)])	{
-			best_H <- best_zipf
-			best_model <- "zipf"
-			best_dist <- zipf_distribution(zm=best_zipf[1],S=best_zipf[2])
-			}
-		}
-	output <- list(best_model,best_H,best_dist)
-	names(output) <- c("Best_Model","Best_Model_Parameters","Best_Distribution")
-	return(output)
-	}
+
 
 ##### GRAPHICAL GOODNESS
 draw_symmetric_axes <- function(mxx,xsize)	{

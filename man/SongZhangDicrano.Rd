@@ -5,6 +5,7 @@
 \alias{SongZhangDicrano}
 \alias{charMatDicrano}
 \alias{cladogramDicranoX12}
+\alias{cladogramDicranoX13}
 \title{Cladistic Data for Dicranograptid Graptolites from Song and Zhang (2014)}
 \format{Loading this dataset adds two objects to the R environment.
 \code{charMatDicrano} is a \code{data.frame} object composed of multiple factors, with \code{NA} values

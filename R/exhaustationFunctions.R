@@ -266,7 +266,7 @@ charExhaustPlot<-function(exhaustion_info,plotType,xlab="Total Characters",ylab=
 		points(exhaustion[,1],exhaustion[,3],pch=21,bg="green",cex=1.25)
 		}
 	#
-	if(plotType=="charAlt")
+	if(plotType=="charAlt"){
 		# get the best model for the size and distribution of state space
 		best_state_exhaustion <- accioBestAcquisitionModel(changes=state_derivs,
 			models=c("exponential","gamma","lognormal","zipf"))

@@ -1,11 +1,12 @@
-#' Exhaustation of 
+#' Exhaustation of Characters 
 
 
-#' @param phyloTree A phylogenetic tree of class \code{phylo} as used by package \code{ape}.
 
-#' @details
+#' @details 
 
 #' @inheritParams
+
+#' @param phyloTree A phylogenetic tree of class \code{phylo} as used by package \code{ape}.
 
 #' @param
 
@@ -94,14 +95,14 @@ char_changes <- sort(rowSums(exhaustion_info$State_Derivations),decreasing=TRUE)
 state_derivs <- sort(array(exhaustion_info$State_Derivations)[array(exhaustion_info$State_Derivations)>0],decreasing=TRUE)
 
 # get the best model for the size and distribution of character space
-best_character_exhaustion <- accio_best_acquisition_model(changes=char_changes,
+best_character_exhaustion <- accioBestAcquisitionModel(changes=char_changes,
 	models=c("exponential","gamma","lognormal","zipf"))
 bca <- best_character_exhaustion$Best_Distribution
 after3 <- exhaustion[2,1]
 hbca <- expected_exhaustion_curve(rel_ab_dist=bca, nstep, after3, length(bca))
 
 # get the best model for the size and distribution of state space
-best_state_exhaustion <- accio_best_acquisition_model(changes=state_derivs,
+best_state_exhaustion <- accioBestAcquisitionModel(changes=state_derivs,
 	models=c("exponential","gamma","lognormal","zipf"))
 bsa <- best_state_exhaustion$Best_Distribution
 after3 <- exhaustion[3,1]
@@ -134,51 +135,91 @@ points(exhaustion[,1],exhaustion[,2],pch=21,bg="skyblue",cex=1.25)
 
 
 
+#
 
-
-
-exhaustion <- exhaustion_info$Exhaustion
-nstep <- max(exhaustion_info$Exhaustion[,1])
-char_changes <- sort(rowSums(exhaustion_info$State_Derivations),decreasing=TRUE)
-state_derivs <- sort(array(exhaustion_info$State_Derivations)[array(exhaustion_info$State_Derivations)>0],decreasing=TRUE)
-
-# get the best model for the size and distribution of character space
-best_character_exhaustion <- accio_best_acquisition_model(changes=char_changes,
-	models=c("exponential","gamma","lognormal","zipf"))
-bca <- best_character_exhaustion$Best_Distribution
-after3 <- exhaustion[2,1]
-hbca <- expected_exhaustion_curve(rel_ab_dist=bca, nstep, after3, length(bca))
-
-# get the best model for the size and distribution of state space
-best_state_exhaustion <- accio_best_acquisition_model(changes=state_derivs,
-	models=c("exponential","gamma","lognormal","zipf"))
-bsa <- best_state_exhaustion$Best_Distribution
-after3 <- exhaustion[3,1]
-hbsa <- expected_exhaustion_curve(rel_ab_dist=bsa, nstep, after3, length(bsa))
-
-mxx <- 10*ceiling(max(exhaustion[,1])/10)
-if (mxx<100)	{
-	mxx <- 5*ceiling(mxx/5)
-	}	else	{
-	mxx <- 10*ceiling(mxx/10)
+charExhaustPlot<-function(exhaustion_info,plotType,xlab="Total Characters",ylab=NULL,main=NULL,xsize=3){
+	if(all(plotType!=c("totalAcc","charAlt"))){
+		stop("plotType must be one of either 'totalAcc' or 'charAlt'")
+		}
+	exhaustion <- exhaustion_info$Exhaustion
+	nstep <- max(exhaustion_info$Exhaustion[,1])
+	char_changes <- sort(rowSums(exhaustion_info$State_Derivations),decreasing=TRUE)
+	state_derivs <- sort(array(exhaustion_info$State_Derivations)[array(exhaustion_info$State_Derivations)>0],decreasing=TRUE)
+	#
+	#
+	mxx <- 10*ceiling(max(exhaustion[,1])/10)
+	if (mxx<100)	{
+		mxx <- 5*ceiling(mxx/5)
+	}else{
+		mxx <- 10*ceiling(mxx/10)
+		}
+	#
+	# plot activation of characters
+	#xsize <- 3
+	par(pin=c(xsize,xsize))
+	#
+	if(plotType=="totalAcc"){
+		# get the best model for the size and distribution of character space
+		best_character_exhaustion <- accioBestAcquisitionModel(changes=char_changes,
+			models=c("exponential","gamma","lognormal","zipf"))
+		bca <- best_character_exhaustion$Best_Distribution
+		after3 <- exhaustion[2,1]
+		hbca <- expected_exhaustion_curve(rel_ab_dist=bca, nstep, after3, length(bca))
+		#
+		if(is.null(ylab)){
+			ordinate <- "Novel States"
+		}else{
+			ordinate<-ylab
+			}	
+		if(is.null(main)){
+			main_title <- "State Accumulation"	
+		}else{
+			main_title <- main
+			}	
+		plot(NA,type='n',axes=FALSE,main=main_title,
+			xlab=abcissa,ylab=ordinate,
+			xlim=c(0,mxx),ylim=c(0,mxx))
+		draw_symmetric_axes(mxx,xsize)
+		#
+		lines((1:nstep),hbca,lwd=2,lty=3)
+		points(exhaustion[,1],exhaustion[,3],pch=21,bg="green",cex=1.25)
+		}
+	#
+	if(plotType=="charAlt")
+		# get the best model for the size and distribution of state space
+		best_state_exhaustion <- accioBestAcquisitionModel(changes=state_derivs,
+			models=c("exponential","gamma","lognormal","zipf"))
+		bsa <- best_state_exhaustion$Best_Distribution
+		after3 <- exhaustion[3,1]
+		hbsa <- expected_exhaustion_curve(rel_ab_dist=bsa, nstep, after3, length(bsa))
+		#
+		if(is.null(ylab)){
+			ordinate <- "Altered Characters"
+		}else{
+			ordinate<-ylab
+			}	
+		if(is.null(main)){
+			main_title <- "Character Alterations"
+		}else{
+			main_title <- main
+			}	
+		plot(NA,type='n',axes=FALSE,main=main_title,
+			xlab=abcissa,ylab=ordinate,
+			xlim=c(0,mxx),ylim=c(0,mxx))
+		draw_symmetric_axes(mxx,xsize)
+		#
+		lines((1:nstep),hbsa,lwd=2,lty=2)
+		points(exhaustion[,1],exhaustion[,2],pch=21,bg="skyblue",cex=1.25)
+		}
+	#
+	#layout(1)
 	}
 
-# plot activation of characters
-#xsize <- 3
-par(pin=c(xsize,xsize))
-ordinate <- "Altered Characters"
-abcissa <- "Total Changes"
-main_title <- "Character Alterations"
-plot(NA,type='n',axes=FALSE,main=main_title,
-	xlab=abcissa,ylab=ordinate,
-	xlim=c(0,mxx),ylim=c(0,mxx))
-#draw_symmetric_axes(mxx,xsize)
-lines((1:nstep),hbca,lwd=2,lty=3)
-points(exhaustion[,1],exhaustion[,3],pch=21,bg="green",cex=1.25)
 
+	
 
-
-
+	
+	
 
 
 

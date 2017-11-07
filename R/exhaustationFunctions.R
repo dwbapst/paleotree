@@ -4,228 +4,82 @@
 
 #' @details 
 
-#' @inheritParams
-
 #' @param phyloTree A phylogenetic tree of class \code{phylo} as used by package \code{ape}.
 
 #' @param
 
-#' @return
 
-#' @aliases
+
+
+#accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
+#	firstAppearances=NULL,missingCharValue="?",inapplicableValue="-")	
+
+#accioBestAcquisitionModel <- function(changes,models=c("exponential","gamma","lognormal","zipf"))
+
+
+#charExhaustPlot<-function(exhaustion_info,plotType,xlab="Total Characters",ylab=NULL,main=NULL,xsize=3)
+
+
+
+#' @return
+#' 
+#' 
+#' 
+#' 
 
 #' @seealso
+#' 
 
 #' @author David W. Bapst
 
 #' @references
+#' Wagner, P. J. 2000. Exhaustion of morphologic character states among fossil taxa. Evolution 54(2):365-386.
 
 #' @examples
-
-
 #' 
+#' # get data
+#' data(SongZhangDicrano)
+#' 
+#' phyloTree<-cladogramDicranoX13
+#' 
+#' # stratigraphic age data
+#' strat_data<-cbind(c(0, 4, 7, 7, 6, 6, 6, 2, 2, 1, 1, 6, 7), c(0, 5, 7, 7, 7, 7, 7, 2, 2, 1, 1, 7, 7))
+#' # get just first appearances from strat data
+#' FAs <- strat_data[,1]
+#'  
+#' # modify char data
+#' charMat<-data.matrix(charMatDicrano)
+#' charMat[is.na(charMatDicrano)]<-0
+#' charMat<-(charMat-1)
+#' colnames(charMat)<-NULL
+#' charMat[is.na(charMatDicrano)]<-"?"
+#' 
+#' # get character types
+#' nchar <- dim(charMat)[2]
+#' types <- rep(0,nchar)	# set character types to unordered (1)
+#' 
+#' 
+#' #the 'outgroup' is Exigraptus, first taxon listed in the matrix
+#' exhaustionResults <- accioExhaustionCurve(phyloTree,charMat,types,FAs,outgroup=1)
+#' 
+#' 
+#' 
+#' 
+#' # plot of exhausation of total accumulation of character states
+#' 
+#' charExhaustPlot(exhaustion_info=exhaustionResults,
+#' 	plotType="totalAcc")
+#' 
+#' 	
+#' # plot of exhausation of character alterations
+#' 
+#' charExhaustPlot(exhaustion_info=exhaustionResults,
+#' 	plotType="charAlt")
+#' 	
 
 
-
-
-#library(paleotree)
-#source("D://dave/workspace/paleotree/R/exhaustationFunctions.R")
-#nexustreefile <- "Dicranograptidae_Tree.txt"
-#phyloTree <- read.tree(nexustreefile)
-#strat_file <- "Dicranograptidae_Ranges.txt"
-#strat_data <- read.table(strat_file,header=FALSE,sep="\t")
-#setwd("D:\\dave\\research\\0 wagner exhaustion code")
-#nexus_file_name <- "Dicranograptidae_Song_&_Zhang_2014.nex"
-#char_data <- accio_data_from_nexus_file(nexus_file_name,polymorphs=FALSE)
-# rewrite read.tree output to match what I use
-#nTips <- Ntip(phyloTree)
-#
-#charMat <- char_data$Matrix
-#########################################################
-# modify data
-# what is this outgroup thing??
-#if (char_data$Outgroup>0)	{
-#	outgroup <- char_data$Outgroup
-#	}	else	{
-#	outgroup <- 1	
-#	}
-#
-# modify strat data
-#
-#if (length(simplify2array(strat_data))>notu)	{
-#	FAs <- strat_data[,1]
-#}else{
-#	FAs <- strat_data
-#	}
-
-
-# get data
-data(SongZhangDicrano)
-
-phyloTree<-cladogramDicranoX13
-
-# stratigraphic age data
-strat_data<-cbind(c(0, 4, 7, 7, 6, 6, 6, 2, 2, 1, 1, 6, 7), c(0, 5, 7, 7, 7, 7, 7, 2, 2, 1, 1, 7, 7))
-# get just first appearances from strat data
-FAs <- strat_data[,1]
- 
-# modify char data
-charMat<-data.matrix(charMatDicrano)
-charMat[is.na(charMatDicrano)]<-0
-charMat<-(charMat-1)
-colnames(charMat)<-NULL
-charMat[is.na(charMatDicrano)]<-"?"
-
-# get character types
-nchar <- dim(charMat)[2]
-types <- rep(0,nchar)	# set character types to unordered (1)
-
-
-#the 'outgroup' is Exigraptus, first taxon listed in the matrix
-exhaustionResults <- accioExhaustionCurve(phyloTree,charMat,types,FAs,outgroup=1)
-
-
-
-
-function(exhaustion_info,)
-
-exhaustion <- exhaustion_info$Exhaustion
-nstep <- max(exhaustion_info$Exhaustion[,1])
-char_changes <- sort(rowSums(exhaustion_info$State_Derivations),decreasing=TRUE)
-state_derivs <- sort(array(exhaustion_info$State_Derivations)[array(exhaustion_info$State_Derivations)>0],decreasing=TRUE)
-
-# get the best model for the size and distribution of character space
-best_character_exhaustion <- accioBestAcquisitionModel(changes=char_changes,
-	models=c("exponential","gamma","lognormal","zipf"))
-bca <- best_character_exhaustion$Best_Distribution
-after3 <- exhaustion[2,1]
-hbca <- expected_exhaustion_curve(rel_ab_dist=bca, nstep, after3, length(bca))
-
-# get the best model for the size and distribution of state space
-best_state_exhaustion <- accioBestAcquisitionModel(changes=state_derivs,
-	models=c("exponential","gamma","lognormal","zipf"))
-bsa <- best_state_exhaustion$Best_Distribution
-after3 <- exhaustion[3,1]
-hbsa <- expected_exhaustion_curve(rel_ab_dist=bsa, nstep, after3, length(bsa))
-
-mxx <- 10*ceiling(max(exhaustion[,1])/10)
-if (mxx<100)	{
-	mxx <- 5*ceiling(mxx/5)
-	}	else	{
-	mxx <- 10*ceiling(mxx/10)
-	}
-
-# plot accumulation of states
-xsize <- 3
-par(pin=c(xsize,xsize))
-ordinate <- "Novel States"
-abcissa <- "Total Changes"
-main_title <- "State Accumulation"
-plot(NA,type='n',axes=FALSE,main=main_title,
-	xlab=abcissa,ylab=ordinate,
-	xlim=c(0,mxx),ylim=c(0,mxx))
-draw_symmetric_axes(mxx,xsize)
-lines((1:nstep),hbsa,lwd=2,lty=2)
-points(exhaustion[,1],exhaustion[,2],pch=21,bg="skyblue",cex=1.25)
-
-
-
-
-
-
-
-
-#
-
-charExhaustPlot<-function(exhaustion_info,plotType,xlab="Total Characters",ylab=NULL,main=NULL,xsize=3){
-	if(all(plotType!=c("totalAcc","charAlt"))){
-		stop("plotType must be one of either 'totalAcc' or 'charAlt'")
-		}
-	exhaustion <- exhaustion_info$Exhaustion
-	nstep <- max(exhaustion_info$Exhaustion[,1])
-	char_changes <- sort(rowSums(exhaustion_info$State_Derivations),decreasing=TRUE)
-	state_derivs <- sort(array(exhaustion_info$State_Derivations)[array(exhaustion_info$State_Derivations)>0],decreasing=TRUE)
-	#
-	#
-	mxx <- 10*ceiling(max(exhaustion[,1])/10)
-	if (mxx<100)	{
-		mxx <- 5*ceiling(mxx/5)
-	}else{
-		mxx <- 10*ceiling(mxx/10)
-		}
-	#
-	# plot activation of characters
-	#xsize <- 3
-	par(pin=c(xsize,xsize))
-	#
-	if(plotType=="totalAcc"){
-		# get the best model for the size and distribution of character space
-		best_character_exhaustion <- accioBestAcquisitionModel(changes=char_changes,
-			models=c("exponential","gamma","lognormal","zipf"))
-		bca <- best_character_exhaustion$Best_Distribution
-		after3 <- exhaustion[2,1]
-		hbca <- expected_exhaustion_curve(rel_ab_dist=bca, nstep, after3, length(bca))
-		#
-		if(is.null(ylab)){
-			ordinate <- "Novel States"
-		}else{
-			ordinate<-ylab
-			}	
-		if(is.null(main)){
-			main_title <- "State Accumulation"	
-		}else{
-			main_title <- main
-			}	
-		plot(NA,type='n',axes=FALSE,main=main_title,
-			xlab=abcissa,ylab=ordinate,
-			xlim=c(0,mxx),ylim=c(0,mxx))
-		draw_symmetric_axes(mxx,xsize)
-		#
-		lines((1:nstep),hbca,lwd=2,lty=3)
-		points(exhaustion[,1],exhaustion[,3],pch=21,bg="green",cex=1.25)
-		}
-	#
-	if(plotType=="charAlt")
-		# get the best model for the size and distribution of state space
-		best_state_exhaustion <- accioBestAcquisitionModel(changes=state_derivs,
-			models=c("exponential","gamma","lognormal","zipf"))
-		bsa <- best_state_exhaustion$Best_Distribution
-		after3 <- exhaustion[3,1]
-		hbsa <- expected_exhaustion_curve(rel_ab_dist=bsa, nstep, after3, length(bsa))
-		#
-		if(is.null(ylab)){
-			ordinate <- "Altered Characters"
-		}else{
-			ordinate<-ylab
-			}	
-		if(is.null(main)){
-			main_title <- "Character Alterations"
-		}else{
-			main_title <- main
-			}	
-		plot(NA,type='n',axes=FALSE,main=main_title,
-			xlab=abcissa,ylab=ordinate,
-			xlim=c(0,mxx),ylim=c(0,mxx))
-		draw_symmetric_axes(mxx,xsize)
-		#
-		lines((1:nstep),hbsa,lwd=2,lty=2)
-		points(exhaustion[,1],exhaustion[,2],pch=21,bg="skyblue",cex=1.25)
-		}
-	#
-	#layout(1)
-	}
-
-
-	
-
-	
-	
-
-
-
-
-#' @name
-#' @rdname
+#' @name exhaustationFunctions
+#' @rdname exhaustationFunctions
 #' @export
 accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
 	firstAppearances=NULL,missingCharValue="?",inapplicableValue="-")	{
@@ -318,8 +172,8 @@ accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
 	return(exhaust_output)
 	}
 
-
-
+#' @rdname exhaustationFunctions
+#' @export
 accioBestAcquisitionModel <- function(changes,models=c("exponential","gamma","lognormal","zipf"))	{
 	# get the best model based on change/derivation distributions
 	best_H <- best_uniform <- optimize_uniform_abundance(counts=changes)
@@ -362,35 +216,87 @@ accioBestAcquisitionModel <- function(changes,models=c("exponential","gamma","lo
 	return(output)
 	}
 
+#' @rdname exhaustationFunctions
+#' @export
+charExhaustPlot<-function(exhaustion_info,plotType,xlab="Total Characters",ylab=NULL,main=NULL,xsize=3){
+	if(all(plotType!=c("totalAcc","charAlt"))){
+		stop("plotType must be one of either 'totalAcc' or 'charAlt'")
+		}
+	exhaustion <- exhaustion_info$Exhaustion
+	nstep <- max(exhaustion_info$Exhaustion[,1])
+	char_changes <- sort(rowSums(exhaustion_info$State_Derivations),decreasing=TRUE)
+	state_derivs <- sort(array(exhaustion_info$State_Derivations)[array(exhaustion_info$State_Derivations)>0],decreasing=TRUE)
+	#
+	#
+	mxx <- 10*ceiling(max(exhaustion[,1])/10)
+	if (mxx<100)	{
+		mxx <- 5*ceiling(mxx/5)
+	}else{
+		mxx <- 10*ceiling(mxx/10)
+		}
+	#
+	# plot activation of characters
+	#xsize <- 3
+	par(pin=c(xsize,xsize))
+	#
+	if(plotType=="totalAcc"){
+		# get the best model for the size and distribution of character space
+		best_character_exhaustion <- accioBestAcquisitionModel(changes=char_changes,
+			models=c("exponential","gamma","lognormal","zipf"))
+		bca <- best_character_exhaustion$Best_Distribution
+		after3 <- exhaustion[2,1]
+		hbca <- expected_exhaustion_curve(rel_ab_dist=bca, nstep, after3, length(bca))
+		#
+		if(is.null(ylab)){
+			ordinate <- "Novel States"
+		}else{
+			ordinate<-ylab
+			}	
+		if(is.null(main)){
+			main_title <- "State Accumulation"	
+		}else{
+			main_title <- main
+			}	
+		plot(NA,type='n',axes=FALSE,main=main_title,
+			xlab=abcissa,ylab=ordinate,
+			xlim=c(0,mxx),ylim=c(0,mxx))
+		draw_symmetric_axes(mxx,xsize)
+		#
+		lines((1:nstep),hbca,lwd=2,lty=3)
+		points(exhaustion[,1],exhaustion[,3],pch=21,bg="green",cex=1.25)
+		}
+	#
+	if(plotType=="charAlt")
+		# get the best model for the size and distribution of state space
+		best_state_exhaustion <- accioBestAcquisitionModel(changes=state_derivs,
+			models=c("exponential","gamma","lognormal","zipf"))
+		bsa <- best_state_exhaustion$Best_Distribution
+		after3 <- exhaustion[3,1]
+		hbsa <- expected_exhaustion_curve(rel_ab_dist=bsa, nstep, after3, length(bsa))
+		#
+		if(is.null(ylab)){
+			ordinate <- "Altered Characters"
+		}else{
+			ordinate<-ylab
+			}	
+		if(is.null(main)){
+			main_title <- "Character Alterations"
+		}else{
+			main_title <- main
+			}	
+		plot(NA,type='n',axes=FALSE,main=main_title,
+			xlab=abcissa,ylab=ordinate,
+			xlim=c(0,mxx),ylim=c(0,mxx))
+		draw_symmetric_axes(mxx,xsize)
+		#
+		lines((1:nstep),hbsa,lwd=2,lty=2)
+		points(exhaustion[,1],exhaustion[,2],pch=21,bg="skyblue",cex=1.25)
+		}
+	#
+	#layout(1)
+	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-##############################################################
-
-# old stuff
-
-
-
-#ZERO  1e-323
-#MINEXPN <- 10^-10
-#MINNO = 5e-324
-#MAXNO = 1.797693e+308
-#gap <- inapplicableValue <- "-"
-#missingCharValue <- missing <- "?"
-#missingCharValue <- "?"		# replace "?" with "?"
-#inapplicableValue <- "-"			# replace "-" with "-"
 
 #############################################################
 
@@ -1757,3 +1663,51 @@ accio_matrix_tree_from_ape_tree <- function(ape)	{
 	vector_tree <- c(vector_tree[1:(base-1)],-1,vector_tree[base:length(vector_tree)])
 	mtree <- accio_matrix_tree_from_vector_tree(vector_tree)
 	}
+	
+##############################################################
+
+# old stuff
+
+
+
+#ZERO  1e-323
+#MINEXPN <- 10^-10
+#MINNO = 5e-324
+#MAXNO = 1.797693e+308
+#gap <- inapplicableValue <- "-"
+#missingCharValue <- missing <- "?"
+#missingCharValue <- "?"		# replace "?" with "?"
+#inapplicableValue <- "-"			# replace "-" with "-"
+
+#library(paleotree)
+#source("D://dave/workspace/paleotree/R/exhaustationFunctions.R")
+#nexustreefile <- "Dicranograptidae_Tree.txt"
+#phyloTree <- read.tree(nexustreefile)
+#strat_file <- "Dicranograptidae_Ranges.txt"
+#strat_data <- read.table(strat_file,header=FALSE,sep="\t")
+#setwd("D:\\dave\\research\\0 wagner exhaustion code")
+#nexus_file_name <- "Dicranograptidae_Song_&_Zhang_2014.nex"
+#char_data <- accio_data_from_nexus_file(nexus_file_name,polymorphs=FALSE)
+# rewrite read.tree output to match what I use
+#nTips <- Ntip(phyloTree)
+#
+#charMat <- char_data$Matrix
+#########################################################
+# modify data
+# what is this outgroup thing??
+#if (char_data$Outgroup>0)	{
+#	outgroup <- char_data$Outgroup
+#	}	else	{
+#	outgroup <- 1	
+#	}
+#
+# modify strat data
+#
+#if (length(simplify2array(strat_data))>notu)	{
+#	FAs <- strat_data[,1]
+#}else{
+#	FAs <- strat_data
+#	}
+
+	
+	

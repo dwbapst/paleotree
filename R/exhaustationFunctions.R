@@ -60,10 +60,7 @@
 #' 
 #' 
 #' #the 'outgroup' is Exigraptus, first taxon listed in the matrix
-#' exhaustionResults <- accioExhaustionCurve(phyloTree,charMat,types,FAs,outgroup=1)
-#' 
-#' 
-#' 
+#' exhaustionResults <- accioExhaustionCurve(phyloTree,charMat,types,FAs,outgroup="Exigraptus")
 #' 
 #' # plot of exhausation of total accumulation of character states
 #' 
@@ -97,8 +94,10 @@ accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
 	#	up the tree.
 	#	MODIFY to show number of characters triggered as well as # of states
 	nchar <- dim(charData)[2]
+	#
 	char_history <- accio_minimum_steps_history(mtree=mtree,charData=charData,charTypes=charTypes,
 		missingCharValue=missingCharValue,inapplicableValue=inapplicableValue,outgroup=outgroup)
+	#
 	if (is.null(firstAppearances))	{
 		# order branches from base of the tree
 		branch_order <- accio_patristic_distance_from_base(mtree)	
@@ -522,16 +521,16 @@ accio_data_from_nexus_file <- function(nexus_file_name, polymorphs=TRUE,
 		}
 
 	if (length(char_names)>1 && outgroup!=-1)	{
-		output <- (list(taxa,chmatrix,nstates,char_names,state_names,outgroup))
+		output <- (list(taxa=taxa,chmatrix=chmatrix,nstates=nstates,char_names=char_names,state_names=state_names,outgroup=outgroup))
 		names(output)<- c("OTUs","Matrix","States","Characters_Labels","States_Labels","Outgroup")
 		} else if (length(char_names)>1){
-		output <- (list(taxa,chmatrix,nstates,char_names,state_names))
+		output <- (list(taxa=taxa,chmatrix=chmatrix,nstates=nstates,char_names=char_names,state_names=state_names))
 		names(output)<- c("OTUs","Matrix","States","Characters_Labels","States_Labels")
 		} else if (outgroup!=-1)	{
-		output <- (list(taxa,chmatrix,nstates,outgroup))
+		output <- (list(taxa=taxa,chmatrix=chmatrix,nstates=nstates,outgroup=outgroup))
 		names(output)<- c("OTUs","Matrix","States","Outgroup")
 		}	else	{
-		output <- (list(taxa,chmatrix,nstates))
+		output <- (list(taxa=taxa,chmatrix=chmatrix,nstates=nstates))
 		names(output)<- c("OTUs","Matrix","States")
 		}
 	return(output)
@@ -578,7 +577,7 @@ unravel_polymorph <- function(poly)	{
 	combo <- -1*poly
 	sts <- 1+floor(log10(abs(combo)))
 	polymorphics <- vector(length=sts)
-
+	#
 	base <- 10^(sts-1)
 	for (s in 1:sts)	{
 		polymorphics[s] <- floor(abs(combo)/base)
@@ -675,7 +674,7 @@ accio_minimum_steps_history <- function(mtree,charData,charTypes,missingCharValu
 	# charTypes: 1 for unordered, 0 for ordered
 	# missingCharValue: numeric representation for "?"
 	# inapplicableValue: numeric representation for inapplicable or gap
-	# outgroup: the number of the outgroup taxon
+	# outgroup: the name of the outgroup taxon
 	otus <- dim(charData)[1]
 	Nnodes <- dim(mtree)[1]
 	nchar <- dim(charData)[2]
@@ -809,8 +808,8 @@ Sankoff_character <- function(mtree,cvector,type=1,missingCharValue="?",inapplic
 		poss_starts <- unravel_polymorph(cvector[base])
 		# IF the designated outgroup is attached to the first node AND if it 
 		#	has one of the possible nodal states, then assign that to basal node
-		if (!is.na(match(outgroup,mtree[1,])) && !is.na(match(cvector[outgroup],poss_starts)))	{
-			cvector[base] <- cvector[outgroup]
+		if (!is.na(match(outgroupID,mtree[1,])) && !is.na(match(cvector[outgroupID],poss_starts)))	{
+			cvector[base] <- cvector[outgroupID]
 			}	else	{
 			# otherwise, just grab one of them at random: it really doesn't matter
 			grab <- ceiling(runif(1)/(1/length(poss_starts)))

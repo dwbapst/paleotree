@@ -90,7 +90,7 @@
 
 #' @importFrom phangorn Descendants Ancestors phyDat ancestral.pars maxCladeCred
 #' @importFrom phytools bind.tip
-#' @importFrom graphics par layout plot hist lines legend polygon title axis
+#' @importFrom graphics par layout plot hist lines legend polygon title axis points
 #' @importFrom grDevices rainbow dev.new
 #' @importFrom methods is
 #' @importFrom utils read.csv type.convert read.table

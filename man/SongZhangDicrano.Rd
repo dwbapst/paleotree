@@ -107,8 +107,11 @@ require(phylobase)
 
 charMatDicrano<-readNexus(file.choose(),type="data",SYMBOLS = " 0 1 2")
 
-cladogramDicranoX12<-read.nexus(file.choose())
+cladogramDicranoX12<-read.tree(file.choose())
 cladogramDicranoX13<-read.nexus(file.choose())
+
+cladogramDicranoX13$tip.label<-rownames(
+	 charMatDicrano)[c(13,8,7,9,12,10,1,4,6,2,3,11,5)]
 
 save(charMatDicrano,cladogramDicranoX12,file="SongZhangDicrano.rdata")
 }

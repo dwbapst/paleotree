@@ -1,92 +1,199 @@
-#' Exhaustation of Characters 
+#' Analyses of the Exhaustation of Character States Over Evolutionary History
+#' 
+#' The following functions are for measuring and fitting various
+#' distributions to the gradual exhaustation of unexpressed
+#' character states, as originally described by Wagner (2000,
+#' Evolution). 
+#' 
+#' \code{accioExhaustionCurve} uses a Sankoff parsimony ancestral-reconstruction
+#' algorithm (written by PJ Wagner, \emph{not} the one from \code{phangorn} used
+#' elsewhere in paleotree) to calculate character changes across each branch
+#' (internode edge) of a tree, and then reports the counts of character state
+#" changes, new state changes, etc. 
+#' 
+#' \code{accioBestAcquisitionModel} takes output from \code{accioExhaustionCurve},
+#' calculates one of two character change indices, and then fits a series of user-selected
+#' models to the dataset, returning details pertaining to the best-fit model.
+#' 
+#' \code{charExhaustPlot} is a wrapper for \code{accioBestAcquisitionModel} that
+#' produces a plot of the observed character change data against the
+#' expectation under the best-fit model.
+#'
 
+#' @details
+#' The functions \code{accioBestAcquisitionModel}  and \code{charExhaustPlot} offer
+#' users two different options for examining character change: \code{totalAcc}
+#' fits models to the total accumulated number of state changes over the phylogeny,
+#' thus using exhaustation to explor the size and distribution of character space. The
+#' other option \code{charAlt} fits models to the number of character that alter from
+#' primitive to derived over phylogeny, thus reflecting the size and distribution of state space.
+#' 
+#' \code{accioExhaustionCurve} can order its reconstruction of change by stratigraphic order of first appearances. It is unclear what this means.
 
+#' @param charData A \code{data.frame} of morphological character
+#' codings (a morphological 'matrix'), with taxon units
+#' as rows and characters as columns.
 
-#' @details 
+#' @param charTypes A vector of length equal to
+#' the number of chaacters in \code{charData}, with elements indicating
+#' whether the corresponding character in \code{charData}
+#' is \code{"unordered"} or \code{"ordered"}. However,
+#' if \code{length(charTypes) = 1}, then it is repeated for all taxa.
+#' The default value for this argument is \code{"unordered"}.
+
+#' @param outgroup A string matching to one
+#' of the tip labels as given by \code{tip.label}, 
+
+#' @param firstAppearances A vector, with length equal to the
+#' same number of taxa (rows) as in \code{charData}, in the same corresponding order.
+
+#' @param missingCharValue The string value indicating a missing
+#' character coding value, by default \code{"?"}.
+
+#' @param inapplicableValue The string value indicating an
+#' inapplicable character coding value, by default \code{"-"}.
+
+# @param changes A vector counting character change; the extraction of this is automated if you use .
 
 #' @param phyloTree A phylogenetic tree of class \code{phylo} as used by package \code{ape}.
 
-#' @param
+#' @param models A vector of type \code{character} naming models to be fit.
+#' Default is \code{c("exponential","gamma","lognormal","zipf")}.
 
+#' @param exhaustion_info The list of results output
+#' from function \code{accioExhaustionCurve}.
 
+#' @param changesType A single character value, indicating the character change data
+#' to be assessed from the result of the character
+#' exhaustation analysis, must be one of either 'totalAcc' (to the total number of
+#' accumulated character changes, ideal for modeling the size and distribution of
+#' \emph{state} space) or 'charAlt' (to plot the total number of character alterations,
+#' ideal for modeling the size and distribution of \emph{character} space).
 
+#' @param xlab Label for the X axis; \code{"Total Characters"} by default.
 
-#accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
-#	firstAppearances=NULL,missingCharValue="?",inapplicableValue="-")	
+#' @param ylab Label for the Y axis. If not provided by the user,
+#' a label based on the \code{changesType} argument will be used.
 
-#accioBestAcquisitionModel <- function(changes,models=c("exponential","gamma","lognormal","zipf"))
+#' @param main Main title label for the plot. If not provided by
+#' the user, a label based on the \code{changesType} argument will be used.
 
-
-#charExhaustPlot<-function(exhaustion_info,plotType,xlab="Total Characters",ylab=NULL,main=NULL,xsize=3)
-
-
+#' @param xsize Parameter controling size of the axes,
+#' which are forced to be symmetric.
 
 #' @return
+#' \code{accioExhaustionCurve} outputs a list containing two objects: first,
+#' a matrix named \code{exhaustation} consisting of three columns: \code{"Steps"},
+#' \code{"Novel_States"}, and \code{"Novel_Characters"}, respectively giving
+#' the counts of these respective values for each branch (internode edge).
+#' The second element of this list is named \code{State_Derivations} and is
+#' a count of how often each state, across all characters, was derived relative
+#' to the primitive position along each internode edge.
 #' 
+#' The output of \code{accioBestAcquisitionModel} is a list object containing
+#' information on the best-fit model, the parameters of that model, the calculated
+#' probabilition distribution for that model at the same intervals, for use in quantile plots.	
 #' 
-#' 
-#' 
+#' \code{charExhaustPlot} produces a plot, and outputs no data.
+	
+
+
+#' @note
+#' This family of functios presented here were originally written 
+#' by Peter J. Wagner, and then modified and adapted by David W.
+#' Bapst for wider release  in a CRAN-distributed
+#' package: \code{paleotree}. This makes the code presented here
+#' a very different beast than typical paleotree code, for
+#' example, there are fewer tests of correct input type, length, etc.
 
 #' @seealso
-#' 
+#' Also see \code{paleotree} functions \code{\link{minCharChange}} and
+#' \code{\link{ancPropStateMat}}, the latter of which is a wrapper
+#' for \code{phangorn}'s function \code{ancestral.pars}.
 
-#' @author David W. Bapst
+#' @author 
+#' Initially written by Peter J. Wagner, with modification
+#' and documentation by David W. Bapst.
 
 #' @references
-#' Wagner, P. J. 2000. Exhaustion of morphologic character states among fossil taxa. Evolution 54(2):365-386.
+#' Wagner, P. J. 2000. Exhaustion of morphologic character
+#' states among fossil taxa. \emph{Evolution} 54(2):365-386.
 
 #' @examples
 #' 
 #' # get data
 #' data(SongZhangDicrano)
 #' 
-#' phyloTree<-cladogramDicranoX13
+#' dicranoTree<-cladogramDicranoX13
 #' 
-#' # stratigraphic age data
-#' strat_data<-cbind(c(0, 4, 7, 7, 6, 6, 6, 2, 2, 1, 1, 6, 7), c(0, 5, 7, 7, 7, 7, 7, 2, 2, 1, 1, 7, 7))
-#' # get just first appearances from strat data
-#' FAs <- strat_data[,1]
-#'  
 #' # modify char data
 #' charMat<-data.matrix(charMatDicrano)
 #' charMat[is.na(charMatDicrano)]<-0
 #' charMat<-(charMat-1)
 #' colnames(charMat)<-NULL
+#' # replace missing values
 #' charMat[is.na(charMatDicrano)]<-"?"
 #' 
-#' # get character types
-#' nchar <- dim(charMat)[2]
-#' types <- rep(0,nchar)	# set character types to unordered (1)
-#' 
-#' 
-#' #the 'outgroup' is Exigraptus, first taxon listed in the matrix
-#' exhaustionResults <- accioExhaustionCurve(phyloTree,charMat,types,FAs,outgroup="Exigraptus")
+#' # the 'outgroup' is Exigraptus, first taxon listed in the matrix
+#' exhaustionResults <- accioExhaustionCurve(phyloTree=dicranoTree,
+#'    charData=charMat, charTypes="unordered",
+#'    outgroup="Exigraptus")
+#'
+#' # fits models to exhaustion curve
+#'	# first get count state derivations to count total accumulation
+#' changesDicrano <- sort(rowSums(exhaustionResults$State_Derivations),decreasing=TRUE) 
+#' # fit model for total accumulation
+#' accioBestAcquisitionModel(changes=changesDicrano,
+#'     models=c("exponential","gamma","lognormal","zipf")) 
 #' 
 #' # plot of exhausation of total accumulation of character states
-#' 
 #' charExhaustPlot(exhaustion_info=exhaustionResults,
-#' 	plotType="totalAcc")
+#' 	   changesType="totalAcc")
 #' 
-#' 	
 #' # plot of exhausation of character alterations
-#' 
 #' charExhaustPlot(exhaustion_info=exhaustionResults,
-#' 	plotType="charAlt")
+#' 	   changesType="charAlt")
 #' 	
+
+
+
+# examples trash
+
+# # stratigraphic age data
+#   # Not clear where this taken from (collected by PJW)
+# strat_data<-cbind(
+#     c(0, 4, 7, 7, 6, 6, 6, 2, 2, 1, 1, 6, 7),
+#     c(0, 5, 7, 7, 7, 7, 7, 2, 2, 1, 1, 7, 7))
+# # get just first appearances from strat data
+# FAs <- strat_data[,1]
+#  
+# 	  firstAppearances=FAs, 
+
+# # get character types
+# nchar <- dim(charMat)[2]
+# types <- rep("unordered",nchar)	# set character types to unordered (1)
+
 
 
 #' @name exhaustationFunctions
 #' @rdname exhaustationFunctions
 #' @export
-accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
-	firstAppearances=NULL,missingCharValue="?",inapplicableValue="-")	{
+accioExhaustionCurve <- function(phyloTree,charData,
+	charTypes="unordered",outgroup=NULL,firstAppearances=NULL,
+	missingCharValue="?",inapplicableValue="-")	{
 	#
 	# sorry pete, but paleotree is camelCase... ;)
 	#
 	# rewrite ape's phylo format tree
 	### vtree is a vector tree, where each cell gives the ancestral HTU of the OTU or HTU
 	###		HTU's are nodes, with the basal HTU = nTips+1 (i.e., 13 for 12 taxa)
-	mtree <- accio_matrix_tree_from_ape_tree(phyloTree)	
+	ntaxa<- dim(charData)[1]
+	if(ntaxa!=Ntip(phyloTree)){
+		stop("Number of tips on phylotree doesn't match number of taxa in charData")
+		}
+	mtree<-phyloTree
+	mtree$tip.label<-match(phyloTree$tip.label,rownames(charData))
+	mtree <- accio_matrix_tree_from_ape_tree(mtree)	
 	#
 	# based on routine used in Wagner (2000).  Uses simple parsimony optimization
 	#	and (if available) stratigraphic data to order branches and show how
@@ -94,9 +201,32 @@ accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
 	#	up the tree.
 	#	MODIFY to show number of characters triggered as well as # of states
 	nchar <- dim(charData)[2]
+	# test charTypes
+	if(nchar != length(charTypes)){
+		if(length(charTypes)==1){
+			charTypes<-rep(charTypes,nchar)
+		}else{
+			stop("length of charTypes must be 1 or equal to number of characters")
+			}
+		}
+	# convert charData row names to numbers
+	rownames(charData)<-1:nrow(charData)
+	#
+	#get outgroupID
+	if(is.null(outgroup)){
+		outgroupID<-1
+	}else{
+		if(length(outgroup)!=1){
+			stop("if given, outgroup must be of length 1")
+			}
+		outgroupID<-which(phyloTree$tip.label==outgroup)
+		if(length(outgroupID) != 1){
+			stop("There is no single match to the outgroup given among tip labels")
+			}
+		}
 	#
 	char_history <- accio_minimum_steps_history(mtree=mtree,charData=charData,charTypes=charTypes,
-		missingCharValue=missingCharValue,inapplicableValue=inapplicableValue,outgroup=outgroup)
+		missingCharValue=missingCharValue,inapplicableValue=inapplicableValue,outgroupID=outgroupID)
 	#
 	if (is.null(firstAppearances))	{
 		# order branches from base of the tree
@@ -106,14 +236,18 @@ accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
 		# list branches in order	
 		exhaust_order <- order(used_order,decreasing=FALSE)		
 	}else{
+		if(ntaxa!=length(firstAppearances)){
+			stop("length of firstAppearances doesn't match number of taxa in charData")
+			}
 		exhaust_order <- used_order <- accio_branch_order_with_stratigraphy(mtree,firstAppearances)
 		### insert ordering with stratigraphy here.	
 		}
 	#
 	branches <- max(mtree)
 	branch_derivs <- vector(length=branches)
-	for (b in 1:branches)
+	for (b in 1:branches){
 		branch_derivs[b] <- sum(char_history$Changes[,1]==b)
+		}
 	# get relevant branches (non-zero length) in order of appearance
 	rel_branches <- exhaust_order[branch_derivs[exhaust_order]>0]
 	rb <- length(rel_branches)
@@ -123,16 +257,16 @@ accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
 	found <- total_steps <- novel_chars <- novel_states <- 0
 	for (b in 1:rb)	{
 		br <- rel_branches[b]
-	#	br_ch <- sum(char_history$Changes[,1]==br)
-	#	if (br_ch>0)	{
+		#br_ch <- sum(char_history$Changes[,1]==br)
+		#if (br_ch>0)	{
 		local_change <- subset(char_history$Changes,char_history$Changes[,1]==br)
 		char_deriv[local_change[,2]] <- char_deriv[local_change[,2]]+1
 		novel_chars <- novel_chars + sum(char_deriv[local_change[,2]]==1)
 		for (d in 1:branch_derivs[br])	{
-			if (branch_derivs[br]>1)	{
+			if (branch_derivs[br]>1){
 				ch <- local_change[d,2]
 				st <- local_change[d,3]
-				}	else	{
+			}else{
 				ch <- local_change[2]
 				st <- local_change[3]
 				}
@@ -140,20 +274,24 @@ accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
 			if (exhaust_matrix[ch,st]==1)	novel_states <- novel_states+1
 			}
 		total_steps <- total_steps+branch_derivs[br]
-		if (exhaust_order[b]<10)	{
-			if (max(mtree)<10)	{
+		if (exhaust_order[b]<10){
+			if (max(mtree)<10){
 				brnm <- paste("br_",exhaust_order[b],sep="")
-				} else if (max(mtree<100))	{
-				brnm <- paste("br_0",exhaust_order[b],sep="")	
-			}else{
-				brnm <- paste("br_00",exhaust_order[b],sep="")	
+			} else{
+				if (max(mtree<100))	{
+					brnm <- paste("br_0",exhaust_order[b],sep="")	
+				}else{
+					brnm <- paste("br_00",exhaust_order[b],sep="")	
+					}
 				}
-			}	else if (exhaust_order[b]<100)	{
-			if (max(mtree)<100){
-				brnm <- paste("br_",exhaust_order[b],sep="")	
-			}else{
-				brnm <- paste("br_0",exhaust_order[b],sep="")	
-				}				
+		}else{
+			if (exhaust_order[b]<100){
+				if (max(mtree)<100){
+					brnm <- paste("br_",exhaust_order[b],sep="")	
+				}else{
+					brnm <- paste("br_0",exhaust_order[b],sep="")	
+					}				
+				}
 			}
 		if (b==1){
 			exhaustion <- c(total_steps,novel_states,novel_chars)
@@ -171,9 +309,25 @@ accioExhaustionCurve <- function(phyloTree,charData,charTypes,outgroup=NULL,
 	return(exhaust_output)
 	}
 
+	
+	
 #' @rdname exhaustationFunctions
 #' @export
-accioBestAcquisitionModel <- function(changes,models=c("exponential","gamma","lognormal","zipf"))	{
+accioBestAcquisitionModel <- function(changes,changesType,
+		models=c("exponential","gamma","lognormal","zipf"))	{
+	# check
+	if(all(changesType!=c("totalAcc","charAlt"))){
+		stop("changesType must be one of either 'totalAcc' or 'charAlt'")
+		}
+	# get changes
+	if(changesType=="totalAcc"){
+		# get the best model for the size and distribution of character space
+		changes <- sort(rowSums(exhaustion_info$State_Derivations),decreasing=TRUE)	#char_changes
+		}
+	if(changesType=="charAlt"){
+		# get the best model for the size and distribution of state space
+		changes <- sort(array(exhaustion_info$State_Derivations)[array(exhaustion_info$State_Derivations)>0],decreasing=TRUE)	#state_derivs
+		}	
 	# get the best model based on change/derivation distributions
 	best_H <- best_uniform <- optimize_uniform_abundance(counts=changes)
 	best_model <- "uniform"
@@ -217,15 +371,14 @@ accioBestAcquisitionModel <- function(changes,models=c("exponential","gamma","lo
 
 #' @rdname exhaustationFunctions
 #' @export
-charExhaustPlot<-function(exhaustion_info,plotType,xlab="Total Characters",ylab=NULL,main=NULL,xsize=3){
-	if(all(plotType!=c("totalAcc","charAlt"))){
-		stop("plotType must be one of either 'totalAcc' or 'charAlt'")
+charExhaustPlot<-function(exhaustion_info,changesType,xlab="Total Characters",ylab=NULL,main=NULL,xsize=3){
+	if(all(changesType!=c("totalAcc","charAlt"))){
+		stop("changesType must be one of either 'totalAcc' or 'charAlt'")
 		}
 	exhaustion <- exhaustion_info$Exhaustion
 	nstep <- max(exhaustion_info$Exhaustion[,1])
-	char_changes <- sort(rowSums(exhaustion_info$State_Derivations),decreasing=TRUE)
-	state_derivs <- sort(array(exhaustion_info$State_Derivations)[array(exhaustion_info$State_Derivations)>0],decreasing=TRUE)
-	#
+	best_state_exhaustion <- accioBestAcquisitionModel(exhaustion_info=exhaustion_info,
+			changesType=changesType, models=c("exponential","gamma","lognormal","zipf"))
 	#
 	mxx <- 10*ceiling(max(exhaustion[,1])/10)
 	if (mxx<100)	{
@@ -238,10 +391,8 @@ charExhaustPlot<-function(exhaustion_info,plotType,xlab="Total Characters",ylab=
 	#xsize <- 3
 	par(pin=c(xsize,xsize))
 	#
-	if(plotType=="totalAcc"){
+	if(changesType=="totalAcc"){
 		# get the best model for the size and distribution of character space
-		best_character_exhaustion <- accioBestAcquisitionModel(changes=char_changes,
-			models=c("exponential","gamma","lognormal","zipf"))
 		bca <- best_character_exhaustion$Best_Distribution
 		after3 <- exhaustion[2,1]
 		hbca <- expected_exhaustion_curve(rel_ab_dist=bca, nstep, after3, length(bca))
@@ -265,10 +416,9 @@ charExhaustPlot<-function(exhaustion_info,plotType,xlab="Total Characters",ylab=
 		points(exhaustion[,1],exhaustion[,3],pch=21,bg="green",cex=1.25)
 		}
 	#
-	if(plotType=="charAlt"){
+	if(changesType=="charAlt"){
 		# get the best model for the size and distribution of state space
-		best_state_exhaustion <- accioBestAcquisitionModel(changes=state_derivs,
-			models=c("exponential","gamma","lognormal","zipf"))
+
 		bsa <- best_state_exhaustion$Best_Distribution
 		after3 <- exhaustion[3,1]
 		hbsa <- expected_exhaustion_curve(rel_ab_dist=bsa, nstep, after3, length(bsa))
@@ -294,7 +444,236 @@ charExhaustPlot<-function(exhaustion_info,plotType,xlab="Total Characters",ylab=
 	#
 	#layout(1)
 	}
+	
+	
 
+
+	
+##############################################################
+
+
+### ROUTINES TO RECONSTRUCT CHARACTER CHANGE
+
+# get history of character evolution implied by minimum steps
+accio_minimum_steps_history <- function(mtree,charData,charTypes,missingCharValue="?",
+		inapplicableValue="-",outgroupID=outgroupID)	{
+	# mtree: matrix tree, where each row gives the branches stemming from a node
+	# charData: character data
+	# charTypes: 1 for unordered, 0 for ordered
+	# missingCharValue: numeric representation for "?"
+	# inapplicableValue: numeric representation for inapplicable or gap
+	# outgroupID: the tip ID # of the outgroupID taxon
+	otus <- dim(charData)[1]
+	Nnodes <- dim(mtree)[1]
+	nchar <- dim(charData)[2]
+	steps <- vector(length=nchar)
+	for (c in 1:nchar)	{
+		cvector <- charData[,c]
+		type <- charTypes[c]
+		char_evolution <- Sankoff_character(mtree=mtree,cvector=cvector,
+			type=type,missingCharValue=missingCharValue,
+			inapplicableValue=inapplicableValue,outgroupID=outgroupID)
+		steps[c] <- char_evolution$Steps
+		if (c==1)	{
+			full_matrix <- char_evolution$States
+			changes_matrix <- char_evolution$Derivation
+			}	else	{
+			full_matrix <- cbind(full_matrix,char_evolution$States)
+			changes_matrix <- cbind(changes_matrix,char_evolution$Derivation)
+			}
+		}
+	char_labels <- vector(length=nchar)
+	for (c in 1:nchar)	{
+		if (c<10)	{
+			if (nchar<10)	{
+				char_labels[c] <- paste("ch_",c,sep="")
+				}	else if (nchar>9 && nchar<100)	{
+				char_labels[c] <- paste("ch_0",c,sep="")
+				}	else	{
+				char_labels[c] <- paste("ch_00",c,sep="")
+				}
+			}	else if (c<100)	{
+				if (nchar<100)	{
+				char_labels[c] <- paste("ch_",c,sep="")
+				}	else	{
+				char_labels[c] <- paste("ch_0",c,sep="")
+				}
+			}
+		}
+
+	ttl_br <- otus+Nnodes
+	nonzero <- 1
+	rbr <- 1
+	for (br in 1:ttl_br)	{
+		nonzero <- sum(changes_matrix[br,]>0)
+		if (nonzero>0)	{
+			dch <- (1:nchar)[changes_matrix[br,]>0]
+			dst <- changes_matrix[br,changes_matrix[br,]>0]
+			dbr <- rep(br,length(dch))
+			if (rbr==1)	{
+				branch_changes <- cbind(dbr,dch,dst)
+				} else	{
+				branch_changes <- rbind(branch_changes,cbind(dbr,dch,dst))
+				}
+			rbr <- rbr+1
+			}
+		}
+	rownames(branch_changes) <- rep("",dim(branch_changes)[1])
+	colnames(full_matrix) <- colnames(changes_matrix) <- char_labels
+	output <- list(steps,full_matrix[((otus+1):(otus+Nnodes)),],branch_changes)
+	names(output) <- c("Steps","Ancestral_Reconstructions","Changes")
+	return(output)
+	}
+
+# get Sankoff matrix ancestral reconstructions
+Sankoff_character <- function(mtree,cvector,type=1,missingCharValue="?",inapplicableValue="-",outgroupID=outgroupID)	{
+	# method for reconstructing ancestral conditions.
+	obs_states <- sort(unique(cvector[cvector>=0]))
+	ttl_states <- length(obs_states)
+	Nnodes <- dim(mtree)[1]
+	otus <- length(cvector)
+	scored <- (1:otus)
+	sankoff_matrix <- matrix(1,otus+Nnodes,(length=ttl_states))
+	for (s in 1:otus)	{
+		if (cvector[s] >= 0)	{
+			st <- match(cvector[s],obs_states)
+			sankoff_matrix[s,st] <- 0
+			}	else	sankoff_matrix[s,] <- 0
+		}
+	cvector <- c(cvector,rep(missingCharValue,Nnodes))
+	node_rich <- vector(length=Nnodes)
+	for (n in Nnodes:1)	{
+		missing <- gap <- 0
+		node_rich[n] <- f1 <- length(mtree[n,mtree[n,]>0])
+		# if all taxa are scored
+		# mtree[n,]
+	#	if (sum(mtree[n,(1:f1)] %in% scored)==f1)	{
+		ht <- n+otus
+		sankoff_matrix[ht,] <- 0
+		for (s in 1:f1)	{
+			#### add something to deal with inapplicables here.
+			# list states that demand more than minimal change
+			sp <- mtree[n,s]
+			if (cvector[sp]!=inapplicableValue && cvector[sp]!=missingCharValue)	{
+				#	we will add a step to each of these because if sankoff is:
+				#		0 1 1 for states 0, 1 & 2
+				#	then we need 1 step from either 1 or 2
+				n_s <- obs_states[sankoff_matrix[sp,] %in% min(sankoff_matrix[sp,])]
+				a_s <- obs_states[!sankoff_matrix[sp,] %in% min(sankoff_matrix[sp,])]
+				no_step <- match(n_s,obs_states)
+				add_step <- match(a_s,obs_states)
+				sankoff_matrix[ht,no_step] <- sankoff_matrix[ht,no_step]+min(sankoff_matrix[sp,])
+				if (length(no_step) < length(obs_states))	{
+					sankoff_matrix[ht,add_step] <- sankoff_matrix[ht,add_step]+min(sankoff_matrix[sp,])+1
+		#			sankoff_matrix[ht,add_step] <- sankoff_matrix[ht,add_step]+sankoff_matrix[sp,add_step]
+		#			sankoff_matrix[ht,]
+					}
+				}	else if (cvector[sp]==inapplicableValue)	{
+				gap <- gap+1
+				}	else if (cvector[sp]==missingCharValue)	{
+				missing <- missing+1
+				}
+			}
+		if (missing==f1)	{
+			cvector[ht] <- missingCharValue
+			scored <- c(scored,ht)
+			}	else if (gap==f1)	{
+			cvector[ht] <- inapplicableValue
+			scored <- c(scored,ht)
+			}	else if (sum(sankoff_matrix[ht,] %in% min(sankoff_matrix[ht,]))==1)	{
+			# see if we can fix a state
+			ast <- match(min(sankoff_matrix[ht,]),sankoff_matrix[ht,])
+			cvector[ht] <- obs_states[ast]
+			scored <- c(scored,ht)
+			}	else	{
+			#print(obs_states[sankoff_matrix[ht,] %in% min(sankoff_matrix[ht,])])
+			cvector[ht] <- ravel_polymorph(obs_states[sankoff_matrix[ht,] %in% min(sankoff_matrix[ht,])])
+			}
+		}
+
+	base <- otus+1
+	ch_steps <- min(sankoff_matrix[base,])
+
+	if (cvector[base]<0 && (cvector[base]!=missingCharValue && cvector[base]!=inapplicableValue))	{
+		#poss_starts <- (1:ttl_states)[sankoff_matrix[base,] %in% min(sankoff_matrix[base,])]
+		#print(cvector[base])
+		poss_starts <- unravel_polymorph(cvector[base])
+		# IF the designated outgroupID is attached to the first node AND if it 
+		#	has one of the possible nodal states, then assign that to basal node
+		if (!is.na(match(outgroupID,mtree[1,])) && !is.na(match(cvector[outgroupID],poss_starts)))	{
+			cvector[base] <- cvector[outgroupID]
+			}	else	{
+			# otherwise, just grab one of them at random: it really doesn't matter
+			grab <- ceiling(runif(1)/(1/length(poss_starts)))
+			cvector[base] <- poss_starts[grab]
+			}
+		}
+
+	### start here: work up the tree, using cvector[htu] to set the state
+	changes_above <- vector(length=Nnodes)
+	for (n in 1:Nnodes)	{
+		ht <- n+otus
+		if (cvector[ht]!=inapplicableValue && cvector[ht]!=missingCharValue)	{
+			f1 <- node_rich[n]
+			# if all taxa are scored in mtree[n,]
+			if (sum(mtree[n,(1:f1)] %in% scored)<f1)	{
+				anc_st <- cvector[ht]
+				unscored <- mtree[n,!mtree[n,(1:f1)] %in% scored]
+				for (u in 1:length(unscored))	{
+					if (length(unscored)>1)	{
+						f2 <- unscored[u]
+						}	else	{
+						f2 <- unscored
+						}
+					# if parent value matches one of the possible values for the daughter node
+					#	then go with that value
+					if(anc_st>=0 && (!is.na(match(anc_st,obs_states[sankoff_matrix[f2,] %in% min(sankoff_matrix[f2,])]))))	{
+						cvector[f2] <- anc_st
+						}	else if (anc_st<0 && (anc_st!=missingCharValue && anc_st!=inapplicableValue))	{
+						anc_poss <- unravel_polymorph(anc_st)
+						f2_poss <- unravel_polymorph(cvector[f2])
+						reduced_poss <- f2_poss[f2_poss %in% anc_poss]
+						if (length(reduced_poss)==1)	{
+							cvector[ht] <- cvector[f2] <- reduced_poss
+							}	else	{
+							#cvector[ht] <- cvector[f2] <- ravel_polymorph(reduced_poss)
+							# if it is still up in the air at this point, then you might as
+							#	well roll the dice!
+							cvector[f2] <- reduced_poss[ceiling(runif(1)/(1/length(reduced_poss)))]
+							}
+						}	else	{
+					# it really does not matter at this point what state we pick: it will all be the same.
+						f2_poss <- unravel_polymorph(cvector[f2])
+						cvector[f2] <- f2_poss[ceiling(runif(1)/(1/length(f2_poss)))]
+						}
+						# end case where we can assign ancestral condition to daughter node
+					}	# end search of unscored nodes
+				}	# I could add a routine here to compare sets of equally parsimonious states
+			changes_above[n] <- min(sankoff_matrix[n+otus,])
+			}		# if node has (0,1) and daughter node has (1,2), then go with 1
+		}
+	cchanges <- rep(0,length(cvector))
+	for (n in 1:Nnodes)	{
+		ht <- otus+n
+		if (cvector[ht]!=missingCharValue && cvector[ht]!=inapplicableValue)	{
+			f1 <- node_rich[n]
+			for (f in 1:f1)	{
+				f2 <- mtree[n,f]
+				if (cvector[f2] != cvector[ht])
+					if ((cvector[f2]!=missingCharValue 
+					&& cvector[f2]!=inapplicableValue) 
+					&& (cvector[ht]!=missingCharValue 
+					&& cvector[ht]!=inapplicableValue))
+						# if both taxa are resolved, then this is easy
+						if (length(cvector[f2])==1 && length(cvector[ht])==1)
+							cchanges[f2] <- match(cvector[f2],obs_states)
+				}
+			}
+		}
+	output <- list(ch_steps,cvector,cchanges)
+	names(output) <- c("Steps","States","Derivation")
+	return(output)
+	}
 
 
 #############################################################
@@ -574,6 +953,7 @@ convert_letter_state_to_numeric <- function(letterstate)  {
 
 #poly <- -321
 unravel_polymorph <- function(poly)	{
+	poly<-as.numeric(poly)
 	combo <- -1*poly
 	sts <- 1+floor(log10(abs(combo)))
 	polymorphics <- vector(length=sts)
@@ -665,223 +1045,10 @@ accio_matrix_tree_from_vector_tree <- function(vector_tree)	{
 	}
 
 
-### ROUTINES TO RECONSTRUCT CHARACTER CHANGE
-
-# get history of character evolution implied by minimum steps
-accio_minimum_steps_history <- function(mtree,charData,charTypes,missingCharValue="?",inapplicableValue="-",outgroup=NULL)	{
-	# mtree: matrix tree, where each row gives the branches stemming from a node
-	# charData: character data
-	# charTypes: 1 for unordered, 0 for ordered
-	# missingCharValue: numeric representation for "?"
-	# inapplicableValue: numeric representation for inapplicable or gap
-	# outgroup: the name of the outgroup taxon
-	otus <- dim(charData)[1]
-	Nnodes <- dim(mtree)[1]
-	nchar <- dim(charData)[2]
-	steps <- vector(length=nchar)
-	for (c in 1:nchar)	{
-		cvector <- charData[,c]
-		type <- charTypes[c]
-		char_evolution <- Sankoff_character(mtree,cvector,type,missingCharValue,inapplicableValue,outgroup)
-		steps[c] <- char_evolution$Steps
-		if (c==1)	{
-			full_matrix <- char_evolution$States
-			changes_matrix <- char_evolution$Derivation
-			}	else	{
-			full_matrix <- cbind(full_matrix,char_evolution$States)
-			changes_matrix <- cbind(changes_matrix,char_evolution$Derivation)
-			}
-		}
-	char_labels <- vector(length=nchar)
-	for (c in 1:nchar)	{
-		if (c<10)	{
-			if (nchar<10)	{
-				char_labels[c] <- paste("ch_",c,sep="")
-				}	else if (nchar>9 && nchar<100)	{
-				char_labels[c] <- paste("ch_0",c,sep="")
-				}	else	{
-				char_labels[c] <- paste("ch_00",c,sep="")
-				}
-			}	else if (c<100)	{
-				if (nchar<100)	{
-				char_labels[c] <- paste("ch_",c,sep="")
-				}	else	{
-				char_labels[c] <- paste("ch_0",c,sep="")
-				}
-			}
-		}
-
-	ttl_br <- otus+Nnodes
-	nonzero <- 1
-	rbr <- 1
-	for (br in 1:ttl_br)	{
-		nonzero <- sum(changes_matrix[br,]>0)
-		if (nonzero>0)	{
-			dch <- (1:nchar)[changes_matrix[br,]>0]
-			dst <- changes_matrix[br,changes_matrix[br,]>0]
-			dbr <- rep(br,length(dch))
-			if (rbr==1)	{
-				branch_changes <- cbind(dbr,dch,dst)
-				} else	{
-				branch_changes <- rbind(branch_changes,cbind(dbr,dch,dst))
-				}
-			rbr <- rbr+1
-			}
-		}
-	rownames(branch_changes) <- rep("",dim(branch_changes)[1])
-	colnames(full_matrix) <- colnames(changes_matrix) <- char_labels
-	output <- list(steps,full_matrix[((otus+1):(otus+Nnodes)),],branch_changes)
-	names(output) <- c("Steps","Ancestral_Reconstructions","Changes")
-	return(output)
-	}
-
-# get Sankoff matrix ancestral reconstructions
-Sankoff_character <- function(mtree,cvector,type=1,missingCharValue="?",inapplicableValue="-",outgroup=NULL)	{
-	# method for reconstructing ancestral conditions.
-	obs_states <- sort(unique(cvector[cvector>=0]))
-	ttl_states <- length(obs_states)
-	Nnodes <- dim(mtree)[1]
-	otus <- length(cvector)
-	scored <- (1:otus)
-	sankoff_matrix <- matrix(1,otus+Nnodes,(length=ttl_states))
-	for (s in 1:otus)	{
-		if (cvector[s] >= 0)	{
-			st <- match(cvector[s],obs_states)
-			sankoff_matrix[s,st] <- 0
-			}	else	sankoff_matrix[s,] <- 0
-		}
-	cvector <- c(cvector,rep(missingCharValue,Nnodes))
-	node_rich <- vector(length=Nnodes)
-	for (n in Nnodes:1)	{
-		missing <- gap <- 0
-		node_rich[n] <- f1 <- length(mtree[n,mtree[n,]>0])
-		# if all taxa are scored
-		# mtree[n,]
-	#	if (sum(mtree[n,(1:f1)] %in% scored)==f1)	{
-		ht <- n+otus
-		sankoff_matrix[ht,] <- 0
-		for (s in 1:f1)	{
-			#### add something to deal with inapplicables here.
-			# list states that demand more than minimal change
-			sp <- mtree[n,s]
-			if (cvector[sp]!=inapplicableValue && cvector[sp]!=missingCharValue)	{
-				#	we will add a step to each of these because if sankoff is:
-				#		0 1 1 for states 0, 1 & 2
-				#	then we need 1 step from either 1 or 2
-				n_s <- obs_states[sankoff_matrix[sp,] %in% min(sankoff_matrix[sp,])]
-				a_s <- obs_states[!sankoff_matrix[sp,] %in% min(sankoff_matrix[sp,])]
-				no_step <- match(n_s,obs_states)
-				add_step <- match(a_s,obs_states)
-				sankoff_matrix[ht,no_step] <- sankoff_matrix[ht,no_step]+min(sankoff_matrix[sp,])
-				if (length(no_step) < length(obs_states))	{
-					sankoff_matrix[ht,add_step] <- sankoff_matrix[ht,add_step]+min(sankoff_matrix[sp,])+1
-		#			sankoff_matrix[ht,add_step] <- sankoff_matrix[ht,add_step]+sankoff_matrix[sp,add_step]
-		#			sankoff_matrix[ht,]
-					}
-				}	else if (cvector[sp]==inapplicableValue)	{
-				gap <- gap+1
-				}	else if (cvector[sp]==missingCharValue)	{
-				missing <- missing+1
-				}
-			}
-		if (missing==f1)	{
-			cvector[ht] <- missingCharValue
-			scored <- c(scored,ht)
-			}	else if (gap==f1)	{
-			cvector[ht] <- inapplicableValue
-			scored <- c(scored,ht)
-			}	else if (sum(sankoff_matrix[ht,] %in% min(sankoff_matrix[ht,]))==1)	{
-			# see if we can fix a state
-			ast <- match(min(sankoff_matrix[ht,]),sankoff_matrix[ht,])
-			cvector[ht] <- obs_states[ast]
-			scored <- c(scored,ht)
-			}	else	{
-			cvector[ht] <- ravel_polymorph(obs_states[sankoff_matrix[ht,] %in% min(sankoff_matrix[ht,])])
-			}
-		}
-
-	base <- otus+1
-	ch_steps <- min(sankoff_matrix[base,])
-
-	if (cvector[base]<0 && (cvector[base]!=missingCharValue && cvector[base]!=inapplicableValue))	{
-		#poss_starts <- (1:ttl_states)[sankoff_matrix[base,] %in% min(sankoff_matrix[base,])]
-		poss_starts <- unravel_polymorph(cvector[base])
-		# IF the designated outgroup is attached to the first node AND if it 
-		#	has one of the possible nodal states, then assign that to basal node
-		if (!is.na(match(outgroupID,mtree[1,])) && !is.na(match(cvector[outgroupID],poss_starts)))	{
-			cvector[base] <- cvector[outgroupID]
-			}	else	{
-			# otherwise, just grab one of them at random: it really doesn't matter
-			grab <- ceiling(runif(1)/(1/length(poss_starts)))
-			cvector[base] <- poss_starts[grab]
-			}
-		}
-
-	### start here: work up the tree, using cvector[htu] to set the state
-	changes_above <- vector(length=Nnodes)
-	for (n in 1:Nnodes)	{
-		ht <- n+otus
-		if (cvector[ht]!=inapplicableValue && cvector[ht]!=missingCharValue)	{
-			f1 <- node_rich[n]
-			# if all taxa are scored in mtree[n,]
-			if (sum(mtree[n,(1:f1)] %in% scored)<f1)	{
-				anc_st <- cvector[ht]
-				unscored <- mtree[n,!mtree[n,(1:f1)] %in% scored]
-				for (u in 1:length(unscored))	{
-					if (length(unscored)>1)	{
-						f2 <- unscored[u]
-						}	else	{
-						f2 <- unscored
-						}
-					# if parent value matches one of the possible values for the daughter node
-					#	then go with that value
-					if(anc_st>=0 && (!is.na(match(anc_st,obs_states[sankoff_matrix[f2,] %in% min(sankoff_matrix[f2,])]))))	{
-						cvector[f2] <- anc_st
-						}	else if (anc_st<0 && (anc_st!=missingCharValue && anc_st!=inapplicableValue))	{
-						anc_poss <- unravel_polymorph(anc_st)
-						f2_poss <- unravel_polymorph(cvector[f2])
-						reduced_poss <- f2_poss[f2_poss %in% anc_poss]
-						if (length(reduced_poss)==1)	{
-							cvector[ht] <- cvector[f2] <- reduced_poss
-							}	else	{
-							#cvector[ht] <- cvector[f2] <- ravel_polymorph(reduced_poss)
-							# if it is still up in the air at this point, then you might as
-							#	well roll the dice!
-							cvector[f2] <- reduced_poss[ceiling(runif(1)/(1/length(reduced_poss)))]
-							}
-						}	else	{
-					# it really does not matter at this point what state we pick: it will all be the same.
-						f2_poss <- unravel_polymorph(cvector[f2])
-						cvector[f2] <- f2_poss[ceiling(runif(1)/(1/length(f2_poss)))]
-						}
-						# end case where we can assign ancestral condition to daughter node
-					}	# end search of unscored nodes
-				}	# I could add a routine here to compare sets of equally parsimonious states
-			changes_above[n] <- min(sankoff_matrix[n+otus,])
-			}		# if node has (0,1) and daughter node has (1,2), then go with 1
-		}
-	cchanges <- rep(0,length(cvector))
-	for (n in 1:Nnodes)	{
-		ht <- otus+n
-		if (cvector[ht]!=missingCharValue && cvector[ht]!=inapplicableValue)	{
-			f1 <- node_rich[n]
-			for (f in 1:f1)	{
-				f2 <- mtree[n,f]
-				if (cvector[f2] != cvector[ht])
-					if ((cvector[f2]!=missingCharValue && cvector[f2]!=inapplicableValue) && (cvector[ht]!=missingCharValue && cvector[ht]!=inapplicableValue))
-						# if both taxa are resolved, then this is easy
-						if (length(cvector[f2])==1 && length(cvector[ht])==1)
-							cchanges[f2] <- match(cvector[f2],obs_states)
-				}
-			}
-		}
-	output <- list(ch_steps,cvector,cchanges)
-	names(output) <- c("Steps","States","Derivation")
-	return(output)
-	}
 
 # convert string of states into a polymorphic
 ravel_polymorph <- function(polies)	{
+	polies<-as.numeric(polies)
 	poly <- 0
 	for (i in 1:length(polies))	poly <- poly + (polies[i]*10^(i-1))
 	return(-1*poly)
@@ -893,13 +1060,12 @@ accio_branch_order_with_stratigraphy <- function(mtree,firstAppearances)	{
 	branch_order <- accio_patristic_distance_from_base(mtree)	# order branches from base of the tree
 	used_order <- branch_order + (1-(1:length(branch_order))/100)	# for ties, put nodes before otus
 	strat_order <- date_taxa_on_tree_simple(mtree,firstAppearances)
-
 	tosort <- cbind(strat_order,used_order)
 	return(order(tosort[,1],tosort[,2],decreasing=FALSE))
 	}
 
-	# get order of branches from base of tree up
-	accio_patristic_distance_from_base <- function(atree)	{
+# get order of branches from base of tree up
+accio_patristic_distance_from_base <- function(atree)	{
 	ttus <- max(atree)
 	pat_dist_from_base <- vector(length=ttus)
 	if (length(dim(as.array(atree)))==1)	{
@@ -1119,7 +1285,7 @@ optimize_geometric_abundance <- function(counts)	{
 	decay <- (min(counts)/max(counts))^(1/(length(counts)-1))
 	max_decay <- exp(log(decay)/2)
 	min_decay <- exp(log(decay)*2)
-
+	#
 	cl <- list(fnscale=-1)
 	nspec <- sum(counts)
 	w <- optim(decay,fn=loglikelihood_geometric_rad,method="L-BFGS-B",nspec=nspec,oS=oS,observed=observed,lower=min_decay,upper=max_decay,control=cl)

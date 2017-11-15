@@ -3,7 +3,7 @@ Type: Package
 Version: 3.0.1
 Title: Paleontological and Phylogenetic Analyses of Evolution
 Date: 2017-10-21
-Author: David W. Bapst
+Author: David W. Bapst, Peter J. Wagner
 Depends:
 	R (>= 3.0.0),
 	ape (>= 4.1)

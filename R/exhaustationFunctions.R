@@ -373,6 +373,9 @@ accioBestAcquisitionModel <- function(exhaustion_info,changesType,
 #' @rdname exhaustionFunctions
 #' @export
 charExhaustPlot<-function(exhaustion_info,changesType,xlab="Total Characters",ylab=NULL,main=NULL,xsize=3){
+	#
+	abcissa<-xlab
+	#
 	if(all(changesType!=c("totalAcc","charAlt"))){
 		stop("changesType must be one of either 'totalAcc' or 'charAlt'")
 		}

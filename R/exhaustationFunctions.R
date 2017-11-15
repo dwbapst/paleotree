@@ -137,14 +137,12 @@
 #' # the 'outgroup' is Exigraptus, first taxon listed in the matrix
 #' exhaustionResults <- accioExhaustionCurve(phyloTree=dicranoTree,
 #'    charData=charMat, charTypes="unordered",
-#'    outgroup="Exigraptus")
+#'    outgroup="Exigraptus_uniformis")
 #'
-#' # fits models to exhaustion curve
-#'	# first get count state derivations to count total accumulation
-#' changesDicrano <- sort(rowSums(exhaustionResults$State_Derivations),decreasing=TRUE) 
-#' # fit model for total accumulation
-#' accioBestAcquisitionModel(changes=changesDicrano,
-#'     models=c("exponential","gamma","lognormal","zipf")) 
+#' # fits models to exhaustion for total accumulation
+#' accioBestAcquisitionModel(exhaustion_info=exhaustionResults,
+#'  changesTypes="totalAcc", 	
+#'  models=c("exponential","gamma","lognormal","zipf")) 
 #' 
 #' # plot of exhausation of total accumulation of character states
 #' charExhaustPlot(exhaustion_info=exhaustionResults,
@@ -158,6 +156,9 @@
 
 
 # examples trash
+
+#	# first get count state derivations to count total accumulation
+# changesDicrano <- sort(rowSums(exhaustionResults$State_Derivations),decreasing=TRUE) 
 
 # # stratigraphic age data
 #   # Not clear where this taken from (collected by PJW)
@@ -313,7 +314,7 @@ accioExhaustionCurve <- function(phyloTree,charData,
 	
 #' @rdname exhaustationFunctions
 #' @export
-accioBestAcquisitionModel <- function(changes,changesType,
+accioBestAcquisitionModel <- function(exhaustation_info,changesType,
 		models=c("exponential","gamma","lognormal","zipf"))	{
 	# check
 	if(all(changesType!=c("totalAcc","charAlt"))){

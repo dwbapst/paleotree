@@ -378,8 +378,12 @@ charExhaustPlot<-function(exhaustion_info,changesType,xlab="Total Characters",yl
 		}
 	exhaustion <- exhaustion_info$Exhaustion
 	nstep <- max(exhaustion_info$Exhaustion[,1])
-	best_state_exhaustion <- accioBestAcquisitionModel(exhaustion_info=exhaustion_info,
+	best_exhaustion <- accioBestAcquisitionModel(exhaustion_info=exhaustion_info,
 			changesType=changesType, models=c("exponential","gamma","lognormal","zipf"))
+	# get the best model for the size and distribution of character/state space
+	ba <- best_exhaustion$Best_Distribution
+	after3 <- exhaustion[2,1]
+	hba <- expected_exhaustion_curve(rel_ab_dist=ba, nstep, after3, length(ba))
 	#
 	mxx <- 10*ceiling(max(exhaustion[,1])/10)
 	if (mxx<100)	{
@@ -393,11 +397,6 @@ charExhaustPlot<-function(exhaustion_info,changesType,xlab="Total Characters",yl
 	par(pin=c(xsize,xsize))
 	#
 	if(changesType=="totalAcc"){
-		# get the best model for the size and distribution of character space
-		bca <- best_character_exhaustion$Best_Distribution
-		after3 <- exhaustion[2,1]
-		hbca <- expected_exhaustion_curve(rel_ab_dist=bca, nstep, after3, length(bca))
-		#
 		if(is.null(ylab)){
 			ordinate <- "Novel States"
 		}else{
@@ -413,17 +412,11 @@ charExhaustPlot<-function(exhaustion_info,changesType,xlab="Total Characters",yl
 			xlim=c(0,mxx),ylim=c(0,mxx))
 		draw_symmetric_axes(mxx,xsize)
 		#
-		lines((1:nstep),hbca,lwd=2,lty=3)
+		lines((1:nstep),hba,lwd=2,lty=3)
 		points(exhaustion[,1],exhaustion[,3],pch=21,bg="green",cex=1.25)
 		}
 	#
 	if(changesType=="charAlt"){
-		# get the best model for the size and distribution of state space
-
-		bsa <- best_state_exhaustion$Best_Distribution
-		after3 <- exhaustion[3,1]
-		hbsa <- expected_exhaustion_curve(rel_ab_dist=bsa, nstep, after3, length(bsa))
-		#
 		if(is.null(ylab)){
 			ordinate <- "Altered Characters"
 		}else{
@@ -439,7 +432,7 @@ charExhaustPlot<-function(exhaustion_info,changesType,xlab="Total Characters",yl
 			xlim=c(0,mxx),ylim=c(0,mxx))
 		draw_symmetric_axes(mxx,xsize)
 		#
-		lines((1:nstep),hbsa,lwd=2,lty=2)
+		lines((1:nstep),hba,lwd=2,lty=2)
 		points(exhaustion[,1],exhaustion[,2],pch=21,bg="skyblue",cex=1.25)
 		}
 	#

@@ -1,7 +1,7 @@
-#' Analyses of the Exhaustation of Character States Over Evolutionary History
+#' Analyses of the exhaustion of Character States Over Evolutionary History
 #' 
 #' The following functions are for measuring and fitting various
-#' distributions to the gradual exhaustation of unexpressed
+#' distributions to the gradual exhaustion of unexpressed
 #' character states, as originally described by Wagner (2000,
 #' Evolution). 
 #' 
@@ -24,7 +24,7 @@
 #' The functions \code{accioBestAcquisitionModel}  and \code{charExhaustPlot} offer
 #' users two different options for examining character change: \code{totalAcc}
 #' fits models to the total accumulated number of state changes over the phylogeny,
-#' thus using exhaustation to explor the size and distribution of character space. The
+#' thus using exhaustion to explor the size and distribution of character space. The
 #' other option \code{charAlt} fits models to the number of character that alter from
 #' primitive to derived over phylogeny, thus reflecting the size and distribution of state space.
 #' 
@@ -65,7 +65,7 @@
 
 #' @param changesType A single character value, indicating the character change data
 #' to be assessed from the result of the character
-#' exhaustation analysis, must be one of either 'totalAcc' (to the total number of
+#' exhaustion analysis, must be one of either 'totalAcc' (to the total number of
 #' accumulated character changes, ideal for modeling the size and distribution of
 #' \emph{state} space) or 'charAlt' (to plot the total number of character alterations,
 #' ideal for modeling the size and distribution of \emph{character} space).
@@ -83,7 +83,7 @@
 
 #' @return
 #' \code{accioExhaustionCurve} outputs a list containing two objects: first,
-#' a matrix named \code{exhaustation} consisting of three columns: \code{"Steps"},
+#' a matrix named \code{exhaustion} consisting of three columns: \code{"Steps"},
 #' \code{"Novel_States"}, and \code{"Novel_Characters"}, respectively giving
 #' the counts of these respective values for each branch (internode edge).
 #' The second element of this list is named \code{State_Derivations} and is
@@ -141,7 +141,7 @@
 #'
 #' # fits models to exhaustion for total accumulation
 #' accioBestAcquisitionModel(exhaustion_info=exhaustionResults,
-#'  changesTypes="totalAcc", 	
+#'  changesType="totalAcc", 	
 #'  models=c("exponential","gamma","lognormal","zipf")) 
 #' 
 #' # plot of exhausation of total accumulation of character states
@@ -176,8 +176,8 @@
 
 
 
-#' @name exhaustationFunctions
-#' @rdname exhaustationFunctions
+#' @name exhaustionFunctions
+#' @rdname exhaustionFunctions
 #' @export
 accioExhaustionCurve <- function(phyloTree,charData,
 	charTypes="unordered",outgroup=NULL,firstAppearances=NULL,
@@ -312,9 +312,9 @@ accioExhaustionCurve <- function(phyloTree,charData,
 
 	
 	
-#' @rdname exhaustationFunctions
+#' @rdname exhaustionFunctions
 #' @export
-accioBestAcquisitionModel <- function(exhaustation_info,changesType,
+accioBestAcquisitionModel <- function(exhaustion_info,changesType,
 		models=c("exponential","gamma","lognormal","zipf"))	{
 	# check
 	if(all(changesType!=c("totalAcc","charAlt"))){
@@ -370,7 +370,7 @@ accioBestAcquisitionModel <- function(exhaustation_info,changesType,
 	return(output)
 	}
 
-#' @rdname exhaustationFunctions
+#' @rdname exhaustionFunctions
 #' @export
 charExhaustPlot<-function(exhaustion_info,changesType,xlab="Total Characters",ylab=NULL,main=NULL,xsize=3){
 	if(all(changesType!=c("totalAcc","charAlt"))){
@@ -1846,7 +1846,7 @@ accio_matrix_tree_from_ape_tree <- function(ape)	{
 #inapplicableValue <- "-"			# replace "-" with "-"
 
 #library(paleotree)
-#source("D://dave/workspace/paleotree/R/exhaustationFunctions.R")
+#source("D://dave/workspace/paleotree/R/exhaustionFunctions.R")
 #nexustreefile <- "Dicranograptidae_Tree.txt"
 #phyloTree <- read.tree(nexustreefile)
 #strat_file <- "Dicranograptidae_Ranges.txt"

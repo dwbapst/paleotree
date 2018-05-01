@@ -10,15 +10,16 @@
 cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1,
   anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
   FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200, step.size = 0.1,
-  randres = FALSE, noisyDrop = TRUE, tolerance = 1e-04,
-  diagnosticMode = FALSE, plot = FALSE)
+  randres = FALSE, noisyDrop = TRUE, verboseWarnings = TRUE,
+  diagnosticMode = FALSE, tolerance = 1e-04, plot = FALSE)
 
 bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
   anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
   FAD.only = FALSE, sites = NULL, point.occur = FALSE,
   nonstoch.bin = FALSE, adj.obs.wt = TRUE, root.max = 200,
-  step.size = 0.1, randres = FALSE, noisyDrop = TRUE, tolerance = 1e-04,
-  diagnosticMode = FALSE, plot = FALSE)
+  step.size = 0.1, randres = FALSE, noisyDrop = TRUE,
+  verboseWarnings = TRUE, tolerance = 1e-04, diagnosticMode = FALSE,
+  plot = FALSE)
 }
 \arguments{
 \item{tree}{An unscaled cladogram of fossil taxa, of class \code{phylo}. Tip labels
@@ -121,15 +122,19 @@ relative to sampling in the fossil record?}
 \item{noisyDrop}{If \code{TRUE} (the default), any taxa dropped from tree due to not
 having a matching entry in the time data will be listed in a system message.}
 
-\item{tolerance}{Acceptable amount of shift in tip dates from dates listed
-in \code{timeData}. Shifts outside of the range of \code{tolerance} will
-cause a warning message to be issued that terminal tips appear to be
-improperly aligned.}
+\item{verboseWarnings}{if \code{TRUE} (the default), then various warnings and messages
+ regarding best practices will be issued to the console about the analysis. If \code{FALSE},
+the function will run as quietly as possible.}
 
 \item{diagnosticMode}{If \code{TRUE}, \code{cal3timePaleoPhy} will return to the
 console and to graphic devices an enormous number of messages, plots and
 ancilliary information that may be useful or entirely useless to figuring
 out what is going wrong.}
+
+\item{tolerance}{Acceptable amount of shift in tip dates from dates listed
+in \code{timeData}. Shifts outside of the range of \code{tolerance} will
+cause a warning message to be issued that terminal tips appear to be
+improperly aligned.}
 
 \item{plot}{If true, plots the input, "basic" time-scaled phylogeny (an
 intermediary step in the algorithm) and the output

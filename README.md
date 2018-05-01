@@ -18,8 +18,7 @@ The most recent commit is currently: [![Build Status](https://travis-ci.org/dwba
 	
 You can install this latest development version using the R function install_github in the package 'devtools':
 
-	library(devtools)
-	install_github("dwbapst/paleotree")
+	devtools::install_github("dwbapst/paleotree")
 
 Once installed, you can check the version number of your paleotree install using the R function packageVersion:
 
@@ -35,7 +34,7 @@ You can also call the citation for paleotree from within R, using the citation f
 	
 	citation("paleotree")
 	
-This code is authored by David Bapst and offered under CC0.
+This code is mainly authored by David Bapst, with some functions authored by Peter Wagner, and offered under CC0.
 
 The current total number of downloads of the paleotree package from the RStudio CRAN mirror is: [![Number of Downloads](http://cranlogs.r-pkg.org/badges/grand-total/paleotree)](https://github.com/metacran/cranlogs.app)
 

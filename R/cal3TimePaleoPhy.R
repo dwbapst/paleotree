@@ -962,7 +962,8 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,
 		stop("FAD.only=TRUE and dateTreatment='randObs' are conflicting arguments")
 		}
 	if(dateTreatment=="minMax" & FAD.only){
-		stop("FAD.only=TRUE and dateTreatment='minMax' are conflicting, as there are no FADs, as dates are simply point occurrences")}
+		stop("FAD.only=TRUE and dateTreatment='minMax' are conflicting, as there are no FADs, as dates are simply point occurrences")
+		}
 	if(!is.null(sites) & point.occur){
 		stop(paste0("Inconsistent arguments, point.occur=TRUE would replace input 'sites' matrix",
 			"\n Why not just make site assignments for first and last appearance the same in your input site matrix?"))
@@ -976,16 +977,20 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,
 		}
 	#
 	#clean out all taxa which are NA or missing for timeData
-	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
+	droppers<-tree$tip.label[is.na(match(tree$tip.label,
+		names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
-		if(length(droppers)==Ntip(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
+		if(length(droppers)==Ntip(tree)){
+			stop("Absolutely NO valid taxa shared between the tree and temporal data!")
+		}
 		if(noisyDrop){
 			message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))
 			}
 		tree<-drop.tip(tree,droppers)
 		if(is.null(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
 		if(Ntip(tree)<2){stop("Less than two valid taxa shared between the tree and temporal data!")}
-		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x==tree$tip.label))),1]<-NA
+		whichNoMatch<-which(!sapply(rownames(timeList[[2]]),function(x)any(x==tree$tip.label)))
+		timeList[[2]][whichNoMatch,1]<-NA
 		}
 	if(!is.null(node.mins)){
 		if(length(droppers)>0){	#then... the tree has changed unpredictably, node.mins unusable

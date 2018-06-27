@@ -128,13 +128,13 @@ nodeDates2branchLengths<-function(nodeDates, tree, allTipsModern=FALSE){
         warning("input tree has $edge.lengths present, these will be replaced")
 		}
     #
+	#stop("nodeDates2branchLengths doesn't handle non-ultrametric trees or trees where not all tips are at the modern day... yet")
 	if(allTipsModern){
 	    if(length(nodeDates)!=Nnode(tree)){
 			stop("nodeDates must be same length as number of nodes on input tree if allTipsModern=TRUE")
 			}
 		#add zero ages for tips
 		allAges<-c(rep(0,Ntip(tree)),nodeDates)
-		stop("nodeDates2branchLengths doesn't handle non-ultrametric trees or trees where not all tips are at the modern day... yet")
 	}else{
 	    if(length(nodeDates)!=(Nnode(tree)+Ntip(tree))){
 			stop("nodeDates must be same length as number of nodes AND tips on input tree if allTipsModern=FALSE")

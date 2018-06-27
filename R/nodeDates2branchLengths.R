@@ -1,21 +1,42 @@
 #' Obtaining Edge Lengths for Undated Phylogenies Using Known Branching Node and Tip Ages
 #' 
-#' 
+#' This function takes some undated phylogenetic topology, a set of ages in
+#' absolute time, for the internal nodes and (by default) the terminal tips
+#' of that phylogeny,  and returns a dated phylogeny consistent with those input ages.
 
 #' @details
+#' The function \code{\link{compute.brtime}} in package \code{ape} does
+#' a very similar functionality, but is limited in its application for
+#' only ultrametric trees, as it does not allow for tips to have
+#' incongruent ages. It also only accepts node ages as on the relative
+#' scale where the latest tips are at zero, as assumed in general
+#' elsewhere in package \code{ape}.
 
-#' @param nodeDates Under default \code{allTipsModern = FALSE} conditions, \code{nodeDates} should be a vector of length \code{Ntip(tree) + Nnode(tree)} which contains the dates for all terminal tip nodes and internal nodes for the tree, in that order, as numbered in the \code{tree$edge} matrix. Such a vector is produced as output by \code{\link{dateNodes}}. If \code{allTipsModern = TRUE}, then the vector should only be as long as the number of nodes, and contain the dates only for those same internal nodes in \code{tree}. 
+#' @param nodeDates Under default \code{allTipsModern = FALSE} conditions,
+#' \code{nodeDates} should be a vector of length \code{Ntip(tree) + Nnode(tree)}
+#' which contains the dates for all terminal tip nodes and internal nodes for
+#' the tree, in that order, as numbered in the \code{tree$edge} matrix. Such
+#' a vector is produced as output by \code{\link{dateNodes}}. If \code{allTipsModern = TRUE},
+#' then the vector should only be as long as the number of nodes,
+#' and contain the dates only for those same internal nodes in \code{tree}. 
 #' These dates should always on a descending scale (i.e. time before present), with respect to an
 #' absolute time-scale. It is possible for the time 0 date to represent
 #' a date far in the future from the latest tip.
 
 #' @param tree An undated phylogeny object, of class \code{phylo}, lacking edge lengths.
-#' If the tree appears to be dated (i.e. has edge lengths), the function will fail with a warning.
+#' If the tree appears to be dated (i.e. has edge lengths), the function will issue a warning.
 
-#' @param  allTipsModern A logical, default is \code{FALSE}. If \code{FALSE}, then the function expects \code{nodeDates} to contain ages for all 'nodes' - both internal branching nodes and terminal tips. If \code{TRUE}, then the function will expect \code{nodeDates} to contain ages only for internal branching nodes, and all tips will be assumed to be at time 0. (Thus, if your tree is ultrametric but tips aren't all at the modern, do \emph{not} use {allTipsModern = TRUE}).
-
+#' @param  allTipsModern A logical, default is \code{FALSE}. If \code{FALSE},
+#' then the function expects \code{nodeDates} to contain ages for all
+#' 'nodes' - both internal branching nodes and terminal tips. If \code{TRUE}, then
+#' the function will expect \code{nodeDates} to contain ages only for internal
+#' branching nodes, and all tips will be assumed to be at time 0. (Thus, if your
+#' tree is ultrametric but tips aren't all at the modern, do \emph{not}
+#' use {allTipsModern = TRUE}).
 
 #' @return
+#' A dated tree as a list of class \code{phylo}, with a \code{$root.time}
+#' element for referencing the tree against absolute time.
 
 #' @seealso
 #' This function will likely often be used in conjunction with
@@ -102,8 +123,11 @@
 #' @export
 nodeDates2branchLengths<-function(nodeDates, tree, allTipsModern=FALSE){
     # checks
+	if(!inherits(tree,"phylo")){
+		stop("tree is not of class phylo")
+		}
 	if(!is.null(tree$edge.lengths)){
-        message("Warning: input tree has $edge.lengths present, these will be replaced")
+        warning("input tree has $edge.lengths present, these will be replaced")
 		}
     #
 	if(allTipsModern){
@@ -116,8 +140,13 @@ nodeDates2branchLengths<-function(nodeDates, tree, allTipsModern=FALSE){
 	}else{
 	    if(length(nodeDates)!=(Nnode(tree)+Ntip(tree))){
 			stop("nodeDates must be same length as number of nodes AND tips on input tree if allTipsModern=FALSE")
-			}		
+			}
+		allAges<-nodeDates
 		}
+	# check that all ages are provided
+	if(any(is.na(allAges)) | any(is.null(allAges))){
+		stop("Some input ages appear to be NA or NULL - ages for all nodes MUST be provided")
+		}	
     ######################################
     # get mother node age for each edge
     momAges<-allAges[tree$edge[,1]]
@@ -125,6 +154,16 @@ nodeDates2branchLengths<-function(nodeDates, tree, allTipsModern=FALSE){
     childAges<-allAges[tree$edge[,2]]
     #edge lengths = mom - child
     edgeLengths<-momAges-childAges
+	# check edgeLengths
+	if(any(edgeLengths<0)){
+		stop("Check ages - some edges are calculated as having negative lengths!")
+		}
+	if(any(edgeLengths==0)){
+		message("Caution: some edges are calculated as being zero-length - is this expected?")
+		}
+	#
     tree$edge.length<-edgeLengths
+	# set root age
+	tree$root.time<-allAges[(Ntip(tree)+1]
     return(tree)
     }

@@ -7,7 +7,7 @@ Version - 3.0.2 - 06-27-18 (Not Released to CRAN)
 
 
 Version - 3.0.1 - 05-03-18 (Not Released to CRAN)
--Post CRAN release version - adding Pete Wagner's functions relating to measuring character exhaustation, added Pete to the authors for paleotree.
+-Added Pete Wagner's functions relating to measuring character exhaustation, added Pete to the authors for paleotree.
 -Added another cladogram (an MPT from a 13-taxon analysis) to SongZhangDicrano example dataset
 -Added argument verboseWarnings to cal3 functions, modified previous 'warnings' (actually used function for messages) to warnings
 

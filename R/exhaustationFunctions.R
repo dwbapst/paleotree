@@ -1191,7 +1191,7 @@ expected_exhaustion_curve <- function(rel_ab_dist, nstep, after3, C)	{
 	}
 
 # expected sampled
-# get the likelihood of observed numbers of taxa with 1...N finds given expected numbers of taxa with 1…N finds
+# get the likelihood of observed numbers of taxa with 1...N finds given expected numbers of taxa with 1...N finds
 expected_sampled_richness <- function(rel_ab_dist, nspec, S, MINNO = 5e-324)	{
 	exp_find <- 0
 	for (t in 1:S)

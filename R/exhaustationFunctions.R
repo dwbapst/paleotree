@@ -1141,7 +1141,7 @@ modified_AIC <- function(lnL,k,n)	{
 	return(aic_c)
 	}
 
-# convert abundances to "Fisher plot" giving # taxa with 1…N Finds
+# convert abundances to "Fisher plot" giving # taxa with 1...N Finds
 fisher_plot <- function(finds)	{
 	return(hist(finds,breaks=(0:max(finds)),plot=FALSE)$counts)
 	}
@@ -1151,7 +1151,7 @@ create_quantile_vector<-function(N)	{
 	}
 
 # find expectations of this gamma at this sample size
-# exp will give the expected number of taxa found 1…ncoll times
+# exp will give the expected number of taxa found 1...ncoll times
 expected_abundances <- function(rel_ab_dist, nspec, S)	{
 	expected <- vector(length=nspec)
 	for (t in 1:S)	{
@@ -1191,7 +1191,7 @@ expected_exhaustion_curve <- function(rel_ab_dist, nstep, after3, C)	{
 	}
 
 # expected sampled
-# get the likelihood of observed numbers of taxa with 1…N finds given expected numbers of taxa with 1…N finds
+# get the likelihood of observed numbers of taxa with 1...N finds given expected numbers of taxa with 1…N finds
 expected_sampled_richness <- function(rel_ab_dist, nspec, S, MINNO = 5e-324)	{
 	exp_find <- 0
 	for (t in 1:S)

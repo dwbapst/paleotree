@@ -49,8 +49,6 @@
 
 #' @author David W. Bapst
 
-#' @references
-
 #' @examples
 #' set.seed(444)
 #' 
@@ -69,7 +67,7 @@
 #' chronoRedux <-  nodeDates2branchLengths(tree=notChrono,
 #'     nodeDates=nodeTimes, allTipsModern=FALSE)
 #' # test that its the same
-#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length))
+#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
 #' 
 #' ######################################
 #' # modern ultrametric tree
@@ -85,7 +83,7 @@
 #' # setting those branching times with ape
 #' chronoRedux <-  compute.brtime(notChrono, branchingTimes)
 #' # test that its the same
-#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length))
+#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
 #' 
 #' # lets do the same thing but with nodeDates2branchLengths
 #' 
@@ -94,7 +92,7 @@
 #' chronoRedux <-  nodeDates2branchLengths(tree=notChrono,
 #'     nodeDates=branchingTimes, allTipsModern=TRUE)
 #' # test that its the same
-#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length))
+#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
 #' 
 #' # now lets try with dateNodes in paleotree
 #' nodeTimes<-dateNodes(chrono)
@@ -102,7 +100,7 @@
 #' chronoRedux <-  nodeDates2branchLengths(tree=notChrono,
 #'     nodeDates=nodeTimes, allTipsModern=FALSE)
 #' # test that its the same
-#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length))
+#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
 #' 
 #' # get just the node times (remove tip dates)
 #' nodeOnlyTimes<-nodeTimes[-(1:Ntip(chrono))]
@@ -110,7 +108,7 @@
 #' chronoRedux <-  nodeDates2branchLengths(tree=notChrono,
 #'     nodeDates=nodeOnlyTimes, allTipsModern=TRUE)
 #' # test that its the same
-#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length))
+#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
 #' 
 #' # did all tests come out as TRUE?
 #' if(!all(tests)){stop("nodeDates2branchLengths isn't functioning correctly")}
@@ -164,6 +162,6 @@ nodeDates2branchLengths<-function(nodeDates, tree, allTipsModern=FALSE){
 	#
     tree$edge.length<-edgeLengths
 	# set root age
-	tree$root.time<-allAges[(Ntip(tree)+1]
+	tree$root.time<-allAges[Ntip(tree)+1]
     return(tree)
     }

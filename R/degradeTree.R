@@ -18,34 +18,36 @@
 #' 
 #' By default, branch lengths are removed from the input tree prior to
 #' degradation and entirely absent from the output tree. This is changed if
-#' argument leave.zlb is TRUE.
+#' argument \code{leave.zlb} is TRUE.
 #' 
-#' @param tree A phylogeny of class 'phylo'
+#' @param tree A phylogeny of class \code{phylo}
 
 #' @param prop_collapse Proportion of nodes to collapse
 
 #' @param nCollapse Number of nodes to collapse, can be supplied as an
-#' alternative to prop_collapse
+#' alternative to \code{prop_collapse}
 
 #' @param node.depth A number between 0 to 1, which conditions the depth of
-#' nodes removed. If NA, no conditioning (this is the default).
+#' nodes removed. If \code{NA}, no conditioning (this is the default).
 
-#' @param leave.zlb If FALSE, the default option, the original branch length
+#' @param leave.zlb If \code{FALSE}, the default option, the original branch length
 #' distribution is destroyed and branches set to zero by this function will
-#' return polytomies. If TRUE, then the original edge lengths are kept for
+#' return polytomies. If \code{TRUE}, then the original edge lengths are kept for
 #' unmodified edges, and modified edges are changed to zero length, and are not
 #' collapsed into polytomies. The removed branch length is not shifted to other
 #' edges.
 
 #' @param nodeID The node ID number(s) to be collapsed into a polytomy, as identified in
-#' the \code{$edge} matrix of the'phylo' object. Must be a vector of one or more ID numbers.
+#' the \code{$edge} matrix of the \code{phylo} object. Must be a vector of one or more ID numbers.
 
-#' @param collapseType Whether to collapse the edge leading the listed node (if "forward"), or to
-#' collapse the child edges leading away from the node (if "backward"). Collapsing a node 'into' a
-#' polytomy conceptually could be either and users should heed this option carefully. A third option,
-#' if "collapseType=clade" is to collapse the entire clade that is descended from a node (i.e. forward).
+#' @param collapseType Whether to collapse the edge leading the listed node
+#' (if \code{collapseType = "forward"}), or to collapse the child edges leading
+#' away from the node (if \code{collapseType = "backward"}). Collapsing a node
+#'' 'into' a polytomy conceptually could be either and users should heed this
+#' option carefully. A third option, if \code{"collapseType = clade"} is to
+#' collapse the entire clade that is descended from a node (i.e. forward).
 
-#' @return Returns the modified tree as an object of class phylo, with no edge
+#' @return Returns the modified tree as an object of class \code{phylo}, with no edge
 #' lengths by default.
 
 #' @seealso \code{\link{di2multi}},\code{\link{timeLadderTree}}

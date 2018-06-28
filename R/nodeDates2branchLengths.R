@@ -152,6 +152,7 @@ nodeDates2branchLengths<-function(nodeDates, tree, allTipsModern=FALSE){
     childAges<-allAges[tree$edge[,2]]
     #edge lengths = mom - child
     edgeLengths<-momAges-childAges
+	names(edgeLengths)<-NULL
 	# check edgeLengths
 	if(any(edgeLengths<0)){
 		stop("Check ages - some edges are calculated as having negative lengths!")

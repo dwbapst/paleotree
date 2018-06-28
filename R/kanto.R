@@ -92,20 +92,20 @@
 #' library(vegan)
 #' bcDist <- vegdist(kanto,method="bray")
 #' 
-#' #do a PCO on the bray-curtis distances
+#' # do a PCO on the bray-curtis distances
 #' pcoRes <- pcoa(bcDist,correction="lingoes")
 #' scores <- pcoRes$vectors
-#' #plot the PCO
+#' # plot the PCO
 #' plot(scores,type="n")
 #' text(labels=rownames(kanto),scores[,1],scores[,2],cex=0.5)
 #' 
-#' #the way the power plant and the pokemon tower converge
+#' # the way the power plant and the pokemon tower converge
 #' 	# is very suspicious: may be distortion due to a long gradient
 #' 
-#' #do a DCA instead with vegan's decorana
+#' # do a DCA instead with vegan's decorana
 #' dcaRes<-decorana(kanto)
-#' #plot using native vegan functions
-#' 	#will show species scores in red
+#' # plot using native vegan functions
+#' 	   #will show species scores in red
 #' plot(dcaRes,cex=0.5)
 #' #kind of messy
 #' 
@@ -118,9 +118,10 @@
 #' #well, that's pretty cool
 #' 
 #' #######################
-#' #get the nearest neighbor for each site based on pair-wise rho coefficients
+#' #get the nearest neighbor for each site
+#'     # based on pair-wise rho coefficients
 #' rhoNeighbor<-apply(rhoCoeff,1,function(x)
-#' 	rownames(kanto)[tail(order(x,na.last=NA),1)])
+#' 	    rownames(kanto)[tail(order(x,na.last=NA),1)])
 #' 
 #' #let's plot the nearest neighbor connections with igraph
 #' NNtable<-cbind(rownames(kanto),rhoNeighbor)
@@ -131,7 +132,7 @@
 #' plot(NNlist)
 #' 
 #' #arrows point at the nearest neighbor of each sample
-#' 	# based on maximum Spearman rho correlation
+#' 	    # based on maximum Spearman rho correlation
 #'
 #' ##################################
 #' # Two Way Cluster With Heatmap
@@ -233,6 +234,8 @@
 #'
 #' }
 #' 
+
+
 
 
 #'

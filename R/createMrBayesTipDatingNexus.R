@@ -14,7 +14,7 @@
 #' (via paleotree function \code{\link{createMrBayesTipCalibrations}}). 
 #' The user must also supply some topological constraint: 
 #' either a set of taxa designated as the outgroup, which is then converted into a command constraining
-#' th monophyly on the ingroup taxa, which is presumed to be all taxa \emph{not} listed in the outgroup. 
+#' the monophyly on the ingroup taxa, which is presumed to be all taxa \emph{not} listed in the outgroup. 
 #' Alternatively, a user may supply a tree which is then converted into a series of hard topological
 #' constraints (via function \code{\link{createMrBayesConstraints}}. Both types of topological constraints
 #' cannot be applied. Many of the options available with \code{\link{createMrBayesTipCalibrations}} are available with this function,

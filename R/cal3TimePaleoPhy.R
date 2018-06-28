@@ -264,6 +264,10 @@
 #' ancilliary information that may be useful or entirely useless to figuring
 #' out what is going wrong.
 
+#' @param verboseWarnings if \code{TRUE} (the default), then various warnings and messages
+#'  regarding best practices will be issued to the console about the analysis. If \code{FALSE},
+#' the function will run as quietly as possible.
+
 #' @param nonstoch.bin If true, dates are not stochastically pulled from
 #' uniform distributions. See below for more details.
 
@@ -461,7 +465,8 @@
 cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 	ntrees=1, anc.wt=1, node.mins=NULL, dateTreatment="firstLast",
 	FAD.only=FALSE, adj.obs.wt=TRUE, root.max=200, step.size=0.1,
-	randres=FALSE, noisyDrop=TRUE, tolerance=0.0001, diagnosticMode=FALSE, plot=FALSE){
+	randres=FALSE, noisyDrop=TRUE, verboseWarnings=TRUE, 
+	diagnosticMode=FALSE, tolerance=0.0001, plot=FALSE){
 	
 	#function for Ps - use pqr2Ps
 	#example data
@@ -486,7 +491,7 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 	#add.zombie=FALSE;node.mins<-c(-sort(-runif(1,600,900)),rep(NA,Nnode(tree)-1))	#assume two very deep divergences
 	#
 	#require(ape)#;require(phangorn)
-
+	#
 	if(!inherits(tree, "phylo")){stop("tree is not of class phylo")}
 	if(!inherits(timeData,"matrix")){
 		if(inherits(timeData,"data.frame")){
@@ -496,13 +501,22 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 			}
 		}
 	if(!any(dateTreatment==c("firstLast","minMax","randObs"))){
-		stop("dateTreatment must be one of 'firstLast', 'minMax' or 'randObs'!")}
-	if(dateTreatment=="randObs" & FAD.only){stop("FAD.only=TRUE and dateTreatment='randObs' are conflicting arguments")}
+		stop("dateTreatment must be one of 'firstLast', 'minMax' or 'randObs'!")
+		}
+	if(dateTreatment=="randObs" & FAD.only){
+		stop("FAD.only=TRUE and dateTreatment='randObs' are conflicting arguments")
+		}
 	if(dateTreatment=="minMax" & FAD.only){
-		stop("FAD.only=TRUE and dateTreatment='minMax' are conflicting, as there are no FADs, as dates are simply point occurrences")}
-	#first clean out all taxa which are NA or missing in timeData
-	if(ntrees==1){message("Warning: Do not interpret a single cal3 time-scaled tree, regardless of other arguments!")}
-	if(ntrees<1){stop("ntrees<1")}
+		stop("FAD.only=TRUE and dateTreatment='minMax' are conflicting, as there are no FADs, as dates are simply point occurrences")
+		}
+	#first clean out all taxa which are NA or missing in timeData	
+	if(ntrees<1){
+		stop("ntrees<1")
+		}
+	# warnings, not fatal errors
+	if(ntrees==1 & verboseWarnings){
+		warning("Do not interpret a single cal3 time-scaled tree, regardless of other arguments!")
+		}
 	#originalInputTree<-tree
 	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
 	if(length(droppers)>0){
@@ -912,8 +926,8 @@ cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
 bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,
 	ntrees=1, anc.wt=1, node.mins=NULL, dateTreatment="firstLast",
 	FAD.only=FALSE,sites=NULL,point.occur=FALSE,nonstoch.bin=FALSE,
-	adj.obs.wt=TRUE,root.max=200,step.size=0.1,
-	randres=FALSE,noisyDrop=TRUE,
+	adj.obs.wt=TRUE, root.max=200, step.size=0.1,
+	randres=FALSE, noisyDrop=TRUE,  verboseWarnings=TRUE,
 	tolerance=0.0001, diagnosticMode=FALSE, plot=FALSE){
 	#see the bin_cal3 function for more notation...
 	#require(ape)
@@ -934,28 +948,49 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,
 			stop("timeList[[2]] not of matrix or data.frame format")
 			}
 		}
-	if(dateTreatment=="minMax"){stop("Instead of dateTreatment='minMax', please use argument point.occur instead in bin_ functions or use sites argument")}
+	if(dateTreatment=="minMax"){
+		stop("Instead of dateTreatment='minMax', please use argument point.occur instead in bin_ functions or use sites argument")
+		}
 	if(!any(dateTreatment==c("firstLast","randObs"))){
-		stop("dateTreatment must be one of 'firstLast' or 'randObs'!")}
-	if(ntrees<1){stop("ntrees<1")}
-	if(ntrees==1){message("Warning: Do not interpret a single cal3 time-scaled tree")}
-	if(ntrees==1 & !nonstoch.bin){
-		message("Warning: Do not interpret a single tree; dates are stochastically pulled from uniform distributions")}
-	if(dateTreatment=="randObs" & FAD.only){stop("FAD.only=TRUE and dateTreatment='randObs' are conflicting arguments")}
+		stop("dateTreatment must be one of 'firstLast' or 'randObs'!")
+		}
+	if(ntrees<1){
+		stop("ntrees<1")
+		}
+	#	
+	if(dateTreatment=="randObs" & FAD.only){
+		stop("FAD.only=TRUE and dateTreatment='randObs' are conflicting arguments")
+		}
 	if(dateTreatment=="minMax" & FAD.only){
-		stop("FAD.only=TRUE and dateTreatment='minMax' are conflicting, as there are no FADs, as dates are simply point occurrences")}
-	if(!is.null(sites) & point.occur){stop("Inconsistent arguments, point.occur=TRUE would replace input 'sites' matrix\n Why not just make site assignments for first and last appearance the same in your input site matrix?")}
+		stop("FAD.only=TRUE and dateTreatment='minMax' are conflicting, as there are no FADs, as dates are simply point occurrences")
+		}
+	if(!is.null(sites) & point.occur){
+		stop(paste0("Inconsistent arguments, point.occur=TRUE would replace input 'sites' matrix",
+			"\n Why not just make site assignments for first and last appearance the same in your input site matrix?"))
+			}
+	# warning messages
+	if(ntrees==1 & verboseWarnings){
+		warning("Do not interpret a single cal3 time-scaled tree")
+		}
+	if(ntrees==1 & !nonstoch.bin & verboseWarnings){
+		warning("Do not interpret a single tree; dates are stochastically pulled from uniform distributions")
+		}
+	#
 	#clean out all taxa which are NA or missing for timeData
-	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
+	droppers<-tree$tip.label[is.na(match(tree$tip.label,
+		names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
-		if(length(droppers)==Ntip(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
+		if(length(droppers)==Ntip(tree)){
+			stop("Absolutely NO valid taxa shared between the tree and temporal data!")
+		}
 		if(noisyDrop){
 			message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))
 			}
 		tree<-drop.tip(tree,droppers)
 		if(is.null(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
 		if(Ntip(tree)<2){stop("Less than two valid taxa shared between the tree and temporal data!")}
-		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x==tree$tip.label))),1]<-NA
+		whichNoMatch<-which(!sapply(rownames(timeList[[2]]),function(x)any(x==tree$tip.label)))
+		timeList[[2]][whichNoMatch,1]<-NA
 		}
 	if(!is.null(node.mins)){
 		if(length(droppers)>0){	#then... the tree has changed unpredictably, node.mins unusable
@@ -968,7 +1003,7 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,
 	if(length(notTree)>0){
 		if(is.null(sites)){
 			if(noisyDrop){
-				message(paste("Warning: Following taxa dropped from timeList:",paste0(notTree,collapse=", ")))}
+				warning(paste("Following taxa dropped from timeList:",paste0(notTree,collapse=", ")))}
 			timeList[[2]]<-timeList[[2]][!is.na(match(rownames(timeList[[2]]),tree$tip.label)),]
 		}else{
 			stop("Some taxa in timeList not included on tree: no automatic taxon drop if 'sites' are given. Please remove from both sites and timeList and try again.")
@@ -1031,12 +1066,14 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,
 		rownames(timeData)<-rownames(timeList[[2]])
 		#if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
 		#if(FAD.only){timeData[,2]<-timeData[,1]}
-		tree2<-suppressMessages(
+		tree2<-suppressWarnings(
 			cal3TimePaleoPhy(tree,timeData,brRate=brRate,extRate=extRate,sampRate=sampRate,
 				ntrees=1,anc.wt=anc.wt,node.mins=node.mins,adj.obs.wt=adj.obs.wt,
 				root.max=root.max,step.size=step.size,
 				FAD.only=FAD.only,dateTreatment=dateTreatment,randres=randres,
-				tolerance=tolerance,diagnosticMode=diagnosticMode,plot=plot)
+				tolerance=tolerance,diagnosticMode=diagnosticMode,
+				verboseWarnings=verboseWarnings,
+				plot=plot)
 			)
 		colnames(timeData)<-c("FAD","LAD")
 		tree2$ranges.used<-timeData

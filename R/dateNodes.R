@@ -12,17 +12,17 @@
 
 #' @param rootAge The root age of the tree, assumed by default to be equal to the element
 #' tree$root.time, which is a standard element for trees time-scaled by the paleotree
-#' package. If not given by the user and if the $root.time element does not exist, then
+#' package. If not given by the user and if the \code{$root.time} element does not exist, then
 #' the maximum depth of the tree will be taken as the root age, which implicitly assumes
 #' the latest most terminal tip is an extant taxon at the modern day (time = 0). If rootAge
 #' is so defined that some nodes may occur later than time = 0, this function may return
 #' negative dates.
 
-#' @param labelDates If FALSE (the default), the dates returned are labeled with the
+#' @param labelDates If \code{FALSE} (the default), the dates returned are labeled with the
 #' tip/node numbers as in \code{tree$edge}. If TRUE, they are labeled with the tip labels
 #' of every descendant tip, which for terminal tips means a single taxon label, and for
 #' internal tips a label that might be very long, composed of multiple tip labels pasted
-#' together. Thus, by default, this argument is FALSE.
+#' together. Thus, by default, this argument is \code{FALSE}.
 
 #' @param tolerance The tolerance within which a node date has to be removed from time = 0 
 #' (i.e. the modern) to issue a warning that there are 'negative' node dates.
@@ -30,12 +30,13 @@
 #' @return 
 #' Returns a vector of length \code{Ntip(tree) + Nnode(tree)} which contains the dates for
 #' all terminal tip nodes and internal nodes for the tree, in that order, as numbered in the \code{tree$edge}
-#' matrix. These dates are always on a descending scale (i.e. time before present); see rootAge for how
-#' the present time is determined. If rootAge is so defined that some nodes may occur later than
+#' matrix. These dates are always on a descending scale (i.e. time before present);
+#' see help for argument \code{rootAge} for how
+#' the present time is determined. If \code{rootAge} is so defined that some nodes may occur later than
 #' time = 0 units before present, this function may (confusingly) return negative dates and a 
 #' warning message will be issued.
 
-#' @seealso \code{\link{compareTimescaling}}
+#' @seealso \code{\link{compareTimescaling}}, \code{\link{nodeDates2branchLengths}} 
 
 #' @author 
 #' David W. Bapst, based on a function originally written by Graeme Lloyd.

@@ -121,6 +121,7 @@ a very different beast than typical paleotree code, for
 example, there are fewer tests of correct input type, length, etc.
 }
 \examples{
+\donttest{
 
 # get data
 data(SongZhangDicrano)
@@ -152,7 +153,8 @@ charExhaustPlot(exhaustion_info=exhaustionResults,
 # plot of exhausation of character alterations
 charExhaustPlot(exhaustion_info=exhaustionResults,
 	   changesType="charAlt")
-	
+
+}	
 }
 \references{
 Wagner, P. J. 2000. Exhaustion of morphologic character

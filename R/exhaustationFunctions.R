@@ -120,6 +120,7 @@
 #' states among fossil taxa. \emph{Evolution} 54(2):365-386.
 
 #' @examples
+#' \donttest{
 #' 
 #' # get data
 #' data(SongZhangDicrano)
@@ -151,7 +152,8 @@
 #' # plot of exhausation of character alterations
 #' charExhaustPlot(exhaustion_info=exhaustionResults,
 #' 	   changesType="charAlt")
-#' 	
+#' 
+#' }	
 
 
 

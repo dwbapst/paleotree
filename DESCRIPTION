@@ -1,8 +1,8 @@
 Package: paleotree
 Type: Package
-Version: 3.0.2
+Version: 3.1.0
 Title: Paleontological and Phylogenetic Analyses of Evolution
-Date: 2018-06-27
+Date: 2018-07-02
 Author: David W. Bapst, Peter J. Wagner
 Depends:
 	R (>= 3.0.0),
@@ -20,8 +20,8 @@ Maintainer: David W. Bapst <dwbapst@gmail.com>
 Description: Provides tools for transforming, a posteriori time-scaling, and
     modifying phylogenies containing extinct (i.e. fossil) lineages. In particular,
     most users are interested in the functions timePaleoPhy(), bin_timePaleoPhy(),
-    cal3TimePaleoPhy() and bin_cal3TimePaleoPhy(), which a posteriori time-scale cladograms of
-    fossil taxa into dated phylogenies. This package also contains a large number
+    cal3TimePaleoPhy() and bin_cal3TimePaleoPhy(), which date cladograms of
+    fossil taxa using stratigraphic data. This package also contains a large number
     of likelihood functions for estimating sampling and diversification rates from
     different types of data available from the fossil record (e.g. range data,
     occurrence data, etc). paleotree users can also simulate diversification and

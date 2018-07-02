@@ -1,5 +1,5 @@
 ^\.travis\.yml$
-^.git$
-^.revdep$
+^\.git$
+^revdep$
 
 ^cran-comments\.md$

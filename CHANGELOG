@@ -2,11 +2,9 @@ Version - 3.1.0 - 07-02-18
 -CRAN release
 -Modified code checking for unique solutions in minCharChange on advice of Uwe Ligges, to avoid timing-out when tested on openBLAS systems
 
-
 Version - 3.0.2 - 06-27-18 (Not Released to CRAN)
 -Added new function nodeDates2branchLengths, so that node and tip ages can be used to obtain edge lengths, in absolute time, for undated trees, at suggestion of Struan Henderson
 -Bumped version number, merged to master branch.
-
 
 Version - 3.0.1 - 05-03-18 (Not Released to CRAN)
 -Added Pete Wagner's functions relating to measuring character exhaustation, added Pete to the authors for paleotree.

@@ -151,6 +151,9 @@ is \emph{arbitrary nonsense} and should be combined to
 to obtain the total number of character changes.
 }
 \examples{
+
+\donttest{
+
 # let's write a quick & dirty ancestral trait plotting function
 
 quickAncPlotter<-function(tree,ancData,cex){
@@ -277,6 +280,8 @@ layout(1)
 # all of this machinery should function just fine in minCharChange
 	# again, by default polySymbol="&" (included anyway here for kicks)
 minCharChange(tree, trait=charPoly, polySymbol="&")
+
+}
 
 }
 \references{

@@ -163,6 +163,9 @@
 
 
 #' @examples
+#' 
+#' \donttest{
+#' 
 #' # let's write a quick & dirty ancestral trait plotting function
 #' 
 #' quickAncPlotter<-function(tree,ancData,cex){
@@ -302,6 +305,8 @@
 #'		# again, by default polySymbol="&" (included anyway here for kicks)
 #' minCharChange(tree, trait=charPoly, polySymbol="&")
 #' 
+#' }
+#' 
 
 
 
@@ -343,9 +348,12 @@ minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE, ordered
 		solMat<-solMat[order(as.numeric(rownames(solMat))),,drop=FALSE]
 		}
 	#are all solMats unique? (yes, if TRUE)
-	solUnq<-all(!sapply(1:ncol(solMat),function(x) 
-		any(sapply((1:ncol(solMat))[-x],function(y) identical(solMat[,x],solMat[,y])))))
-	#do I need to stop if not all solutions are unique???
+	#solUnq<-all(!sapply(1:ncol(solMat),function(x) 
+	#	any(sapply((1:ncol(solMat))[-x],function(y) identical(solMat[,x],solMat[,y])))))
+	#
+	# alternative suggested by Uwe Ligges - 07/01/18
+	solUnq<-all(!duplicated(solMat, MARGIN=2))
+	#do I need to stop if not all solutions are unique??? probably
 	if(!solUnq){
 		if(nSol>randomMax){
 			#if random, then okay, I guess you might have non unique solutions

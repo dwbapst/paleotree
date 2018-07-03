@@ -1,4 +1,4 @@
-Version - 3.1.0 - 07-02-18
+Version - 3.1.0 - 07-02-18 (Released to CRAN)
 -CRAN release
 -Modified code checking for unique solutions in minCharChange on advice of Uwe Ligges, to avoid timing-out when tested on openBLAS systems
 

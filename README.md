@@ -9,7 +9,7 @@ The most recent public release of the code is on CRAN at:
 You can install the most recent public release version of `paleotree` in R using:
 
 ```
-	install.packages("paleotree")
+install.packages("paleotree")
 ```
 	
 The latest pre-release version of `paleotree` can be found at github:

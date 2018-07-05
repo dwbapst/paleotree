@@ -1,4 +1,6 @@
 
+# internal function for use with createMrBayesTipDatingNexus
+
 parseNexusFile<-function(origNexusFile=origNexusFile,asIs=TRUE){
 	# if asIs, then the morph Nexus never gets broken down or parsed beyond being scanned
 	morphNexusAsIs<-readLines(con=origNexusFile,warn=FALSE)

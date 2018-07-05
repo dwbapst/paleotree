@@ -356,6 +356,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 			if(parseOriginalNexus){
 				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=FALSE)
 				remakeDataBlockFun<-nexusData$remakeDataBlockFun
+				morphNexus<-nexusData$morphNexusAsIs
 			}else{
 				stop("Cannot use an option for multiple OTUs if you don't parse your NEXUS file")
 				}
@@ -366,8 +367,10 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		if(!is.null(origNexusFile)){
 			if(parseOriginalNexus){
 				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=FALSE)
+				morphNexus<-nexusData$morphNexusAsIs
 			}else{
 				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=TRUE)
+				morphNexus<-nexusData
 				}
 			}	
 		}
@@ -423,7 +426,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 			}
 		}
 	#
-	# test if consistent with from origNexusFile, if parsed
+	# test if consistent with taxa from origNexusFile, if parsed
 	if(parseOriginalNexus & !is.null(origNexusFile)){
 		nexusTaxa<-nexusData$taxonNames
 		missingTip<-taxaTipTimes[sapply(taxaTipTimes,function(x) all(x!=nexusTaxa))]
@@ -569,6 +572,8 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		}else{
 			morphNexus<-" "
 			}
+	}else{
+		morphNexus<-nexusFile
 		}
 	########################################################
 	# get runName if not supplied

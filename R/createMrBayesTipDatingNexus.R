@@ -345,6 +345,9 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		stop("Only one of outgroupTaxa or treeConstraints can be provided. 
 		If the ingroup monophyly is not enforced on the provided treeConstraints, please add this split to treeConstraints")
 		}	
+	####################################################################################
+	# make morphNexus as NULL so can test later that its been replaced
+	morphNexus<-NULL
 	##################################################################################
 	# provide new whichAppearance options: 'firstLast', 'rangeThrough'
 		# rangeThrough will require checking tipTimes for sequential intervals
@@ -572,9 +575,15 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		}else{
 			morphNexus<-" "
 			}
-	}else{
-		morphNexus<-nexusFile
 		}
+	########################################
+	# check that morphNexus has been replaced
+	if(is.null(morphNexus)){
+		stop("a morphological nexus was neither provided nor created - please contact dwbapst@gmail.com about this bug")
+		}
+	#}else{
+	#	morphNexus<-nexusFileText
+	#	}
 	########################################################
 	# get runName if not supplied
 	if(is.null(runName)){

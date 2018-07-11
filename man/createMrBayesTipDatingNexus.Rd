@@ -316,7 +316,13 @@ Bapst, D. W., H. A. Schreiber, and S. J. Carlson. In press. Combined analysis of
 (Brachiopoda) using morphological and molecular data. \emph{Systematic Biology} doi: 10.1093/sysbio/syx049
 }
 \seealso{
-\code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipCalibrations}}, , \code{\link{cal3}}
+This function wraps various aspects of the functions \code{\link{createMrBayesConstraints}}
+and \code{\link{createMrBayesTipCalibrations}}. In many ways, this functionality is a
+replacement for the probabilistic dating method \code{\link{cal3}}.
+
+For putting the posterior estimated trees on an absolute time scale, see
+functions \code{\link{obtainDatedPosteriorTreesMrB}}, with \code{getFixedTimes = TRUE}
+if you used a taxon with a fixed age, and function \code{\link{setRootAges}}.
 }
 \author{
 David W. Bapst. This code was produced as part of a project 

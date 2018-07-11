@@ -26,7 +26,9 @@ The input tree is output, with a new \code{$root.time} element.
 This function uses a table of fixed dates for operational-taxon-units (tip taxa) to calculate the absolute
 age of the root divergence for a tree with branch lengths, and then appends this root age to the tree
 as a \code{$root.time} element, and then outputs the tree. Function \code{setRootAges} is a wrapper for
-\code{setRootAge} for use with multiple trees in a "multiPhylo" object.
+\code{setRootAge} for use with multiple trees in a "multiPhylo" object. This function was mainly written for
+dealing with trees of extinct taxa dated in units of absolute time from Bayesian analyses, such as with MrBayes, 
+with trees scaled to time units by functions such as \code{\link{obtainDatedPosteriorTreesMrB}}.
 }
 \details{
 Trees of fossil taxa come with one issue rarely encountered by those dealing with molecular
@@ -54,7 +56,10 @@ axisPhylo()
 
 }
 \seealso{
-See argument \code{\link{obtainDatedPosteriorTreesMrB}}
+\code{setRootAges} is designed to work by default with trees on relative
+time-scales dated by \code{\link{obtainDatedPosteriorTreesMrB}}, particularly
+when the argument with \code{getFixedTimes = TRUE} is used to obtain fixed tip
+ages for anchoring the tree against an absolute time-scale.
 }
 \author{
 David W. Bapst

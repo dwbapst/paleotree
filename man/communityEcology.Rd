@@ -120,8 +120,8 @@ clustRes <- hclust(rhoDist)
 plot(clustRes)
 
 # Principle Coordinates Analysis
-pcoRes  <-  pcoa(rhoDist,correction = "lingoes")
-scores  <-  pcoRes$vectors
+pcoRes <- pcoa(rhoDist,correction = "lingoes")
+scores <- pcoRes$vectors
 #plot the PCO
 plot(scores,type = "n")
 text(labels = rownames(kanto),scores[,1],scores[,2],cex = 0.5)

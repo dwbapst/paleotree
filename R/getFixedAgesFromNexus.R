@@ -34,7 +34,7 @@ getMrBFixedAgesFromNexus <- function(origNexusFile){
 	origNexus <- scan(file = origNexusFile,what = character(), #sep = "\n",
 		quiet = TRUE, comment.char = "[", strip.white = TRUE)
 	#
-	origNexus  <-  readChar(origNexusFile, file.info(origNexusFile)$size)
+	origNexus <- readChar(origNexusFile, file.info(origNexusFile)$size)
 	# remove white space
 	origNexus <- gsub(origNexus,pattern = " ",replacement = "")
 	origNexus <- gsub(origNexus,pattern = "\t",replacement = "")

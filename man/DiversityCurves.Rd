@@ -152,25 +152,25 @@ taxa <- fossilRecord2fossilTaxa(record)
 #plot the FADs and LADs with taxicDivCont()
 taxicDivCont(taxa)
 #simulate a fossil record with imperfect sampling with sampleRanges
-rangesCont  <-  sampleRanges(taxa,r = 0.5)
+rangesCont <- sampleRanges(taxa,r = 0.5)
 #plot the diversity curve based on the sampled ranges
 layout(1:2)
 taxicDivCont(rangesCont)
 #Now let's use binTimeData to bin in intervals of 1 time unit
-rangesDisc  <-  binTimeData(rangesCont,int.length = 1)
+rangesDisc <- binTimeData(rangesCont,int.length = 1)
 #plot with taxicDivDisc
 taxicDivDisc(rangesDisc)
 #compare to the continuous time diversity curve
 
 layout(1)
 #Now let's make a tree using taxa2phylo
-tree  <-  taxa2phylo(taxa,obs_time = rangesCont[,2])
+tree <- taxa2phylo(taxa,obs_time = rangesCont[,2])
 phyloDiv(tree)
 
 #a simple example with phyloDiv
   #using a tree from rtree in ape
 set.seed(444)
-tree  <-  rtree(100)
+tree <- rtree(100)
 phyloDiv(tree)
 
 #a neat example of using phyDiv with timeSliceTree 
@@ -184,11 +184,11 @@ taxicDivCont(taxa)
 #that's the whole diversity curve
 #with timeSliceTree we could look at the lineage accumulation curve 
  #we'd get of species sampled at a point in time
-tree  <-  taxa2phylo(taxa)
+tree <- taxa2phylo(taxa)
 #use timeSliceTree to make tree of relationships up until time = 950 
-tree950  <-  timeSliceTree(tree,sliceTime = 950,plot = TRUE,drop.extinct = FALSE)
+tree950 <- timeSliceTree(tree,sliceTime = 950,plot = TRUE,drop.extinct = FALSE)
 #use drop.extinct = T to only get the tree of lineages extant at time = 950
-tree950  <-  timeSliceTree(tree,sliceTime = 950,plot = TRUE,drop.extinct = TRUE)
+tree950 <- timeSliceTree(tree,sliceTime = 950,plot = TRUE,drop.extinct = TRUE)
 #now its an ultrametric tree with many fewer tips...
 #lets plot the lineage accumulation plot on a log scale
 phyloDiv(tree950,plotLogRich = TRUE)
@@ -198,10 +198,10 @@ set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
 nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
-taxaDiv  <-  taxicDivCont(taxa)
+taxaDiv <- taxicDivCont(taxa)
 #simulate a fossil record with imperfect sampling with sampleRanges()
-rangesCont  <-  sampleRanges(taxa,r = 0.5)
-rangesDisc  <-  binTimeData(rangesCont,int.length = 10)
+rangesCont <- sampleRanges(taxa,r = 0.5)
+rangesDisc <- binTimeData(rangesCont,int.length = 10)
 #now let's plot with taxicDivDisc() but with the intervals from taxaDiv
  #by default, split.int = TRUE
 taxicDivDisc(rangesDisc,int.times = taxaDiv[,1:2],split.int = TRUE)

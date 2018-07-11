@@ -137,7 +137,7 @@ colnames(charMat) <- NULL
 charMat[is.na(charMatDicrano)] <- "?"
 
 # the 'outgroup' is Exigraptus, first taxon listed in the matrix
-exhaustionResults  <-  accioExhaustionCurve(phyloTree = dicranoTree,
+exhaustionResults <- accioExhaustionCurve(phyloTree = dicranoTree,
    charData = charMat, charTypes = "unordered",
    outgroup = "Exigraptus_uniformis")
 

@@ -48,7 +48,7 @@
 #'	nTotalTaxa = c(30,40), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' #get the true time-sclaed tree
-#' tree1  <-  taxa2phylo(taxa)
+#' tree1 <- taxa2phylo(taxa)
 #'
 #' #now let's try dateNodes
 #' dateNodes(tree1)
@@ -71,7 +71,7 @@ dateNodes <- function(tree,rootAge = tree$root.time,labelDates = FALSE,tolerance
 	if(is.null(tree$edge.length)){stop("tree does not appear to have edge lengths?")}
 	nodeRelTimes <- node.depth.edgelength(tree)
 	if(is.null(rootAge)){
-		rootAge  <-  max(nodeRelTimes)
+		rootAge <- max(nodeRelTimes)
 		message("Root age not given; treating tree as if latest tip was at modern day (time = 0)")}
 	res <- rootAge-nodeRelTimes
 	if(any(res<(-tolerance))){

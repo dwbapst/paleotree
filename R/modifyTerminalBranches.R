@@ -133,7 +133,7 @@
 #' #simulate a fossil record with imperfect sampling with sampleRanges
 #' rangesCont <- sampleRanges(taxa,r = 0.5)
 #' #Now let's make a tree using taxa2phylo
-#' tree  <-  taxa2phylo(taxa,obs_time = rangesCont[,2])
+#' tree <- taxa2phylo(taxa,obs_time = rangesCont[,2])
 #' #compare the two trees
 #' layout(1:2)
 #' plot(ladderize(tree))
@@ -147,17 +147,17 @@
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' tree <- taxa2phylo(taxa)
 #' phyloDiv(tree)
-#' tree1  <-  dropExtinct(tree)
+#' tree1 <- dropExtinct(tree)
 #' phyloDiv(tree1)
-#' tree2  <-  dropExtant(tree)
+#' tree2 <- dropExtant(tree)
 #' phyloDiv(tree2)
 #'
 #' #graphics.off()
 #' 
 #' #example using addTermBranchLength
 #' set.seed(444)
-#' treeA  <-  rtree(10)
-#' treeB  <-  addTermBranchLength(treeA,1)
+#' treeA <- rtree(10)
+#' treeB <- addTermBranchLength(treeA,1)
 #' compareTermBranches(treeA,treeB)
 #' 
 #' #########################

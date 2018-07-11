@@ -204,19 +204,19 @@
 #' 
 #' # let's simulate some taxon ranges from an imperfectly sampled fossil record
 #' set.seed(444)
-#' record  <-  simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
 #'	nTotalTaxa = c(30,40), nExtant = 0)
-#' taxa  <-  fossilRecord2fossilTaxa(record)
-#' rangesCont  <-  sampleRanges(taxa,r = 0.5)
+#' taxa <- fossilRecord2fossilTaxa(record)
+#' rangesCont <- sampleRanges(taxa,r = 0.5)
 #' #bin the ranges into discrete time intervals
-#' rangesDisc  <-  binTimeData(rangesCont,int.length = 5)
+#' rangesDisc <- binTimeData(rangesCont,int.length = 5)
 #' 
 #' #apply make_inverseSurv
 #' likFun <- make_inverseSurv(rangesDisc)
 #' #use constrainParPaleo to make the model time-homogenous
 #'   	#match.all~match.all will match parameters so only 2 pars: p = q and r
 #' constrFun <- constrainParPaleo(likFun,match.all~match.all)
-#' results  <-  optim(parInit(constrFun), constrFun,
+#' results <- optim(parInit(constrFun), constrFun,
 #'       lower = parLower(constrFun), upper = parUpper(constrFun),
 #'       method = "L-BFGS-B", control = list(maxit = 1000000))
 #' results
@@ -250,8 +250,8 @@ make_inverseSurv <- function(timeList,groups = NULL,p_cont = TRUE,q_cont = TRUE,
 		#record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
 		#	nTotalTaxa = c(30,40), nExtant = 0)
 		#taxa <- fossilRecord2fossilTaxa(record)
-		#rangesCont  <-  sampleRanges(taxa,r = 0.5,,modern.samp.prob = 1)
-		#timeList  <-  binTimeData(rangesCont,int.length = 1)
+		#rangesCont <- sampleRanges(taxa,r = 0.5,,modern.samp.prob = 1)
+		#timeList <- binTimeData(rangesCont,int.length = 1)
 		#PA_n <- "fixed";p_cont = T;q_cont = F
 		#groups <- cbind(sample(0:1,nrow(timeList[[2]]),replace = TRUE),
 		#	sample(0:1,nrow(timeList[[2]]),replace = TRUE))

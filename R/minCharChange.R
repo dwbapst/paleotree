@@ -507,7 +507,7 @@ ancPropStateMat <- function(trait, tree, orderedChar = FALSE, type = "MPR", cost
 		unqState <- unique(c(trait))
 		#identify unique non-ambiguous states
 		isAmbigState <- sapply(unqState,function(x) any(sapply(ambiguity,identical,x)))
-		trueStates  <-  sort(unqState[!isAmbigState], na.last = TRUE)
+		trueStates <- sort(unqState[!isAmbigState], na.last = TRUE)
 	}else{
 		#get trueStates from contrast
 		trueStates <- colnames(contrast)
@@ -535,8 +535,8 @@ ancPropStateMat <- function(trait, tree, orderedChar = FALSE, type = "MPR", cost
 	if(length(anc1[[1]])<1){
 		stop("Ancestral reconstruction returned by ancestral.pars is empty, check arguments involving state codings")}
 	#pull final contrast table
-	contrastTable  <-  attr(anc1, "contrast")
-	dimnames(contrastTable)  <-  list(attr(anc1, "allLevels"), attr(anc1, "levels"))
+	contrastTable <- attr(anc1, "contrast")
+	dimnames(contrastTable) <- list(attr(anc1, "allLevels"), attr(anc1, "levels"))
 	#turn into a col-per-state matrix with each row a node or tip, numbered as in edge
 	anc2 <- matrix(unlist(anc1),,length(attr(anc1, "levels")),byrow = T)
 	#based on conversation with Klaus on 04-17-15
@@ -563,7 +563,7 @@ buildContrastPoly <- function(trait, polySymbol = "&", ambiguity = c(NA, "?")){
 	containPoly <- sapply(unqState,grepl,pattern = polySymbol)
 	#identify unique non-poly, non-ambiguous states
 	isAmbig <- sapply(unqState,function(x) any(sapply(ambiguity,identical,x)))
-	trueStates  <-  sort(unqState[!containPoly & !isAmbig], na.last = TRUE)
+	trueStates <- sort(unqState[!containPoly & !isAmbig], na.last = TRUE)
 	#WAIT also need to include all partial states from poly codings 06-04-15
 		# a state might not be listed 'alone'
 		# might only be listed for polymorphic taxon!

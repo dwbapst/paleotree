@@ -76,9 +76,9 @@
 #'	nTotalTaxa = c(30,40), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' #simulate a fossil record with imperfect sampling with sampleRanges
-#' rangesCont  <-  sampleRanges(taxa,r = 0.1)
+#' rangesCont <- sampleRanges(taxa,r = 0.1)
 #' #Now let's use binTimeData to bin in intervals of 5 time units
-#' rangesDisc  <-  binTimeData(rangesCont,int.length = 5)
+#' rangesDisc <- binTimeData(rangesCont,int.length = 5)
 #' 
 #' #now, get an estimate of the sampling rate (we set it to 0.5 above)
 #' #for discrete data we can estimate the sampling probability per interval (R)
@@ -88,7 +88,7 @@
 #' #expect R = ~0.39
 #' 
 #' #now we can apply freqRat to get sampling probability
-#' SampProb  <-  freqRat(rangesDisc,plot = TRUE)
+#' SampProb <- freqRat(rangesDisc,plot = TRUE)
 #' SampProb
 #'
 #' #est. R = ~0.25 

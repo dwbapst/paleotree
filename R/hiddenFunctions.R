@@ -38,14 +38,14 @@ constrainParsePaleo <- function(formula, names.lhs, names.rhs,extra = NULL){
 	## If it is an expression, then all variable names must be found in
 	## names.rhs (or perhaps in the containing environment - check in the future?)
 	# 
-	formula  <-  as.formula(formula)
+	formula <- as.formula(formula)
 	if ( length(formula)  !=  3L ) {stop("Invalid formula")}
-	lhs  <-  formula[[2]]	#of type symbol
-	rhs  <-  formula[[3]]	#of type language
+	lhs <- formula[[2]]	#of type symbol
+	rhs <- formula[[3]]	#of type language
 	 ## Checking the lhs is easy: is the lhs in the list of allowable
 	 ## names and of length 1? Anything that does not match this is invalid.
 	if ( !is.name(lhs) ) {stop("Invalid target on LHS of formula" )}	#If one result term in formula, is.name = true
-	lhs.is.target  <-  is.na(match(as.character(lhs), names.lhs))
+	lhs.is.target <- is.na(match(as.character(lhs), names.lhs))
 	 ## Checking the rhs is more difficult. We are OK if any of the
 	 ## following is met:
 	 ## Numeric values (checked at the end)
@@ -54,13 +54,13 @@ constrainParsePaleo <- function(formula, names.lhs, names.rhs,extra = NULL){
 	 ## Failing that, if the rhs is a single variable that does exist in
 	 ## the calling environment.
 	if( is.language(rhs) ) {
-		vars  <-  all.vars(rhs)
-		ok  <-  (all(vars %in% names.rhs) || length(vars)  ==  1 && vars %in% extra)
+		vars <- all.vars(rhs)
+		ok <- (all(vars %in% names.rhs) || length(vars)  ==  1 && vars %in% extra)
 		if( !ok && length(vars)  ==  1 ) {
-			e  <-  parent.frame()
+			e <- parent.frame()
 			if( exists(vars, e) ) {
-				rhs  <-  get(vars, e)
-				ok  <-  TRUE
+				rhs <- get(vars, e)
+				ok <- TRUE
 				}
    			}
 		if( !ok ){stop("Invalid RHS of formula:\n\t", as.character(rhs))}
@@ -68,18 +68,18 @@ constrainParsePaleo <- function(formula, names.lhs, names.rhs,extra = NULL){
 	}else{
 		if( !is.numeric(rhs) ) {stop("RHS must be expression, variable or number")}
 		}
-	res  <-  list(lhs, rhs)
-  	attr(res, "lhs.is.target")  <-  lhs.is.target
+	res <- list(lhs, rhs)
+  	attr(res, "lhs.is.target") <- lhs.is.target
 	return(res)
 	}
 
 expandConstrainForm <- function(formula,breakNames,nparcat){
 	#another function to be hidden at all costs
 	#take an expression like p.all~q.all 
-	formula  <-  as.formula(formula)
+	formula <- as.formula(formula)
 	if ( length(formula)  !=  3L ) {stop("Invalid formula")}
-	lhs  <-  formula[[2]]	#of type symbol
-	rhs  <-  formula[[3]]	#of type language
+	lhs <- formula[[2]]	#of type symbol
+	rhs <- formula[[3]]	#of type language
 	if ( !is.name(lhs) ) {stop("Invalid target on LHS of formula" )}	#If one result term in formula, is.name = true
 	#for now, we can only have one rhs term
 	if ( !is.name(rhs) ) {stop("Can't have more than single, non-modified RHS term with match/all" )}

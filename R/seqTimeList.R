@@ -58,13 +58,13 @@
 #'	nTotalTaxa = c(60,80), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' #simulate a fossil record with imperfect sampling with sampleRanges()
-#' rangesCont  <-  sampleRanges(taxa,r = 0.1)
+#' rangesCont <- sampleRanges(taxa,r = 0.1)
 #' 
 #' #Now let's use binTimeData to get ranges in discrete overlapping intervals
 #'     #via pre-set intervals input
-#' presetIntervals  <-  cbind(c(1000,995,990,980,970,975,960,950,940,930,900,890,888,879,875),
+#' presetIntervals <- cbind(c(1000,995,990,980,970,975,960,950,940,930,900,890,888,879,875),
 #'   c(995,989,960,975,960,950,930,930,930,900,895,888,880,875,870))
-#' rangesDisc1  <-  binTimeData(rangesCont,int.times = presetIntervals)
+#' rangesDisc1 <- binTimeData(rangesCont,int.times = presetIntervals)
 #' 
 #' seqLists <- seqTimeList(rangesDisc1,nruns = 10)
 #' seqLists$nTaxa

@@ -74,10 +74,10 @@
 #' 
 #' #can apply PCO (use lingoes correction to account for negative values
 #'    #resulting from non-euclidean matrix
-#' pco_res  <-  pcoa(charDist,correction = "lingoes")
+#' pco_res <- pcoa(charDist,correction = "lingoes")
 #' 
 #' #relative corrected eigenvalues
-#' rel_corr_eig  <-  pco_res$values$Rel_corr_eig
+#' rel_corr_eig <- pco_res$values$Rel_corr_eig
 #' layout(1:2)
 #' plot(rel_corr_eig)
 #' #cumulative
@@ -85,7 +85,7 @@
 #' 
 #' #well let's look at those PCO axes anyway
 #' layout(1)
-#' pco_axes  <-  pco_res$vectors
+#' pco_axes <- pco_res$vectors
 #' plot(pco_axes[,1],pco_axes[,2],pch = 16,
 #'    xlab = paste("PCO Axis 1, Rel. Corr. Eigenvalue  = ",round(rel_corr_eig[1],3)),
 #'    ylab = paste("PCO Axis 2, Rel. Corr. Eigenvalue  = ",round(rel_corr_eig[2],3)))

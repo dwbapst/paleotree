@@ -291,14 +291,14 @@ set.seed(2)
 
 # quick birth-death-sampling run with 1 run, 50 taxa
 
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1,
 	nTotalTaxa = 50, plot = TRUE)
 
 \donttest{ 
 # examining multiple runs of simulations
 
 #example of repeated pure birth simulations over 50 time-units
-records  <-  simFossilRecord(p = 0.1, q = 0, nruns = 10,
+records <- simFossilRecord(p = 0.1, q = 0, nruns = 10,
 	totalTime = 50, plot = TRUE)
 #plot multiple diversity curves on a log scale
 records <- lapply(records,fossilRecord2fossilTaxa)
@@ -307,7 +307,7 @@ multiDiv(records,plotMultCurves = TRUE,plotLogRich = TRUE)
 hist(sapply(records,nrow))
 
 #example of repeated birth-death-sampling simulations over 50 time-units
-records  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 10,
+records <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 10,
 	totalTime = 50, plot = TRUE)
 records <- lapply(records,fossilRecord2fossilTaxa)
 multiDiv(records,plotMultCurves = TRUE)
@@ -315,7 +315,7 @@ multiDiv(records,plotMultCurves = TRUE)
 #like above, but conditioned instead on having 10 extant taxa
 	# between 1 and 100 time-units
 set.seed(4)
-records  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 10,
+records <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 10,
 	totalTime = c(1,300), nExtant = 10, plot = TRUE)
 records <- lapply(records,fossilRecord2fossilTaxa)
 multiDiv(records,plotMultCurves = TRUE)
@@ -331,13 +331,13 @@ set.seed(1)
 	# with high extinction relative to branching
 # use default run conditions (barely any conditioning)
 # use print.runs to look at acceptance probability
-records  <-  simFossilRecord(p = 0.1, q = 0.8, nruns = 10,
+records <- simFossilRecord(p = 0.1, q = 0.8, nruns = 10,
 	print.runs = TRUE, plot = TRUE)
 # 10 runs accepted from a total of 10 !
 
 # now let's give much more stringent run conditions
 	# require 3 extant taxa at minimum, 5 taxa total minimum
-records  <-  simFossilRecord(p = 0.1, q = 0.8, nruns = 10,
+records <- simFossilRecord(p = 0.1, q = 0.8, nruns = 10,
 	nExtant = c(3,100), nTotalTaxa = c(5,100),
 	print.runs = TRUE, plot = TRUE)
 # thousands of simulations to just obtail 10 accepable runs!
@@ -380,9 +380,9 @@ records  <-  simFossilRecord(p = 0.1, q = 0.8, nruns = 10,
 # also branching rate cannot reference extinction rate
 # we'll have to set lambda0, mu and K in the rate equation directly
 
-lambda0  <-  0.3	# branching rate at 0 richness in Ltu
-K  <-  40		# carrying capacity 
-mu  <-  0.1		# extinction rate will 0.1 Ltu ( =  1/3 of lambda0)
+lambda0 <- 0.3	# branching rate at 0 richness in Ltu
+K <- 40		# carrying capacity 
+mu <- 0.1		# extinction rate will 0.1 Ltu ( =  1/3 of lambda0)
 
 # technically, mu here represents the lambda at richness = K
 	# i.e. lambdaK
@@ -396,7 +396,7 @@ branchingRateEq
 # its a thing of beauty, folks
 
 # now let's try it
-records  <-  simFossilRecord(p = branchingRateEq, q = mu, nruns = 3,
+records <- simFossilRecord(p = branchingRateEq, q = mu, nruns = 3,
 	totalTime = 100, plot = TRUE, print.runs = TRUE)
 records <- lapply(records,fossilRecord2fossilTaxa)
 multiDiv(records,plotMultCurves = TRUE)
@@ -418,7 +418,7 @@ extRateEq <- paste0(mu0,"-(",mu0,"-",muK,")*(N/",K,")")
 extRateEq
 
 # now let's try it
-records  <-  simFossilRecord(p = lambda, q = extRateEq, nruns = 3,
+records <- simFossilRecord(p = lambda, q = extRateEq, nruns = 3,
 	totalTime = 100, plot = TRUE, print.runs = TRUE)
 records <- lapply(records,fossilRecord2fossilTaxa)
 multiDiv(records,plotMultCurves = TRUE)
@@ -446,7 +446,7 @@ timeEquation <- "0.4-(0.007*T)"
 # "P" is the algebraic equivalent for "branching rate" in simFossilRecord
 
 # now let's try it
-records  <-  simFossilRecord(p = timeEquation, q = "P", nruns = 3,
+records <- simFossilRecord(p = timeEquation, q = "P", nruns = 3,
 	totalTime = 50, plot = TRUE, print.runs = TRUE)
 records <- lapply(records,fossilRecord2fossilTaxa)
 multiDiv(records,plotMultCurves = TRUE)
@@ -457,7 +457,7 @@ multiDiv(records,plotMultCurves = TRUE)
 durDepExt <- "0.01+(0.01*D)"
 
 # okay, let's take it for a spin
-records  <-  simFossilRecord(p = 0.1, q = durDepExt, nruns = 3,
+records <- simFossilRecord(p = 0.1, q = durDepExt, nruns = 3,
 	totalTime = 50, plot = TRUE, print.runs = TRUE)
 records <- lapply(records,fossilRecord2fossilTaxa)
 multiDiv(records,plotMultCurves = TRUE)
@@ -471,8 +471,10 @@ multiDiv(records,plotMultCurves = TRUE)
 # For example, we could constantly redraw
  		# the branching rate from an exponential
 
-record <- simFossilRecord(p = "rexp(n = 1,rate = 10)", q = 0.1, r = 0.1, nruns = 1,
-	nTotalTaxa = 50, plot = TRUE)
+record <- simFossilRecord(
+  p = "rexp(n = 1,rate = 10)",
+  q = 0.1, r = 0.1, nruns = 1,
+	 nTotalTaxa = 50, plot = TRUE)
 
 # Setting up specific time-variable rates can be laborious though
 	# e.g. one rate during this 10 unit interval, 
@@ -495,7 +497,7 @@ rates <- 0.1+rlnorm(100,meanlog = 1,sdlog = 1)/100
 rateEquation <- paste0("c(",paste0(rates,collapse = ","),")[1+(T\%/\%10)]")
 
 # and let's run it
-record  <-  simFossilRecord(p = rateEquation, q = 0.1, r = 0.1, nruns = 1,
+record <- simFossilRecord(p = rateEquation, q = 0.1, r = 0.1, nruns = 1,
 	totalTime = c(30,40), plot = TRUE)
 
  
@@ -507,7 +509,7 @@ record  <-  simFossilRecord(p = rateEquation, q = 0.1, r = 0.1, nruns = 1,
 # The default is pure budding cladogenesis
 	# anag.rate = prop.bifurc = prop.cryptic = 0
 # let's just set those for the moment anyway
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0,
 	nruns = 1, nTotalTaxa = c(20,30) ,nExtant = 0, plot = TRUE)
 
@@ -519,7 +521,7 @@ converted <- fossilRecord2fossilTaxa(record)
 tree <- taxa2phylo(converted,plot = TRUE)
 
 #now, an example of pure bifurcation
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0, prop.bifurc = 1, prop.cryptic = 0,
 	nruns = 1, nTotalTaxa = c(20,30) ,nExtant = 0)
 tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
@@ -528,21 +530,21 @@ tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
 	# via pseudoextinction at bifurcation events
 
 # an example with anagenesis = branching
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0.1, prop.bifurc = 0, prop.cryptic = 0,
 	nruns = 1, nTotalTaxa = c(20,30) ,nExtant = 0)
 tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
 # lots of pseudoextinction
 
 # an example with anagenesis, pure bifurcation
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0.1, prop.bifurc = 1, prop.cryptic = 0,
 	nruns = 1, nTotalTaxa = c(20,30) ,nExtant = 0)
 tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
 # lots and lots of pseudoextinction
 
 # an example with half cryptic speciation
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0.5,
 	nruns = 1, nTotalTaxa = c(20,30), nExtant = 0)
 tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
@@ -552,7 +554,7 @@ tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
 	# separate taxa by default, as controlled by count.cryptic
 
 # an example with anagenesis, bifurcation, cryptic speciation
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0.1, prop.bifurc = 0.5, prop.cryptic = 0.5,
 	nruns = 1, nTotalTaxa = c(20,30), nExtant = 0)
 tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
@@ -562,14 +564,14 @@ tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
 # an example with anagenesis, pure cryptic speciation
 	# morphotaxon identity will thus be entirely indep of branching!
 	# I wonder if this is what is really going on, sometimes...
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0.1, prop.bifurc = 0, prop.cryptic = 1,
 	nruns = 1, nTotalTaxa = c(20,30), nExtant = 0)
 tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
 
 # merging cryptic taxa when all speciation is cryptic
 set.seed(1)
-record  <-  simFossilRecord(p = 0.1,
+record <- simFossilRecord(p = 0.1,
 	q = 0.1, r = 0.1,
 	prop.crypt = 1,
 	totalTime = 50, plot = TRUE)
@@ -584,7 +586,7 @@ length(record)	#actual number of cryptic lineages
     #or total taxa including cryptic taxa with count.cryptic = FALSE
 
 # an example with pure cryptic speciation with count.cryptic = TRUE
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 1,
 	nruns = 1, totalTime = 50, nTotalTaxa = c(10,100), count.cryptic = TRUE)
 tree <- taxa2phylo(fossilRecord2fossilTaxa(record))
@@ -595,7 +597,7 @@ plot(tree);axisPhylo()
 	# or else the count.cryptic = FALSE simulation will never end!
 
 # an example with pure cryptic speciation with count.cryptic = FALSE
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 1,
 	nruns = 1, totalTime = 50, count.cryptic = FALSE)
 tree <- taxa2phylo(fossilRecord2fossilTaxa(record))
@@ -607,44 +609,44 @@ plot(tree);axisPhylo()
 #simple simulation going for 50 total taxa	
 
 #first, count.cryptic = FALSE (default)
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0.5,
 	nruns = 1, nTotalTaxa = 50, count.cryptic = FALSE)
 taxa <- fossilRecord2fossilTaxa(record)
-nrow(taxa)                 		#number of lineages (inc. cryptic)
-length(unique(taxa[,6]))            #number of morph-distinguishable taxa
+nrow(taxa)               #number of lineages (inc. cryptic)
+length(unique(taxa[,6]))     #number of morph-distinguishable taxa
 
 # and count.cryptic = TRUE
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0.5,
 	nruns = 1, nTotalTaxa = 50, count.cryptic = TRUE)
 taxa <- fossilRecord2fossilTaxa(record)
-nrow(taxa)                 		#number of lineages (inc. cryptic)
-length(unique(taxa[,6]))            #number of morph-distinguishable taxa
+nrow(taxa)                #number of lineages (inc. cryptic)
+length(unique(taxa[,6]))     #number of morph-distinguishable taxa
 
 # okay...
 # now let's try with 50 extant taxa
 
 #first, count.cryptic = FALSE (default)
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0.5,
 	nruns = 1, nExtant = 10, totalTime = c(1,100), count.cryptic = FALSE)
 taxa <- fossilRecord2fossilTaxa(record)
-sum(taxa[,5])             		  	#number of still-living lineages (inc. cryptic)
-length(unique(taxa[taxa[,5] == 1,6]))	   	#number of still-living morph-dist. taxa
+sum(taxa[,5])            #number of still-living lineages (inc. cryptic)
+length(unique(taxa[taxa[,5] == 1,6]))	#number of still-living morph-dist. taxa
 
 # and count.cryptic = TRUE
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0.5,
 	nruns = 1, nExtant = 10, totalTime = c(1,100), count.cryptic = TRUE)
 taxa <- fossilRecord2fossilTaxa(record)
-sum(taxa[,5])             		  	#number of still-living lineages (inc. cryptic)
-length(unique(taxa[taxa[,5] == 1,6]))	   	#number of still-living morph-dist. taxa
+sum(taxa[,5])           #number of still-living lineages (inc. cryptic)
+length(unique(taxa[taxa[,5] == 1,6]))	#number of still-living morph-dist. taxa
 
 #################################################
 
 # an example using startTaxa to have more initial taxa
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1,
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1,
 nTotalTaxa = 100, startTaxa = 20, plot = TRUE)
 
 ######################################################
@@ -657,25 +659,25 @@ nTotalTaxa = 100, startTaxa = 20, plot = TRUE)
 
 # let's set time = 10-100 units, total taxa = 30-40, extant = 10
 	#and look at acceptance rates with print.run
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
 	totalTime = c(10,100), nTotalTaxa = c(30,40), nExtant = 10,
 	print.runs = TRUE, plot = TRUE)
 
 # let's make the constraints on totaltaxa a little tighter
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
 	totalTime = c(50,100), nTotalTaxa = 30, nExtant = 10,
 	print.runs = TRUE, plot = TRUE)
 # still okay acceptance rates
 
 # alright, now let's add a constraint on sampled taxa
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
 	totalTime = c(50,100), nTotalTaxa = 30, nExtant = 10,
 	nSamp = 15, print.runs = TRUE, plot = TRUE)
 # still okay acceptance rates
 
 # we can be really odd and condition on having a single taxon
 set.seed(1)
-record  <-  simFossilRecord(p = 0.1,
+record <- simFossilRecord(p = 0.1,
 q = 0.1, r = 0.1, nTotalTaxa = 1,
 totalTime = c(10,20), plot = TRUE)
 
@@ -685,26 +687,29 @@ totalTime = c(10,20), plot = TRUE)
 
 #Typically, a user may want to condition on a precise
 	# number of sampled taxa in an all-extinct simulation
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
 	nTotalTaxa = c(1,100), nExtant = 0, nSamp = 20,
 	print.runs = TRUE, plot = TRUE)
 
 # Note that when simulations don't include
 # sampling or extant taxa, the plot 
 # functionality changes
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0, nruns = 1, 
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0, nruns = 1, 
 	nExtant = 0, print.runs = TRUE, plot = TRUE)
 # something similar happens when there is no sampling
 # and there are extant taxa but they aren't sampled
-record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0, nruns = 1, 
+record <- simFossilRecord(p = 0.1, q = 0.1, r = 0, nruns = 1, 
 	nExtant = 10, nTotalTaxa = 100, modern.samp.prob = 0,
 	print.runs = TRUE, plot = TRUE)
 
 
 # We can set up a test to make sure that no extant taxa somehow get
 # returned in many simulations with extinct-only conditioning:
-res <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,nTotalTaxa = 10,nExtant = 0,nruns = 1000,plot = TRUE)
-anyLive <- any(sapply(res,function(z) any(sapply(z,function(x) x[[1]][5] == 1))))
+res <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
+   nTotalTaxa = 10,nExtant = 0,nruns = 1000,plot = TRUE)
+anyLive <- any(sapply(res,function(z) 
+   any(sapply(z,function(x) x[[1]][5] == 1))))
+# test if any are still alive
 if(anyLive){
 stop("Runs have extant taxa under conditioning for none?")
 }

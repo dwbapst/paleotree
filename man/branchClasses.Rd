@@ -43,8 +43,8 @@ set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
 nTotalTaxa = c(30,40), nExtant = c(10,20))
 taxa <- fossilRecord2fossilTaxa(record)
-tree  <-  taxa2phylo(taxa)
-brlenRes  <-  branchClasses(tree)
+tree <- taxa2phylo(taxa)
+brlenRes <- branchClasses(tree)
 
 #see frequency histograms of branch lengths
 layout(1:4)

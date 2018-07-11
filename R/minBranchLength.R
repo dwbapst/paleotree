@@ -98,9 +98,9 @@ minBranchLength <- function(tree, mbl){
 			small <- min(timetree$edge.length[timetree$edge[,1] == mom[i]])
 			mom_blen <- timetree$edge.length[timetree$edge[,1] == mom[i] & timetree$edge[,2] == mom[i-1]]
 			debt[i] <- max(debt[i-1] - max(mom_blen-mbl,0),0) + max(mbl-small,0) 
-			timetree$edge.length[timetree$edge[,1] == mom[i] & timetree$edge[,2] == mom[i-1]]  <-  
+			timetree$edge.length[timetree$edge[,1] == mom[i] & timetree$edge[,2] == mom[i-1]] <- 
 			mom_blen - max(min(max(mom_blen-mbl,0),debt[i-1]),0) + max(mbl-small,0)
-			timetree$edge.length[timetree$edge[,1] == mom[i] & timetree$edge[,2] != mom[i-1]]  <-   
+			timetree$edge.length[timetree$edge[,1] == mom[i] & timetree$edge[,2] != mom[i-1]] <-  
 			timetree$edge.length[timetree$edge[,1] == mom[i] & timetree$edge[,2] != mom[i-1]] + debt[i]
 			}}
 		}

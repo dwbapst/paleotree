@@ -76,23 +76,23 @@
 #' #separate out two components of character matrix
 #' 
 #' #45 discrete characters
-#' discChar  <-  graptCharMatrix[,1:45]
+#' discChar <- graptCharMatrix[,1:45]
 #' 
 #' #min ranges for 4 continuous characters
-#' cMinChar  <-  graptCharMatrix[,c(46,48,50,52)]
+#' cMinChar <- graptCharMatrix[,c(46,48,50,52)]
 #' #max ranges for 4 continuous characters
-#' cMaxChar  <-  graptCharMatrix[,c(47,49,51,53)]
+#' cMaxChar <- graptCharMatrix[,c(47,49,51,53)]
 #' 
 #' #group (clade/paraclade) coding
-#' groupID  <-  graptCharMatrix[,54]
+#' groupID <- graptCharMatrix[,54]
 #' 
 #' #number of species
-#' nspec  <-  nrow(graptCharMatrix)
+#' nspec <- nrow(graptCharMatrix)
 #' 
 #' #some plotting information from Bapst et al.'s plotting scripts
-#' grpLabel  <-  c("Normalo.","Monogr.","Climaco.",
+#' grpLabel <- c("Normalo.","Monogr.","Climaco.",
 #' 		"Dicrano.","Lasiogr.","Diplogr.","Retiol.")
-#' grpColor  <-  c("red","purple",colors()[257],colors()[614],
+#' grpColor <- c("red","purple",colors()[257],colors()[614],
 #' 		colors()[124],"blue",colors()[556])
 #' 
 #' ##########
@@ -119,7 +119,7 @@
 #' isSymmetric(graptDistMat)
 #' 
 #' #can apply cluster analysis
-#' clustRes  <-  hclust(as.dist(graptDistMat))
+#' clustRes <- hclust(as.dist(graptDistMat))
 #' plot(clustRes,labels = FALSE)
 #' 
 #' #use ape to plot with colors at the tips
@@ -132,10 +132,10 @@
 #' 
 #' #can apply PCO (use lingoes correction to account for negative values
 #'    #resulting from non-euclidean matrix
-#' pco_res  <-  pcoa(graptDistMat,correction = "lingoes")
+#' pco_res <- pcoa(graptDistMat,correction = "lingoes")
 #' 
 #' #relative corrected eigenvalues
-#' rel_corr_eig  <-  pco_res$values$Rel_corr_eig
+#' rel_corr_eig <- pco_res$values$Rel_corr_eig
 #' layout(1:2)
 #' plot(rel_corr_eig)
 #' #cumulative
@@ -147,7 +147,7 @@
 #' 
 #' #well let's look at those PCO axes anyway
 #' layout(1)
-#' pco_axes  <-  pco_res$vectors
+#' pco_axes <- pco_res$vectors
 #' plot(pco_axes[,1],pco_axes[,2],pch = 16,col = grpColor[groupID+1],
 #'    xlab = paste("PCO Axis 1, Rel. Corr. Eigenvalue  = ",round(rel_corr_eig[1],3)),
 #'    ylab = paste("PCO Axis 2, Rel. Corr. Eigenvalue  = ",round(rel_corr_eig[2],3)))
@@ -168,23 +168,23 @@
 #' rownames(distMat) <- colnames(distMat) <- rownames(graptCharMatrix)
 #' for(i in 1:nspec){ for(j in 1:nspec){    #calculate for each pair of species
 #'    #discrete characters
-#'    di  <-  discChar[i,]     #discrete character vector for species i
-#'    dj  <-  discChar[j,]     #discrete character vector for species j
+#'    di <- discChar[i,]     #discrete character vector for species i
+#'    dj <- discChar[j,]     #discrete character vector for species j
 #'    #now calculate pair-wise differences for non-missing characters
-#'    discDiff  <-  (di != dj)[!is.na(di)&!is.na(dj)] #logical vector
+#'    discDiff <- (di != dj)[!is.na(di)&!is.na(dj)] #logical vector
 #'    #
 #'    #continuous characters: need another for() loop
-#'    contDiff  <-  numeric()
+#'    contDiff <- numeric()
 #'    for(ct in 1:4){
 #'        #if they do not overlap, a min must be greater than a max value
-#'        contDiff[ct]  <-  cMinChar[i,ct]>cMaxChar[j,ct] | cMinChar[j,ct]>cMaxChar[i,ct]
+#'        contDiff[ct] <- cMinChar[i,ct]>cMaxChar[j,ct] | cMinChar[j,ct]>cMaxChar[i,ct]
 #'        }
 #'    #remove NAs
-#'    contDiff  <-  contDiff[!is.na(contDiff)]
+#'    contDiff <- contDiff[!is.na(contDiff)]
 #'    #combine
-#'    totalDiff  <-  c(discDiff,contDiff)
+#'    totalDiff <- c(discDiff,contDiff)
 #'    #divide total difference 
-#'    distMat[i,j]  <-  sum(totalDiff)/length(totalDiff)
+#'    distMat[i,j] <- sum(totalDiff)/length(totalDiff)
 #'    }}
 #' 
 #' #but is it identical to the distance matrix already provided?
@@ -196,13 +196,13 @@
 #' rownames(distMat) <- colnames(distMat) <- rownames(graptCharMatrix)
 #' for(i in 1:(nspec-1)){ for(j in (i+1):nspec){    #calculate for each pair of species
 #'    #now calculate pair-wise differences for non-missing characters
-#'    discDiff  <-  (discChar[i,] != discChar[j,])[
+#'    discDiff <- (discChar[i,] != discChar[j,])[
 #'       !is.na(discChar[i,])&!is.na(discChar[j,])] #logical vector
 #'    #continuous characters: if they do not overlap, a min must be greater than a max value
 #'       contDiff <- sapply(1:4,function(ct)
 #'             cMinChar[i,ct]>cMaxChar[j,ct] | cMinChar[j,ct]>cMaxChar[i,ct])
 #'    #remove NAs, combine, divide total difference 
-#'    distMat[i,j]  <-  distMat[j,i]  <-  sum(c(discDiff,contDiff[!is.na(contDiff)]))/length(
+#'    distMat[i,j] <- distMat[j,i] <- sum(c(discDiff,contDiff[!is.na(contDiff)]))/length(
 #'         c(discDiff,contDiff[!is.na(contDiff)]))
 #'    }}
 #' diag(distMat) <- 0

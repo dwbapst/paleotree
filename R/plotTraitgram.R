@@ -55,8 +55,8 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' tree  <-  rtree(10)
-#' trait  <-  rTraitCont(tree)
+#' tree <- rtree(10)
+#' trait <- rTraitCont(tree)
 #' 
 #' #first, traitgram without conf intervals
 #' plotTraitgram(trait,tree,conf.int = FALSE)
@@ -67,7 +67,7 @@
 #' 
 #' # plotting simulated data
 #'     # with values for ancestral nodes as input
-#' trait  <-  rTraitCont(tree, ancestor = TRUE)
+#' trait <- rTraitCont(tree, ancestor = TRUE)
 #' plotTraitgram(tree = tree,trait = trait)
 #'
 

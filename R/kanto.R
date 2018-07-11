@@ -90,11 +90,11 @@
 #'
 #' #get bray-curtis distances
 #' library(vegan)
-#' bcDist  <-  vegdist(kanto,method = "bray")
+#' bcDist <- vegdist(kanto,method = "bray")
 #' 
 #' # do a PCO on the bray-curtis distances
-#' pcoRes  <-  pcoa(bcDist,correction = "lingoes")
-#' scores  <-  pcoRes$vectors
+#' pcoRes <- pcoa(bcDist,correction = "lingoes")
+#' scores <- pcoRes$vectors
 #' # plot the PCO
 #' plot(scores,type = "n")
 #' text(labels = rownames(kanto),scores[,1],scores[,2],cex = 0.5)
@@ -128,7 +128,7 @@
 #' 
 #' # now plot with igraph
 #' library(igraph)
-#' NNlist  <-  graph.data.frame(NNtable)
+#' NNlist <- graph.data.frame(NNtable)
 #' plot(NNlist)
 #' 
 #' #arrows point at the nearest neighbor of each sample
@@ -147,14 +147,14 @@
 #' 	# standardized to total abundance
 #' 
 #' # standardize site matrix to relative abundance
-#' siteStand  <-  decostand(kanto, method = "total")
+#' siteStand <- decostand(kanto, method = "total")
 #' # site distance matrix (Bray-Curtis)
-#' siteDist  <-  vegdist(siteStand, "bray", diag = TRUE)
+#' siteDist <- vegdist(siteStand, "bray", diag = TRUE)
 #' 
 #' # standardize taxa matrix to relative abundance
-#' taxaStand  <-  decostand(t(kanto), method = "total")
+#' taxaStand <- decostand(t(kanto), method = "total")
 #' # taxa distance matrix (Bray-Curtis)
-#' taxaDist  <-  vegdist(taxaStand, "bray", diag = TRUE)
+#' taxaDist <- vegdist(taxaStand, "bray", diag = TRUE)
 #' 
 #' ### Need to set graphic parameters for table
 #' 
@@ -175,17 +175,17 @@
 #' 	# You can do this manually too.
 #' # here we added a 0 to 'underValue' bin to 
 #' 	# the heatmap, making this bin essentially 0.
-#' colorBreaks  <-  c(0,seq(underValue,max(siteStand), 
+#' colorBreaks <- c(0,seq(underValue,max(siteStand), 
 #' 	by = max(siteStand)/(nBreaks-1)))
 #' # here we used the function rainbow to create a vector of colors.  
 #' 	# You can set these colors yourself too.  
 #' # It is important that this vector is one element 
 #' 	# less than the myBreaks vector
-#' rainColors  <-  rainbow(nBreaks) 
+#' rainColors <- rainbow(nBreaks) 
 #' # now we can add "white" onto the vector, 
 #' 	# this will be the first color bin, 
 #' 	# which we're going to set to be (essentially) 0.  
-#' rainColors  <-  c("white", rainColors) 
+#' rainColors <- c("white", rainColors) 
 #' # If you don't add white, taxa at 0 abundance get colored in
 #' 
 #' ### Plot the 2-Way Cluster
@@ -227,7 +227,7 @@
 #' 
 #' library(mvabund)
 #' 
-#' ft  <-  manyglm(formula = kanto~factor(groups))
+#' ft <- manyglm(formula = kanto~factor(groups))
 #' anova(ft)
 #' #also highly significant!
 #' 

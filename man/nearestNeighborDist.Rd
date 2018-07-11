@@ -44,7 +44,7 @@ mean(NND)
 #calculate NND for different groups
 
 #group (clade/paraclade) coding
-groupID  <-  graptCharMatrix[,54]+1
+groupID <- graptCharMatrix[,54]+1
 
 groupNND <- numeric(7)
 names(groupNND) <- c("Normalo.","Monogr.","Climaco.",

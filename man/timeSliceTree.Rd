@@ -56,12 +56,12 @@ taxicDivCont(taxa)
 
 #with timeSliceTree we could look at the lineage accumulation curve 
    #we'd get of species sampled at a point in time
-tree  <-  taxa2phylo(taxa)
+tree <- taxa2phylo(taxa)
 #use timeSliceTree to make tree of relationships up until time = 950 
-tree950  <-  timeSliceTree(tree,sliceTime = 950,plot = TRUE,drop.extinct = FALSE)
+tree950 <- timeSliceTree(tree,sliceTime = 950,plot = TRUE,drop.extinct = FALSE)
 
 #use drop.extinct = T to only get the tree of lineages extant at time = 950
-tree950  <-  timeSliceTree(tree,sliceTime = 950,plot = FALSE,drop.extinct = TRUE)
+tree950 <- timeSliceTree(tree,sliceTime = 950,plot = FALSE,drop.extinct = TRUE)
 #now its an ultrametric tree with many fewer tips...
 #lets plot the lineage accumulation plot on a log scale
 phyloDiv(tree950,plotLogRich = TRUE)

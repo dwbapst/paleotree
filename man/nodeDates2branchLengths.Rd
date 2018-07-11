@@ -61,7 +61,7 @@ notChrono$edge.length <- NULL
 # now lets try with dateNodes in paleotree
 nodeTimes <- dateNodes(chrono)
 # need to use allTipsModern = FALSE because tip ages are included
-chronoRedux  <-   nodeDates2branchLengths(tree = notChrono,
+chronoRedux <-  nodeDates2branchLengths(tree = notChrono,
     nodeDates = nodeTimes, allTipsModern = FALSE)
 # test that its the same
 (tests <- c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
@@ -76,9 +76,9 @@ notChrono$edge.length <- NULL
 # with ultrametric trees, you could just use ape's compute.brtime 
 
 # getting branching times with ape
-branchingTimes  <-  branching.times(chrono)	
+branchingTimes <- branching.times(chrono)	
 # setting those branching times with ape
-chronoRedux  <-   compute.brtime(notChrono, branchingTimes)
+chronoRedux <-  compute.brtime(notChrono, branchingTimes)
 # test that its the same
 (tests <- c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
 
@@ -86,7 +86,7 @@ chronoRedux  <-   compute.brtime(notChrono, branchingTimes)
 
 # can use branching.times from ape 
 	# (but only for ultrametric trees!)
-chronoRedux  <-   nodeDates2branchLengths(tree = notChrono,
+chronoRedux <-  nodeDates2branchLengths(tree = notChrono,
     nodeDates = branchingTimes, allTipsModern = TRUE)
 # test that its the same
 (tests <- c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
@@ -94,7 +94,7 @@ chronoRedux  <-   nodeDates2branchLengths(tree = notChrono,
 # now lets try with dateNodes in paleotree
 nodeTimes <- dateNodes(chrono)
 # need to use allTipsModern = FALSE because tip ages are included
-chronoRedux  <-   nodeDates2branchLengths(tree = notChrono,
+chronoRedux <-  nodeDates2branchLengths(tree = notChrono,
     nodeDates = nodeTimes, allTipsModern = FALSE)
 # test that its the same
 (tests <- c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
@@ -102,7 +102,7 @@ chronoRedux  <-   nodeDates2branchLengths(tree = notChrono,
 # get just the node times (remove tip dates)
 nodeOnlyTimes <- nodeTimes[-(1:Ntip(chrono))]
 # let's use the allTipsModern = TRUE setting
-chronoRedux  <-   nodeDates2branchLengths(tree = notChrono,
+chronoRedux <-  nodeDates2branchLengths(tree = notChrono,
     nodeDates = nodeOnlyTimes, allTipsModern = TRUE)
 # test that its the same
 (tests <- c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))

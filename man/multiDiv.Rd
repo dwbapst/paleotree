@@ -128,19 +128,19 @@ set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
 	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
-rangesCont  <-  sampleRanges(taxa, r = 0.5)
-rangesDisc  <-  binTimeData(rangesCont, int.length = 1)
+rangesCont <- sampleRanges(taxa, r = 0.5)
+rangesDisc <- binTimeData(rangesCont, int.length = 1)
 cladogram <- taxa2cladogram(taxa, plot = TRUE)
 #using multiDiv with very different data types
-ttree  <-  timePaleoPhy(cladogram, rangesCont, type = "basic", add.term = TRUE, plot = FALSE)
-input  <-  list(rangesCont, rangesDisc, ttree)
+ttree <- timePaleoPhy(cladogram, rangesCont, type = "basic", add.term = TRUE, plot = FALSE)
+input <- list(rangesCont, rangesDisc, ttree)
 multiDiv(input, plot = TRUE)
 
 #using fixed interval times
 multiDiv(input, int.times = rangesDisc[[1]], plot = TRUE)
 
 #using multiDiv with samples of trees
-ttrees  <-  timePaleoPhy(cladogram, rangesCont, type = "basic",
+ttrees <- timePaleoPhy(cladogram, rangesCont, type = "basic",
     randres = TRUE, ntrees = 10, add.term = TRUE)
 multiDiv(ttrees)
 #uncertainty in diversity history is solely due to 

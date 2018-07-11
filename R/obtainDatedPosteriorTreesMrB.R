@@ -208,7 +208,7 @@ obtainDatedPosteriorTreesMrB <- function(runFile,nRuns = 2,burnin = 0.5,
 	####################
 	#
 	# Specify sample start based on burnin - here 50%
-	sampleStart  <-  floor(length(treeFiles[[1]])*burnin)
+	sampleStart <- floor(length(treeFiles[[1]])*burnin)
 	#
 	# remove burnin from both
 	treeFilesBurn <- lapply(treeFiles,function(x){
@@ -233,8 +233,8 @@ obtainDatedPosteriorTreesMrB <- function(runFile,nRuns = 2,burnin = 0.5,
 		# by the estimated clock rate in the par files
 	#
 	# Function to rescale branch lengths of a phylogeny by clockrate
-	rescaleMrBTree  <-  function(phy, rate){
-		phy$edge.length  <-  phy$edge.length / rate$clockrate
+	rescaleMrBTree <- function(phy, rate){
+		phy$edge.length <- phy$edge.length / rate$clockrate
 		return(phy)
 		}
 	# now apply it

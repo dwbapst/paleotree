@@ -119,8 +119,8 @@
 #' plot(clustRes)
 #' 
 #' # Principle Coordinates Analysis
-#' pcoRes  <-  pcoa(rhoDist,correction = "lingoes")
-#' scores  <-  pcoRes$vectors
+#' pcoRes <- pcoa(rhoDist,correction = "lingoes")
+#' scores <- pcoRes$vectors
 #' #plot the PCO
 #' plot(scores,type = "n")
 #' text(labels = rownames(kanto),scores[,1],scores[,2],cex = 0.5)
@@ -215,8 +215,8 @@ pairwiseSpearmanRho <- function(x, dropAbsent = "bothAbsent", asDistance = FALSE
 	if(asDistance){
 		rhos <- (1-rhos)/2
 		result <- as.dist(rhos)
-		attr(result, 'Diag')  <-  diag
-		attr(result, 'Upper')  <-  upper
+		attr(result, 'Diag') <- diag
+		attr(result, 'Upper') <- upper
 	}else{
 		result <- rhos
 		}

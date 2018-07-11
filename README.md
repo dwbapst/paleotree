@@ -4,9 +4,9 @@ paleotree is an R package for transforming, 'a posteriori' time-scaling, and mod
 
 The most recent public release of the code is on CRAN at:
 
-	http://cran.r-project.org/web/packages/paleotree/index.html
+	[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/paleotree)](https://cran.r-project.org/package=paleotree)
 
-You can install the most recent public release version of `paleotree` in R using:
+You can install the most recent public release version of `paleotree` in R from CRAN using:
 
 ```
 install.packages("paleotree")

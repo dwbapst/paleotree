@@ -14,19 +14,19 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' tree <- rtree(500)
+#' tree  <-  rtree(500)
 #' depthRainbow(tree)
 #' 
 #' @export depthRainbow
-depthRainbow<-function(tree){
+depthRainbow <- function(tree){
 	#plots a tree with edges color-coded to depth
 	if(!inherits(tree, "phylo")){
 		stop("tree isn't of class phylo")
 		}
-	tree<-ladderize(tree)
-	ndepth<-node.depth.edgelength(tree)
-	#nodelabels(ceiling(ndepth[(Ntip(tree):Nedge(tree))+1]),node=(Ntip(tree):Nedge(tree))+1)
-	edepth<-ceiling((ndepth[(Ntip(tree):Nedge(tree))+1])[tree$edge[,1]-Ntip(tree)])+1
-	col_edge<-rainbow(max(edepth))[edepth]
-	plot(ladderize(tree),show.tip.label=FALSE,edge.color=col_edge);axisPhylo()
+	tree <- ladderize(tree)
+	ndepth <- node.depth.edgelength(tree)
+	#nodelabels(ceiling(ndepth[(Ntip(tree):Nedge(tree))+1]),node = (Ntip(tree):Nedge(tree))+1)
+	edepth <- ceiling((ndepth[(Ntip(tree):Nedge(tree))+1])[tree$edge[,1]-Ntip(tree)])+1
+	col_edge <- rainbow(max(edepth))[edepth]
+	plot(ladderize(tree),show.tip.label = FALSE,edge.color = col_edge);axisPhylo()
 	}

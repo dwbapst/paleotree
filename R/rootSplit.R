@@ -14,17 +14,17 @@
 #' @author David W. Bapst
 #' @examples
 #' 
-#' tree<-rtree(100)
+#' tree <- rtree(100)
 #' rootSplit(tree)
 #' 
 #' @export rootSplit
-rootSplit<-function(tree){
+rootSplit <- function(tree){
 	#returns a list with the daughter taxa of the two clades at the root split
 	#checks
 	if(!inherits(tree,"phylo")){
 		stop("tree must be of class 'phylo'")
 		}
-	tips<-lapply(tree$edge[tree$edge[,1]==(Ntip(tree)+1),2],function(zz) 
+	tips <- lapply(tree$edge[tree$edge[,1] == (Ntip(tree)+1),2],function(zz) 
 		if(zz>Ntip(tree)){tree$tip.label[prop.part(tree)[[zz-Ntip(tree)]]]
 			}else{tree$tip.label[zz]})
 	return(tips)

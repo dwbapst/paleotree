@@ -105,27 +105,27 @@
 #' @examples
 #' \dontrun{
 #' 
-#' MCCT<-obtainDatedPosteriorTreesMrB(
-#'  	runFile="C:\\myTipDatingAnalysis\\MrB_run_fossil_05-10-17.nex.run1.t",
-#'  	nRuns=2, burnin=0.5,
-#' 		outputTrees="MCCT", file=NULL)
+#' MCCT <- obtainDatedPosteriorTreesMrB(
+#'  	runFile = "C:\\myTipDatingAnalysis\\MrB_run_fossil_05-10-17.nex.run1.t",
+#'  	nRuns = 2, burnin = 0.5,
+#' 		outputTrees = "MCCT", file = NULL)
 #'
-#' MAP<-obtainDatedPosteriorTreesMrB(
-#'  	runFile="C:\\myTipDatingAnalysis\\MrB_run_fossil_05-10-17.nex.run1.t",
-#'  	nRuns=2, burnin=0.5, getFixedTimes = TRUE,
-#' 		outputTrees="MAP", file=NULL)
+#' MAP <- obtainDatedPosteriorTreesMrB(
+#'  	runFile = "C:\\myTipDatingAnalysis\\MrB_run_fossil_05-10-17.nex.run1.t",
+#'  	nRuns = 2, burnin = 0.5, getFixedTimes = TRUE,
+#' 		outputTrees = "MAP", file = NULL)
 #'
 #' # get a root age from the fixed ages for tips
-#' setRootAge(tree=MAP)
+#' setRootAge(tree = MAP)
 #' 
 #' #pull a hundred trees randomly from the posterior
-#' hundredRandomlySelectedTrees<-obtainDatedPosteriorTreesMrB(
-#'  	runFile="C:\\myTipDatingAnalysis\\MrB_run_fossil_05-10-17.nex.run1.t",
-#'  	nRuns=2, burnin=0.5, getFixedTimes = TRUE,
-#' 		outputTrees=100, file=NULL)
+#' hundredRandomlySelectedTrees <- obtainDatedPosteriorTreesMrB(
+#'  	runFile = "C:\\myTipDatingAnalysis\\MrB_run_fossil_05-10-17.nex.run1.t",
+#'  	nRuns = 2, burnin = 0.5, getFixedTimes = TRUE,
+#' 		outputTrees = 100, file = NULL)
 #'
 # # set the root age using the fixed ages
-#' setRootAges(trees=hundredRandomlySelectedTrees)
+#' setRootAges(trees = hundredRandomlySelectedTrees)
 #' 
 #' }
 #'
@@ -135,15 +135,15 @@
 #' @name obtainDatedPosteriorTreesMrB
 #' @rdname obtainDatedPosteriorTreesMrB
 #' @export
-obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
-	outputTrees,labelPostProb=FALSE,
-	getFixedTimes=FALSE,originalNexusFile=NULL,
-	file=NULL){
+obtainDatedPosteriorTreesMrB <- function(runFile,nRuns = 2,burnin = 0.5,
+	outputTrees,labelPostProb = FALSE,
+	getFixedTimes = FALSE,originalNexusFile = NULL,
+	file = NULL){
 	#checks
-	if(length(outputTrees)!=1){
+	if(length(outputTrees) != 1){
 		stop("outputTrees must be of length 1")
 		}
-	if(all(outputTrees!=c("all","MCCT","MAP")) & !is.numeric(outputTrees)){
+	if(all(outputTrees != c("all","MCCT","MAP")) & !is.numeric(outputTrees)){
 		stop("outputTrees must be one of 'all', 'MCCT', or a numeric value indicating the number of trees to randomly sample from the posterior")
 		}
 	if(is.numeric(outputTrees)){	
@@ -160,24 +160,24 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 	# all needed .p and .t files must be in the same directory as this file
 	#
 	# take indicated file and get the basic run name
-	runPath<-strsplit(runFile,split="\\.run")[[1]]
-	if(length(runPath)!=2){
+	runPath <- strsplit(runFile,split = "\\.run")[[1]]
+	if(length(runPath) != 2){
 		stop("Unable to parse the runPath correctly")
 		}
-	runPath<-runPath[[1]]
+	runPath <- runPath[[1]]
 	# get list of tree files
-	treeFiles<-lapply(1:nRuns,function(x){
-		read.nexus(file=paste0(runPath,".run",x,".t"))}
+	treeFiles <- lapply(1:nRuns,function(x){
+		read.nexus(file = paste0(runPath,".run",x,".t"))}
 		)
 	# get list of .p files
-	parFiles<-lapply(1:nRuns,function(x)
-		read.table(file=paste0(runPath,".run",x,".p"),
-			 header = T, skip=1)
+	parFiles <- lapply(1:nRuns,function(x)
+		read.table(file = paste0(runPath,".run",x,".p"),
+			 header = T, skip = 1)
 		)
 	#############################
 	# checks for length 
 	for(i in 1:nRuns){
-		if(length(treeFiles[[i]])!=nrow(parFiles[[i]])){
+		if(length(treeFiles[[i]]) != nrow(parFiles[[i]])){
 			stop("Parameter data and tree data not of the same length")
 			}
 		}
@@ -198,32 +198,32 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 	if(getFixedTimes){
 		if(is.null(originalNexusFile)){
 			# file name, if presuming shares run name with 
-			#originalNexusFile<-paste0(runPath,".nex")
-			originalNexusFile<-runPath
+			#originalNexusFile <- paste0(runPath,".nex")
+			originalNexusFile <- runPath
 			}
-		fixedTable<-getMrBFixedAgesFromNexus(originalNexusFile)
+		fixedTable <- getMrBFixedAgesFromNexus(originalNexusFile)
 	}else{
-		fixedTable<-NULL
+		fixedTable <- NULL
 		}
 	####################
 	#
 	# Specify sample start based on burnin - here 50%
-	sampleStart <- floor(length(treeFiles[[1]])*burnin)
+	sampleStart  <-  floor(length(treeFiles[[1]])*burnin)
 	#
 	# remove burnin from both
-	treeFilesBurn<-lapply(treeFiles,function(x){
-		startSamp<-floor(length(x)*burnin)
+	treeFilesBurn <- lapply(treeFiles,function(x){
+		startSamp <- floor(length(x)*burnin)
 		x[startSamp:length(x)]
 		}
 	)
-	parFilesBurn<-lapply(parFiles,function(x){
-		startSamp<-floor(nrow(x)*burnin)
+	parFilesBurn <- lapply(parFiles,function(x){
+		startSamp <- floor(nrow(x)*burnin)
 		x[startSamp:nrow(x),]
 		}
 	)
 	# checks for length again
 	for(i in 1:nRuns){
-		if(length(treeFilesBurn[[i]])!=nrow(parFilesBurn[[i]])){
+		if(length(treeFilesBurn[[i]]) != nrow(parFilesBurn[[i]])){
 			stop("Parameter data and tree data not of the same length")
 			}
 		}
@@ -233,12 +233,12 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 		# by the estimated clock rate in the par files
 	#
 	# Function to rescale branch lengths of a phylogeny by clockrate
-	rescaleMrBTree <- function(phy, rate){
-		phy$edge.length <- phy$edge.length / rate$clockrate
+	rescaleMrBTree  <-  function(phy, rate){
+		phy$edge.length  <-  phy$edge.length / rate$clockrate
 		return(phy)
 		}
 	# now apply it
-	rescaledTrees<-lapply(1:nRuns,function(x){ 
+	rescaledTrees <- lapply(1:nRuns,function(x){ 
 		lapply(1:length(treeFilesBurn[[x]]),function(y){
 			rescaleMrBTree(treeFilesBurn[[x]][[y]],parFilesBurn[[x]][y,])
 			})
@@ -248,40 +248,40 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 	# attach marginal likelihoods to each tree
 	for(i in 1:nRuns){
 		for(j in 1:length(rescaledTrees[[i]])){
-			rescaledTrees[[i]][[j]]$LnPr<-parFilesBurn[[i]][j,]$LnPr
+			rescaledTrees[[i]][[j]]$LnPr <- parFilesBurn[[i]][j,]$LnPr
 			}
 		}
 	# concatanate trees from each run
-	lumpTrees<-unlist(rescaledTrees,recursive=FALSE)
-	class(lumpTrees)<-"multiPhylo"
+	lumpTrees <- unlist(rescaledTrees,recursive = FALSE)
+	class(lumpTrees) <- "multiPhylo"
 	#
 	##########################################
 	#
-	if(outputTrees=="all"){
-		outTree<-lumpTrees
+	if(outputTrees == "all"){
+		outTree <- lumpTrees
 		if(labelPostProb){
 			# assign posterior probabilities as node labels
-			outTree<-lapply(outTree,getPosteriorProbabiities,postBurninTrees=lumpTrees)
+			outTree <- lapply(outTree,getPosteriorProbabiities,postBurninTrees = lumpTrees)
 			}
 		}
 	#
-	if(outputTrees=="MAP"){
+	if(outputTrees == "MAP"){
 		# get MAP
-		LnPr<-sapply(lumpTrees,function(x) x$LnPr)
-		whichMAP<-which(LnPr==max(LnPr))
-		outTree<-lumpTrees[[whichMAP]]
+		LnPr <- sapply(lumpTrees,function(x) x$LnPr)
+		whichMAP <- which(LnPr == max(LnPr))
+		outTree <- lumpTrees[[whichMAP]]
 		if(labelPostProb){
 			# assign posterior probabilities as node labels
-			outTree<-getPosteriorProbabiities(tree=outTree,postBurninTrees=lumpTrees)
+			outTree <- getPosteriorProbabiities(tree = outTree,postBurninTrees = lumpTrees)
 			}
 		}
 	#
-	if(outputTrees=="MCCT"){
+	if(outputTrees == "MCCT"){
 		# turns out the MCCT isn't the tree with the highest likelihood
-		outTree<-phangorn::maxCladeCred(lumpTrees)
+		outTree <- phangorn::maxCladeCred(lumpTrees)
 		if(labelPostProb){
 			# assign posterior probabilities as node labels
-			outTree<-getPosteriorProbabiities(tree=outTree,postBurninTrees=lumpTrees)
+			outTree <- getPosteriorProbabiities(tree = outTree,postBurninTrees = lumpTrees)
 			}
 		}
 	#
@@ -293,20 +293,20 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 				") greater than the total number of post-burning trees (",
 				length(lumpTrees),")"))
 			}
-		whichOutput<-sample(length(lumpTrees),outputTrees,replace=FALSE)
-		outTree<-lumpTrees[whichOutput]
+		whichOutput <- sample(length(lumpTrees),outputTrees,replace = FALSE)
+		outTree <- lumpTrees[whichOutput]
 		if(labelPostProb){
 			# assign posterior probabilities as node labels
 			if(outputTrees>1){
-				outTree<-lapply(outTree,getPosteriorProbabiities,postBurninTrees=lumpTrees)
+				outTree <- lapply(outTree,getPosteriorProbabiities,postBurninTrees = lumpTrees)
 			}else{
-				outTree<-getPosteriorProbabiities(tree=outTree,postBurninTrees=lumpTrees)
+				outTree <- getPosteriorProbabiities(tree = outTree,postBurninTrees = lumpTrees)
 				}
 			}
 		}
 	########################################
 	if(!is.null(file)){
-		write.nexus(outTree, file=file)
+		write.nexus(outTree, file = file)
 		if(!is.null(fixedTable)){
 			print("You may need to know which tip ages were fixed to a precise date")
 			print("in order to assign absolute dates to the tree, as follows:")
@@ -314,16 +314,16 @@ obtainDatedPosteriorTreesMrB<-function(runFile,nRuns=2,burnin=0.5,
 			}
 	}else{
 		if(!is.null(fixedTable)){
-			attr(outTree,"fixedTable")<-fixedTable
+			attr(outTree,"fixedTable") <- fixedTable
 			}
 		return(outTree)
 		}
 	}
 
-getPosteriorProbabiities<-function(tree,postBurninTrees){
-	cladeFreq<-prop.clades(tree,postBurninTrees)
-	postProbs<-cladeFreq/length(postBurninTrees)
-	tree$node.label<-postProbs
+getPosteriorProbabiities <- function(tree,postBurninTrees){
+	cladeFreq <- prop.clades(tree,postBurninTrees)
+	postProbs <- cladeFreq/length(postBurninTrees)
+	tree$node.label <- postProbs
 	return(tree)
 	}
 

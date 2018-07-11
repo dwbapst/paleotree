@@ -105,25 +105,25 @@ data(retiolitinae)
 # uniform prior, with a 10 million year offset for
 	# the expected tree age from the earliest first appearance
 
-createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-	ageCalibrationType="uniformRange", treeAgeOffset=10)
+createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
+	ageCalibrationType = "uniformRange", treeAgeOffset = 10)
 
 # fixed prior, at the earliest bound for the first appearance
 
-createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-	ageCalibrationType="fixedDateEarlier", treeAgeOffset=10)
+createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
+	ageCalibrationType = "fixedDateEarlier", treeAgeOffset = 10)
 
 # fixed prior, sampled from between the bounds on the last appearance
 	# you should probably never do this, fyi
 
-createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-	ageCalibrationType="fixedDateRandom", treeAgeOffset=10)
+createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
+	ageCalibrationType = "fixedDateRandom", treeAgeOffset = 10)
 
 
 \dontrun{
 
-createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-	ageCalibrationType="uniformRange", treeAgeOffset=10, file="tipCalibrations.txt")
+createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
+	ageCalibrationType = "uniformRange", treeAgeOffset = 10, file = "tipCalibrations.txt")
 
 }
 

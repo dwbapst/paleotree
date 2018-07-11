@@ -23,7 +23,7 @@ What does it mean to scale every edge of the phylogeny to the same length?
 \examples{
 
 set.seed(444)
-tree <- rtree(10)
+tree  <-  rtree(10)
 layout(1:2)
 plot(tree)
 plot(unitLengthTree(tree))

@@ -44,24 +44,24 @@
 #' @examples
 #' #let's simulate some example data
 #' set.seed(444)
-#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
-#'	nTotalTaxa=c(30,40), nExtant=0)
-#' taxa<-fossilRecord2fossilTaxa(record)
+#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+#'	nTotalTaxa = c(30,40), nExtant = 0)
+#' taxa <- fossilRecord2fossilTaxa(record)
 #' #get the true time-sclaed tree
-#' tree1 <- taxa2phylo(taxa)
+#' tree1  <-  taxa2phylo(taxa)
 #'
 #' #now let's try dateNodes
 #' dateNodes(tree1)
 #' 
 #' #let's ignore $root.time
-#' dateNodes(tree1,rootAge=NULL)
+#' dateNodes(tree1,rootAge = NULL)
 #' 
 #' #with the lengthy tip-label based labels
 #'    #some of these will be hideously long
-#' dateNodes(tree1,labelDates=TRUE)
+#' dateNodes(tree1,labelDates = TRUE)
 
 #' @export
-dateNodes<-function(tree,rootAge=tree$root.time,labelDates=FALSE,tolerance=0.001){
+dateNodes <- function(tree,rootAge = tree$root.time,labelDates = FALSE,tolerance = 0.001){
 	#based on date.nodes by Graeme Lloyd, but using node.depth.edgelength
 	#checks
 	if(!inherits(tree,"phylo")){
@@ -69,17 +69,17 @@ dateNodes<-function(tree,rootAge=tree$root.time,labelDates=FALSE,tolerance=0.001
 		}
 	#test that it has edge lengths
 	if(is.null(tree$edge.length)){stop("tree does not appear to have edge lengths?")}
-	nodeRelTimes<-node.depth.edgelength(tree)
+	nodeRelTimes <- node.depth.edgelength(tree)
 	if(is.null(rootAge)){
-		rootAge <- max(nodeRelTimes)
-		message("Root age not given; treating tree as if latest tip was at modern day (time=0)")}
-	res<-rootAge-nodeRelTimes
+		rootAge  <-  max(nodeRelTimes)
+		message("Root age not given; treating tree as if latest tip was at modern day (time = 0)")}
+	res <- rootAge-nodeRelTimes
 	if(any(res<(-tolerance))){
 		message("Warning: Some dates are negative? rootAge may be incorrectly defined or you are using a time-scaling method that warps the tree, like aba or zbla.")}
 	if(labelDates){
-		names(res)<-sapply(Descendants(tree),function(x) paste0(sort(tree$tip.label[x]),collapse=" "))
+		names(res) <- sapply(Descendants(tree),function(x) paste0(sort(tree$tip.label[x]),collapse = " "))
 	}else{
-		names(res)<-1:(Ntip(tree)+Nnode(tree))
+		names(res) <- 1:(Ntip(tree)+Nnode(tree))
 		}
 	return(res)
 	}

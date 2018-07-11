@@ -24,8 +24,8 @@
 #' Should be a value of 0 to 1, NULL, or can be simply "fixed", the default option.
 #' This default "fixed" option allows \code{make_inverseSurv} to decide the value
 #' based on whether there is a modern interval (i.e. an interval that is 
-#' \code{c(0,0)}) or not: if there is one, then \code{PA_n=1}, if not, 
-#' then \code{PA_n=0}. If NULL, PA_n is treated as an additional free
+#' \code{c(0,0)}) or not: if there is one, then \code{PA_n = 1}, if not, 
+#' then \code{PA_n = 0}. If NULL, PA_n is treated as an additional free
 #' parameter in the output model.
 
 #' @param PB_1 The probability of sampling a taxon before the first interval 
@@ -135,7 +135,7 @@
 
 #'  \item{ratesPerInt}{If FALSE, the default option, the rates plotted and returned will
 #' be in units per lineage-time units, if those rates were being treated as rates for a
-#' continuous-time process (i.e. p_cont=TRUE and q_cont=TRUE for p and q, respectively,
+#' continuous-time process (i.e. p_cont = TRUE and q_cont = TRUE for p and q, respectively,
 #' while r is always per lineage-time units). Otherwise, the respective rate will be in
 #' units per lineage-interval. If ratesPerInt is TRUE instead, then \emph{all} rates, even
 #' rates modeled as continuous-time process, will be returned as per lineage-interval rates,
@@ -204,37 +204,37 @@
 #' 
 #' # let's simulate some taxon ranges from an imperfectly sampled fossil record
 #' set.seed(444)
-#' record <- simFossilRecord(p=0.1, q=0.1, nruns=1,
-#'	nTotalTaxa=c(30,40), nExtant=0)
-#' taxa <- fossilRecord2fossilTaxa(record)
-#' rangesCont <- sampleRanges(taxa,r=0.5)
+#' record  <-  simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+#'	nTotalTaxa = c(30,40), nExtant = 0)
+#' taxa  <-  fossilRecord2fossilTaxa(record)
+#' rangesCont  <-  sampleRanges(taxa,r = 0.5)
 #' #bin the ranges into discrete time intervals
-#' rangesDisc <- binTimeData(rangesCont,int.length=5)
+#' rangesDisc  <-  binTimeData(rangesCont,int.length = 5)
 #' 
 #' #apply make_inverseSurv
-#' likFun<-make_inverseSurv(rangesDisc)
+#' likFun <- make_inverseSurv(rangesDisc)
 #' #use constrainParPaleo to make the model time-homogenous
-#'   	#match.all~match.all will match parameters so only 2 pars: p=q and r
-#' constrFun<-constrainParPaleo(likFun,match.all~match.all)
-#' results <- optim(parInit(constrFun), constrFun,
-#'       lower=parLower(constrFun), upper=parUpper(constrFun),
-#'       method="L-BFGS-B", control=list(maxit=1000000))
+#'   	#match.all~match.all will match parameters so only 2 pars: p = q and r
+#' constrFun <- constrainParPaleo(likFun,match.all~match.all)
+#' results  <-  optim(parInit(constrFun), constrFun,
+#'       lower = parLower(constrFun), upper = parUpper(constrFun),
+#'       method = "L-BFGS-B", control = list(maxit = 1000000))
 #' results
 #'
 #' #plot the results
-#' constrFun(results$par, altMode=TRUE)
+#' constrFun(results$par, altMode = TRUE)
 #'
 #' #unconstrained function with ALL of 225 parameters!!!
 #'     # this will take forever to converge, so it isn't run
-#' optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
-#'       method="L-BFGS-B",control=list(maxit=1000000))
+#' optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
+#'       method = "L-BFGS-B",control = list(maxit = 1000000))
 #' }
 
 #' @name inverseSurv
 #' @rdname inverseSurv
 #' @export
-make_inverseSurv<-function(timeList,groups=NULL,p_cont=TRUE,q_cont=TRUE,
-	PA_n="fixed",PB_1=0,Nb=1,drop.extant=TRUE){
+make_inverseSurv <- function(timeList,groups = NULL,p_cont = TRUE,q_cont = TRUE,
+	PA_n = "fixed",PB_1 = 0,Nb = 1,drop.extant = TRUE){
 		#
 	#infer a seperate p, q, r for every interval
 		#PAn can be free or constrained: if last interval is modern, 1, if last interval pre-modern, 0
@@ -247,147 +247,147 @@ make_inverseSurv<-function(timeList,groups=NULL,p_cont=TRUE,q_cont=TRUE,
 	#Nb is a nuisance parameter; all parameters scale to Nb, and usually set arbitrary to 1
 	#examples
 		#library(paleotree);set.seed(444)
-		#record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
-		#	nTotalTaxa=c(30,40), nExtant=0)
-		#taxa<-fossilRecord2fossilTaxa(record)
-		#rangesCont <- sampleRanges(taxa,r=0.5,,modern.samp.prob=1)
-		#timeList <- binTimeData(rangesCont,int.length=1)
-		#PA_n<-"fixed";p_cont=T;q_cont=F
-		#groups<-cbind(sample(0:1,nrow(timeList[[2]]),replace=TRUE),
-		#	sample(0:1,nrow(timeList[[2]]),replace=TRUE))
+		#record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+		#	nTotalTaxa = c(30,40), nExtant = 0)
+		#taxa <- fossilRecord2fossilTaxa(record)
+		#rangesCont  <-  sampleRanges(taxa,r = 0.5,,modern.samp.prob = 1)
+		#timeList  <-  binTimeData(rangesCont,int.length = 1)
+		#PA_n <- "fixed";p_cont = T;q_cont = F
+		#groups <- cbind(sample(0:1,nrow(timeList[[2]]),replace = TRUE),
+		#	sample(0:1,nrow(timeList[[2]]),replace = TRUE))
 	#
-		#groups=NULL;PA_n="fixed";PB_1=0;p_cont=TRUE;q_cont=TRUE;Nb=1;dropModern=TRUE
+		#groups = NULL;PA_n = "fixed";PB_1 = 0;p_cont = TRUE;q_cont = TRUE;Nb = 1;dropModern = TRUE
 	#
-	modernTest<-apply(timeList[[1]],1,function(x) all(x==0))
+	modernTest <- apply(timeList[[1]],1,function(x) all(x == 0))
 	if(any(modernTest)){	#if modern present
 		if(sum(modernTest)>1){stop("More than one modern interval in timeList??!")}
 		#modify the taxon occurrence matrix
-		modInt<-which(modernTest)
-		newInt<-which(apply(timeList[[1]],1,function(x) x[1]!=0 & x[2]==0))
+		modInt <- which(modernTest)
+		newInt <- which(apply(timeList[[1]],1,function(x) x[1] != 0 & x[2] == 0))
 		if(length(newInt)>1){stop("More than one interval stretching to the modern in timeList??!")}
 		if(drop.extant){
-			modDroppers<-timeList[[2]][,1]==modInt
-			timeList[[2]]<-timeList[[2]][!modDroppers,]
+			modDroppers <- timeList[[2]][,1] == modInt
+			timeList[[2]] <- timeList[[2]][!modDroppers,]
 			}
 		#change all modInt references to the prior int in the taxon appearance matrix
-		timeList[[2]]<-apply(timeList[[2]],2,sapply,function(x) if(x==modInt){newInt}else{x})
+		timeList[[2]] <- apply(timeList[[2]],2,sapply,function(x) if(x == modInt){newInt}else{x})
 		#modify interval matrix
-		timeList[[1]]<-timeList[[1]][-modInt,]
-		if(PA_n=="fixed"){PA_n=1}
+		timeList[[1]] <- timeList[[1]][-modInt,]
+		if(PA_n == "fixed"){PA_n = 1}
 		}
-	if(PA_n=="fixed"){PA_n=0}	#if no modern interval, PA_n when fixed is 0
-	n<-nrow(timeList[[1]])	#number of intervals
-	int.length<-(-apply(timeList[[1]],1,diff))
+	if(PA_n == "fixed"){PA_n = 0}	#if no modern interval, PA_n when fixed is 0
+	n <- nrow(timeList[[1]])	#number of intervals
+	int.length <- (-apply(timeList[[1]],1,diff))
 	#get parNames
-	parNames<-c("p","q","r")
-	parNames<-as.vector(sapply(parNames,function(x) paste(x,1:n,sep=".")))
-	if(is.null(PB_1)){parNames<-c(parNames,c("PB_1.0"))}
-	if(is.null(PA_n)){parNames<-c(parNames,c("PA_n.0"))}
+	parNames <- c("p","q","r")
+	parNames <- as.vector(sapply(parNames,function(x) paste(x,1:n,sep = ".")))
+	if(is.null(PB_1)){parNames <- c(parNames,c("PB_1.0"))}
+	if(is.null(PA_n)){parNames <- c(parNames,c("PA_n.0"))}
 	if(!is.null(groups)){
-		if(drop.extant & any(modernTest)){groups<-groups[-modDroppers,]}
-		if(nrow(timeList[[2]])!=nrow(groups)){
+		if(drop.extant & any(modernTest)){groups <- groups[-modDroppers,]}
+		if(nrow(timeList[[2]]) != nrow(groups)){
 			stop(paste("number of rows in groups isn't equal to number of taxa in timeList",
 				if(drop.extant){"after modern taxa are dropped"}))}
 		for(i in 1:ncol(groups)){
-			parNames<-as.vector(sapply(parNames,function(x) paste(x,unique(groups[,i]),sep=".")))
+			parNames <- as.vector(sapply(parNames,function(x) paste(x,unique(groups[,i]),sep = ".")))
 			}
-		groupings<-unique(groups)
+		groupings <- unique(groups)
 		}
-	ngroup<-ifelse(is.null(groups),1,nrow(groupings))
+	ngroup <- ifelse(is.null(groups),1,nrow(groupings))
 	#break parnames into a character matrix
-	breakNames<-t(sapply(parNames,function(x) unlist(strsplit(x,split=".",fixed=TRUE))))
+	breakNames <- t(sapply(parNames,function(x) unlist(strsplit(x,split = ".",fixed = TRUE))))
 	#set bounds
-	lowerBound<-rep(0.001,length(parNames))
-	upperBound<-rep(5,length(parNames))
-	upperBound[breakNames[,1]=="PB_1"]<-1
-	upperBound[breakNames[,1]=="PA_n"]<-1
+	lowerBound <- rep(0.001,length(parNames))
+	upperBound <- rep(5,length(parNames))
+	upperBound[breakNames[,1] == "PB_1"] <- 1
+	upperBound[breakNames[,1] == "PA_n"] <- 1
 	#01-06-14 p can exceed 1 because diversity can more than double
 		# q cannot because each lineage can only go extinct once
-	#if(!p_cont){upperBound[breakNames[,1]=="p"]<-1}
-	if(!q_cont){upperBound[breakNames[,1]=="q"]<-1}
-	parbounds<-list(lowerBound,upperBound)
+	#if(!p_cont){upperBound[breakNames[,1] == "p"] <- 1}
+	if(!q_cont){upperBound[breakNames[,1] == "q"] <- 1}
+	parbounds <- list(lowerBound,upperBound)
 	#
 	#first build survivorship table
 		#get Xij number of taxa that appeared in i and continued to interval j
 		#need to get a different table for every grouping of taxa
-	obs_X_list<-list()
+	obs_X_list <- list()
 	for(k in 1:ngroup){
 		if(is.null(groups)){
-			ranges<-timeList[[2]]
+			ranges <- timeList[[2]]
 		}else{
-			ranges<-timeList[[2]][apply(groups,1,function(x) all(x==groupings[k,])),]
+			ranges <- timeList[[2]][apply(groups,1,function(x) all(x == groupings[k,])),]
 			}
 		#make survivorship table from selected ranges
-		obs_X<-matrix(0,n,n)
-		for(i in 1:n){for(j in 1:n){if(i<=j){
-			obs_X[i,j]<-sum(ranges[,1]==i & ranges[,2]==j)
+		obs_X <- matrix(0,n,n)
+		for(i in 1:n){for(j in 1:n){if(i <= j){
+			obs_X[i,j] <- sum(ranges[,1] == i & ranges[,2] == j)
 			}}}
-		obs_X_list[k]<-list(obs_X)
+		obs_X_list[k] <- list(obs_X)
 		}
 	#
-	logL_invSurv<-function(par,altMode=FALSE,plotPar=TRUE,ratesPerInt=FALSE,
-		logRates=FALSE,jitter=TRUE,legendPosition="topleft"){
-		if(length(par)!=length(parNames)){stop("Number of input parameters is not equal to number of parnames")}
+	logL_invSurv <- function(par,altMode = FALSE,plotPar = TRUE,ratesPerInt = FALSE,
+		logRates = FALSE,jitter = TRUE,legendPosition = "topleft"){
+		if(length(par) != length(parNames)){stop("Number of input parameters is not equal to number of parnames")}
 		if(!altMode){
-			logLsum<-numeric()
+			logLsum <- numeric()
 			for(z in 1:ngroup){
-				if(is.null(groups)){selector<-rep(TRUE,length(par))
-					}else{selector<-apply(breakNames,1,function(x) x[-(1:2)]==groupings[z,])}
-				parnew<-par[selector]
-				breaknew<-breakNames[selector,]
+				if(is.null(groups)){selector <- rep(TRUE,length(par))
+					}else{selector <- apply(breakNames,1,function(x) x[-(1:2)] == groupings[z,])}
+				parnew <- par[selector]
+				breaknew <- breakNames[selector,]
 				#get pars and order according to interval
-				p<-(parnew[breaknew[,1]=="p"])[order(as.numeric(breaknew[breaknew[,1]=="p",2]))]
-				q<-(parnew[breaknew[,1]=="q"])[order(as.numeric(breaknew[breaknew[,1]=="q",2]))]
-				r<-(parnew[breaknew[,1]=="r"])[order(as.numeric(breaknew[breaknew[,1]=="r",2]))]
+				p <- (parnew[breaknew[,1] == "p"])[order(as.numeric(breaknew[breaknew[,1] == "p",2]))]
+				q <- (parnew[breaknew[,1] == "q"])[order(as.numeric(breaknew[breaknew[,1] == "q",2]))]
+				r <- (parnew[breaknew[,1] == "r"])[order(as.numeric(breaknew[breaknew[,1] == "r",2]))]
 				#correct for int.length, make rates relative to interval length
 					#this means the rates we input as par are (when they are continuous) rates per Ltu
 					#taking product with interval length makes the rates per lineage interval
-				r<-r*int.length
-				if(p_cont){p<-p*int.length}
-				if(q_cont){q<-q*int.length}
+				r <- r*int.length
+				if(p_cont){p <- p*int.length}
+				if(q_cont){q <- q*int.length}
 				#	}
-				obs_X<-unlist(obs_X_list[[z]])
+				obs_X <- unlist(obs_X_list[[z]])
 				#
-				fR<-footeValues(p=p,q=q,r=r,PA_n=PA_n,PB_1=PB_1,p_cont=p_cont,q_cont=q_cont,Nb=Nb)
+				fR <- footeValues(p = p,q = q,r = r,PA_n = PA_n,PB_1 = PB_1,p_cont = p_cont,q_cont = q_cont,Nb = Nb)
 				#P_forw
-				P_forw<-matrix(,n,n)
+				P_forw <- matrix(,n,n)
 				for(j in 1:n){
-					P_forw[j,j]<-fR$XFL[j]/(fR$XFt[j]+fR$XFL[j])
+					P_forw[j,j] <- fR$XFL[j]/(fR$XFt[j]+fR$XFL[j])
 					}
 				for(i in 1:n){for(j in 1:n){if(i<j){
-					if((i+1)<=(j-1)){k<-(i+1):(j-1)}else{k<-NA}
+					if((i+1) <= (j-1)){k <- (i+1):(j-1)}else{k <- NA}
 					if(q_cont){
-						P_forw[i,j]<-(1-P_forw[i,i])*ifelse(is.na(k[i]),1,exp(-sum(q[k])))*((1-exp(-q[j]))
+						P_forw[i,j] <- (1-P_forw[i,i])*ifelse(is.na(k[i]),1,exp(-sum(q[k])))*((1-exp(-q[j]))
 							*fR$PD_bL[j]+exp(-q[j])*fR$PD_bt[j]*(1-fR$PA[j]))/fR$PA[i]
 						}else{
-							P_forw[i,j]<-(1-P_forw[i,i])*ifelse(is.na(k[i]),1,prod(1-q[k]))*(q[j]*
+							P_forw[i,j] <- (1-P_forw[i,i])*ifelse(is.na(k[i]),1,prod(1-q[k]))*(q[j]*
 								fR$PD_bL[j]+(1-q[j])*fR$PD_bt[j]*(1-fR$PA[j]))/fR$PA[i]
 						}
 					}}}
 				#P_inv
-				P_inv<-matrix(,n,n)
+				P_inv <- matrix(,n,n)
 				for(j in 1:n){
-					P_inv[j,j]<-fR$XFL[i]/(fR$XbL[i]+fR$XFL[i])
+					P_inv[j,j] <- fR$XFL[i]/(fR$XbL[i]+fR$XFL[i])
 					}
 				for(i in 1:n){for(j in 1:n){if(i<j){
-					if((i+1)<=(j-1)){k<-(i+1):(j-1)}else{k<-NA}
+					if((i+1) <= (j-1)){k <- (i+1):(j-1)}else{k <- NA}
 					if(q_cont){
-						P_inv[i,j]<-(1-P_inv[j,j])*ifelse(is.na(k[1]),1,exp(-sum(p[k])))*((1-exp(-p[i]))
+						P_inv[i,j] <- (1-P_inv[j,j])*ifelse(is.na(k[1]),1,exp(-sum(p[k])))*((1-exp(-p[i]))
 							*fR$PD_Ft[i]+exp(-p[i])*fR$PD_bt[i]*(1-fR$PB[i]))/fR$PB[j]
 					}else{
-						P_inv[i,j]<-(1-P_inv[j,j])*ifelse(is.na(k[1]),1,prod(1/(1+p[k])))*(p[i]/(1+p[i])
+						P_inv[i,j] <- (1-P_inv[j,j])*ifelse(is.na(k[1]),1,prod(1/(1+p[k])))*(p[i]/(1+p[i])
 							*fR$PD_Ft[i]+1/(1+p[i])*fR$PD_bt[i]*(1-fR$PB[i]))/fR$PB[j]
 						}
 					}}}
 				#get log likelihood
-				logL<-matrix(NA,n,n)
+				logL <- matrix(NA,n,n)
 				for(i in 1:n){for(j in 1:n){if(obs_X[i,j]>0){
-					logL[i,j]<-obs_X[i,j]*log(P_forw[i,j])+obs_X[i,j]*log(P_inv[i,j])
+					logL[i,j] <- obs_X[i,j]*log(P_forw[i,j])+obs_X[i,j]*log(P_inv[i,j])
 					#print(paste(logL[i,j],i,j))
 					}}}
-				logLsum[z]<-sum(logL,na.rm=TRUE)
+				logLsum[z] <- sum(logL,na.rm = TRUE)
 				}
-				logLsum<-sum(logLsum)
+				logLsum <- sum(logLsum)
 			return(unname(-logLsum))	#negate so optim works correctly
 		}else{
 			if(plotPar){
@@ -395,70 +395,70 @@ make_inverseSurv<-function(timeList,groups=NULL,p_cont=TRUE,q_cont=TRUE,
 					layout(1:ngroup)	#first do layout
 				}else{
 					message("Number of groups greater than 5, not plotting the resulting rates.")
-					plotPar<-FALSE
+					plotPar <- FALSE
 					}
 				}
 			#
-			results<-list()
+			results <- list()
 			for(z in 1:ngroup){
 				if(is.null(groups)){
-					selector<-rep(TRUE,length(par))
+					selector <- rep(TRUE,length(par))
 				}else{
-					selector<-apply(breakNames,1,function(x) x[-(1:2)]==groupings[z,])}
-				parnew<-par[selector]
-				breaknew<-breakNames[selector,]
+					selector <- apply(breakNames,1,function(x) x[-(1:2)] == groupings[z,])}
+				parnew <- par[selector]
+				breaknew <- breakNames[selector,]
 				#get pars and order according to interval
-				p<-(parnew[breaknew[,1]=="p"])[order(as.numeric(breaknew[breaknew[,1]=="p",2]))]
-				q<-(parnew[breaknew[,1]=="q"])[order(as.numeric(breaknew[breaknew[,1]=="q",2]))]
-				r<-(parnew[breaknew[,1]=="r"])[order(as.numeric(breaknew[breaknew[,1]=="r",2]))]
+				p <- (parnew[breaknew[,1] == "p"])[order(as.numeric(breaknew[breaknew[,1] == "p",2]))]
+				q <- (parnew[breaknew[,1] == "q"])[order(as.numeric(breaknew[breaknew[,1] == "q",2]))]
+				r <- (parnew[breaknew[,1] == "r"])[order(as.numeric(breaknew[breaknew[,1] == "r",2]))]
 				if(ratesPerInt){ 
 					#correct for int.length, make rates per interval, not per time
-					r<-r*int.length
-					if(p_cont){p<-p*int.length}
-					if(q_cont){q<-q*int.length}
+					r <- r*int.length
+					if(p_cont){p <- p*int.length}
+					if(q_cont){q <- q*int.length}
 					}
-				rates<-cbind(p,q,r)
-				rownames(rates)<-sapply(strsplit(rownames(rates),"p"),function(x) x[2])
-				results[[z]]<-rates
+				rates <- cbind(p,q,r)
+				rownames(rates) <- sapply(strsplit(rownames(rates),"p"),function(x) x[2])
+				results[[z]] <- rates
 				if(plotPar){
 					#now plot
-					int.start<-timeList[[1]][,1];int.end<-timeList[[1]][,2]
-					times1<-c(int.start,(int.end+((int.start-int.end)/100)))
+					int.start <- timeList[[1]][,1];int.end <- timeList[[1]][,2]
+					times1 <- c(int.start,(int.end+((int.start-int.end)/100)))
 					#add a jigger so rates don't overlap
-					jigger<-min(diff(times1))/10
-					p1<-c(p,p)[order(times1)]
-					q1<-c(q,q)[order(times1)]
-					r1<-c(r,r)[order(times1)]
-					times1<-sort(times1)
+					jigger <- min(diff(times1))/10
+					p1 <- c(p,p)[order(times1)]
+					q1 <- c(q,q)[order(times1)]
+					r1 <- c(r,r)[order(times1)]
+					times1 <- sort(times1)
 					if(logRates){
-						p1[!(p1>0)]<-NA
-						q1[!(q1>0)]<-NA
-						r1[!(r1>0)]<-NA
-						ylims<-c(min(c(p1,q1,r1),na.rm=TRUE),(max(c(p1,q1,r1),na.rm=TRUE))*1.5)
-						plot(times1,p1,type="l",log="y",col=4,lwd=2,lty=5,
-						xlim=c(max(times1),max(0,min(times1))),ylim=ylims,
-						xlab="Time (Before Present)",ylab="Instantaneous Per-Capita Rate (per Ltu)")
+						p1[!(p1>0)] <- NA
+						q1[!(q1>0)] <- NA
+						r1[!(r1>0)] <- NA
+						ylims <- c(min(c(p1,q1,r1),na.rm = TRUE),(max(c(p1,q1,r1),na.rm = TRUE))*1.5)
+						plot(times1,p1,type = "l",log = "y",col = 4,lwd = 2,lty = 5,
+						xlim = c(max(times1),max(0,min(times1))),ylim = ylims,
+						xlab = "Time (Before Present)",ylab = "Instantaneous Per-Capita Rate (per Ltu)")
 					}else{
-						ylims<-c(min(c(p1,q1,r1),na.rm=TRUE),(max(c(p1,q1,r1),na.rm=TRUE))*1.5)
-						plot(times1,p1,type="l",col=4,lwd=2,lty=5,
-						xlim=c(max(times1),max(0,min(times1))),ylim=ylims,
-						xlab="Time (Before Present)",ylab="Instantaneous Per-Capita Rate (per Ltu)")
+						ylims <- c(min(c(p1,q1,r1),na.rm = TRUE),(max(c(p1,q1,r1),na.rm = TRUE))*1.5)
+						plot(times1,p1,type = "l",col = 4,lwd = 2,lty = 5,
+						xlim = c(max(times1),max(0,min(times1))),ylim = ylims,
+						xlab = "Time (Before Present)",ylab = "Instantaneous Per-Capita Rate (per Ltu)")
 						}
 					if(jitter){
-						lines(times1+jigger,q1,col=2,lwd=2,lty=2)
-						lines(times1-jigger,r1,col=3,lwd=2,lty=6)
+						lines(times1+jigger,q1,col = 2,lwd = 2,lty = 2)
+						lines(times1-jigger,r1,col = 3,lwd = 2,lty = 6)
 					}else{
-						lines(times1,q1,col=2,lwd=2,lty=2)
-						lines(times1,r1,col=3,lwd=2,lty=6)
+						lines(times1,q1,col = 2,lwd = 2,lty = 2)
+						lines(times1,r1,col = 3,lwd = 2,lty = 6)
 						}
 					if(!is.na(legendPosition)){
-						legend(x=legendPosition,
-							legend=c("Origination","Extinction","Sampling"),
-							lty=c(5,2,6),lwd=2,col=c(4,2,3))
+						legend(x = legendPosition,
+							legend = c("Origination","Extinction","Sampling"),
+							lty = c(5,2,6),lwd = 2,col = c(4,2,3))
 						}
 					}
 				}
-			if(ngroup==1){results<-results[[1]]}
+			if(ngroup == 1){results <- results[[1]]}
 			#return the table of broken recalculated rates
 			#if(plotPar){
 			#return(invisible(results))
@@ -468,7 +468,7 @@ make_inverseSurv<-function(timeList,groups=NULL,p_cont=TRUE,q_cont=TRUE,
 			}
 		}
 	#make into a paleoFunc
-	logL_invSurv<-make_paleotreeFunc(logL_invSurv,parNames,parbounds)
+	logL_invSurv <- make_paleotreeFunc(logL_invSurv,parNames,parbounds)
 	return(logL_invSurv)
 	}
 	

@@ -35,42 +35,42 @@
 #' data(kanto)
 #'
 #' #visualize site abundances as barplots
-#' barplotAbund<-function(x){
-#' 	x<-x[,colSums(x)>0]
+#' barplotAbund <- function(x){
+#' 	x <- x[,colSums(x)>0]
 #' 	layout(1:(nrow(x)+1))
-#' 	xpar<-par(mar=c(0,7,2,0))
+#' 	xpar <- par(mar = c(0,7,2,0))
 #' 	for(i in 1:(nrow(x)-1)){
-#' 		barplot(x[i,],ylab=rownames(x)[i],
-#' 			names.arg="")
+#' 		barplot(x[i,],ylab = rownames(x)[i],
+#' 			names.arg = "")
 #' 		}
 #' 	barplot(x[nrow(x),],
-#' 		ylab=rownames(x)[nrow(x)],las=3)
+#' 		ylab = rownames(x)[nrow(x)],las = 3)
 #' 	par(xpar)
 #' 	layout(1)
-#' 	mtext("Abundances",side=2,line=3,adj=0.8)
+#' 	mtext("Abundances",side = 2,line = 3,adj = 0.8)
 #' 	}
 #' 
 #' #first five sites
-#' kanto5<-kanto[1:5,]
+#' kanto5 <- kanto[1:5,]
 #' barplotAbund(kanto5)
 #' 
 #' #get pairwise Spearman rho coefficients
-#' rhoCoeff<-pairwiseSpearmanRho(kanto,dropAbsent="bothAbsent")
+#' rhoCoeff <- pairwiseSpearmanRho(kanto,dropAbsent = "bothAbsent")
 #' 
 #' #what are the nearest-neighbor rhos (largest rho correlations)?
-#' diag(rhoCoeff)<-NA
-#' rhoNearest<-apply(rhoCoeff,1,max,na.rm=TRUE)
+#' diag(rhoCoeff) <- NA
+#' rhoNearest <- apply(rhoCoeff,1,max,na.rm = TRUE)
 #' rhoNearest
 #' 
 #' # We can see the power plant sample is extremely different from the rest
 #' 
 #' # measure evenness: Hurlbert's PIE
 #' 
-#' kantoPIE<-HurlbertPIE(kanto)
+#' kantoPIE <- HurlbertPIE(kanto)
 #' 
 #' # compare to dominance (relative abundance of most abundant taxon)
 #' 
-#' dominance<-apply(kanto,1,function(x) max(x)/sum(x) )
+#' dominance <- apply(kanto,1,function(x) max(x)/sum(x) )
 #' 
 #' plot(kantoPIE,dominance)
 #' 
@@ -90,45 +90,45 @@
 #'
 #' #get bray-curtis distances
 #' library(vegan)
-#' bcDist <- vegdist(kanto,method="bray")
+#' bcDist  <-  vegdist(kanto,method = "bray")
 #' 
 #' # do a PCO on the bray-curtis distances
-#' pcoRes <- pcoa(bcDist,correction="lingoes")
-#' scores <- pcoRes$vectors
+#' pcoRes  <-  pcoa(bcDist,correction = "lingoes")
+#' scores  <-  pcoRes$vectors
 #' # plot the PCO
-#' plot(scores,type="n")
-#' text(labels=rownames(kanto),scores[,1],scores[,2],cex=0.5)
+#' plot(scores,type = "n")
+#' text(labels = rownames(kanto),scores[,1],scores[,2],cex = 0.5)
 #' 
 #' # the way the power plant and the pokemon tower converge
 #' 	# is very suspicious: may be distortion due to a long gradient
 #' 
 #' # do a DCA instead with vegan's decorana
-#' dcaRes<-decorana(kanto)
+#' dcaRes <- decorana(kanto)
 #' # plot using native vegan functions
 #' 	   #will show species scores in red
-#' plot(dcaRes,cex=0.5)
+#' plot(dcaRes,cex = 0.5)
 #' #kind of messy
 #' 
 #' #show just the sites scores
-#' plot(dcaRes,cex=0.5,display="sites")
+#' plot(dcaRes,cex = 0.5,display = "sites")
 #' 
 #' #show just the species scores
-#' plot(dcaRes,cex=0.5,display="species")
+#' plot(dcaRes,cex = 0.5,display = "species")
 #' 
 #' #well, that's pretty cool
 #' 
 #' #######################
 #' #get the nearest neighbor for each site
 #'     # based on pair-wise rho coefficients
-#' rhoNeighbor<-apply(rhoCoeff,1,function(x)
-#' 	    rownames(kanto)[tail(order(x,na.last=NA),1)])
+#' rhoNeighbor <- apply(rhoCoeff,1,function(x)
+#' 	    rownames(kanto)[tail(order(x,na.last = NA),1)])
 #' 
 #' #let's plot the nearest neighbor connections with igraph
-#' NNtable<-cbind(rownames(kanto),rhoNeighbor)
+#' NNtable <- cbind(rownames(kanto),rhoNeighbor)
 #' 
 #' # now plot with igraph
 #' library(igraph)
-#' NNlist <- graph.data.frame(NNtable)
+#' NNlist  <-  graph.data.frame(NNtable)
 #' plot(NNlist)
 #' 
 #' #arrows point at the nearest neighbor of each sample
@@ -147,14 +147,14 @@
 #' 	# standardized to total abundance
 #' 
 #' # standardize site matrix to relative abundance
-#' siteStand <- decostand(kanto, method = "total")
+#' siteStand  <-  decostand(kanto, method = "total")
 #' # site distance matrix (Bray-Curtis)
-#' siteDist <- vegdist(siteStand, "bray", diag = TRUE)
+#' siteDist  <-  vegdist(siteStand, "bray", diag = TRUE)
 #' 
 #' # standardize taxa matrix to relative abundance
-#' taxaStand <- decostand(t(kanto), method = "total")
+#' taxaStand  <-  decostand(t(kanto), method = "total")
 #' # taxa distance matrix (Bray-Curtis)
-#' taxaDist <- vegdist(taxaStand, "bray", diag = TRUE)
+#' taxaDist  <-  vegdist(taxaStand, "bray", diag = TRUE)
 #' 
 #' ### Need to set graphic parameters for table
 #' 
@@ -162,30 +162,30 @@
 #' # hist(myStand) # none get very high...
 #' 
 #' # number of breaks: number of colors for heatmap
-#' nBreaks<-15
+#' nBreaks <- 15
 #' 
 #' # set underValue
 #' 	# anything below this counts as not appearing
 #' 	# at that site for visualization purposes
-#' underValue<- min(siteStand[siteStand>0])-min(siteStand[siteStand>0])/10
+#' underValue <-  min(siteStand[siteStand>0])-min(siteStand[siteStand>0])/10
 #' # set overValue (max relative abundance)
-#' overValue<-max(siteStand)
+#' overValue <- max(siteStand)
 #' # you can set your breaks to any sequence you want
 #' 	# and they don't have to be the same length.  
 #' 	# You can do this manually too.
 #' # here we added a 0 to 'underValue' bin to 
 #' 	# the heatmap, making this bin essentially 0.
-#' colorBreaks <- c(0,seq(underValue,max(siteStand), 
+#' colorBreaks  <-  c(0,seq(underValue,max(siteStand), 
 #' 	by = max(siteStand)/(nBreaks-1)))
 #' # here we used the function rainbow to create a vector of colors.  
 #' 	# You can set these colors yourself too.  
 #' # It is important that this vector is one element 
 #' 	# less than the myBreaks vector
-#' rainColors <- rainbow(nBreaks) 
+#' rainColors  <-  rainbow(nBreaks) 
 #' # now we can add "white" onto the vector, 
 #' 	# this will be the first color bin, 
 #' 	# which we're going to set to be (essentially) 0.  
-#' rainColors <- c("white", rainColors) 
+#' rainColors  <-  c("white", rainColors) 
 #' # If you don't add white, taxa at 0 abundance get colored in
 #' 
 #' ### Plot the 2-Way Cluster
@@ -196,14 +196,14 @@
 #' # scale is the relative abundance, let's label it as such
 #' 
 #' 
-#' dev.new(width=10)
+#' dev.new(width = 10)
 #' #for some reason, mtext() doesn't recognize pheatmap as plot.new
-#' plot.new(width=7) 
+#' plot.new(width = 7) 
 #' pheatmap(siteStand, color = rainColors, breaks = colorBreaks, 
 #' 	clustering_method = "ward.D", 
 #' 	clustering_distance_rows = siteDist, 
 #' 	clustering_distance_cols = taxaDist)
-#' mtext("Relative Abundance",side=4,line=-1.4,adj=0.95)
+#' mtext("Relative Abundance",side = 4,line = -1.4,adj = 0.95)
 #' 
 #' # pretty cool looking!
 #' 
@@ -211,15 +211,15 @@
 #' ## Testing for differences between groups of sites
 #' 
 #' #is there a difference between routes and non-routes
-#' groups<-rep(0,nrow(kanto))
-#' groups[grep(rownames(kanto),pattern="Route")]<-1
+#' groups <- rep(0,nrow(kanto))
+#' groups[grep(rownames(kanto),pattern = "Route")] <- 1
 #' 
 #' #anosim (in vegan)
 #' 	#are distances within groups smaller than distances between?
 #' #we could also use adonis from vegan instead 
 #' library(vegan)
 #' 
-#' anosim(dat=kanto,grouping=groups)
+#' anosim(dat = kanto,grouping = groups)
 #' adonis(kanto~factor(groups))
 #' #both are very significant
 #' 
@@ -227,7 +227,7 @@
 #' 
 #' library(mvabund)
 #' 
-#' ft <- manyglm(formula=kanto~factor(groups))
+#' ft  <-  manyglm(formula = kanto~factor(groups))
 #' anova(ft)
 #' #also highly significant!
 #' 

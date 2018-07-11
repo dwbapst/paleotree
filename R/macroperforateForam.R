@@ -97,13 +97,13 @@
 #' 	#converted to separate tab-deliminated text files
 #' 
 #' # aM: budding/bifurcating morphospecies phylogeny
-#' foramAM<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
+#' foramAM <- read.table(file.choose(),stringsAsFactors = FALSE,header = TRUE)
 #' # aL: budding/bifurcating lineage phylogeny
-#' foramAL<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
+#' foramAL <- read.table(file.choose(),stringsAsFactors = FALSE,header = TRUE)
 #' # aMb: fully bifurcating morphospecies phylogeny
-#' foramAMb<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
+#' foramAMb <- read.table(file.choose(),stringsAsFactors = FALSE,header = TRUE)
 #' # aLb: fully bifurcating lineage phylogeny
-#' foramALb<-read.table(file.choose(),stringsAsFactors=FALSE,header=TRUE)
+#' foramALb <- read.table(file.choose(),stringsAsFactors = FALSE,header = TRUE)
 #' 
 #' save.image("macroperforateForam.rdata")
 #' 
@@ -134,33 +134,33 @@
 #' 	#those 'taxa' tables has 6 columns:
 #' 	#taxon.id ancestor.id orig.time ext.time still.alive looks.like
 #' 
-#' #for the purposes of this, we'll make taxon.id=looks.like
+#' #for the purposes of this, we'll make taxon.id = looks.like
 #' 	# (That's only for simulating cryptic speciation anyway)
-#' #still.alive should be TRUE (1) if ext.time=0
+#' #still.alive should be TRUE (1) if ext.time = 0
 #' 
 #' #a function to convert Aze et al's suppmat to paleotree-readable format
 #' 
-#' createTaxaData<-function(table){
+#' createTaxaData <- function(table){
 #' 	#reorder table by first appearance time
-#' 	table<-table[order(-as.numeric(table[,3])),]
-#' 	ID<-1:nrow(table)
-#' 	anc<-sapply(table[,2],function(x)
+#' 	table <- table[order(-as.numeric(table[,3])),]
+#' 	ID <- 1:nrow(table)
+#' 	anc <- sapply(table[,2],function(x)
 #' 		if(!is.na(x)){
-#' 			which(x==table[,1])
+#' 			which(x == table[,1])
 #' 		}else{ NA })
-#' 	stillAlive<-as.numeric(table[,4]==0)
-#' 	ages<-cbind(as.numeric(table[,3]),as.numeric(table[,4]))
-#' 	res<-cbind(ID,anc,ages,stillAlive,ID)
-#' 	colnames(res)<-c('taxon.id','ancestor.id','orig.time',
+#' 	stillAlive <- as.numeric(table[,4] == 0)
+#' 	ages <- cbind(as.numeric(table[,3]),as.numeric(table[,4]))
+#' 	res <- cbind(ID,anc,ages,stillAlive,ID)
+#' 	colnames(res) <- c('taxon.id','ancestor.id','orig.time',
 #' 		'ext.time','still.alive','looks.like')
-#' 	rownames(res)<-table[,1]
+#' 	rownames(res) <- table[,1]
 #' 	return(res)
 #' 	}
 #' 
-#' taxaAM<-createTaxaData(foramAM)
-#' taxaAMb<-createTaxaData(foramAMb)
-#' taxaAL<-createTaxaData(foramAL)
-#' taxaALb<-createTaxaData(foramALb)
+#' taxaAM <- createTaxaData(foramAM)
+#' taxaAMb <- createTaxaData(foramAMb)
+#' taxaAL <- createTaxaData(foramAL)
+#' taxaALb <- createTaxaData(foramALb)
 #' 
 #' ##################################
 #' 
@@ -169,8 +169,8 @@
 #' #For each of these, there should only be a single taxon
 #' 	# without a parent listed (essentially, the root ancestor)
 #' 
-#' countParentsWithoutMatch<-function(table){
-#'     	parentMatch<-match(unique(table[,2]),table[,1])
+#' countParentsWithoutMatch <- function(table){
+#'     	parentMatch <- match(unique(table[,2]),table[,1])
 #'     	sum(is.na(parentMatch))
 #' 	}
 #' 
@@ -193,16 +193,16 @@
 #' 
 #' #can be very slow...
 #' 
-#' treeAM<-parentChild2taxonTree(foramAM[,2:1])
-#' treeAL<-parentChild2taxonTree(foramAL[,2:1])
-#' treeAMb<-parentChild2taxonTree(foramAMb[,2:1])
-#' treeALb<-parentChild2taxonTree(foramALb[,2:1])
+#' treeAM <- parentChild2taxonTree(foramAM[,2:1])
+#' treeAL <- parentChild2taxonTree(foramAL[,2:1])
+#' treeAMb <- parentChild2taxonTree(foramAMb[,2:1])
+#' treeALb <- parentChild2taxonTree(foramALb[,2:1])
 #' 
 #' layout(matrix(1:4,2,2))
-#' plot(treeAM,main='treeAM',show.tip.label=FALSE)
-#' plot(treeAL,main='treeAL',show.tip.label=FALSE)
-#' plot(treeAMb,main='treeAMb',show.tip.label=FALSE)
-#' plot(treeALb,main='treeALb',show.tip.label=FALSE)
+#' plot(treeAM,main = 'treeAM',show.tip.label = FALSE)
+#' plot(treeAL,main = 'treeAL',show.tip.label = FALSE)
+#' plot(treeAMb,main = 'treeAMb',show.tip.label = FALSE)
+#' plot(treeALb,main = 'treeALb',show.tip.label = FALSE)
 #' 
 #' # FYI 
 #' # in case you were wondering
@@ -217,9 +217,9 @@
 #' # do all first occurrence dates occur before last occurrence dates?
 #' 	# we'll check the original datasets here
 #' 
-#' checkFoLo<-function(data){
-#' 	diffDate<-data[,3]-data[,4]	#subtract LO from FO
-#' 	isGood<-all(diffDate>=0)	#is it good
+#' checkFoLo <- function(data){
+#' 	diffDate <- data[,3]-data[,4]	#subtract LO from FO
+#' 	isGood <- all(diffDate >= 0)	#is it good
 #' 	return(isGood)
 #' 	}
 #' 
@@ -231,15 +231,15 @@
 #' #cool, but do all ancestors appear before their descendants?
 #' 	# easier to check unified fossilRecord2fossilTaxa format here
 #' 
-#' checkAncOrder<-function(taxa){
+#' checkAncOrder <- function(taxa){
 #' 	#get ancestor's first occurrence
-#' 	ancFO<-taxa[taxa[,2],3]
+#' 	ancFO <- taxa[taxa[,2],3]
 #' 	#get descendant's first occurrence	
-#' 	descFO<-taxa[,3]
-#' 	diffDate<-ancFO-descFO	#subtract descFO from ancFO
+#' 	descFO <- taxa[,3]
+#' 	diffDate <- ancFO-descFO	#subtract descFO from ancFO
 #' 	#remove NAs due to root taxon
-#' 	diffDate<-diffDate[!is.na(diffDate)]
-#' 	isGood<-all(diffDate>=0)	#is it all good	
+#' 	diffDate <- diffDate[!is.na(diffDate)]
+#' 	isGood <- all(diffDate >= 0)	#is it all good	
 #' 	return(isGood)
 #' 	}
 #' 
@@ -255,17 +255,17 @@
 #' # After all, fossilRecord2fossilTaxa output tables are designed for
 #' 	   # fully observed simulated fossil records with no gaps.
 #' 
-#' sumAncDescGap<-function(taxa){
+#' sumAncDescGap <- function(taxa){
 #' 	#get ancestor's last occurrence
-#' 	ancLO<-taxa[taxa[,2],4]
+#' 	ancLO <- taxa[taxa[,2],4]
 #' 	#get descendant's first occurrence	
-#' 	descFO<-taxa[,3]
-#' 	diffDate<-ancLO-descFO	#subtract descFO from ancFO
+#' 	descFO <- taxa[,3]
+#' 	diffDate <- ancLO-descFO	#subtract descFO from ancFO
 #' 	#remove NAs due to root taxon
-#' 	diffDate<-diffDate[!is.na(diffDate)]
+#' 	diffDate <- diffDate[!is.na(diffDate)]
 #' 	#should be negative or zero, positive values are gaps
-#' 	gaps<-c(0,diffDate[diffDate>0])
-#' 	sumGap<-sum(gaps)
+#' 	gaps <- c(0,diffDate[diffDate>0])
+#' 	sumGap <- sum(gaps)
 #' 	return(sumGap)
 #' 	}
 #' 
@@ -294,35 +294,35 @@
 #' # We can use the function taxa2phylo to directly create
 #' # time-scaled phylogenies from the Aze et al. stratophenetic data
 #' 
-#' timetreeAM<-taxa2phylo(taxaAM)
-#' timetreeAL<-taxa2phylo(taxaAL)
-#' timetreeAMb<-taxa2phylo(taxaAMb)
-#' timetreeALb<-taxa2phylo(taxaALb)
+#' timetreeAM <- taxa2phylo(taxaAM)
+#' timetreeAL <- taxa2phylo(taxaAL)
+#' timetreeAMb <- taxa2phylo(taxaAMb)
+#' timetreeALb <- taxa2phylo(taxaALb)
 #' 
 #' layout(matrix(1:4,2,2))
-#' plot(timetreeAM,main='timetreeAM',show.tip.label=FALSE)
+#' plot(timetreeAM,main = 'timetreeAM',show.tip.label = FALSE)
 #' axisPhylo()
-#' plot(timetreeAL,main='timetreeAL',show.tip.label=FALSE)
+#' plot(timetreeAL,main = 'timetreeAL',show.tip.label = FALSE)
 #' axisPhylo()
-#' plot(timetreeAMb,main='timetreeAMb',show.tip.label=FALSE)
+#' plot(timetreeAMb,main = 'timetreeAMb',show.tip.label = FALSE)
 #' axisPhylo()
-#' plot(timetreeALb,main='timetreeALb',show.tip.label=FALSE)
+#' plot(timetreeALb,main = 'timetreeALb',show.tip.label = FALSE)
 #' axisPhylo()
 #' 
 #' #visually compare the two pairs we expect to be close to identical
 #' 
 #' #morpospecies
 #' layout(1:2)
-#' plot(timetreeAM,main='timetreeAM',show.tip.label=FALSE)
+#' plot(timetreeAM,main = 'timetreeAM',show.tip.label = FALSE)
 #' axisPhylo()
-#' plot(timetreeAMb,main='timetreeAMb',show.tip.label=FALSE)
+#' plot(timetreeAMb,main = 'timetreeAMb',show.tip.label = FALSE)
 #' axisPhylo()
 #' 
 #' #lineages
 #' layout(1:2)
-#' plot(timetreeAL,main='timetreeAL',show.tip.label=FALSE)
+#' plot(timetreeAL,main = 'timetreeAL',show.tip.label = FALSE)
 #' axisPhylo()
-#' plot(timetreeALb,main='timetreeALb',show.tip.label=FALSE)
+#' plot(timetreeALb,main = 'timetreeALb',show.tip.label = FALSE)
 #' axisPhylo()
 #' 
 #' layout(1)
@@ -350,11 +350,11 @@
 #' 
 #' #we can create some diversity plots to compare
 #' 
-#' multiDiv(data=list(timetreeAM,timetreeAMb),
-#' 	plotMultCurves=TRUE)
+#' multiDiv(data = list(timetreeAM,timetreeAMb),
+#' 	plotMultCurves = TRUE)
 #' 
-#' multiDiv(data=list(timetreeAL,timetreeALb),
-#' 	plotMultCurves=TRUE)
+#' multiDiv(data = list(timetreeAL,timetreeALb),
+#' 	plotMultCurves = TRUE)
 #' 
 #' # we can see that the morphospecies datasets are identical
 #' 	# that's why we can only see one line
@@ -363,8 +363,8 @@
 #' 
 #' #can also compare morphospecies and lineages diversity curves
 #' 
-#' multiDiv(data=list(timetreeAM,timetreeAL),
-#' 	plotMultCurves=TRUE)
+#' multiDiv(data = list(timetreeAM,timetreeAL),
+#' 	plotMultCurves = TRUE)
 #' 
 #' #they are similar, but some peaks are missing from lineages
 #' 	# particularly around ~20-10 Ma

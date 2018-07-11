@@ -64,11 +64,11 @@
 #' @examples
 #' #example with make_durationFreqCont
 #' set.seed(444)
-#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
-#'	nTotalTaxa=c(30,40), nExtant=0)
-#' taxa<-fossilRecord2fossilTaxa(record)
-#' rangesCont <- sampleRanges(taxa,r=0.5)
-#' likFun <- make_durationFreqCont(rangesCont)
+#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+#'	nTotalTaxa = c(30,40), nExtant = 0)
+#' taxa <- fossilRecord2fossilTaxa(record)
+#' rangesCont  <-  sampleRanges(taxa,r = 0.5)
+#' likFun  <-  make_durationFreqCont(rangesCont)
 #' 
 #' #get parameter names
 #' parnames(likFun)
@@ -91,10 +91,10 @@
 #' parnames(likFun2) <- c("extRate","sampRate")
 #' parnames(likFun2)
 #' #test if reset correctly
-#' parnames(likFun2)==c("extRate","sampRate")
+#' parnames(likFun2) == c("extRate","sampRate")
 
 #' #also works for constrained functions
-#' constrainFun<-constrainParPaleo(likFun,q.1~r.1)
+#' constrainFun <- constrainParPaleo(likFun,q.1~r.1)
 #' parnames(constrainFun)
 #' #also modified the parameter bounds, see!
 #' parbounds(constrainFun)
@@ -144,14 +144,14 @@ parnames.constrained <- function(x, ...){
 #' @export
 `parnames<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
-	np<-attr(x,"np")	#number of parameters 
+	np <- attr(x,"np")	#number of parameters 
 	#original uses base, not current number of params? I'm not following why...
-	#parnames<-attr(x,"parnames")
-	value<-as.character(value)
-	if(length(value)!=np){stop("length of new parnames not equal to number of parameters")}
+	#parnames <- attr(x,"parnames")
+	value <- as.character(value)
+	if(length(value) != np){stop("length of new parnames not equal to number of parameters")}
 	if(any(is.na(value))){stop("NA values in parnames replacement")}
 	if(any(duplicated(value))){stop("Duplicated names in parnames replacement")}
-	attr(x,"parnames")<-value
+	attr(x,"parnames") <- value
 	return(x)
 	}
 
@@ -196,16 +196,16 @@ parbounds.constrained <- function(x, ...){
 #' @export
 `parbounds<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
-	np<-attr(x,"np")	#number of parameters 
+	np <- attr(x,"np")	#number of parameters 
 	#original uses base, not current number of params? I'm not following why...
-	if(!is.list(value) | !length(value)==2){stop("parbounds needs to be a list composed of two vectors")}
-	lower<-as.numeric(value[[1]])
-	if(length(lower)!=np){stop("length of new lower parbounds not equal to number of parameters")}
+	if(!is.list(value) | !length(value) == 2){stop("parbounds needs to be a list composed of two vectors")}
+	lower <- as.numeric(value[[1]])
+	if(length(lower) != np){stop("length of new lower parbounds not equal to number of parameters")}
 	if(any(is.na(lower))){stop("NA values in lower parbounds replacement")}
-	upper<-as.numeric(value[[2]])
-	if(length(upper)!=np){stop("length of new upper parbounds not equal to number of parameters")}
+	upper <- as.numeric(value[[2]])
+	if(length(upper) != np){stop("length of new upper parbounds not equal to number of parameters")}
 	if(any(is.na(upper))){stop("NA values in upper parbounds replacement")}
-	attr(x,"parbounds")<-value
+	attr(x,"parbounds") <- value
 	return(x)
 	}
 	
@@ -251,12 +251,12 @@ parLower.paleotreeFunc <- function(x, ...){
 #' @export
 `parLower<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
-	np<-attr(x,"np")	#number of parameters 
+	np <- attr(x,"np")	#number of parameters 
 	#original uses base, not current number of params? I'm not following why...
-	lower<-as.numeric(value)
-	if(length(lower)!=np){stop("length of new lower parbounds not equal to number of parameters")}
+	lower <- as.numeric(value)
+	if(length(lower) != np){stop("length of new lower parbounds not equal to number of parameters")}
 	if(any(is.na(lower))){stop("NA values in lower parbounds replacement")}
-	attr(x,"parbounds")[[1]]<-value
+	attr(x,"parbounds")[[1]] <- value
 	return(x)
 	}
 	
@@ -299,12 +299,12 @@ parUpper.paleotreeFunc <- function(x, ...){
 #' @export
 `parUpper<-.paleotreeFunc` <- function(x, value) {
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
-	np<-attr(x,"np")	#number of parameters 
+	np <- attr(x,"np")	#number of parameters 
 	#original uses base, not current number of params? I'm not following why...
-	upper<-as.numeric(value)
-	if(length(upper)!=np){stop("length of new upper parbounds not equal to number of parameters")}
+	upper <- as.numeric(value)
+	if(length(upper) != np){stop("length of new upper parbounds not equal to number of parameters")}
 	if(any(is.na(upper))){stop("NA values in upper parbounds replacement")}
-	attr(x,"parbounds")[[2]]<-value
+	attr(x,"parbounds")[[2]] <- value
 	return(x)
 	}
 
@@ -321,11 +321,11 @@ parInit <- function(x, ...){
 #' @export
 parInit.constrained <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
-	#res<-(attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2
-	res<-runif(length(attr(x,"parnames")),attr(x, "parbounds")[[1]],attr(x, "parbounds")[[2]])
+	#res <- (attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2
+	res <- runif(length(attr(x,"parnames")),attr(x, "parbounds")[[1]],attr(x, "parbounds")[[2]])
 	#infinite bounds probably too far from actual param value; use lower bound instead
-	if(any(is.infinite(res))){res<-attr(x, "parbounds")[[1]]}
-	names(res)<-attr(x,"parnames")
+	if(any(is.infinite(res))){res <- attr(x, "parbounds")[[1]]}
+	names(res) <- attr(x,"parnames")
 	return(res)
 	}
 
@@ -333,10 +333,10 @@ parInit.constrained <- function(x, ...){
 #' @export
 parInit.paleotreeFunc <- function(x, ...){
 	#based on Rich FitzJohn's argnames function for diversitree 10-22-13
-	#res<-(attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2
-	res<-runif(length(attr(x,"parnames")),attr(x, "parbounds")[[1]],attr(x, "parbounds")[[2]])
+	#res <- (attr(x, "parbounds")[[2]]-attr(x, "parbounds")[[1]])/2
+	res <- runif(length(attr(x,"parnames")),attr(x, "parbounds")[[1]],attr(x, "parbounds")[[2]])
 	#infinite bounds probably too far from actual param value; use lower bound instead
-	if(any(is.infinite(res))){res<-attr(x, "parbounds")[[1]]}
-	names(res)<-attr(x,"parnames")
+	if(any(is.infinite(res))){res <- attr(x, "parbounds")[[1]]}
+	names(res) <- attr(x,"parnames")
 	return(res)
 	}

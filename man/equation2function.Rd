@@ -33,18 +33,18 @@ functionality that does not seem to be otherwise exist elsewhere in R.
 }
 \examples{
 # some simple examples
-foo<-equation2function("x+y")
+foo <- equation2function("x+y")
 foo
-foo(x=4,y=0.1)
+foo(x = 4,y = 0.1)
 
-foo<-equation2function("x+2*sqrt(2*y+3)^2")
+foo <- equation2function("x+2*sqrt(2*y+3)^2")
 foo
-foo(x=4,y=0.1)
+foo(x = 4,y = 0.1)
 
 # what about weird long argument names and spaces
-foo<-equation2function("stegosaur + 0.4 * P")
+foo <- equation2function("stegosaur + 0.4 * P")
 foo
-foo(stegosaur=5,P=0.3)
+foo(stegosaur = 5,P = 0.3)
 }
 \author{
 David W. Bapst

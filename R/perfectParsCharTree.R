@@ -32,48 +32,48 @@
 #' data(retiolitinae)
 #'
 #' #fewer characters than nodes
-#' perfectParsCharTree(retioTree,nchar=10)
+#' perfectParsCharTree(retioTree,nchar = 10)
 #'
 #' #same as number of nodes (minus root)
-#' perfectParsCharTree(retioTree,nchar=12)
+#' perfectParsCharTree(retioTree,nchar = 12)
 #'
 #' #more characters than the number of nodes
-#' perfectParsCharTree(retioTree,nchar=20)
+#' perfectParsCharTree(retioTree,nchar = 20)
 
 #' @export perfectParsCharTree
-perfectParsCharTree<-function(tree,nchar){
+perfectParsCharTree <- function(tree,nchar){
 	#checks
 	if(!inherits(tree,"phylo")){
 		stop("tree must be of class 'phylo'")
 		}
 	#simulate a perfect character dataset (parsimony informative binary chars) for a given tree
-	charMat<-matrix(0,Ntip(tree),nchar)
-	rownames(charMat)<-tree$tip.label
-	desc<-sapply(prop.part(tree),function(x) tree$tip.label[x])
-	desc<-desc[sapply(desc,length)!=Ntip(tree)]	        #get rid of root node that contains all taxa (not pars informative!
-	nnode<-length(desc)
+	charMat <- matrix(0,Ntip(tree),nchar)
+	rownames(charMat) <- tree$tip.label
+	desc <- sapply(prop.part(tree),function(x) tree$tip.label[x])
+	desc <- desc[sapply(desc,length) != Ntip(tree)]	        #get rid of root node that contains all taxa (not pars informative!
+	nnode <- length(desc)
 	if(nchar>nnode){
 		#repeat desc if nchar multiple of nnode
 		if((nchar %/% nnode) >1){
 			for(i in 1:((nchar %/% nnode)-1) ){
-				desc[(length(desc)+1):(length(desc)+nnode)]<-desc[1:nnode]
+				desc[(length(desc)+1):(length(desc)+nnode)] <- desc[1:nnode]
 				}
 			}
-		if((nchar%%length(desc)) != 0){
-			nrand<-nchar-length(desc)
+		if((nchar%%length(desc))  !=  0){
+			nrand <- nchar-length(desc)
 			#sample without replacement
-			desc[(length(desc)+1):nchar]<-desc[sample(1:nnode,nrand,replace=FALSE)]
+			desc[(length(desc)+1):nchar] <- desc[sample(1:nnode,nrand,replace = FALSE)]
 			message(paste("Randomly sampling nodes for",nrand,"extra characters"))
 			}
 	}else{
 		if(nnode>nchar){
 			message("nchar less than the number of nodes, all returned characters placed randomly")
 			#sample without replacement
-			desc[1:nchar]<-desc[sample(1:nnode,nchar,replace=FALSE)]
+			desc[1:nchar] <- desc[sample(1:nnode,nchar,replace = FALSE)]
 			}
 		}
 	for(i in 1:nchar){
-		charMat[desc[[i]],i]<-1
+		charMat[desc[[i]],i] <- 1
 		}		
 	return(charMat)
 	}

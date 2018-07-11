@@ -47,11 +47,11 @@ plot(ceratopsianTreeRaia);axisPhylo()
 plot(cervidTreeRaia);axisPhylo()
 
 # plotting traitgrams for ammonites
-plotTraitgram(tree=multi2di(ammoniteTreeRaia), trait=sutureComplexity,
-	 conf.int=FALSE, main="Ammonite Suture Complexity")
+plotTraitgram(tree = multi2di(ammoniteTreeRaia), trait = sutureComplexity,
+	 conf.int = FALSE, main = "Ammonite Suture Complexity")
 
-plotTraitgram(tree=multi2di(ammoniteTreeRaia), trait=shellSize,
-	 conf.int=FALSE, main="Ammonite Shell Diameter")
+plotTraitgram(tree = multi2di(ammoniteTreeRaia), trait = shellSize,
+	 conf.int = FALSE, main = "Ammonite Shell Diameter")
 
 ##############################################################################################
 
@@ -69,7 +69,7 @@ library(paleotree)
 #########################################
 # ammonite genera
 
-ammoniteTreeRaia<-paste0("(((((Araxoceras:4,Eoaraxoceras:4)Araxoceratidae:26.5,Pseudasp",
+ammoniteTreeRaia <- paste0("(((((Araxoceras:4,Eoaraxoceras:4)Araxoceratidae:26.5,Pseudasp",
  "idites:33.199997,Dieneroceras:37.300003,(Tardicolumbites:13.000015,Cowboyiceras:13.000023)",
  "Dinaritaceae:24.299988,Grambergia:42.5,(Amphipopanoceras:6, Megaphyllites:46.399994)Megaph",
  "yllitaceae:36.5,(Proteusites:11,Nathorstites:21)Nathorstitaceae:31.5,(Inyoites:7,Lanceolit",
@@ -154,7 +154,7 @@ ammoniteTreeRaia<-paste0("(((((Araxoceras:4,Eoaraxoceras:4)Araxoceratidae:26.5,P
  "de_153:0.199982)clade_152:0.200002,Anarcestes:5) Anarcestina:11.099976)clade_142:1.033356)",
  "clade_141:1.033325,Anetoceras:9.966675)clade_140:1.03333) Agoniatitida:7.100006)clade_1;")
 
-ammoniteTreeRaia<-read.tree(text=ammoniteTreeRaia)
+ammoniteTreeRaia <- read.tree(text = ammoniteTreeRaia)
 
 # what about the root age?
 # Raia et al. are unclear
@@ -163,11 +163,11 @@ ammoniteTreeRaia<-read.tree(text=ammoniteTreeRaia)
 #
 # Latest occurring tips are:
 ammoniteTreeRaia$tip.label[
- which(node.depth.edgelength(ammoniteTreeRaia)==max(node.depth.edgelength(ammoniteTreeRaia)))]
+ which(node.depth.edgelength(ammoniteTreeRaia) == max(node.depth.edgelength(ammoniteTreeRaia)))]
 #
 # so we can treat distance of Phylloceras from root + end Cretaceous (66.043 Ma) as $root.time
-(ammoniteTreeRaia$root.time<-66.043+
- node.depth.edgelength(ammoniteTreeRaia)[which(ammoniteTreeRaia$tip.label=="Phylloceras")])
+(ammoniteTreeRaia$root.time <- 66.043+
+ node.depth.edgelength(ammoniteTreeRaia)[which(ammoniteTreeRaia$tip.label == "Phylloceras")])
 
 # now let's plot it
 plot(ladderize(ammoniteTreeRaia));axisPhylo()
@@ -179,24 +179,24 @@ plot(ladderize(ammoniteTreeRaia));axisPhylo()
  # FD = fractal dimension of first suture (suture complexity)
  # Log D = log of the mean shell diameter per genus (body size)
  # log dur = log of the stratigraphic duration in million years.
-ammoniteTraitsRaia<-read.table("ammoniteTraitsRaia.txt",row.names=1,header=TRUE)
+ammoniteTraitsRaia <- read.table("ammoniteTraitsRaia.txt",row.names = 1,header = TRUE)
 
-sutureComplexity<-ammoniteTraitsRaia$FD
-shellSize<-ammoniteTraitsRaia$Log_D
-names(shellSize)<-names(sutureComplexity)<-rownames(ammoniteTraitsRaia)
+sutureComplexity <- ammoniteTraitsRaia$FD
+shellSize <- ammoniteTraitsRaia$Log_D
+names(shellSize) <- names(sutureComplexity) <- rownames(ammoniteTraitsRaia)
 
-plotTraitgram(tree=multi2di(ammoniteTreeRaia), trait=sutureComplexity,
-  conf.int=FALSE, main="Ammonite Suture Complexity")
+plotTraitgram(tree = multi2di(ammoniteTreeRaia), trait = sutureComplexity,
+  conf.int = FALSE, main = "Ammonite Suture Complexity")
 
-plotTraitgram(tree=multi2di(ammoniteTreeRaia), trait=shellSize,
-  conf.int=FALSE, main="Ammonite Shell Diameter")
+plotTraitgram(tree = multi2di(ammoniteTreeRaia), trait = shellSize,
+  conf.int = FALSE, main = "Ammonite Shell Diameter")
 
 }
 \donttest{
 ########################################
 # ceratopsian species
 
-ceratopsianTreeRaia<-paste0("((((((((((((Centrosaurus_apertus:5.1,Styracosaurus_alberte",
+ceratopsianTreeRaia <- paste0("((((((((((((Centrosaurus_apertus:5.1,Styracosaurus_alberte",
  "nsis:5.9):1,(((Pachyrhinosaurus_perotorum:10.5,Pachyrhinosaurus_lakustai:7):0.5,Achelousau",
  "rus_horneri:6.3):0.5,Einiosaurus_procurvicornis:6.5):1):0.5, Avaceratops_lammersi:5.5):0.5",
  ",Diabloceratops_eatoni:3):1.1,((Chasmosaurus_russelli:1.4,Chasmosaurus_belli:1.6):2.5, (Mo",
@@ -210,17 +210,17 @@ ceratopsianTreeRaia<-paste0("((((((((((((Centrosaurus_apertus:5.1,Styracosaurus_
  "osaurus_houi:9,(Psittacosaurus_mongoliensis:33.5, (Psittacosaurus_meileyingensis:20,(Psitt",
  "acosaurus_major:7.5,(Psittacosaurus_gobiensis:21,(Psittacosaurus_sinensis:24, Psittacosaur",
  "us_neimongoliensis:18):1):1.5):0.5):0.5):0.5):1):23,Yinlong_downsi:6):3;")
-ceratopsianTreeRaia<-read.tree(text=ceratopsianTreeRaia)
+ceratopsianTreeRaia <- read.tree(text = ceratopsianTreeRaia)
 
 # Raia et al. placed origin of ceratopsians at ~163 Ma, base of Oxfordian
-ceratopsianTreeRaia$root.time<-163
+ceratopsianTreeRaia$root.time <- 163
 
 plot(ceratopsianTreeRaia);axisPhylo()
 
 ###############################################
 # cervid species
 
-cervidTreeRaia<-paste0("((((Lagomeryx_parvulus:9.925998,Lagomeryx_pumilio:10.775998):3.",
+cervidTreeRaia <- paste0("((((Lagomeryx_parvulus:9.925998,Lagomeryx_pumilio:10.775998):3.",
  "25,(Procervulus_flerovi:11.425998,Procervulus_dichotomus:7.025998,Procervulus_praelucidus:",
  "5.675998):3.25,(Stephanocemas_aralensis:6.925998, Stephanocemas_thomsoni:11.175998):2):2,(",
  "((Euprox_furcatus:14.440997,Euprox_minimus:12.590997, Euprox_dicranoceros:14.190997):2.185",
@@ -237,19 +237,19 @@ cervidTreeRaia<-paste0("((((Lagomeryx_parvulus:9.925998,Lagomeryx_pumilio:10.775
  "s_obscurus:6.084504245,Megaceroides_solilhacus:6.725161676):2.883334):2.883333, (Megalocer",
 	"os_savini:7.349060017,Megaloceros_giganteus:7.430999):5.145):3.849999):6.6):2.75):2.75);")
 
-cervidTreeRaia<-read.tree(text=cervidTreeRaia)
+cervidTreeRaia <- read.tree(text = cervidTreeRaia)
 
 # Many of the latest-occurring tips are still extant, like Rusa unicolor and Dama dama:
 cervidTreeRaia$tip.label[
-	which(node.depth.edgelength(cervidTreeRaia)==max(node.depth.edgelength(cervidTreeRaia)))]
+	which(node.depth.edgelength(cervidTreeRaia) == max(node.depth.edgelength(cervidTreeRaia)))]
 
 # note!
 # if you plot the tree there seem to be a lot more taxa that are *almost* as late-occurring
 	# unclear if this is recently extinct taxa, computational rounding error, or what
 
 # so we can treat distance of Dama dama to root as $root.time
-(cervidTreeRaia$root.time<-
-	node.depth.edgelength(cervidTreeRaia)[which(cervidTreeRaia$tip.label=="Dama_dama")])
+(cervidTreeRaia$root.time <- 
+	node.depth.edgelength(cervidTreeRaia)[which(cervidTreeRaia$tip.label == "Dama_dama")])
 
 plot(cervidTreeRaia);axisPhylo()
 

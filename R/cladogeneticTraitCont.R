@@ -65,37 +65,37 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
-#'	nTotalTaxa=c(30,1000), plot=TRUE)
-#' taxa<-fossilRecord2fossilTaxa(record)
-#' trait <- cladogeneticTraitCont(taxa)
-#' tree <- taxa2phylo(taxa)
-#' plotTraitgram(trait,tree,conf.int=FALSE)
+#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+#'	nTotalTaxa = c(30,1000), plot = TRUE)
+#' taxa <- fossilRecord2fossilTaxa(record)
+#' trait  <-  cladogeneticTraitCont(taxa)
+#' tree  <-  taxa2phylo(taxa)
+#' plotTraitgram(trait,tree,conf.int = FALSE)
 #' 
 #' #with cryptic speciation
-#' record<-simFossilRecord(p=0.1, q=0.1, prop.cryptic=0.5, 
-#'	nruns=1, nTotalTaxa=c(30,1000), plot=TRUE)
-#' taxa<-fossilRecord2fossilTaxa(record)
-#' trait <- cladogeneticTraitCont(taxa)
-#' tree <- taxa2phylo(taxa)
-#' plotTraitgram(trait,tree,conf.int=FALSE)
+#' record <- simFossilRecord(p = 0.1, q = 0.1, prop.cryptic = 0.5, 
+#'	nruns = 1, nTotalTaxa = c(30,1000), plot = TRUE)
+#' taxa <- fossilRecord2fossilTaxa(record)
+#' trait  <-  cladogeneticTraitCont(taxa)
+#' tree  <-  taxa2phylo(taxa)
+#' plotTraitgram(trait,tree,conf.int = FALSE)
 #' 
 
 #' @export cladogeneticTraitCont
-cladogeneticTraitCont<-function(taxa,rate=1,meanChange=0,rootTrait=0){
+cladogeneticTraitCont <- function(taxa,rate = 1,meanChange = 0,rootTrait = 0){
 	#simulate speciational trait evolution for datasets from simFossilRecord
 	#idiot proofing
-	taxa<-taxa[order(taxa[,1]),]
-	if(any(taxa[-1,2]>=taxa[-1,1])){stop("Ancestors have higher IDs than Descendants?")}
-	anctaxa<-sapply(taxa[-1,2],function(x) which(x==taxa[,1]))
-	traits<-rootTrait
+	taxa <- taxa[order(taxa[,1]),]
+	if(any(taxa[-1,2] >= taxa[-1,1])){stop("Ancestors have higher IDs than Descendants?")}
+	anctaxa <- sapply(taxa[-1,2],function(x) which(x == taxa[,1]))
+	traits <- rootTrait
 	for(i in 2:nrow(taxa)){
-		if(taxa[i,1]==taxa[i,6]){
-			traits[i]<-traits[anctaxa[i-1]]+rnorm(1,mean=meanChange,sd=sqrt(rate))
+		if(taxa[i,1] == taxa[i,6]){
+			traits[i] <- traits[anctaxa[i-1]]+rnorm(1,mean = meanChange,sd = sqrt(rate))
 		}else{
-			traits[i]<-traits[anctaxa[i-1]]
+			traits[i] <- traits[anctaxa[i-1]]
 			}
 		}
-	names(traits)<-rownames(taxa)
+	names(traits) <- rownames(taxa)
 	return(traits)
 	}

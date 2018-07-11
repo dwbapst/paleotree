@@ -83,123 +83,123 @@
 
 #' @examples
 #' 
-#' sRate2sProb(r=0.5)
-#' sProb2sRate(R=0.1)
-#' pqsRate2sProb(r=0.5,p=0.1,q=0.1)
+#' sRate2sProb(r = 0.5)
+#' sProb2sRate(R = 0.1)
+#' pqsRate2sProb(r = 0.5,p = 0.1,q = 0.1)
 #'
 #' # different modes can be tried
-#' qsProb2Comp(R=0.1,q=0.1,mode="budding")
-#' qsProb2Comp(R=0.1,q=0.1,mode="bifurcating")
+#' qsProb2Comp(R = 0.1,q = 0.1,mode = "budding")
+#' qsProb2Comp(R = 0.1,q = 0.1,mode = "bifurcating")
 #'
-#' qsRate2Comp(r=0.1,q=0.1)
+#' qsRate2Comp(r = 0.1,q = 0.1)
 
 
 #' @name SamplingConv
 #' @rdname SamplingConv
 #' @export
-sProb2sRate<-function(R,int.length=1){
-	res<-(-log(1-R)/int.length)	#rough estimate
-	names(res)<-NULL
+sProb2sRate <- function(R,int.length = 1){
+	res <- (-log(1-R)/int.length)	#rough estimate
+	names(res) <- NULL
 	return(res)
 	}
 
 #' @rdname SamplingConv
 #' @export
-sRate2sProb<-function(r,int.length=1){
-	res<-1-exp(-r*int.length)	#rough estimate
-	names(res)<-NULL
+sRate2sProb <- function(r,int.length = 1){
+	res <- 1-exp(-r*int.length)	#rough estimate
+	names(res) <- NULL
 	return(res)
 	}
 
 #' @rdname SamplingConv
 #' @export
-pqsRate2sProb<-function(r,p,q,int.length=1){
+pqsRate2sProb <- function(r,p,q,int.length = 1){
 	#A more accurate estimat of R given r, p and q
 	#assuming p,q,r are constant and the timespan is infinte
 		#dt is interval length for R
 	#USES equations 26-29 from appendix to Foote (2000)
 	#prob of samp for lineages that cross both boundaries
 		#note typo in Foote (2000), eq 26, corrected version below
-	dt<-int.length
-	PDbt<-function(r,dt){1-exp(-r*dt)}
+	dt <- int.length
+	PDbt <- function(r,dt){1-exp(-r*dt)}
 	#prob of samp for lineages that only cross bottom boundary
-	PDbL<-function(q,r,dt){
+	PDbL <- function(q,r,dt){
 		(((r+(q*exp(-(q+r)*dt)))/(q+r))-exp(-q*dt))/(1-exp(-q*dt))
 		}
 	#prob of samp for lineages that only cross upper boundary
-	PDFt<-function(p,r,dt){
+	PDFt <- function(p,r,dt){
 		(((r+(p*exp(-(p+r)*dt)))/(p+r))-exp(-p*dt))/(1-exp(-p*dt))
 		}
 	#prob of samp for lineages that cross neither boundary
 		#29b corrected with addition sign!
-	PDFL<-function(p,q,r,dt){
-		if(p==q){
-			NbNFL<-1/(exp(-q*dt)+(p*dt)-1)		#N(b)/N(FL) based on eq 1b and 6b
-			term1<-(r*dt)/(p+r)				#first term in square brackets in eq 29b
-			term2<-(1-exp(-p*dt))/p				#second term
-			term3<-(p*(1-exp(-(p+r)*dt)))/((p+r)^2)	#third term
-			terms<-term1-term2+term3			#full terms in square brackets
-			res<-(NbNFL)*p*terms					#P(D|FL)
+	PDFL <- function(p,q,r,dt){
+		if(p == q){
+			NbNFL <- 1/(exp(-q*dt)+(p*dt)-1)		#N(b)/N(FL) based on eq 1b and 6b
+			term1 <- (r*dt)/(p+r)				#first term in square brackets in eq 29b
+			term2 <- (1-exp(-p*dt))/p				#second term
+			term3 <- (p*(1-exp(-(p+r)*dt)))/((p+r)^2)	#third term
+			terms <- term1-term2+term3			#full terms in square brackets
+			res <- (NbNFL)*p*terms					#P(D|FL)
 		}else{
-			NbNFL<-1/(((q*exp((p-q)*dt))+((p-q)*exp(-q*dt))-p)/(p-q))
-			term1<-(p*r*(exp((p-q)*dt)-1))/((q+r)*(p-q))
-			term2<-(p*q*exp(-(q+r)*dt)*(exp((p+r)*dt)-1))/((p+r)*(q+r))
-			term3<-exp(-q*dt)*(exp(p*dt)-1)
-			terms<-term1+term2-term3
-			res<-(NbNFL)*terms
+			NbNFL <- 1/(((q*exp((p-q)*dt))+((p-q)*exp(-q*dt))-p)/(p-q))
+			term1 <- (p*r*(exp((p-q)*dt)-1))/((q+r)*(p-q))
+			term2 <- (p*q*exp(-(q+r)*dt)*(exp((p+r)*dt)-1))/((p+r)*(q+r))
+			term3 <- exp(-q*dt)*(exp(p*dt)-1)
+			terms <- term1+term2-term3
+			res <- (NbNFL)*terms
 			}
 		res
 		}
 	#need to weight the PDs by the P of those taxon classes
 		#use N equations from Foote (2000), relative to Nb to be probs
-	Pbt<-exp(-q*dt)	
-	PbL<-(1-exp(-q*dt))
-	PFt<-exp((p-q)*dt)*(1-exp(-p*dt))
-	if(p==q){PFL<-exp(-q*dt)+(p*dt)-1
-		}else{PFL<-((q*exp((p-q)*dt))+((p-q)*exp(-q*dt))-p)/(p-q)}
-	res<-sum(PDbt(r,dt)*Pbt,PDbL(q,r,dt)*PbL,
+	Pbt <- exp(-q*dt)	
+	PbL <- (1-exp(-q*dt))
+	PFt <- exp((p-q)*dt)*(1-exp(-p*dt))
+	if(p == q){PFL <- exp(-q*dt)+(p*dt)-1
+		}else{PFL <- ((q*exp((p-q)*dt))+((p-q)*exp(-q*dt))-p)/(p-q)}
+	res <- sum(PDbt(r,dt)*Pbt,PDbL(q,r,dt)*PbL,
 		PDFt(p,r,dt)*PFt,PDFL(p,q,r,dt)*PFL)
-	names(res)<-NULL
+	names(res) <- NULL
 	return(res)
 	}
 
 #' @rdname SamplingConv
 #' @export
-qsProb2Comp<-function(R,q,p=NULL,mode="budding",nrep=10000){
+qsProb2Comp <- function(R,q,p = NULL,mode = "budding",nrep = 10000){
 	#calculate completeness given R and mu
 	#based on equations in appendix of Foote, 1996
-	if(mode=="budding"){
-		Pd<-function(p,q,Ti){exp(-q*(Ti-1))-exp(-q*Ti)}
+	if(mode == "budding"){
+		Pd <- function(p,q,Ti){exp(-q*(Ti-1))-exp(-q*Ti)}
 		}
-	if(mode=="bifurcating"){
-		Pd<-function(p,q,Ti){exp(-(p+q)*(Ti-1))-exp(-(p+q)*Ti)}
+	if(mode == "bifurcating"){
+		Pd <- function(p,q,Ti){exp(-(p+q)*(Ti-1))-exp(-(p+q)*Ti)}
 		if(is.null(p)){
-			p<-q
+			p <- q
 			message("Origination rate (p) not given, assuming equal to extinction rate")
 			}
 		}
-	if(mode=="anagenesis"){
-		Pd<-function(p,q,Ti){exp(-(p+q)*(Ti-1))-exp(-(p+q)*Ti)}
+	if(mode == "anagenesis"){
+		Pd <- function(p,q,Ti){exp(-(p+q)*(Ti-1))-exp(-(p+q)*Ti)}
 		if(is.null(p)){
-			p<-q
+			p <- q
 			message("Rate of pseudo-speciation / anagenesis (p) not given, assuming equal to extinction rate")
 			}
 		}
-	res<-numeric()
+	res <- numeric()
 	for(t in 1:nrep){
-		res[t]<-(1-((1-R)^t))*Pd(p=p,q=q,Ti=t)
+		res[t] <- (1-((1-R)^t))*Pd(p = p,q = q,Ti = t)
 		}
-	res<-sum(res)
-	names(res)<-NULL
+	res <- sum(res)
+	names(res) <- NULL
 	return(res)
 	}
 
 #' @rdname SamplingConv
 #' @export
-qsRate2Comp<-function(r,q){
+qsRate2Comp <- function(r,q){
 	#calculate completeness given r and mu
-	res<-r/(r+q)
-	names(res)<-NULL
+	res <- r/(r+q)
+	names(res) <- NULL
 	return(res)
 	}
 

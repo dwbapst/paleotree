@@ -233,7 +233,7 @@ data(retiolitinae)
 	# the expected tree age from the earliest first appearance
 # set average tree age to be 10 Ma earlier than first FAD
 
-outgroupRetio<-"Rotaretiolites" # sister to all other included taxa
+outgroupRetio <- "Rotaretiolites" # sister to all other included taxa
 
 # the following will create a NEXUS file with an 'empty' morph matrix
 	# with the only topological constraint on ingroup monophyly
@@ -241,23 +241,23 @@ outgroupRetio<-"Rotaretiolites" # sister to all other included taxa
  
 # with doNotRun set to TRUE for troubleshooting
 
-createMrBayesTipDatingNexus(tipTimes=retioRanges,
-		outgroupTaxa=outgroupRetio,treeConstraints=NULL,
-		ageCalibrationType="uniformRange",whichAppearance="first",
-		treeAgeOffset=10,	newFile=NULL,	
-		origNexusFile=NULL,createEmptyMorphMat=TRUE,
-		runName="retio_dating",doNotRun=TRUE)
+createMrBayesTipDatingNexus(tipTimes = retioRanges,
+		outgroupTaxa = outgroupRetio,treeConstraints = NULL,
+		ageCalibrationType = "uniformRange",whichAppearance = "first",
+		treeAgeOffset = 10,	newFile = NULL,	
+		origNexusFile = NULL,createEmptyMorphMat = TRUE,
+		runName = "retio_dating",doNotRun = TRUE)
 
 # let's try it with a tree for topological constraints
      # this requires setting outgroupTaxa to NULL
 # let's also set doNotRun to FALSE
 
-createMrBayesTipDatingNexus(tipTimes=retioRanges,
-		outgroupTaxa=NULL,treeConstraints=retioTree,
-		ageCalibrationType="uniformRange",whichAppearance="first",
-		treeAgeOffset=10,	newFile=NULL,	
-		origNexusFile=NULL,createEmptyMorphMat=TRUE,
-		runName="retio_dating",doNotRun=FALSE)
+createMrBayesTipDatingNexus(tipTimes = retioRanges,
+		outgroupTaxa = NULL,treeConstraints = retioTree,
+		ageCalibrationType = "uniformRange",whichAppearance = "first",
+		treeAgeOffset = 10,	newFile = NULL,	
+		origNexusFile = NULL,createEmptyMorphMat = TRUE,
+		runName = "retio_dating",doNotRun = FALSE)
 
 # the above is essentially cal3 with a better algorithm,
 		# and no need for a priori rate estimates
@@ -268,12 +268,12 @@ createMrBayesTipDatingNexus(tipTimes=retioRanges,
 
 # no morph matrix supplied or generated
 	# you'll need to manually append to an existing NEXUS file
-createMrBayesTipDatingNexus(tipTimes=retioRanges,
-		outgroupTaxa=NULL,treeConstraints=retioTree,
-		ageCalibrationType="uniformRange",whichAppearance="first",
-		treeAgeOffset=10,	newFile=NULL,	
-		origNexusFile=NULL,createEmptyMorphMat=FALSE,
-		runName="retio_dating",doNotRun=TRUE)
+createMrBayesTipDatingNexus(tipTimes = retioRanges,
+		outgroupTaxa = NULL,treeConstraints = retioTree,
+		ageCalibrationType = "uniformRange",whichAppearance = "first",
+		treeAgeOffset = 10,	newFile = NULL,	
+		origNexusFile = NULL,createEmptyMorphMat = FALSE,
+		runName = "retio_dating",doNotRun = TRUE)
 
 \dontrun{
 
@@ -281,14 +281,14 @@ createMrBayesTipDatingNexus(tipTimes=retioRanges,
 	# to file and see what happens
 
 # here's my super secret MrBayes directory
-file<-"D:\\\\dave\\\\workspace\\\\mrbayes\\\\exampleRetio.nex"
+file <- "D:\\\\dave\\\\workspace\\\\mrbayes\\\\exampleRetio.nex"
 
-createMrBayesTipDatingNexus(tipTimes=retioRanges,
-		outgroupTaxa=NULL,treeConstraints=retioTree,
-		ageCalibrationType="uniformRange",whichAppearance="first",
-		treeAgeOffset=10,	newFile=file,	
-		origNexusFile=NULL,createEmptyMorphMat=TRUE,
-		runName="retio_dating",doNotRun=FALSE)
+createMrBayesTipDatingNexus(tipTimes = retioRanges,
+		outgroupTaxa = NULL,treeConstraints = retioTree,
+		ageCalibrationType = "uniformRange",whichAppearance = "first",
+		treeAgeOffset = 10,	newFile = file,	
+		origNexusFile = NULL,createEmptyMorphMat = TRUE,
+		runName = "retio_dating",doNotRun = FALSE)
 
 }
 

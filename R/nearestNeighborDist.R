@@ -52,20 +52,20 @@
 #' data(graptDisparity)
 #' 
 #' #calculate mean NND
-#' NND<-nearestNeighborDist(graptDistMat)
+#' NND <- nearestNeighborDist(graptDistMat)
 #' mean(NND)
 #' 
 #' #calculate NND for different groups
 #' 
 #' #group (clade/paraclade) coding
-#' groupID <- graptCharMatrix[,54]+1
+#' groupID  <-  graptCharMatrix[,54]+1
 #' 
-#' groupNND<-numeric(7)
-#' names(groupNND)<-c("Normalo.","Monogr.","Climaco.",
+#' groupNND <- numeric(7)
+#' names(groupNND) <- c("Normalo.","Monogr.","Climaco.",
 #'    "Dicrano.","Lasiogr.","Diplogr.","Retiol.")
 #' for(i in unique(groupID)){
-#'    groupNND[i]<-mean(nearestNeighborDist(
-#'       graptDistMat[groupID==i,groupID==i]))
+#'    groupNND[i] <- mean(nearestNeighborDist(
+#'       graptDistMat[groupID == i,groupID == i]))
 #'    }
 #' groupNND
 #' 
@@ -78,23 +78,23 @@
 #' @name nearestNeighborDist
 #' @rdname nearestNeighborDist
 #' @export nearestNeighborDist
-nearestNeighborDist<-function(distMat){
+nearestNeighborDist <- function(distMat){
    #returns a vector of NNDs for each taxon in a distance matrix
    #this function is included in paleotree mainly for pedagogical use
    if(!inherits(distMat,"dist")){
       if(is.matrix(distMat)){
-         if(all(diag(distMat)!=0)){
+         if(all(diag(distMat) != 0)){
             stop("Diagonal is nonzero, may be a similarity matrix, not a distance matrix")}
          if(!isSymmetric(distMat)){stop("Not a Symmetric Distance Matrix?")}
-         distM<-distMat
+         distM <- distMat
       }else{
          stop("Not a matrix, not a 'dist' object, what is it?")
       }
    }else{
-      distM<-is.matrix(distMat)
+      distM <- is.matrix(distMat)
       }
-   NND<-sapply(1:nrow(distMat),function(x) min(distMat[x,-x]))
-   names(NND)<-labels(distM)[[1]]
+   NND <- sapply(1:nrow(distMat),function(x) min(distMat[x,-x]))
+   names(NND) <- labels(distM)[[1]]
    return(NND) #return as a per-taxon 
    }
    

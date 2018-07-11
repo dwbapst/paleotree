@@ -103,26 +103,26 @@ a tree with fossil taxa, as the half-compatibility and all-compatibility summary
 \examples{
 \dontrun{
 
-MCCT<-obtainDatedPosteriorTreesMrB(
- 	runFile="C:\\\\myTipDatingAnalysis\\\\MrB_run_fossil_05-10-17.nex.run1.t",
- 	nRuns=2, burnin=0.5,
-		outputTrees="MCCT", file=NULL)
+MCCT <- obtainDatedPosteriorTreesMrB(
+ 	runFile = "C:\\\\myTipDatingAnalysis\\\\MrB_run_fossil_05-10-17.nex.run1.t",
+ 	nRuns = 2, burnin = 0.5,
+		outputTrees = "MCCT", file = NULL)
 
-MAP<-obtainDatedPosteriorTreesMrB(
- 	runFile="C:\\\\myTipDatingAnalysis\\\\MrB_run_fossil_05-10-17.nex.run1.t",
- 	nRuns=2, burnin=0.5, getFixedTimes = TRUE,
-		outputTrees="MAP", file=NULL)
+MAP <- obtainDatedPosteriorTreesMrB(
+ 	runFile = "C:\\\\myTipDatingAnalysis\\\\MrB_run_fossil_05-10-17.nex.run1.t",
+ 	nRuns = 2, burnin = 0.5, getFixedTimes = TRUE,
+		outputTrees = "MAP", file = NULL)
 
 # get a root age from the fixed ages for tips
-setRootAge(tree=MAP)
+setRootAge(tree = MAP)
 
 #pull a hundred trees randomly from the posterior
-hundredRandomlySelectedTrees<-obtainDatedPosteriorTreesMrB(
- 	runFile="C:\\\\myTipDatingAnalysis\\\\MrB_run_fossil_05-10-17.nex.run1.t",
- 	nRuns=2, burnin=0.5, getFixedTimes = TRUE,
-		outputTrees=100, file=NULL)
+hundredRandomlySelectedTrees <- obtainDatedPosteriorTreesMrB(
+ 	runFile = "C:\\\\myTipDatingAnalysis\\\\MrB_run_fossil_05-10-17.nex.run1.t",
+ 	nRuns = 2, burnin = 0.5, getFixedTimes = TRUE,
+		outputTrees = 100, file = NULL)
 
-setRootAges(trees=hundredRandomlySelectedTrees)
+setRootAges(trees = hundredRandomlySelectedTrees)
 
 }
 

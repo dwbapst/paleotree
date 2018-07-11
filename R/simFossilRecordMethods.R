@@ -74,18 +74,18 @@
 #' @examples
 #' 
 #' set.seed(44)
-#' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
-#' 	nTotalTaxa=c(20,30) ,nExtant=0, plot=TRUE)
+#' record  <-  simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1,
+#' 	nTotalTaxa = c(20,30) ,nExtant = 0, plot = TRUE)
 #' 
 #' # time-slicing
 #' 
 #' # let's try slicing this record at 940 time-units
-#' slicedRecord<-timeSliceFossilRecord(fossilRecord = record, sliceTime = 940)
+#' slicedRecord <- timeSliceFossilRecord(fossilRecord = record, sliceTime = 940)
 #' # and let's plot it
 #' divCurveFossilRecordSim(slicedRecord)
 #' 
 #' # now with shiftRoot4TimeSlice = TRUE to shift the root age
-#' slicedRecord<-timeSliceFossilRecord(fossilRecord = record, sliceTime = 940,
+#' slicedRecord <- timeSliceFossilRecord(fossilRecord = record, sliceTime = 940,
 #' 	shiftRoot4TimeSlice = TRUE)
 #' # and let's plot it
 #' divCurveFossilRecordSim(slicedRecord)
@@ -94,8 +94,8 @@
 #' # notice that in both, 'modern' (extant) taxa are sampled with probability = 1
 #' 	#let's try it again, make that probability = 0
 #' 
-#' # now with shiftRoot4TimeSlice=TRUE
-#' slicedRecord<-timeSliceFossilRecord(fossilRecord = record, sliceTime = 940,
+#' # now with shiftRoot4TimeSlice = TRUE
+#' slicedRecord <- timeSliceFossilRecord(fossilRecord = record, sliceTime = 940,
 #' 	shiftRoot4TimeSlice = TRUE, modern.samp.prob = 0)
 #' # and let's plot it
 #' divCurveFossilRecordSim(slicedRecord)
@@ -105,68 +105,68 @@
 #' # converting to taxa objects and observed ranges
 #' 
 #' # convert to taxa data
-#' taxa<-fossilRecord2fossilTaxa(record)
+#' taxa <- fossilRecord2fossilTaxa(record)
 #' # convert to ranges
-#' ranges<-fossilRecord2fossilRanges(record)
+#' ranges <- fossilRecord2fossilRanges(record)
 #' 
 #' # plot diversity curves with multiDiv
-#' multiDiv(list(taxa,ranges),plotMultCurves=TRUE)
+#' multiDiv(list(taxa,ranges),plotMultCurves = TRUE)
 #' # should look a lot like what we got earlier
 #' 
 #' # get the cladogram we'd obtain for these taxa with taxa2cladogram
-#' cladogram<-taxa2cladogram(taxa,plot=TRUE)
+#' cladogram <- taxa2cladogram(taxa,plot = TRUE)
 #' 
 #' # now get the time-scaled phylogenies with taxa2phylo
 #' 
 #' # first, with tips extending to the true times of extinction
-#' treeExt<-taxa2phylo(taxa,plot=TRUE)
+#' treeExt <- taxa2phylo(taxa,plot = TRUE)
 #' 
 #' # now, with tips extending to the first appearance dates (FADs) of taxa
 #' 	# get the FADs from the ranges
-#' FADs<-ranges[,1]
-#' treeFAD<-taxa2phylo(taxa,FADs,plot=TRUE)
+#' FADs <- ranges[,1]
+#' treeFAD <- taxa2phylo(taxa,FADs,plot = TRUE)
 #' 
 #' @rdname simFossilRecordMethods
 #' @export
-timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FALSE,
-		modern.samp.prob=1, tolerance=10^-4){
+timeSliceFossilRecord <- function(fossilRecord, sliceTime, shiftRoot4TimeSlice = FALSE,
+		modern.samp.prob = 1, tolerance = 10^-4){
 	#take a fossilRecord data object and cut it at some specific date
 	#
 	# CHECKS
-	checkResult<-checkFossilRecord(fossilRecord)
+	checkResult <- checkFossilRecord(fossilRecord)
 	#check shiftRoot4TimeSlice
-	shiftPar<-c(TRUE,FALSE,"withExtantOnly")
-	shiftRoot4TimeSlice<-shiftPar[pmatch(shiftRoot4TimeSlice,shiftPar)]
+	shiftPar <- c(TRUE,FALSE,"withExtantOnly")
+	shiftRoot4TimeSlice <- shiftPar[pmatch(shiftRoot4TimeSlice,shiftPar)]
 	if(is.na(shiftRoot4TimeSlice)){
 		stop("shiftRoot4TimeSlice must be a logical or the string 'withExtantOnly'")}
 	#
 	#drop all taxa that originate after the sliceTime
-	droppers<-sapply(fossilRecord,function(x) x[[1]][3]<sliceTime)
-	fossilRecord<-fossilRecord[!droppers]
+	droppers <- sapply(fossilRecord,function(x) x[[1]][3]<sliceTime)
+	fossilRecord <- fossilRecord[!droppers]
 	#
 	#remove all sampling events after sliceTime
 		for(i in 1:length(fossilRecord)){
 			#remove all sampling events after sliceTime
-			fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]][fossilRecord[[i]][[2]]>=sliceTime]
+			fossilRecord[[i]][[2]] <- fossilRecord[[i]][[2]][fossilRecord[[i]][[2]] >= sliceTime]
 		}
 	# adjusting time, making taxa extant
 		# need to first test if there are extant taxa or not
-	isAlive<-sapply(fossilRecord,function(x){
+	isAlive <- sapply(fossilRecord,function(x){
 		if(is.na(x[[1]][4])){
 			TRUE
 		}else{
 			(sliceTime-x[[1]][4])>tolerance
 		}})
 	#browser()
-	if(shiftRoot4TimeSlice=="withExtantOnly"){
+	if(shiftRoot4TimeSlice == "withExtantOnly"){
 		if(any(isAlive)){
-			shiftRoot4TimeSlice<-TRUE
+			shiftRoot4TimeSlice <- TRUE
 		}else{
-			shiftRoot4TimeSlice<-FALSE
+			shiftRoot4TimeSlice <- FALSE
 			}
 		}
 	#
-	# if shiftRoot4TimeSlice, then the whole thing shifts so time=0 is slice time
+	# if shiftRoot4TimeSlice, then the whole thing shifts so time = 0 is slice time
 	if(shiftRoot4TimeSlice){	
 		#adjust all dates so cutdate becomes 0
 		for(i in 1:length(fossilRecord)){
@@ -174,107 +174,107 @@ timeSliceFossilRecord<-function(fossilRecord, sliceTime, shiftRoot4TimeSlice=FAL
 				#if stillAlive, replace 4:5 with 0,1
 			if(isAlive[i]){
 				#turn all taxa that went extinct after sliceTime so they are still alive
-				fossilRecord[[i]][[1]][3]<-fossilRecord[[i]][[1]][3]-sliceTime
-				fossilRecord[[i]][[1]][4:5]<-c(0,1)
+				fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3]-sliceTime
+				fossilRecord[[i]][[1]][4:5] <- c(0,1)
 			}else{
-				fossilRecord[[i]][[1]][3:4]<-fossilRecord[[i]][[1]][3:4]-sliceTime
+				fossilRecord[[i]][[1]][3:4] <- fossilRecord[[i]][[1]][3:4]-sliceTime
 				}
-			fossilRecord[[i]][[2]]<-fossilRecord[[i]][[2]]-sliceTime
+			fossilRecord[[i]][[2]] <- fossilRecord[[i]][[2]]-sliceTime
 			}
-		modernTime<-0
-	# if shiftRoot4TimeSlice=FALSE, then simply replace all extant taxa with
+		modernTime <- 0
+	# if shiftRoot4TimeSlice = FALSE, then simply replace all extant taxa with
 		# LADs at sliceTime and score as extant
 	}else{
 		for(i in 1:length(fossilRecord)){
 			if(isAlive[i]){
-				fossilRecord[[i]][[1]][4:5]<-c(sliceTime,1)
+				fossilRecord[[i]][[1]][4:5] <- c(sliceTime,1)
 				}
 			}
-		modernTime<-sliceTime
+		modernTime <- sliceTime
 		}
 	#
 	# sample at modern based on modern.samp.prob
-	whichExtant<-which(sapply(fossilRecord,function(x) x[[1]][5]==1))
-	nLive<-length(whichExtant)
-	liveSampled<-as.logical(rbinom(n=nLive, size=1, prob=modern.samp.prob))
-	whichSampled<-whichExtant[liveSampled]
+	whichExtant <- which(sapply(fossilRecord,function(x) x[[1]][5] == 1))
+	nLive <- length(whichExtant)
+	liveSampled <- as.logical(rbinom(n = nLive, size = 1, prob = modern.samp.prob))
+	whichSampled <- whichExtant[liveSampled]
 	#
 	#add sampling event at modern
 	for(i in whichSampled){
-		fossilRecord[[i]][[2]]<-c(fossilRecord[[i]][[2]],modernTime)
+		fossilRecord[[i]][[2]] <- c(fossilRecord[[i]][[2]],modernTime)
 		}
 	#
 	# make sure it has the right class
-	class(fossilRecord)<-'fossilRecordSimulation'
+	class(fossilRecord) <- 'fossilRecordSimulation'
 	# 
 	return(fossilRecord)
 	}
 
 #' @rdname simFossilRecordMethods
 #' @export
-fossilRecord2fossilTaxa<-function(fossilRecord){
+fossilRecord2fossilTaxa <- function(fossilRecord){
 	# CHECKS
-	checkResult<-checkFossilRecord(fossilRecord)
+	checkResult <- checkFossilRecord(fossilRecord)
 	# a function that transforms a simfossilrecord to a taxa object
-	taxaConvert<-t(sapply(fossilRecord,function(x) x[[1]]))	
-	rownames(taxaConvert)<-names(fossilRecord)
+	taxaConvert <- t(sapply(fossilRecord,function(x) x[[1]]))	
+	rownames(taxaConvert) <- names(fossilRecord)
 	return(taxaConvert)
 	}
 
 #' @rdname simFossilRecordMethods
 #' @export	
-fossilRecord2fossilRanges<-function(fossilRecord, merge.cryptic=TRUE, ranges.only = TRUE){
+fossilRecord2fossilRanges <- function(fossilRecord, merge.cryptic = TRUE, ranges.only = TRUE){
 	# a function that transforms a simfossilrecord to a set of ranges (like from sampleRanges)
 		# merge.cryptic = TRUE or FALSE
 		# ranges.only or sampling times?
 	# CHECKS
 	# browser()
-	checkResult<-checkFossilRecord(fossilRecord)
+	checkResult <- checkFossilRecord(fossilRecord)
 	#
-	sampData<-lapply(fossilRecord,function(x) x[[2]]) 
+	sampData <- lapply(fossilRecord,function(x) x[[2]]) 
 	#get sampOcc : separate out the sampling events
-	sampOcc<-lapply(fossilRecord,function(x) x[[2]])
-	names(sampOcc)<-names(fossilRecord)
+	sampOcc <- lapply(fossilRecord,function(x) x[[2]])
+	names(sampOcc) <- names(fossilRecord)
 	#merge cryptic taxa
 	if(merge.cryptic){
-		taxonIDs<-sapply(fossilRecord,function(x) x[[1]][1])
-		cryptIDs<-sapply(fossilRecord,function(x) x[[1]][6])
+		taxonIDs <- sapply(fossilRecord,function(x) x[[1]][1])
+		cryptIDs <- sapply(fossilRecord,function(x) x[[1]][6])
 		for(i in 1:length(fossilRecord)){
-			if(taxonIDs[i]==cryptIDs[i]){
+			if(taxonIDs[i] == cryptIDs[i]){
 				#if its the original taxon, collect all sampling events
 					# for this cryptic complex into one pool
 				# browser()
-				sampOcc[[i]]<-unlist(c(sampOcc[taxonIDs[i]==cryptIDs]))
+				sampOcc[[i]] <- unlist(c(sampOcc[taxonIDs[i] == cryptIDs]))
 				#check that its a vector
 				if(is.list(sampOcc[[i]])){
 					stop("sampling data for taxa is not coercing correctly to a vector")}
 			}else{
 				#if its a cryptic taxon that didn't found the complex, erase its data
-				sampOcc[[i]]<-NA
+				sampOcc[[i]] <- NA
 				}
 			}
 		}
-	sampOcc[sapply(sampOcc,length)==0]<-NA
+	sampOcc[sapply(sampOcc,length) == 0] <- NA
 	#convert sampling events to FADs and LADs
 	if(ranges.only){
-		ranges<-cbind(sapply(sampOcc,max),sapply(sampOcc,min))
-		rownames(ranges)<-names(sampOcc)
-		colnames(ranges)<-c("FAD","LAD")
-		result<-ranges
+		ranges <- cbind(sapply(sampOcc,max),sapply(sampOcc,min))
+		rownames(ranges) <- names(sampOcc)
+		colnames(ranges) <- c("FAD","LAD")
+		result <- ranges
 	}else{
-		result<-sampOcc
+		result <- sampOcc
 		}
 	return(result)
 	}
 
 	
 # don't export
-checkFossilRecord<-function(fossilRecord){
+checkFossilRecord <- function(fossilRecord){
 	if(!inherits(fossilRecord,"fossilRecordSimulation")){
 		stop("fossilRecord object is not of class 'fossilRecordSimulation'")}
-	if(any(sapply(fossilRecord,length)!=2)){
+	if(any(sapply(fossilRecord,length) != 2)){
 		stop("fossilRecord object has taxon entries with more or less than two elements")}
-	if(any(sapply(fossilRecord,function(x) length(x[[1]]))!=6)){
+	if(any(sapply(fossilRecord,function(x) length(x[[1]])) != 6)){
 		stop("fossilRecord object has taxon entries with more or less than six elements in first element")}		
 	return(TRUE)
 	}

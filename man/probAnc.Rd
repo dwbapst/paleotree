@@ -61,7 +61,7 @@ can be no higher than 0.5. See Foote (1996) for a graphic depiction of this
 non-intuitive ceiling. For reasons (probably?) having to do with finite
 approximations of infinite summations, values close to perfect sampling
 may have values slightly higher than this ceiling, which is also apparent
-visually in the figures in Foote (1996). Thus, values higher than 0.5 when p=q
+visually in the figures in Foote (1996). Thus, values higher than 0.5 when p = q
 should be discounted, and in general when sampling rate is high, results should
 be treated cautiously as overestimates.
 }
@@ -69,16 +69,16 @@ be treated cautiously as overestimates.
 #examples, run at very low nrep for sake of speed (examples need to be fast)
 
 #default: probability of sampling a direct descendant
-probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis="directDesc",nrep=100)
+probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis = "directDesc",nrep = 100)
 
 #other modes
-probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis="directDesc",nrep=100)
-probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="directDesc",nrep=100)
+probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis = "directDesc",nrep = 100)
+probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis = "directDesc",nrep = 100)
 
 #probability of having sampled indirect descendants of a taxon
-probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis="indirectDesc",nrep=100)	#default
-probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis="indirectDesc",nrep=100)
-probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis="indirectDesc",nrep=100)
+probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "budding", analysis = "indirectDesc",nrep = 100)	#default
+probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "bifurcating", analysis = "indirectDesc",nrep = 100)
+probAnc(p = 0.1, q = 0.1, R = 0.5, mode = "anagenesis", analysis = "indirectDesc",nrep = 100)
 
 }
 \references{

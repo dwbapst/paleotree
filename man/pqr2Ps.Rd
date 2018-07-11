@@ -65,9 +65,9 @@ in the code anyway, here's the unpublished equation for the exact solution:
 }
 \examples{
 #with exact solution
-pqr2Ps(p=0.1,q=0.1,r=0.1,useExact=TRUE)
+pqr2Ps(p = 0.1,q = 0.1,r = 0.1,useExact = TRUE)
 #with inexact solution
-pqr2Ps(p=0.1,q=0.1,r=0.1,useExact=TRUE)
+pqr2Ps(p = 0.1,q = 0.1,r = 0.1,useExact = TRUE)
 }
 \references{
 Bapst, D. W., E. A. King and M. W. Pennell. In prep. Probability models

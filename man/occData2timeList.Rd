@@ -76,14 +76,14 @@ endpoints of a taxon's range without ignoring uncertainty from any particular se
 \examples{
 data(graptPBDB)
 
-graptOccSpecies<-taxonSortPBDBocc(graptOccPBDB,rank="species",onlyFormal=FALSE)
-graptTimeSpecies<-occData2timeList(occList=graptOccSpecies)
+graptOccSpecies <- taxonSortPBDBocc(graptOccPBDB,rank = "species",onlyFormal = FALSE)
+graptTimeSpecies <- occData2timeList(occList = graptOccSpecies)
 
 head(graptTimeSpecies[[1]])
 head(graptTimeSpecies[[2]])
 
-graptOccGenus<-taxonSortPBDBocc(graptOccPBDB,rank="genus",onlyFormal=FALSE)
-graptTimeGenus<-occData2timeList(occList=graptOccGenus)
+graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,rank = "genus",onlyFormal = FALSE)
+graptTimeGenus <- occData2timeList(occList = graptOccGenus)
 
 layout(1:2)
 taxicDivDisc(graptTimeSpecies)
@@ -93,7 +93,7 @@ taxicDivDisc(graptTimeGenus)
 # let's compare to the other option, "occRange"
 	# for species
 
-graptOccRange<-occData2timeList(occList=graptOccSpecies, intervalType="occRange")
+graptOccRange <- occData2timeList(occList = graptOccSpecies, intervalType = "occRange")
 
 #we would expect no change in the diversity curve
 	#because there are only changes in th
@@ -110,9 +110,9 @@ taxicDivDisc(graptOccRange)
 
 # write a simple function for getting uncertainty in first and last
 		# appearance dates from a timeList object
-sumAgeUncert<-function(timeList){
-	fourDate<-timeList2fourDate(timeList)
-	perOcc<-(fourDate[,1]-fourDate[,2])+(fourDate[,3]-fourDate[,4])
+sumAgeUncert <- function(timeList){
+	fourDate <- timeList2fourDate(timeList)
+	perOcc <- (fourDate[,1]-fourDate[,2])+(fourDate[,3]-fourDate[,4])
 	sum(perOcc)
 	}
 
@@ -126,7 +126,7 @@ sumAgeUncert(graptOccRange)-sumAgeUncert(graptTimeSpecies)
 1-(sumAgeUncert(graptTimeSpecies)/sumAgeUncert(graptOccRange))
 
 #a different way of doing it
-dateChange<-timeList2fourDate(graptTimeSpecies)-timeList2fourDate(graptOccRange)
+dateChange <- timeList2fourDate(graptTimeSpecies)-timeList2fourDate(graptOccRange)
 apply(dateChange,2,sum)
 #total amount of uncertainty removed by dateRange algorithm
 sum(abs(dateChange))

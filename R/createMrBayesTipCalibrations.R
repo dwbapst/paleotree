@@ -107,25 +107,25 @@
 #' # uniform prior, with a 10 million year offset for
 #' 	# the expected tree age from the earliest first appearance
 #' 
-#' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-#' 	ageCalibrationType="uniformRange", treeAgeOffset=10)
+#' createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
+#' 	ageCalibrationType = "uniformRange", treeAgeOffset = 10)
 #' 
 #' # fixed prior, at the earliest bound for the first appearance
 #' 
-#' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-#' 	ageCalibrationType="fixedDateEarlier", treeAgeOffset=10)
+#' createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
+#' 	ageCalibrationType = "fixedDateEarlier", treeAgeOffset = 10)
 #' 
 #' # fixed prior, sampled from between the bounds on the last appearance
 #' 	# you should probably never do this, fyi
 #' 
-#' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-#' 	ageCalibrationType="fixedDateRandom", treeAgeOffset=10)
+#' createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
+#' 	ageCalibrationType = "fixedDateRandom", treeAgeOffset = 10)
 #' 
 #' 
 #' \dontrun{
 #' 
-#' createMrBayesTipCalibrations(tipTimes=retioRanges, whichAppearance="first",
-#' 	ageCalibrationType="uniformRange", treeAgeOffset=10, file="tipCalibrations.txt")
+#' createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
+#' 	ageCalibrationType = "uniformRange", treeAgeOffset = 10, file = "tipCalibrations.txt")
 #' 
 #' }
 #' 
@@ -136,46 +136,46 @@
 #' @name createMrBayesTipCalibrations
 #' @rdname createMrBayesTipCalibrations
 #' @export
-createMrBayesTipCalibrations<-function(tipTimes,
-	ageCalibrationType,whichAppearance="first",
-	treeAgeOffset,minTreeAge=NULL,
-	collapseUniform=TRUE,anchorTaxon=TRUE,file=NULL){
+createMrBayesTipCalibrations <- function(tipTimes,
+	ageCalibrationType,whichAppearance = "first",
+	treeAgeOffset,minTreeAge = NULL,
+	collapseUniform = TRUE,anchorTaxon = TRUE,file = NULL){
 	#
 	#
 	#################################################################################################
 	# make sure tipTimes is not a data.frame
 	if(is.data.frame(tipTimes)){
-		tipTimes<-as.matrix(tipTimes)
+		tipTimes <- as.matrix(tipTimes)
 		}
 	if(is.list(tipTimes)){
-		if(length(tipTimes)==2){
-			tipTimes[[1]]<-as.matrix(tipTimes[[1]])
-			tipTimes[[2]]<-as.matrix(tipTimes[[2]])
+		if(length(tipTimes) == 2){
+			tipTimes[[1]] <- as.matrix(tipTimes[[1]])
+			tipTimes[[2]] <- as.matrix(tipTimes[[2]])
 		}else{
 			stop("why is tipTimes a list of not length 2?")
 			}
 		}
 	#######################################################################################
-	if(length(ageCalibrationType)!=1){
+	if(length(ageCalibrationType) != 1){
 		stop("argument ageCalibrationType must be of length 1")
 		}
-	if(length(whichAppearance)!=1){
+	if(length(whichAppearance) != 1){
 		stop("argument whichAppearance must be of length 1")
 		}
-	if(all(whichAppearance!=c("first","last"))){
+	if(all(whichAppearance != c("first","last"))){
 		stop("argument whichAppearance must be one of 'first' or 'last'")
 		}
-	if(all(ageCalibrationType!=c(
+	if(all(ageCalibrationType != c(
 		"fixedDateEarlier","fixedDateLatter",
 		"fixedDateRandom","uniformRange"))){
 			stop('argument ageCalibrationType must be one of 
 				"fixedDateEarlier", "fixedDateLatter", "fixedDateRandom", or "uniformRange"')
 		}
-	if(length(treeAgeOffset)!=1){
+	if(length(treeAgeOffset) != 1){
 		stop("treeAgeOffset must be of length 1")
 		}
 	if(!is.null(minTreeAge)){
-		if(length(minTreeAge)!=1){
+		if(length(minTreeAge) != 1){
 			stop("minTreeAge must be of length 1")
 			}
 		}
@@ -185,8 +185,8 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	# format tipTimes
 	#
 	#if list of two (i.e. timeList), convert to four-date format
-	if(is.list(tipTimes) & length(tipTimes)==2){
-		tipTimes<-timeList2fourDate(tipTimes)
+	if(is.list(tipTimes) & length(tipTimes) == 2){
+		tipTimes <- timeList2fourDate(tipTimes)
 		}
 	# checks for insanity in tipTimes
 	if(!is.matrix(tipTimes)){
@@ -194,20 +194,20 @@ createMrBayesTipCalibrations<-function(tipTimes,
 		}
 	# coerce to numeric
 	if(!is.numeric(tipTimes)){
-		tipTimes2<-apply(tipTimes,2,as.numeric)
-		rownames(tipTimes2)<-rownames(tipTimes)
-		tipTimes<-tipTimes2
+		tipTimes2 <- apply(tipTimes,2,as.numeric)
+		rownames(tipTimes2) <- rownames(tipTimes)
+		tipTimes <- tipTimes2
 		}
 	# must be a table with 1, 2 or 4 columns
-	if(all(ncol(tipTimes)!=c(1,2,4))){
+	if(all(ncol(tipTimes) != c(1,2,4))){
 		stop("tipTimes must have 1 or 2 or 4 columns")
 		}
 	# Before we go any further, let's preserve the taxon names
-	taxonNames<-rownames(tipTimes)
+	taxonNames <- rownames(tipTimes)
 	#
 	# check for things the user is unlikely to want to do
-	if(ncol(tipTimes)==1){
-		if(ageCalibrationType!="fixedDateEarlier"){
+	if(ncol(tipTimes) == 1){
+		if(ageCalibrationType != "fixedDateEarlier"){
 			stop("You appear to be supplying a single point occurrence per taxon.
 				There isn't any uncertainty or upper bounds on ages, so 
 				ageCalibrationType should be set to 'fixedDateEarlier'")
@@ -215,74 +215,74 @@ createMrBayesTipCalibrations<-function(tipTimes,
 		}
 	###########################################
 	# test anchorTaxon
-	if(length(anchorTaxon)!=1){
+	if(length(anchorTaxon) != 1){
 		stop("anchorTaxon must be of length 1")
 		}
 	# is anchorTaxon a logical?
 	if(is.logical(anchorTaxon)){
-		pickFix<-anchorTaxon
+		pickFix <- anchorTaxon
 		# Does an anchorTaxon need to be picked?
-		if(anchorTaxon & ageCalibrationType=="uniformRange"){
+		if(anchorTaxon & ageCalibrationType == "uniformRange"){
 			# remember taxonNames[1] for later... might not become fixed though
-			anchorTaxon<-taxonNames[1]
+			anchorTaxon <- taxonNames[1]
 		}else{
-			anchorTaxon<-NULL
+			anchorTaxon <- NULL
 			}
 	}else{
 		if(!is.character(anchorTaxon)){
 			stop("anchorTaxon must be of type character if not logical")
 			}
-		pickFix<-FALSE
+		pickFix <- FALSE
 		# test that its a real taxon
-		if(!any(anchorTaxon==taxonNames)){
+		if(!any(anchorTaxon == taxonNames)){
 			stop("anchorTaxon appears to be a taxon name, but not found among rownames (presumed taxon names) in tipTimes")
 			}
 		}
 	####################################################################
 	# fix so four columns
 	# if two columns, then make four-date by repeating
-	if(ncol(tipTimes)==2){
-		tipTimes<-cbind(tipTimes,tipTimes)
+	if(ncol(tipTimes) == 2){
+		tipTimes <- cbind(tipTimes,tipTimes)
 		}
 	#if a single column of point ages, then repeat four times
-	if(ncol(tipTimes)==1){
-		tipTimes<-cbind(tipTimes,tipTimes,tipTimes,tipTimes)
+	if(ncol(tipTimes) == 1){
+		tipTimes <- cbind(tipTimes,tipTimes,tipTimes,tipTimes)
 		}
 	# check that tipTimes is now a matrix with 4 columns
 	if(!is.matrix(tipTimes)){
 		stop("tipTimes not coercing to matrix properly")
 		}
-	if(ncol(tipTimes)!=4){
+	if(ncol(tipTimes) != 4){
 		stop("tipTimes not coercing to four column format correctly")
 		}
 	if(!is.numeric(tipTimes)){
 		stop("tipTimes not coercing to type numeric properly")
 		}
 	# -Add check to tip-Calibrate which makes sure age data is correctly ordered before using it
-	misorderedTimes<-apply(tipTimes,1,function(z) diff(z[1:2]))>0.0001
+	misorderedTimes <- apply(tipTimes,1,function(z) diff(z[1:2]))>0.0001
 	if(any(misorderedTimes)){
 		#print(tipTimes)
 		stop(paste0("dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
-			paste0(rownames(tipTimes)[misorderedTimes],collapse=" ")))
+			paste0(rownames(tipTimes)[misorderedTimes],collapse = " ")))
 		}
 	#and the other pair of dates
-	misorderedTimes<-apply(tipTimes,1,function(z) diff(z[3:4]))>0
+	misorderedTimes <- apply(tipTimes,1,function(z) diff(z[3:4]))>0
 	if(any(misorderedTimes)){
 		stop(paste0("dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
-			paste0(rownames(tipTimes)[misorderedTimes],collapse=" ")))
+			paste0(rownames(tipTimes)[misorderedTimes],collapse = " ")))
 		}	
 	#####################################################################
 	# filter for whichAppearance
 	# choose either the first or last appearance times
 		# (these will likely often be identical)
-	if(whichAppearance=="first"){
-		tipTimes<-tipTimes[,1:2]
+	if(whichAppearance == "first"){
+		tipTimes <- tipTimes[,1:2]
 		}
-	if(whichAppearance=="last"){
-		tipTimes<-tipTimes[,3:4]
+	if(whichAppearance == "last"){
+		tipTimes <- tipTimes[,3:4]
 		}
 	#check
-	if(ncol(tipTimes)!=2){
+	if(ncol(tipTimes) != 2){
 		stop("Weird data format for tipTimes")
 		}
 	#
@@ -290,50 +290,50 @@ createMrBayesTipCalibrations<-function(tipTimes,
 	# select times
 	# for converting to fixed or uniform age ranges
 	#
-	if(ageCalibrationType=="fixedDateEarlier"){
+	if(ageCalibrationType == "fixedDateEarlier"){
 		# use lower bound for selected age of appearance
-		tipTimes<-tipTimes[,1,drop=FALSE]
-		timeType<-"fixed"
+		tipTimes <- tipTimes[,1,drop = FALSE]
+		timeType <- "fixed"
 		}
-	if(ageCalibrationType=="fixedDateLatter"){	
+	if(ageCalibrationType == "fixedDateLatter"){	
 		# use upper bound for selected age of appearance
-		tipTimes<-tipTimes[,2,drop=FALSE]
-		timeType<-"fixed"
+		tipTimes <- tipTimes[,2,drop = FALSE]
+		timeType <- "fixed"
 		}
-	if(ageCalibrationType=="fixedDateRandom"){	
+	if(ageCalibrationType == "fixedDateRandom"){	
 		# random drawn from a uniform distribution
-		tipTimes<-t(t(apply(tipTimes,1,function(x) runif(1,x[2],x[1]))))
-		timeType<-"fixed"
+		tipTimes <- t(t(apply(tipTimes,1,function(x) runif(1,x[2],x[1]))))
+		timeType <- "fixed"
 		}
-	if(ageCalibrationType=="uniformRange"){
+	if(ageCalibrationType == "uniformRange"){
 		# if uniform, don't need to edit tipTimes
-		timeType<-"uniform"
+		timeType <- "uniform"
 		}
 	# check
-	if(all(timeType!=c("fixed","uniform"))){
+	if(all(timeType != c("fixed","uniform"))){
 		stop("Problem when selecting ages. ageCalibrationType argument incorrect?")
 		}
 	# 
 	##############################################
 	# start writing MrBayes block
-	if(timeType=="fixed"){
+	if(timeType == "fixed"){
 		#format fixed age script - single age per taxon
-		dateBlock<-sapply(1:nrow(tipTimes),function(i)
+		dateBlock <- sapply(1:nrow(tipTimes),function(i)
 			paste0("calibrate ",rownames(tipTimes)[i],
 				" = fixed (",tipTimes[i],");"))
 		}
 	# use upper and lower bounds of selected age
 		# of appearance to place uniform prior on tip age
-	if(timeType=="uniform"){
+	if(timeType == "uniform"){
 		# format uniform age block - two ages per taxon
 		# figure out which taxa will need to be fixed
 		if(collapseUniform){
 			# MrBayes doesn't like uniform ranges with the same max and min
-					# related - cannot use uniform calibration is min==max, must use fixed!
-			fixCollapse<-sapply(1:nrow(tipTimes),function(x)
+					# related - cannot use uniform calibration is min == max, must use fixed!
+			fixCollapse <- sapply(1:nrow(tipTimes),function(x)
 				identical(tipTimes[x,2],tipTimes[x,1]))
 		}else{
-			fixCollapse<-rep(FALSE,nrow(tipTimes))
+			fixCollapse <- rep(FALSE,nrow(tipTimes))
 			}
 		# fix anchor taxon
 			# -Need to write code so that users are forced by default to constrain at least one
@@ -342,41 +342,41 @@ createMrBayesTipCalibrations<-function(tipTimes,
 			if(!any(fixCollapse)){
 				message(paste0("anchorTaxon not user-defined, forcing ",
 					anchorTaxon," to be a fixed tip age"))
-				fixCollapse[rownames(tipTimes)==anchorTaxon]<-TRUE
+				fixCollapse[rownames(tipTimes) == anchorTaxon] <- TRUE
 				}
 		}else{
 			if(!is.null(anchorTaxon)){
-				fixCollapse[rownames(tipTimes)==anchorTaxon]<-TRUE
+				fixCollapse[rownames(tipTimes) == anchorTaxon] <- TRUE
 				}
 			}
 		# now actually write the date block!
-		dateBlock<-character(nrow(tipTimes))	
+		dateBlock <- character(nrow(tipTimes))	
 		for(i in 1:length(dateBlock)){
 			if(fixCollapse[i]){
-				dateBlock[i]<-paste0("calibrate ",rownames(tipTimes)[i],
+				dateBlock[i] <- paste0("calibrate ",rownames(tipTimes)[i],
 					" = fixed (",tipTimes[i,1],");")
 			}else{
-				dateBlock[i]<-paste0("calibrate ",rownames(tipTimes)[i],
+				dateBlock[i] <- paste0("calibrate ",rownames(tipTimes)[i],
 					" = uniform (",tipTimes[i,2],
 					", ",tipTimes[i,1],");")
 				}
 			}
 		# write line indicating fixed taxa
 		if(any(fixCollapse)){
-			fixedLine<-paste("[These taxa had fixed tip ages:",
-				paste0(rownames(tipTimes)[fixCollapse],collapse=" "),"]")
+			fixedLine <- paste("[These taxa had fixed tip ages:",
+				paste0(rownames(tipTimes)[fixCollapse],collapse = " "),"]")
 		}else{
-			fixedLine<-" "
+			fixedLine <- " "
 			}
 		# attach to date block
-		dateBlock<-c(dateBlock,fixedLine)
+		dateBlock <- c(dateBlock,fixedLine)
 		}
 	#####################################################
 	#need to create tree age prior
 	# get minimum age of tips
-	minTipAge<-max(tipTimes)
+	minTipAge <- max(tipTimes)
 	if(is.null(minTreeAge)){
-		minTreeAge<-minTipAge
+		minTreeAge <- minTipAge
 	}else{
 		# make sure minimum tree age is less than oldest tip
 		if((minTreeAge*1.0001)<minTipAge){
@@ -385,15 +385,15 @@ createMrBayesTipCalibrations<-function(tipTimes,
 		}
 	#
 	# use offset to calculate mean tree age
-	meanTreeAge<-minTreeAge+treeAgeOffset
+	meanTreeAge <- minTreeAge+treeAgeOffset
 	#
 	# write tree age prior command
-	treeAgeBlock<-paste0("prset treeagepr = offsetexp(",
+	treeAgeBlock <- paste0("prset treeagepr = offsetexp(",
 		minTreeAge,", ",meanTreeAge,");")
 	########################################################
 	# create final block for output
 	#
-	finalBlock<-c(dateBlock,"",treeAgeBlock)
+	finalBlock <- c(dateBlock,"",treeAgeBlock)
 	#
 	if(!is.null(file)){
 		write(finalBlock,file)

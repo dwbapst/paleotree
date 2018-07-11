@@ -34,9 +34,9 @@ samples (i.e. plotting a box-plot).
 }
 \examples{
 
-list1<-list(list(1:3),list(1:3),list(1:3))
-reverseList(list1,simplify=FALSE)
-reverseList(list1,simplify=TRUE)
+list1 <- list(list(1:3),list(1:3),list(1:3))
+reverseList(list1,simplify = FALSE)
+reverseList(list1,simplify = TRUE)
 
 }
 \author{

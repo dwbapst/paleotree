@@ -26,16 +26,16 @@
 #'     # where modelFun is the likelihood function
 #' 
 #' #optim(parInit(modelFun),modelFun,
-#' #		lower=parLower(modelFun),upper=parUpper(modelFun), 
-#' #		method="L-BFGS-B",control=list(maxit=1000000))
+#' #		lower = parLower(modelFun),upper = parUpper(modelFun), 
+#' #		method = "L-BFGS-B",control = list(maxit = 1000000))
 
 #' @export
-optimPaleo<-function(modelFun){
+optimPaleo <- function(modelFun){
 	if(!is(modelFun,'paleotreeFunc')){
 		stop("Given function does not appear to be a paleotree likelihood function")}
 	#
-	res<-optim(parInit(modelFun),modelFun,
-		lower=parLower(modelFun),upper=parUpper(modelFun), 
-		method="L-BFGS-B",control=list(maxit=1000000))
+	res <- optim(parInit(modelFun),modelFun,
+		lower = parLower(modelFun),upper = parUpper(modelFun), 
+		method = "L-BFGS-B",control = list(maxit = 1000000))
 	return(res)
 	}

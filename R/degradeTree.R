@@ -57,38 +57,38 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' tree <- rtree(100)
-#' tree1 <- degradeTree(tree,prop_collapse=0.5) 
-#' tree3 <- degradeTree(tree,nCollapse=50) 
+#' tree  <-  rtree(100)
+#' tree1  <-  degradeTree(tree,prop_collapse = 0.5) 
+#' tree3  <-  degradeTree(tree,nCollapse = 50) 
 #' 
 #' #let's compare the input and output
 #' layout(matrix(1:2,,2))
-#' plot(tree,show.tip.label=FALSE,use.edge.length=FALSE)
-#' plot(tree1,show.tip.label=FALSE,use.edge.length=FALSE)
+#' plot(tree,show.tip.label = FALSE,use.edge.length = FALSE)
+#' plot(tree1,show.tip.label = FALSE,use.edge.length = FALSE)
 #' 
 #' #now with collapseNodes
-#' tree <- rtree(10)
+#' tree  <-  rtree(10)
 #' #collapse nodes backwards
 #'    #let's collapse lucky node number 13!
-#' tree1 <- collapseNodes(nodeID=13,tree=tree,collapseType="backward")  
+#' tree1  <-  collapseNodes(nodeID = 13,tree = tree,collapseType = "backward")  
 #' #collapse nodes forwards 
-#' tree2 <- collapseNodes(nodeID=13,tree=tree,collapseType="forward")
+#' tree2  <-  collapseNodes(nodeID = 13,tree = tree,collapseType = "forward")
 #' #collapse entire clade
-#' tree3 <- collapseNodes(nodeID=13,tree=tree,collapseType="clade")
+#' tree3  <-  collapseNodes(nodeID = 13,tree = tree,collapseType = "clade")
 #' 
 #' #let's compare
 #' layout(1:4)
-#' plot(tree,use.edge.length=FALSE,main="original")
-#' plot(tree1,use.edge.length=FALSE,main="backward collapse")
-#' plot(tree2,use.edge.length=FALSE,main="forward collapse")
-#' plot(tree3,use.edge.length=FALSE,main="entire clade")
+#' plot(tree,use.edge.length = FALSE,main = "original")
+#' plot(tree1,use.edge.length = FALSE,main = "backward collapse")
+#' plot(tree2,use.edge.length = FALSE,main = "forward collapse")
+#' plot(tree3,use.edge.length = FALSE,main = "entire clade")
 #' 
 #' layout(1)
 #' 
 #' @name degradeTree
 #' @rdname degradeTree
 #' @export degradeTree
-degradeTree<-function(tree,prop_collapse=NULL,nCollapse=NULL,node.depth=NA,leave.zlb=FALSE){
+degradeTree <- function(tree,prop_collapse = NULL,nCollapse = NULL,node.depth = NA,leave.zlb = FALSE){
 	#collapses a given proportion of internal edges, creating polytomies
 		#node.depth conditions on depth of edge in tree
 			# 1 removes more shallow nodes, 0 removes deeper nodes
@@ -103,33 +103,33 @@ degradeTree<-function(tree,prop_collapse=NULL,nCollapse=NULL,node.depth=NA,leave
 		}
 	if(!is.null(nCollapse) & !is.null(prop_collapse)){
 		stop("Providing both 'prop_collapse' and 'nCollapse' are conflicting choices")}			
-	edge<-(1:length(tree$edge))[which(tree$edge[,2]>Ntip(tree))]	#internal edges
-	if(is.null(nCollapse)){nCollapse<-round(prop_collapse*length(edge))}
+	edge <- (1:length(tree$edge))[which(tree$edge[,2]>Ntip(tree))]	#internal edges
+	if(is.null(nCollapse)){nCollapse <- round(prop_collapse*length(edge))}
 	if(is.na(node.depth)){
-		cedge<-sample(edge,nCollapse)	#edges chosen to collapse
+		cedge <- sample(edge,nCollapse)	#edges chosen to collapse
 	}else{
-		node_pdesc<-sapply(prop.part(tree),length)/Ntip(tree)	#prop desc per int node
-		edge_pdesc<-node_pdesc[tree$edge[edge,2]-Ntip(tree)]
-		edge_prob<-(edge_pdesc-node.depth)^2;edge_prob<-edge_prob/sum(edge_prob)
-		cedge<-sample(edge,nCollapse,prob=edge_prob)	#chosen edges	
+		node_pdesc <- sapply(prop.part(tree),length)/Ntip(tree)	#prop desc per int node
+		edge_pdesc <- node_pdesc[tree$edge[edge,2]-Ntip(tree)]
+		edge_prob <- (edge_pdesc-node.depth)^2;edge_prob <- edge_prob/sum(edge_prob)
+		cedge <- sample(edge,nCollapse,prob = edge_prob)	#chosen edges	
 		}
 	if(leave.zlb){
-		tree$edge.length[cedge]<-0
+		tree$edge.length[cedge] <- 0
 	}else{
-		tree$edge.length<-NULL
-		tree<-collapse.singles(tree)
-		tree$edge.length<-rep(1,Nedge(tree))
-		tree$edge.length[cedge]<-0
-		tree<-di2multi(tree)
-		tree<-collapse.singles(tree)
-		tree$edge.length<-NULL		
+		tree$edge.length <- NULL
+		tree <- collapse.singles(tree)
+		tree$edge.length <- rep(1,Nedge(tree))
+		tree$edge.length[cedge] <- 0
+		tree <- di2multi(tree)
+		tree <- collapse.singles(tree)
+		tree$edge.length <- NULL		
 		}
 	return(tree)
 	}
 
 #' @rdname degradeTree
 #' @export 
-collapseNodes<-function(tree,nodeID,collapseType,leave.zlb=FALSE){
+collapseNodes <- function(tree,nodeID,collapseType,leave.zlb = FALSE){
 	if(!inherits(tree, "phylo")){
 		stop("tree is not of class phylo")
 		}
@@ -137,30 +137,30 @@ collapseNodes<-function(tree,nodeID,collapseType,leave.zlb=FALSE){
 		stop("some nodeID values outside the range of tip and node IDs")}
 	if(!all(nodeID>Ntip(tree))){
 		message("Warning: Some nodeID values indicate terminal tips; collapsing these generally doesn't do anything")}
-	if(length(collapseType)!=1){stop("collapseType must be a single selected option (length=1)")}
-	if(!any(collapseType==c("forward","backward","clade"))){
+	if(length(collapseType) != 1){stop("collapseType must be a single selected option (length = 1)")}
+	if(!any(collapseType == c("forward","backward","clade"))){
 		stop("collapseType must be either 'forward', 'backward' or 'clade'")}
-	if(collapseType=="backward"){
+	if(collapseType == "backward"){
 		# 01-15-14 if the edge is collapsed backward, then its the edges who have that node as a descendant!!!
-		cedge<-which(sapply(tree$edge[,2],function(x) any(x==nodeID)))
+		cedge <- which(sapply(tree$edge[,2],function(x) any(x == nodeID)))
 		}
-	if(collapseType=="forward"){
-		cedge<-which(sapply(tree$edge[,1],function(x) any(x==nodeID)))
+	if(collapseType == "forward"){
+		cedge <- which(sapply(tree$edge[,1],function(x) any(x == nodeID)))
 		}
-	if(collapseType=="clade"){
-		descNodes<-unique(sapply(nodeID,function(x) Descendants(tree,x,"all")))
-		cedge<-which(sapply(tree$edge[,2],function(x) any(x==descNodes)))
+	if(collapseType == "clade"){
+		descNodes <- unique(sapply(nodeID,function(x) Descendants(tree,x,"all")))
+		cedge <- which(sapply(tree$edge[,2],function(x) any(x == descNodes)))
 		}
 	if(leave.zlb){
-		tree$edge.length[cedge]<-0
+		tree$edge.length[cedge] <- 0
 	}else{
-		tree$edge.length<-NULL
-		tree<-collapse.singles(tree)
-		tree$edge.length<-rep(1,Nedge(tree))
-		tree$edge.length[cedge]<-0
-		tree<-di2multi(tree)
-		tree<-collapse.singles(tree)
-		tree$edge.length<-NULL		
+		tree$edge.length <- NULL
+		tree <- collapse.singles(tree)
+		tree$edge.length <- rep(1,Nedge(tree))
+		tree$edge.length[cedge] <- 0
+		tree <- di2multi(tree)
+		tree <- collapse.singles(tree)
+		tree$edge.length <- NULL		
 		}
 	return(tree)
 	}

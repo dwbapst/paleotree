@@ -49,7 +49,7 @@ This function was originally conceived of in the following blog post:
 data(graptPBDB)
 
 #get formal genera
-occSpecies<-taxonSortPBDBocc(graptOccPBDB, rank="species")
+occSpecies <- taxonSortPBDBocc(graptOccPBDB, rank = "species")
 
 #plot it!
 plotOccData(occSpecies)
@@ -60,7 +60,7 @@ plotOccData(occSpecies)
 #genera is messier...
 
 #get formal genera
-occGenus<-taxonSortPBDBocc(graptOccPBDB, rank="genus")
+occGenus <- taxonSortPBDBocc(graptOccPBDB, rank = "genus")
 
 #plot it!
 plotOccData(occGenus)

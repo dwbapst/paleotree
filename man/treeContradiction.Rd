@@ -52,8 +52,8 @@ many other typical tree comparisons, such as RF distances. See examples below.
 # let's simulate two trees
 
 set.seed(1)
-treeA<-rtree(30,br=NULL)
-treeB<-rtree(30,br=NULL)
+treeA <- rtree(30,br = NULL)
+treeB <- rtree(30,br = NULL)
 
 \dontrun{
 
@@ -71,7 +71,7 @@ treedist(treeA,treeB)
     # we consider a tree that isn't well-resolved
 
 # let's simulate the worst resolved tree possible: a star tree
-treeC<-stree(30)
+treeC <- stree(30)
 
 \dontrun{
 # plot the tanglegram between A and C
@@ -96,11 +96,11 @@ treeContradiction(treeA,treeB)  # should be non-zero distance
 
 # a less ideal property of the CD is that two taxon on opposite ends of the 
 # moving from side of the topology to the other of an otherwise identical tree
-# will return the maximum contradiction difference possible (i.e., `= 1`)
+# will return the maximum contradiction difference possible (i.e., ` =  1`)
 
 # an example
-treeAA<-read.tree(text="(A,(B,(C,(D,(E,F)))));")
-treeBB<-read.tree(text="(E,(B,(C,(D,(A,F)))));")
+treeAA <- read.tree(text = "(A,(B,(C,(D,(E,F)))));")
+treeBB <- read.tree(text = "(E,(B,(C,(D,(A,F)))));")
 
 \dontrun{
 plot(cophylo(treeAA,treeBB))

@@ -16,18 +16,18 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' tree <- rtree(10)
+#' tree  <-  rtree(10)
 #' layout(1:2)
 #' plot(tree)
 #' plot(unitLengthTree(tree))
 #' layout(1)
 #' 
 #' @export unitLengthTree
-unitLengthTree<-function(tree){
+unitLengthTree <- function(tree){
 	if(!inherits(tree, "phylo")){
 		stop("tree is not of class phylo")
 		}
-	tree$edge.length<-rep(1,Nedge(tree))
-	tree$root.time<-NULL
+	tree$edge.length <- rep(1,Nedge(tree))
+	tree$root.time <- NULL
 	return(tree)
 	}

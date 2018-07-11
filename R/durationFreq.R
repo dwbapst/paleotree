@@ -144,12 +144,12 @@
 #' @examples
 #' #let's simulate some taxon ranges from an imperfectly sampled fossil record
 #' set.seed(444)
-#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
-#'	nTotalTaxa=c(30,40), nExtant=0)
-#' taxa<-fossilRecord2fossilTaxa(record)
-#' rangesCont <- sampleRanges(taxa,r=0.5)
+#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+#'	nTotalTaxa = c(30,40), nExtant = 0)
+#' taxa <- fossilRecord2fossilTaxa(record)
+#' rangesCont  <-  sampleRanges(taxa,r = 0.5)
 #' #bin the ranges into discrete time intervals
-#' rangesDisc <- binTimeData(rangesCont,int.length=1)
+#' rangesDisc  <-  binTimeData(rangesCont,int.length = 1)
 #' #note that we made interval lengths = 1: 
 #'  	# thus q (per int) = q (per time) for make_durationFreqDisc
 #' 
@@ -164,23 +164,23 @@
 #'     # we can use parInit, parLower and parUpper to control parameter bounds
 #' 
 #' #as opposed to getSampRateCont, we can do:
-#' likFun<-make_durationFreqCont(rangesCont)
-#' optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
-#'       method="L-BFGS-B",control=list(maxit=1000000))
+#' likFun <- make_durationFreqCont(rangesCont)
+#' optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
+#'       method = "L-BFGS-B",control = list(maxit = 1000000))
 #' 
 #' #as opposed to getSampProbDisc, we can do:
-#' likFun<-make_durationFreqDisc(rangesDisc)
-#' optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
-#'      method="L-BFGS-B",control=list(maxit=1000000))
+#' likFun <- make_durationFreqDisc(rangesDisc)
+#' optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
+#'      method = "L-BFGS-B",control = list(maxit = 1000000))
 #' 
 #' #these give the same answers (as we'd expect them to!)
 #' 
 #' #with newer functions we can constrain our functions easily
 #'     # what if we knew the extinction rate = 0.1 a priori?
-#' likFun<-make_durationFreqCont(rangesCont)
-#' likFun<-constrainParPaleo(likFun,q.1~0.1)
-#' optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
-#' 	    method="L-BFGS-B",control=list(maxit=1000000))
+#' likFun <- make_durationFreqCont(rangesCont)
+#' likFun <- constrainParPaleo(likFun,q.1~0.1)
+#' optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
+#' 	    method = "L-BFGS-B",control = list(maxit = 1000000))
 #' 
 #' #actually decreases our sampling rate estimate
 #'    # gets further away from true generating value, r = 0.5 (geesh!)
@@ -189,7 +189,7 @@
 #' @name durationFreq
 #' @rdname durationFreq
 #' @export
-make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=0.01,tol=0.0001){		# infTimeWindow=FALSE,
+make_durationFreqCont <- function(timeData,groups = NULL,drop.extant = TRUE,threshold = 0.01,tol = 0.0001){		# infTimeWindow = FALSE,
 	#this is the multi-parameter maximum likelihood analysis of binned timeData
 		#uses a set of binned-interval timeData (just the by-species first and last intervals matrix) 
 			#to fit models of different samp probs and ext rates
@@ -200,32 +200,32 @@ make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=
 	#drop.extant drops ALL taxa that survive to the modern (i.e. truncated ranges)
 	if(!inherits(timeData,"matrix")){
 		if(inherits(timeData,"data.frame")){
-			timeData<-as.matrix(timeData)
+			timeData <- as.matrix(timeData)
 		}else{
 			stop("timeData not of matrix or data.frame format")
 			}
 		}
 	#drop unsampled taxa (i.e. NAs)
-	naDroppers<-is.na(timeData[,1]) | is.na(timeData[,2])
+	naDroppers <- is.na(timeData[,1]) | is.na(timeData[,2])
 	if(any(naDroppers)){
-		timeData<-timeData[!naDroppers,]
+		timeData <- timeData[!naDroppers,]
 		if(!is.null(groups)){
-			groups<-groups[!naDroppers,,drop=FALSE]
-			if(nrow(timeData)!=nrow(groups)){
+			groups <- groups[!naDroppers,,drop = FALSE]
+			if(nrow(timeData) != nrow(groups)){
 				stop(paste("number of rows in groups isn't equal to number of taxa in timeData",
 					if(drop.extant){"after taxa listed with NA in timeData are dropped in both"}))}
 			}
 		}
 	#take care of modern taxa
-	modernTest<-any(timeData<tol)
+	modernTest <- any(timeData<tol)
 	if(any(modernTest)){	#if modern present
 		#modify the taxon occurrence matrix
 		if(drop.extant){
-			modDroppers<-timeData[,2]<tol
-			timeData<-timeData[-modDroppers,,drop=FALSE]
+			modDroppers <- timeData[,2]<tol
+			timeData <- timeData[-modDroppers,,drop = FALSE]
 			if(!is.null(groups)){
-				if(drop.extant & any(modernTest)){groups<-groups[-modDroppers,]}
-				if(nrow(timeData)!=nrow(groups)){
+				if(drop.extant & any(modernTest)){groups <- groups[-modDroppers,]}
+				if(nrow(timeData) != nrow(groups)){
 					stop(paste("number of rows in groups isn't equal to number of taxa in timeData",
 						if(drop.extant){"after modern taxa are dropped"}))}
 				}
@@ -236,52 +236,52 @@ make_durationFreqCont<-function(timeData,groups=NULL,drop.extant=TRUE,threshold=
 		stop("timeData is not in time relative to modern (decreasing to present)")}
 	if(any(timeData[,2]<0)){stop("Some dates in timeData <0 ?")}
 	#get the dataset
-	dur<-(timeData[,1]-timeData[,2])
+	dur <- (timeData[,1]-timeData[,2])
 	#THRESHOLD DETERMINES RANGES TOO SMALL TO BE CONSIDERED NOT ONE-TIMERS
-	dur[dur<threshold]<-0
+	dur[dur<threshold] <- 0
 	#define parnames
-	parnames<-c("q","r")
-	if(is.null(groups)){groups2<-matrix(1,length(dur),1)}else{groups2<-groups}
-	if(nrow(timeData)!=nrow(groups2)){
+	parnames <- c("q","r")
+	if(is.null(groups)){groups2 <- matrix(1,length(dur),1)}else{groups2 <- groups}
+	if(nrow(timeData) != nrow(groups2)){
 		stop("Number of rows in groups isn't equal to number of taxa in timeData!")}
 	for(i in 1:ncol(groups2)){
-		parnames<-as.vector(sapply(parnames,function(x) paste(x,unique(groups2[,i]),sep=".")))
+		parnames <- as.vector(sapply(parnames,function(x) paste(x,unique(groups2[,i]),sep = ".")))
 		}
-	groupings<-unique(groups2)
-	ngroup<-nrow(groupings)
+	groupings <- unique(groups2)
+	ngroup <- nrow(groupings)
 	#break parnames into a character matrix
-	breakNames<-t(sapply(parnames,function(x) unlist(strsplit(x,split=".",fixed=TRUE))))
+	breakNames <- t(sapply(parnames,function(x) unlist(strsplit(x,split = ".",fixed = TRUE))))
 	#NEED TO FIGURE OUT parbounds
-	lowerBound<-rep(0.001,length(parnames))
-	upperBound<-rep(5,length(parnames))
-	parbounds<-list(lowerBound,upperBound)
+	lowerBound <- rep(0.001,length(parnames))
+	upperBound <- rep(5,length(parnames))
+	parbounds <- list(lowerBound,upperBound)
 	#
-	logL<-function(par){
-		if(length(par)!=length(parnames)){stop("Number of input parameters is not equal to number of parnames")}
-		logLsum<-numeric()
+	logL <- function(par){
+		if(length(par) != length(parnames)){stop("Number of input parameters is not equal to number of parnames")}
+		logLsum <- numeric()
 		for(i in 1:ngroup){
-			#if(is.null(groups)){selector<-rep(TRUE,length(par))
-			#	}else{selector<-apply(breakNames,1,function(x) x[-(1:2)]==groupings[i,])}
-			selector<-apply(breakNames,1,function(x) x[-1]==groupings[i,])
-			parnew<-par[selector]
-			breaknew<-breakNames[selector,]
-			q<-parnew[breaknew[,1]=="q"]
-			r<-parnew[breaknew[,1]=="r"]
-			dur1<-dur[selector]
-			ft<-ifelse(dur1==0,log(q/(r+q)),log(q*r*exp(-q*dur1)/(r+q)))
-			logLsum[i]<-(sum(ft))
+			#if(is.null(groups)){selector <- rep(TRUE,length(par))
+			#	}else{selector <- apply(breakNames,1,function(x) x[-(1:2)] == groupings[i,])}
+			selector <- apply(breakNames,1,function(x) x[-1] == groupings[i,])
+			parnew <- par[selector]
+			breaknew <- breakNames[selector,]
+			q <- parnew[breaknew[,1] == "q"]
+			r <- parnew[breaknew[,1] == "r"]
+			dur1 <- dur[selector]
+			ft <- ifelse(dur1 == 0,log(q/(r+q)),log(q*r*exp(-q*dur1)/(r+q)))
+			logLsum[i] <- (sum(ft))
 			}		
-		res<-(-sum(logLsum))
+		res <- (-sum(logLsum))
 		return(unname(res))
 		}
 	#make into a paletree likelihood function
-	logL<-make_paleotreeFunc(logL,parnames,parbounds)
+	logL <- make_paleotreeFunc(logL,parnames,parbounds)
 	return(logL)
 	}
 
 #' @rdname durationFreq
 #' @export	
-make_durationFreqDisc<-function(timeList,groups=NULL,drop.extant=TRUE){				# ,infTimeWindow=FALSE
+make_durationFreqDisc <- function(timeList,groups = NULL,drop.extant = TRUE){				# ,infTimeWindow = FALSE
 	#this is the multi-parameter maximum likelihood analysis of binned timeData
 		#uses a set of binned-interval timeData (just the by-species first and last intervals matrix) 
 			#to fit models of different samp probs and ext rates
@@ -290,44 +290,44 @@ make_durationFreqDisc<-function(timeList,groups=NULL,drop.extant=TRUE){				# ,in
 		#UNLIKE getSampProbDisc and getSampRateCont, there are no moving time-windows
 		#in fact, this was probably a bad idea to begin with
 	#drop.extant drops ALL taxa that survive to the modern (i.e. truncated ranges)
-	timeData<-timeList	#because i'm an idiot and i dislike having to rename arguments?
-	if(length(timeData)==2){	#if a timeList matrix...
-		timeList<-timeData
-		modernTest<-apply(timeList[[1]],1,function(x) all(x==0))
+	timeData <- timeList	#because i'm an idiot and i dislike having to rename arguments?
+	if(length(timeData) == 2){	#if a timeList matrix...
+		timeList <- timeData
+		modernTest <- apply(timeList[[1]],1,function(x) all(x == 0))
 		if(any(modernTest)){	#if modern present
 			if(sum(modernTest)>1){stop("More than one modern interval in timeList??!")}
 			#modify the taxon occurrence matrix
-			modInt<-which(modernTest)
-			newInt<-which(apply(timeList[[1]],1,function(x) x[1]!=0 & x[2]==0))
+			modInt <- which(modernTest)
+			newInt <- which(apply(timeList[[1]],1,function(x) x[1] != 0 & x[2] == 0))
 			if(length(newInt)>1){stop("More than one interval stretching to the modern in timeList??!")}
 			if(drop.extant){
-				modDroppers<-apply(timeList[[2]],1,function(x) x[1]==modInt)
-				timeList[[2]]<-timeList[[2]][-modDroppers,]
+				modDroppers <- apply(timeList[[2]],1,function(x) x[1] == modInt)
+				timeList[[2]] <- timeList[[2]][-modDroppers,]
 				if(!is.null(groups)){
-					if(drop.extant & any(modernTest)){groups<-groups[-modDroppers,,drop=FALSE]}
-					if(nrow(timeList[[2]])!=nrow(groups)){
+					if(drop.extant & any(modernTest)){groups <- groups[-modDroppers,,drop = FALSE]}
+					if(nrow(timeList[[2]]) != nrow(groups)){
 						stop(paste("number of rows in groups isn't equal to number of taxa in timeList[[2]]",
 							if(drop.extant){"after modern taxa are dropped"}))}
 					}
 				}
 			#change all modInt references to the prior int in the taxon appearance matrix
-			timeList[[2]]<-apply(timeList[[2]],2,sapply,function(x) if(x==modInt){newInt}else{x})
+			timeList[[2]] <- apply(timeList[[2]],2,sapply,function(x) if(x == modInt){newInt}else{x})
 			}
-		#now need to get information for finite time window if infTimeWindow=FALSE...
-		timeData<-timeList[[2]]
+		#now need to get information for finite time window if infTimeWindow = FALSE...
+		timeData <- timeList[[2]]
 	#}else{
-	#	if(infTimeWindow==FALSE){
+	#	if(infTimeWindow == FALSE){
 	#		message("No information on time interval dates given, so infinite time window approach applied.")
-	#		infTimeWindow<-TRUE
+	#		infTimeWindow <- TRUE
 	#		}
 		}
 	#drop unsampled taxa (i.e. NAs)
-	naDroppers<-is.na(timeData[,1]) | is.na(timeData[,2])
+	naDroppers <- is.na(timeData[,1]) | is.na(timeData[,2])
 	if(any(naDroppers)){
-		timeData<-timeData[!naDroppers,]
+		timeData <- timeData[!naDroppers,]
 		if(!is.null(groups)){
-			groups<-groups[!naDroppers,,drop=FALSE]
-			if(nrow(timeData)!=nrow(groups)){
+			groups <- groups[!naDroppers,,drop = FALSE]
+			if(nrow(timeData) != nrow(groups)){
 				stop(paste("number of rows in groups isn't equal to number of taxa in timeList[[2]]",
 					if(drop.extant){"after taxa listed with NA in timeList[[2]] are dropped in both"}))}
 			}
@@ -339,61 +339,61 @@ make_durationFreqDisc<-function(timeList,groups=NULL,drop.extant=TRUE){				# ,in
 	if(sum(timeData%%1)>0){
 		stop("Some of these interval numbers aren't given as whole numbers! What?")}
 	#get the dataset
-	dur<-apply(timeData,1,diff)+1
-	#timeData1<-max(timeData)-timeData+1
-	#FO<-timeData1[,1];LO<-timeData1[,2]	#not needed
+	dur <- apply(timeData,1,diff)+1
+	#timeData1 <- max(timeData)-timeData+1
+	#FO <- timeData1[,1];LO <- timeData1[,2]	#not needed
 	#define parnames
-	parnames<-c("q","R")
+	parnames <- c("q","R")
 	#BAD
 	#if(!is.null(groups)){
 	#	for(i in 1:ncol(groups)){
-	#		parnames<-as.vector(sapply(parnames,function(x) paste(x,unique(groups[,i]),sep=".")))
+	#		parnames <- as.vector(sapply(parnames,function(x) paste(x,unique(groups[,i]),sep = ".")))
 	#		}
-	#	groupings<-unique(groups)
+	#	groupings <- unique(groups)
 	#	}
-	#ngroup<-ifelse(is.null(groups),1,nrow(groupings))
+	#ngroup <- ifelse(is.null(groups),1,nrow(groupings))
 	#NEW
-	if(is.null(groups)){groups2<-matrix(1,length(dur),1)}else{groups2<-groups}
-	if(nrow(timeData)!=nrow(groups2)){
+	if(is.null(groups)){groups2 <- matrix(1,length(dur),1)}else{groups2 <- groups}
+	if(nrow(timeData) != nrow(groups2)){
 		stop("Number of rows in groups isn't equal to number of taxa in timeList[[2]]!")}
 	for(i in 1:ncol(groups2)){
-		parnames<-as.vector(sapply(parnames,function(x) paste(x,unique(groups2[,i]),sep=".")))
+		parnames <- as.vector(sapply(parnames,function(x) paste(x,unique(groups2[,i]),sep = ".")))
 		}
-	groupings<-unique(groups2)
-	ngroup<-nrow(groupings)
+	groupings <- unique(groups2)
+	ngroup <- nrow(groupings)
 	#
 	#break parnames into a character matrix
-	breakNames<-t(sapply(parnames,function(x) unlist(strsplit(x,split=".",fixed=TRUE))))
+	breakNames <- t(sapply(parnames,function(x) unlist(strsplit(x,split = ".",fixed = TRUE))))
 	#NEED TO FIGURE OUT parbounds
-	lowerBound<-rep(0.001,length(parnames))
-	upperBound<-rep(100,length(parnames))
-	upperBound[breakNames[,1]=="R"]<-1
-	parbounds<-list(lowerBound,upperBound)
-	logL<-function(par){
-		if(length(par)!=length(parnames)){stop("Number of input parameters is not equal to number of parnames")}
-		logLsum<-numeric()
+	lowerBound <- rep(0.001,length(parnames))
+	upperBound <- rep(100,length(parnames))
+	upperBound[breakNames[,1] == "R"] <- 1
+	parbounds <- list(lowerBound,upperBound)
+	logL <- function(par){
+		if(length(par) != length(parnames)){stop("Number of input parameters is not equal to number of parnames")}
+		logLsum <- numeric()
 		for(i in 1:ngroup){
-			#if(is.null(groups)){selector<-rep(TRUE,length(par))
-			#	}else{selector<-apply(breakNames,1,function(x) x[-(1:2)]==groupings[i,])}
-			selector<-apply(breakNames,1,function(x) x[-1]==groupings[i,])
-			parnew<-par[selector]
-			breaknew<-breakNames[selector,]
-			q<-parnew[breaknew[,1]=="q"]
-			R<-parnew[breaknew[,1]=="R"]
-			dur1<-dur[selector]
-			TMax<-max(dur1)
-			Ti<-1:TMax	#unique durations
-			N<-sapply(Ti,function(t) sum(t==dur1))		#number with those durations
-			PDT<-exp(-q*(Ti-1))-exp(-q*Ti)
-			Rex<-c(1,rep(2,TMax-1))
-			ft<- sapply(Ti,function(t) sum(PDT[t:TMax]*((R^Rex[t])*(Ti[t:TMax]-t+1)*((1-R)^(Ti[t:TMax]-t)))))
-			ft<-log(ft/sum(ft))	#divide by sum; same as normalizing by Pp acc. to Foote (really? COOL!)
-			logLsum[i]<-sum((N*ft)[!is.infinite(ft)])
+			#if(is.null(groups)){selector <- rep(TRUE,length(par))
+			#	}else{selector <- apply(breakNames,1,function(x) x[-(1:2)] == groupings[i,])}
+			selector <- apply(breakNames,1,function(x) x[-1] == groupings[i,])
+			parnew <- par[selector]
+			breaknew <- breakNames[selector,]
+			q <- parnew[breaknew[,1] == "q"]
+			R <- parnew[breaknew[,1] == "R"]
+			dur1 <- dur[selector]
+			TMax <- max(dur1)
+			Ti <- 1:TMax	#unique durations
+			N <- sapply(Ti,function(t) sum(t == dur1))		#number with those durations
+			PDT <- exp(-q*(Ti-1))-exp(-q*Ti)
+			Rex <- c(1,rep(2,TMax-1))
+			ft <-  sapply(Ti,function(t) sum(PDT[t:TMax]*((R^Rex[t])*(Ti[t:TMax]-t+1)*((1-R)^(Ti[t:TMax]-t)))))
+			ft <- log(ft/sum(ft))	#divide by sum; same as normalizing by Pp acc. to Foote (really? COOL!)
+			logLsum[i] <- sum((N*ft)[!is.infinite(ft)])
 			}		
-		res<-(-sum(logLsum))
+		res <- (-sum(logLsum))
 		return(unname(res))
 		}
 	#make into a paletree likelihood function
-	logL<-make_paleotreeFunc(logL,parnames,parbounds)
+	logL <- make_paleotreeFunc(logL,parnames,parbounds)
 	return(logL)
 	}

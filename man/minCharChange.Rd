@@ -151,18 +151,16 @@ is \emph{arbitrary nonsense} and should be combined to
 to obtain the total number of character changes.
 }
 \examples{
-
 \donttest{
-
 # let's write a quick & dirty ancestral trait plotting function
 
 quickAncPlotter <- function(tree,ancData,cex){
-ancCol <- (1:ncol(ancData))+1
-	plot(tree,show.tip.label = FALSE,no.margin = TRUE,direction = "upwards")
-	tiplabels(pch = 16,pie = ancData[(1:Ntip(tree)),],cex = cex,piecol = ancCol,
-	col = 0)
-	nodelabels(pie = ancData[-(1:Ntip(tree)),],cex = cex,piecol = ancCol)	
-	}
+    ancCol <- (1:ncol(ancData))+1
+        plot(tree,show.tip.label = FALSE,no.margin = TRUE,direction = "upwards")
+        tiplabels(pch = 16,pie = ancData[(1:Ntip(tree)),],cex = cex,piecol = ancCol,
+	    col = 0)
+    nodelabels(pie = ancData[-(1:Ntip(tree)),],cex = cex,piecol = ancCol)	
+    }
 
 # example with retiolitid graptolite data
 
@@ -280,9 +278,7 @@ layout(1)
 # all of this machinery should function just fine in minCharChange
 	# again, by default polySymbol = "&" (included anyway here for kicks)
 minCharChange(tree, trait = charPoly, polySymbol = "&")
-
 }
-
 }
 \references{
 Hanazawa, M., H. Narushima, and N. Minaka. 1995. Generating most parsimonious reconstructions on

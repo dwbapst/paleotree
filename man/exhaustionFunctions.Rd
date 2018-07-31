@@ -163,7 +163,7 @@ states among fossil taxa. \emph{Evolution} 54(2):365-386.
 \seealso{
 Also see \code{paleotree} functions \code{\link{minCharChange}} and
 \code{\link{ancPropStateMat}}, the latter of which is a wrapper
-for \code{phangorn}'s function \code{ancestral.pars}.
+for \code{phangorn}'s function \code{\link{ancestral.pars}}.
 }
 \author{
 Initially written by Peter J. Wagner, with modification

@@ -41,18 +41,25 @@
 #' The contradiction difference between two trees is reported as a single numeric variable.
 
 #' @seealso
-#' See \code{phangorn}'s function for calculating the Robinson-Foulds distance: \code{\link[phangorn]{treedist}}
+#' See \code{phangorn}'s function for calculating the Robinson-Foulds distance: \code{\link[phangorn]{treedist}}.
+#' 
+#' Graeme Lloyd's \code{metatree} package, currently not on CRAN,
+#' also contains the function \code{\link[metatree]{MultiTreeDistance}}
+#' for calculating both the contradiction difference measure and the Robinson-Foulds distance. This function is
+#' optimized for very large samples of trees  or very large
+#' trees, and thus may be faster than \code{treeContradiction}.
+#' Also see the function \code{\link[metatree]{MultiTreeContradiction}} in the same package.
 
 #' @author
 #' David W. Bapst. This code was produced as part of a project 
 #' funded by National Science Foundation grant EAR-1147537 to S. J. Carlson.
 
 #' @references
-#' This measure was introduced in our recent Systematic Biology paper:
-#' 
-#' Bapst, D. W., H. A. Schreiber, and S. J. Carlson. In press. Combined analysis of extant Rhynchonellida
-#' (Brachiopoda) using morphological and molecular data. \emph{Systematic Biology} doi: 10.1093/sysbio/syx049
+#' This contradiction difference measure was introduced in:
 #'
+#' Bapst, D. W., H. A. Schreiber, and S. J. Carlson. 2018. Combined Analysis of Extant Rhynchonellida
+#' (Brachiopoda) using Morphological and Molecular Data. \emph{Systematic Biology} 67(1):32-48. doi: 10.1093/sysbio/syx049
+
 
 #' @examples
 #' 

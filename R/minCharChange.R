@@ -144,7 +144,7 @@
 
 #' @seealso
 #' The functions described here are effectively wrappers of \code{phangorn}'s function
-#' \code{ancestral.pars}.
+#' \code{\link[phangorn]{ancestral.pars}}.
 
 #' @author David W. Bapst
 

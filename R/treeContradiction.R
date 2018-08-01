@@ -44,11 +44,11 @@
 #' See \code{phangorn}'s function for calculating the Robinson-Foulds distance: \code{\link[phangorn]{treedist}}.
 #' 
 #' Graeme Lloyd's \code{metatree} package, currently not on CRAN,
-#' also contains the function \code{\link{MultiTreeDistance}}
+#' also contains the function \code{MultiTreeDistance}
 #' for calculating both the contradiction difference measure and the Robinson-Foulds distance. This function is
 #' optimized for very large samples of trees  or very large
 #' trees, and thus may be faster than \code{treeContradiction}.
-#' Also see the function \code{\link{MultiTreeContradiction}} in the same package.
+#' Also see the function \code{MultiTreeContradiction} in the same package.
 
 # R CHECK doesn't like this because metatree isnt on CRAN:
 # \code{\link[metatree]{MultiTreeContradiction}}

@@ -1,5 +1,7 @@
 ^\.travis\.yml$
 ^\.git$
+^\.lintr$
 ^revdep$
 
 ^cran-comments\.md$
+

@@ -34,7 +34,7 @@ in \code{paleotree}.
 
 # (sorry, URLs removed as they lead to the PBDB test server...)
 
-save(graptOccPBDB,graptTaxaPBDB,file="graptPBDB.rdata")
+save(graptOccPBDB,graptTaxaPBDB,file = "graptPBDB.rdata")
 
 }
 
@@ -49,7 +49,7 @@ pie(sort(table(graptOccPBDB$authorizer)))
 
 # Let's look at age resolution of these occurrences
 hist(graptOccPBDB$early_age-graptOccPBDB$late_age,
-	main="Age Resolution of Occurrences", xlab="Ma")
+	main = "Age Resolution of Occurrences", xlab = "Ma")
 
 #distribution of taxa among taxonomic ranks
 table(graptTaxaPBDB$taxon_rank)

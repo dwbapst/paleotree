@@ -36,7 +36,7 @@ de novo construction), and thus is used by a number of paleotree functions.
 \examples{
 
 set.seed(444)
-tree<-rtree(10)
+tree <- rtree(10)
 # should return TRUE
 testEdgeMat(tree)
 
@@ -51,7 +51,7 @@ testEdgeMat(stree(1))
 
 #running cleanNewPhylo on this tree should have little effect
 		#beyond ladderizing it...
-tree1<-cleanNewPhylo(tree)
+tree1 <- cleanNewPhylo(tree)
 
 #compare outputs
 layout(1:2)

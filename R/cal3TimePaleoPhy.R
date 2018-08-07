@@ -167,9 +167,9 @@
 #' The argument anc.wt allows users to change the default consideration of
 #' anc-desc relationships. This value is used as a multiplier applied to the
 #' probability of choosing any node position which would infer an
-#' ancestor-descendant relationship. By default, anc.wt=1, and thus these
+#' ancestor-descendant relationship. By default, anc.wt = 1, and thus these
 #' probabilities are unaltered. if anc.wt is less than 1, the probabilities
-#' decrease and at anc.wt=0, no ancestor-descendant relationships are inferred
+#' decrease and at anc.wt = 0, no ancestor-descendant relationships are inferred
 #' at all. Can be a single value or a vector of per-taxon values, such as if a
 #' user wants to only allow plesiomorphic taxa to be ancestors.
 
@@ -336,60 +336,60 @@
 #' 
 #' #Simulate some fossil ranges with simFossilRecord
 #' set.seed(444)
-#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
-#'	nTotalTaxa=c(30,40), nExtant=0)
-#' taxa<-fossilRecord2fossilTaxa(record)
+#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+#'	nTotalTaxa = c(30,40), nExtant = 0)
+#' taxa <- fossilRecord2fossilTaxa(record)
 #' #simulate a fossil record with imperfect sampling with sampleRanges
-#' rangesCont <- sampleRanges(taxa,r=0.5)
+#' rangesCont <- sampleRanges(taxa,r = 0.5)
 #' #let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
-#' cladogram <- taxa2cladogram(taxa,plot=TRUE)
+#' cladogram <- taxa2cladogram(taxa,plot = TRUE)
 #' #this library allows one to use rate calibrated type time-scaling methods (Bapst, in prep.)
 #' #to use these, we need an estimate of the sampling rate (we set it to 0.5 above)
-#' likFun<-make_durationFreqCont(rangesCont)
-#' srRes<-optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
-#'       method="L-BFGS-B",control=list(maxit=1000000))
+#' likFun <- make_durationFreqCont(rangesCont)
+#' srRes <- optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
+#'       method = "L-BFGS-B",control = list(maxit = 1000000))
 #' sRate <- srRes[[1]][2]
 #' # we also need extinction rate and branching rate
 #'    # we can get extRate from getSampRateCont too
-#' #we'll assume extRate=brRate (ala Foote et al., 1999); may not always be a good assumption
-#' divRate<-srRes[[1]][1]
+#' #we'll assume extRate = brRate (ala Foote et al., 1999); may not always be a good assumption
+#' divRate <- srRes[[1]][1]
 #' #now let's try cal3TimePaleoPhy, which time-scales using a sampling rate to calibrate
 #' #This can also resolve polytomies based on sampling rates, with some stochastic decisions
-#' ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
-#'     sampRate=sRate,ntrees=1,plot=TRUE)
+#' ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
+#'     sampRate = sRate,ntrees = 1,plot = TRUE)
 #' #notice the warning it gives!
 #' phyloDiv(ttree)
 #' 
 #' #by default, cal3TimePaleoPhy may predict indirect ancestor-descendant relationships
-#' #can turn this off by setting anc.wt=0
-#' ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
-#'     sampRate=sRate,ntrees=1,anc.wt=0,plot=TRUE)
+#' #can turn this off by setting anc.wt = 0
+#' ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
+#'     sampRate = sRate,ntrees = 1,anc.wt = 0,plot = TRUE)
 #' 
 #' \donttest{
 #' #let's look at how three trees generated with very different time of obs. look
-#' ttreeFAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
-#'     FAD.only=TRUE,dateTreatment="firstLast",sampRate=sRate,ntrees=1,plot=TRUE)
-#' ttreeRand <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
-#'     FAD.only=FALSE,dateTreatment="randObs",sampRate=sRate,ntrees=1,plot=TRUE)
+#' ttreeFAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
+#'     FAD.only = TRUE,dateTreatment = "firstLast",sampRate = sRate,ntrees = 1,plot = TRUE)
+#' ttreeRand <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
+#'     FAD.only = FALSE,dateTreatment = "randObs",sampRate = sRate,ntrees = 1,plot = TRUE)
 #' #by default the time of observations are the LADs
-#' ttreeLAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
-#'     FAD.only=FALSE,dateTreatment="randObs",sampRate=sRate,ntrees=1,plot=TRUE)
+#' ttreeLAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
+#'     FAD.only = FALSE,dateTreatment = "randObs",sampRate = sRate,ntrees = 1,plot = TRUE)
 #' layout(1:3)
-#' parOrig <- par(no.readonly=TRUE)
-#' par(mar=c(0,0,0,0))
-#' plot(ladderize(ttreeFAD));text(5,5,"time.obs=FAD",cex=1.5,pos=4)
-#' plot(ladderize(ttreeRand));text(5,5,"time.obs=Random",cex=1.5,pos=4)
-#' plot(ladderize(ttreeLAD));text(5,5,"time.obs=LAD",cex=1.5,pos=4)
+#' parOrig <- par(no.readonly = TRUE)
+#' par(mar = c(0,0,0,0))
+#' plot(ladderize(ttreeFAD));text(5,5,"time.obs = FAD",cex = 1.5,pos = 4)
+#' plot(ladderize(ttreeRand));text(5,5,"time.obs = Random",cex = 1.5,pos = 4)
+#' plot(ladderize(ttreeLAD));text(5,5,"time.obs = LAD",cex = 1.5,pos = 4)
 #' layout(1); par(parOrig)
 #' 
 #' #to get a fair sample of trees, let's increase ntrees
-#' ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate=divRate,extRate=divRate,
-#'     sampRate=sRate,ntrees=9,plot=FALSE)
+#' ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
+#'     sampRate = sRate,ntrees = 9,plot = FALSE)
 #' #let's compare nine of them at once in a plot
 #' layout(matrix(1:9,3,3))
-#' parOrig <- par(no.readonly=TRUE)
-#' par(mar=c(0,0,0,0))
-#' for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label=FALSE)}
+#' parOrig <- par(no.readonly = TRUE)
+#' par(mar = c(0,0,0,0))
+#' for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label = FALSE)}
 #' layout(1)
 #' par(parOrig)
 #' #they are all a bit different!
@@ -405,55 +405,55 @@
 #' cladoDrop <- drop.tip(cladogram, droppers)
 #' # now make vector same length as number of nodes
 #' nodeDates <- rep(NA, Nnode(cladoDrop))
-#' nodeDates[5]<-1200
-#' ttree <- cal3TimePaleoPhy(cladoDrop,rangesCont,brRate=divRate,extRate=divRate,
-#'     sampRate=sRate,ntrees=1,node.mins=nodeDates,plot=TRUE)
+#' nodeDates[5] <- 1200
+#' ttree <- cal3TimePaleoPhy(cladoDrop,rangesCont,brRate = divRate,extRate = divRate,
+#'     sampRate = sRate,ntrees = 1,node.mins = nodeDates,plot = TRUE)
 #' 
 #' #example with time in discrete intervals
 #' set.seed(444)
-#' record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
-#'	nTotalTaxa=c(30,40), nExtant=0)
-#' taxa<-fossilRecord2fossilTaxa(record)
+#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+#'	nTotalTaxa = c(30,40), nExtant = 0)
+#' taxa <- fossilRecord2fossilTaxa(record)
 #' #simulate a fossil record with imperfect sampling with sampleRanges()
-#' rangesCont <- sampleRanges(taxa,r=0.5)
+#' rangesCont <- sampleRanges(taxa,r = 0.5)
 #' #let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
-#' cladogram <- taxa2cladogram(taxa,plot=TRUE)
+#' cladogram <- taxa2cladogram(taxa,plot = TRUE)
 #' #Now let's use binTimeData to bin in intervals of 1 time unit
-#' rangesDisc <- binTimeData(rangesCont,int.length=1)
+#' rangesDisc <- binTimeData(rangesCont,int.length = 1)
 #' #we can do something very similar for the discrete time data (can be a bit slow)
-#' likFun<-make_durationFreqDisc(rangesDisc)
-#' spRes<-optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
-#'       method="L-BFGS-B",control=list(maxit=1000000))
+#' likFun <- make_durationFreqDisc(rangesDisc)
+#' spRes <- optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
+#'       method = "L-BFGS-B",control = list(maxit = 1000000))
 #' sProb <- spRes[[1]][2]
 #' #but that's the sampling PROBABILITY per bin, not the instantaneous rate of change
 #' #we can use sProb2sRate() to get the rate. We'll need to also tell it the int.length
-#' sRate1 <- sProb2sRate(sProb,int.length=1)
+#' sRate1 <- sProb2sRate(sProb,int.length = 1)
 #' #we also need extinction rate and branching rate (see above)
 #'     #need to divide by int.length...
-#' divRate<-spRes[[1]][1]/1
-#' #estimates that r=0.3... kind of low (simulated sampling rate is 0.5)
+#' divRate <- spRes[[1]][1]/1
+#' #estimates that r = 0.3... kind of low (simulated sampling rate is 0.5)
 #' #Note: for real data, you may need to use an average int.length (no constant length)
-#' ttree <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,
-#'     sampRate=sRate1,ntrees=1,plot=TRUE)
+#' ttree <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate = divRate,extRate = divRate,
+#'     sampRate = sRate1,ntrees = 1,plot = TRUE)
 #' phyloDiv(ttree)
 #' #can also force the appearance timings not to be chosen stochastically
-#' ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,
-#'     sampRate=sRate1,ntrees=1,nonstoch.bin=TRUE,plot=TRUE)
+#' ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate = divRate,extRate = divRate,
+#'     sampRate = sRate1,ntrees = 1,nonstoch.bin = TRUE,plot = TRUE)
 #' phyloDiv(ttree1)
 #'
 #' # testing node.mins in bin_cal3TimePaleoPhy
-#' ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate=divRate,extRate=divRate,
-#'     sampRate=sRate1,ntrees=1,node.mins=nodeDates,plot=TRUE)
-#' # with randres=TRUE
-#' ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate=divRate,extRate=divRate,
-#'     sampRate=sRate1,ntrees=1,randres=TRUE,node.mins=nodeDates,plot=TRUE)
+#' ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate = divRate,extRate = divRate,
+#'     sampRate = sRate1,ntrees = 1,node.mins = nodeDates,plot = TRUE)
+#' # with randres = TRUE
+#' ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate = divRate,extRate = divRate,
+#'     sampRate = sRate1,ntrees = 1,randres = TRUE,node.mins = nodeDates,plot = TRUE)
 #' 
 #' 
 #' #example with multiple values of anc.wt
-#' ancWt <- sample(0:1,nrow(rangesDisc[[2]]),replace=TRUE)
-#' names(ancWt)<-rownames(rangesDisc[[2]])
-#' ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate=divRate,extRate=divRate,
-#'     sampRate=sRate1,ntrees=1,anc.wt=ancWt,plot=TRUE)
+#' ancWt <- sample(0:1,nrow(rangesDisc[[2]]),replace = TRUE)
+#' names(ancWt) <- rownames(rangesDisc[[2]])
+#' ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate = divRate,extRate = divRate,
+#'     sampRate = sRate1,ntrees = 1,anc.wt = ancWt,plot = TRUE)
 #' }
 #' 
 
@@ -462,473 +462,473 @@
 # @rdname cal3Timescaling
 
 #' @export
-cal3TimePaleoPhy<-function(tree, timeData, brRate, extRate, sampRate,
-	ntrees=1, anc.wt=1, node.mins=NULL, dateTreatment="firstLast",
-	FAD.only=FALSE, adj.obs.wt=TRUE, root.max=200, step.size=0.1,
-	randres=FALSE, noisyDrop=TRUE, verboseWarnings=TRUE, 
-	diagnosticMode=FALSE, tolerance=0.0001, plot=FALSE){
+cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
+	ntrees = 1, anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
+	FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200, step.size = 0.1,
+	randres = FALSE, noisyDrop = TRUE, verboseWarnings = TRUE, 
+	diagnosticMode = FALSE, tolerance = 0.0001, plot = FALSE){
 	
 	#function for Ps - use pqr2Ps
 	#example data
-	#tree<-rtree(10);tree$edge.length<-sample(0:1,Nedge(tree),replace=TRUE);tree<-di2multi(tree)
-	#sampRate=rep(0.1,Ntip(tree));names(sampRate)<-tree$tip.label
-	#brRate<-extRate<-sampRate
-	#timeData<-runif(Ntip(tree),200,400);timeData<-cbind(timeData,timeData-runif(Ntip(tree),1,80))
-	#rownames(timeData)<-tree$tip.label
-	#ntrees=1; anc.wt=1; node.mins=NULL; dateTreatment="firstLast";
-	#FAD.only=FALSE; adj.obs.wt=TRUE; root.max=200; step.size=0.1;
-	#randres=FALSE; noisyDrop=TRUE; plot=FALSE
+	#tree <- rtree(10);tree$edge.length <- sample(0:1,Nedge(tree),replace = TRUE);tree <- di2multi(tree)
+	#sampRate = rep(0.1,Ntip(tree));names(sampRate) <- tree$tip.label
+	#brRate <- extRate <- sampRate
+	#timeData <- runif(Ntip(tree),200,400);timeData <- cbind(timeData,timeData-runif(Ntip(tree),1,80))
+	#rownames(timeData) <- tree$tip.label
+	#ntrees = 1; anc.wt = 1; node.mins = NULL; dateTreatment = "firstLast";
+	#FAD.only = FALSE; adj.obs.wt = TRUE; root.max = 200; step.size = 0.1;
+	#randres = FALSE; noisyDrop = TRUE; plot = FALSE
 	#
-	# record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
-	#	nTotalTaxa=c(50,100), nExtant=0)
-	# taxa<-fossilRecord2fossilTaxa(record)
-	#cladogram<-taxa2cladogram(taxa);timeData<-sampleRanges(taxa,r=0.1)
+	# record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+	#	nTotalTaxa = c(50,100), nExtant = 0)
+	# taxa <- fossilRecord2fossilTaxa(record)
+	#cladogram <- taxa2cladogram(taxa);timeData <- sampleRanges(taxa,r = 0.1)
 	#
 	###trying to see if adj.wts works
-	#tree<-rtree(2);anc.wt=1;node.mins=NULL;brRate<-extRate<-sampRate<-0.1;timeData<-cbind(c(100,95),c(90,85));adj.obs.wt=TRUE
-	#rownames(timeData)<-tree$tip.label;root.max=200;plot=TRUE;rand.obs=FALSE;FAD.only=TRUE;ntrees=1;randres=FALSE;step.size=0.1
+	#tree <- rtree(2);anc.wt = 1;node.mins = NULL;brRate <- extRate <- sampRate <- 0.1;timeData <- cbind(c(100,95),c(90,85));adj.obs.wt = TRUE
+	#rownames(timeData) <- tree$tip.label;root.max = 200;plot = TRUE;rand.obs = FALSE;FAD.only = TRUE;ntrees = 1;randres = FALSE;step.size = 0.1
 	#
-	#add.zombie=FALSE;node.mins<-c(-sort(-runif(1,600,900)),rep(NA,Nnode(tree)-1))	#assume two very deep divergences
+	#add.zombie = FALSE;node.mins <- c(-sort(-runif(1,600,900)),rep(NA,Nnode(tree)-1))	#assume two very deep divergences
 	#
 	#require(ape)#;require(phangorn)
 	#
 	if(!inherits(tree, "phylo")){stop("tree is not of class phylo")}
 	if(!inherits(timeData,"matrix")){
 		if(inherits(timeData,"data.frame")){
-			timeData<-as.matrix(timeData)
+			timeData <- as.matrix(timeData)
 		}else{
 			stop("timeData not of matrix or data.frame format")
 			}
 		}
-	if(!any(dateTreatment==c("firstLast","minMax","randObs"))){
+	if(!any(dateTreatment == c("firstLast","minMax","randObs"))){
 		stop("dateTreatment must be one of 'firstLast', 'minMax' or 'randObs'!")
 		}
-	if(dateTreatment=="randObs" & FAD.only){
-		stop("FAD.only=TRUE and dateTreatment='randObs' are conflicting arguments")
+	if(dateTreatment == "randObs" & FAD.only){
+		stop("FAD.only = TRUE and dateTreatment = 'randObs' are conflicting arguments")
 		}
-	if(dateTreatment=="minMax" & FAD.only){
-		stop("FAD.only=TRUE and dateTreatment='minMax' are conflicting, as there are no FADs, as dates are simply point occurrences")
+	if(dateTreatment == "minMax" & FAD.only){
+		stop("FAD.only = TRUE and dateTreatment = 'minMax' are conflicting, as there are no FADs, as dates are simply point occurrences")
 		}
 	#first clean out all taxa which are NA or missing in timeData	
 	if(ntrees<1){
 		stop("ntrees<1")
 		}
 	# warnings, not fatal errors
-	if(ntrees==1 & verboseWarnings){
+	if(ntrees == 1 & verboseWarnings){
 		warning("Do not interpret a single cal3 time-scaled tree, regardless of other arguments!")
 		}
-	#originalInputTree<-tree
-	droppers<-tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
+	#originalInputTree <- tree
+	droppers <- tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
 	if(length(droppers)>0){
-		if(length(droppers)==Ntip(tree)){
+		if(length(droppers) == Ntip(tree)){
 			stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
 		if(noisyDrop){
 			message(paste("Warning: Following taxa dropped from tree:",
-				paste0(droppers,collapse=", ")))}
-		tree<-drop.tip(tree,droppers)
+				paste0(droppers,collapse = ", ")))}
+		tree <- drop.tip(tree,droppers)
 		if(Ntip(tree)<2){
 			stop("Less than two valid taxa shared between the tree and temporal data!")}
-		timeData[which(!sapply(rownames(timeData),function(x) any(x==tree$tip.label))),1]<-NA
+		timeData[which(!sapply(rownames(timeData),function(x) any(x == tree$tip.label))),1] <- NA
 		}
 	if(!is.null(node.mins)){
 		if(length(droppers)>0){	#then... the tree has changed unpredictably, node.mins unusable
 			stop("node.mins not compatible with datasets where some taxa are dropped; drop before analysis instead")}
-		if(Nnode(tree)!=length(node.mins)){
+		if(Nnode(tree) != length(node.mins)){
 			stop("node.mins must be same length as number of nodes in the input tree!")}
 		}
-	timeData<-timeData[!is.na(timeData[,1]),]
+	timeData <- timeData[!is.na(timeData[,1]),]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
 	if(any(timeData[,1]<timeData[,2])){stop("timeData is not in time relative to modern (decreasing to present)")}
-	if(length(unique(rownames(timeData)))!=length(rownames(timeData))){stop("Duplicate taxa in timeList[[2]]")}
-	if(length(unique(tree$tip.label))!=length(tree$tip.label)){stop("Duplicate tip taxon names in tree$tip.label")}
-	if(length(rownames(timeData))!=length(tree$tip.label)){
+	if(length(unique(rownames(timeData))) != length(rownames(timeData))){stop("Duplicate taxa in timeList[[2]]")}
+	if(length(unique(tree$tip.label)) != length(tree$tip.label)){stop("Duplicate tip taxon names in tree$tip.label")}
+	if(length(rownames(timeData)) != length(tree$tip.label)){
 		stop("Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
 	#make sure all taxa have a sampRate, brRate and exRate
-	if(length(sampRate)==1){sampRate<-rep(sampRate,Ntip(tree));names(sampRate)<-tree$tip.label
+	if(length(sampRate) == 1){sampRate <- rep(sampRate,Ntip(tree));names(sampRate) <- tree$tip.label
 		#if it is a species-named vector, all the species better be there1
 		}else{if(any(is.na(match(tree$tip.label,names(sampRate))))){
 			stop("Sampling Rates Not Given For All Taxa on Tree!")}}
-	if(length(brRate)==1){brRate<-rep(brRate,Ntip(tree));names(brRate)<-tree$tip.label
+	if(length(brRate) == 1){brRate <- rep(brRate,Ntip(tree));names(brRate) <- tree$tip.label
 		#if it is a species-named vector, all the species better be there1
 		}else{if(any(is.na(match(tree$tip.label,names(brRate))))){
 			stop("Branching Rates Not Given For All Taxa on Tree!")}}
-	if(length(extRate)==1){extRate<-rep(extRate,Ntip(tree));names(extRate)<-tree$tip.label
+	if(length(extRate) == 1){extRate <- rep(extRate,Ntip(tree));names(extRate) <- tree$tip.label
 		#if it is a species-named vector, all the species better be there1
 		}else{if(any(is.na(match(tree$tip.label,names(extRate))))){
 			stop("Extinction Rates Not Given For All Taxa on Tree!")}}
 	#allow per-taxon anc.wt values
-	if(length(anc.wt)==1){anc.wt<-rep(anc.wt,Ntip(tree));names(anc.wt)<-tree$tip.label
+	if(length(anc.wt) == 1){anc.wt <- rep(anc.wt,Ntip(tree));names(anc.wt) <- tree$tip.label
 		#if it is a species-named vector, all the species better be there1
 		}else{if(any(is.na(match(tree$tip.label,names(anc.wt))))){
 			stop("Ancestral Weights Not Given For All Taxa on Tree!")}}
-	Ps<-sapply(tree$tip.label,function(x) pqr2Ps(brRate[x],extRate[x],sampRate[x]))
-	names(Ps)<-tree$tip.label
+	Ps <- sapply(tree$tip.label,function(x) pqr2Ps(brRate[x],extRate[x],sampRate[x]))
+	names(Ps) <- tree$tip.label
 	#timescale with timePaleoPhy to get "basic" timetree
-	ttree1<-timePaleoPhy(tree=tree,timeData=timeData,
-		type="basic",dateTreatment="firstLast",
-		node.mins=node.mins,add.term=FALSE,inc.term.adj=FALSE)
+	ttree1 <- timePaleoPhy(tree = tree,timeData = timeData,
+		type = "basic",dateTreatment = "firstLast",
+		node.mins = node.mins,add.term = FALSE,inc.term.adj = FALSE)
 	#identify which nodes are min-locked; make sure to update when resolving polytomies
 	if(length(node.mins)>0){
-		locked_nodesOrig<-which(!is.na(node.mins))+Ntip(tree)
+		locked_nodesOrig <- which(!is.na(node.mins))+Ntip(tree)
 	}else{
-		locked_nodesOrig<-NA
+		locked_nodesOrig <- NA
 		}
-	ttree1<-collapse.singles(ttree1)
-	ttrees<-rmtree(ntrees,3)
-	sampledLogLike<-numeric()
+	ttree1 <- collapse.singles(ttree1)
+	ttrees <- rmtree(ntrees,3)
+	sampledLogLike <- numeric()
 	for(ntr in 1:ntrees){
 		#10/30/12: get FAD, new LAD (time of observation), and then calculate difference between t.obs and LAD
-		if(dateTreatment=="randObs" | FAD.only){
+		if(dateTreatment == "randObs" | FAD.only){
 			if(FAD.only){
-				timeData1<-cbind(timeData[,1],timeData[,1],timeData[,1]-timeData[,2])
+				timeData1 <- cbind(timeData[,1],timeData[,1],timeData[,1]-timeData[,2])
 				}
-			if(dateTreatment=="randObs"){
-				timeData1<-cbind(timeData[,1],apply(timeData,1,function(x) runif(1,x[2],x[1])))
-				timeData1<-cbind(timeData1,timeData1[,2]-timeData[,2])
+			if(dateTreatment == "randObs"){
+				timeData1 <- cbind(timeData[,1],apply(timeData,1,function(x) runif(1,x[2],x[1])))
+				timeData1 <- cbind(timeData1,timeData1[,2]-timeData[,2])
 				}
 		}else{
-			if(dateTreatment=="minMax"){
-				datesUniffy<-apply(timeData,1,function(x) runif(1,x[2],x[1]))
-				timeData1<-cbind(datesUniffy,datesUniffy,0)
+			if(dateTreatment == "minMax"){
+				datesUniffy <- apply(timeData,1,function(x) runif(1,x[2],x[1]))
+				timeData1 <- cbind(datesUniffy,datesUniffy,0)
 				}
-			timeData1<-cbind(timeData,0)
+			timeData1 <- cbind(timeData,0)
 			}
 		# now randomly resolve if randres
 		if(randres & (!is.binary.tree(ttree1) | !is.rooted(ttree1))){
-			ktree<-multi2di(ttree1)
+			ktree <- multi2di(ttree1)
 			# need to updated node locks if any node.mins given
 			if(!identical(locked_nodesOrig,NA)){
-				origDesc<-lapply(prop.part(ttree1),function(x) sort(ttree1$tip.label[x]))
-				treeDesc<-lapply(prop.part(ktree),function(x) sort(ktree$tip.label[x]))
-				node_changes<-match(origDesc,treeDesc)
-				locked_nodes<-node_changes[locked_nodesOrig]
+				origDesc <- lapply(prop.part(ttree1),function(x) sort(ttree1$tip.label[x]))
+				treeDesc <- lapply(prop.part(ktree),function(x) sort(ktree$tip.label[x]))
+				node_changes <- match(origDesc,treeDesc)
+				locked_nodes <- node_changes[locked_nodesOrig]
 			}else{
-				locked_nodes<-locked_nodesOrig
+				locked_nodes <- locked_nodesOrig
 				}
 		}else{
-			ktree<-ttree1
-			locked_nodes<-locked_nodesOrig
+			ktree <- ttree1
+			locked_nodes <- locked_nodesOrig
 			}
-		nodes<-(1:Nnode(ktree))+Ntip(ktree)		#get a vector of all internal nodes	
-		nodes<-nodes[order(-node.depth(ktree)[-(1:Ntip(ktree))])]	#order by depth
-		anags<-character();budds<-character();nAdjZip<-0
+		nodes <- (1:Nnode(ktree))+Ntip(ktree)		#get a vector of all internal nodes	
+		nodes <- nodes[order(-node.depth(ktree)[-(1:Ntip(ktree))])]	#order by depth
+		anags <- character();budds <- character();nAdjZip <- 0
 		while(length(nodes)>0){		#can't use a for() because # of nodes may change
 			if(diagnosticMode){
-				save_tree<-ktree
+				save_tree <- ktree
 				dev.new()
 				plot(ktree)
 				}
-			node<-nodes[1]
-			tipl<-ktree$tip.label
+			node <- nodes[1]
+			tipl <- ktree$tip.label
 			#put together tip data: diffLAD is the difference between the time of observation and the true LAD
-			tipd<-cbind(ID=(1:Ntip(ttree1)),FAD=(timeData1[tipl,1]),time.obs=(timeData1[tipl,2]),SR=sampRate[tipl],
-				BR=brRate[tipl],ER=extRate[tipl],Ps=Ps[tipl],ancWt=anc.wt[tipl],diffLAD=(timeData1[tipl,3]))
-			if(node==(Ntip(ktree)+1)){
-				min_zip<-(-root.max)	#if root, allow to be push back up to root.max
-				stem_len<-root.max
-				#root_push<--seq(min_zip,0,by=step.size)
+			tipd <- cbind(ID = (1:Ntip(ttree1)),FAD = (timeData1[tipl,1]),time.obs = (timeData1[tipl,2]),SR = sampRate[tipl],
+				BR = brRate[tipl],ER = extRate[tipl],Ps = Ps[tipl],ancWt = anc.wt[tipl],diffLAD = (timeData1[tipl,3]))
+			if(node == (Ntip(ktree)+1)){
+				min_zip <- (-root.max)	#if root, allow to be push back up to root.max
+				stem_len <- root.max
+				#root_push <- -seq(min_zip,0,by = step.size)
 			}else{									#if not root, push down to lower node
-				min_zip<-(-ktree$edge.length[ktree$edge[,2]==node])
-				stem_len<-ktree$edge.length[ktree$edge[,2]==node]
+				min_zip <- (-ktree$edge.length[ktree$edge[,2] == node])
+				stem_len <- ktree$edge.length[ktree$edge[,2] == node]
 				}		
-			dnodes<-ktree$edge[ktree$edge[,1]==node,2]	#find the daughter nodes
-			dlen<-ktree$edge.length[match(dnodes,ktree$edge[,2])]	#find the dedges lengths
-			minlocked<-ifelse(!all(is.na(locked_nodes)),any(node==locked_nodes),FALSE)	#is this node min-locked?
-			#if(any(dnodes==which(ktree$tip.label=="t10"))){break()}
+			dnodes <- ktree$edge[ktree$edge[,1] == node,2]	#find the daughter nodes
+			dlen <- ktree$edge.length[match(dnodes,ktree$edge[,2])]	#find the dedges lengths
+			minlocked <- ifelse(!all(is.na(locked_nodes)),any(node == locked_nodes),FALSE)	#is this node min-locked?
+			#if(any(dnodes == which(ktree$tip.label == "t10"))){break()}
 			if(length(dnodes)>2){		#if node is a polytomy, use PARALLEL ZIPPER
 				#pick a starting lineage
-				dSR<-drng<-dBR<-dER<-dPs<-danc.wt<-ddfLAD<-numeric()
+				dSR <- drng <- dBR <- dER <- dPs <- danc.wt <- ddfLAD <- numeric()
 				for(i in dnodes){		#for each desc, get vector of SR for earliest and range if desc is a tip
-					dtips<-match(unlist(Descendants(ktree,i)),tipd[,1])
-					dearly<-which(tipd[dtips,2]==max(tipd[dtips,2]))[1]
-					dSR[length(dSR)+1]<-tipd[dearly,4]
-					dBR[length(dBR)+1]<-tipd[dearly,5]
-					dER[length(dER)+1]<-tipd[dearly,6]
-					dPs[length(dPs)+1]<-tipd[dearly,7]
-					danc.wt[length(danc.wt)+1]<-tipd[dearly,8]
-					ddfLAD[length(ddfLAD)+1]<-tipd[dearly,9]		#10-30-12: diff between t.obs and LAD
-					drng[length(drng)+1]<-ifelse(length(dtips)>1,NA,diff(unlist(tipd[dtips,3:2])))
+					dtips <- match(unlist(Descendants(ktree,i)),tipd[,1])
+					dearly <- which(tipd[dtips,2] == max(tipd[dtips,2]))[1]
+					dSR[length(dSR)+1] <- tipd[dearly,4]
+					dBR[length(dBR)+1] <- tipd[dearly,5]
+					dER[length(dER)+1] <- tipd[dearly,6]
+					dPs[length(dPs)+1] <- tipd[dearly,7]
+					danc.wt[length(danc.wt)+1] <- tipd[dearly,8]
+					ddfLAD[length(ddfLAD)+1] <- tipd[dearly,9]		#10-30-12: diff between t.obs and LAD
+					drng[length(drng)+1] <- ifelse(length(dtips)>1,NA,diff(unlist(tipd[dtips,3:2])))
 					}
 				#08-01-12: choice of starting lineage doesn't matter (see SRC method)
-				dnode1<-dnodes[which(dlen==min(dlen))[1]]		#just pick first appearing
+				dnode1 <- dnodes[which(dlen == min(dlen))[1]]		#just pick first appearing
 				#make sure to include stem length in calculations!
 				#08-03-12: as with new SRC above, the stem length will JUST be the -min_zip: max root.push!
-				#if(node==(Ntip(ktree)+1)){
+				#if(node == (Ntip(ktree)+1)){
 				#	#07-29-12: this treats the stem length as a single gap
 				#		#given that this should be a single gap and not gamma distributed
-				#	root_density<-dexp(root_push,rate=dSR[dnode1==dnodes]+(dBR[dnode1==dnodes]*dPs[dnode1==dnodes]))
-				#	stem_len<-sample(root_push,1,prob=root_density)
+				#	root_density <- dexp(root_push,rate = dSR[dnode1 == dnodes]+(dBR[dnode1 == dnodes]*dPs[dnode1 == dnodes]))
+				#	stem_len <- sample(root_push,1,prob = root_density)
 				#	}
-				#make data structure for placed lineages; anc= row of anc lineage, events in time-from-stem 
-				plin<-c(dnode1,(dlen[dnode1==dnodes]+stem_len),drng[dnode1==dnodes],NA,
-					0,dlen[dnode1==dnodes]+stem_len,dlen[dnode1==dnodes]+drng[dnode1==dnodes]+stem_len,
-					danc.wt[dnode1==dnodes],ddfLAD[dnode1==dnodes])
-				plin<-matrix(plin,1,)
-				colnames(plin)<-c("node","brl","rng","anc","tSpec","tFO","tLO","ancWt","diffLAD")
+				#make data structure for placed lineages; anc =  row of anc lineage, events in time-from-stem 
+				plin <- c(dnode1,(dlen[dnode1 == dnodes]+stem_len),drng[dnode1 == dnodes],NA,
+					0,dlen[dnode1 == dnodes]+stem_len,dlen[dnode1 == dnodes]+drng[dnode1 == dnodes]+stem_len,
+					danc.wt[dnode1 == dnodes],ddfLAD[dnode1 == dnodes])
+				plin <- matrix(plin,1,)
+				colnames(plin) <- c("node","brl","rng","anc","tSpec","tFO","tLO","ancWt","diffLAD")
 				#place additional lineages, in order of max zip, using parallel zippers along placed lineages
 				#add_nodes will hold necessary information on dlen, rng, SR for unplaced nodes
-				add_nodes<-cbind(dnodes,dlen+stem_len,drng,dSR,dBR,dER,dPs,danc.wt,ddfLAD)[-which(dnodes==dnode1),]
-				add_nodes<-add_nodes[order(dlen[-which(dnodes==dnode1)]),]
-				colnames(add_nodes)<-c("node","dstem","rng","SR","BR","ER","Ps","ancWt","diffLAD")	#dstem is distance from stem to FAD
+				add_nodes <- cbind(dnodes,dlen+stem_len,drng,dSR,dBR,dER,dPs,danc.wt,ddfLAD)[-which(dnodes == dnode1),]
+				add_nodes <- add_nodes[order(dlen[-which(dnodes == dnode1)]),]
+				colnames(add_nodes) <- c("node","dstem","rng","SR","BR","ER","Ps","ancWt","diffLAD")	#dstem is distance from stem to FAD
 				for(i in 1:nrow(add_nodes)){
 					#identify each currently placed lineage, produce zipper for each relative to stem point
-					zips<-matrix(,1,3)
+					zips <- matrix(,1,3)
 					for(j in 1:nrow(plin)){
-						min_zip<-plin[j,5]	#time of speciation (stem time for each placed lineage)
-						max_zip<-ifelse(plin[j,8]>0 & !is.na(plin[j,7]),	#max zip is complicated, dependent on anc.wt
+						min_zip <- plin[j,5]	#time of speciation (stem time for each placed lineage)
+						max_zip <- ifelse(plin[j,8]>0 & !is.na(plin[j,7]),	#max zip is complicated, dependent on anc.wt
 							min(add_nodes[i,2],plin[j,7]),	#min of LAD of the placed lineage or FAD of the lineage to be placed
 							min(add_nodes[i,2],plin[j,6]))	#min of FAD of the placed lineage or FAD of the lineage to be placed
-						if(minlocked){max_zip<-stem_len}		#if minlocked, node must be not earlier than original node time
-						#and on a stemTime=0 scale as used for the parallel zipper, stem_len is the original node time, unlike single zipper below
-						poss_zip<-seq(min_zip,max_zip,by=step.size)
+						if(minlocked){max_zip <- stem_len}		#if minlocked, node must be not earlier than original node time
+						#and on a stemTime = 0 scale as used for the parallel zipper, stem_len is the original node time, unlike single zipper below
+						poss_zip <- seq(min_zip,max_zip,by = step.size)
 						#08-01-12: getting the density via the Cal3 algorithm
-						gap1<-plin[j,6]-poss_zip		#waiting time from FAD1 to zip
-						gap1<-ifelse(gap1>0,gap1,0)		#waiting time from branching point to FAD1
-						gap2<-add_nodes[i,2]-poss_zip			#waiting time from branching point to FAD2
-						gapStem2zip<-ifelse(plin[j,6]>poss_zip,poss_zip,plin[j,6])	#waiting time from stem to FAD1 OR br node
-						totalgap<-gap1+gap2+gapStem2zip
-						#07-31-12: Given a lack of other options, gamma(shape=2,rate=r+p*Ps) distribution best fit
-							#under different combinations with p=q=r,p=q>r and p=q<r
+						gap1 <- plin[j,6]-poss_zip		#waiting time from FAD1 to zip
+						gap1 <- ifelse(gap1>0,gap1,0)		#waiting time from branching point to FAD1
+						gap2 <- add_nodes[i,2]-poss_zip			#waiting time from branching point to FAD2
+						gapStem2zip <- ifelse(plin[j,6]>poss_zip,poss_zip,plin[j,6])	#waiting time from stem to FAD1 OR br node
+						totalgap <- gap1+gap2+gapStem2zip
+						#07-31-12: Given a lack of other options, gamma(shape = 2,rate = r+p*Ps) distribution best fit
+							#under different combinations with p = q = r,p = q>r and p = q<r
 							#admittedly not a perfect fit, though!
 							#use rates from the lineages being added
-						linDense<-dgamma(totalgap,shape=2,rate=add_nodes[i,4]+(add_nodes[i,5]*add_nodes[i,7]))
-						linDense<-ifelse(poss_zip>plin[j,6],
+						linDense <- dgamma(totalgap,shape = 2,rate = add_nodes[i,4]+(add_nodes[i,5]*add_nodes[i,7]))
+						linDense <- ifelse(poss_zip>plin[j,6],
 							plin[j,8]*linDense,	#with anc.wt (of the PLACED LINEAGE)
 								    linDense)	#without anc.wt, but with gap1 probability
-						#10-30-12 need to correct linDense value for time of observation if difference from LAD =/= 0
+						#10-30-12 need to correct linDense value for time of observation if difference from LAD  = / =  0
 							#use the diffLAD of the PLACED LINEAGE (CAUSE ITS THE ANCESTOR)
 							#if adj.obs.wt, if anc.wt>0 & diffLAD>0 & plin's LAD is before the add_nodes's FAD...
 						if(ifelse(is.na(plin[j,7]),FALSE,add_nodes[i,2]>(plin[j,7]+step.size)) & 
 								adj.obs.wt & plin[j,8]>0 & plin[j,9]>0){	
-							adj_max<-max(add_nodes[i,2],plin[j,9]+plin[j,7])
-							adj_zips<-seq(plin[j,7]+step.size,adj_max,by=step.size) 	#the zips we ain't looking at
+							adj_max <- max(add_nodes[i,2],plin[j,9]+plin[j,7])
+							adj_zips <- seq(plin[j,7]+step.size,adj_max,by = step.size) 	#the zips we ain't looking at
 							#08-01-12: getting the density via the Cal3 algorithm
-							gap1<-plin[j,6]-adj_zips		#waiting time from FAD1 to zip
-							gap1<-ifelse(gap1>0,gap1,0)		#waiting time from branching point to FAD1
-							gap2<-add_nodes[i,2]-adj_zips			#waiting time from branching point to FAD2
-							gapStem2zip<-ifelse(plin[j,6]>adj_zips,adj_zips,plin[j,6])	#waiting time from stem to FAD1 OR br node
-							adj_totalgap<-gap1+gap2+gapStem2zip
-							#07-31-12: Given a lack of other options, gamma(shape=2,rate=r+p*Ps) distribution best fit
-								#under different combinations with p=q=r,p=q>r and p=q<r
+							gap1 <- plin[j,6]-adj_zips		#waiting time from FAD1 to zip
+							gap1 <- ifelse(gap1>0,gap1,0)		#waiting time from branching point to FAD1
+							gap2 <- add_nodes[i,2]-adj_zips			#waiting time from branching point to FAD2
+							gapStem2zip <- ifelse(plin[j,6]>adj_zips,adj_zips,plin[j,6])	#waiting time from stem to FAD1 OR br node
+							adj_totalgap <- gap1+gap2+gapStem2zip
+							#07-31-12: Given a lack of other options, gamma(shape = 2,rate = r+p*Ps) distribution best fit
+								#under different combinations with p = q = r,p = q>r and p = q<r
 								#admittedly not a perfect fit, though!
-							adj_linDense<-dgamma(adj_totalgap,shape=2,rate=add_nodes[i,4]+(add_nodes[i,5]*add_nodes[i,7]))
-							linDense[length(linDense)]<-linDense[length(linDense)]+sum(adj_linDense*plin[j,8])
-							nAdjZip<-nAdjZip+1
+							adj_linDense <- dgamma(adj_totalgap,shape = 2,rate = add_nodes[i,4]+(add_nodes[i,5]*add_nodes[i,7]))
+							linDense[length(linDense)] <- linDense[length(linDense)]+sum(adj_linDense*plin[j,8])
+							nAdjZip <- nAdjZip+1
 							}
-						new_zip<-cbind(linDense,plin[j,1],poss_zip)
-						zips<-rbind(zips,new_zip)
+						new_zip <- cbind(linDense,plin[j,1],poss_zip)
+						zips <- rbind(zips,new_zip)
 						}
-					if(nrow(zips)<3){zips<-matrix(zips[-1,],1,3)}else{zips<-zips[-1,]}
-					colnames(zips)<-c("linDensity","anc","tzip")
+					if(nrow(zips)<3){zips <- matrix(zips[-1,],1,3)}else{zips <- zips[-1,]}
+					colnames(zips) <- c("linDensity","anc","tzip")
 					#new as of 08-21-12
-					zip_prob<-zips[,1]
-					zip_prob[is.na(zip_prob)]<-0
-					if(sum(zip_prob)==0){zip_prob<-rep(1,length(zip_prob))}
-					zip_prob<-zip_prob/sum(zip_prob)
-					ch_zip<-sample(1:nrow(zips),1,prob=zip_prob)	#sample zips
+					zip_prob <- zips[,1]
+					zip_prob[is.na(zip_prob)] <- 0
+					if(sum(zip_prob) == 0){zip_prob <- rep(1,length(zip_prob))}
+					zip_prob <- zip_prob/sum(zip_prob)
+					ch_zip <- sample(1:nrow(zips),1,prob = zip_prob)	#sample zips
 					#record sampled zip_prob
-					sampledLogLike<-c(sampledLogLike,log(zip_prob[ch_zip]))
-					ch_anc<-zips[ch_zip,2]
-					ch_tzip<-zips[ch_zip,3]
+					sampledLogLike <- c(sampledLogLike,log(zip_prob[ch_zip]))
+					ch_anc <- zips[ch_zip,2]
+					ch_tzip <- zips[ch_zip,3]
 					#if anagenesis, add to anags; if budding, add to budds
-					if(!is.na(plin[ch_anc==plin[,1],7])){	#if the anc is terminal
-						if(plin[ch_anc==plin[,1],7]==ch_tzip){anags<-c(anags,ktree$tip.label[ch_anc])}	#if anagenetic
-						if(plin[ch_anc==plin[,1],6]<ch_tzip){budds<-c(budds,ktree$tip.label[ch_anc])}		#if budding
+					if(!is.na(plin[ch_anc == plin[,1],7])){	#if the anc is terminal
+						if(plin[ch_anc == plin[,1],7] == ch_tzip){anags <- c(anags,ktree$tip.label[ch_anc])}	#if anagenetic
+						if(plin[ch_anc == plin[,1],6]<ch_tzip){budds <- c(budds,ktree$tip.label[ch_anc])}		#if budding
 						}
-					new_lin<-c(add_nodes[i,1],add_nodes[i,2]-ch_tzip,add_nodes[i,3],
+					new_lin <- c(add_nodes[i,1],add_nodes[i,2]-ch_tzip,add_nodes[i,3],
 						ch_anc,ch_tzip,add_nodes[i,2],add_nodes[i,2]+add_nodes[i,3],add_nodes[i,8],add_nodes[i,9])
-					plin<-rbind(plin,new_lin)	#put in plin
+					plin <- rbind(plin,new_lin)	#put in plin
 					}
 				#turn into a subtree using taxa2phylo()
-				taxad_o<-t(apply(plin,1,function(x) c(x[1],x[4],x[5],ifelse(is.na(x[7]),x[6],x[7]))))
-				new_anc<-sapply(taxad_o[,2],function(x) ifelse(is.na(x),NA,which(taxad_o[,1]==x)))
-				taxad_n<-cbind(1:nrow(taxad_o),new_anc,taxad_o[,3:4])
-				taxad_n[,3:4]<-max(taxad_n[,3:4])-taxad_n[,3:4]
-				rownames(taxad_n)<-paste("t",1:nrow(taxad_o),sep="")
-				subtree<-taxa2phylo(taxad_n)
-				subtree$tip.label<-taxad_o[match(subtree$tip.label,paste("t",1:nrow(taxad_o),sep="")),1]
-				new_stem<-diff(sort(plin[,5]))[1]	#time to stem (branch length for stem)
+				taxad_o <- t(apply(plin,1,function(x) c(x[1],x[4],x[5],ifelse(is.na(x[7]),x[6],x[7]))))
+				new_anc <- sapply(taxad_o[,2],function(x) ifelse(is.na(x),NA,which(taxad_o[,1] == x)))
+				taxad_n <- cbind(1:nrow(taxad_o),new_anc,taxad_o[,3:4])
+				taxad_n[,3:4] <- max(taxad_n[,3:4])-taxad_n[,3:4]
+				rownames(taxad_n) <- paste("t",1:nrow(taxad_o),sep = "")
+				subtree <- taxa2phylo(taxad_n)
+				subtree$tip.label <- taxad_o[match(subtree$tip.label,paste("t",1:nrow(taxad_o),sep = "")),1]
+				new_stem <- diff(sort(plin[,5]))[1]	#time to stem (branch length for stem)
 				#stick desc tips onto the subtree
 				for(i in dnodes){
-					dtip<-which(subtree$tip.label==i)
+					dtip <- which(subtree$tip.label == i)
 					if(i>Ntip(ktree)){		#if its a clade
-						subclade<-extract.clade(ktree,i)
-						subtree<-bind.tree(subtree,subclade,where=dtip)
-						subtree<-collapse.singles(subtree)
+						subclade <- extract.clade(ktree,i)
+						subtree <- bind.tree(subtree,subclade,where = dtip)
+						subtree <- collapse.singles(subtree)
 					}else{				#if its a tip
-						subtree$tip.label[dtip]<-ktree$tip.label[i]
+						subtree$tip.label[dtip] <- ktree$tip.label[i]
 					}}
 				#replace original node with new, resolved, scaled node
-				if(node!=(Ntip(ktree)+1)){	#if it isn't the node
-					drtips<-prop.part(ktree)[[node-Ntip(ktree)]]
-					tip_lab<-ktree$tip.label[drtips[1]]	#I need to cut out all but one tip, for the sole purpose of putting it all back later)
-					droptree<-collapse.singles(drop.tip(ktree,drtips[-1]))
-					droptree$edge.length[droptree$edge[,2]==which(droptree$tip.label==tip_lab)]<-new_stem	#reset edge length leading to remaining tip to new_stem
-					droptree<-bind.tree(droptree,subtree,where=which(droptree$tip.label==tip_lab))	#put in subtree at tip
-					ktree1<-droptree
+				if(node != (Ntip(ktree)+1)){	#if it isn't the node
+					drtips <- prop.part(ktree)[[node-Ntip(ktree)]]
+					tip_lab <- ktree$tip.label[drtips[1]]	#I need to cut out all but one tip, for the sole purpose of putting it all back later)
+					droptree <- collapse.singles(drop.tip(ktree,drtips[-1]))
+					droptree$edge.length[droptree$edge[,2] == which(droptree$tip.label == tip_lab)] <- new_stem	#reset edge length leading to remaining tip to new_stem
+					droptree <- bind.tree(droptree,subtree,where = which(droptree$tip.label == tip_lab))	#put in subtree at tip
+					ktree1 <- droptree
 				}else{				#if it is the node
-					ktree1<-subtree
+					ktree1 <- subtree
 					}				
 				#once you've changed the structure of the tree find original nodes in new tree (surprisingly frustating to code!)
 				if(length(nodes)>1){
-					d_o<-lapply(Descendants(ktree,nodes[-1]),function(x) ktree$tip.label[x])
-					d_n<-lapply(Descendants(ktree1)[-(1:Ntip(ktree1))],function(x) ktree1$tip.label[x])
-					nodes1<-sapply(d_o,function(x) which(sapply(d_n,function(y) 
-						ifelse(length(y)==length(x),all(sort(y)==sort(x)),FALSE))))
-					nodes1<-Ntip(ktree1)+nodes1
-					nodes1<-nodes1[order(-node.depth(ktree1)[nodes1])]	#order by depth
+					d_o <- lapply(Descendants(ktree,nodes[-1]),function(x) ktree$tip.label[x])
+					d_n <- lapply(Descendants(ktree1)[-(1:Ntip(ktree1))],function(x) ktree1$tip.label[x])
+					nodes1 <- sapply(d_o,function(x) which(sapply(d_n,function(y) 
+						ifelse(length(y) == length(x),all(sort(y) == sort(x)),FALSE))))
+					nodes1 <- Ntip(ktree1)+nodes1
+					nodes1 <- nodes1[order(-node.depth(ktree1)[nodes1])]	#order by depth
 					if(!all(is.na(locked_nodes))){	#update locked_nodes, can re-use d_n
-						d_ol<-lapply(Descendants(ktree,locked_nodes),function(x) ktree$tip.label[x])
-						locked_nodes<-sapply(d_ol,function(x) which(sapply(d_n,function(y) 
-							ifelse(length(y)==length(x),all(sort(y)==sort(x)),FALSE))))
-						locked_nodes<-Ntip(ktree1)+locked_nodes
+						d_ol <- lapply(Descendants(ktree,locked_nodes),function(x) ktree$tip.label[x])
+						locked_nodes <- sapply(d_ol,function(x) which(sapply(d_n,function(y) 
+							ifelse(length(y) == length(x),all(sort(y) == sort(x)),FALSE))))
+						locked_nodes <- Ntip(ktree1)+locked_nodes
 						}					
-				}else{nodes1<-numeric()}				#don't bother if no more nodes left...
+				}else{nodes1 <- numeric()}				#don't bother if no more nodes left...
 				if(diagnosticMode){
 					layout(matrix(1:2,2,));plot(save_tree);plot(ktree1);layout(1)
 					}
 				#update tipd and nodes (tree str will have changed)
-				ktree1<-collapse.singles(ktree1)
-				ktree<-ktree1
-				nodes<-nodes1
+				ktree1 <- collapse.singles(ktree1)
+				ktree <- ktree1
+				nodes <- nodes1
 			}else{	#if node is NOT a polytomy, then use regular zipper
-				dlen1<-min(dlen)				#the shortest branch (nothing can be done about this one)
-				dlen2<-max(dlen)				#the longest branch
-				dnode1<-dnodes[which(dlen==dlen1)[1]]
-				dnode2<-dnodes[dnodes!=dnode1]
+				dlen1 <- min(dlen)				#the shortest branch (nothing can be done about this one)
+				dlen2 <- max(dlen)				#the longest branch
+				dnode1 <- dnodes[which(dlen == dlen1)[1]]
+				dnode2 <- dnodes[dnodes != dnode1]
 				#get the SR of earliest tip of d2
-				d2FADs<-tipd[match(unlist(Descendants(ktree,dnode2)),tipd[,1]),2]	#need the NODE for prop.part, idiot!
-				d2early<-which(d2FADs==max(d2FADs))	
-				d2early<-ifelse(length(d2early)>1,sample(d2early,1),d2early)	#if more than one of same FAD, just randomly choose one
-				d2SR<-(tipd[match(unlist(Descendants(ktree,dnode2)),tipd[,1]),4])[d2early]
-				d2BR<-(tipd[match(unlist(Descendants(ktree,dnode2)),tipd[,1]),5])[d2early]
-				d2Ps<-(tipd[match(unlist(Descendants(ktree,dnode2)),tipd[,1]),7])[d2early]
-				d1rng<-ifelse(dnode1<=Ntip(ktree),diff(unlist(tipd[match(dnode1,tipd[,1]),3:2])),NA)	#if clade, range = NA	
-				d2rng<-ifelse(dnode2<=Ntip(ktree),diff(unlist(tipd[match(dnode2,tipd[,1]),3:2])),NA)
-				d1ancWt<-ifelse(dnode1<=Ntip(ktree),unlist(tipd[match(dnode1,tipd[,1]),8]),0)
-				d1diffLAD<-ifelse(dnode1<=Ntip(ktree),unlist(tipd[match(dnode1,tipd[,1]),9]),0)
+				d2FADs <- tipd[match(unlist(Descendants(ktree,dnode2)),tipd[,1]),2]	#need the NODE for prop.part, idiot!
+				d2early <- which(d2FADs == max(d2FADs))	
+				d2early <- ifelse(length(d2early)>1,sample(d2early,1),d2early)	#if more than one of same FAD, just randomly choose one
+				d2SR <- (tipd[match(unlist(Descendants(ktree,dnode2)),tipd[,1]),4])[d2early]
+				d2BR <- (tipd[match(unlist(Descendants(ktree,dnode2)),tipd[,1]),5])[d2early]
+				d2Ps <- (tipd[match(unlist(Descendants(ktree,dnode2)),tipd[,1]),7])[d2early]
+				d1rng <- ifelse(dnode1 <= Ntip(ktree),diff(unlist(tipd[match(dnode1,tipd[,1]),3:2])),NA)	#if clade, range = NA	
+				d2rng <- ifelse(dnode2 <= Ntip(ktree),diff(unlist(tipd[match(dnode2,tipd[,1]),3:2])),NA)
+				d1ancWt <- ifelse(dnode1 <= Ntip(ktree),unlist(tipd[match(dnode1,tipd[,1]),8]),0)
+				d1diffLAD <- ifelse(dnode1 <= Ntip(ktree),unlist(tipd[match(dnode1,tipd[,1]),9]),0)
 				#ZIPPPER: first create a list of scenarios, treat the position of the node like a zipper which can be moved up or down
-				max_zip<-ifelse(d1ancWt>0 & !is.na(d1rng),min(dlen1+d1rng,dlen2),dlen1)	#if d1 isn't a clade and there can be ancestors	
-				if(minlocked){max_zip<-0}		#in single zipper, unlike parallel zipper, 0 is original node time
-				poss_zip<-seq(min_zip,max_zip,by=step.size)
+				max_zip <- ifelse(d1ancWt>0 & !is.na(d1rng),min(dlen1+d1rng,dlen2),dlen1)	#if d1 isn't a clade and there can be ancestors	
+				if(minlocked){max_zip <- 0}		#in single zipper, unlike parallel zipper, 0 is original node time
+				poss_zip <- seq(min_zip,max_zip,by = step.size)
 				#waiting time from zip (branching point) to FAD1
-				gap1<-ifelse(poss_zip>dlen1,0,dlen1-poss_zip)		#restrict to be dlen1 if longer than dlen1 (FAD1-time, prob 0 anyway!)
-				gap2<-dlen2-poss_zip			#waiting time from branching point to FAD2
+				gap1 <- ifelse(poss_zip>dlen1,0,dlen1-poss_zip)		#restrict to be dlen1 if longer than dlen1 (FAD1-time, prob 0 anyway!)
+				gap2 <- dlen2-poss_zip			#waiting time from branching point to FAD2
 				#waiting time from stem to FAD1 OR branch node (zip)
-				gapStem2zip<-ifelse((stem_len+dlen1)>(stem_len+poss_zip),
+				gapStem2zip <- ifelse((stem_len+dlen1)>(stem_len+poss_zip),
 					stem_len+poss_zip,stem_len+dlen1)	
-				totalgap<-gap1+gap2+gapStem2zip
-				#07-31-12: Given a lack of other options, gamma(shape=2,rate=r+p*Ps) distribution best fit
-					#under different combinations with p=q=r,p=q>r and p=q<r
+				totalgap <- gap1+gap2+gapStem2zip
+				#07-31-12: Given a lack of other options, gamma(shape = 2,rate = r+p*Ps) distribution best fit
+					#under different combinations with p = q = r,p = q>r and p = q<r
 						#admittedly not a perfect fit, though!
-				linDense<-dgamma(totalgap,shape=2,rate=d2SR+(d2BR*d2Ps))
-				linDensity<-ifelse((stem_len+dlen1)<(stem_len+poss_zip),
+				linDense <- dgamma(totalgap,shape = 2,rate = d2SR+(d2BR*d2Ps))
+				linDensity <- ifelse((stem_len+dlen1)<(stem_len+poss_zip),
 					d1ancWt*linDense,	#with anc.wt (of first taxon)
 					 	  linDense)	#without anc.wt, but with gap1 probability
-				#10-30-12 need to correct linDense value for time of observation if difference from LAD =/= 0
+				#10-30-12 need to correct linDense value for time of observation if difference from LAD  = / =  0
 					#use the diffLAD of the potential ancestor
 					#if adj.obs.wt, if anc.wt>0 & diffLAD>0 & d1's LAD is before d2's FAD...
 				if(adj.obs.wt & d1ancWt>0 & d1diffLAD>0 & (dlen1+d1rng+step.size)<dlen2){
-					adj_max<-max(dlen2,d1diffLAD+(dlen1+d1rng))
-					adj_zips<-seq((dlen1+d1rng)+step.size,adj_max,by=step.size) 	#the zips we ain't looking at
+					adj_max <- max(dlen2,d1diffLAD+(dlen1+d1rng))
+					adj_zips <- seq((dlen1+d1rng)+step.size,adj_max,by = step.size) 	#the zips we ain't looking at
 					#08-01-12: getting the density via the Cal3 algorithm
 					#waiting time from zip (branching point) to FAD1
-					gap1<-ifelse(adj_zips>dlen1,0,dlen1-adj_zips)		#restrict to be dlen1 if longer than dlen1 (FAD1-time, prob 0 anyway!)
-					gap2<-dlen2-adj_zips			#waiting time from branching point to FAD2
+					gap1 <- ifelse(adj_zips>dlen1,0,dlen1-adj_zips)		#restrict to be dlen1 if longer than dlen1 (FAD1-time, prob 0 anyway!)
+					gap2 <- dlen2-adj_zips			#waiting time from branching point to FAD2
 					#waiting time from stem to FAD1 OR branch node (zip)
-					gapStem2zip<-ifelse((stem_len+dlen1)>(stem_len+adj_zips),
+					gapStem2zip <- ifelse((stem_len+dlen1)>(stem_len+adj_zips),
 						stem_len+adj_zips,stem_len+dlen1)
-					adj_totalgap<-gap1+gap2+gapStem2zip
-					#07-31-12: Given a lack of other options, gamma(shape=2,rate=r+p*Ps) distribution best fit
-						#under different combinations with p=q=r,p=q>r and p=q<r
+					adj_totalgap <- gap1+gap2+gapStem2zip
+					#07-31-12: Given a lack of other options, gamma(shape = 2,rate = r+p*Ps) distribution best fit
+						#under different combinations with p = q = r,p = q>r and p = q<r
 						#admittedly not a perfect fit, though!
-					adj_linDense<-dgamma(totalgap,shape=2,rate=d2SR+(d2BR*d2Ps))
-					linDensity[length(linDensity)]<-linDensity[length(linDensity)]+sum(adj_linDense*d1ancWt)
-					nAdjZip<-nAdjZip+1
+					adj_linDense <- dgamma(totalgap,shape = 2,rate = d2SR+(d2BR*d2Ps))
+					linDensity[length(linDensity)] <- linDensity[length(linDensity)]+sum(adj_linDense*d1ancWt)
+					nAdjZip <- nAdjZip+1
 					}
 				#new as of 08-21-12
-				linDensity[is.na(linDensity)]<-0
-				if(sum(linDensity)==0){linDensity[length(linDensity)]<-1}
-				linDensity1<-linDensity/sum(linDensity)
-				ch_zip<-sample(poss_zip,1,prob=linDensity1)	#pick zipper location
+				linDensity[is.na(linDensity)] <- 0
+				if(sum(linDensity) == 0){linDensity[length(linDensity)] <- 1}
+				linDensity1 <- linDensity/sum(linDensity)
+				ch_zip <- sample(poss_zip,1,prob = linDensity1)	#pick zipper location
 				#record sampled zip_prob
-				sampledLogLike<-c(sampledLogLike,log(linDensity1[ch_zip]))
+				sampledLogLike <- c(sampledLogLike,log(linDensity1[ch_zip]))
 				#calculate new branch lengths, adding terminal ranges to tips
-				new_dlen1<-ifelse(ch_zip>dlen1,NA,dlen1-ch_zip)			#If not budding or anagenesis
-				new_dlen2<-dlen2-ch_zip		
+				new_dlen1 <- ifelse(ch_zip>dlen1,NA,dlen1-ch_zip)			#If not budding or anagenesis
+				new_dlen2 <- dlen2-ch_zip		
 				if(is.na(new_dlen1)){							#if budding or anagensis
-					if(ch_zip==max_zip & dlen1+d1rng<dlen2){ 			#if anagensis
-						anags<-c(anags,ktree$tip.label[dnode1])
-						new_dlen1<-0
+					if(ch_zip == max_zip & dlen1+d1rng<dlen2){ 			#if anagensis
+						anags <- c(anags,ktree$tip.label[dnode1])
+						new_dlen1 <- 0
 					}else{								#if budding
-						budds<-c(budds,ktree$tip.label[dnode1])
-						new_dlen1<-d1rng+dlen1-ch_zip
-				}}else{new_dlen1<-ifelse(!is.na(d1rng),new_dlen1+d1rng,new_dlen1)}	#if tip, add term range
-				new_dlen2<-ifelse(!is.na(d2rng),new_dlen2+d2rng,new_dlen2)		#if tip, add rng to new dlen
+						budds <- c(budds,ktree$tip.label[dnode1])
+						new_dlen1 <- d1rng+dlen1-ch_zip
+				}}else{new_dlen1 <- ifelse(!is.na(d1rng),new_dlen1+d1rng,new_dlen1)}	#if tip, add term range
+				new_dlen2 <- ifelse(!is.na(d2rng),new_dlen2+d2rng,new_dlen2)		#if tip, add rng to new dlen
 				#rescale branches according to their new lengths
-				if(node!=(Ntip(ktree)+1)){	#if not root
-					ktree$edge.length[ktree$edge[,2]==node]<-ch_zip-min_zip	#change stem length
+				if(node != (Ntip(ktree)+1)){	#if not root
+					ktree$edge.length[ktree$edge[,2] == node] <- ch_zip-min_zip	#change stem length
 					}
-				ktree$edge.length[match(dnode1,ktree$edge[,2])]<-new_dlen1
-				ktree$edge.length[match(dnode2,ktree$edge[,2])]<-new_dlen2
+				ktree$edge.length[match(dnode1,ktree$edge[,2])] <- new_dlen1
+				ktree$edge.length[match(dnode2,ktree$edge[,2])] <- new_dlen2
 				if(diagnosticMode){
 					print(c(node,ch_zip-min_zip,new_dlen1,new_dlen2))
 					}
-				nodes<-nodes[-1]			#update nodes
+				nodes <- nodes[-1]			#update nodes
 			}}
-		ktree<-reorder(collapse.singles(ktree),"cladewise")
-		ktree$anag.tips<-anags	#record the number of anagenetic ancestors
-		ktree$budd.tips<-budds	#record the number of budding ancestors	
-		ktree$nAdjZip<-nAdjZip
+		ktree <- reorder(collapse.singles(ktree),"cladewise")
+		ktree$anag.tips <- anags	#record the number of anagenetic ancestors
+		ktree$budd.tips <- budds	#record the number of budding ancestors	
+		ktree$nAdjZip <- nAdjZip
 		#record sampled log-likelihoods
-		ktree$sampledLogLike<-sampledLogLike
-		ktree$sumLogLike<-sum(sampledLogLike)
+		ktree$sampledLogLike <- sampledLogLike
+		ktree$sumLogLike <- sum(sampledLogLike)
 		#now add root.time: because NO TIPS ARE DROPPED (due to anagenesis) can calculate this now
 			#must be calculated on LADs because the terminal ranges are added to the TREE!!!
 			#should be time of earliest LAD + distance of root from earliest tip
-		ktree$root.time<-max(timeData1[ktree$tip.label,2])+min(node.depth.edgelength(ktree)[1:Ntip(ktree)])	
-		names(ktree$edge.length)<-names(ktree$tip.label)<-names(ktree$budd.tips)<-names(ktree$anag.tips)<-NULL
+		ktree$root.time <- max(timeData1[ktree$tip.label,2])+min(node.depth.edgelength(ktree)[1:Ntip(ktree)])	
+		names(ktree$edge.length) <- names(ktree$tip.label) <- names(ktree$budd.tips) <- names(ktree$anag.tips) <- NULL
 		#stuff for checking if things are correct
-		tipdiffs<-cbind(	diff(sort(-timeData1[,2])),
+		tipdiffs <- cbind(	diff(sort(-timeData1[,2])),
 					diff(sort(node.depth.edgelength(ktree)[1:Ntip(ktree)])),
 					diff(sort(-timeData1[,2]))-diff(sort(node.depth.edgelength(ktree)[1:Ntip(ktree)])))	
-		test1<-all(tipdiffs[,3]<tolerance)
-		test2<-identical(names(sort(-timeData1[,2])),
+		test1 <- all(tipdiffs[,3]<tolerance)
+		test2 <- identical(names(sort(-timeData1[,2])),
 				ktree$tip.label[order(node.depth.edgelength(ktree)[1:Ntip(ktree)])])
 		#test 2 does not work if any LADS are same
 		if(length(unique(timeData1[,2]))<Ntip(tree)){
-			test2<-TRUE
+			test2 <- TRUE
 			}	
 		if(all(c(test1,test2))){
-			ktree$test<-"passed"
+			ktree$test <- "passed"
 		}else{
 			warning("Warning: Terminal tips improperly aligned, cause unknown. Use ouput with care.")
 			}
 		if(plot){
-			parOrig <- par(no.readonly=TRUE)
-			par(mar=c(2.5,2.5,1,2.5))
+			parOrig <- par(no.readonly = TRUE)
+			par(mar = c(2.5,2.5,1,2.5))
 			layout(matrix(1:3,3,))
-			plot(ladderize(tree),show.tip.label=TRUE,use.edge.length=FALSE)
-			plot(ladderize(ttree1),show.tip.label=TRUE);axisPhylo()			
-			plot(ladderize(ktree),show.tip.label=TRUE);axisPhylo()
+			plot(ladderize(tree),show.tip.label = TRUE,use.edge.length = FALSE)
+			plot(ladderize(ttree1),show.tip.label = TRUE);axisPhylo()			
+			plot(ladderize(ktree),show.tip.label = TRUE);axisPhylo()
 			layout(1)
 			par(parOrig)		
 			}
-		names(ktree$edge.length)<-NULL
-		ttrees[[ntr]]<-ktree
+		names(ktree$edge.length) <- NULL
+		ttrees[[ntr]] <- ktree
 		}
-	if(ntrees==1){ttrees<-ttrees[[1]]}
+	if(ntrees == 1){ttrees <- ttrees[[1]]}
 	return(ttrees)
 	}
 
 #' @rdname cal3TimePaleoPhy
 #' @export
-bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,
-	ntrees=1, anc.wt=1, node.mins=NULL, dateTreatment="firstLast",
-	FAD.only=FALSE,sites=NULL,point.occur=FALSE,nonstoch.bin=FALSE,
-	adj.obs.wt=TRUE, root.max=200, step.size=0.1,
-	randres=FALSE, noisyDrop=TRUE,  verboseWarnings=TRUE,
-	tolerance=0.0001, diagnosticMode=FALSE, plot=FALSE){
+bin_cal3TimePaleoPhy <- function(tree,timeList,brRate,extRate,sampRate,
+	ntrees = 1, anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
+	FAD.only = FALSE,sites = NULL,point.occur = FALSE,nonstoch.bin = FALSE,
+	adj.obs.wt = TRUE, root.max = 200, step.size = 0.1,
+	randres = FALSE, noisyDrop = TRUE,  verboseWarnings = TRUE,
+	tolerance = 0.0001, diagnosticMode = FALSE, plot = FALSE){
 	#see the bin_cal3 function for more notation...
 	#require(ape)
 	if(!inherits(tree, "phylo")){
@@ -936,82 +936,82 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,
 		}
 	if(!inherits(timeList[[1]],"matrix")){
 		if(inherits(timeList[[1]],"data.frame")){
-			timeList[[1]]<-as.matrix(timeList[[1]])
+			timeList[[1]] <- as.matrix(timeList[[1]])
 		}else{
 			stop("timeList[[1]] not of matrix or data.frame format")
 			}
 			}
 	if(!inherits(timeList[[2]],"matrix")){
 		if(inherits(timeList[[2]],"data.frame")){
-			timeList[[2]]<-as.matrix(timeList[[2]])
+			timeList[[2]] <- as.matrix(timeList[[2]])
 		}else{
 			stop("timeList[[2]] not of matrix or data.frame format")
 			}
 		}
-	if(dateTreatment=="minMax"){
-		stop("Instead of dateTreatment='minMax', please use argument point.occur instead in bin_ functions or use sites argument")
+	if(dateTreatment == "minMax"){
+		stop("Instead of dateTreatment = 'minMax', please use argument point.occur instead in bin_ functions or use sites argument")
 		}
-	if(!any(dateTreatment==c("firstLast","randObs"))){
+	if(!any(dateTreatment == c("firstLast","randObs"))){
 		stop("dateTreatment must be one of 'firstLast' or 'randObs'!")
 		}
 	if(ntrees<1){
 		stop("ntrees<1")
 		}
 	#	
-	if(dateTreatment=="randObs" & FAD.only){
-		stop("FAD.only=TRUE and dateTreatment='randObs' are conflicting arguments")
+	if(dateTreatment == "randObs" & FAD.only){
+		stop("FAD.only = TRUE and dateTreatment = 'randObs' are conflicting arguments")
 		}
-	if(dateTreatment=="minMax" & FAD.only){
-		stop("FAD.only=TRUE and dateTreatment='minMax' are conflicting, as there are no FADs, as dates are simply point occurrences")
+	if(dateTreatment == "minMax" & FAD.only){
+		stop("FAD.only = TRUE and dateTreatment = 'minMax' are conflicting, as there are no FADs, as dates are simply point occurrences")
 		}
 	if(!is.null(sites) & point.occur){
-		stop(paste0("Inconsistent arguments, point.occur=TRUE would replace input 'sites' matrix",
+		stop(paste0("Inconsistent arguments, point.occur = TRUE would replace input 'sites' matrix",
 			"\n Why not just make site assignments for first and last appearance the same in your input site matrix?"))
 			}
 	# warning messages
-	if(ntrees==1 & verboseWarnings){
+	if(ntrees == 1 & verboseWarnings){
 		warning("Do not interpret a single cal3 time-scaled tree")
 		}
-	if(ntrees==1 & !nonstoch.bin & verboseWarnings){
+	if(ntrees == 1 & !nonstoch.bin & verboseWarnings){
 		warning("Do not interpret a single tree; dates are stochastically pulled from uniform distributions")
 		}
 	#
 	#clean out all taxa which are NA or missing for timeData
-	droppers<-tree$tip.label[is.na(match(tree$tip.label,
+	droppers <- tree$tip.label[is.na(match(tree$tip.label,
 		names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
-		if(length(droppers)==Ntip(tree)){
+		if(length(droppers) == Ntip(tree)){
 			stop("Absolutely NO valid taxa shared between the tree and temporal data!")
 		}
 		if(noisyDrop){
-			message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse=", ")))
+			message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse = ", ")))
 			}
-		tree<-drop.tip(tree,droppers)
+		tree <- drop.tip(tree,droppers)
 		if(is.null(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
 		if(Ntip(tree)<2){stop("Less than two valid taxa shared between the tree and temporal data!")}
-		whichNoMatch<-which(!sapply(rownames(timeList[[2]]),function(x)any(x==tree$tip.label)))
-		timeList[[2]][whichNoMatch,1]<-NA
+		whichNoMatch <- which(!sapply(rownames(timeList[[2]]),function(x)any(x == tree$tip.label)))
+		timeList[[2]][whichNoMatch,1] <- NA
 		}
 	if(!is.null(node.mins)){
 		if(length(droppers)>0){	#then... the tree has changed unpredictably, node.mins unusable
 			stop("node.mins not compatible with datasets where some taxa are dropped; drop before analysis instead")}
-		if(Nnode(tree)!=length(node.mins)){
+		if(Nnode(tree) != length(node.mins)){
 			stop("node.mins must be same length as number of nodes in the input tree!")}
 		}
 	#best to drop taxa from timeList that aren't represented on the tree
-	notTree<-rownames(timeList[[2]])[is.na(match(rownames(timeList[[2]]),tree$tip.label))]
+	notTree <- rownames(timeList[[2]])[is.na(match(rownames(timeList[[2]]),tree$tip.label))]
 	if(length(notTree)>0){
 		if(is.null(sites)){
 			if(noisyDrop){
-				warning(paste("Following taxa dropped from timeList:",paste0(notTree,collapse=", ")))}
-			timeList[[2]]<-timeList[[2]][!is.na(match(rownames(timeList[[2]]),tree$tip.label)),]
+				warning(paste("Following taxa dropped from timeList:",paste0(notTree,collapse = ", ")))}
+			timeList[[2]] <- timeList[[2]][!is.na(match(rownames(timeList[[2]]),tree$tip.label)),]
 		}else{
 			stop("Some taxa in timeList not included on tree: no automatic taxon drop if 'sites' are given. Please remove from both sites and timeList and try again.")
 			}
 		}	
-	timeList[[2]]<-timeList[[2]][!is.na(timeList[[2]][,1]),]
+	timeList[[2]] <- timeList[[2]][!is.na(timeList[[2]][,1]),]
 	#
-	if(ncol(timeList[[1]])!=2 | ncol(timeList[[2]])!=2){
+	if(ncol(timeList[[1]]) != 2 | ncol(timeList[[2]]) != 2){
 		stop("Both timeList[[1]] and timeList[[2]] should have only two columns")}
 	if(any(is.na(timeList[[1]])) | any(is.na(timeList[[2]]))){
 		stop("Unexpected NAs in timeList")}
@@ -1026,60 +1026,60 @@ bin_cal3TimePaleoPhy<-function(tree,timeList,brRate,extRate,sampRate,
 		stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
 	if(any(timeList[[2]][,2]<0)){
 		stop("Some dates in timeList[[2]] <0 ?")}
-	if(length(unique(rownames(timeList[[2]])))!=length(rownames(timeList[[2]]))){
+	if(length(unique(rownames(timeList[[2]]))) != length(rownames(timeList[[2]]))){
 		stop("Duplicate taxa in timeList[[2]]")}
-	if(length(unique(tree$tip.label))!=length(tree$tip.label)){
+	if(length(unique(tree$tip.label)) != length(tree$tip.label)){
 		stop("Duplicate tip taxon names in tree$tip.label")}
-	if(length(rownames(timeList[[2]]))!=length(tree$tip.label)){
+	if(length(rownames(timeList[[2]])) != length(tree$tip.label)){
 		stop("Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
 	if(is.null(sites)){
 		if(point.occur){
-			if(any(timeList[[2]][,1]!=timeList[[2]][,2])){
-				stop("point.occur=TRUE but some taxa have FADs and LADs listed in different intervals?!")}
-			sites<-matrix(c(1:Ntip(tree),1:Ntip(tree)),Ntip(tree),2)
+			if(any(timeList[[2]][,1] != timeList[[2]][,2])){
+				stop("point.occur = TRUE but some taxa have FADs and LADs listed in different intervals?!")}
+			sites <- matrix(c(1:Ntip(tree),1:Ntip(tree)),Ntip(tree),2)
 		}else{
-			sites<-matrix(1:(nrow(timeList[[2]])*2),,2)
+			sites <- matrix(1:(nrow(timeList[[2]])*2),,2)
 			}
 	}else{	#make sites a bunch of nicely behaved sorted integers
-		sites[,1]<-sapply(sites[,1],function(x) which(x==sort(unique(as.vector(sites)))))
-		sites[,2]<-sapply(sites[,2],function(x) which(x==sort(unique(as.vector(sites)))))
+		sites[,1] <- sapply(sites[,1],function(x) which(x == sort(unique(as.vector(sites)))))
+		sites[,2] <- sapply(sites[,2],function(x) which(x == sort(unique(as.vector(sites)))))
 		}
-	ttrees<-rmtree(ntrees,3)
-	siteTime<-matrix(,max(sites),2)
+	ttrees <- rmtree(ntrees,3)
+	siteTime <- matrix(,max(sites),2)
 	for (i in unique(as.vector(sites))){		#build two-col matrix of site's FADs and LADs
-		go<-timeList[[2]][which(sites==i)[1]]	#find an interval for this site
-		siteTime[i,]<-timeList[[1]][go,]
+		go <- timeList[[2]][which(sites == i)[1]]	#find an interval for this site
+		siteTime[i,] <- timeList[[1]][go,]
 		}
 	for(ntrb in 1:ntrees){
 		if(!nonstoch.bin){
-			bad_sites<-unique(as.vector(sites))
-			siteDates<-apply(siteTime,1,function(x) runif(1,x[2],x[1]))
+			bad_sites <- unique(as.vector(sites))
+			siteDates <- apply(siteTime,1,function(x) runif(1,x[2],x[1]))
 			while(length(bad_sites)>0){
-				siteDates[bad_sites]<-apply(siteTime[bad_sites,],1,function(x) runif(1,x[2],x[1]))
-				bad_sites<-unique(as.vector(sites[(siteDates[sites[,1]]-siteDates[sites[,2]])<0,]))
+				siteDates[bad_sites] <- apply(siteTime[bad_sites,],1,function(x) runif(1,x[2],x[1]))
+				bad_sites <- unique(as.vector(sites[(siteDates[sites[,1]]-siteDates[sites[,2]])<0,]))
 				#message(length(bad_sites))
 				}
-			timeData<-cbind(siteDates[sites[,1]],siteDates[sites[,2]])
+			timeData <- cbind(siteDates[sites[,1]],siteDates[sites[,2]])
 		}else{
-			timeData<-cbind(siteTime[sites[,1],1],siteTime[sites[,2],2])
+			timeData <- cbind(siteTime[sites[,1],1],siteTime[sites[,2],2])
 			}
-		rownames(timeData)<-rownames(timeList[[2]])
-		#if(rand.obs){timeData[,2]<-apply(timeData,1,function(x) runif(1,x[2],x[1]))}
-		#if(FAD.only){timeData[,2]<-timeData[,1]}
-		tree2<-suppressWarnings(
-			cal3TimePaleoPhy(tree,timeData,brRate=brRate,extRate=extRate,sampRate=sampRate,
-				ntrees=1,anc.wt=anc.wt,node.mins=node.mins,adj.obs.wt=adj.obs.wt,
-				root.max=root.max,step.size=step.size,
-				FAD.only=FAD.only,dateTreatment=dateTreatment,randres=randres,
-				tolerance=tolerance,diagnosticMode=diagnosticMode,
-				verboseWarnings=verboseWarnings,
-				plot=plot)
+		rownames(timeData) <- rownames(timeList[[2]])
+		#if(rand.obs){timeData[,2] <- apply(timeData,1,function(x) runif(1,x[2],x[1]))}
+		#if(FAD.only){timeData[,2] <- timeData[,1]}
+		tree2 <- suppressWarnings(
+			cal3TimePaleoPhy(tree,timeData,brRate = brRate,extRate = extRate,sampRate = sampRate,
+				ntrees = 1,anc.wt = anc.wt,node.mins = node.mins,adj.obs.wt = adj.obs.wt,
+				root.max = root.max,step.size = step.size,
+				FAD.only = FAD.only,dateTreatment = dateTreatment,randres = randres,
+				tolerance = tolerance,diagnosticMode = diagnosticMode,
+				verboseWarnings = verboseWarnings,
+				plot = plot)
 			)
-		colnames(timeData)<-c("FAD","LAD")
-		tree2$ranges.used<-timeData
-		names(tree2$edge.length)<-NULL
-		ttrees[[ntrb]]<-tree2
+		colnames(timeData) <- c("FAD","LAD")
+		tree2$ranges.used <- timeData
+		names(tree2$edge.length) <- NULL
+		ttrees[[ntrb]] <- tree2
 		}
-	if(ntrees==1){ttrees<-ttrees[[1]]}
+	if(ntrees == 1){ttrees <- ttrees[[1]]}
 	return(ttrees)
 	}

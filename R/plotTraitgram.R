@@ -59,7 +59,7 @@
 #' trait <- rTraitCont(tree)
 #' 
 #' #first, traitgram without conf intervals
-#' plotTraitgram(trait,tree,conf.int=FALSE)
+#' plotTraitgram(trait,tree,conf.int = FALSE)
 #' 
 #' #now, with
 #' plotTraitgram(trait,tree)
@@ -67,14 +67,14 @@
 #' 
 #' # plotting simulated data
 #'     # with values for ancestral nodes as input
-#' trait <- rTraitCont(tree, ancestor=TRUE)
-#' plotTraitgram(tree=tree,trait=trait)
+#' trait <- rTraitCont(tree, ancestor = TRUE)
+#' plotTraitgram(tree = tree,trait = trait)
 #'
 
 
 #' @export plotTraitgram
-plotTraitgram<-function(trait,tree,main="",conf.int=TRUE,lwd=1.5){
-	# traitgram plotted using ML ASR from geiger (or ace() from ape if ci=TRUE)
+plotTraitgram <- function(trait,tree,main = "",conf.int = TRUE,lwd = 1.5){
+	# traitgram plotted using ML ASR from geiger (or ace() from ape if ci = TRUE)
 		# or traitgram plotted with ancestral values
 	# checks
 	if(!inherits(tree,"phylo")){
@@ -82,23 +82,23 @@ plotTraitgram<-function(trait,tree,main="",conf.int=TRUE,lwd=1.5){
 		}
 	# get root time
 	if(is.null(tree$root.time)){
-		tree$root.time<-max(node.depth.edgelength(tree)[1:Ntip(tree)])
+		tree$root.time <- max(node.depth.edgelength(tree)[1:Ntip(tree)])
 		}
 	# get times
-	times<-tree$root.time-node.depth.edgelength(tree)
+	times <- tree$root.time-node.depth.edgelength(tree)
 	# are the node values already included?
-	if(length(trait)==Ntip(tree)){
+	if(length(trait) == Ntip(tree)){
 		#sort trait, if not sorted already
 		if(is.null(names(trait))){
 			message("No names for trait data, assuming in same order as tree$tip.label")
 		}else{
-			trait<-trait[tree$tip.label]
+			trait <- trait[tree$tip.label]
 			}
-		noNodes<-TRUE
+		noNodes <- TRUE
 		message("Plotting ancestral reconstructions for nodes.")
 	}else{
-		noNodes<-FALSE
-		if(length(trait)!=(Ntip(tree)+Nnode(tree))){
+		noNodes <- FALSE
+		if(length(trait) != (Ntip(tree)+Nnode(tree))){
 			stop("length(trait) not equal to number of tips, nor number of tips+nodes")
 			}
 		message("Plotting internal node values included in trait data")
@@ -106,40 +106,40 @@ plotTraitgram<-function(trait,tree,main="",conf.int=TRUE,lwd=1.5){
 		}
 	# do ancestral reconstruction if necessary
 	if(noNodes){
-		asr<-ace(trait,tree,method="pic")
-		tr1<-c(trait,asr$ace)
+		asr <- ace(trait,tree,method = "pic")
+		tr1 <- c(trait,asr$ace)
 	}else{
-		tr1<-trait
-		conf.int<-FALSE
+		tr1 <- trait
+		conf.int <- FALSE
 		}
 	# calculate x lims
 	if(conf.int){		
-		ci<-asr$CI95
-		xlims<-c(min(c(tr1,ci))-0.1,max(c(tr1,ci))+0.1)
+		ci <- asr$CI95
+		xlims <- c(min(c(tr1,ci))-0.1,max(c(tr1,ci))+0.1)
 	}else{
-		xlims<-c(min(tr1)-0.1,max(tr1)+0.1)
+		xlims <- c(min(tr1)-0.1,max(tr1)+0.1)
 		}
 	# initial plot
-	plot(1,1,type="n",
-		xlim=xlims,
-		ylim=c(max(times),min(times)),
-		xlab="Trait Values",
-		ylab="Time (Before Present)",
-		main=main)
+	plot(1,1,type = "n",
+		xlim = xlims,
+		ylim = c(max(times),min(times)),
+		xlab = "Trait Values",
+		ylab = "Time (Before Present)",
+		main = main)
 	# plot branches	
 	for(i in 1:nrow(tree$edge)){
-		anc<-tree$edge[i,1]
-		desc<-tree$edge[i,2]
+		anc <- tree$edge[i,1]
+		desc <- tree$edge[i,2]
 		lines(c(tr1[anc],tr1[desc]),
 			c(times[anc],times[desc]),
-			lwd=lwd)
+			lwd = lwd)
 		}
 	# plot confidence intrvals		
 	if(conf.int){	
 		for(i in 1:Nnode(tree)){
 			lines(c(ci[i,1],ci[i,2]),
 				c(times[i+Ntip(tree)],times[i+Ntip(tree)]),
-				lwd=lwd)
+				lwd = lwd)
 			}
 		}	
 	# done

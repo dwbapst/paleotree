@@ -31,8 +31,8 @@ should write their own optim function.
     # where modelFun is the likelihood function
 
 #optim(parInit(modelFun),modelFun,
-#		lower=parLower(modelFun),upper=parUpper(modelFun), 
-#		method="L-BFGS-B",control=list(maxit=1000000))
+#		lower = parLower(modelFun),upper = parUpper(modelFun), 
+#		method = "L-BFGS-B",control = list(maxit = 1000000))
 }
 \seealso{
 \code{\link{constrainParPaleo}} and \code{\link{modelMethods}}

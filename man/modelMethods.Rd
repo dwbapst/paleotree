@@ -150,10 +150,10 @@ to allow it to be replaced (as there is nothing to replace!).
 \examples{
 #example with make_durationFreqCont
 set.seed(444)
-record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
-nTotalTaxa=c(30,40), nExtant=0)
-taxa<-fossilRecord2fossilTaxa(record)
-rangesCont <- sampleRanges(taxa,r=0.5)
+record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+nTotalTaxa = c(30,40), nExtant = 0)
+taxa <- fossilRecord2fossilTaxa(record)
+rangesCont <- sampleRanges(taxa,r = 0.5)
 likFun <- make_durationFreqCont(rangesCont)
 
 #get parameter names
@@ -177,9 +177,9 @@ likFun2 <- likFun
 parnames(likFun2) <- c("extRate","sampRate")
 parnames(likFun2)
 #test if reset correctly
-parnames(likFun2)==c("extRate","sampRate")
+parnames(likFun2) == c("extRate","sampRate")
 #also works for constrained functions
-constrainFun<-constrainParPaleo(likFun,q.1~r.1)
+constrainFun <- constrainParPaleo(likFun,q.1~r.1)
 parnames(constrainFun)
 #also modified the parameter bounds, see!
 parbounds(constrainFun)

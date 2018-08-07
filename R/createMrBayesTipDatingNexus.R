@@ -158,7 +158,14 @@
 #' generated NEXUS script is output to the console as a series of character strings.
 
 #' @seealso
-#' \code{\link{createMrBayesConstraints}}, \code{\link{createMrBayesTipCalibrations}}, , \code{\link{cal3}}
+#' This function wraps various aspects of the functions \code{\link{createMrBayesConstraints}}
+#' and \code{\link{createMrBayesTipCalibrations}}. In many ways, this functionality is a
+#' replacement for the probabilistic dating method \code{\link{cal3}}.
+#' 
+#' For putting the posterior estimated trees on an absolute time scale, see
+#' functions \code{\link{obtainDatedPosteriorTreesMrB}}, with \code{getFixedTimes = TRUE}
+#' if you used a taxon with a fixed age, and function \code{\link{setRootAges}}.
+#' 
 
 #' @author
 #' David W. Bapst. This code was produced as part of a project 
@@ -207,7 +214,7 @@
 #' 	# the expected tree age from the earliest first appearance
 #' # set average tree age to be 10 Ma earlier than first FAD
 #' 
-#' outgroupRetio<-"Rotaretiolites" # sister to all other included taxa
+#' outgroupRetio <- "Rotaretiolites" # sister to all other included taxa
 #' 
 #' # the following will create a NEXUS file with an 'empty' morph matrix
 #' 	# with the only topological constraint on ingroup monophyly
@@ -215,23 +222,23 @@
 #'  
 #' # with doNotRun set to TRUE for troubleshooting
 #' 
-#' createMrBayesTipDatingNexus(tipTimes=retioRanges,
-#' 		outgroupTaxa=outgroupRetio,treeConstraints=NULL,
-#' 		ageCalibrationType="uniformRange",whichAppearance="first",
-#' 		treeAgeOffset=10,	newFile=NULL,	
-#' 		origNexusFile=NULL,createEmptyMorphMat=TRUE,
-#' 		runName="retio_dating",doNotRun=TRUE)
+#' createMrBayesTipDatingNexus(tipTimes = retioRanges,
+#' 		outgroupTaxa = outgroupRetio,treeConstraints = NULL,
+#' 		ageCalibrationType = "uniformRange",whichAppearance = "first",
+#' 		treeAgeOffset = 10,	newFile = NULL,	
+#' 		origNexusFile = NULL,createEmptyMorphMat = TRUE,
+#' 		runName = "retio_dating",doNotRun = TRUE)
 #' 
 #' # let's try it with a tree for topological constraints
 #'      # this requires setting outgroupTaxa to NULL
 #' # let's also set doNotRun to FALSE
 #' 
-#' createMrBayesTipDatingNexus(tipTimes=retioRanges,
-#' 		outgroupTaxa=NULL,treeConstraints=retioTree,
-#' 		ageCalibrationType="uniformRange",whichAppearance="first",
-#' 		treeAgeOffset=10,	newFile=NULL,	
-#' 		origNexusFile=NULL,createEmptyMorphMat=TRUE,
-#' 		runName="retio_dating",doNotRun=FALSE)
+#' createMrBayesTipDatingNexus(tipTimes = retioRanges,
+#' 		outgroupTaxa = NULL,treeConstraints = retioTree,
+#' 		ageCalibrationType = "uniformRange",whichAppearance = "first",
+#' 		treeAgeOffset = 10,	newFile = NULL,	
+#' 		origNexusFile = NULL,createEmptyMorphMat = TRUE,
+#' 		runName = "retio_dating",doNotRun = FALSE)
 #' 
 #' # the above is essentially cal3 with a better algorithm,
 #' 		# and no need for a priori rate estimates
@@ -242,12 +249,12 @@
 #' 
 #' # no morph matrix supplied or generated
 #' 	# you'll need to manually append to an existing NEXUS file
-#' createMrBayesTipDatingNexus(tipTimes=retioRanges,
-#' 		outgroupTaxa=NULL,treeConstraints=retioTree,
-#' 		ageCalibrationType="uniformRange",whichAppearance="first",
-#' 		treeAgeOffset=10,	newFile=NULL,	
-#' 		origNexusFile=NULL,createEmptyMorphMat=FALSE,
-#' 		runName="retio_dating",doNotRun=TRUE)
+#' createMrBayesTipDatingNexus(tipTimes = retioRanges,
+#' 		outgroupTaxa = NULL,treeConstraints = retioTree,
+#' 		ageCalibrationType = "uniformRange",whichAppearance = "first",
+#' 		treeAgeOffset = 10,	newFile = NULL,	
+#' 		origNexusFile = NULL,createEmptyMorphMat = FALSE,
+#' 		runName = "retio_dating",doNotRun = TRUE)
 #' 
 #' \dontrun{
 #' 
@@ -255,14 +262,14 @@
 #' 	# to file and see what happens
 #' 
 #' # here's my super secret MrBayes directory
-#' file<-"D:\\dave\\workspace\\mrbayes\\exampleRetio.nex"
+#' file <- "D:\\dave\\workspace\\mrbayes\\exampleRetio.nex"
 #' 
-#' createMrBayesTipDatingNexus(tipTimes=retioRanges,
-#' 		outgroupTaxa=NULL,treeConstraints=retioTree,
-#' 		ageCalibrationType="uniformRange",whichAppearance="first",
-#' 		treeAgeOffset=10,	newFile=file,	
-#' 		origNexusFile=NULL,createEmptyMorphMat=TRUE,
-#' 		runName="retio_dating",doNotRun=FALSE)
+#' createMrBayesTipDatingNexus(tipTimes = retioRanges,
+#' 		outgroupTaxa = NULL,treeConstraints = retioTree,
+#' 		ageCalibrationType = "uniformRange",whichAppearance = "first",
+#' 		treeAgeOffset = 10,	newFile = file,	
+#' 		origNexusFile = NULL,createEmptyMorphMat = TRUE,
+#' 		runName = "retio_dating",doNotRun = FALSE)
 #' 
 #' }
 #' 
@@ -275,58 +282,58 @@
 #' @name createMrBayesTipDatingNexus
 #' @rdname createMrBayesTipDatingNexus
 #' @export
-createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints=NULL,
-							ageCalibrationType,whichAppearance="first",treeAgeOffset,minTreeAge=NULL,
-							collapseUniform=TRUE,anchorTaxon=TRUE,
-							newFile=NULL,origNexusFile=NULL,parseOriginalNexus=TRUE,createEmptyMorphMat=TRUE,
-							runName=NULL,morphModel="strong",ngen="100000000",doNotRun=FALSE,
-							cleanNames=TRUE,printExecute=TRUE){
+createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstraints = NULL,
+							ageCalibrationType,whichAppearance = "first",treeAgeOffset,minTreeAge = NULL,
+							collapseUniform = TRUE,anchorTaxon = TRUE,
+							newFile = NULL,origNexusFile = NULL,parseOriginalNexus = TRUE,createEmptyMorphMat = TRUE,
+							runName = NULL,morphModel = "strong",ngen = "100000000",doNotRun = FALSE,
+							cleanNames = TRUE,printExecute = TRUE){
 	################################################################################################
 	#         # a wooper of a function ... here's some ASCII from artist 'Psyduck'
 	#
-	#                       =@@@@@@                         
-	#                     =@@.......@@@                      
-	#                   =@..   ........@@    =@              
-	#             =    @...    ..........@   =@  @           
-	#          @  =@  @....   ............@  =@@ @           
-	#          @  =@ =.....................@  =@ @==@        
-	#         @@  =@ @...@.........@.......@  =@==@@         
-	#         @====@@.......................@===@@=          
-	#          @@@==@.=..............=....@===@@  @@         
-	#         @@ @@@=.@..............@....@=@@=@   @         
-	#         @   @@=..@=..........@=......@@ @=@            
-	#             @ @....=@@@@@@@@=.........@ @=@            
-	#            @@ @.......................@  @=            
+	#                        = @@@@@@                         
+	#                      = @@.......@@@                      
+	#                    = @..   ........@@     = @              
+	#            =   @...    ..........@    = @  @           
+	#          @   = @  @....   ............@   = @@ @           
+	#          @   = @  = .....................@   = @ @ == @        
+	#         @@   = @ @...@.........@.......@   = @ == @@         
+	#         @ ==  == @@.......................@ ==  = @@ =           
+	#          @@@ == @. = .............. = ....@ ==  = @@  @@         
+	#         @@ @@@ = .@..............@....@ = @@ = @   @         
+	#         @   @@ = ..@ = ..........@ = ......@@ @ = @            
+	#             @ @.... = @@@@@@@@ = .........@ @ = @            
+	#            @@ @.......................@  @ =             
 	#            @   @.....................@                 
-	#                =.....................@                 
+	#                 = .....................@                 
 	#                 @...................@                  
 	#                  @.................@                   
 	#                   @@.............@@                    
-	#                     @@=.......=@@                      
+	#                     @@ = ....... = @@                      
 	#                       @@.......@          @@@          
-	#                       @.=====...@       @@   @         
-	#                      @...===.....@     @      @        
+	#                       @. ==  ==  = ...@       @@   @         
+	#                      @... ==  = .....@     @      @        
 	#                      @...........@    @.      @        
-	#                     @..==...==....@ @@. .     @        
-	#                     @...=====.....@@.... . .  @        
+	#                     @.. == ... == ....@ @@. .     @        
+	#                     @... ==  ==  = .....@@.... . .  @        
 	#                     @.............@...... . .@         
-	#                      @.==...==....@.........@          
-	#                       @.=====....@=@@.....@@           
-	#                     =@@=@......@@    @@@@@             
-	#                    =...==@@@@@@==@@                    
-	#                    @....@     =....@                   
+	#                      @. == ... == ....@.........@          
+	#                       @. ==  ==  = ....@ = @@.....@@           
+	#                      = @@ = @......@@    @@@@@             
+	#                     = ... == @@@@@@ == @@                    
+	#                    @....@      = ....@                   
 	#                     @@@@      @....@                   
 	#                                @@@@
 	#
 	#################################################################################################
 	# make sure tipTimes is not a data.frame
 	if(is.data.frame(tipTimes)){
-		tipTimes<-as.matrix(tipTimes)
+		tipTimes <- as.matrix(tipTimes)
 		}
 	if(is.list(tipTimes)){
-		if(length(tipTimes)==2){
-			tipTimes[[1]]<-as.matrix(tipTimes[[1]])
-			tipTimes[[2]]<-as.matrix(tipTimes[[2]])
+		if(length(tipTimes) == 2){
+			tipTimes[[1]] <- as.matrix(tipTimes[[1]])
+			tipTimes[[2]] <- as.matrix(tipTimes[[2]])
 		}else{
 			stop("why is tipTimes a list of not length 2?")
 			}
@@ -345,37 +352,43 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		stop("Only one of outgroupTaxa or treeConstraints can be provided. 
 		If the ingroup monophyly is not enforced on the provided treeConstraints, please add this split to treeConstraints")
 		}	
+	####################################################################################
+	# make morphNexus as NULL so can test later that its been replaced
+	morphNexus <- NULL
 	##################################################################################
 	# provide new whichAppearance options: 'firstLast', 'rangeThrough'
 		# rangeThrough will require checking tipTimes for sequential intervals
-	if(any(whichAppearance == c("firstLast","rangeThrough"))){
-		multOTU<-TRUE		
+	if(any(whichAppearance  ==  c("firstLast","rangeThrough"))){
+		multOTU <- TRUE		
 		if(is.null(origNexusFile)){
 #			stop('"A NEXUS file must be supplied if whichAppearance is "firstLast" or "rangeThrough"')
 		}else{
 			if(parseOriginalNexus){
-				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=FALSE)
-				remakeDataBlockFun<-nexusData$remakeDataBlockFun
+				nexusData <- parseNexusFile(origNexusFile = origNexusFile,asIs = FALSE)
+				remakeDataBlockFun <- nexusData$remakeDataBlockFun
+				morphNexus <- nexusData$morphNexusAsIs
 			}else{
 				stop("Cannot use an option for multiple OTUs if you don't parse your NEXUS file")
 				}
 			}
 	}else{
 		# if not multOTU
-		multOTU<-FALSE
+		multOTU <- FALSE
 		if(!is.null(origNexusFile)){
 			if(parseOriginalNexus){
-				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=FALSE)
+				nexusData <- parseNexusFile(origNexusFile = origNexusFile,asIs = FALSE)
+				morphNexus <- nexusData$morphNexusAsIs
 			}else{
-				nexusData<-parseNexusFile(origNexusFile=origNexusFile,asIs=TRUE)
+				nexusData <- parseNexusFile(origNexusFile = origNexusFile,asIs = TRUE)
+				morphNexus <- nexusData
 				}
 			}	
 		}
 	if(is.null(origNexusFile)){
-			nexusData<-NULL
+			nexusData <- NULL
 			}
 	# CHECK rangethrough option
-	if(whichAppearance == "rangeThrough"){
+	if(whichAppearance  ==  "rangeThrough"){
 		# If the input tipTimes is not a list of length = 2, however, the function will 
 		# return an error under this option. 
 			# also require checking for sequential intervals
@@ -389,24 +402,24 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		# all taxa in input treeConstraints must be in tipTimes (and vice versa)
 		# origNexusFile *is* checked
 	if(is.list(tipTimes)){
-		taxaTipTimes<-rownames(tipTimes[[2]])
+		taxaTipTimes <- rownames(tipTimes[[2]])
 		}else{
-		taxaTipTimes<-rownames(tipTimes)
+		taxaTipTimes <- rownames(tipTimes)
 		}
 	if(!is.null(treeConstraints)){
 		if(!is(treeConstraints,"phylo")){
 			stop("treeConstraints must be a phylogeny object of type 'phylo'")
 			}
-		taxaTree<-treeConstraints$tip.label
+		taxaTree <- treeConstraints$tip.label
 		# check both
-		missingTip<-taxaTipTimes[sapply(taxaTipTimes,function(x) all(x!=taxaTree))]
-		missingTree<-taxaTree[sapply(taxaTree,function(x) all(x!=taxaTipTimes))]
+		missingTip <- taxaTipTimes[sapply(taxaTipTimes,function(x) all(x != taxaTree))]
+		missingTree <- taxaTree[sapply(taxaTree,function(x) all(x != taxaTipTimes))]
 		# stop if length>0
 		if(length(c(missingTip,missingTree))>0){
-			stop(paste0("Following taxa in tipTimes not found on treeConstraints: ",paste0(missingTip,collapse=" "),
-				"\nFollowing taxa on treeConstraints not found in tipTimes: ",paste0(missingTree,collapse=" ")))
+			stop(paste0("Following taxa in tipTimes not found on treeConstraints: ",paste0(missingTip,collapse = " "),
+				"\nFollowing taxa on treeConstraints not found in tipTimes: ",paste0(missingTree,collapse = " ")))
 			}
-		if(length(taxaTree)!=length(taxaTipTimes)){
+		if(length(taxaTree) != length(taxaTipTimes)){
 			stop("Somehow have taxa missing from either tipTimes or treeConstraints")
 			}
 		if(!identical(sort(taxaTipTimes),sort(taxaTree))){
@@ -416,23 +429,23 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 	#
 	# test if all outgroupTaxa are in the tip age taxon names
 	if(!is.null(outgroupTaxa)){
-		missingOutgroup<-outgroupTaxa[sapply(outgroupTaxa,function(x) all(x!=taxaTipTimes))]
+		missingOutgroup <- outgroupTaxa[sapply(outgroupTaxa,function(x) all(x != taxaTipTimes))]
 		if(length(missingOutgroup)>0){
 			stop(paste0("Following outgroup taxa have no match in tipTimes: ",
-				paste0(missingOutgroup,collapse=" ")))
+				paste0(missingOutgroup,collapse = " ")))
 			}
 		}
 	#
-	# test if consistent with from origNexusFile, if parsed
+	# test if consistent with taxa from origNexusFile, if parsed
 	if(parseOriginalNexus & !is.null(origNexusFile)){
-		nexusTaxa<-nexusData$taxonNames
-		missingTip<-taxaTipTimes[sapply(taxaTipTimes,function(x) all(x!=nexusTaxa))]
-		missingNexus<-nexusTaxa[sapply(nexusTaxa,function(x) all(x!=taxaTipTimes))]
+		nexusTaxa <- nexusData$taxonNames
+		missingTip <- taxaTipTimes[sapply(taxaTipTimes,function(x) all(x != nexusTaxa))]
+		missingNexus <- nexusTaxa[sapply(nexusTaxa,function(x) all(x != taxaTipTimes))]
 		if(length(c(missingTip,missingNexus))>0){
-			stop(paste0("Following taxa in tipTimes not found in NEXUS file: ",paste0(missingTip,collapse=" "),
-				"\nFollowing taxa in NEXUS file not found in tipTimes: ",paste0(missingNexus,collapse=" ")))
+			stop(paste0("Following taxa in tipTimes not found in NEXUS file: ",paste0(missingTip,collapse = " "),
+				"\nFollowing taxa in NEXUS file not found in tipTimes: ",paste0(missingNexus,collapse = " ")))
 			}
-		if(length(nexusTaxa)!=length(taxaTipTimes)){
+		if(length(nexusTaxa) != length(taxaTipTimes)){
 			stop("Somehow have taxa missing from either tipTimes or the original NEXUS file")
 			}
 		if(!identical(sort(taxaTipTimes),sort(nexusTaxa))){
@@ -441,13 +454,13 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 		}	
 	#################################################################
 	# check other arguments
-	if(length(morphModel)!=1){
+	if(length(morphModel) != 1){
 		stop("morphModel must be of length 1")
 		}
-	if(all(morphModel!=c("relaxed","strong"))){
+	if(all(morphModel != c("relaxed","strong"))){
 		stop("morphModel must be one 'relaxed' or 'strong'")
 		}
-	if(morphModel=="relaxed" & is.null(origNexusFile)){
+	if(morphModel == "relaxed" & is.null(origNexusFile)){
 		warning("Why are you relaxing the morphological model without supplying an original matrix with origNexusFile? I hope you know what you are doing.")
 		}
 	if(!is.character(ngen)){
@@ -457,94 +470,94 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 	# note: origNexusFile might be a connection - cannot test for length 1
 	#
 	#
-	if(length(createEmptyMorphMat)!=1 | !is.logical(createEmptyMorphMat)){
+	if(length(createEmptyMorphMat) != 1 | !is.logical(createEmptyMorphMat)){
 		stop("createEmpthyMorphMat must be  of length 1, and either TRUE or FALSE")
 		}
 	#########################################################
 	# cleaning taxon names
-	cleanTaxonNames<-taxaTipTimes
-	if(length(unique(cleanTaxonNames))!=length(cleanTaxonNames)){
+	cleanTaxonNames <- taxaTipTimes
+	if(length(unique(cleanTaxonNames)) != length(cleanTaxonNames)){
 		stop("Some taxon names were identical duplicates")
 		}
 	if(cleanNames){
 		# create 'clean' version of taxon names - remove all '/' 
-		cleanTaxonNames<-gsub("/","",cleanTaxonNames)
+		cleanTaxonNames <- gsub("/","",cleanTaxonNames)
 		# check that unique
-		if(length(unique(cleanTaxonNames))!=length(cleanTaxonNames)){
+		if(length(unique(cleanTaxonNames)) != length(cleanTaxonNames)){
 			stop("Some taxon names were identical duplicates when special character (/) was removed")
 			}
 		# gsub("[^A-Za-z0-9]", "", a) # removes every character except letters and numbers - only use if dire (i.e. backslashes)
 		#
 		if(is.list(tipTimes)){
-			rownames(tipTimes[[2]])<-gsub("/","",rownames(tipTimes[[2]]))
+			rownames(tipTimes[[2]]) <- gsub("/","",rownames(tipTimes[[2]]))
 		}else{
-			rownames(tipTimes)<-gsub("/","",rownames(tipTimes))
+			rownames(tipTimes) <- gsub("/","",rownames(tipTimes))
 			}	
 		#
 		if(!is.null(outgroupTaxa)){
-			outgroupTaxa<-gsub("/","",outgroupTaxa)
+			outgroupTaxa <- gsub("/","",outgroupTaxa)
 			}
 		#
 		if(!is.null(treeConstraints)){
-			treeConstraints$tip.label<-gsub("/","",treeConstraints$tip.label)
+			treeConstraints$tip.label <- gsub("/","",treeConstraints$tip.label)
 			}
 		#
 		if(parseOriginalNexus & !is.null(origNexusFile)){
-			nexusTaxa<-gsub("/","",nexusTaxa)
+			nexusTaxa <- gsub("/","",nexusTaxa)
 			}
 		#
 		}
 	###################################################################
 	# get final taxon name list
 	if(multOTU){
-		if(whichAppearance == "rangeThrough"){
+		if(whichAppearance  ==  "rangeThrough"){
 			# for each taxon in tipTimes, figure out intervals they range through
 				# and then multiply this taxon in the tip data, the tree/root constraints and NEXUS data block
 			#
-			newOTU<-matrix(,1,4)
+			newOTU <- matrix(,1,4)
 			for(i in 1:nrow(tipTimes[[2]])){
 				# count number of range-through intervals, get dates and new names
-				origName<-rownames(tipTimes[[2]])[i]
+				origName <- rownames(tipTimes[[2]])[i]
 				# raw interval IDs assuming sequential timeList
-				rawIntervals<-tipTimes[[2]][i,1]:tipTimes[[2]][i,2]
-				intervalMatrix<- tipTimes[[1]][rawIntervals,,drop=FALSE]
+				rawIntervals <- tipTimes[[2]][i,1]:tipTimes[[2]][i,2]
+				intervalMatrix <-  tipTimes[[1]][rawIntervals,,drop = FALSE]
 				# get new names, using interval names
-				newNames<-paste0(origName,"_",rownames(intervalMatrix))
-				newOTU<-rbind(newOTU,cbind(newNames,origName,intervalMatrix))
+				newNames <- paste0(origName,"_",rownames(intervalMatrix))
+				newOTU <- rbind(newOTU,cbind(newNames,origName,intervalMatrix))
 				}
-			newOTU<-newOTU[-1,]
+			newOTU <- newOTU[-1,]
 			}
-		if(whichAppearance == "firstLast"){
+		if(whichAppearance  ==  "firstLast"){
 			# okay for almost all inputs
 			#
-			newOTU<-matrix(,1,4)
+			newOTU <- matrix(,1,4)
 			for(i in 1:nrow(tipTimes[[2]])){
 				# count number of range-through intervals, get dates and new names
-				origName<-rownames(tipTimes[[2]])[i]
+				origName <- rownames(tipTimes[[2]])[i]
 				# raw interval IDs for FAD and LAD
-				rawIntervals<-tipTimes[[2]][i,]
-				intervalMatrix<- tipTimes[[1]][rawIntervals,,drop=FALSE]
+				rawIntervals <- tipTimes[[2]][i,]
+				intervalMatrix <-  tipTimes[[1]][rawIntervals,,drop = FALSE]
 				# get new names, using interval names
-				newNames<-paste0(origName,c("_Fint","_Lint"))
-				newOTU<-rbind(newOTU,cbind(newNames,origName,intervalMatrix))
+				newNames <- paste0(origName,c("_Fint","_Lint"))
+				newOTU <- rbind(newOTU,cbind(newNames,origName,intervalMatrix))
 				}
-			newOTU<-newOTU[-1,]
+			newOTU <- newOTU[-1,]
 			}	
 		# create new tipTimes that is two date uncertainties
-		tipTimes<-newOTU[,3:4]
-		rownames(tipTimes)<-newOTU[,1]		
+		tipTimes <- newOTU[,3:4]
+		rownames(tipTimes) <- newOTU[,1]		
 		# create new tree constraints, if such exists
 			# replace original tip with multiple taxa, collapse so not monophyletic
 		if(!is.null(treeConstraints)){
-			treeTaxaExpand<-newOTU[,2]
-			names(treeTaxaExpand)<-newOTU[,1]
-			treeConstraints<-expandTaxonTree(taxonTree=treeConstraints,
-				taxaData=treeTaxaExpand ,collapse= newOTU[,2])				
+			treeTaxaExpand <- newOTU[,2]
+			names(treeTaxaExpand) <- newOTU[,1]
+			treeConstraints <- expandTaxonTree(taxonTree = treeConstraints,
+				taxaData = treeTaxaExpand ,collapse =  newOTU[,2])				
 			}
 		# fix outgroupTaxa, if exists
 		if(!is.null(outgroupTaxa)){
-			newOutgroupOTU<-sapply(newOTU[,2],function(x) any(x==outgroupTaxa))
-			outgroupTaxa<-newOTU[newOutgroupOTU,1]
+			newOutgroupOTU <- sapply(newOTU[,2],function(x) any(x == outgroupTaxa))
+			outgroupTaxa <- newOTU[newOutgroupOTU,1]
 			}	
 		# fix NEXUS matrix
 		if(parseOriginalNexus & !is.null(origNexusFile)){
@@ -552,65 +565,73 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 			# input: a matrix with column 1 = new taxon names
 				# column 2 = old taxon names
 			# need to tell it that the taxon names have change (possibly) due to cleaning
-			morphNexus<-remakeDataBlockFun(newTaxaTable=newOTU[,1:2],
-				taxonNames=cleanTaxonNames)
+			morphNexus <- remakeDataBlockFun(newTaxaTable = newOTU[,1:2],
+				taxonNames = cleanTaxonNames)
 			}
-		taxonnames<-newOTU[,1]
+		taxonnames <- newOTU[,1]
 		# change whichAppearance
-		whichAppearance<-"first"
+		whichAppearance <- "first"
 	}else{
-		taxonnames<-cleanTaxonNames
+		taxonnames <- cleanTaxonNames
 		}
 	#####################################################################
 	# create an empty morph matrix if necessary
 	if(is.null(origNexusFile)){
 		if(createEmptyMorphMat){
-			morphNexus<-makeEmptyMorphNexusMrB(taxonNames=taxonnames)
+			morphNexus <- makeEmptyMorphNexusMrB(taxonNames = taxonnames)
 		}else{
-			morphNexus<-" "
+			morphNexus <- " "
 			}
 		}
+	########################################
+	# check that morphNexus has been replaced
+	if(is.null(morphNexus)){
+		stop("a morphological nexus was neither provided nor created - please contact dwbapst@gmail.com about this bug")
+		}
+	#}else{
+	#	morphNexus <- nexusFileText
+	#	}
 	########################################################
 	# get runName if not supplied
 	if(is.null(runName)){
 		if(is.null(newFile)){
 			#stop("runName must be supplied if name of new file is not designated")
-			runName<-"new_run_paleotree"
+			runName <- "new_run_paleotree"
 			}
 		# get run name - everything after the last / or \\
-		runName<-rev(strsplit(newFile,split="\\\\")[[1]])[1]
-		runName<-rev(strsplit(runName,split="/")[[1]])[1]
+		runName <- rev(strsplit(newFile,split = "\\\\")[[1]])[1]
+		runName <- rev(strsplit(runName,split = "/")[[1]])[1]
 		}
 	# use run name as log file name
-	logfileline<-paste0('log start filename="',runName,'.out" replace;')
+	logfileline <- paste0('log start filename = "',runName,'.out" replace;')
 	########################################################
 	#	
 	if(is.null(treeConstraints)){
 		# get the ingroup constraint, as there is no tree
-		ingroupConstraint<-makeIngroupConstraintMrB(outgroupTaxa=outgroupTaxa,allTaxa=taxonnames)
-		topologicalConstraints<-" "
+		ingroupConstraint <- makeIngroupConstraintMrB(outgroupTaxa = outgroupTaxa,allTaxa = taxonnames)
+		topologicalConstraints <- " "
 		}else{
 		# get topological constraints, if given in input, do not set ingroup
-		ingroupConstraint<-" "
-		topologicalConstraints<-createMrBayesConstraints(tree=treeConstraints,partial=FALSE,
-			file=NULL,includeIngroupConstraint=FALSE)		
+		ingroupConstraint <- " "
+		topologicalConstraints <- createMrBayesConstraints(tree = treeConstraints,partial = FALSE,
+			file = NULL,includeIngroupConstraint = FALSE)		
 		}
 	#
 	# get age calibration block
-	ageCalibrations<-createMrBayesTipCalibrations(tipTimes=tipTimes,
-			ageCalibrationType=ageCalibrationType,whichAppearance=whichAppearance,
-			treeAgeOffset=treeAgeOffset,minTreeAge=minTreeAge,
-			collapseUniform=collapseUniform,anchorTaxon=anchorTaxon,file=NULL)
+	ageCalibrations <- createMrBayesTipCalibrations(tipTimes = tipTimes,
+			ageCalibrationType = ageCalibrationType,whichAppearance = whichAppearance,
+			treeAgeOffset = treeAgeOffset,minTreeAge = minTreeAge,
+			collapseUniform = collapseUniform,anchorTaxon = anchorTaxon,file = NULL)
 	#
 	# make the final MrBayes Block
-	MrBayesBlock<-makeMrBayesBlock(logBlock=logfileline,ingroupBlock=ingroupConstraint,
-		ageBlock=ageCalibrations,constraintBlock=topologicalConstraints,
-		morphModel=morphModel,ngen=ngen,doNotRun=doNotRun)
+	MrBayesBlock <- makeMrBayesBlock(logBlock = logfileline,ingroupBlock = ingroupConstraint,
+		ageBlock = ageCalibrations,constraintBlock = topologicalConstraints,
+		morphModel = morphModel,ngen = ngen,doNotRun = doNotRun)
 	###############################################
 	# combine morph matrix block with MrBayes command block
-	finalText<-c(morphNexus,MrBayesBlock)
+	finalText <- c(morphNexus,MrBayesBlock)
 	if(!is.null(newFile)){
-		write(x=finalText,file=newFile)
+		write(x = finalText,file = newFile)
 		if(printExecute){
 			# have function print command for pasting into MrBayes to execute: 
 				# e.g. ' Execute "C://fossil data/myNexus.nex" '
@@ -631,7 +652,7 @@ createMrBayesTipDatingNexus<-function(tipTimes,outgroupTaxa=NULL,treeConstraints
 
 ###################################################################################
 
-makeIngroupConstraintMrB<-function(outgroupTaxa,allTaxa){
+makeIngroupConstraintMrB <- function(outgroupTaxa,allTaxa){
 	# use the list of outgroup taxa to define the in-group taxa
 	# write a MrBayes line that defines all ingroup taxa
 		# as being monophyletic
@@ -647,27 +668,27 @@ makeIngroupConstraintMrB<-function(outgroupTaxa,allTaxa){
 		stop("taxon labels cannot be turned into a vector of strings")
 		}	
 	# are there any outgroup not in all?
-	notPresent<-sapply(outgroupTaxa,function(x) all(x!=allTaxa))
+	notPresent <- sapply(outgroupTaxa,function(x) all(x != allTaxa))
 	if(any(notPresent)){
 		stop(paste("Following outgroup taxa not present in input tipTimes",
-			paste(outgroupTaxa[notPresent],collapse=" ")))
+			paste(outgroupTaxa[notPresent],collapse = " ")))
 		}
 	#############################################
 	# get the ingroup taxa
-	inGroup<-allTaxa[sapply(allTaxa,function(x) all(x!=outgroupTaxa))]
+	inGroup <- allTaxa[sapply(allTaxa,function(x) all(x != outgroupTaxa))]
 	# check that there are SOME ingroup
 	if(length(inGroup)<2){
 		stop("Less than two taxa are in the ingroup??")
 		}
 	# make ingroup block
-	ingroupBlock<-paste0("constraint ingroup = ",
-		paste(inGroup,collapse=" "),";")
-	ingroupBlock<-c(ingroupBlock,
+	ingroupBlock <- paste0("constraint ingroup = ",
+		paste(inGroup,collapse = " "),";")
+	ingroupBlock <- c(ingroupBlock,
 		"prset topologypr = constraints(ingroup);")
 	return(ingroupBlock)
 	}
 
-makeEmptyMorphNexusMrB<-function(taxonNames){
+makeEmptyMorphNexusMrB <- function(taxonNames){
 	#given a vector of taxonNames, make NEXUS character block
 		# formatted for MrBayes
 		# each character is a single ?
@@ -677,22 +698,22 @@ makeEmptyMorphNexusMrB<-function(taxonNames){
 		}
 	################
 	# get standard header and 	
-	nTaxa<-length(taxonNames)
+	nTaxa <- length(taxonNames)
 	if(nTaxa<1){stop("vector of taxon names is zero-length")}
 	# build header
-	headMat<-c("#NEXUS","BEGIN DATA;",
-		paste0("DIMENSIONS  NTAX=",nTaxa," NCHAR=1;"),
-		"FORMAT DATATYPE=STANDARD GAP=- MISSING=?;",
+	headMat <- c("#NEXUS","BEGIN DATA;",
+		paste0("DIMENSIONS  NTAX = ",nTaxa," NCHAR = 1;"),
+		"FORMAT DATATYPE = STANDARD GAP = - MISSING = ?;",
 		"MATRIX")
-	endMat<-c("",";","END;")
+	endMat <- c("",";","END;")
 	###############################
 	# build body
-	bodyMat<-sapply(taxonNames,function(x)
+	bodyMat <- sapply(taxonNames,function(x)
 		paste0(x,"   ?")
 		)
 	#########################
-	finalMatBlock<-c(headMat,bodyMat,endMat)
-	names(finalMatBlock)<-NULL
+	finalMatBlock <- c(headMat,bodyMat,endMat)
+	names(finalMatBlock) <- NULL
 	return(finalMatBlock)
 	}
 
@@ -701,15 +722,15 @@ makeEmptyMorphNexusMrB<-function(taxonNames){
 
 
 
-makeMrBayesBlock<-function(logBlock,ingroupBlock,ageBlock,
-							constraintBlock,morphModel="strong",ngen=100000000,doNotRun=FALSE){
+makeMrBayesBlock <- function(logBlock,ingroupBlock,ageBlock,
+							constraintBlock,morphModel = "strong",ngen = 100000000,doNotRun = FALSE){
 #########################################################################################						
 	###
 	### # what follows will look very messy due to its untabbed nature
 	### # I'm so sorry - dwb
 	###
 ##################################################
-block1<-"
+block1 <- "
 begin mrbayes;
 
 [This block is a combination of best practices taken from NEXUS files from April Wright,
@@ -717,10 +738,10 @@ begin mrbayes;
 	 recommendations of Matzke and Wright, 2016, Biol. Lett.]
 
 [no autoclose, I like it to ask, but you might want it]
-	[set autoclose=yes;]
+	[set autoclose = yes;]
 "
 ##########################################################################
-block2<-"
+block2 <- "
 [DATA]
 
 [edits to taxon or character selection go here]
@@ -730,7 +751,7 @@ block2<-"
 	[constrain all members of the ingroup to be monophyletic]
 "
 #######################################################################
-block3<-"	
+block3 <- "	
 [TOPOLOGICAL CONSTRAINTS FOR ADDITIONAL NODES]
 
 	[[EXAMPLE]
@@ -739,7 +760,7 @@ block3<-"
 	prset topologypr = constraints(ingroup,node1,node2); [need to include ingroup]]
 "
 ##############################################################################
-morphModelBlock_Strong<-"
+morphModelBlock_Strong <- "
 
 [CHARACTER MODELS]
 	
@@ -748,16 +769,16 @@ morphModelBlock_Strong<-"
 	[default: use pars-informative coding]
 	
 	[set coding and rates - default below maximizes information content]
-		lset  nbetacat=5 rates=equal Coding=informative; [equal rate variation]
-		[lset  nbetacat=5 rates=gamma Coding=informative;   [gamma distributed rate variation]]
+		lset  nbetacat = 5 rates = equal Coding = informative; [equal rate variation]
+		[lset  nbetacat = 5 rates = gamma Coding = informative;   [gamma distributed rate variation]]
 			[gamma distributed rates may cause divide by zero problems with non-fixed symdiri]
 	[symdirhyperpr prior, fixed vs. variable]	
-		prset symdirihyperpr=fixed(infinity);		
-		[prset symdirihyperpr=uniform(1,10);      [this range seems to avoid divide by zero error]]
+		prset symdirihyperpr = fixed(infinity);		
+		[prset symdirihyperpr = uniform(1,10);      [this range seems to avoid divide by zero error]]
 
 "
 
-morphModelBlock_Relaxed<-"
+morphModelBlock_Relaxed <- "
 
 [CHARACTER MODELS]
 	
@@ -766,18 +787,18 @@ morphModelBlock_Relaxed<-"
 	[default: use pars-informative coding]
 	
 	[set coding and rates - default below maximizes information content]
-		[lset  nbetacat=5 rates=equal Coding=informative; [equal rate variation]]
-		lset  nbetacat=5 rates=gamma Coding=informative;   [gamma distributed rate variation]
+		[lset  nbetacat = 5 rates = equal Coding = informative; [equal rate variation]]
+		lset  nbetacat = 5 rates = gamma Coding = informative;   [gamma distributed rate variation]
 			[gamma distributed rates may cause divide by zero problems with non-fixed symdiri]
 	[symdirhyperpr prior, fixed vs. variable]	
-		[prset symdirihyperpr=fixed(infinity);]		
-		prset symdirihyperpr=uniform(1,10);      [this range seems to avoid divide by zero error]
+		[prset symdirihyperpr = fixed(infinity);]		
+		prset symdirihyperpr = uniform(1,10);      [this range seems to avoid divide by zero error]
 
 "
 
 
 #############################################################################
-block4<-"
+block4 <- "
 [TIP AND TREE AGE CALIBRATIONS] 
 	
 		[[EXAMPLE WITH BOUNDS: min age, max age]	
@@ -795,10 +816,10 @@ block4<-"
 			
 "
 ##########################################################################
-block5a<-"	
+block5a <- "	
 [FOSSILIZED BIRTH DEATH MODEL & ASSOCIATED PARAMETERS]
 
-    prset brlenspr=clock:fossilization;
+    prset brlenspr = clock:fossilization;
 	prset fossilizationpr = beta(1,1); [flat, sampling is psi/(mu+psi), 0-1 ]
 
     prset speciationpr = uniform(0,10);
@@ -812,9 +833,9 @@ block5a<-"
 	
 [CLOCK PRIORS]
 	
-	[clock rate: truncated normal, mean=0.08, but very flat; see Supp Table 2 of Matzke & Wright 2016]
+	[clock rate: truncated normal, mean = 0.08, but very flat; see Supp Table 2 of Matzke & Wright 2016]
     prset clockratepr = normal(0.0025,0.1);     
-	prset clockvarpr=igr;
+	prset clockvarpr = igr;
     prset igrvarpr = uniform(0.0001, 200); [vague prior that is actually vague; Matzke & Wright 2016]
 
 	prset nodeagepr = calibrated; [set node age priors]
@@ -826,13 +847,13 @@ block5a<-"
 [RUN SETTINGS]
 
 [FYI burnin settings for one command sets burnin settings for all]
-	mcmcp ngen="
+	mcmcp ngen = "
 	
-block5b<-" relburnin=yes burninfrac=0.5 printfreq=1000 samplefreq=1000 nchains=4 nruns=2 savebrlens=yes;    
-	set seed=4;
+block5b <- " relburnin = yes burninfrac = 0.5 printfreq = 1000 samplefreq = 1000 nchains = 4 nruns = 2 savebrlens = yes;    
+	set seed = 4;
 "
 ###################################################################
-runBlock<-"	
+runBlock <- "	
 
 [RUN]
 	mcmc;
@@ -840,24 +861,24 @@ runBlock<-"
 	
 	[Given this is a dating analysis, should really use MCCT,not summary trees]
 		[I guess best summary tree though is allcompat?]
-	[sumt contype=allcompat; ]    [allcompat has issues with sampled ancestors]
+	[sumt contype = allcompat; ]    [allcompat has issues with sampled ancestors]
 	
 	log stop;
 "
 ######################################################
 	if(doNotRun){
-		runBlock<-" "
+		runBlock <- " "
 		}
-	if(morphModel=="strong"){
-		morphModelBlock<-morphModelBlock_Strong
+	if(morphModel == "strong"){
+		morphModelBlock <- morphModelBlock_Strong
 		}
-	if(morphModel=="relaxed"){
-		morphModelBlock<-morphModelBlock_Relaxed
+	if(morphModel == "relaxed"){
+		morphModelBlock <- morphModelBlock_Relaxed
 		}
 	# insert ngen
-	block5<-paste0(block5a,ngen,block5b)
+	block5 <- paste0(block5a,ngen,block5b)
 	####################
-	finalBlock<-c(block1,logBlock,block2,ingroupBlock,block3,
+	finalBlock <- c(block1,logBlock,block2,ingroupBlock,block3,
 		constraintBlock,morphModelBlock,block4,
 		ageBlock,block5,runBlock," ","end;")
 	return(finalBlock)

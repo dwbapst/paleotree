@@ -46,13 +46,13 @@ str(retioRanges)
 
 taxicDivDisc(retioRanges)
 
-fourDateRet<-timeList2fourDate(retioRanges)
+fourDateRet <- timeList2fourDate(retioRanges)
 
 # total uncertainty in retio first and last appearances?
 sum((fourDateRet[,1]-fourDateRet[,2])+(fourDateRet[,3]-fourDateRet[,4]))
 
 #convert back
-newTimeList<-fourDate2timeList(fourDateRet)
+newTimeList <- fourDate2timeList(fourDateRet)
 taxicDivDisc(retioRanges)
 
 }

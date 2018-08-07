@@ -71,11 +71,11 @@
 #' #Can plot the unscaled cladogram
 #' plot(retioTree)
 #' #Can plot the determinant growth character on the cladogram
-#' tiplabels(pch=16,col=(retioChar[,2]+1),adj=0.25)
+#' tiplabels(pch = 16,col = (retioChar[,2]+1),adj = 0.25)
 #' 
 #' #Use basic time-scaling (terminal branches only go to FADs)
-#' ttree<-bin_timePaleoPhy(tree=retioTree,timeList=retioRanges,type="basic",
-#' 	ntrees=1,plot=TRUE)
+#' ttree <- bin_timePaleoPhy(tree = retioTree,timeList = retioRanges,type = "basic",
+#' 	ntrees = 1,plot = TRUE)
 #' 
 #' #Note that this function creates stochastic time-scaled trees...
 #' 	#A sample of 1 is not representative!

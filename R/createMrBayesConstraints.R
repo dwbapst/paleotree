@@ -54,21 +54,21 @@
 
 #' @examples
 #' set.seed(444)
-#' tree<-rtree(10)
+#' tree <- rtree(10)
 #' createMrBayesConstraints(tree)
-#' createMrBayesConstraints(tree,partial=FALSE)
+#' createMrBayesConstraints(tree,partial = FALSE)
 #' 
 #' \dontrun{
 #' 
-#' createMrBayesConstraints(tree,file="topoConstraints.txt")
+#' createMrBayesConstraints(tree,file = "topoConstraints.txt")
 #' 
 #' }
 
 #' @name createMrBayesConstraints
 #' @rdname createMrBayesConstraints
 #' @export
-createMrBayesConstraints<-function(tree,partial=TRUE,file=NULL,
-		includeIngroupConstraint=FALSE){
+createMrBayesConstraints <- function(tree,partial = TRUE,file = NULL,
+		includeIngroupConstraint = FALSE){
 	#checks
 	if(!inherits(tree,"phylo")){
 		stop("tree must be of class 'phylo'")
@@ -76,45 +76,45 @@ createMrBayesConstraints<-function(tree,partial=TRUE,file=NULL,
 	########################################################
 	#get the splits
 	#
-	splits<-prop.part(tree)	#prop.part
+	splits <- prop.part(tree)	#prop.part
 	#remove split with all taxa
-	splits<-splits[sapply(splits,length)!=Ntip(tree)]
+	splits <- splits[sapply(splits,length) != Ntip(tree)]
 	#
 	# seperate into 'includes' and 'excludes'
-	includes<-lapply(splits,function(x) tree$tip.label[x])
-	excludes<-lapply(splits,function(x) tree$tip.label[-x])
+	includes <- lapply(splits,function(x) tree$tip.label[x])
+	excludes <- lapply(splits,function(x) tree$tip.label[-x])
 	#
 	#turn into character strings
-	includes<-sapply(includes,function(x) paste0(x,collapse=" "))
-	excludes<-sapply(excludes,function(x) paste0(x,collapse=" "))
+	includes <- sapply(includes,function(x) paste0(x,collapse = " "))
+	excludes <- sapply(excludes,function(x) paste0(x,collapse = " "))
 	#
 	########################################################
 	if(partial){	# if they should be formulated as partial constraints
 		# convert into partial constraint commands
-		constraints<-sapply(1:length(includes),function(i)
+		constraints <- sapply(1:length(includes),function(i)
 			paste0("constraint node",i," partial = ",
 			includes[i]," : ",excludes[i],";"))
 	}else{
 		# convert into monophyletic constraint commands
-		constraints<-sapply(1:length(includes),function(i)
+		constraints <- sapply(1:length(includes),function(i)
 			paste0("constraint node",i," = ",includes[i],";"))
 		}
 	#
 	#########################################################
 	# create prset line
-	constList<-paste0("node",1:length(splits),collapse=",")
+	constList <- paste0("node",1:length(splits),collapse = ",")
 	if(includeIngroupConstraint){
-		prsetLine<-paste0("prset topologypr = constraints(",
+		prsetLine <- paste0("prset topologypr = constraints(",
 			constList,",ingroup);")
 	}else{
-		prsetLine<-paste0("prset topologypr = constraints(",
+		prsetLine <- paste0("prset topologypr = constraints(",
 			constList,");")
 		}
 	#
 	############################################################
 	#
 	# create final text block
-	finalText<-c(constraints,"",prsetLine)
+	finalText <- c(constraints,"",prsetLine)
 	#
 	if(!is.null(file)){
 		write(finalText,file)

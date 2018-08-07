@@ -11,7 +11,7 @@ footeValues(p, q, r, PA_n = 0, PB_1 = 0, p_cont = TRUE, q_cont = TRUE,
 \item{p}{Instantaneous origination/branching rate of taxa. Under 
 a continuous model, assumed to be \emph{per interval}, or equal
 to the product of interval lengths and the rates per lineage time
-units for each interval. Under a pulsed mode (p_cont=FALSE), p is a 
+units for each interval. Under a pulsed mode (p_cont = FALSE), p is a 
 per-interval 'rate' which can exceed 1 (because diversity can
 more than double; Foote, 2003a). Given as a vector with length
 equal to the number of intervals, so a different value may be
@@ -21,7 +21,7 @@ q and r.}
 \item{q}{Instantaneous extinction rate of taxa. Under 
 a continuous model, assumed to be \emph{per interval}, or
 equal to the product of interval lengths and the rates per lineage
-time units for each interval. Under a pulsed mode (q_cont=FALSE), q is a  
+time units for each interval. Under a pulsed mode (q_cont = FALSE), q is a  
 per-interval 'rate' but which cannot be observed to exceed 1
 (because you can't have more taxa go extinct than exist). Given as
 a vector with length equal to the number of intervals, so a 
@@ -79,15 +79,15 @@ between the package author and Michael Foote.
 #very simple example with three intervals, same value for all parameters
 
 #example rates (for the most part)
-rate<-rep(0.1,3)                  
+rate <- rep(0.1,3)                  
 #all continuous
 footeValues(rate,rate,rate)	
 #origination pulsed
-footeValues(rate,rate,rate,p_cont=FALSE)		 
+footeValues(rate,rate,rate,p_cont = FALSE)		 
 #extinction pulsed
-footeValues(rate,rate,rate,q_cont=FALSE) 	 
+footeValues(rate,rate,rate,q_cont = FALSE) 	 
 #all pulsed
-footeValues(rate,rate,rate,p_cont=FALSE,q_cont=FALSE) 
+footeValues(rate,rate,rate,p_cont = FALSE,q_cont = FALSE) 
 }
 \references{
 Foote, M. 2001. Inferring temporal patterns of preservation, origination, and 

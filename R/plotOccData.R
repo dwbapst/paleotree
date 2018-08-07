@@ -47,7 +47,7 @@
 #' data(graptPBDB)
 #' 
 #' #get formal genera
-#' occSpecies<-taxonSortPBDBocc(graptOccPBDB, rank="species")
+#' occSpecies <- taxonSortPBDBocc(graptOccPBDB, rank = "species")
 #' 
 #' #plot it!
 #' plotOccData(occSpecies)
@@ -58,7 +58,7 @@
 #' #genera is messier...
 #' 
 #' #get formal genera
-#' occGenus<-taxonSortPBDBocc(graptOccPBDB, rank="genus")
+#' occGenus <- taxonSortPBDBocc(graptOccPBDB, rank = "genus")
 #' 
 #' #plot it!
 #' plotOccData(occGenus)
@@ -70,58 +70,58 @@
 #' @name plotOccData
 #' @rdname plotOccData
 #' @export
-plotOccData<-function(occList,groupLabel=NULL,occColors=NULL,lineWidth=NULL,xlims=NULL){
+plotOccData <- function(occList,groupLabel = NULL,occColors = NULL,lineWidth = NULL,xlims = NULL){
 	#check groupLabel
-	if(!is.null(groupLabel)){if(length(groupLabel)!=1){
-		stop("groupLabel must be length=1")}}
+	if(!is.null(groupLabel)){if(length(groupLabel) != 1){
+		stop("groupLabel must be length = 1")}}
 	#check occColors
-	if(!is.null(occColors)){if(length(occColors)!=length(occList)){
+	if(!is.null(occColors)){if(length(occColors) != length(occList)){
 		stop("occColors must be the same length as occList")}}
 	
 	#use pullOccListData to get occurrence data
-	occList<-pullOccListData(occList)
+	occList <- pullOccListData(occList)
 	#
 	#number of occurrences
-	sumOcc<-sum(sapply(occList,nrow))
+	sumOcc <- sum(sapply(occList,nrow))
 	#
 	#order taxa by earliest occurrence first, then later occurrence
-	occList<-occList[order(sapply(occList,max))]
+	occList <- occList[order(sapply(occList,max))]
 	#order the occurrences within taxa
-	occList<-lapply(occList,function(x) x[order(x[,1],x[,1]),, drop=FALSE])
+	occList <- lapply(occList,function(x) x[order(x[,1],x[,1]),, drop = FALSE])
 	#
 	#set xlims
 	if(is.null(xlims)){
-		xlims<-c(max(sapply(occList,max)), min(sapply(occList,min))) 
-		xlimMod<-(xlims[1]-xlims[2])*0.01
-		xlims<-c(xlims[1]+xlimMod,xlims[2]-xlimMod)
+		xlims <- c(max(sapply(occList,max)), min(sapply(occList,min))) 
+		xlimMod <- (xlims[1]-xlims[2])*0.01
+		xlims <- c(xlims[1]+xlimMod,xlims[2]-xlimMod)
 		}
 	#plot title
-	plotMainTitle<-ifelse(is.null(groupLabel),"Age Uncertainty of Occurrence Data",
+	plotMainTitle <- ifelse(is.null(groupLabel),"Age Uncertainty of Occurrence Data",
              paste("Age Uncertainty of Occurrence Data for",groupLabel))
 	#initiate the plot with a modifiable main title
-	origPar<-par(no.readonly=TRUE)	#save original parameters	
-	par(yaxt="n")
-	plot(0, 0, type="n", xlim=xlims,
-		ylim=c(0,sum(sapply(occList,nrow))+(2*length(occList))),
+	origPar <- par(no.readonly = TRUE)	#save original parameters	
+	par(yaxt = "n")
+	plot(0, 0, type = "n", xlim = xlims,
+		ylim = c(0,sum(sapply(occList,nrow))+(2*length(occList))),
 		ylab = "", xlab = "Time (Ma)",
-		main=plotMainTitle)
+		main = plotMainTitle)
 	#set colors
 	if(is.null(occColors)){
-		occColors<-sample(rainbow(length(occList)))  #scramble colors
+		occColors <- sample(rainbow(length(occList)))  #scramble colors
 		}
 	#set line width
 	if(is.null(lineWidth)){
-		lineWidth<-(-0.02*nrow(sumOcc))+3.2
-		lineWidth<-ifelse(lineWidth>0,lineWidth,0.01)
+		lineWidth <- (-0.02*nrow(sumOcc))+3.2
+		lineWidth <- ifelse(lineWidth>0,lineWidth,0.01)
 		}
 	#now plot the occurrences as lines
-	count<-1
+	count <- 1
 	for(i in 1:length(occList)){
 		for(j in 1:nrow(occList[[i]])){
-			lines(occList[[i]][j,],c(count,count),lwd=lineWidth,col=occColors[i])
-			count<-count+1
+			lines(occList[[i]][j,],c(count,count),lwd = lineWidth,col = occColors[i])
+			count <- count+1
 			}
-		count<-count+2
+		count <- count+2
 		}
 	#reset graph par
 	par(origPar)

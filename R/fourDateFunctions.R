@@ -47,56 +47,56 @@
 #'
 #' taxicDivDisc(retioRanges)
 #' 
-#' fourDateRet<-timeList2fourDate(retioRanges)
+#' fourDateRet <- timeList2fourDate(retioRanges)
 #' 
 #' # total uncertainty in retio first and last appearances?
 #' sum((fourDateRet[,1]-fourDateRet[,2])+(fourDateRet[,3]-fourDateRet[,4]))
 #'
 #' #convert back
-#' newTimeList<-fourDate2timeList(fourDateRet)
+#' newTimeList <- fourDate2timeList(fourDateRet)
 #' taxicDivDisc(retioRanges)
 #'
 
 #' @name timeList2fourDate
 #' @rdname timeList2fourDate
 #' @export
-timeList2fourDate<-function(timeList){
+timeList2fourDate <- function(timeList){
 	if(!is(timeList,"list")){stop("timeList is not a list?")}
-	if(!(length(timeList)==2)){stop("timeList is not length=2")}
-	timeList<-lapply(timeList,as.matrix)
-	if(!all(sapply(timeList,inherits,what="matrix"))){
+	if(!(length(timeList) == 2)){stop("timeList is not length = 2")}
+	timeList <- lapply(timeList,as.matrix)
+	if(!all(sapply(timeList,inherits,what = "matrix"))){
 		stop("timeList elements are not matrices")
 		}
-	if(!all(sapply(timeList,function(x) ncol(x)==2))){
+	if(!all(sapply(timeList,function(x) ncol(x) == 2))){
 		stop("timeList matrices do not have two columns")
 		}
-	firstInt<-t(sapply(timeList[[2]][,1],function(x) timeList[[1]][x,]))
-	lastInt<-t(sapply(timeList[[2]][,2],function(x) timeList[[1]][x,]))
-	fourDate<-cbind(firstInt,lastInt)
+	firstInt <- t(sapply(timeList[[2]][,1],function(x) timeList[[1]][x,]))
+	lastInt <- t(sapply(timeList[[2]][,2],function(x) timeList[[1]][x,]))
+	fourDate <- cbind(firstInt,lastInt)
 	return(fourDate)
 	}
 
 #' @name fourDate2timeList
 #' @rdname timeList2fourDate
 #' @export
-fourDate2timeList<-function(fourDate){
-	fourDate<-as.matrix(fourDate)
-	if(!is(fourDate,"matrix")){if(ncol(fourDate)!=4){
+fourDate2timeList <- function(fourDate){
+	fourDate <- as.matrix(fourDate)
+	if(!is(fourDate,"matrix")){if(ncol(fourDate) != 4){
 		stop("fourDate must be a matrix with four columns")}}
-	taxaFirst<-fourDate[,1:2,drop=FALSE]
-	taxaLast<-fourDate[,3:4,drop=FALSE]
+	taxaFirst <- fourDate[,1:2,drop = FALSE]
+	taxaLast <- fourDate[,3:4,drop = FALSE]
 	#make interval list
-	intTimes<-unique(rbind(taxaFirst,taxaLast))
-	intTimes<-intTimes[order(-intTimes[,1],-intTimes[,2]),]
+	intTimes <- unique(rbind(taxaFirst,taxaLast))
+	intTimes <- intTimes[order(-intTimes[,1],-intTimes[,2]),]
 	#now assign taxa first and last intervals
-	firstInt<-apply(taxaFirst,1,function(x)
+	firstInt <- apply(taxaFirst,1,function(x)
 		which(apply(intTimes,1,function(y) identical(y,x))))
-	lastInt<-apply(taxaLast,1,function(x)
+	lastInt <- apply(taxaLast,1,function(x)
 		which(apply(intTimes,1,function(y) identical(y,x))))
-	taxonTimes<-cbind(firstInt,lastInt)
+	taxonTimes <- cbind(firstInt,lastInt)
 	#package it together
-	dimnames(intTimes)<-list(NULL,c("startTime","endTime"))
-	dimnames(taxonTimes)<-list(NULL,c("firstInt","lastInt"))
-	res<-list(intTimes=intTimes,taxonTimes=taxonTimes)
+	dimnames(intTimes) <- list(NULL,c("startTime","endTime"))
+	dimnames(taxonTimes) <- list(NULL,c("firstInt","lastInt"))
+	res <- list(intTimes = intTimes,taxonTimes = taxonTimes)
 	return(res)
 	}

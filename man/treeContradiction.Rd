@@ -52,8 +52,8 @@ many other typical tree comparisons, such as RF distances. See examples below.
 # let's simulate two trees
 
 set.seed(1)
-treeA<-rtree(30,br=NULL)
-treeB<-rtree(30,br=NULL)
+treeA <- rtree(30,br = NULL)
+treeB <- rtree(30,br = NULL)
 
 \dontrun{
 
@@ -71,7 +71,7 @@ treedist(treeA,treeB)
     # we consider a tree that isn't well-resolved
 
 # let's simulate the worst resolved tree possible: a star tree
-treeC<-stree(30)
+treeC <- stree(30)
 
 \dontrun{
 # plot the tanglegram between A and C
@@ -96,11 +96,11 @@ treeContradiction(treeA,treeB)  # should be non-zero distance
 
 # a less ideal property of the CD is that two taxon on opposite ends of the 
 # moving from side of the topology to the other of an otherwise identical tree
-# will return the maximum contradiction difference possible (i.e., `= 1`)
+# will return the maximum contradiction difference possible (i.e., ` =  1`)
 
 # an example
-treeAA<-read.tree(text="(A,(B,(C,(D,(E,F)))));")
-treeBB<-read.tree(text="(E,(B,(C,(D,(A,F)))));")
+treeAA <- read.tree(text = "(A,(B,(C,(D,(E,F)))));")
+treeBB <- read.tree(text = "(E,(B,(C,(D,(A,F)))));")
 
 \dontrun{
 plot(cophylo(treeAA,treeBB))
@@ -115,13 +115,20 @@ treedist(treeAA,treeBB)
 
 }
 \references{
-This measure was introduced in our recent Systematic Biology paper:
+This contradiction difference measure was introduced in:
 
-Bapst, D. W., H. A. Schreiber, and S. J. Carlson. In press. Combined analysis of extant Rhynchonellida
-(Brachiopoda) using morphological and molecular data. \emph{Systematic Biology} doi: 10.1093/sysbio/syx049
+Bapst, D. W., H. A. Schreiber, and S. J. Carlson. 2018. Combined Analysis of Extant Rhynchonellida
+(Brachiopoda) using Morphological and Molecular Data. \emph{Systematic Biology} 67(1):32-48. doi: 10.1093/sysbio/syx049
 }
 \seealso{
-See \code{phangorn}'s function for calculating the Robinson-Foulds distance: \code{\link[phangorn]{treedist}}
+See \code{phangorn}'s function for calculating the Robinson-Foulds distance: \code{\link[phangorn]{treedist}}.
+
+Graeme Lloyd's \code{metatree} package, currently not on CRAN,
+also contains the function \code{MultiTreeDistance}
+for calculating both the contradiction difference measure and the Robinson-Foulds distance. This function is
+optimized for very large samples of trees  or very large
+trees, and thus may be faster than \code{treeContradiction}.
+Also see the function \code{MultiTreeContradiction} in the same package.
 }
 \author{
 David W. Bapst. This code was produced as part of a project 

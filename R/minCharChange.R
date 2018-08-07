@@ -144,7 +144,7 @@
 
 #' @seealso
 #' The functions described here are effectively wrappers of \code{phangorn}'s function
-#' \code{ancestral.pars}.
+#' \code{\link[phangorn]{ancestral.pars}}.
 
 #' @author David W. Bapst
 
@@ -163,80 +163,78 @@
 
 
 #' @examples
-#' 
 #' \donttest{
-#' 
 #' # let's write a quick & dirty ancestral trait plotting function
 #' 
-#' quickAncPlotter<-function(tree,ancData,cex){
-#'	ancCol<-(1:ncol(ancData))+1
-#' 	plot(tree,show.tip.label=FALSE,no.margin=TRUE,direction="upwards")
-#' 	tiplabels(pch=16,pie=ancData[(1:Ntip(tree)),],cex=cex,piecol=ancCol,
-#'		col=0)
-#' 	nodelabels(pie=ancData[-(1:Ntip(tree)),],cex=cex,piecol=ancCol)	
-#' 	}
+#' quickAncPlotter <- function(tree,ancData,cex){
+#'     ancCol <- (1:ncol(ancData))+1
+#'         plot(tree,show.tip.label = FALSE,no.margin = TRUE,direction = "upwards")
+#'         tiplabels(pch = 16,pie = ancData[(1:Ntip(tree)),],cex = cex,piecol = ancCol,
+#'		    col = 0)
+#'     nodelabels(pie = ancData[-(1:Ntip(tree)),],cex = cex,piecol = ancCol)	
+#'     }
 #'
 #' # example with retiolitid graptolite data
 #' 
 #' data(retiolitinae)
 #' 
 #' #unordered, MPR
-#' ancMPR<-ancPropStateMat(retioTree, trait=retioChar[,2], type="MPR")
-#' quickAncPlotter(retioTree,ancMPR,cex=0.5)
-#' text(x=4,y=5,"type='MPR'",cex=1.5)
+#' ancMPR <- ancPropStateMat(retioTree, trait = retioChar[,2], type = "MPR")
+#' quickAncPlotter(retioTree,ancMPR,cex = 0.5)
+#' text(x = 4,y = 5,"type = 'MPR'",cex = 1.5)
 #' 
-#' minCharChange(retioTree,trait=retioChar[,2],type="MPR")
+#' minCharChange(retioTree,trait = retioChar[,2],type = "MPR")
 #' 
 #' # with simulated data
 #' 
 #' set.seed(444)
-#' tree<-rtree(50)
+#' tree <- rtree(50)
 #' #simulate under a likelihood model
-#' char<-rTraitDisc(tree,k=3,rate=0.7)
-#' tree$edge.length<-NULL
-#' tree<-ladderize(tree)
+#' char <- rTraitDisc(tree,k = 3,rate = 0.7)
+#' tree$edge.length <- NULL
+#' tree <- ladderize(tree)
 #' 
 #' #unordered, MPR
-#' ancMPR<-ancPropStateMat(tree, trait=char, type="MPR")
+#' ancMPR <- ancPropStateMat(tree, trait = char, type = "MPR")
 #  #unordered, ACCTRAN
-#  ancACCTRAN<-ancPropStateMat(tree, trait=char, type="ACCTRAN")
+#  ancACCTRAN <- ancPropStateMat(tree, trait = char, type = "ACCTRAN")
 #' #ordered, MPR
-#' ancMPRord<-ancPropStateMat(tree, trait=char, orderedChar=TRUE, type="MPR")
+#' ancMPRord <- ancPropStateMat(tree, trait = char, orderedChar = TRUE, type = "MPR")
 #' 
 #  #let's compare MPR versus ACCTRAN results
 #  layout(1:2)
-#  quickAncPlotter(tree,ancMPR,cex=0.3)
-#  text(x=8,y=15,"type='MPR'",cex=1.5)
-#  quickAncPlotter(tree,ancACCTRAN,cex=0.3)
-#  text(x=9,y=15,"type='ACCTRAN'",cex=1.5)
+#  quickAncPlotter(tree,ancMPR,cex = 0.3)
+#  text(x = 8,y = 15,"type = 'MPR'",cex = 1.5)
+#  quickAncPlotter(tree,ancACCTRAN,cex = 0.3)
+#  text(x = 9,y = 15,"type = 'ACCTRAN'",cex = 1.5)
 #  #MPR has much more uncertainty in node estimates
 #  	#but that doesn't mean ACCTRAN is preferable
 #'
 #' #let's compare unordered versus ordered under MPR
 #' layout(1:2)
-#' quickAncPlotter(tree,ancMPR,cex=0.3)
-#' text(x=8,y=15,"unordered char\nMPR",cex=1.5)
-#' quickAncPlotter(tree,ancMPRord,cex=0.3)
-#' text(x=9,y=15,"ordered char\nMPR",cex=1.5)
+#' quickAncPlotter(tree,ancMPR,cex = 0.3)
+#' text(x = 8,y = 15,"unordered char\nMPR",cex = 1.5)
+#' quickAncPlotter(tree,ancMPRord,cex = 0.3)
+#' text(x = 9,y = 15,"ordered char\nMPR",cex = 1.5)
 #' layout(1)
 #' 
 #' \dontrun{
 #' # what ancPropStateMat automates (with lots of checks):
 #'
 #' require(phangorn)
-#' char1<-matrix(char,,1)
-#' rownames(char1)<-names(char)
+#' char1 <- matrix(char,,1)
+#' rownames(char1) <- names(char)
 #' #translate into something for phangorn to read
-#' char1<-phyDat(char1,type="USER",levels=sort(unique(char1)))
-#' x<-ancestral.pars(tree,char1,type="MPR")
-#' y<-ancestral.pars(tree,char1,type="ACCTRAN")
+#' char1 <- phyDat(char1,type = "USER",levels = sort(unique(char1)))
+#' x <- ancestral.pars(tree,char1,type = "MPR")
+#' y <- ancestral.pars(tree,char1,type = "ACCTRAN")
 #' }
 #' 
 #' #estimating minimum number of transitions with MPR 
-#' minCharChange(tree,trait=char,type="MPR")
+#' minCharChange(tree,trait = char,type = "MPR")
 #'
 #  #and now with ACCTRAN
-#  minCharChange(tree,trait=char,type="ACCTRAN")
+#  minCharChange(tree,trait = char,type = "ACCTRAN")
 #'
 #' #POLYMORPHISM IN CHARACTER DATA
 #' 
@@ -244,45 +242,45 @@
 #' # example trait data with a polymorphic taxon
 #'      # separated with '&' symbol
 #' # similar to polymorphic data output by ReadMorphNexus from package Claddis
-#' charPoly<-as.character(c(1,2,NA,0,0,1,"1&2",2,0,NA,0,2,1,1,"1&2"))
+#' charPoly <- as.character(c(1,2,NA,0,0,1,"1&2",2,0,NA,0,2,1,1,"1&2"))
 #' #simulate a tree with 16 taxa
 #' set.seed(444)
-#' tree<-rtree(15)
-#' tree$edge.length<-NULL
-#' tree<-ladderize(tree)
-#' names(charPoly)<-tree$tip.label
+#' tree <- rtree(15)
+#' tree$edge.length <- NULL
+#' tree <- ladderize(tree)
+#' names(charPoly) <- tree$tip.label
 #' charPoly
 #' 
 #' # need a contrast matrix that takes this into account
 #'     #can build row by row, by hand
 #' 
 #' #first, build contrast matrix for basic states
-#' contrast012<-rbind(c(1,0,0),c(0,1,0),c(0,0,1))
-#' colnames(contrast012)<-rownames(contrast012)<-0:2
+#' contrast012 <- rbind(c(1,0,0),c(0,1,0),c(0,0,1))
+#' colnames(contrast012) <- rownames(contrast012) <- 0:2
 #' contrast012
 #' 
 #' #add polymorphic state and NA ambiguity as new rows
-#' contrastPoly<-c(0,1,1)
-#' contrastNA<-c(1,1,1)
-#' contrastNew<-rbind(contrast012,'1&2'=contrastPoly,contrastNA)
-#' rownames(contrastNew)[5]<-NA
+#' contrastPoly <- c(0,1,1)
+#' contrastNA <- c(1,1,1)
+#' contrastNew <- rbind(contrast012,'1&2' = contrastPoly,contrastNA)
+#' rownames(contrastNew)[5] <- NA
 #' 
 #' #let's look at contrast
 #' contrastNew
 #' 
 #' # now try this contrast table we've assembled
 #'     # default: unordered, MPR
-#' ancPoly<-ancPropStateMat(tree, trait=charPoly, contrast=contrastNew)
+#' ancPoly <- ancPropStateMat(tree, trait = charPoly, contrast = contrastNew)
 #' 
 #' # but...!
 #' # we can also do it automatically, 
 #'     # by default, states with '&' are automatically treated
 #'     # as polymorphic character codings by ancPropStateMat
-#' ancPolyAuto<-ancPropStateMat(tree, trait=charPoly, polySymbol="&")
+#' ancPolyAuto <- ancPropStateMat(tree, trait = charPoly, polySymbol = "&")
 #'
 #' # but does this match what the table we constructed?
-#' ancPropStateMat(tree, trait=charPoly,
-#' 		polySymbol="&", returnContrast=TRUE)
+#' ancPropStateMat(tree, trait = charPoly,
+#' 		polySymbol = "&", returnContrast = TRUE)
 #' 
 #' # compare to contrastNew above!
 #' # only difference should be the default ambiguous
@@ -290,76 +288,74 @@
 #' 
 #' #compare reconstructions
 #' layout(1:2)
-#' quickAncPlotter(tree,ancPoly,cex=0.5)
-#' text(x=3.5,y=1.2,"manually-constructed\ncontrast",cex=1.3)
-#' quickAncPlotter(tree,ancPolyAuto,cex=0.5)
-#' text(x=3.5,y=1.2,"auto-constructed\ncontrast",cex=1.3)
+#' quickAncPlotter(tree,ancPoly,cex = 0.5)
+#' text(x = 3.5,y = 1.2,"manually-constructed\ncontrast",cex = 1.3)
+#' quickAncPlotter(tree,ancPolyAuto,cex = 0.5)
+#' text(x = 3.5,y = 1.2,"auto-constructed\ncontrast",cex = 1.3)
 #' layout(1)
 #' 
 #' #look pretty similar!
 #' 
-#' #i.e. the default polySymbol="&", but could be a different symbol
+#' #i.e. the default polySymbol = "&", but could be a different symbol
 #'      #such as "," or "\"... it can only be *one* symbol, though
 #' 
 #' # all of this machinery should function just fine in minCharChange
-#'		# again, by default polySymbol="&" (included anyway here for kicks)
-#' minCharChange(tree, trait=charPoly, polySymbol="&")
-#' 
+#'		# again, by default polySymbol = "&" (included anyway here for kicks)
+#' minCharChange(tree, trait = charPoly, polySymbol = "&")
 #' }
-#' 
 
 
 
 #' @name minCharChange
 #' @rdname minCharChange
 #' @export
-minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE, orderedChar=FALSE,
-		type="MPR", cost=NULL, printMinResult=TRUE,  ambiguity= c(NA, "?"),
-		dropAmbiguity=FALSE, polySymbol="&", contrast=NULL){
-	#randomMax=100;maxParsimony=TRUE;printMinResult=TRUE;type="MPR";cost=NULL
+minCharChange <- function(trait, tree, randomMax = 10000, maxParsimony = TRUE, orderedChar = FALSE,
+		type = "MPR", cost = NULL, printMinResult = TRUE,  ambiguity =  c(NA, "?"),
+		dropAmbiguity = FALSE, polySymbol = "&", contrast = NULL){
+	#randomMax = 100;maxParsimony = TRUE;printMinResult = TRUE;type = "MPR";cost = NULL
 	#print result gives back a reasonable 
-	ancMat<-ancPropStateMat(trait, tree, orderedChar=orderedChar, type=type, cost=cost)
+	ancMat <- ancPropStateMat(trait, tree, orderedChar = orderedChar, type = type, cost = cost)
 	#num of potential solutions
-	taxSol<-apply(ancMat,1,function(x) sum(x>0))	#taxSol = solution length of each taxon
-	nSol<-prod(taxSol)
+	taxSol <- apply(ancMat,1,function(x) sum(x>0))	#taxSol = solution length of each taxon
+	nSol <- prod(taxSol)
 	#supposedly charN (my trait vector to be sampled) can be character, its fine
-	charN<-colnames(ancMat)
+	charN <- colnames(ancMat)
 	if(nSol>randomMax){
-		solMat<-t(apply(ancMat,1,function(x) sample(charN[x>0],randomMax,replace=T)))
+		solMat <- t(apply(ancMat,1,function(x) sample(charN[x>0],randomMax,replace = T)))
 	}else{	
 		#exhaustive search needed
 		#first, build matrix of non-changing taxa
-		noChange<-which	(taxSol==1)
-		solMat<-matrix(sapply(noChange,function(x) charN[ancMat[x,]>0]),,1)
-		rownames(solMat)<-noChange
+		noChange <- which	(taxSol == 1)
+		solMat <- matrix(sapply(noChange,function(x) charN[ancMat[x,]>0]),,1)
+		rownames(solMat) <- noChange
 		if(nSol>1){
 			for(i in 2:max(taxSol)){
-				changers<-which(taxSol==i)
+				changers <- which(taxSol == i)
 				for(j in changers){
-					solMat2<-lapply(charN[ancMat[j,]>0],function(x) rbind(solMat,x))
-					solMat1<-solMat2[[1]]
-					for(k in 2:length(solMat2)){solMat1<-cbind(solMat1,solMat2[[k]])}
-					colnames(solMat1)<-NULL
-					rownames(solMat1)<-c(rownames(solMat),j)
-					solMat<-solMat1
+					solMat2 <- lapply(charN[ancMat[j,]>0],function(x) rbind(solMat,x))
+					solMat1 <- solMat2[[1]]
+					for(k in 2:length(solMat2)){solMat1 <- cbind(solMat1,solMat2[[k]])}
+					colnames(solMat1) <- NULL
+					rownames(solMat1) <- c(rownames(solMat),j)
+					solMat <- solMat1
 					}
 				}
 			}
-		solMat<-solMat[order(as.numeric(rownames(solMat))),,drop=FALSE]
+		solMat <- solMat[order(as.numeric(rownames(solMat))),,drop = FALSE]
 		}
 	#are all solMats unique? (yes, if TRUE)
-	#solUnq<-all(!sapply(1:ncol(solMat),function(x) 
+	#solUnq <- all(!sapply(1:ncol(solMat),function(x) 
 	#	any(sapply((1:ncol(solMat))[-x],function(y) identical(solMat[,x],solMat[,y])))))
 	#
 	# alternative suggested by Uwe Ligges - 07/01/18
-	solUnq<-all(!duplicated(solMat, MARGIN=2))
+	solUnq <- all(!duplicated(solMat, MARGIN = 2))
 	#do I need to stop if not all solutions are unique??? probably
 	if(!solUnq){
 		if(nSol>randomMax){
 			#if random, then okay, I guess you might have non unique solutions
-			solDup<-c(FALSE,sapply(2:ncol(solMat),function(x) 
+			solDup <- c(FALSE,sapply(2:ncol(solMat),function(x) 
 				any(sapply((1:ncol(solMat))[1:(x-1)],function(y) identical(solMat[,x],solMat[,y])))))
-			solMat<-solMat[,!solDup]
+			solMat <- solMat[,!solDup]
 		}else{
 			#if not random, then stop cause something is wrong!
 			stop("Not all solutions are unique, as calculated, despite random permutations not used. Please investigate or contact Dave Bapst.")
@@ -369,83 +365,83 @@ minCharChange<-function(trait, tree, randomMax=10000, maxParsimony=TRUE, ordered
 		# rows and two columns indicating the ancestral node of that edge
 		# and the child node of that edge, with values indicating the states
 		# inferred for those nodes in a particular solution
-	edgeSol<-array(,dim=c(Nedge(tree),2,ncol(solMat)))
+	edgeSol <- array(,dim = c(Nedge(tree),2,ncol(solMat)))
 	for(i in 1:ncol(solMat)){
-		xSol<-solMat[,i]
+		xSol <- solMat[,i]
 		#rearrange as an edge matrix of transitions
-		edgeSol[,,i]<-cbind(xSol[sapply(tree$edge[,1],function(x) which(x==names(xSol)))],
-			xSol[sapply(tree$edge[,2],function(x) which(x==names(xSol)))])
+		edgeSol[,,i] <- cbind(xSol[sapply(tree$edge[,1],function(x) which(x == names(xSol)))],
+			xSol[sapply(tree$edge[,2],function(x) which(x == names(xSol)))])
 		}
 	#tranMat is a 3D array where for each solution we have a symmetrical matrix
 		#equal to the number of character states, with values indicating the total
 		#number of transitions from one ancestral state (given as the rows) to
 		#a descendant state (given as columns)
-	tranMat<-array(,dim=c(length(charN),length(charN),ncol(solMat)))
-	rownames(tranMat)<-paste("anc.",colnames(ancMat),sep="")
-	colnames(tranMat)<-paste("desc.",colnames(ancMat),sep="")
+	tranMat <- array(,dim = c(length(charN),length(charN),ncol(solMat)))
+	rownames(tranMat) <- paste("anc.",colnames(ancMat),sep = "")
+	colnames(tranMat) <- paste("desc.",colnames(ancMat),sep = "")
 	#sumTran is the parsimony cost: number of gains+losses
-	sumTran<-numeric()	
+	sumTran <- numeric()	
 	for(i in 1:ncol(solMat)){
-		edgeTran<-edgeSol[,,i]
+		edgeTran <- edgeSol[,,i]
 		#turn into transition matrix
-		tranMat1<-t(sapply(charN,function(x) sapply(charN,function(y) 
-			sum(edgeTran[,1]==x & edgeTran[,2]==y))))
-		tranMat[,,i]<-tranMat1
-		diag(tranMat1)<-0
-		sumTran[i]<-sum(tranMat1)
+		tranMat1 <- t(sapply(charN,function(x) sapply(charN,function(y) 
+			sum(edgeTran[,1] == x & edgeTran[,2] == y))))
+		tranMat[,,i] <- tranMat1
+		diag(tranMat1) <- 0
+		sumTran[i] <- sum(tranMat1)
 		#rows are the ancestor state, columns are the desc state
 		}
 	#are all tranMats unique? generally not
-	#	unqTran<-sapply(1:length(tranMat),function(x) 
+	#	unqTran <- sapply(1:length(tranMat),function(x) 
 	#		any(sapply((1:length(tranMat))[-x],function(y) identical(tranMat[,,x],tranMat[,,y]))))	
 	#hist(sumTran)
-	if(nSol==1){
-		maxPars<-1
-		tranMat<-tranMat[,,1,drop=FALSE]
-		edgeSol<-edgeSol[,,1,drop=FALSE]
+	if(nSol == 1){
+		maxPars <- 1
+		tranMat <- tranMat[,,1,drop = FALSE]
+		edgeSol <- edgeSol[,,1,drop = FALSE]
 	}else{
-		maxPars<-which(sumTran==min(sumTran))
+		maxPars <- which(sumTran == min(sumTran))
 		if(maxParsimony){
 			#select only most parsimonious solutions
-			solMat<-solMat[,maxPars,drop=FALSE]
-			tranMat<-tranMat[,,maxPars,drop=FALSE]
-			sumTran<-sumTran[maxPars]
+			solMat <- solMat[,maxPars,drop = FALSE]
+			tranMat <- tranMat[,,maxPars,drop = FALSE]
+			sumTran <- sumTran[maxPars]
 			}
 		}
 	#get # of gains and # of losses and # of no-change for each transition matrix
-	tranSumChange<-t(sapply(lapply(1:dim(tranMat)[3],function(y) tranMat[,,y]),function(x) 
+	tranSumChange <- t(sapply(lapply(1:dim(tranMat)[3],function(y) tranMat[,,y]),function(x) 
 		c(sum(x[upper.tri(x)]),sum(diag(x)),sum(x[lower.tri(x)]))))
-	colnames(tranSumChange)<-c("Gains","NoChanges","Losses")
+	colnames(tranSumChange) <- c("Gains","NoChanges","Losses")
 	#get the minimum solution
-	minTran<-apply(tranMat,c(1,2),min)
+	minTran <- apply(tranMat,c(1,2),min)
 	#
-	funcMess<-c(paste0(nSol," potential solutions under ",type,", ",length(maxPars)," most parsimonious solutions found"),
+	funcMess <- c(paste0(nSol," potential solutions under ",type,", ",length(maxPars)," most parsimonious solutions found"),
 		ifelse(nSol>randomMax,"Solutions sampled stochastically","Solutions exhaustively checked"))
 	if(printMinResult){
 		if(length(maxPars)<6){
-			print(list(message=funcMess,sumTransitions=sumTran,
-				transitionArray=tranMat,minTransitions=minTran))
+			print(list(message = funcMess,sumTransitions = sumTran,
+				transitionArray = tranMat,minTransitions = minTran))
 		}else{
-			print(list(message=funcMess,sumTransitions=sumTran,minTransitions=minTran))
+			print(list(message = funcMess,sumTransitions = sumTran,minTransitions = minTran))
 			}
 		}
-	return(invisible(list(message=funcMess,sumTransitions=sumTran,minTransitions=minTran,
-		solutionArray=edgeSol,transitionArray=tranMat,transitionSumChanges=tranSumChange))) #
+	return(invisible(list(message = funcMess,sumTransitions = sumTran,minTransitions = minTran,
+		solutionArray = edgeSol,transitionArray = tranMat,transitionSumChanges = tranSumChange))) #
 	}
 
 
 
 #' @rdname minCharChange
 #' @export
-ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL, ambiguity= c(NA, "?"),
-	dropAmbiguity=FALSE, polySymbol="&", contrast=NULL, returnContrast=FALSE){
+ancPropStateMat <- function(trait, tree, orderedChar = FALSE, type = "MPR", cost = NULL, ambiguity =  c(NA, "?"),
+	dropAmbiguity = FALSE, polySymbol = "&", contrast = NULL, returnContrast = FALSE){
 	#wrapper for phangorn's ancestral.pars that returns a fully labeled matrix indicating
 		#the relative frequency of a node being reconstructed under a given state
 	#require(phangorn)
 	#convert trait to a character vector
-	saveNames<-names(trait)
-	trait<-as.character(trait)
-	names(trait)<-saveNames
+	saveNames <- names(trait)
+	trait <- as.character(trait)
+	names(trait) <- saveNames
 	#check trait
 	if(!is.vector(trait) | !is.character(trait)){
 		stop("trait must be vector of state data for a single character, that can be coerced to type 'character'")}
@@ -453,40 +449,40 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL,
 	if(!is.logical(orderedChar)){
 		stop("orderedChar must be a logical class element")
 		}
-	if(length(orderedChar)!=1){
+	if(length(orderedChar) != 1){
 		stop("orderedChar must be a single logical element")
 		}
-	#return error if cost is not null and type=ACCTRAN
-	if(type=="ACCTRAN" & !is.null(cost)){
+	#return error if cost is not null and type = ACCTRAN
+	if(type == "ACCTRAN" & !is.null(cost)){
 		stop("cost matrix is inapplicable if ACCTRAN algorithm is used")}
-	# return error if tree is not fully resolved and type=ACCTRAN
-	if(type=="ACCTRAN" & !is.binary(tree)){
+	# return error if tree is not fully resolved and type = ACCTRAN
+	if(type == "ACCTRAN" & !is.binary(tree)){
 		stop("tree must be fully resolved if ACCTRAN algorithm is used")}
-	#return error if cost is not null and orderedChar=TRUE
+	#return error if cost is not null and orderedChar = TRUE
 	if(orderedChar & !is.null(cost)){
 		stop("Cannot treat character as ordered; cost matrix inapplicable under ACCTRAN")}
 	#check polySymbol
-	if(length(polySymbol)!=1){stop("polySymbol must be length 1, multiple (or zero) polySymbols not allowed")}
+	if(length(polySymbol) != 1){stop("polySymbol must be length 1, multiple (or zero) polySymbols not allowed")}
 	#check names
 	if(is.null(names(trait))){
-		if(Ntip(tree)!=length(trait)){
+		if(Ntip(tree) != length(trait)){
 			stop("names(trait) missing and length(trait) isn't same as number of tips in tree!")
 		}else{
-			names(trait)<-tree$tip.label
+			names(trait) <- tree$tip.label
 			message("names(trait) missing \n","trait values will be assigned to taxa exactly as in tree$tip.label")
 			}
 		}
 	if(dropAmbiguity){
 		#if dropAmbiguity, drop all taxa with ambiguity
-		isAmbig<-sapply(trait,function(x) any(sapply(ambiguity,identical,x)))
-		whichAmbig<-names(trait)[isAmbig]
+		isAmbig <- sapply(trait,function(x) any(sapply(ambiguity,identical,x)))
+		whichAmbig <- names(trait)[isAmbig]
 		#make message
 		message(paste0("dropping following taxa with ambiguious codings: ",
-			whichAmbig,collapse="\n    "))
+			whichAmbig,collapse = "\n    "))
 		#drop from trait
-		trait<-trait[!isAmbig]
+		trait <- trait[!isAmbig]
 		#drop from tree
-		tree<-drop.tip(phy=tree,tip=whichAmbig)
+		tree <- drop.tip(phy = tree,tip = whichAmbig)
 		if(Ntip(tree)<2){stop("Too few non-ambiguous taxa remain on the tree to continue analysis")}
 		}
 	#if contrast isn't null, ignore polySymbol and ambiguity
@@ -495,42 +491,42 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL,
 	}else{
 		#if contrast isn't null..
 		#if anything is polymorphic, need to build contrast table
-		anyPoly<-any(sapply(unique(c(trait)),grepl,pattern=polySymbol))
+		anyPoly <- any(sapply(unique(c(trait)),grepl,pattern = polySymbol))
 		if(anyPoly){
 			#Need to build a contrasts matrix
-			contrast<-buildContrastPoly(trait=trait,
-					polySymbol=polySymbol, ambiguity=ambiguity)
+			contrast <- buildContrastPoly(trait = trait,
+					polySymbol = polySymbol, ambiguity = ambiguity)
 			}
 		}
 	#now if contrast exists, get trueStates from it, otherwise figure them out relative to ambiguity
 	if(is.null(contrast)){
-		unqState<-unique(c(trait))
+		unqState <- unique(c(trait))
 		#identify unique non-ambiguous states
-		isAmbigState<-sapply(unqState,function(x) any(sapply(ambiguity,identical,x)))
+		isAmbigState <- sapply(unqState,function(x) any(sapply(ambiguity,identical,x)))
 		trueStates <- sort(unqState[!isAmbigState], na.last = TRUE)
 	}else{
 		#get trueStates from contrast
-		trueStates<-colnames(contrast)
+		trueStates <- colnames(contrast)
 		}
 	#basic data structure setup
-	char1<-matrix(trait,,1)
-	rownames(char1)<-names(trait)
+	char1 <- matrix(trait,,1)
+	rownames(char1) <- names(trait)
 	#translate into something for phangorn to read
-	char1<-phyDat(char1,type="USER",levels=trueStates,
-		ambiguity=ambiguity,contrast=contrast,compress=FALSE)
+	char1 <- phyDat(char1,type = "USER",levels = trueStates,
+		ambiguity = ambiguity,contrast = contrast,compress = FALSE)
 	#if ordered
 	if(orderedChar){
 		if(!is.null(cost)){stop("Do not give cost matrix if you set argument cost = TRUE")}
 		#if orderedChar 
-		nStates<-length(trueStates)
-		cost<-matrix(,nStates,nStates)
+		nStates <- length(trueStates)
+		cost <- matrix(,nStates,nStates)
 		for(i in 1:nStates){for(j in 1:nStates){
-			cost[i,j]<-abs(i-j)
+			cost[i,j] <- abs(i-j)
 			}}
-		colnames(cost)<-rownames(cost)<-trueStates
+		colnames(cost) <- rownames(cost) <- trueStates
 		}
 	#get anc states
-	anc1<-ancestral.pars(tree,char1,type=type,cost=cost)
+	anc1 <- ancestral.pars(tree,char1,type = type,cost = cost)
 	#check to make sure trait data isn't empty
 	if(length(anc1[[1]])<1){
 		stop("Ancestral reconstruction returned by ancestral.pars is empty, check arguments involving state codings")}
@@ -538,75 +534,75 @@ ancPropStateMat<-function(trait, tree, orderedChar=FALSE, type="MPR", cost=NULL,
 	contrastTable <- attr(anc1, "contrast")
 	dimnames(contrastTable) <- list(attr(anc1, "allLevels"), attr(anc1, "levels"))
 	#turn into a col-per-state matrix with each row a node or tip, numbered as in edge
-	anc2<-matrix(unlist(anc1),,length(attr(anc1, "levels")),byrow=T)
+	anc2 <- matrix(unlist(anc1),,length(attr(anc1, "levels")),byrow = T)
 	#based on conversation with Klaus on 04-17-15
 		#will treat output as if it was always ordered exactly as tips and nodes
 		#are numbered in $edge; should be as basic as numbering 1:nrow
-	rownames(anc2)<-1:nrow(anc2)
+	rownames(anc2) <- 1:nrow(anc2)
 	#does that make sense for the tree
-	if(nrow(anc2) != (Nnode(tree)+Ntip(tree))){
+	if(nrow(anc2)  !=  (Nnode(tree)+Ntip(tree))){
 		stop("ancestral state matrix has wrong number of rows??")}
 	#and now name the columns by the levels
-	colnames(anc2)<-attributes(anc1)$levels
+	colnames(anc2) <- attributes(anc1)$levels
 	if(returnContrast){
-		result<-contrastTable
+		result <- contrastTable
 	}else{
-		result<-anc2
+		result <- anc2
 		}
 	return(result)
 	}
 	
 #hidden internal function
-buildContrastPoly<-function(trait, polySymbol="&", ambiguity=c(NA, "?")){
+buildContrastPoly <- function(trait, polySymbol = "&", ambiguity = c(NA, "?")){
 	#test if any states with polySymbol
-	unqState<-unique(c(trait))
-	containPoly<-sapply(unqState,grepl,pattern=polySymbol)
+	unqState <- unique(c(trait))
+	containPoly <- sapply(unqState,grepl,pattern = polySymbol)
 	#identify unique non-poly, non-ambiguous states
-	isAmbig<-sapply(unqState,function(x) any(sapply(ambiguity,identical,x)))
+	isAmbig <- sapply(unqState,function(x) any(sapply(ambiguity,identical,x)))
 	trueStates <- sort(unqState[!containPoly & !isAmbig], na.last = TRUE)
 	#WAIT also need to include all partial states from poly codings 06-04-15
 		# a state might not be listed 'alone'
 		# might only be listed for polymorphic taxon!
 	#unique polymorphic codings
-	polyState<-sort(unqState[containPoly])
+	polyState <- sort(unqState[containPoly])
 	#break the strings up
-	polyStateBr<-strsplit(polyState,polySymbol)	#so polySymbol needs to be length=1
+	polyStateBr <- strsplit(polyState,polySymbol)	#so polySymbol needs to be length = 1
 	#get unique true states listed by poly codings
-	uniquePolyTrueStates<-unique(unlist(polyStateBr))
-	trueStates<-sort(unique(c(trueStates,uniquePolyTrueStates)))
+	uniquePolyTrueStates <- unique(unlist(polyStateBr))
+	trueStates <- sort(unique(c(trueStates,uniquePolyTrueStates)))
 	#now get number of trueStates
-	nTrue<-length(trueStates)	
+	nTrue <- length(trueStates)	
 	#
 	## now create contrast table
 	#create contrastTrue
-	contrastTrue<-matrix(0,nTrue,nTrue)
-	diag(contrastTrue)<-1
-	colnames(contrastTrue)<-trueStates
-	rowNamesGo<-trueStates
+	contrastTrue <- matrix(0,nTrue,nTrue)
+	diag(contrastTrue) <- 1
+	colnames(contrastTrue) <- trueStates
+	rowNamesGo <- trueStates
 	#now ambiguous characters
 	if(length(ambiguity)>0){
 		#now create rows for ambiguous characters
-		contrastAmbig<-matrix(1,length(ambiguity),nTrue)
-		rowNamesGo<-c(rowNamesGo,ambiguity)
+		contrastAmbig <- matrix(1,length(ambiguity),nTrue)
+		rowNamesGo <- c(rowNamesGo,ambiguity)
 	}else{
-		contrastAmbig<-NULL
+		contrastAmbig <- NULL
 		}
 	#now polymorphic characters
 		#break polymorphic states down into contrast rows
-	polyMatch<-sapply(polyStateBr,function(x) match(x, trueStates))
+	polyMatch <- sapply(polyStateBr,function(x) match(x, trueStates))
 	#number of unique polymorphic codings
-	nPoly<-length(polyState)
-	contrastPoly<-matrix(0,nPoly,nTrue)
-	contrastPolyRaw<-numeric(nTrue) #get a bunch of zeroes
+	nPoly <- length(polyState)
+	contrastPoly <- matrix(0,nPoly,nTrue)
+	contrastPolyRaw <- numeric(nTrue) #get a bunch of zeroes
 	for(i in 1:nPoly){
-		newContrast<-contrastPolyRaw
-		newContrast[polyMatch]<-1		#fill in with 1s
-		contrastPoly[i,]<-newContrast
+		newContrast <- contrastPolyRaw
+		newContrast[polyMatch] <- 1		#fill in with 1s
+		contrastPoly[i,] <- newContrast
 		}
-	rowNamesGo<-c(rowNamesGo, polyState)
+	rowNamesGo <- c(rowNamesGo, polyState)
 	#now combine	
-	contrast<-rbind(contrastTrue,contrastAmbig,contrastPoly)
-	rownames(contrast)<-rowNamesGo
+	contrast <- rbind(contrastTrue,contrastAmbig,contrastPoly)
+	rownames(contrast) <- rowNamesGo
 	#return contrast table
 	return(contrast)
 	}

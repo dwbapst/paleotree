@@ -13,7 +13,7 @@ setRootAges(trees, fixedAges = NULL)
 \item{tree}{A phylogeny with branch lengths of type "phylo".}
 
 \item{fixedAges}{A table of fixed ages for tip taxa, generally as a dataframe where the
-first column is of type character, and the second column is of type numeric. =Such a table is automatically
+first column is of type character, and the second column is of type numeric.  = Such a table is automatically
 generated as an attribute of the output from \code{\link{obtainDatedPosteriorTreesMrB}}, 
 when argument \code{getFixedTimes = TRUE}.}
 
@@ -26,7 +26,9 @@ The input tree is output, with a new \code{$root.time} element.
 This function uses a table of fixed dates for operational-taxon-units (tip taxa) to calculate the absolute
 age of the root divergence for a tree with branch lengths, and then appends this root age to the tree
 as a \code{$root.time} element, and then outputs the tree. Function \code{setRootAges} is a wrapper for
-\code{setRootAge} for use with multiple trees in a "multiPhylo" object.
+\code{setRootAge} for use with multiple trees in a "multiPhylo" object. This function was mainly written for
+dealing with trees of extinct taxa dated in units of absolute time from Bayesian analyses, such as with MrBayes, 
+with trees scaled to time units by functions such as \code{\link{obtainDatedPosteriorTreesMrB}}.
 }
 \details{
 Trees of fossil taxa come with one issue rarely encountered by those dealing with molecular
@@ -35,7 +37,7 @@ majority of molecular phylogenies, it can be assumed the youngest tips occur at 
 the modern. This knowledge gives the tree an anchor for figuring out the absolute timing of events.
 Many programs and other software designed for depicting and analyzing phylogenetic hypotheses
 assumes such an apparent absolute time-scale (in R and elsewhere). A tree of Paleozoic brachiopods that include no
-extant members has no such anchor at time=0, and such a default assumption in available
+extant members has no such anchor at time = 0, and such a default assumption in available
 software can be misleading. The $root.time protocol is intended to grant this
 absolute time-scale to a dated tree of fossil taxa, and is appended by most of the
 dating functions in package paleotree. However, trees dated by other approaches, such as via tip-dating in
@@ -44,17 +46,20 @@ programs such as MrBayes and BEAST, will not have $root.time elements when read 
 \examples{
 
 set.seed(444)
-tree<-rtree(10)
-tipAges<-cbind(c("t1","t2"), c(15,10))
+tree <- rtree(10)
+tipAges <- cbind(c("t1","t2"), c(15,10))
 
-absTimeTree<-setRootAge(tree=tree,tipAges)
+absTimeTree <- setRootAge(tree = tree,tipAges)
 
 plot(absTimeTree)
 axisPhylo()
 
 }
 \seealso{
-See argument \code{\link{obtainDatedPosteriorTreesMrB}}
+\code{setRootAges} is designed to work by default with trees on relative
+time-scales dated by \code{\link{obtainDatedPosteriorTreesMrB}}, particularly
+when the argument with \code{getFixedTimes = TRUE} is used to obtain fixed tip
+ages for anchoring the tree against an absolute time-scale.
 }
 \author{
 David W. Bapst

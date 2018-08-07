@@ -55,8 +55,8 @@ still alive, the probability of sampling them later is probably 1...).
 Should be a value of 0 to 1, NULL, or can be simply "fixed", the default option.
 This default "fixed" option allows \code{make_inverseSurv} to decide the value
 based on whether there is a modern interval (i.e. an interval that is 
-\code{c(0,0)}) or not: if there is one, then \code{PA_n=1}, if not, 
-then \code{PA_n=0}. If NULL, PA_n is treated as an additional free
+\code{c(0,0)}) or not: if there is one, then \code{PA_n = 1}, if not, 
+then \code{PA_n = 0}. If NULL, PA_n is treated as an additional free
 parameter in the output model.}
 
 \item{PB_1}{The probability of sampling a taxon before the first interval 
@@ -157,7 +157,7 @@ conceivable purpose for setting plotPar to FALSE is to get the calculated rates,
 be returned invisibly if plotPar is FALSE.}
  \item{ratesPerInt}{If FALSE, the default option, the rates plotted and returned will
 be in units per lineage-time units, if those rates were being treated as rates for a
-continuous-time process (i.e. p_cont=TRUE and q_cont=TRUE for p and q, respectively,
+continuous-time process (i.e. p_cont = TRUE and q_cont = TRUE for p and q, respectively,
 while r is always per lineage-time units). Otherwise, the respective rate will be in
 units per lineage-interval. If ratesPerInt is TRUE instead, then \emph{all} rates, even
 rates modeled as continuous-time process, will be returned as per lineage-interval rates,
@@ -210,30 +210,30 @@ thus forewarned of this essentially 'beta' status of this function.
 
 # let's simulate some taxon ranges from an imperfectly sampled fossil record
 set.seed(444)
-record <- simFossilRecord(p=0.1, q=0.1, nruns=1,
-nTotalTaxa=c(30,40), nExtant=0)
+record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
-rangesCont <- sampleRanges(taxa,r=0.5)
+rangesCont <- sampleRanges(taxa,r = 0.5)
 #bin the ranges into discrete time intervals
-rangesDisc <- binTimeData(rangesCont,int.length=5)
+rangesDisc <- binTimeData(rangesCont,int.length = 5)
 
 #apply make_inverseSurv
-likFun<-make_inverseSurv(rangesDisc)
+likFun <- make_inverseSurv(rangesDisc)
 #use constrainParPaleo to make the model time-homogenous
-  	#match.all~match.all will match parameters so only 2 pars: p=q and r
-constrFun<-constrainParPaleo(likFun,match.all~match.all)
+  	#match.all~match.all will match parameters so only 2 pars: p = q and r
+constrFun <- constrainParPaleo(likFun,match.all~match.all)
 results <- optim(parInit(constrFun), constrFun,
-      lower=parLower(constrFun), upper=parUpper(constrFun),
-      method="L-BFGS-B", control=list(maxit=1000000))
+      lower = parLower(constrFun), upper = parUpper(constrFun),
+      method = "L-BFGS-B", control = list(maxit = 1000000))
 results
 
 #plot the results
-constrFun(results$par, altMode=TRUE)
+constrFun(results$par, altMode = TRUE)
 
 #unconstrained function with ALL of 225 parameters!!!
     # this will take forever to converge, so it isn't run
-optim(parInit(likFun),likFun,lower=parLower(likFun),upper=parUpper(likFun),
-      method="L-BFGS-B",control=list(maxit=1000000))
+optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
+      method = "L-BFGS-B",control = list(maxit = 1000000))
 }
 }
 \references{

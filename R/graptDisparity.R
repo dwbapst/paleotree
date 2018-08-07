@@ -101,11 +101,11 @@
 #' taxicDivDisc(graptRanges)
 #'
 #' #but the actual study interval for the data is much smaller
-#' abline(v=448.57,lwd=3) #start of study interval
-#' abline(v=439.37,lwd=3) #end of study interval
+#' abline(v = 448.57,lwd = 3) #start of study interval
+#' abline(v = 439.37,lwd = 3) #end of study interval
 #'
 #' #plot diversity curve just for study interval
-#' taxicDivDisc(graptRanges, timelims=c(448.57,439.37))
+#' taxicDivDisc(graptRanges, timelims = c(448.57,439.37))
 #'
 #' ############
 #'
@@ -113,26 +113,26 @@
 #'    #to calculate yourself, see code below in DoNotRun section
 #' 
 #' #now, is the diagonal zero? (it should be)
-#' all(diag(graptDistMat)==0)
+#' all(diag(graptDistMat) == 0)
 #' 
 #' #now, is the matrix symmetric? (it should be)
 #' isSymmetric(graptDistMat)
 #' 
 #' #can apply cluster analysis
 #' clustRes <- hclust(as.dist(graptDistMat))
-#' plot(clustRes,labels=FALSE)
+#' plot(clustRes,labels = FALSE)
 #' 
 #' #use ape to plot with colors at the tips
-#' dev.new(width=15) 	# for a prettier plot
-#' plot.phylo(as.phylo(clustRes),show.tip.label=FALSE,
-#' 		no.margin=TRUE,direction="upwards")
-#' tiplabels(pch=16,col=grpColor[groupID+1])
-#' legend("bottomright",legend=grpLabel,col=grpColor,pch=16)
+#' dev.new(width = 15) 	# for a prettier plot
+#' plot.phylo(as.phylo(clustRes),show.tip.label = FALSE,
+#' 		no.margin = TRUE,direction = "upwards")
+#' tiplabels(pch = 16,col = grpColor[groupID+1])
+#' legend("bottomright",legend = grpLabel,col = grpColor,pch = 16)
 #' dev.set(2)
 #' 
 #' #can apply PCO (use lingoes correction to account for negative values
 #'    #resulting from non-euclidean matrix
-#' pco_res <- pcoa(graptDistMat,correction="lingoes")
+#' pco_res <- pcoa(graptDistMat,correction = "lingoes")
 #' 
 #' #relative corrected eigenvalues
 #' rel_corr_eig <- pco_res$values$Rel_corr_eig
@@ -148,10 +148,10 @@
 #' #well let's look at those PCO axes anyway
 #' layout(1)
 #' pco_axes <- pco_res$vectors
-#' plot(pco_axes[,1],pco_axes[,2],pch=16,col=grpColor[groupID+1],
-#'    xlab=paste("PCO Axis 1, Rel. Corr. Eigenvalue =",round(rel_corr_eig[1],3)),
-#'    ylab=paste("PCO Axis 2, Rel. Corr. Eigenvalue =",round(rel_corr_eig[2],3)))
-#' legend("bottomright",legend=grpLabel,col=grpColor,pch=16,ncol=2,cex=0.8)
+#' plot(pco_axes[,1],pco_axes[,2],pch = 16,col = grpColor[groupID+1],
+#'    xlab = paste("PCO Axis 1, Rel. Corr. Eigenvalue  = ",round(rel_corr_eig[1],3)),
+#'    ylab = paste("PCO Axis 2, Rel. Corr. Eigenvalue  = ",round(rel_corr_eig[2],3)))
+#' legend("bottomright",legend = grpLabel,col = grpColor,pch = 16,ncol = 2,cex = 0.8)
 #' 
 #' 
 #' ##########m##############
@@ -164,14 +164,14 @@
 #' #non-identical discrete states = difference for discrete traits
 #' #non-overlapping ranges for continuous characters = difference for cont traits
 #' 
-#' distMat<-matrix(,nspec,nspec)
-#' rownames(distMat)<-colnames(distMat)<-rownames(graptCharMatrix)
+#' distMat <- matrix(,nspec,nspec)
+#' rownames(distMat) <- colnames(distMat) <- rownames(graptCharMatrix)
 #' for(i in 1:nspec){ for(j in 1:nspec){    #calculate for each pair of species
 #'    #discrete characters
 #'    di <- discChar[i,]     #discrete character vector for species i
 #'    dj <- discChar[j,]     #discrete character vector for species j
 #'    #now calculate pair-wise differences for non-missing characters
-#'    discDiff <- (di!=dj)[!is.na(di)&!is.na(dj)] #logical vector
+#'    discDiff <- (di != dj)[!is.na(di)&!is.na(dj)] #logical vector
 #'    #
 #'    #continuous characters: need another for() loop
 #'    contDiff <- numeric()
@@ -192,20 +192,20 @@
 #' #ehh, numerical rounding issues...
 #' 
 #' #A somewhat speeder alternative to calculate a distance matrix
-#' distMat<-matrix(,nspec,nspec)
-#' rownames(distMat)<-colnames(distMat)<-rownames(graptCharMatrix)
+#' distMat <- matrix(,nspec,nspec)
+#' rownames(distMat) <- colnames(distMat) <- rownames(graptCharMatrix)
 #' for(i in 1:(nspec-1)){ for(j in (i+1):nspec){    #calculate for each pair of species
 #'    #now calculate pair-wise differences for non-missing characters
-#'    discDiff <- (discChar[i,]!=discChar[j,])[
+#'    discDiff <- (discChar[i,] != discChar[j,])[
 #'       !is.na(discChar[i,])&!is.na(discChar[j,])] #logical vector
 #'    #continuous characters: if they do not overlap, a min must be greater than a max value
-#'       contDiff<-sapply(1:4,function(ct)
+#'       contDiff <- sapply(1:4,function(ct)
 #'             cMinChar[i,ct]>cMaxChar[j,ct] | cMinChar[j,ct]>cMaxChar[i,ct])
 #'    #remove NAs, combine, divide total difference 
 #'    distMat[i,j] <- distMat[j,i] <- sum(c(discDiff,contDiff[!is.na(contDiff)]))/length(
 #'         c(discDiff,contDiff[!is.na(contDiff)]))
 #'    }}
-#' diag(distMat)<-0
+#' diag(distMat) <- 0
 #' 
 #' #but is it identical to the distance matrix already provided?
 #' identical(distMat,graptDistMat)

@@ -1,3 +1,7 @@
+Version - 3.1.1 - 07-05-18
+-Fixed bug with createMrBayesTipDatingNexus to avoid 'morphNexus not found error' when a pre-existing NEXUS file is used but the morphological matrix doesn't need to be entirely reconstituted. Thanks to Struan Henderson for finding this bug.
+-
+
 Version - 3.1.0 - 07-02-18 (Released to CRAN)
 -CRAN release
 -Modified code checking for unique solutions in minCharChange on advice of Uwe Ligges, to avoid timing-out when tested on openBLAS systems

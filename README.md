@@ -4,25 +4,37 @@ paleotree is an R package for transforming, 'a posteriori' time-scaling, and mod
 
 The most recent public release of the code is on CRAN at:
 
-	http://cran.r-project.org/web/packages/paleotree/index.html
+	[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/paleotree)](https://cran.r-project.org/package=paleotree)
 
-You can install the most recent public release version of paleotree in R using:
+You can install the most recent public release version of `paleotree` in R from CRAN using:
 
-	install.packages("paleotree")
-
-The latest pre-release version of paleotree can be found at github:
+```
+install.packages("paleotree")
+```
+	
+The latest pre-release version of `paleotree` can be found at github:
 
 	https://github.com/dwbapst/paleotree
 	
 The most recent commit is currently: [![Build Status](https://travis-ci.org/dwbapst/paleotree.svg?branch=master)](https://travis-ci.org/dwbapst/paleotree) (Travis CI)
 	
-You can install this latest development version using the R function install_github in the package 'devtools':
+You can install this latest development version using the R function `install_github` in the package `devtools`:
 
-	devtools::install_github("dwbapst/paleotree")
+```
+devtools::install_github("dwbapst/paleotree")
+```
+	
+The above command will install the **master** branch (as the default option), which should be the most recent stable release (ideally the CRAN release, and thus should be identical to installing `paleotree` from CRAN). There will also generally be an in-development branch where the code may be in a state of change, with new features and bug-fixes; for example right now the development branch is named **developmentBranch** and can be specified with the `ref = ` argument:
 
+```
+devtools::install_github("dwbapst/paleotree", ref="developmentBranch")
+```	
+	
 Once installed, you can check the version number of your paleotree install using the R function packageVersion:
 
-	packageVersion("paleotree")
+```
+packageVersion("paleotree")
+```
 
 If you use paleotree in your research, you can cite my paper describing paleotree in Methods in Ecology and Evolution:
 
@@ -32,7 +44,9 @@ If you use paleotree in your research, you can cite my paper describing paleotre
 	
 You can also call the citation for paleotree from within R, using the citation function:
 	
-	citation("paleotree")
+```
+citation("paleotree")
+```
 	
 This code is mainly authored by David Bapst, with some functions authored by Peter Wagner, and offered under CC0.
 

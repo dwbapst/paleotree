@@ -25,7 +25,7 @@ bifurcation.
 }
 \examples{
 
-tree<-rtree(100)
+tree <- rtree(100)
 rootSplit(tree)
 
 }

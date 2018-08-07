@@ -50,13 +50,13 @@ character data.
 }
 \examples{
 set.seed(444)
-tree<-rtree(10)
+tree <- rtree(10)
 createMrBayesConstraints(tree)
-createMrBayesConstraints(tree,partial=FALSE)
+createMrBayesConstraints(tree,partial = FALSE)
 
 \dontrun{
 
-createMrBayesConstraints(tree,file="topoConstraints.txt")
+createMrBayesConstraints(tree,file = "topoConstraints.txt")
 
 }
 }

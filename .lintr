@@ -1,0 +1,21 @@
+linters: with_defaults( # available linters (07-11-18)
+			absolute_paths_linter, # checks that no absolute paths are used
+			assignment_linter,	# checks that '<-' is always used for assignment
+			object_usage_linter, # checks that closures have the proper usage using checkUsage
+			commented_code_linter, # checks that there is no commented code outside roxygen blocks (not sure what this does, is it only for .Rmd?)
+			multiple_dots_linter, # check that objects do not have.multiple.dots
+			object_length_linter, # check that objects do are not very long
+			line_length_linter(120),  # check the line length of both comments and code is less than length (I like max of ~120)
+			closed_curly_linter(allow_single_line = TRUE), # closed curly braces should always be on their own line unless they follow an }else{ -- allow_single_line = TRUE allows opening and closing to be on same line
+			open_curly_linter(allow_single_line = TRUE), # opening curly braces are never on their own line and are always followed by a newline -- allow_single_line = TRUE allows opening and closing to be on same line
+			no_tab_linter = NULL, # I like tabs, dangit
+			infix_spaces_linter = NULL, # check that all infix operators have spaces around them. I don't like this
+			commas_linter = NULL, # check that all commas are followed by spaces, but do not have spaces before them - but I need weird commas sometimes
+			camel_case_linter = NULL, # I like camelCase
+			snake_case_linter = NULL, # snake_case is sometimes necessary
+			trailing_blank_lines_linter = NULL, # check there are no trailing blank lines. who cares 
+			trailing_whitespace_linter = NULL, # check there are no trailing whitespace characters. I really don't care
+			single_quotes_linter = NULL, # checks that only single quotes are used to delimit string contestants. uhhhh why does this even matter
+			spaces_left_parentheses_linter = NULL, # check that parentheses & square brackets do not have spaces directly inside them. doesn't seem important
+			spaces_inside_linter = NULL	# check that all left parentheses have a space before them unless they are in a function call. can't have spaces in square brackets? Why is this a rule?
+			)

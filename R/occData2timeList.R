@@ -80,14 +80,14 @@
 #' @examples
 #' data(graptPBDB)
 #' 
-#' graptOccSpecies<-taxonSortPBDBocc(graptOccPBDB,rank="species",onlyFormal=FALSE)
-#' graptTimeSpecies<-occData2timeList(occList=graptOccSpecies)
+#' graptOccSpecies <- taxonSortPBDBocc(graptOccPBDB,rank = "species",onlyFormal = FALSE)
+#' graptTimeSpecies <- occData2timeList(occList = graptOccSpecies)
 #' 
 #' head(graptTimeSpecies[[1]])
 #' head(graptTimeSpecies[[2]])
 #' 
-#' graptOccGenus<-taxonSortPBDBocc(graptOccPBDB,rank="genus",onlyFormal=FALSE)
-#' graptTimeGenus<-occData2timeList(occList=graptOccGenus)
+#' graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,rank = "genus",onlyFormal = FALSE)
+#' graptTimeGenus <- occData2timeList(occList = graptOccGenus)
 #' 
 #' layout(1:2)
 #' taxicDivDisc(graptTimeSpecies)
@@ -97,7 +97,7 @@
 #' # let's compare to the other option, "occRange"
 #' 	# for species
 #' 
-#' graptOccRange<-occData2timeList(occList=graptOccSpecies, intervalType="occRange")
+#' graptOccRange <- occData2timeList(occList = graptOccSpecies, intervalType = "occRange")
 #' 
 #' #we would expect no change in the diversity curve
 #' 	#because there are only changes in th
@@ -114,9 +114,9 @@
 #'
 #' # write a simple function for getting uncertainty in first and last
 #' 		# appearance dates from a timeList object
-#' sumAgeUncert<-function(timeList){
-#' 	fourDate<-timeList2fourDate(timeList)
-#' 	perOcc<-(fourDate[,1]-fourDate[,2])+(fourDate[,3]-fourDate[,4])
+#' sumAgeUncert <- function(timeList){
+#' 	fourDate <- timeList2fourDate(timeList)
+#' 	perOcc <- (fourDate[,1]-fourDate[,2])+(fourDate[,3]-fourDate[,4])
 #' 	sum(perOcc)
 #' 	}
 #'
@@ -130,7 +130,7 @@
 #' 1-(sumAgeUncert(graptTimeSpecies)/sumAgeUncert(graptOccRange))
 #' 
 #' #a different way of doing it
-#' dateChange<-timeList2fourDate(graptTimeSpecies)-timeList2fourDate(graptOccRange)
+#' dateChange <- timeList2fourDate(graptTimeSpecies)-timeList2fourDate(graptOccRange)
 #' apply(dateChange,2,sum)
 #' #total amount of uncertainty removed by dateRange algorithm
 #' sum(abs(dateChange))
@@ -140,86 +140,86 @@
 #' @name occData2timeList
 #' @rdname occData2timeList
 #' @export
-occData2timeList<-function(occList,intervalType="dateRange"){
-		#intervalType="dateRange"
+occData2timeList <- function(occList,intervalType = "dateRange"){
+		#intervalType = "dateRange"
 	#the following is all original, though inspired by paleobioDB code
 	#check intervalType
-	if(!any(intervalType==c("occRange","dateRange","zoneOverlap"))){
+	if(!any(intervalType == c("occRange","dateRange","zoneOverlap"))){
 		stop("intervalType must be one of 'dateRange' or 'occRange' or 'zoneOverlap'")}
 	#get just occurrence data with pullOccListData
-	taxaInt<-pullOccListData(occList)
-	if(intervalType=="occRange"){
+	taxaInt <- pullOccListData(occList)
+	if(intervalType == "occRange"){
 		#get earliest and latest intervals the taxa appear in
-		taxaMin<-lapply(taxaInt,function(x) x[x[,1]==max(x[,1]),,drop=FALSE])
-		taxaMax<-lapply(taxaInt,function(x) x[x[,2]==min(x[,2]),,drop=FALSE])
+		taxaMin <- lapply(taxaInt,function(x) x[x[,1] == max(x[,1]),,drop = FALSE])
+		taxaMax <- lapply(taxaInt,function(x) x[x[,2] == min(x[,2]),,drop = FALSE])
 		#get smallest intervals
-		taxaMin<-t(sapply(taxaMin,function(x) if(nrow(x)>1){
-			x[which((-apply(x,1,diff))==min(-apply(x,1,diff)))[1],]
+		taxaMin <- t(sapply(taxaMin,function(x) if(nrow(x)>1){
+			x[which((-apply(x,1,diff)) == min(-apply(x,1,diff)))[1],]
 			}else{x}))
-		taxaMax<-t(sapply(taxaMax,function(x) if(nrow(x)>1){
-			x[which((-apply(x,1,diff))==min(-apply(x,1,diff)))[1],]
+		taxaMax <- t(sapply(taxaMax,function(x) if(nrow(x)>1){
+			x[which((-apply(x,1,diff)) == min(-apply(x,1,diff)))[1],]
 			}else{x}))
 		#transpose and remove weird list attribute
-		#taxaMin<-t(taxaMin)
-		#taxaMax<-t(taxaMax)
-		taxaMin<-cbind(unlist(taxaMin[,1]),unlist(taxaMin[,2]))
-		taxaMax<-cbind(unlist(taxaMax[,1]),unlist(taxaMax[,2]))
+		#taxaMin <- t(taxaMin)
+		#taxaMax <- t(taxaMax)
+		taxaMin <- cbind(unlist(taxaMin[,1]),unlist(taxaMin[,2]))
+		taxaMax <- cbind(unlist(taxaMax[,1]),unlist(taxaMax[,2]))
 		}
-	if(intervalType=="dateRange"){
+	if(intervalType == "dateRange"){
 		#this algorithm suggested by Jon Marcot
 			#should be smallest possible interval for FAD and LAD
 		#get the earliest early age and earliest latest age as taxaMin (FAD)
-		taxaMin<-t(sapply(taxaInt,function(x) apply(x,2,max)))
+		taxaMin <- t(sapply(taxaInt,function(x) apply(x,2,max)))
 		#get the earliest early age and earliest latest age as taxaMax (LAD)
-		taxaMax<-t(sapply(taxaInt,function(x) apply(x,2,min)))
+		taxaMax <- t(sapply(taxaInt,function(x) apply(x,2,min)))
 		}
-	if(intervalType=="zoneOverlap"){
+	if(intervalType == "zoneOverlap"){
 		#emulates behavior of PBDB Classic by John Alroy
 		#get earliest and latest intervals the taxa appear in
 			#these will be set of occurrences that overlap with min/max occs
-		taxaMin<-lapply(taxaInt,function(x) x[x[,1]==max(x[,1]),,drop=FALSE])
-		taxaMax<-lapply(taxaInt,function(x) x[x[,2]==min(x[,2]),,drop=FALSE])
+		taxaMin <- lapply(taxaInt,function(x) x[x[,1] == max(x[,1]),,drop = FALSE])
+		taxaMax <- lapply(taxaInt,function(x) x[x[,2] == min(x[,2]),,drop = FALSE])
 		#find the latest early age and earliest latest age for occs that overlap
-		taxaMin<-t(sapply(taxaMin,function(x) c(min(x[,1]),max(x[,2]))))
-		taxaMax<-t(sapply(taxaMax,function(x) c(min(x[,1]),max(x[,2]))))		
+		taxaMin <- t(sapply(taxaMin,function(x) c(min(x[,1]),max(x[,2]))))
+		taxaMax <- t(sapply(taxaMax,function(x) c(min(x[,1]),max(x[,2]))))		
 		}	
-	fourDate<-cbind(taxaMin,taxaMax)
-	timeList<-fourDate2timeList(fourDate)
-	rownames(timeList$taxonTimes)<-names(occList)
+	fourDate <- cbind(taxaMin,taxaMax)
+	timeList <- fourDate2timeList(fourDate)
+	rownames(timeList$taxonTimes) <- names(occList)
 	return(timeList)
 	}
 
 	
 # hidden function	
-pullOccListData<-function(occList){
+pullOccListData <- function(occList){
 	#need checks
 	#is occList a list
 	if(!is.list(occList)){stop("occList is not a list?")}
 	#are all elements of occList matrices
-	if(!(all(sapply(occList,inherits,what="data.frame")) | all(sapply(occList,inherits,what="matrix")))){
+	if(!(all(sapply(occList,inherits,what = "data.frame")) | all(sapply(occList,inherits,what = "matrix")))){
 		stop("All elements of occList must be all of type data.frame or type matrix")}
 	#pull first list entry as an example to check with
-	exOcc<-occList[[1]]
+	exOcc <- occList[[1]]
 	#test if all occList entries have same number of columns
-	if(!all(sapply(occList,function(x) ncol(x)==ncol(exOcc)))){
+	if(!all(sapply(occList,function(x) ncol(x) == ncol(exOcc)))){
 		stop("Not all occList entries have same number of columns?")}
 	#will assume all data given in this manner either has columns named "" and ""
 		#or has only two columns
-	if(any(colnames(exOcc)=="early_age") & any(colnames(exOcc)=="late_age")){
-		ageSelector<-c("early_age","late_age")
+	if(any(colnames(exOcc) == "early_age") & any(colnames(exOcc) == "late_age")){
+		ageSelector <- c("early_age","late_age")
  	}else{
-		if(any(colnames(exOcc)=="eag") & any(colnames(exOcc)=="lag")){
-			if(ncol(exOcc)!=2){
-				ageSelector<-1:2
+		if(any(colnames(exOcc) == "eag") & any(colnames(exOcc) == "lag")){
+			if(ncol(exOcc) != 2){
+				ageSelector <- 1:2
 			}else{
 				stop("Data is not a list of two-column matrics *and* lacks named age columns (from the PBDB)")
 				}
 		}else{
-			ageSelector<-c("early_age","late_age")
+			ageSelector <- c("early_age","late_age")
 			}
 		}
 	#get intervals in which taxa appear
-	taxaOcc<-lapply(occList,function(x) x[,ageSelector])
+	taxaOcc <- lapply(occList,function(x) x[,ageSelector])
 	return(taxaOcc)
 	}
 

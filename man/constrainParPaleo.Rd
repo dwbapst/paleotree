@@ -204,12 +204,12 @@ for the new constrained function.}
 \examples{
 #simulation example with make_durationFreqCont, with three random groups
 set.seed(444)
-record<-simFossilRecord(p=0.1, q=0.1, nruns=1,
-nTotalTaxa=c(30,40), nExtant=0)
-taxa<-fossilRecord2fossilTaxa(record)
-rangesCont <- sampleRanges(taxa,r=0.5)
-grp1 <- matrix(sample(1:3,nrow(taxa),replace=TRUE),,1)   #groupings matrix
-likFun <- make_durationFreqCont(rangesCont,groups=grp1)
+record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
+nTotalTaxa = c(30,40), nExtant = 0)
+taxa <- fossilRecord2fossilTaxa(record)
+rangesCont <- sampleRanges(taxa,r = 0.5)
+grp1 <- matrix(sample(1:3,nrow(taxa),replace = TRUE),,1)   #groupings matrix
+likFun <- make_durationFreqCont(rangesCont,groups = grp1)
 
 # can constrain both extinction rates to be equal
 constrainFun <- constrainParPaleo(likFun,q.2~q.1)

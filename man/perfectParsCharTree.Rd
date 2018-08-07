@@ -39,13 +39,13 @@ most basal node is a polytomy.
 data(retiolitinae)
 
 #fewer characters than nodes
-perfectParsCharTree(retioTree,nchar=10)
+perfectParsCharTree(retioTree,nchar = 10)
 
 #same as number of nodes (minus root)
-perfectParsCharTree(retioTree,nchar=12)
+perfectParsCharTree(retioTree,nchar = 12)
 
 #more characters than the number of nodes
-perfectParsCharTree(retioTree,nchar=20)
+perfectParsCharTree(retioTree,nchar = 20)
 }
 \author{
 David W. Bapst

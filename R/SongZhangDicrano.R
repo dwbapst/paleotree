@@ -53,20 +53,20 @@
 #' # Examining morphospace with a distance matrix
 #' 
 #' # calculate a distance matrix from the morph character data
-#' char<-charMatDicrano[,-22]	# remove strat character
-#' charDist<-matrix(,nrow(char),nrow(char))
-#' rownames(charDist)<-colnames(charDist)<-rownames(char)
+#' char <- charMatDicrano[,-22]	# remove strat character
+#' charDist <- matrix(,nrow(char),nrow(char))
+#' rownames(charDist) <- colnames(charDist) <- rownames(char)
 #' for(i in 1:nrow(char)){for(j in 1:nrow(char)){
-#' 	charDiff<-logical()
+#' 	charDiff <- logical()
 #' 	for(k in 1:ncol(char)){
-#' 		selectPair<-char[c(i,j),k]
+#' 		selectPair <- char[c(i,j),k]
 #' 		if(all(!is.na(selectPair))){
 #' 			#drop states that are missing			
-#' 			isSame<-identical(selectPair[1],selectPair[2])
-#' 			charDiff<-c(charDiff,isSame)
+#' 			isSame <- identical(selectPair[1],selectPair[2])
+#' 			charDiff <- c(charDiff,isSame)
 #' 			}
 #' 		}
-#' 	charDist[i,j]<-1-sum(charDiff)/length(charDiff)
+#' 	charDist[i,j] <- 1-sum(charDiff)/length(charDiff)
 #' 	}}
 #' 
 #' #####
@@ -74,7 +74,7 @@
 #' 
 #' #can apply PCO (use lingoes correction to account for negative values
 #'    #resulting from non-euclidean matrix
-#' pco_res <- pcoa(charDist,correction="lingoes")
+#' pco_res <- pcoa(charDist,correction = "lingoes")
 #' 
 #' #relative corrected eigenvalues
 #' rel_corr_eig <- pco_res$values$Rel_corr_eig
@@ -86,19 +86,19 @@
 #' #well let's look at those PCO axes anyway
 #' layout(1)
 #' pco_axes <- pco_res$vectors
-#' plot(pco_axes[,1],pco_axes[,2],pch=16,
-#'    xlab=paste("PCO Axis 1, Rel. Corr. Eigenvalue =",round(rel_corr_eig[1],3)),
-#'    ylab=paste("PCO Axis 2, Rel. Corr. Eigenvalue =",round(rel_corr_eig[2],3)))
+#' plot(pco_axes[,1],pco_axes[,2],pch = 16,
+#'    xlab = paste("PCO Axis 1, Rel. Corr. Eigenvalue  = ",round(rel_corr_eig[1],3)),
+#'    ylab = paste("PCO Axis 2, Rel. Corr. Eigenvalue  = ",round(rel_corr_eig[2],3)))
 #' 
 #' #######
 #'
 #' # plot 12 taxon majority rule tree from Song and Zhang
 #' plot(cladogramDicranoX12,
-#'	main="MajRule_24charX12Taxa_wBiostratChar")
+#'	main = "MajRule_24charX12Taxa_wBiostratChar")
 #' 
 #' # plot 13 taxon MPT
 #' plot(cladogramDicranoX13,
-#'	main="MPT_24charX13Taxa_wBiostratChar")
+#'	main = "MPT_24charX13Taxa_wBiostratChar")
 #'
 #' ##############
 #'
@@ -107,14 +107,14 @@
 #' require(ape)
 #' require(phylobase)
 #' 
-#' charMatDicrano<-readNexus(file.choose(),type="data",SYMBOLS = " 0 1 2")
+#' charMatDicrano <- readNexus(file.choose(),type = "data",SYMBOLS = " 0 1 2")
 #' 
-#' cladogramDicranoX12<-read.tree(file.choose())
-#' cladogramDicranoX13<-read.nexus(file.choose())
+#' cladogramDicranoX12 <- read.tree(file.choose())
+#' cladogramDicranoX13 <- read.nexus(file.choose())
 #' 
-#' cladogramDicranoX13$tip.label<-rownames(
+#' cladogramDicranoX13$tip.label <- rownames(
 #' 	 charMatDicrano)[c(13,8,7,9,12,10,1,4,6,2,3,11,5)]
 #' 
-#' save(charMatDicrano,cladogramDicranoX12,file="SongZhangDicrano.rdata")
+#' save(charMatDicrano,cladogramDicranoX12,file = "SongZhangDicrano.rdata")
 #' }
 NULL

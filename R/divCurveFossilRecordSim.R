@@ -41,8 +41,8 @@
 #' @examples
 #'
 #' set.seed(44)
-#' record <- simFossilRecord(p=0.1, q=0.1, r=0.1, nruns=1,
-#' 	nTotalTaxa=c(20,30) ,nExtant=0, plot=FALSE)
+#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1,
+#' 	nTotalTaxa = c(20,30) ,nExtant = 0, plot = FALSE)
 #' 
 #' # now let's plot it
 #' divCurveFossilRecordSim(record)
@@ -51,49 +51,49 @@
 #' @name divCurveFossilRecordSim
 #' @rdname divCurveFossilRecordSim
 #' @export		
-divCurveFossilRecordSim<-function(fossilRecord,merge.cryptic=TRUE,plotLegend=TRUE,
-	legendPosition="topleft",curveColors=c("black","red"),curveLineTypes=c(1,2)){
+divCurveFossilRecordSim <- function(fossilRecord,merge.cryptic = TRUE,plotLegend = TRUE,
+	legendPosition = "topleft",curveColors = c("black","red"),curveLineTypes = c(1,2)){
 	#
-	taxaConvert<-fossilRecord2fossilTaxa(fossilRecord=fossilRecord)
-	#taxicDivCont(taxaConvert,int.length=0.2)
+	taxaConvert <- fossilRecord2fossilTaxa(fossilRecord = fossilRecord)
+	#taxicDivCont(taxaConvert,int.length = 0.2)
 	#are any sampled AT NOT THE PRESENT?
-	areSampled<-whichSampledInPast(fossilRecord)
+	areSampled <- whichSampledInPast(fossilRecord)
 	if(length(areSampled)>0){
-		fossilRanges<-fossilRecord2fossilRanges(fossilRecord=fossilRecord, 
-			merge.cryptic=merge.cryptic, ranges.only = TRUE)
-		curveList<-list(taxaConvert,fossilRanges)
-		#if(i==5 & nruns==1000){browser()}
-		multiDiv(curveList,plotMultCurves=TRUE,drop.cryptic=merge.cryptic,
-			divPalette=curveColors,divLineType=curveLineTypes,main="")
+		fossilRanges <- fossilRecord2fossilRanges(fossilRecord = fossilRecord, 
+			merge.cryptic = merge.cryptic, ranges.only = TRUE)
+		curveList <- list(taxaConvert,fossilRanges)
+		#if(i == 5 & nruns == 1000){browser()}
+		multiDiv(curveList,plotMultCurves = TRUE,drop.cryptic = merge.cryptic,
+			divPalette = curveColors,divLineType = curveLineTypes,main = "")
 		if(plotLegend){
-			legend(legendPosition,legend=c("True Richness", "Sampled Richness"),
-				col=curveColors,lty=curveLineTypes)
+			legend(legendPosition,legend = c("True Richness", "Sampled Richness"),
+				col = curveColors,lty = curveLineTypes)
 			}
 	}else{ #none sampled
-		taxicDivCont(taxaConvert,int.length=0.2)
+		taxicDivCont(taxaConvert,int.length = 0.2)
 		}
 	}	
 	
-whichSampledInPast<-function(taxa){
+whichSampledInPast <- function(taxa){
 	#which taxa are sampled prior to the modern?
-	areSamp<-sapply(taxa,function(x) length(x[[2]])>0)
+	areSamp <- sapply(taxa,function(x) length(x[[2]])>0)
 	#are there any extant taxa
-	areLive<-which(sapply(taxa,function(x) x[[1]][5]==1))
-	nExtant<-length(areLive)
+	areLive <- which(sapply(taxa,function(x) x[[1]][5] == 1))
+	nExtant <- length(areLive)
 	if(sum(areSamp)>0 & nExtant>0){
 		#identify modern time
 			# assuming that latest sampling time of extant taxa is modernTime
-		possModernTime<-min(unlist(sapply(taxa[areLive],function(x) x[[2]])))
-		sampOnce<-sapply(taxa,function(x) length(x[[2]])==1)
-		sampModernOnly<-sapply(taxa,function(x)
-			if(length(x[[2]]==1)){
-				any(x[[2]]==possModernTime)
+		possModernTime <- min(unlist(sapply(taxa[areLive],function(x) x[[2]])))
+		sampOnce <- sapply(taxa,function(x) length(x[[2]]) == 1)
+		sampModernOnly <- sapply(taxa,function(x)
+			if(length(x[[2]] == 1)){
+				any(x[[2]] == possModernTime)
 			}else{
 				FALSE
 				})
-		res<-which(areSamp & !sampModernOnly)
+		res <- which(areSamp & !sampModernOnly)
 	}else{
-		res<-which(areSamp)
+		res <- which(areSamp)
 		}
 	return(res)
 	}

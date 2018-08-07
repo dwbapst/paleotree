@@ -17,7 +17,7 @@ taxonSortPBDBocc(data, rank, onlyFormal = TRUE, cleanUncertain = TRUE,
 Database are returned. If FALSE, then the identified name fields are searched for any
 additional 'informal' taxa with the proper taxon. If their taxon name happens to match
 any formal taxa, their occurrences are merged onto the formal taxa. This argument generally
-has any appreciable effect when rank=species.}
+has any appreciable effect when rank = species.}
 
 \item{cleanUncertain}{If TRUE (the default) any occurrences with an entry in the respective
 'resolution' field that is *not* found in the argument \code{cleanResoValue} will be removed from
@@ -71,8 +71,8 @@ in this procedure is very minor.
 Occurrences with taxonomic uncertainty indicators in the listed identified taxon name are removed
 by default, as controlled by argument \code{cleanUncertain}. This is done by removing any occurrences that
 have an entry in \code{primary_reso} (was "\code{genus_reso}" in v1.1 API) when \code{rank} is a
-supraspecific level, and \code{species_reso} when rank=species, if that entry is not found in
-\code{cleanResoValues}. In some rare cases, when \code{onlyFormal=FALSE}, supraspecific taxon names may be
+supraspecific level, and \code{species_reso} when rank = species, if that entry is not found in
+\code{cleanResoValues}. In some rare cases, when \code{onlyFormal = FALSE}, supraspecific taxon names may be
 returned in the output that have various 'cruft' attached, like 'n.sp.'.
 
 Empty values in the input data table ("") are converted to NAs, as they may be due to issues
@@ -83,18 +83,18 @@ with using read.csv to convert API-downloaded data.
 data(graptPBDB)
 
 #get formal genera
-occGenus<-taxonSortPBDBocc(graptOccPBDB, rank="genus")
+occGenus <- taxonSortPBDBocc(graptOccPBDB, rank = "genus")
 length(occGenus)
 
 #get formal species
-occSpeciesFormal<-taxonSortPBDBocc(graptOccPBDB, rank="species")
+occSpeciesFormal <- taxonSortPBDBocc(graptOccPBDB, rank = "species")
 length(occSpeciesFormal)
 
 #yes, there are fewer 'formal' graptolite species in the PBDB then genera
 
 #get formal and informal species
-occSpeciesInformal<-taxonSortPBDBocc(graptOccPBDB, rank="species",
-	 onlyFormal=FALSE)
+occSpeciesInformal <- taxonSortPBDBocc(graptOccPBDB, rank = "species",
+	 onlyFormal = FALSE)
 length(occSpeciesInformal)
 
 #way more graptolite species are 'informal' in the PBDB
@@ -102,36 +102,36 @@ length(occSpeciesInformal)
 #get formal and informal species 
 	#including from occurrences with uncertain taxonomy
 	#basically everything and the kitchen sink
-occSpeciesEverything<-taxonSortPBDBocc(graptOccPBDB, rank="species",
-		onlyFormal=FALSE, cleanUncertain=FALSE)
+occSpeciesEverything <- taxonSortPBDBocc(graptOccPBDB, rank = "species",
+		onlyFormal = FALSE, cleanUncertain = FALSE)
 length(occSpeciesEverything)
 
 \dontrun{
 
 # simple function for getting occurrence data from API v1.1 
-easyGetPBDBocc<-function(taxa,show=c("ident","phylo")){
+easyGetPBDBocc <- function(taxa,show = c("ident","phylo")){
   #cleans PBDB occurrence downloads of warnings
-  taxa<-paste(taxa,collapse=",")
-	taxa<-paste(unlist(strsplit(taxa,"_")),collapse="\%20")
-	show<-paste(show,collapse=",")
-	command<-paste0("http://paleobiodb.org/data1.2/occs/list.txt?base_name=",
-		taxa,"&show=",show,"&limit=all",
-		collapse="")
-	command<-paste(unlist(strsplit(command,split=" ")),collapse="\%20")
-	downData<-readLines(command)
-	if(length(grep("Warning",downData))!=0){
-		start<-grep("Records",downData)
-		warn<-downData[1:(start-1)]
-		warn<-sapply(warn, function(x) 
-			paste0(unlist(strsplit(unlist(strsplit(x,'"')),",")),collapse=""))
-		warn<-paste0(warn,collapse="\\n")
-		names(warn)<-NULL
-		mat<-downData[-(1:start)]
-		mat<-read.csv(textConnection(mat))
+  taxa <- paste(taxa,collapse = ",")
+	taxa <- paste(unlist(strsplit(taxa,"_")),collapse = "\%20")
+	show <- paste(show,collapse = ",")
+	command <- paste0("http://paleobiodb.org/data1.2/occs/list.txt?base_name = ",
+		taxa,"&show = ",show,"&limit = all",
+		collapse = "")
+	command <- paste(unlist(strsplit(command,split = " ")),collapse = "\%20")
+	downData <- readLines(command)
+	if(length(grep("Warning",downData)) != 0){
+		start <- grep("Records",downData)
+		warn <- downData[1:(start-1)]
+		warn <- sapply(warn, function(x) 
+			paste0(unlist(strsplit(unlist(strsplit(x,'"')),",")),collapse = ""))
+		warn <- paste0(warn,collapse = "\\n")
+		names(warn) <- NULL
+		mat <- downData[-(1:start)]
+		mat <- read.csv(textConnection(mat))
 		message(warn)
 	}else{
-		mat<-downData
-		mat<-read.csv(textConnection(mat))
+		mat <- downData
+		mat <- read.csv(textConnection(mat))
 		}
 	return(mat)
 	}
@@ -139,33 +139,33 @@ easyGetPBDBocc<-function(taxa,show=c("ident","phylo")){
 #try a PBDB API download with lots of synonymization
 	#this should have only 1 species
 #old way:
-#acoData<-read.csv(paste0("http://paleobiodb.org/data1.1/occs/list.txt?",
-#	"base_name=Acosarina\%20minuta&show=ident,phylo&limit=all"))
+#acoData <- read.csv(paste0("http://paleobiodb.org/data1.1/occs/list.txt?",
+#	"base_name = Acosarina\%20minuta&show = ident,phylo&limit = all"))
 # with easyGetPBDBocc:
-acoData<-easyGetPBDBocc("Acosarina minuta")
-x<-taxonSortPBDBocc(acoData, rank="species", onlyFormal=FALSE)
+acoData <- easyGetPBDBocc("Acosarina minuta")
+x <- taxonSortPBDBocc(acoData, rank = "species", onlyFormal = FALSE)
 names(x)
 
 #make sure works with API v1.1
-dicelloData<-read.csv(paste0("http://paleobiodb.org",
-	"/data1.1/occs/list.txt?base_name=Dicellograptus",
-	"&show=ident,phylo&limit=all"))
-dicelloOcc2<-taxonSortPBDBocc(dicelloData, rank="species", onlyFormal=FALSE)
+dicelloData <- read.csv(paste0("http://paleobiodb.org",
+	"/data1.1/occs/list.txt?base_name = Dicellograptus",
+	"&show = ident,phylo&limit = all"))
+dicelloOcc2 <- taxonSortPBDBocc(dicelloData, rank = "species", onlyFormal = FALSE)
 names(dicelloOcc2)
 
 #make sure works with compact vocab v1.1
-dicelloData<-read.csv(paste0("http://paleobiodb.org",
-	"/data1.1/occs/list.txt?base_name=Dicellograptus",
-	"&show=ident,phylo&limit=all&vocab=com"))
-dicelloOccCom1<-taxonSortPBDBocc(dicelloData, rank="species", onlyFormal=FALSE)
+dicelloData <- read.csv(paste0("http://paleobiodb.org",
+	"/data1.1/occs/list.txt?base_name = Dicellograptus",
+	"&show = ident,phylo&limit = all&vocab = com"))
+dicelloOccCom1 <- taxonSortPBDBocc(dicelloData, rank = "species", onlyFormal = FALSE)
 names(dicelloOccCom1)
 head(dicelloOccCom1[[1]])[,1:7]
 
 #make sure works with compact vocab v1.2
-dicelloData<-read.csv(paste0("http://paleobiodb.org",
-	"/data1.2/occs/list.txt?base_name=Dicellograptus",
-	"&show=ident,phylo&limit=all&vocab=com"))
-dicelloOccCom1<-taxonSortPBDBocc(dicelloData, rank="species", onlyFormal=FALSE)
+dicelloData <- read.csv(paste0("http://paleobiodb.org",
+	"/data1.2/occs/list.txt?base_name = Dicellograptus",
+	"&show = ident,phylo&limit = all&vocab = com"))
+dicelloOccCom1 <- taxonSortPBDBocc(dicelloData, rank = "species", onlyFormal = FALSE)
 names(dicelloOccCom1)
 head(dicelloOccCom1[[1]])[,1:7]
 

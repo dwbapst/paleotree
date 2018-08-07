@@ -85,24 +85,24 @@
 #' 
 #' data(kanto)
 #' 
-#' rhoBothAbsent<-pairwiseSpearmanRho(kanto,dropAbsent="bothAbsent")
+#' rhoBothAbsent <- pairwiseSpearmanRho(kanto,dropAbsent = "bothAbsent")
 #' 
 #' #other dropping options
-#' rhoEitherAbsent<-pairwiseSpearmanRho(kanto,dropAbsent="eitherAbsent")
-#' rhoNoDrop<-pairwiseSpearmanRho(kanto,dropAbsent="noDrop")
+#' rhoEitherAbsent <- pairwiseSpearmanRho(kanto,dropAbsent = "eitherAbsent")
+#' rhoNoDrop <- pairwiseSpearmanRho(kanto,dropAbsent = "noDrop")
 #' 
 #' #compare
 #' layout(1:3)
-#' lim<-c(-1,1)
-#' plot(rhoBothAbsent, rhoEitherAbsent, xlim=lim, ylim=lim)
+#' lim <- c(-1,1)
+#' plot(rhoBothAbsent, rhoEitherAbsent, xlim = lim, ylim = lim)
 #' 	abline(0,1)
-#' plot(rhoBothAbsent, rhoNoDrop, xlim=lim, ylim=lim)
+#' plot(rhoBothAbsent, rhoNoDrop, xlim = lim, ylim = lim)
 #' 	abline(0,1)
-#' plot(rhoEitherAbsent, rhoNoDrop, xlim=lim, ylim=lim)
+#' plot(rhoEitherAbsent, rhoNoDrop, xlim = lim, ylim = lim)
 #' 	abline(0,1)
 #' layout(1)
 #' 
-#' #using dropAbsent="eitherAbsent" reduces the number of taxa so much that
+#' #using dropAbsent = "eitherAbsent" reduces the number of taxa so much that
 #' 	# the number of taxa present drops too low to be useful
 #' #dropping none of the taxa restricts the rho measures to high coefficients
 #' 	# due to the many shared 0s for absent taxa
@@ -110,154 +110,154 @@
 #' #############
 #' 
 #' # Try the rho coefficients as a rescaled dissimilarity
-#' rhoDist<-pairwiseSpearmanRho(kanto,asDistance=TRUE,dropAbsent="bothAbsent")
+#' rhoDist <- pairwiseSpearmanRho(kanto,asDistance = TRUE,dropAbsent = "bothAbsent")
 #' 
 #' # What happens if we use these in typical distance matrix based analyses?
 #' 
 #' # Cluster analysis
-#' clustRes<-hclust(rhoDist)
+#' clustRes <- hclust(rhoDist)
 #' plot(clustRes)
 #' 
 #' # Principle Coordinates Analysis
-#' pcoRes <- pcoa(rhoDist,correction="lingoes")
+#' pcoRes <- pcoa(rhoDist,correction = "lingoes")
 #' scores <- pcoRes$vectors
 #' #plot the PCO
-#' plot(scores,type="n")
-#' text(labels=rownames(kanto),scores[,1],scores[,2],cex=0.5)
+#' plot(scores,type = "n")
+#' text(labels = rownames(kanto),scores[,1],scores[,2],cex = 0.5)
 #' 
 #' ##################################
 #' 
 #' # measuring evenness with Hurlbert's PIE
 #' 
-#' kantoPIE<-HurlbertPIE(kanto)
+#' kantoPIE <- HurlbertPIE(kanto)
 #' 
 #' #histogram
 #' hist(kantoPIE)
 #' #evenness of the kanto data is fairly high
 #' 
 #' #barplot
-#' parX<-par(mar=c(7,5,3,3))
-#' barplot(kantoPIE,las=3,cex.names=0.7,
-#' 	ylab="Hurlbert's PIE",ylim=c(0.5,1),xpd=FALSE)
+#' parX <- par(mar = c(7,5,3,3))
+#' barplot(kantoPIE,las = 3,cex.names = 0.7,
+#' 	ylab = "Hurlbert's PIE",ylim = c(0.5,1),xpd = FALSE)
 #' par(parX)
 #' 
 #' #and we can see that the Tower has extremely low unevenness
 #' 	#...overly high abundance of ghosts?
 #' 
 #' #let's look at evenness of 5 most abundant taxa
-#' kantoPIE_5<-HurlbertPIE(kanto,nAnalyze=5)
+#' kantoPIE_5 <- HurlbertPIE(kanto,nAnalyze = 5)
 #'
 #' #barplot
-#' parX<-par(mar=c(7,5,3,3))
-#' barplot(kantoPIE_5,las=3,cex.names=0.7,
-#' 	ylab="Hurlbert's PIE for 5 most abundant taxa",ylim=c(0.5,1),xpd=FALSE)
+#' parX <- par(mar = c(7,5,3,3))
+#' barplot(kantoPIE_5,las = 3,cex.names = 0.7,
+#' 	ylab = "Hurlbert's PIE for 5 most abundant taxa",ylim = c(0.5,1),xpd = FALSE)
 #' par(parX)
 
 #' @rdname communityEcology
 #' @export
-pairwiseSpearmanRho<-function(x, dropAbsent="bothAbsent", asDistance=FALSE,
-	diag=NULL, upper=NULL, na.rm=FALSE){
+pairwiseSpearmanRho <- function(x, dropAbsent = "bothAbsent", asDistance = FALSE,
+	diag = NULL, upper = NULL, na.rm = FALSE){
 	#for ecology: SPECIES ARE COLUMNS, SAMPLES ARE ROWS
-	if(length(dim(x))!=2){
+	if(length(dim(x)) != 2){
 		stop('x must be a matrix, with samples as rows')
 		}
-	dropPar<-c('bothAbsent','eitherAbsent','noDrop')
-	dropAbsent<-dropPar[pmatch(dropAbsent,dropPar)]
+	dropPar <- c('bothAbsent','eitherAbsent','noDrop')
+	dropAbsent <- dropPar[pmatch(dropAbsent,dropPar)]
 	if(asDistance){
-		if(is.null(diag)){diag<-FALSE}
-		if(is.null(upper)){upper<-FALSE}
+		if(is.null(diag)){diag <- FALSE}
+		if(is.null(upper)){upper <- FALSE}
 	}else{
-		if(is.null(diag)){diag<-TRUE}
-		if(is.null(upper)){upper<-TRUE}	
+		if(is.null(diag)){diag <- TRUE}
+		if(is.null(upper)){upper <- TRUE}	
 		}
 	if(is.na(dropAbsent)){
 		stop(paste0('dropAbsent must be one of ',
-			paste(dropPar,collapse=', ')))}
-	rhos<-matrix(,nrow(x),nrow(x))
+			paste(dropPar,collapse = ', ')))}
+	rhos <- matrix(,nrow(x),nrow(x))
 	for(i in 1:nrow(x)){
 		for(j in 1:nrow(x)){
-			if(i>=j){
+			if(i >= j){
 				#if no dropping NA and there are any NAs
 				if(!na.rm & any(is.na(x[c(i,j),]))){
 					#just return NA			
-					rhos[i,j]<-rhos[j,i]<-NA
+					rhos[i,j] <- rhos[j,i] <- NA
 				}else{
 					if(na.rm){
-						selector<-!is.na(x[i,]) & !is.na(x[j,])
+						selector <- !is.na(x[i,]) & !is.na(x[j,])
 					}else{
-						selector<-rep(TRUE,ncol(x))
+						selector <- rep(TRUE,ncol(x))
 						}
 					#now, if dropping absent, add to selector
-					if(dropAbsent=='bothAbsent'){
-						selector<-selector & (x[i,]!=0 | x[j,]!=0)
+					if(dropAbsent == 'bothAbsent'){
+						selector <- selector & (x[i,] != 0 | x[j,] != 0)
 						}
-					if(dropAbsent=='eitherAbsent'){
-						selector<-selector & (x[i,]!=0 & x[j,]!=0)
+					if(dropAbsent == 'eitherAbsent'){
+						selector <- selector & (x[i,] != 0 & x[j,] != 0)
 						}
 					#check selector
 					if(sum(selector)<2){
 						#then these two samples aren't comparable, return NA						
-						rhos[i,j]<-rhos[j,i]<-NA
+						rhos[i,j] <- rhos[j,i] <- NA
 					}else{
-						samp1<-x[i,selector]
-						samp2<-x[j,selector]
+						samp1 <- x[i,selector]
+						samp2 <- x[j,selector]
 						#print(sum(selector))
-						rho<-suppressWarnings(
-							cor.test(samp1,samp2,method='spearman')$estimate
+						rho <- suppressWarnings(
+							cor.test(samp1,samp2,method = 'spearman')$estimate
 							)
-						rhos[i,j]<-rhos[j,i]<-rho
+						rhos[i,j] <- rhos[j,i] <- rho
 						}
 					}
 				}
 			}
 		}
-	colnames(rhos)<-rownames(rhos)<-rownames(x)
+	colnames(rhos) <- rownames(rhos) <- rownames(x)
 	if(asDistance){
-		rhos<-(1-rhos)/2
-		result<-as.dist(rhos)
+		rhos <- (1-rhos)/2
+		result <- as.dist(rhos)
 		attr(result, 'Diag') <- diag
 		attr(result, 'Upper') <- upper
 	}else{
-		result<-rhos
+		result <- rhos
 		}
 	return(result)
 	}
 
 #' @rdname communityEcology
 #' @export
-HurlbertPIE<-function(x,nAnalyze=Inf){
+HurlbertPIE <- function(x,nAnalyze = Inf){
 	if(is.vector(x)){ 
-		x<-matrix(x,1,length(x))
+		x <- matrix(x,1,length(x))
 		}
-	if(length(nAnalyze)!=1 | !is.numeric(nAnalyze) | nAnalyze<2){
+	if(length(nAnalyze) != 1 | !is.numeric(nAnalyze) | nAnalyze<2){
 		stop("nAnalyze must be a numeric vector of length 1, with a value at least equal to 2")
 		}
 	if(!is.infinite(nAnalyze)){if(!is.integer(nAnalyze)){
-		nAnalyze2<-as.integer(nAnalyze)
-		if(nAnalyze2!=nAnalyze){
+		nAnalyze2 <- as.integer(nAnalyze)
+		if(nAnalyze2 != nAnalyze){
 			stop("nAnalyze must be a whole number")
 			}
-		nAnalyze<-nAnalyze2
+		nAnalyze <- nAnalyze2
 		}}
-	PIE<-numeric()
+	PIE <- numeric()
 	for(i in 1:nrow(x)){
 		#first need to test there is actually more than one species
-		samp<-x[i,]
+		samp <- x[i,]
 		#remove all but n most abundant
 		if(!is.infinite(nAnalyze)){
-			samp<-samp[rank(-samp)<(nAnalyze+1)]
+			samp <- samp[rank(-samp)<(nAnalyze+1)]
 			}
 		#drop zeroes
-		samp<-samp[samp>0]
+		samp <- samp[samp>0]
 		#first need to test there is actually more than one species
-		diversity<-length(samp)
+		diversity <- length(samp)
 		if(diversity>1){
-			PIE[i]<-diversity/(diversity-1) * (1-sum((samp/sum(samp))^2))
+			PIE[i] <- diversity/(diversity-1) * (1-sum((samp/sum(samp))^2))
 		}else{
-			PIE[i]<-0
+			PIE[i] <- 0
 			}
 		}
-	names(PIE)<-rownames(x)
+	names(PIE) <- rownames(x)
 	return(PIE)
 	}
 

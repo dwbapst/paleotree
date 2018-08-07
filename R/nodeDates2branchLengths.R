@@ -53,28 +53,28 @@
 #' set.seed(444)
 #' 
 #' # we'll do a number of tests, let's check at the end that all are TRUE
-#' tests<-logical()
+#' tests <- logical()
 #' 
 #' # with a non-ultrametric tree
-#' chrono<-rtree(10)
+#' chrono <- rtree(10)
 #' # make an undated tree
-#' notChrono<-chrono
-#' notChrono$edge.length<-NULL
+#' notChrono <- chrono
+#' notChrono$edge.length <- NULL
 #' 
 #' # now lets try with dateNodes in paleotree
-#' nodeTimes<-dateNodes(chrono)
+#' nodeTimes <- dateNodes(chrono)
 #' # need to use allTipsModern = FALSE because tip ages are included
-#' chronoRedux <-  nodeDates2branchLengths(tree=notChrono,
-#'     nodeDates=nodeTimes, allTipsModern=FALSE)
+#' chronoRedux <-  nodeDates2branchLengths(tree = notChrono,
+#'     nodeDates = nodeTimes, allTipsModern = FALSE)
 #' # test that its the same
-#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
+#' (tests <- c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
 #' 
 #' ######################################
 #' # modern ultrametric tree
-#' chrono<-rcoal(10)
+#' chrono <- rcoal(10)
 #' # make an undated tree
-#' notChrono<-chrono
-#' notChrono$edge.length<-NULL
+#' notChrono <- chrono
+#' notChrono$edge.length <- NULL
 #' 
 #' # with ultrametric trees, you could just use ape's compute.brtime 
 #' 
@@ -83,32 +83,32 @@
 #' # setting those branching times with ape
 #' chronoRedux <-  compute.brtime(notChrono, branchingTimes)
 #' # test that its the same
-#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
+#' (tests <- c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
 #' 
 #' # lets do the same thing but with nodeDates2branchLengths
 #' 
 #' # can use branching.times from ape 
 #' 	# (but only for ultrametric trees!)
-#' chronoRedux <-  nodeDates2branchLengths(tree=notChrono,
-#'     nodeDates=branchingTimes, allTipsModern=TRUE)
+#' chronoRedux <-  nodeDates2branchLengths(tree = notChrono,
+#'     nodeDates = branchingTimes, allTipsModern = TRUE)
 #' # test that its the same
-#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
+#' (tests <- c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
 #' 
 #' # now lets try with dateNodes in paleotree
-#' nodeTimes<-dateNodes(chrono)
+#' nodeTimes <- dateNodes(chrono)
 #' # need to use allTipsModern = FALSE because tip ages are included
-#' chronoRedux <-  nodeDates2branchLengths(tree=notChrono,
-#'     nodeDates=nodeTimes, allTipsModern=FALSE)
+#' chronoRedux <-  nodeDates2branchLengths(tree = notChrono,
+#'     nodeDates = nodeTimes, allTipsModern = FALSE)
 #' # test that its the same
-#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
+#' (tests <- c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
 #' 
 #' # get just the node times (remove tip dates)
-#' nodeOnlyTimes<-nodeTimes[-(1:Ntip(chrono))]
+#' nodeOnlyTimes <- nodeTimes[-(1:Ntip(chrono))]
 #' # let's use the allTipsModern = TRUE setting
-#' chronoRedux <-  nodeDates2branchLengths(tree=notChrono,
-#'     nodeDates=nodeOnlyTimes, allTipsModern=TRUE)
+#' chronoRedux <-  nodeDates2branchLengths(tree = notChrono,
+#'     nodeDates = nodeOnlyTimes, allTipsModern = TRUE)
 #' # test that its the same
-#' (tests<-c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
+#' (tests <- c(tests,all.equal.numeric(chrono$edge.length,chronoRedux$edge.length)))
 #' 
 #' # did all tests come out as TRUE?
 #' if(!all(tests)){stop("nodeDates2branchLengths isn't functioning correctly")}
@@ -119,7 +119,7 @@
 #' @name nodeDates2branchLengths
 #' @rdname nodeDates2branchLengths
 #' @export
-nodeDates2branchLengths<-function(nodeDates, tree, allTipsModern=FALSE){
+nodeDates2branchLengths <- function(nodeDates, tree, allTipsModern = FALSE){
     # checks
 	if(!inherits(tree,"phylo")){
 		stop("tree is not of class phylo")
@@ -130,16 +130,16 @@ nodeDates2branchLengths<-function(nodeDates, tree, allTipsModern=FALSE){
     #
 	#stop("nodeDates2branchLengths doesn't handle non-ultrametric trees or trees where not all tips are at the modern day... yet")
 	if(allTipsModern){
-	    if(length(nodeDates)!=Nnode(tree)){
-			stop("nodeDates must be same length as number of nodes on input tree if allTipsModern=TRUE")
+	    if(length(nodeDates) != Nnode(tree)){
+			stop("nodeDates must be same length as number of nodes on input tree if allTipsModern = TRUE")
 			}
 		#add zero ages for tips
-		allAges<-c(rep(0,Ntip(tree)),nodeDates)
+		allAges <- c(rep(0,Ntip(tree)),nodeDates)
 	}else{
-	    if(length(nodeDates)!=(Nnode(tree)+Ntip(tree))){
-			stop("nodeDates must be same length as number of nodes AND tips on input tree if allTipsModern=FALSE")
+	    if(length(nodeDates) != (Nnode(tree)+Ntip(tree))){
+			stop("nodeDates must be same length as number of nodes AND tips on input tree if allTipsModern = FALSE")
 			}
-		allAges<-nodeDates
+		allAges <- nodeDates
 		}
 	# check that all ages are provided
 	if(any(is.na(allAges)) | any(is.null(allAges))){
@@ -147,22 +147,22 @@ nodeDates2branchLengths<-function(nodeDates, tree, allTipsModern=FALSE){
 		}	
     ######################################
     # get mother node age for each edge
-    momAges<-allAges[tree$edge[,1]]
+    momAges <- allAges[tree$edge[,1]]
     # get node ages for child nodes of each edge
-    childAges<-allAges[tree$edge[,2]]
+    childAges <- allAges[tree$edge[,2]]
     #edge lengths = mom - child
-    edgeLengths<-momAges-childAges
-	names(edgeLengths)<-NULL
+    edgeLengths <- momAges-childAges
+	names(edgeLengths) <- NULL
 	# check edgeLengths
 	if(any(edgeLengths<0)){
 		stop("Check ages - some edges are calculated as having negative lengths!")
 		}
-	if(any(edgeLengths==0)){
+	if(any(edgeLengths == 0)){
 		message("Caution: some edges are calculated as being zero-length - is this expected?")
 		}
 	#
-    tree$edge.length<-edgeLengths
+    tree$edge.length <- edgeLengths
 	# set root age
-	tree$root.time<-allAges[Ntip(tree)+1]
+	tree$root.time <- allAges[Ntip(tree)+1]
     return(tree)
     }

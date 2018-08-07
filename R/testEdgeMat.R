@@ -7,7 +7,7 @@
 #' of post-processing, This includes having singles collapsed,
 #' nodes reordered and being written out as a Newick string and read back in,
 #' to ensure functionality with ape functions
-#' and ape-derived functions. 
+#' and ape-derived functions.
 
 #' @aliases cleanNewPhylo cleanTree
 
@@ -25,10 +25,10 @@
 #'
 #' For \code{cleanNewPhylo}, an object of class 'phylo' is returned.
 
-#' @author 
+#' @author
 #' David W. Bapst, with a large number of tests incorporated from Emmanuel Paradis's checkValidPhylo function,
 #' provided at his github repository here, which was released GPL v>2:
-#' 
+#'
 #' https://github.com/emmanuelparadis/checkValidPhylo
 
 #' @examples
@@ -99,10 +99,10 @@ testEdgeMat<-function(tree){
 	if(storage.mode(tree$Nnode)!="integer"){
 		stop("$Nnode is not stored as an integer")}
 	if(storage.mode(tree$edge)!="integer"){
-		stop("$Nnode is not stored as an integer")}
+		stop("$edge is not stored as an integer")}
 	#check values in $edge for bad values
 	if(any(is.na(tree$edge))){
-		stop("NAs found in $edge matrix")}	
+		stop("NAs found in $edge matrix")}
 	if(any(tree$edge<1)){
 		stop("All elements of $edge must be integers of 1 or greater")}
 	#check that root node and Nnode defined correctly
@@ -159,7 +159,7 @@ testEdgeMat<-function(tree){
 	#if(identical(sort(unique(tree$edge[,2])),c(1L,2L))){stop("Number of nodes is incorrect based on edge[,2]?")}
 	return(TRUE)
 	}
-	
+
 #hidden function
 getRootID<-function(tree){
 	uniqueNode<-unique(tree$edge[,1])
@@ -172,7 +172,7 @@ getRootID<-function(tree){
 	}
 
 #' @rdname testEdgeMat
-#' @export 
+#' @export
 cleanNewPhylo<-function(tree){ 		#,reorderTree=TRUE
 		#
 		renumberRootID<-function(tree){

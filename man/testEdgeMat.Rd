@@ -5,33 +5,33 @@
 \alias{cleanNewPhylo}
 \alias{cleanTree}
 \alias{cleanNewPhylo}
-\title{Test the Edge Matrix of a 'phylo' Phylogeny Object for Inconsistencies}
+\title{Test the Edge Matrix of a '\code{phylo}' Phylogeny Object for Inconsistencies}
 \usage{
 testEdgeMat(tree)
 
 cleanNewPhylo(tree)
 }
 \arguments{
-\item{tree}{A phylogeny object of type phylo}
+\item{tree}{A phylogeny object of type \code{phylo}}
 }
 \value{
-For \code{testEdgeMat}, if all the checks in the function pass correctly, the logical TRUE is returned.
+For \code{testEdgeMat}, if all the checks in the function pass correctly, the logical \code{TRUE} is returned.
 
-For \code{cleanNewPhylo}, an object of class 'phylo' is returned.
+For \code{cleanNewPhylo}, an object of class \code{phylo} is returned.
 }
 \description{
-\code{testEdgeMat} is a small simple function which tests the $edge matrix of 'phylo' objects for
+\code{testEdgeMat} is a small simple function which tests the \code{$edge} matrix of \code{phylo} objects for
 inconsistencies that can cause downstream analytical problems.
 The associated function, \code{cleanNewPhylo} puts an input
-phylo object, presumably freshly created or reconstituted by some function, through a series
+\code{phylo} object, presumably freshly created or reconstituted by some function, through a series
 of post-processing, This includes having singles collapsed,
 nodes reordered and being written out as a Newick string and read back in,
 to ensure functionality with ape functions
-and ape-derived functions.
+and \code{ape}-derived functions.
 }
 \details{
-Useful when doing complex manipulations and reconstitutions of 'phylo' objects (or their
-de novo construction), and thus is used by a number of paleotree functions.
+Useful when doing complex manipulations and reconstitutions of \code{phylo} objects (or their
+\emph{de novo} construction), and thus is used by a number of \code{paleotree} functions.
 }
 \examples{
 
@@ -60,7 +60,7 @@ plot(tree1)
 layout(1)
 }
 \author{
-David W. Bapst, with a large number of tests incorporated from Emmanuel Paradis's checkValidPhylo function,
+David W. Bapst, with a large number of tests incorporated from Emmanuel Paradis's \code{checkValidPhylo} function,
 provided at his github repository here, which was released GPL v>2:
 
 https://github.com/emmanuelparadis/checkValidPhylo

@@ -16,12 +16,12 @@ parseNexusFile <- function(origNexusFile = origNexusFile,asIs = TRUE){
 		if(sum(ntaxLine)<1){
 			stop("No line containing 'NTAX' found in the provided NEXUS file")}
 		# get number of taxa (more regexp borrowed from read.nexus.data)
-		oldNtax <- as.numeric(sub("(.+?)(ntax\\s*\\ = \\s*)(\\d+)(.+)", 
+		oldNtax <- as.numeric(sub("(.+?)(ntax\\s*\\=\\s*)(\\d+)(.+)", 
 			"\\3", morphNexus[ntaxLine], perl = TRUE, ignore.case = TRUE))
 		# get other pieces of ntax line
-		ntaxLineFirst <- sub("(.+?)(ntax\\s*\\ = \\s*)(\\d+)(.+)", 
+		ntaxLineFirst <- sub("(.+?)(ntax\\s*\\=\\s*)(\\d+)(.+)", 
 			"\\1\\2", morphNexus[ntaxLine], perl = TRUE, ignore.case = TRUE)
-		ntaxLineLast <- sub("(.+?)(ntax\\s*\\ = \\s*)(\\d+)(.+)", 
+		ntaxLineLast <- sub("(.+?)(ntax\\s*\\=\\s*)(\\d+)(.+)", 
 			"\\4", morphNexus[ntaxLine], perl = TRUE, ignore.case = TRUE)
 		#
 		# find the matrix line

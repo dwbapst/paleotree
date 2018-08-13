@@ -539,6 +539,9 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 	# get final taxon name list
 	if(multOTU){
 		if(whichAppearance  ==  "rangeThrough"){
+			if(!is.list(tipTimes)){
+				stop("tipTimes must be a timeList object if 'whichAppearance  = rangeThrough'")
+				}
 			# for each taxon in tipTimes, figure out intervals they range through
 				# and then multiply this taxon in the tip data, the tree/root constraints and NEXUS data block
 			#
@@ -559,15 +562,32 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 			# okay for almost all inputs
 			#
 			newOTU <- matrix(,1,4)
-			for(i in 1:nrow(tipTimes[[2]])){
-				# count number of range-through intervals, get dates and new names
-				origName <- rownames(tipTimes[[2]])[i]
-				# raw interval IDs for FAD and LAD
-				rawIntervals <- tipTimes[[2]][i,]
-				intervalMatrix <-  tipTimes[[1]][rawIntervals,,drop = FALSE]
-				# get new names, using interval names
-				newNames <- paste0(origName,c("_Fint","_Lint"))
-				newOTU <- rbind(newOTU,cbind(newNames,origName,intervalMatrix))
+			if(!is.list(tipTimes)){
+				if(ncol(tipTimes)!=4){
+					stop("tipTimes if not a timeList object must have four columns, indicating uncertainty bounds on FADs and LADS separately")
+					}
+				for(i in 1:nrow(tipTimes)){
+					# count number of range-through intervals, get dates and new names
+					origName <- rownames(tipTimes)[i]
+					# raw interval IDs for FAD and LAD
+					intervalMatrix <-  rbind(
+						tipTimes[rawIntervals,1:2],tipTimes[rawIntervals,3:4]
+						)
+					# get new names, using interval names
+					newNames <- paste0(origName,c("_Fint","_Lint"))
+					newOTU <- rbind(newOTU,cbind(newNames,origName,intervalMatrix))
+					}				
+			}else{
+				for(i in 1:nrow(tipTimes[[2]])){
+					# count number of range-through intervals, get dates and new names
+					origName <- rownames(tipTimes[[2]])[i]
+					# raw interval IDs for FAD and LAD
+					rawIntervals <- tipTimes[[2]][i,]
+					intervalMatrix <-  tipTimes[[1]][rawIntervals,,drop = FALSE]
+					# get new names, using interval names
+					newNames <- paste0(origName,c("_Fint","_Lint"))
+					newOTU <- rbind(newOTU,cbind(newNames,origName,intervalMatrix))
+					}
 				}
 			newOTU <- newOTU[-1,]
 			}	

@@ -68,7 +68,8 @@
 #' @aliases communityEcology pairwiseSpearmanRho HurlbertPIE
 
 #' @seealso
-#' Example dataset: \code{\link{kanto}}
+#' \code{\link{twoWayEcologyCluster}}; example dataset: \code{\link{kanto}}
+#'
 
 #' @name communityEcology
 

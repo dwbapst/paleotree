@@ -42,7 +42,7 @@
 #' This function creates a plot, and returns nothing, not even invisible output.
 
 #' @seealso
-#' Several other functions for community ecology data in paleotree are described at the {\link{communityEcology} help file. Also see the example dataset, \code{\link{kanto}}.
+#' Several other functions for community ecology data in paleotree are described at the \code{\link{communityEcology}} help file. Also see the example dataset, \code{\link{kanto}}.
 
 #' @author David W. Bapst
 
@@ -108,8 +108,8 @@
 #' }
 
 
-#' @name
-#' @rdname
+#' @name twoWayEcologyCluster
+#' @rdname twoWayEcologyCluster
 #' @export
 twoWayEcologyCluster<-function(
 		xDist, yDist, propAbund,

@@ -159,7 +159,7 @@ Hurlbert, S. H. 1971. The nonconcept of species diversity:
 a critique and alternative parameters. \emph{Ecology} 52(4):577-586.
 }
 \seealso{
-Example dataset: \code{\link{kanto}}
+\code{\link{twoWayEcologyCluster}}; example dataset: \code{\link{kanto}}
 }
 \author{
 David W. Bapst

@@ -109,6 +109,9 @@ cluster diagrams, particularly the one in Miller, 1988:
 Miller, A. I. 1988. Spatial Resolution in Subfossil Molluscan
 Remains: Implications for Paleobiological Analyses. \emph{Paleobiology} 14(1):91-103.
 }
+\seealso{
+Several other functions for community ecology data in paleotree are described at the \code{\link{communityEcology}} help file. Also see the example dataset, \code{\link{kanto}}.
+}
 \author{
 David W. Bapst
 }

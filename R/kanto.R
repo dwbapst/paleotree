@@ -26,6 +26,9 @@
 #' @source 
 #' Pokemon And All Respective Names are Trademark and Copyright of Nintendo 1996-2015.
 
+#' @seealso
+#' \code{\link{twoWayEcologyCluster}}, \code{\link{communityEcology}}
+
 #' @keywords datasets
 
 #' @docType data

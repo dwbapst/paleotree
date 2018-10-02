@@ -5,8 +5,8 @@
 \title{Get the Sample of Posterior Trees from a Dated Phylogenetic Analysis with MrBayes (Or a Summary Tree, such as the MCCT)}
 \usage{
 obtainDatedPosteriorTreesMrB(runFile, nRuns = 2, burnin = 0.5, outputTrees,
-  labelPostProb = FALSE, getFixedTimes = FALSE, originalNexusFile = NULL,
-  file = NULL)
+  labelPostProb = FALSE, getFixedTimes = FALSE, getRootAges = FALSE,
+  originalNexusFile = NULL, file = NULL)
 }
 \arguments{
 \item{runFile}{A filename in the current directory, or a path to a file that is either a .p 
@@ -57,6 +57,13 @@ square brackets (i.e. treated as comments in NEXUS files). Thus files with
 ridiculously nested series of brackets may cause this code to take a while
 to complete, or may even cause it to hang.}
 
+\item{getRootAges}{\code{FALSE} by default. 
+If \code{TRUE}, and \code{getFixedTimes = TRUE} as well as \code{file = NULL}
+(such that trees will be assigned within the R memory rather than saved to an external file), the
+functions \code{setRootAge} and its wrapper function \code{setRootAges} will be applied to the output
+so that all output trees have \code{root.time} elements for use with other functions in \code{paleotree}
+as well as other packages.}
+
 \item{originalNexusFile}{Filename (and possibly path too) to the original NEXUS file for this analysis.
 Only tried if \code{getFixedTimes = TRUE}. If \code{NULL} (the default), then this function will
 instead try to find a NEXUS file with the same name as implied by the filename used in other inputs. If
@@ -73,8 +80,9 @@ returned directly, or instead written out in NEXUS format via
 ape's \code{write.NEXUS} function to an external file. The output
 will consist either of multiple trees sampled from the post-burnin posterior,
 or will consist of a single phylogeny (a summary tree, either the MCCT or the MAP).
-' 
-Users are warned that the resulting dated trees will not have \code{$root.time} elements necessary
+
+If the argument \code{setRootAges = TRUE} is not used,
+users are warned that the resulting dated trees will not have \code{$root.time} elements necessary
 for comparison against an absolute time-scale. Wile the trees may be scaled to units of absolute
 time now, rather than with branch lengths expressed in the rate of character change, the dates
 estimated by some phylogenetics functions in R may give inaccurate estimates of when events
@@ -84,7 +92,8 @@ elsewhere) will instead presume that the latest tip will be at time 0 (the moder
 may be wrong if you are using \code{paleotree} for analyzing \emph{paleontological} datasets
 consisting of entirely extinct taxa. This can be solved by using argument \code{getFixedTimes = TRUE}
 to obtain fixed tip ages, and then scaling the resulting output to absolute time using
-the function \code{\link{setRootAges}} to obtain a \code{$root.time} element for each tree.
+the argument \code{setRootAges = TRUE}, which obtains a \code{$root.time} element for each tree
+using the functions \code{\link{setRootAge}} and \code{\link{setRootAges}} (for single and multiple phylogenies).
 }
 \description{
 MrBayes is not great for getting samples of dated posterior phylogenies, or for obtaining certain summary trees from
@@ -120,16 +129,17 @@ setRootAge(tree = MAP)
 hundredRandomlySelectedTrees <- obtainDatedPosteriorTreesMrB(
  	runFile = "C:\\\\myTipDatingAnalysis\\\\MrB_run_fossil_05-10-17.nex.run1.t",
  	nRuns = 2, burnin = 0.5, getFixedTimes = TRUE,
+ 	getRootAges = TRUE,
 		outputTrees = 100, file = NULL)
 
-setRootAges(trees = hundredRandomlySelectedTrees)
 
 }
 
 }
 \seealso{
-When the argument \code{getFixedTimes = TRUE} is used, the resulting output can easily be scaled to absolute time 
-if you used a taxon with a fixed age, and function \code{\link{setRootAges}}.
+When the arguments \code{getFixedTimes = TRUE} and \code{setRootAges = TRUE} are used, the resulting output will be scaled to absolute time 
+with the available fixed ages using functions \code{\link{setRootAge}} and \code{\link{setRootAges}} (for single and multiple phylogenies).
+This is only done if fixed ages are available and if the tree is not being saved to an external file.
 
 Maximum Clade Credibility trees are estimated using the function\code{\link[phangorn]{maxCladeCred}} in package phangorn.
 }

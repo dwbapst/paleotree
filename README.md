@@ -2,9 +2,7 @@
 
 paleotree is an R package for transforming, 'a posteriori' time-scaling, and modifying phylogenies containing extinct (i.e. fossil) lineages. In particular, most users are interested in the functions timePaleoPhy, bin_timePaleoPhy, cal3TimePaleoPhy and bin_cal3TimePaleoPhy, which a posteriori time-scale cladograms of fossil taxa into dated phylogenies. This package also contains a large number of likelihood functions for estimating sampling and diversification rates from different types of data available from the fossil record (e.g. range data, occurrence data, etc). paleotree users can also simulate diversification and sampling in the fossil record using the function simFossilRecord, which is a detailed simulator for branching birth-death-sampling processes composed of discrete taxonomic units arranged in ancestor-descendant relationships. Users can use simFossilRecord to simulate diversification in incompletely sampled fossil records, under various models of morphological differentiation (i.e. the various patterns by which morphotaxa originate from one another), and with time-dependent, longevity-dependent and/or diversity-dependent rates of diversification, extinction and sampling. Additional functions allow users to translate simulated ancestor-descendant data from simFossilRecord into standard time-scaled phylogenies or unscaled cladograms that reflect the relationships among taxon units.
 
-The most recent public release of the code is on CRAN at:
-
-	[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/paleotree)](https://cran.r-project.org/package=paleotree)
+The most recent public release of the code is on CRAN at: [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/paleotree)](https://cran.r-project.org/package=paleotree)
 
 You can install the most recent public release version of `paleotree` in R from CRAN using:
 

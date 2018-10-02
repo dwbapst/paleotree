@@ -6,6 +6,7 @@
 \alias{fossilRecord2fossilTaxa}
 \alias{fossilRecord2fossilRanges}
 \alias{fossilRecord2fossilTaxa}
+\alias{fossilTaxa2fossilRecord}
 \alias{fossilRecord2fossilRanges}
 \title{Methods for Editing or Converting Output from simFossilRecord}
 \usage{
@@ -13,6 +14,8 @@ timeSliceFossilRecord(fossilRecord, sliceTime, shiftRoot4TimeSlice = FALSE,
   modern.samp.prob = 1, tolerance = 10^-4)
 
 fossilRecord2fossilTaxa(fossilRecord)
+
+fossilTaxa2fossilRecord(fossilTaxa)
 
 fossilRecord2fossilRanges(fossilRecord, merge.cryptic = TRUE,
   ranges.only = TRUE)
@@ -40,6 +43,10 @@ day (to the \code{sliceTime}) are sampled, if 0, none are.}
 
 \item{tolerance}{A small number which sets a range around the \code{sliceTime} within
 which taxa will be considered extant for the purposes of output.}
+
+\item{fossilTaxa}{A \code{fossilTaxa} object, composed of a table
+containing information on the true first and last appearance times of taxa,
+as well as their ancestor-descendant relationships.}
 
 \item{merge.cryptic}{If \code{TRUE}, sampling events for cryptic taxon-units (i.e.
 those in the same cryptic complex) will be merged into sampling events for a single
@@ -72,7 +79,12 @@ are now listed as extant.
 \code{fossilRecord2fossilTaxa} converts a \code{fossilRecordSimulation} object
 to the flat table format of taxon data as was originally output by deprecated function 
 \code{simFossilTaxa}, and can be taken as input by a number of \code{paleotree} functions such as
-\code{sampleRanges},\code{taxa2phylo} and \code{taxa2cladogram}.
+\code{sampleRanges},\code{taxa2phylo} and \code{taxa2cladogram}. 
+
+\code{fossilTaxa2fossilRecord} does the reverse, converting a \code{simFossilTaxa}
+table into a \code{fossilRecordSimulation} list object,
+but returns a \code{fossilRecordSimulation} object that considers each species as un-sampled (as sampling
+information is not contained within a \code{simFossilTaxa} table).
 
 \code{fossilRecord2fossilRanges} converts a \code{fossilRecordSimulation} object
 to the flat table format of observed taxon ranges, as is typically output by processing
@@ -139,5 +151,5 @@ treeFAD <- taxa2phylo(taxa,FADs,plot = TRUE)
 \code{\link{simFossilRecord}}
 }
 \author{
-David W. Bapst.
+David W. Bapst
 }

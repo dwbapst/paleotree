@@ -9,9 +9,10 @@ createMrBayesTipDatingNexus(tipTimes, outgroupTaxa = NULL,
   treeConstraints = NULL, ageCalibrationType, whichAppearance = "first",
   treeAgeOffset, minTreeAge = NULL, collapseUniform = TRUE,
   anchorTaxon = TRUE, newFile = NULL, origNexusFile = NULL,
-  parseOriginalNexus = TRUE, createEmptyMorphMat = TRUE, runName = NULL,
-  morphModel = "strong", ngen = "100000000", doNotRun = FALSE,
-  cleanNames = TRUE, printExecute = TRUE)
+  parseOriginalNexus = TRUE, createEmptyMorphMat = TRUE,
+  orderedChars = NULL, morphModel = "strong", runName = NULL,
+  ngen = "100000000", doNotRun = FALSE, cleanNames = TRUE,
+  printExecute = TRUE)
 }
 \arguments{
 \item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
@@ -137,10 +138,12 @@ appended to the set of \emph{MrBayes} commands if this command is \code{TRUE} (t
 determined entirely by the fossilized birth-death prior, with no impact from a
 presupposed morphological clock (thus a 'clock-less analysis').}
 
-\item{runName}{The name of the run, used for naming the log files. 
-If not set, the name will be taken from the name given for outputting
-the NEXUS script (\code{newFile}). If \code{newFile} is not given, and
-\code{runName} is not set by the user, the default run name will be  "new_run_paleotree".}
+\item{orderedChars}{Should be a vector of numbers, indicating which characters should have their
+character-type in MrBayes changed to 'ordered'. 
+If \code{NULL}, the default, then all characters will be treated as essentially unordered.
+No character ID should be listed that is higher than the number of characters in the matrix provided in
+\code{origNexusFile}. If \code{origNexusFile} is not provided, while \code{orderedChars}
+is defined, then an error will be returned.}
 
 \item{morphModel}{This argument can be used to switch between two end-member models of 
 morphological evolution in MrBayes, here named 'strong' and 'relaxed', for the 'strong assumptions'
@@ -150,6 +153,11 @@ while the 'relaxed' alternative allows for considerably more heterogeneity in th
 of morphological evolution across characters, and in the forward and reverse transition
 rates between states. Note that in both cases, the character data is assumed to be filtered
 to only parsimony-informative characters, without autapomorphies.}
+
+\item{runName}{The name of the run, used for naming the log files. 
+If not set, the name will be taken from the name given for outputting
+the NEXUS script (\code{newFile}). If \code{newFile} is not given, and
+\code{runName} is not set by the user, the default run name will be  "new_run_paleotree".}
 
 \item{ngen}{Number of generations to set the MCMCMC to run for.
 Default (\code{ngen = 100000000}) is very high.}

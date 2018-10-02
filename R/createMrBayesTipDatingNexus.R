@@ -70,6 +70,12 @@
 #' If the input tipTimes is not a list of length = 2, however, the function will 
 #' return an error under this option. 
 
+#' @param orderedChars Should be a vector of numbers, indicating which characters should have their
+#' character-type in MrBayes changed to 'ordered'. 
+#' If \code{NULL}, the default, then all characters will be treated as essentially unordered.
+#' No character ID should be listed that is higher than the number of characters in the matrix provided in
+#' \code{origNexusFile}. If \code{origNexusFile} is not provided, while \code{orderedChars}
+#' is defined, then an error will be returned.
 
 #' @param origNexusFile Filename (possibly with path) as a character
 #' string leading to a NEXUS text file, presumably containing a matrix
@@ -285,9 +291,11 @@
 createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstraints = NULL,
 							ageCalibrationType,whichAppearance = "first",treeAgeOffset,minTreeAge = NULL,
 							collapseUniform = TRUE,anchorTaxon = TRUE,
-							newFile = NULL,origNexusFile = NULL,parseOriginalNexus = TRUE,createEmptyMorphMat = TRUE,
-							runName = NULL,morphModel = "strong",ngen = "100000000",doNotRun = FALSE,
-							cleanNames = TRUE,printExecute = TRUE){
+							newFile = NULL,origNexusFile = NULL, 
+							parseOriginalNexus = TRUE,createEmptyMorphMat = TRUE,
+							orderedChars=NULL, morphModel = "strong",
+							runName = NULL, ngen = "100000000", doNotRun = FALSE,
+							cleanNames = TRUE, printExecute = TRUE){
 	################################################################################################
 	#         # a wooper of a function ... here's some ASCII from artist 'Psyduck'
 	#
@@ -384,6 +392,9 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 				}
 			}	
 		}
+	if(is.null(origNexusFile) & !is.null(orderedChars)){
+		stop("Morphological data in an original matrix must be provided if orderedChars is used")
+		}
 	if(is.null(origNexusFile)){
 			nexusData <- NULL
 			}
@@ -463,17 +474,34 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 	if(morphModel == "relaxed" & is.null(origNexusFile)){
 		warning("Why are you relaxing the morphological model without supplying an original matrix with origNexusFile? I hope you know what you are doing.")
 		}
+	#
 	if(!is.character(ngen)){
 		stop("ngen must be type character; it turns out R is terrible at converting large numbers to text")
 		}
 	#
 	# note: origNexusFile might be a connection - cannot test for length 1
 	#
-	#
 	if(length(createEmptyMorphMat) != 1 | !is.logical(createEmptyMorphMat)){
 		stop("createEmpthyMorphMat must be  of length 1, and either TRUE or FALSE")
 		}
-	#########################################################
+	##################################################
+	# check and get orderedChars line
+	if(!is.null(orderedChars)){
+		if(is.numeric(orderedChars)){
+			if(any(orderedChars<1)){
+				"orderedChars should only have positive numbers greater than 0"
+				}	
+			orderedChars<-paste0(orderedChars,collapse=" ")
+			if(!is.character(orderedChars) | length(orderedChars)!=1){
+				stop("orderedChars cannot be coerced to a string of length = 1")
+				}			
+		}else{
+			if(!is.character(orderedChars) | length(orderedChars)!=1){
+				stop("orderedChars is not a numeric vector or a string of length = 1")
+				}
+			}
+		}
+	###################################################
 	# cleaning taxon names
 	cleanTaxonNames <- taxaTipTimes
 	if(length(unique(cleanTaxonNames)) != length(cleanTaxonNames)){
@@ -511,6 +539,9 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 	# get final taxon name list
 	if(multOTU){
 		if(whichAppearance  ==  "rangeThrough"){
+			if(!is.list(tipTimes)){
+				stop("tipTimes must be a timeList object if 'whichAppearance  = rangeThrough'")
+				}
 			# for each taxon in tipTimes, figure out intervals they range through
 				# and then multiply this taxon in the tip data, the tree/root constraints and NEXUS data block
 			#
@@ -531,15 +562,32 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 			# okay for almost all inputs
 			#
 			newOTU <- matrix(,1,4)
-			for(i in 1:nrow(tipTimes[[2]])){
-				# count number of range-through intervals, get dates and new names
-				origName <- rownames(tipTimes[[2]])[i]
-				# raw interval IDs for FAD and LAD
-				rawIntervals <- tipTimes[[2]][i,]
-				intervalMatrix <-  tipTimes[[1]][rawIntervals,,drop = FALSE]
-				# get new names, using interval names
-				newNames <- paste0(origName,c("_Fint","_Lint"))
-				newOTU <- rbind(newOTU,cbind(newNames,origName,intervalMatrix))
+			if(!is.list(tipTimes)){
+				if(ncol(tipTimes)!=4){
+					stop("tipTimes if not a timeList object must have four columns, indicating uncertainty bounds on FADs and LADS separately")
+					}
+				for(i in 1:nrow(tipTimes)){
+					# count number of range-through intervals, get dates and new names
+					origName <- rownames(tipTimes)[i]
+					# raw interval IDs for FAD and LAD
+					intervalMatrix <-  rbind(
+						tipTimes[i,1:2],tipTimes[i,3:4]
+						)
+					# get new names, using interval names
+					newNames <- paste0(origName,c("_Fint","_Lint"))
+					newOTU <- rbind(newOTU,cbind(newNames,origName,intervalMatrix))
+					}				
+			}else{
+				for(i in 1:nrow(tipTimes[[2]])){
+					# count number of range-through intervals, get dates and new names
+					origName <- rownames(tipTimes[[2]])[i]
+					# raw interval IDs for FAD and LAD
+					rawIntervals <- tipTimes[[2]][i,]
+					intervalMatrix <-  tipTimes[[1]][rawIntervals,,drop = FALSE]
+					# get new names, using interval names
+					newNames <- paste0(origName,c("_Fint","_Lint"))
+					newOTU <- rbind(newOTU,cbind(newNames,origName,intervalMatrix))
+					}
 				}
 			newOTU <- newOTU[-1,]
 			}	
@@ -624,9 +672,15 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 			collapseUniform = collapseUniform,anchorTaxon = anchorTaxon,file = NULL)
 	#
 	# make the final MrBayes Block
-	MrBayesBlock <- makeMrBayesBlock(logBlock = logfileline,ingroupBlock = ingroupConstraint,
-		ageBlock = ageCalibrations,constraintBlock = topologicalConstraints,
-		morphModel = morphModel,ngen = ngen,doNotRun = doNotRun)
+	MrBayesBlock <- makeMrBayesBlock(
+		logBlock = logfileline, 
+		ingroupBlock = ingroupConstraint,
+		ageBlock = ageCalibrations, 
+		constraintBlock = topologicalConstraints,
+		orderedChars=orderedChars,		
+		morphModel = morphModel, 
+		ngen = ngen, 
+		doNotRun = doNotRun)
 	###############################################
 	# combine morph matrix block with MrBayes command block
 	finalText <- c(morphNexus,MrBayesBlock)
@@ -644,6 +698,7 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 	}
 
 
+	
 
 
 #################################################################################
@@ -651,6 +706,11 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 # Supplemental functions
 
 ###################################################################################
+
+
+
+
+
 
 makeIngroupConstraintMrB <- function(outgroupTaxa,allTaxa){
 	# use the list of outgroup taxa to define the in-group taxa
@@ -722,7 +782,7 @@ makeEmptyMorphNexusMrB <- function(taxonNames){
 
 
 
-makeMrBayesBlock <- function(logBlock,ingroupBlock,ageBlock,
+makeMrBayesBlock <- function(logBlock,ingroupBlock,ageBlock,orderedChars,
 							constraintBlock,morphModel = "strong",ngen = 100000000,doNotRun = FALSE){
 #########################################################################################						
 	###
@@ -759,6 +819,21 @@ block3 <- "
     constraint node2 = t4 t5;
 	prset topologypr = constraints(ingroup,node1,node2); [need to include ingroup]]
 "
+
+############################################################################
+if(!is.null(orderedChars)){
+	# example:
+		# ctype ordered: 1 15 20;
+	orderedChars<-c(
+		"  ",
+		"[ordered characters block]",
+		paste0("ctype ordered: ",orderedChars,";"),
+		""
+		)
+}else{
+	orderedChars<-""
+	}
+
 ##############################################################################
 morphModelBlock_Strong <- "
 
@@ -795,8 +870,7 @@ morphModelBlock_Relaxed <- "
 		prset symdirihyperpr = uniform(1,10);      [this range seems to avoid divide by zero error]
 
 "
-
-
+	
 #############################################################################
 block4 <- "
 [TIP AND TREE AGE CALIBRATIONS] 
@@ -878,9 +952,21 @@ runBlock <- "
 	# insert ngen
 	block5 <- paste0(block5a,ngen,block5b)
 	####################
-	finalBlock <- c(block1,logBlock,block2,ingroupBlock,block3,
-		constraintBlock,morphModelBlock,block4,
-		ageBlock,block5,runBlock," ","end;")
+	finalBlock <- c(
+		block1,
+		logBlock,
+		block2,
+		ingroupBlock,
+		block3,
+		constraintBlock,
+		orderedChars,
+		morphModelBlock,
+		block4,
+		ageBlock,
+		block5,
+		runBlock,
+		" ",
+		"end;")
 	return(finalBlock)
 	}
 

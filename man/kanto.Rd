@@ -231,4 +231,7 @@ anova(ft)
 
 
 }
+\seealso{
+\code{\link{twoWayEcologyCluster}}, \code{\link{communityEcology}}
+}
 \keyword{datasets}

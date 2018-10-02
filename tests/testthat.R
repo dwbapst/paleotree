@@ -1,4 +1,4 @@
-library(testthat)
-library(paleotree)
+#library(testthat)
+#library(paleotree)
 
-test_check("paleotree")
+#test_check("paleotree")

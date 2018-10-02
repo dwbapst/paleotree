@@ -56,7 +56,7 @@
 
 
 #' @examples
-#' 
+#' \dontrun{
 #' library(vegan)
 #' 
 #' # generate random community ecology data
@@ -105,7 +105,7 @@
 #'     yDist = taxaDist,
 #'     propAbund = siteStand
 #'     )
-#' 
+#' }
 
 
 #' @name

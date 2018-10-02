@@ -44,6 +44,10 @@ day (to the \code{sliceTime}) are sampled, if 0, none are.}
 \item{tolerance}{A small number which sets a range around the \code{sliceTime} within
 which taxa will be considered extant for the purposes of output.}
 
+\item{fossilTaxa}{A \code{fossilTaxa} object, composed of a table
+containing information on the true first and last appearance times of taxa,
+as well as their ancestor-descendant relationships.}
+
 \item{merge.cryptic}{If \code{TRUE}, sampling events for cryptic taxon-units (i.e.
 those in the same cryptic complex) will be merged into sampling events for a single
 taxon-unit (with the name of the first taxon in that cryptic complex).}

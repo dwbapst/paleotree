@@ -38,6 +38,10 @@
 #' element being a distinctive six-element vector composed of numbers, corresponding
 #' to the six fields in tables output by the deprecated function \code{simFossilTaxa}.
 
+#' @param fossilTaxa A \code{fossilTaxa} object, composed of a table
+#' containing information on the true first and last appearance times of taxa,
+#' as well as their ancestor-descendant relationships.
+
 #' @param sliceTime The date to slice the \code{simFossilRecord} output at, given
 #' in time-units before the modern, on the same scale as the input \code{fossilRecord}.
 
@@ -226,7 +230,6 @@ fossilRecord2fossilTaxa <- function(fossilRecord){
 	return(taxaConvert)
 	}
 
-	
 #' @rdname simFossilRecordMethods
 #' @export	
 fossilTaxa2fossilRecord<-function(fossilTaxa){

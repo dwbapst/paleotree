@@ -51,7 +51,7 @@ You might be able to apply this to datasets that aren't community ecology datase
 of proportional abundance, but I can't guarantee pr even predict what will happen.
 }
 \examples{
-
+\dontrun{
 library(vegan)
 
 # generate random community ecology data
@@ -100,7 +100,7 @@ twoWayEcologyCluster(
     yDist = taxaDist,
     propAbund = siteStand
     )
-
+}
 }
 \references{
 The function here was designed to emulate previous published 'two-way'

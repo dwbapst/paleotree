@@ -58,8 +58,10 @@ axisPhylo()
 \seealso{
 \code{setRootAges} is designed to work by default with trees on relative
 time-scales dated by \code{\link{obtainDatedPosteriorTreesMrB}}, particularly
-when the argument with \code{getFixedTimes = TRUE} is used to obtain fixed tip
-ages for anchoring the tree against an absolute time-scale.
+when the argument with \code{getFixedTimes = TRUE}, which is used to obtain fixed tip
+ages for anchoring the tree against an absolute time-scale. The functions described here
+will be applied automatically with \code{\link{obtainDatedPosteriorTreesMrB}}
+if argument \code{getRootAges = TRUE}.
 }
 \author{
 David W. Bapst

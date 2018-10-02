@@ -571,7 +571,7 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 					origName <- rownames(tipTimes)[i]
 					# raw interval IDs for FAD and LAD
 					intervalMatrix <-  rbind(
-						tipTimes[rawIntervals,1:2],tipTimes[rawIntervals,3:4]
+						tipTimes[i,1:2],tipTimes[i,3:4]
 						)
 					# get new names, using interval names
 					newNames <- paste0(origName,c("_Fint","_Lint"))

@@ -20,7 +20,12 @@
 #' \code{fossilRecord2fossilTaxa} converts a \code{fossilRecordSimulation} object
 #' to the flat table format of taxon data as was originally output by deprecated function 
 #' \code{simFossilTaxa}, and can be taken as input by a number of \code{paleotree} functions such as
-#' \code{sampleRanges},\code{taxa2phylo} and \code{taxa2cladogram}.
+#' \code{sampleRanges},\code{taxa2phylo} and \code{taxa2cladogram}. 
+#' 
+#' \code{fossilTaxa2fossilRecord} does the reverse, converting a \code{simFossilTaxa}
+#' table into a \code{fossilRecordSimulation} list object,
+#' but returns a \code{fossilRecordSimulation} object that considers each species as un-sampled (as sampling
+#' information is not contained within a \code{simFossilTaxa} table).
 #'
 #' \code{fossilRecord2fossilRanges} converts a \code{fossilRecordSimulation} object
 #' to the flat table format of observed taxon ranges, as is typically output by processing
@@ -69,7 +74,7 @@
 #' \code{\link{simFossilRecord}}
 
 #' @author 
-#' David W. Bapst.
+#' David W. Bapst
 
 #' @examples
 #' 
@@ -221,6 +226,21 @@ fossilRecord2fossilTaxa <- function(fossilRecord){
 	return(taxaConvert)
 	}
 
+	
+#' @rdname simFossilRecordMethods
+#' @export	
+fossilTaxa2fossilRecord<-function(fossilTaxa){
+	# convert a fossilTaxa object to a fossilRecord object
+	fossilRecord <- apply(fossilTaxa,1,function(x)
+		list(taxa.data=x,
+		sampling.times=numeric(0)))
+	names(fossilRecord) <- rownames(fossilTaxa)
+	class(fossilRecord) <- 'fossilRecordSimulation'
+	checkResult <- checkFossilRecord(fossilRecord)
+	return(fossilRecord)
+	}
+	
+	
 #' @rdname simFossilRecordMethods
 #' @export	
 fossilRecord2fossilRanges <- function(fossilRecord, merge.cryptic = TRUE, ranges.only = TRUE){

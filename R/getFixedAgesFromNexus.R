@@ -54,16 +54,19 @@ getMrBFixedAgesFromNexus <- function(origNexusFile){
 	# remove calibrate
 	hasCalibrate <- gsub(x = hasCalibrate,pattern = "calibrate",replacement = "")
 	# find calibrate lines with fixed
-	hasFixed <- grepl(pattern = " = fixed\\(",x = hasCalibrate,ignore.case = TRUE)
+	hasFixed <- grepl(pattern = "=fixed\\(",x = hasCalibrate,ignore.case = TRUE)
 	hasFixed <- hasCalibrate[hasFixed]
 	# remove fixed
 	hasFixed <- gsub(x = hasFixed,pattern = "fixed\\(",replacement = "")
 	# remove ;]
 	hasFixed <- gsub(x = hasFixed,pattern = "\\);",replacement = "")
-	fixedList <- strsplit(hasFixed,split = " = ")
+	fixedList <- strsplit(hasFixed,split = "=")
 	fixedMatrix <- matrix(sapply(fixedList,function(x) x),,2,byrow = TRUE)
 	fixedTable <- as.data.frame(fixedMatrix)
 	fixedTable[,2] <- as.numeric(fixedMatrix[,2])
+	if(nrow(fixedTable)==0){
+		warning("No OTUs with fixed ages found in original NEXUS file")
+		}
 	colnames(fixedTable) <- c("OTUname","fixedAge")
 	return(fixedTable)
 	}

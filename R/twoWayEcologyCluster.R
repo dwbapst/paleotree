@@ -6,7 +6,7 @@
 
 #' @details
 #' You might be able to apply this to datasets that aren't community ecology datasets
-#' of proportional abundance, but I can't guarantee pr even predict what will happen.
+#' of proportional abundance, but I can't guarantee or even predict what will happen.
 #'
 
 #' @param xDist The pair-wise distance matrix for the cluster diagram drawn along the
@@ -34,6 +34,9 @@
 #' @param abundExpansion An argument that is a multiplier controlling the size
 #' of dots plotted for reflecting relative abundance.
 
+#' @param cex.axisLabels Character expansion parameter for controlling the plotting
+#' of axis labels on the abundance dot-grid only.
+
 #' @param xAxisLabel The label placed on the horizontal axis of the plot.
 
 #' @param yAxisLabel The label placed on the vertical axis of the plot.
@@ -42,7 +45,8 @@
 #' This function creates a plot, and returns nothing, not even invisible output.
 
 #' @seealso
-#' Several other functions for community ecology data in paleotree are described at the \code{\link{communityEcology}} help file. Also see the example dataset, \code{\link{kanto}}.
+#' Several other functions for community ecology data in paleotree are described
+#' at the \code{\link{communityEcology}} help file. Also see the example dataset, \code{\link{kanto}}.
 
 #' @author David W. Bapst
 
@@ -56,20 +60,38 @@
 
 
 #' @examples
-#' \dontrun{
-#' library(vegan)
+#' set.seed(1)
 #' 
 #' # generate random community ecology data
 #' 	# using a Poisson distribution
 #' data<-matrix(rpois(5*7,1),5,7)
 #' 
-#' # relative abundance, distance matrices
+#' # get relative abundance, distance matrices
 #' propAbundMat<-t(apply(data,1,function(x) x/sum(x)))
-#' rownames(propAbundMat)<-paste0("x", 1:nrow(propAbundMat))
-#' colnames(propAbundMat)<-paste0("y", 1:ncol(propAbundMat))
+#' rownames(propAbundMat)<-paste0("site ", 1:nrow(propAbundMat))
+#' colnames(propAbundMat)<-paste0("taxon ", 1:ncol(propAbundMat))
 #' 
-#' siteDist<-vegdist(propAbundMat, "bray")
-#' taxaDist<-vegdist(t(propAbundMat), "bray")
+#' # for simplicity, let's calculate
+#' 	# the pairwise square chord distance
+#' 	# between sites and taxa
+#' 
+#' squareChordDist<-function(mat){
+#' 	res<-apply(mat,1,function(x)
+#' 		apply(mat,1,function(y)
+#' 			sum((sqrt(x)-sqrt(y))^2)
+#' 			)
+#' 		)
+#' 	#
+#' 	res<-as.dist(res)
+#' 	return(res)
+#' 	}
+#' 
+#' # its not a very popular distance metric
+#' 	# but it will do
+#' 	# quite popular in palynology
+#' 
+#' siteDist<-squareChordDist(propAbundMat)
+#' taxaDist<-squareChordDist(t(propAbundMat))
 #' 
 #' dev.new(width=10)	
 #' 
@@ -79,9 +101,13 @@
 #' 	propAbund = propAbundMat
 #' 	)
 #' 
-#' ##############################################	
+#' \dontrun{
 #' 
-#' # now let's try an example with some pokemon data
+#' # now let's try an example with the example kanto dataset
+#' # and use bray-curtis distance from vegan
+#' 
+#' library(vegan)
+#' 
 #' data(kanto)
 #' 
 #' # get distance matrices for sites and taxa
@@ -89,23 +115,26 @@
 #' 	# standardized to total abundance
 #' 
 #' # standardize site matrix to relative abundance
-#' siteStand <- decostand(kanto, method = "total")
+#' siteStandKanto <- decostand(kanto, method = "total")
 #' 
 #' # calculate site distance matrix (Bray-Curtis)
-#' siteDist <- vegdist(siteStand, "bray")
+#' siteDistKanto <- vegdist(siteStandKanto, "bray")
 #' 
 #' # calculate taxa distance matrix (Bray-Curtis)
 #' 	# from transposed standardized site matrix 
-#' taxaDist <- vegdist(t(siteStand), "bray")
+#' taxaDistKanto <- vegdist(t(siteStandKanto), "bray")
 #' 
 #' dev.new(width=10)	
 #' 
 #' twoWayEcologyCluster(
-#'     xDist = siteDist,
-#'     yDist = taxaDist,
-#'     propAbund = siteStand
+#'     xDist = siteDistKanto,
+#'     yDist = taxaDistKanto,
+#'     propAbund = siteStandKanto,
+#'     cex.axisLabels = 0.8
 #'     )
+#' 
 #' }
+
 
 
 #' @name twoWayEcologyCluster
@@ -122,7 +151,9 @@ twoWayEcologyCluster<-function(
 		# space to place between cluster diagrams and abundance plot
 		marginBetween = 0.1,
 		# multiplier applies for plotting dots reflecting abundance
-		abundExpansion = 4, 
+		abundExpansion = 3, 
+		# axis label cex
+		cex.axisLabels = 1,
 		xAxisLabel = "Across Sites",
 		yAxisLabel = "Across Taxa"
 		){
@@ -155,7 +186,7 @@ twoWayEcologyCluster<-function(
 	## PLOTTING IT
 	##
 	# make panes
-	oldPar<-par()
+	oldPar<-par(no.readonly = TRUE)
 	layout(mat=rbind(3:4,1:2),
 		heights=c(1,5),
 		widths=c(5,1)
@@ -188,13 +219,16 @@ twoWayEcologyCluster<-function(
 	#
 	axis(side=1,at=iSet,
 		las=2,lwd.ticks=0,
-		padj=-1,mgp=c(3,0.1,0),
-		labels=rownames(propAbund)
+		#padj=-1,
+		mgp=c(3,0.1,0),
+		labels=rownames(propAbund),
+		cex.axis = cex.axisLabels
 		)
 	axis(side=2,at=jSet,
 		las=2,lwd.ticks=0,
 		mgp=c(3,0.1,0),
-		labels=colnames(propAbund)
+		labels=colnames(propAbund),
+		cex.axis = cex.axisLabels
 		)
 	#
 	#################

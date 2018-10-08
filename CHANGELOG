@@ -1,3 +1,6 @@
+Version - 3.1.4 -
+-Updates to timePaleoPhy and cal3 documentation for dateTreatment argument, thanks to Armin Eisler for pointing out some inaccuracies in the text.
+
 Version - 3.1.3 - 10-01-18
 -Added function twoWayEcologyCluster for doing two-way R-mode & Q-mode cluster analyses of proportional abundance datasets from community ecology
 

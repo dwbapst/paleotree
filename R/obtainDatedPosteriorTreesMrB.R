@@ -103,14 +103,17 @@
 #'
 
 
-#' @seealso
+#' @seealso 
 #' When the arguments \code{getFixedTimes = TRUE} and \code{setRootAges = TRUE} are used, the resulting output will be scaled to absolute time 
 #' with the available fixed ages using functions \code{\link{setRootAge}} and \code{\link{setRootAges}} (for single and multiple phylogenies).
 #' This is only done if fixed ages are available and if the tree is not being saved to an external file.
 #' 
 #' Maximum Clade Credibility trees are estimated using the function\code{\link[phangorn]{maxCladeCred}} in package phangorn.
+#' 
+#' See function \code{link{tipDatingCompatabilitySummaryMrB}} for additional
+#' ways of solely evaluating the topoligical information in trees taken from MrBayes posterior samples.
 
-#' @author
+#' @author 
 #' David Bapst, with rescaling of raw output
 #' trees via code originally written by Nicholas Crouch.
 
@@ -148,12 +151,15 @@
 #' @name obtainDatedPosteriorTreesMrB
 #' @rdname obtainDatedPosteriorTreesMrB
 #' @export
-obtainDatedPosteriorTreesMrB <- function(runFile,nRuns = 2,burnin = 0.5,
+obtainDatedPosteriorTreesMrB <- function(
+	runFile,nRuns = 2,burnin = 0.5,
 	outputTrees,labelPostProb = FALSE,
 	getFixedTimes = FALSE,
 	getRootAges = FALSE,
 	originalNexusFile = NULL,
 	file = NULL){
+	#
+	#########################################################
 	#checks
 	if(length(outputTrees) != 1){
 		stop("outputTrees must be of length 1")

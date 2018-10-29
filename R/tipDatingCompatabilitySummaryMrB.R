@@ -11,7 +11,7 @@
 #' @details
 #' This function is most useful for dealing with dating analyses in MrBayes, particularly when tip-dating
 #' a tree with fossil taxa, as the half-compatibility and all-compatibility summary trees offered by the
-#' 'sumt' command in MrBayes can have issues properly portraying summary trees from such datasets.
+#' '\code{sumt}' command in MrBayes can have issues properly portraying summary trees from such datasets.
 #' 
 #' Summary topologies calculated with some tip-dating software environments, such as MrBayes,
 #' can be subject to strange and uninterpretable methodological artifacts
@@ -27,8 +27,6 @@
 #' 
 
 #' @inheritParams obtainDatedPosteriorTreesMrB
-
-#' @param
 
 #' @param compatibilityThreshold The posterior probability threshold (between 1 and zero, post-burn-in)
 #' that a node must satisfy to appear on the output summary tree. The default is 0.5, making the
@@ -55,9 +53,6 @@
 #' class \code{phylo}. If \code{labelPostProb = TRUE}, nodes will be labeled with the posterior probability of
 #' the respective clade.
 
-
-#' @aliases
-
 #' @seealso
 #' See function \code{link{obtainDatedPosteriorTreesMrB}} for additional
 #' ways of processing and evaluating trees from MrBayes posterior samples.
@@ -67,10 +62,8 @@
 
 #' @author David W. Bapst
 
-#' @references
-
-#' @example
-#' /dontrun{
+#' @examples
+#' \dontrun{
 #' #pull post-burnin trees from the posterior
 #'       # and get the half-compatibility summary (majority-rule consensus)
 #'       # by setting 'compatibilityThreshold = 0.5'

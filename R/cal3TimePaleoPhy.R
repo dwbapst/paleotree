@@ -173,8 +173,9 @@
 #' at all. Can be a single value or a vector of per-taxon values, such as if a
 #' user wants to only allow plesiomorphic taxa to be ancestors.
 
-#' @param dateTreatment This argument controls the interpretation of \code{timeData}. The default setting
-#' \code{dateTreatment = "firstLast"} treats the dates in timeData as a column of precise first and last appearances.
+#' @param dateTreatment This argument controls the interpretation of \code{timeData}.
+#' The default setting \code{dateTreatment = "firstLast"} treats the dates
+#' in \code{timeData} as a column of precise first and last appearances.
 #' A second option is \code{dateTreatment = "minMax"}, which
 #' treats these dates as minimum and maximum bounds on single point dates. Under this option,
 #' all taxa in the analysis will be treated as being point dates, such that the first appearance

@@ -194,7 +194,7 @@
 #' With both arguments \code{dateTreatment = "minMax"} and
 #' \code{dateTreatment = "randObs"}, the sampling of dates from random distributions should
 #' compel users to produce many time-scaled trees for any given analytical purpose.
-#' Note that  \code{\code{minMax"} returns an error in 'bin' time-scaling functions; please use
+#' Note that  \code{dateTreatment = "minMax"} returns an error in 'bin' time-scaling functions; please use
 #' \code{points.occur} instead.
 
 # @param rand.obs Should the tips represent observation times uniform

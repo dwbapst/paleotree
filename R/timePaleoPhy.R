@@ -227,10 +227,10 @@
 #' \code{add.term = FALSE}, as this argument is inconsistent with those argument
 #' options.
 
-#' @param dateTreatment This argument controls the interpretation of \code{timeData}.
-#' The default setting \code{dateTreatment = "firstLast"} treats the dates
-#' in \code{timeData} as a column of precise first and last appearances.
-#' A second option is \code{dateTreatment = "minMax"}, which
+#' @param dateTreatment This argument controls the interpretation of \code{timeData}. 
+#' The default setting \code{dateTreatment = "firstLast"} treats the dates 
+#' in \code{timeData} as a column of precise first and last appearances. 
+#' A second option is \code{dateTreatment = "minMax"}, which 
 #' treats these dates as minimum and maximum bounds on single point dates. Under this option,
 #' all taxa in the analysis will be treated as being point dates, such that the first appearance
 #' is also the last. These dates will be pulled under a uniform distribution. If \code{dateTreatment = "minMax"} is used,
@@ -248,7 +248,7 @@
 #' With both arguments \code{dateTreatment = "minMax"} and
 #' \code{dateTreatment = "randObs"}, the sampling of dates from random distributions should
 #' compel users to produce many time-scaled trees for any given analytical purpose.
-#' Note that  \code{\code{minMax"} returns an error in 'bin' time-scaling functions; please use
+#' Note that \code{dateTreatment = "minMax"} returns an error in 'bin' time-scaling functions; please use
 #' \code{points.occur} instead.
 
 

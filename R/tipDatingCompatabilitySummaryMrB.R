@@ -121,7 +121,7 @@ tipDatingCompatabilitySummaryMrB <- function(
 	# get the posterior probabilities
 	if(labelPostProb){ 
 		# label tree with posterior probabilities as node labels
-		finalTree <- getPosteriorProbabiities(finalTree,postBurninTrees)
+		finalTree <- getPosteriorProbabiities(finalTree,postBurnInTrees)
 		}
 	# return final compatibility tree
 	return(finalTree)

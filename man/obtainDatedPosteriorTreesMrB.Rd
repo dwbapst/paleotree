@@ -142,6 +142,9 @@ with the available fixed ages using functions \code{\link{setRootAge}} and \code
 This is only done if fixed ages are available and if the tree is not being saved to an external file.
 
 Maximum Clade Credibility trees are estimated using the function\code{\link[phangorn]{maxCladeCred}} in package phangorn.
+
+See function \code{link{tipDatingCompatabilitySummaryMrB}} for additional
+ways of solely evaluating the topoligical information in trees taken from MrBayes posterior samples.
 }
 \author{
 David Bapst, with rescaling of raw output

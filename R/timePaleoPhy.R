@@ -111,8 +111,9 @@
 #' is known from. Presumably, the first and last appearances of that taxon in
 #' the fossil record is at unknown dates within these bounds. 
 #'
-#' As of paleotree version 2.0. the treatment of taxon ages in \code{timePaleoPhy} is handled by the argument \code{dateTreatment}.
-#'\emph{By default,} this argument is set to 'firstLast' which means the matrix of ages are treated
+#' As of paleotree version 2.0. the treatment of taxon ages in
+#' \code{timePaleoPhy} is handled by the argument \code{dateTreatment}.
+#' \emph{By default,} this argument is set to 'firstLast' which means the matrix of ages are treated
 #' as precise first and last appearance dates (i.e. FADs and LADs). The earlier FADs will be used
 #' to calibrate the node ages, which could produce fairly nonsensical results if these are 'minimum'
 #' ages instead and reflect age uncertainty. Alternatively, \code{dateTreatment} can be set to 'minMax'
@@ -226,27 +227,32 @@
 #' \code{add.term = FALSE}, as this argument is inconsistent with those argument
 #' options.
 
-#' @param dateTreatment This argument controls the interpretation of timeData. The default setting
-#' 'firstLast' treats the dates in timeData as a column of precise first and last appearances,
-#' such that first appearances will be used to date nodes and last appearances will only be
-#' called on if \code{add.term = TRUE}. A second option, added by great demand, is 'minMax' which
+#' @param dateTreatment This argument controls the interpretation of \code{timeData}. 
+#' The default setting \code{dateTreatment = "firstLast"} treats the dates 
+#' in \code{timeData} as a column of precise first and last appearances. 
+#' A second option is \code{dateTreatment = "minMax"}, which 
 #' treats these dates as minimum and maximum bounds on single point dates. Under this option,
 #' all taxa in the analysis will be treated as being point dates, such that the first appearance
-#' is also the last. These dates will be pulled under a uniform distribution. If 'minMax' is used,
-#' add.term becomes meaningless, and the use of it will return an error message. A third option
-#' is 'randObs'. This assumes that the dates in the matrix are first and last appearance times,
-#' but that the desired time of observation is unknown. Thus, this is much like 'firstLast' except
-#' the effective time of observation (the taxon's LAD under 'firstLast') is treated an uncertain date, and is randomly
-#' sampled between the first and last appearance times. The FAD still is treated as a fixed number, used
+#' is also the last. These dates will be pulled under a uniform distribution. If \code{dateTreatment = "minMax"} is used,
+#' \code{add.term} becomes meaningless, and the use of it will return an error message. A third option
+#' is \code{dateTreatment = "randObs"}. This assumes that the dates in the matrix are first and last appearance times,
+#' but that the desired time of observation is unknown. Thus, this is much like \code{dateTreatment = "firstLast"} except
+#' the effective time of observation (the taxon's LAD under
+#' \code{dateTreatment = "firstLast"}) is treated as an uncertain date, and
+#' is randomly sampled between the first and last appearance times. The FAD still is treated as a fixed number, used
 #' for dating the nodes. In previous versions of paleotree, this
-#' was called in \code{timePaleoPhy} using the argument rand.obs, which has been removed
+#' was called in \code{timePaleoPhy} using the argument \code{rand.obs}, which has been removed
 #' for clarity. This temporal uncertainty in times of observation might be useful if
 #' a user is interested in applying phylogeny-based approaches to studying trait evolution, but have
 #' per-taxon measurements of traits that come from museum specimens with uncertain temporal placement.
-#' With both arguments 'minMax' and 'randObs', the sampling of dates from random distributions should
+#' With both arguments \code{dateTreatment = "minMax"} and
+#' \code{dateTreatment = "randObs"}, the sampling of dates from random distributions should
 #' compel users to produce many time-scaled trees for any given analytical purpose.
-#' Note that 'minMax' returns an error in 'bin' time-scaling functions; please use
-#' 'points.occur' instead.
+#' Note that \code{dateTreatment = "minMax"} returns an error in 'bin' time-scaling functions; please use
+#' \code{points.occur} instead.
+
+
+
 
 #DEPRECATED HELP TEXT
 # @param rand.obs Should the tips represent observation times uniform

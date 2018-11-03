@@ -659,7 +659,7 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 	# use run name as log file name
 	logfileline <- paste0('log start filename = "',runName,'.out" replace;')
 	# use run name for MCMC output files
-	outputNameLine <- paste0('filenames = "',runName,'"')
+	outputNameLine <- paste0('Filename = "',runName,'"')
 	########################################################
 	#	
 	if(is.null(treeConstraints)){
@@ -968,7 +968,7 @@ runBlock <- "
 		morphModelBlock <- morphModelBlock_Relaxed
 		}
 	# insert ngen
-	block5 <- paste0(block5a,ngen,block5b)
+	block5 <- paste0(block5a,ngen," ",outputNameLine,block5b)
 	####################
 	finalBlock <- c(
 		block1,
@@ -981,7 +981,6 @@ runBlock <- "
 		morphModelBlock,
 		block4,
 		ageBlock,
-		outputNameLine,
 		block5,
 		runBlock,
 		" ",

@@ -54,7 +54,7 @@
 #' the respective clade.
 
 #' @seealso
-#' See function \code{link{obtainDatedPosteriorTreesMrB}} for additional
+#' See function \code{\link{obtainDatedPosteriorTreesMrB}} for additional
 #' ways of processing and evaluating trees from MrBayes posterior samples.
 #' 
 #' Summary trees are estimated using the function \code{\link[ape]{consensus}}

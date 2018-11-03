@@ -110,7 +110,7 @@
 #' determined entirely by the fossilized birth-death prior, with no impact from a
 #' presupposed morphological clock (thus a 'clock-less analysis').
 
-#' @param runName The name of the run, used for naming the log files. 
+#' @param runName The name of the run, used for naming the log files and MCMC output files. 
 #' If not set, the name will be taken from the name given for outputting
 #' the NEXUS script (\code{newFile}). If \code{newFile} is not given, and
 #' \code{runName} is not set by the user, the default run name will be  "new_run_paleotree".
@@ -118,6 +118,11 @@
 #' @param doNotRun If \code{TRUE}, the commands that cause a script to automatically begin running in 
 #' \emph{MrBayes} will be left out. Useful for troubleshooting initial runs of scripts for non-fatal errors and
 #' warnings (such as ignored constraints). Default for this argument is \code{FALSE}.
+
+#' @param autoCloseMrB If \code{TRUE}, the MrBayes script created by this function will
+#' 'autoclose', so that when an MCMC run finishes the specified number of generations,
+#' it does not interactively check whether to continue the MCMC. This is often necessary
+#' for batch analyses.
 
 #' @param treeConstraints An object of class \code{phylo}, 
 #' from which (if \code{treeConstraints} is supplied) the set topological constraints are derived, as
@@ -293,8 +298,9 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 							collapseUniform = TRUE,anchorTaxon = TRUE,
 							newFile = NULL,origNexusFile = NULL, 
 							parseOriginalNexus = TRUE,createEmptyMorphMat = TRUE,
-							orderedChars=NULL, morphModel = "strong",
-							runName = NULL, ngen = "100000000", doNotRun = FALSE,
+							orderedChars=NULL, morphModel = "strong", 
+							runName = NULL, ngen = "100000000",
+							doNotRun = FALSE, autoCloseMrB = FALSE,
 							cleanNames = TRUE, printExecute = TRUE){
 	################################################################################################
 	#         # a wooper of a function ... here's some ASCII from artist 'Psyduck'
@@ -652,6 +658,8 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 		}
 	# use run name as log file name
 	logfileline <- paste0('log start filename = "',runName,'.out" replace;')
+	# use run name for MCMC output files
+	outputNameLine <- paste0('filenames = "',runName,'"')
 	########################################################
 	#	
 	if(is.null(treeConstraints)){
@@ -677,10 +685,12 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 		ingroupBlock = ingroupConstraint,
 		ageBlock = ageCalibrations, 
 		constraintBlock = topologicalConstraints,
-		orderedChars=orderedChars,		
+		orderedChars=orderedChars,
+		autoCloseMrB = autoCloseMrB,
 		morphModel = morphModel, 
 		ngen = ngen, 
-		doNotRun = doNotRun)
+		doNotRun = doNotRun,
+		outputNameLine = outputNameLine)
 	###############################################
 	# combine morph matrix block with MrBayes command block
 	finalText <- c(morphNexus,MrBayesBlock)
@@ -782,8 +792,11 @@ makeEmptyMorphNexusMrB <- function(taxonNames){
 
 
 
-makeMrBayesBlock <- function(logBlock,ingroupBlock,ageBlock,orderedChars,
-							constraintBlock,morphModel = "strong",ngen = 100000000,doNotRun = FALSE){
+makeMrBayesBlock <- function(logBlock, ingroupBlock,
+							ageBlock, orderedChars, autoCloseMrB,
+							constraintBlock, morphModel = "strong",
+							ngen = 100000000, doNotRun = FALSE,
+							outputNameLine = outputNameLine){
 #########################################################################################						
 	###
 	### # what follows will look very messy due to its untabbed nature
@@ -797,9 +810,14 @@ begin mrbayes;
      William Gearty, Graham Slater, Davey Wright, and guided by the 
 	 recommendations of Matzke and Wright, 2016, Biol. Lett.]
 
-[no autoclose, I like it to ask, but you might want it]
-	[set autoclose = yes;]
-"
+[autoclose, I like it to ask (the default), but you might want it - if so, set to 'yes']"
+
+if(autoCloseMrB){
+	block1 <- C(block1,"set autoclose = yes;\n")
+}else{
+	block1 <- C(block1,"[set autoclose = yes;]\n")
+	}
+
 ##########################################################################
 block2 <- "
 [DATA]
@@ -963,6 +981,7 @@ runBlock <- "
 		morphModelBlock,
 		block4,
 		ageBlock,
+		outputNameLine,
 		block5,
 		runBlock,
 		" ",

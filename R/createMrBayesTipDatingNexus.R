@@ -813,9 +813,9 @@ begin mrbayes;
 [autoclose, I like it to ask (the default), but you might want it - if so, set to 'yes']"
 
 if(autoCloseMrB){
-	block1 <- C(block1,"set autoclose = yes;\n")
+	block1 <- c(block1,"set autoclose = yes;\n")
 }else{
-	block1 <- C(block1,"[set autoclose = yes;]\n")
+	block1 <- c(block1,"[set autoclose = yes;]\n")
 	}
 
 ##########################################################################

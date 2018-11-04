@@ -74,6 +74,11 @@
 #'  	compatibilityThreshold = 0.5,
 #'  	labelPostProb = TRUE
 #'  	)
+#' 
+#' # let's try plotting it with posterior probabilities as node labels
+#' plot(halfCompatTree)
+#' nodelabels(halfCompatTree$node.label)
+#'  
 #' }
 #' 
 

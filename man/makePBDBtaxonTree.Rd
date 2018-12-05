@@ -4,8 +4,9 @@
 \alias{makePBDBtaxonTree}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
-makePBDBtaxonTree(data, rank, method = "parentChild", solveMissing = NULL,
-  tipSet = "nonParents", cleanTree = TRUE, APIversion = "1.1")
+makePBDBtaxonTree(data, rank, method = "parentChild",
+  solveMissing = NULL, tipSet = "nonParents", cleanTree = TRUE,
+  APIversion = "1.2")
 }
 \arguments{
 \item{data}{A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
@@ -83,9 +84,9 @@ This function should not be taken too seriously. Many groups in the Paleobiology
 out-of-date or very incomplete taxonomic information. This function is meant to help visualize
 what information is present, and by use of time-scaling functions, allow us to visualize the intersection
 of temporal and phylogenetic, mainly to look for incongruence due to either incorrect taxonomic placements,
-erroneous occurrence data or both. 
+erroneous occurrence data or both.
 
-Note however that, contrary to common opinion among some paleontologists, taxon-trees may be just as useful for 
+Note however that, contrary to common opinion among some paleontologists, taxon-trees may be just as useful for
 macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, in press.).
 }
 \examples{
@@ -94,9 +95,9 @@ macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, in pr
 easyGetPBDBtaxa <- function(taxon,show = c("phylo","img","app")){
 	#let's get some taxonomic data
 	taxaData <- read.csv(paste0("http://paleobiodb.org/",
-		"data1.1/taxa/list.txt?base_name = ",taxon,
-		"&rel = all_children&show = ",
-	paste0(show,collapse = ","),"&status = senior"),
+		"data1.2/taxa/list.txt?base_name=",taxon,
+		"&rel=all_children&show=",
+	paste0(show,collapse = ","),"&status=senior"),
 	stringsAsFactors = FALSE)
 	return(taxaData)
 	}
@@ -191,7 +192,7 @@ nodelabels(timeTree$node.label,cex = 0.5)
 }
 \references{
 Soul, L. C., and M. Friedman. In Press. Taxonomy and Phylogeny Can Yield
-Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology} 
+Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology}
 (\href{http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract}{Link})
 }
 \seealso{

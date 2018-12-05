@@ -5,13 +5,12 @@
 \alias{timeSliceFossilRecord}
 \alias{fossilRecord2fossilTaxa}
 \alias{fossilRecord2fossilRanges}
-\alias{fossilRecord2fossilTaxa}
 \alias{fossilTaxa2fossilRecord}
-\alias{fossilRecord2fossilRanges}
 \title{Methods for Editing or Converting Output from simFossilRecord}
 \usage{
-timeSliceFossilRecord(fossilRecord, sliceTime, shiftRoot4TimeSlice = FALSE,
-  modern.samp.prob = 1, tolerance = 10^-4)
+timeSliceFossilRecord(fossilRecord, sliceTime,
+  shiftRoot4TimeSlice = FALSE, modern.samp.prob = 1,
+  tolerance = 10^-4)
 
 fossilRecord2fossilTaxa(fossilRecord)
 

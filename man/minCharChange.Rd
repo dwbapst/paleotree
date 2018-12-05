@@ -3,13 +3,12 @@
 \name{minCharChange}
 \alias{minCharChange}
 \alias{ancPropStateMat}
-\alias{ancPropStateMat}
 \title{Estimating the Minimum Number of Character Transitions Using Maximum Parsimony}
 \usage{
 minCharChange(trait, tree, randomMax = 10000, maxParsimony = TRUE,
-  orderedChar = FALSE, type = "MPR", cost = NULL, printMinResult = TRUE,
-  ambiguity = c(NA, "?"), dropAmbiguity = FALSE, polySymbol = "&",
-  contrast = NULL)
+  orderedChar = FALSE, type = "MPR", cost = NULL,
+  printMinResult = TRUE, ambiguity = c(NA, "?"),
+  dropAmbiguity = FALSE, polySymbol = "&", contrast = NULL)
 
 ancPropStateMat(trait, tree, orderedChar = FALSE, type = "MPR",
   cost = NULL, ambiguity = c(NA, "?"), dropAmbiguity = FALSE,

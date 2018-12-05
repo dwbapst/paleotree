@@ -4,7 +4,6 @@
 \alias{communityEcology}
 \alias{pairwiseSpearmanRho}
 \alias{HurlbertPIE}
-\alias{HurlbertPIE}
 \title{Miscellaneous Functions for Community Ecology}
 \usage{
 pairwiseSpearmanRho(x, dropAbsent = "bothAbsent", asDistance = FALSE,

@@ -9,9 +9,9 @@
 #' out-of-date or very incomplete taxonomic information. This function is meant to help visualize
 #' what information is present, and by use of time-scaling functions, allow us to visualize the intersection
 #' of temporal and phylogenetic, mainly to look for incongruence due to either incorrect taxonomic placements,
-#' erroneous occurrence data or both. 
+#' erroneous occurrence data or both.
 #'
-#' Note however that, contrary to common opinion among some paleontologists, taxon-trees may be just as useful for 
+#' Note however that, contrary to common opinion among some paleontologists, taxon-trees may be just as useful for
 #' macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, in press.).
 
 #' @param data A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
@@ -98,23 +98,23 @@
 
 #' @references
 #' Soul, L. C., and M. Friedman. In Press. Taxonomy and Phylogeny Can Yield
-#' Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology} 
+#' Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology}
 #' (\href{http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract}{Link})
-#' 
+#'
 
 #' @examples
 #' \dontrun{
-#' 
+#'
 #' easyGetPBDBtaxa <- function(taxon,show = c("phylo","img","app")){
 #' 	#let's get some taxonomic data
 #' 	taxaData <- read.csv(paste0("http://paleobiodb.org/",
-#' 		"data1.1/taxa/list.txt?base_name = ",taxon,
-#' 		"&rel = all_children&show = ",
-#'		paste0(show,collapse = ","),"&status = senior"),
+#' 		"data1.2/taxa/list.txt?base_name=",taxon,
+#' 		"&rel=all_children&show=",
+#'		paste0(show,collapse = ","),"&status=senior"),
 #'		stringsAsFactors = FALSE)
 #' 	return(taxaData)
 #' 	}
-#' 
+#'
 #' #graptolites
 #' graptData <- easyGetPBDBtaxa("Graptolithina")
 #' graptTree <- makePBDBtaxonTree(graptData,"genus",
@@ -124,21 +124,21 @@
 #' 	method = "Linnean")
 #' plot(graptTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
 #' nodelabels(graptTree$node.label,adj = c(0,1/2))
-#' 
+#'
 #' #conodonts
 #' conoData <- easyGetPBDBtaxa("Conodonta")
 #' conoTree <- makePBDBtaxonTree(conoData,"genus",
 #' 	method = "parentChild", solveMissing = "queryPBDB")
 #' plot(conoTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
 #' nodelabels(conoTree$node.label,adj = c(0,1/2))
-#' 
+#'
 #' #asaphid trilobites
 #' asaData <- easyGetPBDBtaxa("Asaphida")
 #' asaTree <- makePBDBtaxonTree(asaData,"genus",
 #' 	method = "parentChild", solveMissing = "queryPBDB")
 #' plot(asaTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
 #' nodelabels(asaTree$node.label,adj = c(0,1/2))
-#' 
+#'
 #' #Ornithischia
 #' ornithData <- easyGetPBDBtaxa("Ornithischia")
 #' ornithTree <- makePBDBtaxonTree(ornithData,"genus",
@@ -150,26 +150,26 @@
 #' 	method = "Linnean")
 #' plot(ornithTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
 #' nodelabels(ornithTree$node.label,adj = c(0,1/2))
-#' 
+#'
 #' #Rhynchonellida
 #' rynchData <- easyGetPBDBtaxa("Rhynchonellida")
 #' rynchTree <- makePBDBtaxonTree(rynchData,"genus",
 #' 	method = "parentChild", solveMissing = "queryPBDB")
 #' plot(rynchTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
 #' nodelabels(rynchTree$node.label,adj = c(0,1/2))
-#' 
+#'
 #' #some of these look pretty messy!
-#' 
+#'
 #' }
-#' 
+#'
 #' ###################################
 #' \donttest{
-#' 
+#'
 #' #let's try time-scaling the graptolite tree
-#' 
+#'
 #' #get some example occurrence and taxonomic data
 #' data(graptPBDB)
-#' 
+#'
 #' #get the taxon tree: Linnean method
 #' graptTree <- makePBDBtaxonTree(graptTaxaPBDB, "genus", method = "Linnean")
 #' plot(graptTree,cex = 0.4)
@@ -179,41 +179,41 @@
 #' graptTree <- makePBDBtaxonTree(graptTaxaPBDB, "genus", method = "parentChild")
 #' plot(graptTree,cex = 0.4)
 #' nodelabels(graptTree$node.label,cex = 0.5)
-#' 
+#'
 #' #get time data from occurrences
 #' graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,rank = "genus",onlyFormal = FALSE)
 #' graptTimeGenus <- occData2timeList(occList = graptOccGenus)
-#' 
+#'
 #' #let's time-scale the parentChild tree with paleotree
 #'		# use minimum branch length for visualization
 #' 		# and nonstoch.bin so we plot maximal ranges
 #' timeTree <- bin_timePaleoPhy(graptTree,timeList = graptTimeGenus,
 #' 	nonstoch.bin = TRUE,type = "mbl",vartime = 3)
-#' 
+#'
 #' #drops a lot of taxa; some of this is due to mispellings, etc
-#' 
+#'
 #' }
 #' \dontrun{
-#' 
+#'
 #' #make pretty plot with library strap
 #' library(strap)
 #' geoscalePhylo(timeTree, ages = timeTree$ranges.used)
 #' nodelabels(timeTree$node.label,cex = 0.5)
 #'
 #' }
-#' 
+#'
 
 #' @name makePBDBtaxonTree
 #' @rdname makePBDBtaxonTree
 #' @export
 makePBDBtaxonTree <- function(data,rank,method = "parentChild",solveMissing = NULL,
-					tipSet = "nonParents",cleanTree = TRUE,APIversion = "1.1"){		
-	# 
+					tipSet = "nonParents",cleanTree = TRUE,APIversion = "1.2"){
+	#
 	# library(paleotree);data(graptPBDB);
 	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE; solveMissing = NULL
 	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE; solveMissing = "queryPBDB"
 	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE; solveMissing = "mergeRoots"
-	# data <- graptTaxaPBDB; rank = "genus"; method = "Linnean"; 
+	# data <- graptTaxaPBDB; rank = "genus"; method = "Linnean";
 	#
 	#CHECKS
 	if(length(method) != 1 | !is.character(method)){
@@ -247,11 +247,11 @@ makePBDBtaxonTree <- function(data,rank,method = "parentChild",solveMissing = NU
 			"subclass","class","superclass","subphylum","phylum","superphylum","subkingdom",
 			"kingdom","unranked clade","informal")	#keep informal as high, never drop!
 		rank1 <- which(rank == taxRankPBDB)
-		numTaxonRank <- sapply(data1[,"taxon_rank"],function(x) which(x == taxRankPBDB))		
+		numTaxonRank <- sapply(data1[,"taxon_rank"],function(x) which(x == taxRankPBDB))
 		#drop taxa below specified rank
 		data1 <- data1[rank1 <= numTaxonRank,]
 		#also recreate numTaxonRank
-		numTaxonRank <- sapply(data1[,"taxon_rank"],function(x) which(x == taxRankPBDB))		
+		numTaxonRank <- sapply(data1[,"taxon_rank"],function(x) which(x == taxRankPBDB))
 		#
 		#create lookup table for taxon names
 		taxonNameTable <- cbind(as.numeric(data1[,"taxon_no"]),as.character(data1[,"taxon_name"]))
@@ -281,7 +281,7 @@ makePBDBtaxonTree <- function(data,rank,method = "parentChild",solveMissing = NU
 			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
 				if(!is.null(solveMissing)){
 					if(solveMissing == "queryPBDB"){
-						floatData <- queryMissingParents(taxaID = floatersNew,APIversion = APIversion)	
+						floatData <- queryMissingParents(taxaID = floatersNew,APIversion = APIversion)
 						#update taxon names in taxonNameTable
 						whichUpdate <- match(floatData[,"taxon_no"],taxonNameTable[,1])
 						taxonNameTable[whichUpdate[!is.na(whichUpdate)],2] <- floatData[
@@ -357,7 +357,7 @@ translatePBDBtaxa <- function(data){
 	#need to replace any empty string values with NAs (due perhaps to use of read.csv with the API)
 	data[data == ""] <- NA
 	#if com vocab
-	if(any("rnk" == colnames(data))){	
+	if(any("rnk" == colnames(data))){
 		#apparently it doesn't matter if these columns *are* present or not
 		colnames(data)[colnames(data) == "acn"] <- "accepted_name"
 		colnames(data)[colnames(data) == "snp"] <- "senpar_no"
@@ -365,8 +365,8 @@ translatePBDBtaxa <- function(data){
 		colnames(data)[colnames(data) == "nam"] <- "taxon_name"
 		colnames(data)[colnames(data) == "fml"] <- "family"
 		colnames(data)[colnames(data) == "odl"] <- "order"
-		colnames(data)[colnames(data) == "cll"] <- "class"	
-		colnames(data)[colnames(data) == "phl"] <- "phylum"	
+		colnames(data)[colnames(data) == "cll"] <- "class"
+		colnames(data)[colnames(data) == "phl"] <- "phylum"
 		colnames(data)[colnames(data) == "kgl"] <- "kingdom"
 		colnames(data)[colnames(data) == "par"] <- "parent_no"
 		colnames(data)[colnames(data) == "oid"] <- "taxon_no"
@@ -395,27 +395,31 @@ translatePBDBtaxa <- function(data){
 		#
 		#replace taxon_no with accepted_no
 		taxNum <- data[,"accepted_no"]
-		taxNum[is.na(taxNum)] <- as.character(data[is.na(taxNum),"taxon_no"])	
-		data[,"taxon_no"] <- taxNum			
+		taxNum[is.na(taxNum)] <- as.character(data[is.na(taxNum),"taxon_no"])
+		data[,"taxon_no"] <- taxNum
 		#
 		#also replace parent_no in the same way with senpar_no
-		parNum <- data[,"senpar_no"]
-		parNum[is.na(parNum)] <- as.character(data[is.na(parNum),"parent_no"])	
-		data[,"parent_no"] <- parNum		
+		#modified to deal with 1.2 lacking senpar_no sometimes? always?
+
+		if(any(colnames(data) == "senpar_no")){
+			parNum <- data[,"senpar_no"]
+			parNum[is.na(parNum)] <- as.character(data[is.na(parNum),"parent_no"])
+			data[,"parent_no"] <- parNum
 		}
+	}
 	#
 	return(data)
-	}
+}
 
 #another hidden function
-queryMissingParents <- function(taxaID, APIversion = "1.1"){
+queryMissingParents <- function(taxaID, APIversion = "1.2"){
 	#drop Eukarya, as it won't return if status = senior under 1.1
 	#taxaID <- as.numeric(taxaID[taxaID != "1"])
 	#let's get some taxonomic data
 	floatData <- read.csv(paste0("http://paleobiodb.org/",
 		"data",APIversion,
-		"/taxa/list.txt?id = ",paste0(taxaID,collapse = ","),
-		"&rel = self&status = senior&vocab = pbdb"),
+		"/taxa/list.txt?id=",paste0(taxaID,collapse = ","),
+		"&rel=", ifelse(APIversion=="1.1", "self", "exact"),"&status=senior&vocab=pbdb"),
 		stringsAsFactors = FALSE)
 	if(nrow(floatData) == 0){
 		stop(paste("Current PBDB API would not return info for the following taxon IDs: \n",

@@ -4,7 +4,6 @@
 \alias{compareTimescaling}
 \alias{compareNodeAges}
 \alias{compareTermBranches}
-\alias{compareTermBranches}
 \title{Comparing the Time-Scaling of Trees}
 \usage{
 compareNodeAges(tree1, tree2, dropUnshared = FALSE)

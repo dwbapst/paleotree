@@ -6,13 +6,13 @@
 \title{Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes}
 \usage{
 createMrBayesTipDatingNexus(tipTimes, outgroupTaxa = NULL,
-  treeConstraints = NULL, ageCalibrationType, whichAppearance = "first",
-  treeAgeOffset, minTreeAge = NULL, collapseUniform = TRUE,
-  anchorTaxon = TRUE, newFile = NULL, origNexusFile = NULL,
-  parseOriginalNexus = TRUE, createEmptyMorphMat = TRUE,
-  orderedChars = NULL, morphModel = "strong", runName = NULL,
-  ngen = "100000000", doNotRun = FALSE, cleanNames = TRUE,
-  printExecute = TRUE)
+  treeConstraints = NULL, ageCalibrationType,
+  whichAppearance = "first", treeAgeOffset, minTreeAge = NULL,
+  collapseUniform = TRUE, anchorTaxon = TRUE, newFile = NULL,
+  origNexusFile = NULL, parseOriginalNexus = TRUE,
+  createEmptyMorphMat = TRUE, orderedChars = NULL,
+  morphModel = "strong", runName = NULL, ngen = "100000000",
+  doNotRun = FALSE, cleanNames = TRUE, printExecute = TRUE)
 }
 \arguments{
 \item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 

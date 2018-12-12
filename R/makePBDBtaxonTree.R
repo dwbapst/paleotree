@@ -12,7 +12,7 @@
 #' erroneous occurrence data or both. 
 #'
 #' Note however that, contrary to common opinion among some paleontologists, taxon-trees may be just as useful for 
-#' macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, in press.).
+#' macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, 2015.).
 
 #' @param data A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
 #' with \code{show=phylo}. Should work with versions 1.1-1.2 of
@@ -21,11 +21,15 @@
 #' tree will have a taxon's *original* name and not
 #' any formally updated name.
 
-#' @param rank The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.
+#' @param rank The selected taxon rank; must be one of 'species',
+#' 'genus', 'family', 'order', 'class' or 'phylum'.
 
-#' @param cleanTree By default, the tree is run through a series of post-processing, including having singles collapsed,
-#' nodes reordered and being written out as a Newick string and read back in, to ensure functionality with ape functions
-#' and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
+#' @param cleanTree When \code{TRUE} (the default), the tree is run through a series of
+#' post-processing, including having singles collapsed,
+#' nodes reordered and being written out as a Newick string and read
+#' back in, to ensure functionality with ape functions
+#' and ape-derived functions. If \code{FALSE}, none of this post-processing
+#' is done and users should beware, as such trees can
 #' lead to hard-crashes of R.
 
 #' @param method Controls which algorithm is used for calculating
@@ -98,7 +102,7 @@
 #' @author David W. Bapst
 
 #' @references
-#' Soul, L. C., and M. Friedman. In Press. Taxonomy and Phylogeny Can Yield
+#' Soul, L. C., and M. Friedman. 2015. Taxonomy and Phylogeny Can Yield
 #' Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology} 
 #' (\href{http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract}{Link})
 #' 
@@ -109,24 +113,24 @@
 #' easyGetPBDBtaxa <- function(taxon,show = c("phylo","img","app")){
 #' 	#let's get some taxonomic data
 #' 	taxaData <- read.csv(paste0("http://paleobiodb.org/",
-#' 		"data1.2/taxa/list.txt?base_name=",taxon,
-#' 		"&rel=all_children&show=",
-#'		paste0(show,collapse = ","),"&status=senior"),
-#'		stringsAsFactors = FALSE)
+#' 	    "data1.2/taxa/list.txt?base_name=",taxon,
+#' 	    "&rel=all_children&show=",
+#' 	    paste0(show,collapse = ","),"&status=senior"),
+#' 	    stringsAsFactors = FALSE)
 #' 	return(taxaData)
 #' 	}
 #' 
 #' #graptolites
 #' graptData <- easyGetPBDBtaxa("Graptolithina")
 #' graptTree <- makePBDBtaxonTree(graptData,"genus",
-#' 	method = "parentChild", solveMissing = "queryPBDB")
+#' 	   method = "parentChild", solveMissing = "queryPBDB")
 #' #try Linnean
 #' graptTree <- makePBDBtaxonTree(graptData,"genus",
-#' 	method = "Linnean")
+#' 	   method = "Linnean")
 #' 
 #' # plot it!
 #' plot(graptTree,show.tip.label = FALSE,
-#'    no.margin = TRUE,edge.width = 0.35)
+#'     no.margin = TRUE,edge.width = 0.35)
 #' nodelabels(graptTree$node.label,adj = c(0,1/2))
 #' 
 #' #################
@@ -199,7 +203,7 @@
 #' graptTimeGenus <- occData2timeList(occList = graptOccGenus)
 #' 
 #' #let's time-scale the parentChild tree with paleotree
-#'		# use minimum branch length for visualization
+#' 		# use minimum branch length for visualization
 #' 		# and nonstoch.bin so we plot maximal ranges
 #' timeTree <- bin_timePaleoPhy(graptTree,timeList = graptTimeGenus,
 #' 	nonstoch.bin = TRUE,type = "mbl",vartime = 3)

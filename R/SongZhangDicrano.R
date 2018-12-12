@@ -94,11 +94,11 @@
 #'
 #' # plot 12 taxon majority rule tree from Song and Zhang
 #' plot(cladogramDicranoX12,
-#'	main = "MajRule_24charX12Taxa_wBiostratChar")
+#' 	main = "MajRule_24charX12Taxa_wBiostratChar")
 #' 
 #' # plot 13 taxon MPT
 #' plot(cladogramDicranoX13,
-#'	main = "MPT_24charX13Taxa_wBiostratChar")
+#' 	main = "MPT_24charX13Taxa_wBiostratChar")
 #'
 #' ##############
 #'

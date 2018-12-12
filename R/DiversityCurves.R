@@ -139,7 +139,7 @@
 #' #simulation examples
 #' set.seed(444)
 #' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#'	nTotalTaxa = c(30,40), nExtant = 0)
+#' 	nTotalTaxa = c(30,40), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' #let's see what the 'true' diversity curve looks like in this case
 #' #plot the FADs and LADs with taxicDivCont()
@@ -171,7 +171,7 @@
 #'  #of diversification...in the past
 #' set.seed(444)
 #' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#'	nTotalTaxa = c(30,40), nExtant = 0)
+#' 	nTotalTaxa = c(30,40), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' taxicDivCont(taxa)
 #' #that's the whole diversity curve
@@ -189,7 +189,7 @@
 #' #an example of a 'spiky' diversity curve and why split.int is a good thing
 #' set.seed(444)
 #' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#'	nTotalTaxa = c(30,40), nExtant = 0)
+#' 	nTotalTaxa = c(30,40), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' taxaDiv <- taxicDivCont(taxa)
 #' #simulate a fossil record with imperfect sampling with sampleRanges()

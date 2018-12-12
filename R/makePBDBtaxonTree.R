@@ -15,8 +15,10 @@
 #' macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, in press.).
 
 #' @param data A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
-#' with show = phylo. Should work with versions 1.1-1.2 of the API, with either the 'pbdb' or 'com' vocab. However,
-#' as 'accepted_name' is not available in API v1.1, the resulting tree will have a taxon's *original* name and not
+#' with \code{show=phylo}. Should work with versions 1.1-1.2 of
+#' the API, with either the \code{pbdb} or \code{com} vocab. However,
+#' as \code{accepted_name} is not available in API v1.1, the resulting
+#' tree will have a taxon's *original* name and not
 #' any formally updated name.
 
 #' @param rank The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.
@@ -26,29 +28,30 @@
 #' and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
 #' lead to hard-crashes of R.
 
-#' @param method Controls which algorithm is used for calculating the taxon-tree: either \code{method  = } \code{"parentChild"}
+#' @param method Controls which algorithm is used for calculating
+#' the taxon-tree: either \code{method  = "parentChild"}
 #' (the default option) which converts the listed binary parent-child taxon relationships from the input PBDB data,
 #' or \code{method = "Linnean"}, which converts a taxon-tree by creating a table of the Linnean
 #' taxonomic assignments (family, order, etc), which are provided when
-#' option 'show = phylo' is used in PBDB API calls.
+#' option \code{show=phylo} is used in PBDB API calls.
 
 #' @param tipSet This argument only impacts analyses where the argument
-#' \code{method  = } \code{"parentChild"} is also used. This \code{tipSet} controls
+#' \code{method  = "parentChild"} is also used. This \code{tipSet} controls
 #' which taxa are selected as tip taxa for the
-#' output tree. The default \code{tipSet  = } \code{"nonParents"} selects all child taxa which
+#' output tree. The default \code{tipSet  = "nonParents"} selects all child taxa which
 #' are not listed as parents in \code{parentChild}. Alternatively, \code{tipSet = "all"}
 #' will add a tip to every internal node with the parent-taxon name encapsulated in
 #' parentheses.
 
-#' @param solveMissing Under \code{method  = } \code{"parentChild"}, what should \code{makePBDBtaxonTree} do about
+#' @param solveMissing Under \code{method  = "parentChild"}, what should \code{makePBDBtaxonTree} do about
 #' multiple 'floating' parent taxa, listed without their own parent taxon information in the input
 #'  dataset under \code{data}? Each of these is essentially a separate root taxon, for a different set
 #'  of parent-child relationships, and thus poses a problem as far as returning a single phylogeny is
 #'  concerned. If \code{solveMissing = NULL} (the default), nothing is done and the operation halts with
 #'  an error, reporting the identity of these taxa. Two alternative solutions are offered: first,
-#'  \code{solveMissing  = } \code{"mergeRoots"} will combine these disparate potential roots and link them to an
+#'  \code{solveMissing  = "mergeRoots"} will combine these disparate potential roots and link them to an
 #'  artificially-constructed pseudo-root, which at least allows for visualization of the taxonomic
-#'  structure in a limited dataset. Secondly, \code{solveMissing  = } \code{"queryPBDB"} queries the Paleobiology
+#'  structure in a limited dataset. Secondly, \code{solveMissing  = "queryPBDB"} queries the Paleobiology
 #'  Database repeatedly via the API for information on parent taxa of the 'floating' parents, and continues
 #'  within a \code{while()} loop until only one such unassigned parent taxon remains. This latter option may
 #'  talk a long time or never finish, depending on the linearity and taxonomic structures encountered in the
@@ -56,13 +59,11 @@
 #'  mistake, then under this option \code{makePBDBtaxonTree} might never finish. In cases where taxonomy is
 #'  bad due to weird and erroneous taxonomic assignments reported by the PBDB, this routine may search all
 #'  the way back to a very ancient and deep taxon, such as the Eukaryota taxon.
-#' Users should thus use \code{solveMissing  = } \code{"queryPBDB"} only with caution.
+#' Users should thus use \code{solveMissing  = "queryPBDB"} only with caution.
 
 #' @param APIversion Version of the Paleobiology Database API used by \code{makePBDBtaxonTree} when
-#' \code{solveMissing  = } \code{"queryPBDB"}. The current default is "1.1", which is the only option available
-#' as of 05/05/2015. In the future, the improved API version "1.2" will be released on the public
-#' PBDB server, which will become the new default for this function, but the option to return to "1.1"
-#' behavior will be retained for .
+#' \code{solveMissing  = "queryPBDB"}. The current default is "1.2", the most recent API version
+#' as of 12/11/2018.
 
 # @param cleanDuplicate If TRUE (\emph{not} the default), duplicated taxa of a
 # taxonomic rank \emph{not} selected by argument \code{rank}
@@ -108,9 +109,9 @@
 #' easyGetPBDBtaxa <- function(taxon,show = c("phylo","img","app")){
 #' 	#let's get some taxonomic data
 #' 	taxaData <- read.csv(paste0("http://paleobiodb.org/",
-#' 		"data1.1/taxa/list.txt?base_name = ",taxon,
-#' 		"&rel = all_children&show = ",
-#'		paste0(show,collapse = ","),"&status = senior"),
+#' 		"data1.2/taxa/list.txt?base_name=",taxon,
+#' 		"&rel=all_children&show=",
+#'		paste0(show,collapse = ","),"&status=senior"),
 #'		stringsAsFactors = FALSE)
 #' 	return(taxaData)
 #' 	}
@@ -122,21 +123,32 @@
 #' #try Linnean
 #' graptTree <- makePBDBtaxonTree(graptData,"genus",
 #' 	method = "Linnean")
-#' plot(graptTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
+#' 
+#' # plot it!
+#' plot(graptTree,show.tip.label = FALSE,
+#'    no.margin = TRUE,edge.width = 0.35)
 #' nodelabels(graptTree$node.label,adj = c(0,1/2))
 #' 
+#' #################
 #' #conodonts
 #' conoData <- easyGetPBDBtaxa("Conodonta")
 #' conoTree <- makePBDBtaxonTree(conoData,"genus",
 #' 	method = "parentChild", solveMissing = "queryPBDB")
-#' plot(conoTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
+#' 
+#' # plot it!
+#' plot(conoTree,show.tip.label = FALSE,
+#'    no.margin = TRUE,edge.width = 0.35)
 #' nodelabels(conoTree$node.label,adj = c(0,1/2))
 #' 
+#' ############################
 #' #asaphid trilobites
 #' asaData <- easyGetPBDBtaxa("Asaphida")
 #' asaTree <- makePBDBtaxonTree(asaData,"genus",
 #' 	method = "parentChild", solveMissing = "queryPBDB")
-#' plot(asaTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
+#' 
+#' # plot it!
+#' plot(asaTree,show.tip.label = FALSE,
+#'    no.margin = TRUE,edge.width = 0.35)
 #' nodelabels(asaTree$node.label,adj = c(0,1/2))
 #' 
 #' #Ornithischia
@@ -148,14 +160,16 @@
 #' ornithData <- ornithData[-(which(ornithData[,"taxon_name"] == "Hylaeosaurus")[1]),]
 #' ornithTree <- makePBDBtaxonTree(ornithData,"genus",
 #' 	method = "Linnean")
-#' plot(ornithTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
+#' plot(ornithTree,show.tip.label = FALSE,
+#'    no.margin = TRUE,edge.width = 0.35)
 #' nodelabels(ornithTree$node.label,adj = c(0,1/2))
 #' 
 #' #Rhynchonellida
 #' rynchData <- easyGetPBDBtaxa("Rhynchonellida")
 #' rynchTree <- makePBDBtaxonTree(rynchData,"genus",
 #' 	method = "parentChild", solveMissing = "queryPBDB")
-#' plot(rynchTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
+#' plot(rynchTree, show.tip.label = FALSE, 
+#'    no.margin = TRUE, edge.width = 0.35)
 #' nodelabels(rynchTree$node.label,adj = c(0,1/2))
 #' 
 #' #some of these look pretty messy!
@@ -172,8 +186,8 @@
 #' 
 #' #get the taxon tree: Linnean method
 #' graptTree <- makePBDBtaxonTree(graptTaxaPBDB, "genus", method = "Linnean")
-#' plot(graptTree,cex = 0.4)
-#' nodelabels(graptTree$node.label,cex = 0.5)
+#' plot(graptTree, cex = 0.4)
+#' nodelabels(graptTree$node.label, cex = 0.5)
 #'
 #' #get the taxon tree: parentChild method
 #' graptTree <- makePBDBtaxonTree(graptTaxaPBDB, "genus", method = "parentChild")
@@ -207,7 +221,7 @@
 #' @rdname makePBDBtaxonTree
 #' @export
 makePBDBtaxonTree <- function(data,rank,method = "parentChild",solveMissing = NULL,
-					tipSet = "nonParents",cleanTree = TRUE,APIversion = "1.1"){		
+					tipSet = "nonParents",cleanTree = TRUE,APIversion = "1.2"){		
 	# 
 	# library(paleotree);data(graptPBDB);
 	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE; solveMissing = NULL
@@ -330,7 +344,9 @@ makePBDBtaxonTree <- function(data,rank,method = "parentChild",solveMissing = NU
 	#
 	if(method == "Linnean"){
 		#Check if show = phylo was used
-		if(!any(colnames(data1) == "family")){stop("Data must be a taxonomic download with show = phylo for method = 'Linnean'")}
+		if(!any(colnames(data1) == "family")){
+			stop("Data must be a taxonomic download with show = phylo for method = 'Linnean'")
+			}
 		#message that tipSet and solveMissing are ignored
 		message("Linnean taxon-tree option selected, arguments 'tipSet', 'solveMissing' ignored")
 		#now check and return an error if duplicate taxa of selected rank
@@ -381,8 +397,10 @@ translatePBDBtaxa <- function(data){
 		message("compact vocab detected, relevant fields will be translated")
 		}
 	#if 1.1 and vocab is pbdb
-	if(any(colnames(data) == "rank")){
-		colnames(data)[colnames(data) == "rank"] <- "taxon_rank"
+	if(version == "1.1" & vocab = "pbdb"){
+		if(any(colnames(data) == "rank")){
+			colnames(data)[colnames(data) == "rank"] <- "taxon_rank"
+			}	
 		}
 	#
 	#if 1.2 and there is an accepted_name column..
@@ -408,14 +426,14 @@ translatePBDBtaxa <- function(data){
 	}
 
 #another hidden function
-queryMissingParents <- function(taxaID, APIversion = "1.1"){
+queryMissingParents <- function(taxaID, APIversion = "1.2"){
 	#drop Eukarya, as it won't return if status = senior under 1.1
 	#taxaID <- as.numeric(taxaID[taxaID != "1"])
 	#let's get some taxonomic data
 	floatData <- read.csv(paste0("http://paleobiodb.org/",
 		"data",APIversion,
-		"/taxa/list.txt?id = ",paste0(taxaID,collapse = ","),
-		"&rel = self&status = senior&vocab = pbdb"),
+		"/taxa/list.txt?id=",paste0(taxaID,collapse=","),
+		"&rel=self&status=senior&vocab=pbdb"),
 		stringsAsFactors = FALSE)
 	if(nrow(floatData) == 0){
 		stop(paste("Current PBDB API would not return info for the following taxon IDs: \n",

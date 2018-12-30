@@ -259,10 +259,14 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 		stop("rank must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")
 		}
 	#
+	#########################################
+	# CLEAN DATA
+	#
 	#translate to a common vocabulary
 	dataTransform <- translatePBDBtaxa(data)
 	dataTransform <- apply(dataTransform, 2, as.character)
 	#
+	
 	if(method == "parentChild"){
 		# need two things: a table of parent-child relationships as IDs
 			#and a look-up table of IDs and taxon names
@@ -270,16 +274,8 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 		# filer out lower than selected rank
 		# 
 		# translate rank and taxon_rank to a number
-		taxRankPBDB <- c( 	
-			"subspecies","species","subgenus","genus",
-			"subtribe","tribe","subfamily",
-			"family","superfamily","infraorder",
-			"suborder","order","superorder","infraclass",
-			"subclass","class","superclass","subphylum",
-			"phylum","superphylum","subkingdom",
-			"kingdom","unranked clade","informal"
-			#keep informal as high, never drop!
-			)
+		# taxon rank translation vectors for compact vocab
+		taxRankPBDB <- getTaxRankPBDB()
 		rankID <- which(rank == taxRankPBDB)
 		numTaxonRank <- sapply(dataTransform[,"taxon_rank"],
 			function(x) which(x == taxRankPBDB))		
@@ -290,8 +286,9 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 			function(x) which(x == taxRankPBDB))		
 		#
 		#create lookup table for taxon names
-		taxonNameTable <- cbind(as.numeric(dataTransform[,"taxon_no"]), 
-			as.character(dataTransform[,"taxon_name"])
+		taxonNameTable <- cbind(
+			as.numeric(dataTransform[,"taxon_no"]), 
+			as.character(dataTransform[,"accepted_name"])
 			)
 		#add parents not listed
 		parentFloat <- unique(dataTransform[,"parent_no"])
@@ -417,6 +414,7 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 			"phylum", "class",
 			"order", "family",
 			"taxon_name")
+		#print(colnames(dataTransform))
 		taxonData <- dataTransform[,taxonFields]
 		taxonData <- apply(taxonData,2,as.character)
 		tree <- taxonTable2taxonTree(taxonTable = taxonData,cleanTree = cleanTree)
@@ -425,9 +423,6 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 	return(tree)
 	}
 	
-"phylum"         
-[13] "class"           "order"           "family"          "genus"   	
-
 #hidden function, don't import
 translatePBDBtaxa <- function(data){
 	# Do some translation
@@ -448,10 +443,7 @@ translatePBDBtaxa <- function(data){
 		colnames(data)[colnames(data) == "par"] <- "parent_no"
 		colnames(data)[colnames(data) == "oid"] <- "taxon_no"
 		# taxon rank translation vectors for compact vocab
-		taxRankPBDB <- c("subspecies","species","subgenus","genus","subtribe","tribe","subfamily",
-			"family","superfamily","infraorder","suborder","order","superorder","infraclass",
-			"subclass","class","superclass","subphylum","phylum","superphylum","subkingdom",
-			"kingdom","unranked clade","informal")
+		taxRankPBDB <- getTaxRankPBDB()
 		taxRankCOM <- 2:26
 		#change contents of "identified_rank" and "accepted_rank"
 		data$taxon_rank <- sapply(data$taxon_rank,function(x) taxRankPBDB[x == taxRankCOM])
@@ -490,7 +482,20 @@ translatePBDBtaxa <- function(data){
 	return(data)
 	}
 
+getTaxRankPBDB<-function(){
+	return(c("subspecies","species","subgenus","genus",
+		"subtribe","tribe","subfamily",
+		"family","superfamily","infraorder",
+		"suborder","order","superorder","infraclass",
+		"subclass","class","superclass","subphylum",
+		"phylum","superphylum","subkingdom",
+		"kingdom","unranked clade","informal"
+		#keep informal as high, never drop!
+		))
+	}
 
+	
+	
 queryMissingParents <- function(taxaID,
 		APIversion = "1.2",
 		status = "all"){

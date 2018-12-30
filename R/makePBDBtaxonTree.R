@@ -259,8 +259,8 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 		}
 	#
 	#translate to a common vocabulary
-	data1 <- translatePBDBtaxa(data)
-	data1 <- apply(data1,2,as.character)
+	dataTransform <- translatePBDBtaxa(data)
+	dataTransform <- apply(dataTransform, 2, as.character)
 	#
 	if(method == "parentChild"){
 		# need two things: a table of parent-child relationships as IDs
@@ -280,18 +280,18 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 			#keep informal as high, never drop!
 			)
 		rank1 <- which(rank == taxRankPBDB)
-		numTaxonRank <- sapply(data1[,"taxon_rank"], function(x) which(x == taxRankPBDB))		
+		numTaxonRank <- sapply(dataTransform[,"taxon_rank"], function(x) which(x == taxRankPBDB))		
 		#drop taxa below specified rank
-		data1 <- data1[rank1 <= numTaxonRank,]
+		dataTransform <- dataTransform[rank1 <= numTaxonRank,]
 		#also recreate numTaxonRank
-		numTaxonRank <- sapply(data1[,"taxon_rank"], function(x) which(x == taxRankPBDB))		
+		numTaxonRank <- sapply(dataTransform[,"taxon_rank"], function(x) which(x == taxRankPBDB))		
 		#
 		#create lookup table for taxon names
-		taxonNameTable <- cbind(as.numeric(data1[,"taxon_no"]), 
-			as.character(data1[,"taxon_name"])
+		taxonNameTable <- cbind(as.numeric(dataTransform[,"taxon_no"]), 
+			as.character(dataTransform[,"taxon_name"])
 			)
 		#add parents not listed
-		parentFloat <- unique(data1[,"parent_no"])
+		parentFloat <- unique(dataTransform[,"parent_no"])
 		parentFloat <- parentFloat[is.na(match(parentFloat, taxonNameTable[,1]))]
 		taxonNameTable <- rbind(taxonNameTable,
 			cbind(parentFloat,
@@ -302,7 +302,7 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 		#
 		#now need to put together parentChild table
 		#first, get table of all parentChild relationships in data
-		pcAll <- cbind(as.numeric(data1[,"parent_no"]),as.numeric(data1[,"taxon_no"]))
+		pcAll <- cbind(as.numeric(dataTransform[,"parent_no"]),as.numeric(dataTransform[,"taxon_no"]))
 		#then start creating final matrix: first, those of desired rank
 		pcMat <- pcAll[rank1 == numTaxonRank,]
 		#identify IDs of parents floating without ancestors of their own
@@ -355,14 +355,17 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 						" monophyletic set of parent-child relationship pairs. \n",
 						"Multiple taxa appear to be listed as parents, but are not \n",
 						"listed themselves so have no parents listed: \n",
-						paste0(taxonNameTable[match(floaters,taxonNameTable[,1]),2]
-							,collapse = ", ")))
+						paste0(
+							taxonNameTable[match(floaters,taxonNameTable[,1]),2],
+							collapse = ", ")))
 					}
 			}else{
 				floaters <- floatersNew
 				}
 			}
 		pcMat <- apply(pcMat,2,as.character)
+		#
+		# 
 		tree <- parentChild2taxonTree(parentChild = pcMat,
 			tipSet = tipSet,
 			cleanTree = cleanTree)
@@ -374,22 +377,26 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 	#
 	if(method == "Linnean"){
 		#Check if show = phylo was used
-		if(!any(colnames(data1) == "family")){
+		if(!any(colnames(dataTransform) == "family")){
 			stop("Data must be a taxonomic download with show = phylo for method = 'Linnean'")
 			}
 		#message that tipSet and solveMissing are ignored
 		message("Linnean taxon-tree option selected, arguments 'tipSet', 'solveMissing' ignored")
 		#now check and return an error if duplicate taxa of selected rank
-		nDup <- sapply(nrow(data1),function(x) sum(data1[,"taxon_name"] == data1[x,"taxon_name"])>1 & data1[x,"taxon_rank"] == rank)
+		nDup <- sapply(nrow(dataTransform),function(x)
+			sum(dataTransform[,"taxon_name"] == dataTransform[x,"taxon_name"])>1 & dataTransform[x,"taxon_rank"] == rank
+			)
 		if(any(nDup)){
-			stop(paste0("Duplicate taxa of selected rank: ",paste0("(",which(nDup),") ",data1[nDup,"taxon_name"],collapse = ", ")))}
+			stop(paste0("Duplicate taxa of selected rank: ",paste0("(",which(nDup),") ",dataTransform[nDup,"taxon_name"],collapse = ", ")))}
 		#filter on rank
-		data1 <- data1[data1[,"taxon_rank"] == rank,]
+		dataTransform <- dataTransform[dataTransform[,"taxon_rank"] == rank,]
 		#
 		#get the fields you want
-		taxonFields <- c("kingdom","phylum","class","order","family",
+		taxonFields <- c(
+			"kingdom","phylum",
+			"class","order","family",
 			"taxon_name")
-		taxonData <- data1[,taxonFields]
+		taxonData <- dataTransform[,taxonFields]
 		taxonData <- apply(taxonData,2,as.character)
 		tree <- taxonTable2taxonTree(taxonTable = taxonData,cleanTree = cleanTree)
 		tree$taxonTable <- taxonData

@@ -136,8 +136,21 @@
 #' The default is a model which makes very 'strong' assumptions about the process of morphological evolution,
 #' while the 'relaxed' alternative allows for considerably more heterogeneity in the rate
 #' of morphological evolution across characters, and in the forward and reverse transition
-#' rates between states. Note that in both cases, the character data is assumed to be filtered
-#' to only parsimony-informative characters, without autapomorphies.
+#' rates between states. Also see argument \code{morphFiltered}.
+
+#' @param morphFiltered This argument controls what type of filtering the input
+#' morphological data is assumed to have been collected under. The likelihood of
+#' the character data will be modified to take into account the apparent filtering
+#' (Lewis, 2001; Allman et al., 2010). The default value, \code{"parsInf"}, forces
+#' characters to be treated as if they were collected as part of a parsimony-based
+#' study, with constant characters and autapomorphies (characters that only differ
+#' in state in a single taxon unit) ignored or otherwise filtered out, and any such
+#' characters in the presented matrix will be ignored. \code{morphFiltered = "variable"}
+#' assumes that while constant characters are still filtered out (e.g. it is
+#' difficult or impossible to count the number of morphological characters that
+#' show no variation across a group), the autapomorphies were intentionally collected
+#' and included in the presented matrix. Thus, constant characters in the included
+#' matrix will be ignored, but autapomorphies will be considered. 
 
 #' @param cleanNames If \code{TRUE} (the default), then special characters
 #' (currently, this only contains the forward-slashes: '/') are removed from
@@ -298,7 +311,8 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 							collapseUniform = TRUE,anchorTaxon = TRUE,
 							newFile = NULL,origNexusFile = NULL, 
 							parseOriginalNexus = TRUE,createEmptyMorphMat = TRUE,
-							orderedChars=NULL, morphModel = "strong", 
+							orderedChars=NULL, 
+							morphModel = "strong", morphFiltered = "parsInf",
 							runName = NULL, ngen = "100000000",
 							doNotRun = FALSE, autoCloseMrB = FALSE,
 							cleanNames = TRUE, printExecute = TRUE){

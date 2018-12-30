@@ -37,7 +37,7 @@
 #' (the default option) which converts the listed binary parent-child taxon relationships from the input PBDB data,
 #' or \code{method = "Linnean"}, which converts a taxon-tree by creating a table of the Linnean
 #' taxonomic assignments (family, order, etc), which are provided when
-#' option \code{show=phylo} is used in PBDB API calls.
+#' option \code{show = "phylo"} is used in PBDB API calls.
 
 #' @param tipSet This argument only impacts analyses where the argument
 #' \code{method  = "parentChild"} is also used. This \code{tipSet} controls
@@ -224,8 +224,8 @@
 #' @name makePBDBtaxonTree
 #' @rdname makePBDBtaxonTree
 #' @export
-makePBDBtaxonTree <- function(data,rank,method = "parentChild",solveMissing = NULL,
-					tipSet = "nonParents",cleanTree = TRUE,APIversion = "1.2"){		
+makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing = NULL,
+					tipSet = "nonParents", cleanTree = TRUE, APIversion = "1.2"){		
 	# 
 	# library(paleotree);data(graptPBDB);
 	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE; solveMissing = NULL

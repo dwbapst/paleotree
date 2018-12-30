@@ -235,48 +235,69 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 	#
 	#CHECKS
 	if(length(method) != 1 | !is.character(method)){
-		stop("method must be a single character value")}
-	if(!any(method == c("Linnean","parentChild"))){
-		stop("method must be one of either 'Linnean' or 'parentChild'")}
+		stop("method must be a single character value")
+		}
+	if(!any(method == c("Linnean", "parentChild"))){
+		stop("method must be one of either 'Linnean' or 'parentChild'")
+		}
 	if(!is.null(solveMissing)){
 		if(length(solveMissing)>1 | !is.character(solveMissing)){
-			stop("solveMissing must be either NULL or a single character value")}
+			stop("solveMissing must be either NULL or a single character value")
+			}
 		if(is.na(match(solveMissing,c("queryPBDB","mergeRoots")))){
-			stop('solveMissing but be either NULL or "queryPBDB" or "mergeRoots"')}
+			stop('solveMissing but be either NULL or "queryPBDB" or "mergeRoots"')
+			}
 		}
-	if(!is(data,"data.frame")){stop("data isn't a data.frame")}
+	if(!is(data,"data.frame")){
+		stop("data isn't a data.frame")
+		}
 	if(length(rank) != 1 | !is.character(rank)){
-		stop("rank must be a single character value")}
+		stop("rank must be a single character value")
+		}
 	if(!any(sapply(c("species","genus","family","order","class","phylum"),function(x) x == rank))){
-		stop("rank must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")}
+		stop("rank must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")
+		}
 	#
 	#translate to a common vocabulary
 	data1 <- translatePBDBtaxa(data)
 	data1 <- apply(data1,2,as.character)
 	#
 	if(method == "parentChild"){
-		#need two things: a table of parent-child relationships as IDs
+		# need two things: a table of parent-child relationships as IDs
 			#and a look-up table of IDs and taxon names
-		#
-		#filer out lower than selected rank
+		# 
+		# filer out lower than selected rank
+		# 
 		# translate rank and taxon_rank to a number
-		taxRankPBDB <- c("subspecies","species","subgenus","genus","subtribe","tribe","subfamily",
-			"family","superfamily","infraorder","suborder","order","superorder","infraclass",
-			"subclass","class","superclass","subphylum","phylum","superphylum","subkingdom",
-			"kingdom","unranked clade","informal")	#keep informal as high, never drop!
+		taxRankPBDB <- c( 	
+			"subspecies","species","subgenus","genus",
+			"subtribe","tribe","subfamily",
+			"family","superfamily","infraorder",
+			"suborder","order","superorder","infraclass",
+			"subclass","class","superclass","subphylum",
+			"phylum","superphylum","subkingdom",
+			"kingdom","unranked clade","informal"
+			#keep informal as high, never drop!
+			)
 		rank1 <- which(rank == taxRankPBDB)
-		numTaxonRank <- sapply(data1[,"taxon_rank"],function(x) which(x == taxRankPBDB))		
+		numTaxonRank <- sapply(data1[,"taxon_rank"], function(x) which(x == taxRankPBDB))		
 		#drop taxa below specified rank
 		data1 <- data1[rank1 <= numTaxonRank,]
 		#also recreate numTaxonRank
-		numTaxonRank <- sapply(data1[,"taxon_rank"],function(x) which(x == taxRankPBDB))		
+		numTaxonRank <- sapply(data1[,"taxon_rank"], function(x) which(x == taxRankPBDB))		
 		#
 		#create lookup table for taxon names
-		taxonNameTable <- cbind(as.numeric(data1[,"taxon_no"]),as.character(data1[,"taxon_name"]))
+		taxonNameTable <- cbind(as.numeric(data1[,"taxon_no"]), 
+			as.character(data1[,"taxon_name"])
+			)
 		#add parents not listed
 		parentFloat <- unique(data1[,"parent_no"])
-		parentFloat <- parentFloat[is.na(match(parentFloat,taxonNameTable[,1]))]
-		taxonNameTable <- rbind(taxonNameTable,cbind(parentFloat,paste("ID:",as.character(parentFloat))))
+		parentFloat <- parentFloat[is.na(match(parentFloat, taxonNameTable[,1]))]
+		taxonNameTable <- rbind(taxonNameTable,
+			cbind(parentFloat,
+				paste("ID:", as.character(parentFloat))
+				)
+			)
 		#DONE
 		#
 		#now need to put together parentChild table
@@ -299,7 +320,10 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
 				if(!is.null(solveMissing)){
 					if(solveMissing == "queryPBDB"){
-						floatData <- queryMissingParents(taxaID = floatersNew,APIversion = APIversion)	
+						floatData <- queryMissingParents(
+							taxaID = floatersNew, 
+							APIversion = APIversion
+							)	
 						#update taxon names in taxonNameTable
 						whichUpdate <- match(floatData[,"taxon_no"],taxonNameTable[,1])
 						taxonNameTable[whichUpdate[!is.na(whichUpdate)],2] <- floatData[
@@ -339,10 +363,12 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 				}
 			}
 		pcMat <- apply(pcMat,2,as.character)
-		tree <- parentChild2taxonTree(parentChild = pcMat,tipSet = tipSet,cleanTree = cleanTree)
+		tree <- parentChild2taxonTree(parentChild = pcMat,
+			tipSet = tipSet,
+			cleanTree = cleanTree)
 		#convert tip.label and node.label to taxon names from taxonNameTable
-		tree$tip.label <- taxonNameTable[match(tree$tip.label,taxonNameTable[,1]),2]
-		tree$node.label <- taxonNameTable[match(tree$node.label,taxonNameTable[,1]),2]
+		tree$tip.label <- taxonNameTable[match(tree$tip.label, taxonNameTable[,1]),2]
+		tree$node.label <- taxonNameTable[match(tree$node.label, taxonNameTable[,1]),2]
 		tree$parentChild <- pcMat
 		}
 	#

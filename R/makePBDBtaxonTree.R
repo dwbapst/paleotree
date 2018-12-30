@@ -393,17 +393,29 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 		message("Linnean taxon-tree option selected, arguments 'tipSet', 'solveMissing' ignored")
 		#now check and return an error if duplicate taxa of selected rank
 		nDup <- sapply(nrow(dataTransform),function(x)
-			sum(dataTransform[,"taxon_name"] == dataTransform[x,"taxon_name"])>1 & dataTransform[x,"taxon_rank"] == rank
+			sum(dataTransform[,"taxon_name"] == dataTransform[x,"taxon_name"])>1
+			 & dataTransform[x,"taxon_rank"] == rank
 			)
 		if(any(nDup)){
-			stop(paste0("Duplicate taxa of selected rank: ",paste0("(",which(nDup),") ",dataTransform[nDup,"taxon_name"],collapse = ", ")))}
+			stop(
+				paste0(
+					"Duplicate taxa of selected rank: ",
+					paste0("(",which(nDup),") ",
+					dataTransform[nDup,"taxon_name"],
+					collapse = ", ")
+					)
+				)
+			}
 		#filter on rank
 		dataTransform <- dataTransform[dataTransform[,"taxon_rank"] == rank,]
 		#
-		#get the fields you want
+		#get the taxonomic fields you want
+		#from API documentation: "phylum","class","order","family","genus"  
+			# apparently 'kingdom' dropped from v1.2 API
 		taxonFields <- c(
-			"kingdom","phylum",
-			"class","order","family",
+			#"kingdom",
+			"phylum", "class",
+			"order", "family",
 			"taxon_name")
 		taxonData <- dataTransform[,taxonFields]
 		taxonData <- apply(taxonData,2,as.character)
@@ -412,6 +424,9 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 		}
 	return(tree)
 	}
+	
+"phylum"         
+[13] "class"           "order"           "family"          "genus"   	
 
 #hidden function, don't import
 translatePBDBtaxa <- function(data){
@@ -442,16 +457,17 @@ translatePBDBtaxa <- function(data){
 		data$taxon_rank <- sapply(data$taxon_rank,function(x) taxRankPBDB[x == taxRankCOM])
 		message("compact vocab detected, relevant fields will be translated")
 		}
-	#if 1.1 and vocab is pbdb
-	if(version == "1.1" & vocab = "pbdb"){
-		if(any(colnames(data) == "rank")){
-			colnames(data)[colnames(data) == "rank"] <- "taxon_rank"
-			}	
-		}
+	###########
+	# following are closet cases that mostly only apply to OLD API calls
 	#
-	#if 1.2 and there is an accepted_name column..
+	if(any(colnames(data) == "rank")){
+		#if 1.1 and vocab is pbdb
+		colnames(data)[colnames(data) == "rank"] <- "taxon_rank"
+		}	
+	#
 	if(any(colnames(data) == "accepted_name")){
-		#fill empty accepted_name values with taxon_name
+		#if 1.2 and there is an accepted_name column..
+			#fill empty accepted_name values with taxon_name
 		nameFormal <- data[,"accepted_name"]
 		nameFormal[is.na(nameFormal)] <- as.character(data[is.na(nameFormal),"taxon_name"])
 		#replace taxon_name
@@ -462,35 +478,60 @@ translatePBDBtaxa <- function(data){
 		taxNum[is.na(taxNum)] <- as.character(data[is.na(taxNum),"taxon_no"])	
 		data[,"taxon_no"] <- taxNum			
 		#
-		#also replace parent_no in the same way with senpar_no
+		}
+	if(any(colnames(data)=="senpar_no")){
+		#if this is OLD v1.2 data, and there is a senpar_no column
+			# replace parent_no in the same way with senpar_no
 		parNum <- data[,"senpar_no"]
 		parNum[is.na(parNum)] <- as.character(data[is.na(parNum),"parent_no"])	
-		data[,"parent_no"] <- parNum		
+		data[,"parent_no"] <- parNum
 		}
 	#
 	return(data)
 	}
 
-#find missing parents by access API
-queryMissingParents <- function(taxaID, APIversion = "1.2"){
-	#drop Eukarya, as it won't return if status = senior under 1.1
-	#taxaID <- as.numeric(taxaID[taxaID != "1"])
-	#let's get some taxonomic data
-	floatData <- read.csv(paste0("http://paleobiodb.org/",
-		"data",APIversion,
-		"/taxa/list.txt?id=",paste0(taxaID,collapse=","),
-		"&rel=self&status=senior&vocab=pbdb"),
+
+queryMissingParents <- function(taxaID,
+		APIversion = "1.2",
+		status = "all"){
+	# find missing parents by access API
+	#
+	# drop Eukarya, as it won't return if status = senior under 1.1
+	# taxaID <- as.numeric(taxaID[taxaID != "1"])
+	#
+	# let's get some taxonomic data
+	floatData <- read.csv(
+		paste0("http://paleobiodb.org/",
+			"data",APIversion,
+			"/taxa/list.txt?taxon_id=",paste0(taxaID,collapse=","),
+				### should we take all or only ACCEPTED parents?
+			 "&rel=exact&status=",status,
+			 "&vocab=pbdb"
+			),
 		stringsAsFactors = FALSE)
 	if(nrow(floatData) == 0){
-		stop(paste("Current PBDB API would not return info for the following taxon IDs: \n",
-			paste0(taxaID,collapse = ", ")))}
+		stop(
+			paste("Current PBDB API would not return info for the following taxon IDs: \n",
+				paste0(taxaID,collapse = ", ")
+				)
+			)
+		}
 	floatData <- translatePBDBtaxa(floatData)
 	#parse down to just taxon_name, taxon_no, parent_no
-	floatData <- cbind("taxon_name" = as.character(floatData[,"taxon_name"]),
-		"parent_no" = as.numeric(floatData[,"parent_no"]),
-		"taxon_no" = as.numeric(floatData[,"taxon_no"]))
+	floatData <- parseParentPBDBData(floatData)
 	return(floatData)
 	}
+
+
+parseParentPBDBData <- function(parentData){
+	#parse down to just taxon_name, taxon_no, parent_no
+	result <- data.frame(
+		"accepted_name" = as.character(parentData[,"accepted_name"]),
+		"parent_no" = as.numeric(parentData[,"parent_no"]),
+		"taxon_no" = as.numeric(parentData[,"taxon_no"]))
+	return(result)
+	}
+
 
 #identify IDs of parents floating without ancestors of their own
 getFloatAncPBDB <- function(pcDat){

@@ -15,7 +15,7 @@
 #' macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, 2015.).
 
 #' @param data A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
-#' with \code{show=phylo}. Should work with versions 1.1-1.2 of
+#' with \code{show = class}. Should work with versions 1.1-1.2 of
 #' the API, with either the \code{pbdb} or \code{com} vocab. However,
 #' as \code{accepted_name} is not available in API v1.1, the resulting
 #' tree will have a taxon's *original* name and not
@@ -37,7 +37,7 @@
 #' (the default option) which converts the listed binary parent-child taxon relationships from the input PBDB data,
 #' or \code{method = "Linnean"}, which converts a taxon-tree by creating a table of the Linnean
 #' taxonomic assignments (family, order, etc), which are provided when
-#' option \code{show = "phylo"} is used in PBDB API calls.
+#' option \code{show = class} is used in PBDB API calls.
 
 #' @param tipSet This argument only impacts analyses where the argument
 #' \code{method  = "parentChild"} is also used. This \code{tipSet} controls
@@ -110,7 +110,7 @@
 #' @examples
 #' \dontrun{
 #' 
-#' easyGetPBDBtaxa <- function(taxon,show = c("phylo","img","app")){
+#' easyGetPBDBtaxa <- function(taxon,show = c("class","img","app")){
 #' 	#let's get some taxonomic data
 #' 	taxaData <- read.csv(paste0("http://paleobiodb.org/",
 #' 	    "data1.2/taxa/list.txt?base_name=",taxon,
@@ -254,7 +254,8 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 	if(length(rank) != 1 | !is.character(rank)){
 		stop("rank must be a single character value")
 		}
-	if(!any(sapply(c("species","genus","family","order","class","phylum"),function(x) x == rank))){
+	if(!any(sapply(c("species","genus","family","order","class","phylum"),
+			function(x) x == rank))){
 		stop("rank must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")
 		}
 	#
@@ -279,12 +280,14 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 			"kingdom","unranked clade","informal"
 			#keep informal as high, never drop!
 			)
-		rank1 <- which(rank == taxRankPBDB)
-		numTaxonRank <- sapply(dataTransform[,"taxon_rank"], function(x) which(x == taxRankPBDB))		
+		rankID <- which(rank == taxRankPBDB)
+		numTaxonRank <- sapply(dataTransform[,"taxon_rank"],
+			function(x) which(x == taxRankPBDB))		
 		#drop taxa below specified rank
-		dataTransform <- dataTransform[rank1 <= numTaxonRank,]
+		dataTransform <- dataTransform[rankID <= numTaxonRank,]
 		#also recreate numTaxonRank
-		numTaxonRank <- sapply(dataTransform[,"taxon_rank"], function(x) which(x == taxRankPBDB))		
+		numTaxonRank <- sapply(dataTransform[,"taxon_rank"],
+			function(x) which(x == taxRankPBDB))		
 		#
 		#create lookup table for taxon names
 		taxonNameTable <- cbind(as.numeric(dataTransform[,"taxon_no"]), 
@@ -302,12 +305,12 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 		#
 		#now need to put together parentChild table
 		#first, get table of all parentChild relationships in data
-		pcAll <- cbind(as.numeric(dataTransform[,"parent_no"]),as.numeric(dataTransform[,"taxon_no"]))
+		pcAll <- cbind(as.numeric(dataTransform[,"parent_no"]), 
+			as.numeric(dataTransform[,"taxon_no"]))
 		#then start creating final matrix: first, those of desired rank
-		pcMat <- pcAll[rank1 == numTaxonRank,]
+		pcMat <- pcAll[rankID == numTaxonRank,]
 		#identify IDs of parents floating without ancestors of their own
-		getFloat <- function(pcDat){unique(pcDat[sapply(pcDat[,1],function(x) all(x != pcDat[,2])),1])}
-		floaters <- getFloat(pcDat = pcMat)
+		floaters <- getFloatAncPBDB(pcDat = pcMat)
 		#
 		nCount <- 0	#start tracing back
 		while(length(floaters)>1){	#so only ONE root can float
@@ -315,7 +318,7 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 			#get new relations: will 'anchor' the floaters
 			anchors <- match(floaters,pcAll[,2])
 			pcMat <- rbind(pcMat,pcAll[anchors[!is.na(anchors)],])	#bind to pcMat
-			floatersNew <- getFloat(pcDat = pcMat)	#recalculate float
+			floatersNew <- getFloatAncPBDB(pcDat = pcMat)	#recalculate float
 			#stopping condition, as this is a silly while() loop...
 			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
 				if(!is.null(solveMissing)){
@@ -349,15 +352,19 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 								,collapse = ", ")))
 						}
 					#regardless of method used, recalculate floaters
-					floaters <- getFloat(pcDat = pcMat)
+					floaters <- getFloatAncPBDB(pcDat = pcMat)
 				}else{
-					stop(paste0("Provided PBDB Dataset does not appear to have a \n",
-						" monophyletic set of parent-child relationship pairs. \n",
-						"Multiple taxa appear to be listed as parents, but are not \n",
-						"listed themselves so have no parents listed: \n",
-						paste0(
-							taxonNameTable[match(floaters,taxonNameTable[,1]),2],
-							collapse = ", ")))
+					stop(
+						paste0("Provided PBDB Dataset does not appear to have a \n",
+							"  monophyletic set of parent-child relationship pairs. \n",
+							"Multiple taxa appear to be listed as parents, but are not \n",
+							"  listed themselves so have no parents listed: \n",
+							paste0(
+								taxonNameTable[match(floaters,taxonNameTable[,1]),2],
+								collapse = ", "
+								)
+							)
+						)
 					}
 			}else{
 				floaters <- floatersNew
@@ -370,15 +377,17 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 			tipSet = tipSet,
 			cleanTree = cleanTree)
 		#convert tip.label and node.label to taxon names from taxonNameTable
-		tree$tip.label <- taxonNameTable[match(tree$tip.label, taxonNameTable[,1]),2]
-		tree$node.label <- taxonNameTable[match(tree$node.label, taxonNameTable[,1]),2]
+		tree$tip.label <- taxonNameTable[match(tree$tip.label,
+			taxonNameTable[,1]),2]
+		tree$node.label <- taxonNameTable[match(tree$node.label, 
+			taxonNameTable[,1]),2]
 		tree$parentChild <- pcMat
 		}
 	#
 	if(method == "Linnean"){
-		#Check if show = phylo was used
+		#Check if show = class was used
 		if(!any(colnames(dataTransform) == "family")){
-			stop("Data must be a taxonomic download with show = phylo for method = 'Linnean'")
+			stop("Data must be a taxonomic download with show = class for method = 'Linnean'")
 			}
 		#message that tipSet and solveMissing are ignored
 		message("Linnean taxon-tree option selected, arguments 'tipSet', 'solveMissing' ignored")
@@ -462,7 +471,7 @@ translatePBDBtaxa <- function(data){
 	return(data)
 	}
 
-#another hidden function
+#find missing parents by access API
 queryMissingParents <- function(taxaID, APIversion = "1.2"){
 	#drop Eukarya, as it won't return if status = senior under 1.1
 	#taxaID <- as.numeric(taxaID[taxaID != "1"])
@@ -482,3 +491,12 @@ queryMissingParents <- function(taxaID, APIversion = "1.2"){
 		"taxon_no" = as.numeric(floatData[,"taxon_no"]))
 	return(floatData)
 	}
+
+#identify IDs of parents floating without ancestors of their own
+getFloatAncPBDB <- function(pcDat){
+	unique(pcDat[
+		sapply(pcDat[,1], function(x) 
+			all(x != pcDat[,2])
+			)
+		,1])
+		}

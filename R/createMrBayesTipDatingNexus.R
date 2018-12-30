@@ -702,6 +702,7 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 		orderedChars=orderedChars,
 		autoCloseMrB = autoCloseMrB,
 		morphModel = morphModel, 
+		morphFiltered = morphFiltered,
 		ngen = ngen, 
 		doNotRun = doNotRun,
 		outputNameLine = outputNameLine)
@@ -809,6 +810,7 @@ makeEmptyMorphNexusMrB <- function(taxonNames){
 makeMrBayesBlock <- function(logBlock, ingroupBlock,
 							ageBlock, orderedChars, autoCloseMrB,
 							constraintBlock, morphModel = "strong",
+							
 							ngen = 100000000, doNotRun = FALSE,
 							outputNameLine = outputNameLine){
 #########################################################################################						
@@ -867,7 +869,17 @@ if(!is.null(orderedChars)){
 	}
 
 ##############################################################################
-morphModelBlock_Strong <- "
+if(morphFiltered == "parsInf"){
+	filteredType <- "informative"
+	}
+if(morphFiltered == "variable"){
+	filteredType <- "variable"
+	}
+if(is.null(filteredType)){
+	stop("morphFiltered must be one of 'parsInf' or 'variable'")
+	}
+
+morphModelBlock_Strong <- paste0("
 
 [CHARACTER MODELS]
 	
@@ -876,16 +888,18 @@ morphModelBlock_Strong <- "
 	[default: use pars-informative coding]
 	
 	[set coding and rates - default below maximizes information content]
-		lset  nbetacat = 5 rates = equal Coding = informative; [equal rate variation]
+		lset  nbetacat = 5 rates = equal Coding = ",
+filteredType,
+		"; [equal rate variation]
 		[lset  nbetacat = 5 rates = gamma Coding = informative;   [gamma distributed rate variation]]
 			[gamma distributed rates may cause divide by zero problems with non-fixed symdiri]
 	[symdirhyperpr prior, fixed vs. variable]	
 		prset symdirihyperpr = fixed(infinity);		
 		[prset symdirihyperpr = uniform(1,10);      [this range seems to avoid divide by zero error]]
 
-"
+")
 
-morphModelBlock_Relaxed <- "
+morphModelBlock_Relaxed <- paste0("
 
 [CHARACTER MODELS]
 	
@@ -894,14 +908,16 @@ morphModelBlock_Relaxed <- "
 	[default: use pars-informative coding]
 	
 	[set coding and rates - default below maximizes information content]
-		[lset  nbetacat = 5 rates = equal Coding = informative; [equal rate variation]]
+		[lset  nbetacat = 5 rates = equal Coding = ",
+filteredType,
+		"; [equal rate variation]]
 		lset  nbetacat = 5 rates = gamma Coding = informative;   [gamma distributed rate variation]
 			[gamma distributed rates may cause divide by zero problems with non-fixed symdiri]
 	[symdirhyperpr prior, fixed vs. variable]	
 		[prset symdirihyperpr = fixed(infinity);]		
 		prset symdirihyperpr = uniform(1,10);      [this range seems to avoid divide by zero error]
 
-"
+")
 	
 #############################################################################
 block4 <- "

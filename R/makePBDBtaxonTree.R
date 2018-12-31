@@ -47,29 +47,30 @@
 #' will add a tip to every internal node with the parent-taxon name encapsulated in
 #' parentheses.
 
-#' @param solveMissing Under \code{method  = "parentChild"}, what should \code{makePBDBtaxonTree} do about
-#' multiple 'floating' parent taxa, listed without their own parent taxon information in the input
-#'  dataset under \code{data}? Each of these is essentially a separate root taxon, for a different set
-#'  of parent-child relationships, and thus poses a problem as far as returning a single phylogeny is
-#'  concerned. If \code{solveMissing = NULL} (the default), nothing is done and the operation halts with
-#'  an error, reporting the identity of these taxa. Two alternative solutions are offered: first,
-#'  \code{solveMissing  = "mergeRoots"} will combine these disparate potential roots and link them to an
-#'  artificially-constructed pseudo-root, which at least allows for visualization of the taxonomic
-#'  structure in a limited dataset. Secondly, \code{solveMissing  = "queryPBDB"} queries the Paleobiology
-#'  Database repeatedly via the API for information on parent taxa of the 'floating' parents, and continues
-#'  within a \code{while()} loop until only one such unassigned parent taxon remains. This latter option may
-#'  talk a long time or never finish, depending on the linearity and taxonomic structures encountered in the
-#'  PBDB taxonomic data; i.e. if someone a taxon was ultimately its own indirect child in some grand loop by
-#'  mistake, then under this option \code{makePBDBtaxonTree} might never finish. In cases where taxonomy is
-#'  bad due to weird and erroneous taxonomic assignments reported by the PBDB, this routine may search all
-#'  the way back to a very ancient and deep taxon, such as the Eukaryota taxon.
-#' Users should thus use \code{solveMissing  = "queryPBDB"} only with caution.
+#  @param solveMissing Under \code{method  = "parentChild"}, what should \code{makePBDBtaxonTree} do about
+#  multiple 'floating' parent taxa, listed without their own parent taxon information in the input
+#   dataset under \code{data}? Each of these is essentially a separate root taxon, for a different set
+#   of parent-child relationships, and thus poses a problem as far as returning a single phylogeny is
+#   concerned. If \code{solveMissing = NULL} (the default), nothing is done and the operation halts with
+#   an error, reporting the identity of these taxa. Two alternative solutions are offered: first,
+#   \code{solveMissing  = "mergeRoots"} will combine these disparate potential roots and link them to an
+#   artificially-constructed pseudo-root, which at least allows for visualization of the taxonomic
+#   structure in a limited dataset. Secondly, \code{solveMissing  = "queryPBDB"} queries the Paleobiology
+#   Database repeatedly via the API for information on parent taxa of the 'floating' parents, and continues
+#   within a \code{while()} loop until only one such unassigned parent taxon remains. This latter option may
+#   talk a long time or never finish, depending on the linearity and taxonomic structures encountered in the
+#   PBDB taxonomic data; i.e. if someone a taxon was ultimately its own indirect child in some grand loop by
+#   mistake, then under this option \code{makePBDBtaxonTree} might never finish. In cases where taxonomy is
+#   bad due to weird and erroneous taxonomic assignments reported by the PBDB, this routine may search all
+#   the way back to a very ancient and deep taxon, such as the Eukaryota taxon.
+#  Users should thus use \code{solveMissing  = "queryPBDB"} only with caution.
 
-#' @param APIversion Version of the Paleobiology Database API used by \code{makePBDBtaxonTree} when
-#' \code{solveMissing  = "queryPBDB"}. The current default is "1.2", the most recent API version
-#' as of 12/11/2018.
+#' @param APIversion Version of the Paleobiology Database API used by
+#' \code{makePBDBtaxonTree} when \code{method  = "parentChild"} or
+#' \code{method  = "parentChildOldQueryPBDB"} is used. The current default
+#' is \code{APIversion = "1.2"}, the most recent API version as of 12/11/2018.
 
-# @param cleanDuplicate If TRUE (\emph{not} the default), duplicated taxa of a
+# @param cleanDuplicate If \code{TRUE} (\emph{not} the default), duplicated taxa of a
 # taxonomic rank \emph{not} selected by argument \code{rank}
 # will be removed silently. Only duplicates of the taxonomic rank of interest
 # will actually result in an error message.
@@ -110,20 +111,31 @@
 #' @examples
 #' \dontrun{
 #' 
-#' easyGetPBDBtaxa <- function(taxon,show = c("class","img","app")){
+#' easyGetPBDBtaxa <- function(taxon,
+#' 		show = c("class","img","app","parent"),
+#' 		status = "accepted"){
+#' 	##########################################
+#' 	# 12-30-18: modified for API version 1.2
 #' 	#let's get some taxonomic data
-#' 	taxaData <- read.csv(paste0("http://paleobiodb.org/",
-#' 	    "data1.2/taxa/list.txt?base_name=",taxon,
-#' 	    "&rel=all_children&show=",
-#' 	    paste0(show,collapse = ","),"&status=senior"),
+#' 	taxaData <- read.csv(
+#' 		paste0("http://paleobiodb.org/",
+#' 			"data1.2/taxa/list.txt?base_name=", taxon,
+#' 			"&show=",paste0(show,collapse = ","),
+#' 			# status -> all, accepted, valid
+#' 				# accepted -> only senior synonyms
+#' 				# valid -> snior synonyms + valid subjective synonyms
+#' 				# all -> valid taxa + repressed invalid taxa
+#' 			"&taxon_status=",status
+#' 			),
 #' 	    stringsAsFactors = FALSE)
+#' 	#######################################
 #' 	return(taxaData)
 #' 	}
 #' 
 #' #graptolites
 #' graptData <- easyGetPBDBtaxa("Graptolithina")
 #' graptTree <- makePBDBtaxonTree(graptData,"genus",
-#' 	   method = "parentChild", solveMissing = "queryPBDB")
+#' 	   method = "parentChild")
 #' #try Linnean
 #' graptTree <- makePBDBtaxonTree(graptData,"genus",
 #' 	   method = "Linnean")
@@ -137,7 +149,7 @@
 #' #conodonts
 #' conoData <- easyGetPBDBtaxa("Conodonta")
 #' conoTree <- makePBDBtaxonTree(conoData,"genus",
-#' 	method = "parentChild", solveMissing = "queryPBDB")
+#' 	   method = "parentChild")
 #' 
 #' # plot it!
 #' plot(conoTree,show.tip.label = FALSE,
@@ -148,7 +160,7 @@
 #' #asaphid trilobites
 #' asaData <- easyGetPBDBtaxa("Asaphida")
 #' asaTree <- makePBDBtaxonTree(asaData,"genus",
-#' 	method = "parentChild", solveMissing = "queryPBDB")
+#' 	   method = "parentChild")
 #' 
 #' # plot it!
 #' plot(asaTree,show.tip.label = FALSE,
@@ -158,12 +170,13 @@
 #' #Ornithischia
 #' ornithData <- easyGetPBDBtaxa("Ornithischia")
 #' ornithTree <- makePBDBtaxonTree(ornithData,"genus",
-#' 	method = "parentChild", solveMissing = "queryPBDB")
+#' 	  method = "parentChild")
 #' #try Linnean
 #' #need to drop repeated taxon first: Hylaeosaurus
-#' ornithData <- ornithData[-(which(ornithData[,"taxon_name"] == "Hylaeosaurus")[1]),]
+#' ornithData <- ornithData[
+#'    -(which(ornithData[,"taxon_name"] == "Hylaeosaurus")[1]),]
 #' ornithTree <- makePBDBtaxonTree(ornithData,"genus",
-#' 	method = "Linnean")
+#' 	  method = "Linnean")
 #' plot(ornithTree,show.tip.label = FALSE,
 #'    no.margin = TRUE,edge.width = 0.35)
 #' nodelabels(ornithTree$node.label,adj = c(0,1/2))
@@ -171,7 +184,7 @@
 #' #Rhynchonellida
 #' rynchData <- easyGetPBDBtaxa("Rhynchonellida")
 #' rynchTree <- makePBDBtaxonTree(rynchData,"genus",
-#' 	method = "parentChild", solveMissing = "queryPBDB")
+#' 	  method = "parentChild")
 #' plot(rynchTree, show.tip.label = FALSE, 
 #'    no.margin = TRUE, edge.width = 0.35)
 #' nodelabels(rynchTree$node.label,adj = c(0,1/2))
@@ -189,24 +202,29 @@
 #' data(graptPBDB)
 #' 
 #' #get the taxon tree: Linnean method
-#' graptTree <- makePBDBtaxonTree(graptTaxaPBDB, "genus", method = "Linnean")
+#' graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
+#'     "genus", method = "Linnean")
 #' plot(graptTree, cex = 0.4)
 #' nodelabels(graptTree$node.label, cex = 0.5)
 #'
 #' #get the taxon tree: parentChild method
-#' graptTree <- makePBDBtaxonTree(graptTaxaPBDB, "genus", method = "parentChild")
+#' graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
+#'     "genus", method = "parentChild")
 #' plot(graptTree,cex = 0.4)
 #' nodelabels(graptTree$node.label,cex = 0.5)
 #' 
 #' #get time data from occurrences
-#' graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,rank = "genus",onlyFormal = FALSE)
+#' graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,
+#'     rank = "genus", onlyFormal = FALSE)
 #' graptTimeGenus <- occData2timeList(occList = graptOccGenus)
 #' 
 #' #let's time-scale the parentChild tree with paleotree
 #' 		# use minimum branch length for visualization
 #' 		# and nonstoch.bin so we plot maximal ranges
-#' timeTree <- bin_timePaleoPhy(graptTree,timeList = graptTimeGenus,
-#' 	nonstoch.bin = TRUE,type = "mbl",vartime = 3)
+#' timeTree <- bin_timePaleoPhy(graptTree,
+#'     timeList = graptTimeGenus,
+#'     nonstoch.bin = TRUE,
+#'     type = "mbl", vartime = 3)
 #' 
 #' #drops a lot of taxa; some of this is due to mispellings, etc
 #' 
@@ -215,7 +233,8 @@
 #' 
 #' #make pretty plot with library strap
 #' library(strap)
-#' geoscalePhylo(timeTree, ages = timeTree$ranges.used)
+#' geoscalePhylo(timeTree,
+#'     ages = timeTree$ranges.used)
 #' nodelabels(timeTree$node.label,cex = 0.5)
 #'
 #' }
@@ -224,13 +243,16 @@
 #' @name makePBDBtaxonTree
 #' @rdname makePBDBtaxonTree
 #' @export
-makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing = NULL,
-					tipSet = "nonParents", cleanTree = TRUE, APIversion = "1.2"){		
-	# 
+makePBDBtaxonTree <- function(data, rank,
+					method = "parentChild", #solveMissing = NULL,
+					tipSet = "nonParents", cleanTree = TRUE,
+					APIversion = "1.2"){		
+	############################################################
+	############################################################
 	# library(paleotree);data(graptPBDB);
-	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE; solveMissing = NULL
-	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE; solveMissing = "queryPBDB"
-	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE; solveMissing = "mergeRoots"
+	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
+	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
+	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
 	# data <- graptTaxaPBDB; rank = "genus"; method = "Linnean"; 
 	#
 	#CHECKS
@@ -240,14 +262,14 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 	if(!any(method == c("Linnean", "parentChild"))){
 		stop("method must be one of either 'Linnean' or 'parentChild'")
 		}
-	if(!is.null(solveMissing)){
-		if(length(solveMissing)>1 | !is.character(solveMissing)){
-			stop("solveMissing must be either NULL or a single character value")
-			}
-		if(is.na(match(solveMissing,c("queryPBDB","mergeRoots")))){
-			stop('solveMissing but be either NULL or "queryPBDB" or "mergeRoots"')
-			}
-		}
+	#if(!is.null(solveMissing)){
+	#	if(length(solveMissing)>1 | !is.character(solveMissing)){
+	#		stop("solveMissing must be either NULL or a single character value")
+	#		}
+	#	if(is.na(match(solveMissing,c("queryPBDB","mergeRoots")))){
+	#		stop('solveMissing but be either NULL or "queryPBDB" or "mergeRoots"')
+	#		}
+	#	}
 	if(!is(data,"data.frame")){
 		stop("data isn't a data.frame")
 		}
@@ -266,8 +288,113 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 	dataTransform <- translatePBDBtaxa(data)
 	dataTransform <- apply(dataTransform, 2, as.character)
 	#
-	
 	if(method == "parentChild"){
+		# need two things: a table of parent-child relationships as IDs
+			#and a look-up table of IDs and taxon names
+		# 
+		##############################
+		# FIND ALL PARENTS FIRST
+			# three column matrix with taxon name, taxon ID, parent ID
+			# (in that order)
+		parData<- getAllParents(dataTransform)
+		#
+		#######################################
+		# NOW FILTER OUT TIP TAXA WE WANT
+		tipIDs <- getTaxaIDsDesiredRank(data=dataTransform, rank=rank)
+		# figure out which taxon numbers match tip IDs
+		whichTip <- match(tipIDs, parData$taxon_no)
+		#
+		###############################
+		# BUILD PARENT-CHILD matrix
+		# get parent-child matrix for just desired OTUs 
+			# start matrix with those parent-child relationships
+		pcMat <- parData[whichTip, c("parent_no","taxon_no")]
+		# find floating parents in current pcMat
+		#identify IDs of parents floating without ancestors of their own
+		floaters <- getFloatAncPBDB(pcDat = pcMat)
+		# use a while loop to complete the parent-child matrix
+		while(length(floaters)>1){	#so only ONE root can float
+			# get new relations: will 'anchor' the floaters
+			anchors <- match(floaters,parData[,2])
+			anchorMat <- parData[anchors, c("parent_no","taxon_no")]
+			# bind to pcMat
+			pcMat <- rbind(pcMat,anchorMat)
+			# recalculate floater taxa
+			floatersNew <- getFloatAncPBDB(pcDat = pcMat)	#recalculate float
+			if( identical(floaters,floatersNew) ){
+				stop(paste0(
+					"Provided PBDB Dataset does not appear to have a \n",
+					"  monophyletic set of parent-child relationship pairs. \n",
+					"Multiple taxa appear to be listed as parents, but are not \n",
+					"  listed themselves so have no parents listed: \n",
+					paste0(
+						parData$taxon_name[match(floaters,
+							parData$taxon_no)],
+						collapse = ", "
+						)
+					))	
+			}else{
+				floaters <- floatersNew
+				}
+			}
+		#################################
+		# convert parent-child matrix to accepted taxon names
+		pcMat <- apply(pcMat, 2, function(x) 
+			as.character(parData$taxon_name[x])
+			)
+		############################
+		# Calculate the taxon tree!
+		tree <- parentChild2taxonTree(
+			parentChild = pcMat,
+			tipSet = tipSet,
+			cleanTree = cleanTree)
+		#
+		tree$parentChild <- pcMat
+		}
+	##############
+	#
+	if(method == "Linnean"){
+		#Check if show = class was used
+		if(!any(colnames(dataTransform) == "family")){
+			stop("Data must be a taxonomic download with show = class for method = 'Linnean'")
+			}
+		#message that tipSet (and solveMissing) is ignored
+		message("Linnean taxon-tree option selected, argument 'tipSet' is ignored")
+		#now check and return an error if duplicate taxa of selected rank
+		nDup <- sapply(nrow(dataTransform),function(x)
+			sum(dataTransform[,"taxon_name"] == dataTransform[x,"taxon_name"])>1
+			 & dataTransform[x,"taxon_rank"] == rank
+			)
+		if(any(nDup)){
+			stop(
+				paste0(
+					"Duplicate taxa of selected rank: ",
+					paste0("(",which(nDup),") ",
+					dataTransform[nDup,"taxon_name"],
+					collapse = ", ")
+					)
+				)
+			}
+		#filter on rank
+		dataTransform <- dataTransform[dataTransform[,"taxon_rank"] == rank,]
+		#
+		#get the taxonomic fields you want
+		#from API documentation: "phylum","class","order","family","genus"  
+			# apparently 'kingdom' dropped from v1.2 API
+		taxonFields <- c(
+			#"kingdom",
+			"phylum", "class",
+			"order", "family",
+			"taxon_name")
+		#print(colnames(dataTransform))
+		taxonData <- dataTransform[,taxonFields]
+		taxonData <- apply(taxonData,2,as.character)
+		tree <- taxonTable2taxonTree(taxonTable = taxonData,cleanTree = cleanTree)
+		tree$taxonTable <- taxonData
+		}
+	#########
+	#
+	if(method == "parentChildOldMergeRoot" | method == "parentChildOldQueryPBDB"){
 		# need two things: a table of parent-child relationships as IDs
 			#and a look-up table of IDs and taxon names
 		# 
@@ -318,8 +445,8 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 			floatersNew <- getFloatAncPBDB(pcDat = pcMat)	#recalculate float
 			#stopping condition, as this is a silly while() loop...
 			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
-				if(!is.null(solveMissing)){
-					if(solveMissing == "queryPBDB"){
+				#if(!is.null(solveMissing)){
+					if(method == "parentChildOldQueryPBDB"){
 						floatData <- queryMissingParents(
 							taxaID = floatersNew, 
 							APIversion = APIversion
@@ -340,7 +467,7 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 						pcMat <- rbind(pcMat,newEntries)
 						pcAll <- rbind(pcAll,newEntries)
 						}
-					if(solveMissing == "mergeRoots"){
+					if(method == "parentChildOldMergeRoot"){
 						pcMat <- rbind(pcMat,cbind("ArtificialRoot",floaters))
 						taxonNameTable <- rbind(taxonNameTable,c("ArtificialRoot","ArtificialRoot"))
 						message(paste0(
@@ -350,7 +477,7 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 						}
 					#regardless of method used, recalculate floaters
 					floaters <- getFloatAncPBDB(pcDat = pcMat)
-				}else{
+				if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
 					stop(
 						paste0("Provided PBDB Dataset does not appear to have a \n",
 							"  monophyletic set of parent-child relationship pairs. \n",
@@ -380,49 +507,10 @@ makePBDBtaxonTree <- function(data, rank, method = "parentChild", solveMissing =
 			taxonNameTable[,1]),2]
 		tree$parentChild <- pcMat
 		}
-	#
-	if(method == "Linnean"){
-		#Check if show = class was used
-		if(!any(colnames(dataTransform) == "family")){
-			stop("Data must be a taxonomic download with show = class for method = 'Linnean'")
-			}
-		#message that tipSet and solveMissing are ignored
-		message("Linnean taxon-tree option selected, arguments 'tipSet', 'solveMissing' ignored")
-		#now check and return an error if duplicate taxa of selected rank
-		nDup <- sapply(nrow(dataTransform),function(x)
-			sum(dataTransform[,"taxon_name"] == dataTransform[x,"taxon_name"])>1
-			 & dataTransform[x,"taxon_rank"] == rank
-			)
-		if(any(nDup)){
-			stop(
-				paste0(
-					"Duplicate taxa of selected rank: ",
-					paste0("(",which(nDup),") ",
-					dataTransform[nDup,"taxon_name"],
-					collapse = ", ")
-					)
-				)
-			}
-		#filter on rank
-		dataTransform <- dataTransform[dataTransform[,"taxon_rank"] == rank,]
-		#
-		#get the taxonomic fields you want
-		#from API documentation: "phylum","class","order","family","genus"  
-			# apparently 'kingdom' dropped from v1.2 API
-		taxonFields <- c(
-			#"kingdom",
-			"phylum", "class",
-			"order", "family",
-			"taxon_name")
-		#print(colnames(dataTransform))
-		taxonData <- dataTransform[,taxonFields]
-		taxonData <- apply(taxonData,2,as.character)
-		tree <- taxonTable2taxonTree(taxonTable = taxonData,cleanTree = cleanTree)
-		tree$taxonTable <- taxonData
-		}
+	####################
 	return(tree)
 	}
-	
+
 #hidden function, don't import
 translatePBDBtaxa <- function(data){
 	# Do some translation
@@ -494,7 +582,7 @@ getTaxRankPBDB<-function(){
 		))
 	}
 
-	
+
 	
 queryMissingParents <- function(taxaID,
 		APIversion = "1.2",
@@ -538,11 +626,56 @@ parseParentPBDBData <- function(parentData){
 	}
 
 
-#identify IDs of parents floating without ancestors of their own
+
 getFloatAncPBDB <- function(pcDat){
-	unique(pcDat[
+	#identify IDs of parents floating without ancestors of their own
+	res <- unique(pcDat[
 		sapply(pcDat[,1], function(x) 
 			all(x != pcDat[,2])
 			)
 		,1])
+	return(res)
+	}
+
+
+getAllParents<-function(inputData){
+	parData<-parseParentPBDBData(inputData)
+	noParentMatch<-findNoParentMatch(parData)
+	while(sum(noParentMatch)>1){
+		floatingParentNum <- unique(parData$parent_no[noParentMatch])
+		dataNew<-queryMissingParents(floatingParentNum)
+		parData<-rbind(parData,dataNew)
+		noParentMatch<-findNoParentMatch(parData)
 		}
+	if(sum(noParentMatch)!=1){
+		stop("Cannot find a single common ancestor by tracing parents")
+		}
+	return(parData)
+	}
+
+
+findNoParentMatch<-function(parData){
+	res <- is.na(match(parData$parent_no, parData$taxon_no))
+	return(res)
+	}
+
+
+getTaxaIDsDesiredRank<-function(data,rank){
+	# filter out lower than selected rank (for tip taxa)
+		# so need to know which ranks are lower/higher
+	# get taxon rank translation vectors for compact vocab
+	taxRankPBDB <- getTaxRankPBDB()
+	# translate rank to a number
+	rankID <- which(rank == taxRankPBDB)
+	# translate taxon_rank to a number
+	numTaxonRank <- sapply(data[,"taxon_rank"],
+		function(x) which(x == taxRankPBDB))		
+	#now need to put together parentChild table
+	# get taxon ID numbers of just those of desired rank
+	desiredIDs <- data[rankID == numTaxonRank, "parent_no"]
+	desiredIDs <- as.numeric(desiredIDs)
+	return(desiredIDs)
+	}
+
+
+	

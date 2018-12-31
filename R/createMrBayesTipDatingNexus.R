@@ -810,7 +810,7 @@ makeEmptyMorphNexusMrB <- function(taxonNames){
 makeMrBayesBlock <- function(logBlock, ingroupBlock,
 							ageBlock, orderedChars, autoCloseMrB,
 							constraintBlock, morphModel = "strong",
-							
+							morphFiltered="parsInf",
 							ngen = 100000000, doNotRun = FALSE,
 							outputNameLine = outputNameLine){
 #########################################################################################						

@@ -346,18 +346,18 @@ makePBDBtaxonTree <- function(data, rank,
 		# BUILD PARENT-CHILD matrix
 		# get parent-child matrix for just desired OTUs 
 			# start matrix with those parent-child relationships
-		pcMat <- parData[whichTip, c("parent_no", "taxon_no")]
+			# subset these from parData using the taxon ID numbers
+		pcMat <- subsetParDataPBDB(subsetNum = tipIDs, parData = parData)			
 		# starting from desired tip OTUs, work backwards to a common ancestor from the full parData
-		pcMat<-constructParentChildMatrixPBDB(initPCmat=pcMat, parData=parData)
-		#
+		pcMat<-constructParentChildMatrixPBDB(initPCmat=pcMat, parData=parData)	
 		#################################
 		# convert parent-child matrix to accepted taxon names
-		print(pcMat)
-		pcMat <- apply(pcMat, 1:2, function(x) 
-			as.character(parData$taxon_name[match(x,
-							parData$taxon_no)])
-			)
-		print(pcMat)
+		#print(pcMat)
+		pcMat <- apply(pcMat, 1:2, 
+			convertParentChildMatNames,
+			parData = parData)
+		# remove "NODE" root-stem 
+		pcMat <- pcMat[pcMat[,1] != "NODE", ]
 		############################
 		# Calculate the taxon tree!
 		tree <- parentChild2taxonTree(
@@ -600,7 +600,16 @@ getTaxRankPBDB<-function(){
 		))
 	}
 
-
+convertParentChildMatNames <- function(taxID, parData){
+	taxMatch <- match(taxID, parData$taxon_no)
+	if(is.na(taxMatch)){
+		newName <- "NODE"
+	}else{
+		newName <- parData$taxon_name[taxMatch]
+		newName <- as.character(newName)
+		}
+	return(newName)
+	}
 	
 queryMissingParents <- function(taxaID,
 		APIversion = "1.2",
@@ -636,31 +645,20 @@ queryMissingParents <- function(taxaID,
 
 parseParentPBDBData <- function(parentData){
 	#parse down to just taxon_name, taxon_no, parent_no
+	if(any(colnames(parentData)=="accepted_name")){
+		taxon_name = parentData$accepted_name
+	}else{
+		taxon_name = parentData$taxon_name
+		}
+	#
 	result <- data.frame(
-		if(any(colnames(parentData)=="accepted_name")){
-			"taxon_name" = as.character(parentData[,"accepted_name"])
-		}else{
-			"taxon_name" = as.character(parentData[,"taxon_name"])
-			}
-		,
-		"parent_no" = as.numeric(parentData[,"parent_no"]),
-		"taxon_no" = as.numeric(parentData[,"taxon_no"]))
+		taxon_name = as.character(taxon_name),
+		parent_no = as.numeric(parentData$parent_no),
+		taxon_no = as.numeric(parentData$taxon_no)
+		)
 	rownames(result) <- NULL
 	return(result)
 	}
-
-
-
-getFloatAncPBDB <- function(pcDat){
-	#identify IDs of parents floating without ancestors of their own
-	res <- unique(pcDat[
-		sapply(pcDat$parent_no, function(x) 
-			all(x != pcDat$child_no)
-			)
-		,1])
-	return(res)
-	}
-
 
 getAllParents<-function(inputData, status){
 	parData<-parseParentPBDBData(inputData)
@@ -675,7 +673,7 @@ getAllParents<-function(inputData, status){
 		stop("Cannot find a single common ancestor by tracing parents")
 		}
 	if(nrow(parData) != nrow(unique(parData))){
-		print(parData)
+		print(parData[duplicated(parData),])
 		stop("getAllParents added duplicate parent-child relationships, see print-out above")
 		}
 	return(parData)
@@ -688,10 +686,21 @@ findNoParentMatch<-function(parData){
 	}
 
 	
+getFloatAncPBDB <- function(pcDat){
+	#identify IDs of parents floating without ancestors of their own
+	# which parents have no children?
+	noChildren <- sapply(pcDat$parent_no, function(x) 
+			all(x != pcDat$child_no)
+			)
+	# list all unique no-child parents
+	res <- unique(pcDat$parent_no[noChildren])
+	return(res)
+	}	
+	
 constructParentChildMatrixPBDB <- function(initPCmat, parData){
 	# starting from desired tip OTUs, work backwards to a common ancestor from the full parData
 	if(nrow(initPCmat) != nrow(unique(initPCmat))){
-		print(initPCmat)
+		print(initPCmat[duplicated(initPCmat),])
 		stop("initial parent-child matrix had duplicate parent-child relationships, see print-out above")
 		}
 	newPCmat <- initPCmat
@@ -701,16 +710,17 @@ constructParentChildMatrixPBDB <- function(initPCmat, parData){
 	# use a while loop to complete the parent-child matrix
 	while(length(floaters)>1){	#so only ONE root can float
 		# get new relations: will 'anchor' the floaters
-		anchors <- match(floaters, parData$taxon_no)
-		anchorMat <- parData[anchors, c("parent_no", "taxon_no")]
+		anchorMat <- subsetParDataPBDB(subsetNum = floaters, parData = parData)
 		# bind to newPCmat
 		newPCmat <- rbind(newPCmat,anchorMat)
 		if(nrow(newPCmat) != nrow(unique(newPCmat))){
-			print(newPCmat)
+			print(newPCmat[duplicated(newPCmat),])
 			stop("annotated pcMat had duplicate parent-child relationships, see print-out above")
 			}
 		# recalculate floater taxa
 		floatersNew <- getFloatAncPBDB(pcDat = newPCmat)	#recalculate float
+		#
+		# put in a stopping condition for the love of god
 		if( length(floatersNew)>1 & identical(floaters,floatersNew) ){
 			stop(paste0(
 				"Provided PBDB Dataset does not appear to have a \n",
@@ -732,7 +742,23 @@ constructParentChildMatrixPBDB <- function(initPCmat, parData){
 		}
 	return(newPCmat)
 	}	
-
+	
+subsetParDataPBDB <- function(subsetNum,parData){
+	# pull parent-child relationships for a set of taxon numbers from parData
+	subsetRows <- match(subsetNum, parData$taxon_no)
+	# remove the non matching subset (usually the root)
+	subsetRows <- subsetRows[!is.na(subsetRows)]
+	# pull the subset of parent-child relationships from parData
+	#subsetMat <- parData[subsetRows, c("parent_no", "taxon_no")]
+	subsetMat <- data.frame(
+		parent_no = parData$parent_no[subsetRows],
+		child_no = parData$taxon_no[subsetRows]
+		)
+	rownames(subsetMat)<-as.character(parData$taxon_no[subsetRows])
+	return(subsetMat)
+	}
+	
+	
 #getTaxaIDsDesiredRank<-function(data, rank){
 #	# filter out lower than selected rank (for tip taxa)
 #		# so need to know which ranks are lower/higher

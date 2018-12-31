@@ -8,7 +8,8 @@ makePBDBtaxonTree(data, rank, method = "parentChild", tipSet = "nonParents",
   cleanTree = TRUE, APIversion = "1.2")
 }
 \arguments{
-\item{data}{A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
+\item{data}{A table of taxonomic data collected from
+the Paleobiology Database, using the taxa list option
 with \code{show = class}. Should work with versions 1.1-1.2 of
 the API, with either the \code{pbdb} or \code{com} vocab. However,
 as \code{accepted_name} is not available in API v1.1, the resulting
@@ -19,11 +20,38 @@ any formally updated name.}
 'genus', 'family', 'order', 'class' or 'phylum'.}
 
 \item{method}{Controls which algorithm is used for calculating
-the taxon-tree: either \code{method  = "parentChild"}
-(the default option) which converts the listed binary parent-child taxon relationships from the input PBDB data,
-or \code{method = "Linnean"}, which converts a taxon-tree by creating a table of the Linnean
-taxonomic assignments (family, order, etc), which are provided when
-option \code{show = class} is used in PBDB API calls.}
+the taxon-tree. The default option is \code{method  = "parentChild"}
+which converts the listed binary parent-child taxon relationships in
+the Paleobiology Database- these parent-child relationships (if missing
+from the input dataset) are autofilled using API calls to the
+Paleobiology Database. Alternatively, users may use
+\code{method = "Linnean"}, which converts the table of Linnean taxonomic
+assignments (family, order, etc as provided by \code{show = class} in
+PBDB API calls) into a taxon-tree. Two methods formerly both implemented
+under \code{method  = "parentChild"} are also available as
+\code{method = "parentChildOldMergeRoot"} and \code{method = "parentChildOldQueryPBDB"}
+respectively. Both of these use similar algorithms as the current
+\code{method  = "parentChild"} but differ in how they treat taxa with
+parents missing from the input taxonomic dataset.
+\code{method = "parentChildOldQueryPBDB"} behaves most similar
+to \code{method = "parentChild"}  in that it queries the Paleobiology
+Database via the API , but repeatedly does so for information on parent
+taxa of the 'floating' parents, and continues within a \code{while}
+loop until only one such unassigned parent taxon remains. This latter
+option may talk a long time or never finish, depending on the
+linearity and taxonomic structures encountered in the PBDB taxonomic
+data; i.e. if someone a taxon was ultimately its own indirect child
+in some grand loop by mistake, then under this option
+\code{makePBDBtaxonTree} might never finish. In cases where taxonomy
+is bad due to weird and erroneous taxonomic assignments reported by
+the PBDB, this routine may search all the way back to a very ancient
+and deep taxon, such as the \emph{Eukaryota} taxon.
+\code{method = "parentChildOldMergeRoot"} will combine these disparate
+potential roots and link them to an artificially-constructed
+pseudo-root, which at least allows for visualization of the taxonomic
+structure in a limited dataset. This latter option will be fully
+offline, as it does nto do any additional API calls
+of the Paleobiology Database, unlike other options.}
 
 \item{tipSet}{This argument only impacts analyses where the argument
 \code{method  = "parentChild"} is also used. This \code{tipSet} controls
@@ -62,19 +90,28 @@ Similar issues also effect the identification of parent taxa, as the accepted na
 parent ID number is only provided in version 1.2 of the API.
 }
 \description{
-This function creates phylogeny-like object of type \code{phylo} from the taxonomic information
-recorded in a taxonomy download from the PBDB for a given group. Two different algorithms are provided,
-the default being based on parent-child taxon relationships, the other based on the nested Linnean hierarchy.
+This function creates phylogeny-like object of type
+\code{phylo} from the taxonomic information
+recorded in a taxonomy download from the PBDB for
+a given group. Two different algorithms are provided,
+the default being based on parent-child taxon relationships,
+the other based on the nested Linnean hierarchy.
 }
 \details{
-This function should not be taken too seriously. Many groups in the Paleobiology Database have
-out-of-date or very incomplete taxonomic information. This function is meant to help visualize
-what information is present, and by use of time-scaling functions, allow us to visualize the intersection
-of temporal and phylogenetic, mainly to look for incongruence due to either incorrect taxonomic placements,
+This function should not be taken too seriously.
+Many groups in the Paleobiology Database have
+out-of-date or very incomplete taxonomic information.
+This function is meant to help visualize
+what information is present, and by use of time-scaling
+functions, allow us to visualize the intersection
+of temporal and phylogenetic, mainly to look for incongruence
+due to either incorrect taxonomic placements,
 erroneous occurrence data or both. 
 
-Note however that, contrary to common opinion among some paleontologists, taxon-trees may be just as useful for 
-macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, 2015.).
+Note however that, contrary to common opinion among some
+paleontologists, taxon-trees may be just as useful for 
+macroevolutionary studies as reconstructed phylogenies
+(Soul and Friedman, 2015.).
 }
 \examples{
 \dontrun{

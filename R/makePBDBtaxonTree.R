@@ -323,7 +323,7 @@ makePBDBtaxonTree <- function(data, rank,
 	#
 	#translate to a common vocabulary
 	dataTransform <- translatePBDBtaxa(data)
-	dataTransform <- apply(dataTransform, 2, as.character)
+	dataTransform <- unique(dataTransform)
 	#
 	if(method == "parentChild"){
 		# need two things: a table of parent-child relationships as IDs
@@ -333,11 +333,12 @@ makePBDBtaxonTree <- function(data, rank,
 		# FIND ALL PARENTS FIRST
 			# three column matrix with taxon name, taxon ID, parent ID
 			# (in that order)
-		parData<- getAllParents(dataTransform)
+		parData<- getAllParents(dataTransform,status="all")
 		#
 		#######################################
 		# NOW FILTER OUT TIP TAXA WE WANT
-		tipIDs <- getTaxaIDsDesiredRank(data=dataTransform, rank=rank)
+		#tipIDs <- getTaxaIDsDesiredRank(data=dataTransform, rank=rank)
+		tipIDs <- dataTransform$taxon_no[dataTransform$taxon_rank==rank]
 		# figure out which taxon numbers match tip IDs
 		whichTip <- match(tipIDs, parData$taxon_no)
 		#
@@ -345,40 +346,18 @@ makePBDBtaxonTree <- function(data, rank,
 		# BUILD PARENT-CHILD matrix
 		# get parent-child matrix for just desired OTUs 
 			# start matrix with those parent-child relationships
-		pcMat <- parData[whichTip, c("parent_no","taxon_no")]
-		# find floating parents in current pcMat
-		#identify IDs of parents floating without ancestors of their own
-		floaters <- getFloatAncPBDB(pcDat = pcMat)
-		# use a while loop to complete the parent-child matrix
-		while(length(floaters)>1){	#so only ONE root can float
-			# get new relations: will 'anchor' the floaters
-			anchors <- match(floaters,parData[,2])
-			anchorMat <- parData[anchors, c("parent_no","taxon_no")]
-			# bind to pcMat
-			pcMat <- rbind(pcMat,anchorMat)
-			# recalculate floater taxa
-			floatersNew <- getFloatAncPBDB(pcDat = pcMat)	#recalculate float
-			if( identical(floaters,floatersNew) ){
-				stop(paste0(
-					"Provided PBDB Dataset does not appear to have a \n",
-					"  monophyletic set of parent-child relationship pairs. \n",
-					"Multiple taxa appear to be listed as parents, but are not \n",
-					"  listed themselves so have no parents listed: \n",
-					paste0(
-						parData$taxon_name[match(floaters,
-							parData$taxon_no)],
-						collapse = ", "
-						)
-					))	
-			}else{
-				floaters <- floatersNew
-				}
-			}
+		pcMat <- parData[whichTip, c("parent_no", "taxon_no")]
+		# starting from desired tip OTUs, work backwards to a common ancestor from the full parData
+		pcMat<-constructParentChildMatrixPBDB(initPCmat=pcMat, parData=parData)
+		#
 		#################################
 		# convert parent-child matrix to accepted taxon names
-		pcMat <- apply(pcMat, 2, function(x) 
-			as.character(parData$taxon_name[x])
+		print(pcMat)
+		pcMat <- apply(pcMat, 1:2, function(x) 
+			as.character(parData$taxon_name[match(x,
+							parData$taxon_no)])
 			)
+		print(pcMat)
 		############################
 		# Calculate the taxon tree!
 		tree <- parentChild2taxonTree(
@@ -391,6 +370,7 @@ makePBDBtaxonTree <- function(data, rank,
 	##############
 	#
 	if(method == "Linnean"){
+		dataTransform <- apply(dataTransform, 2, as.character)
 		#Check if show = class was used
 		if(!any(colnames(dataTransform) == "family")){
 			stop("Data must be a taxonomic download with show = class for method = 'Linnean'")
@@ -432,6 +412,7 @@ makePBDBtaxonTree <- function(data, rank,
 	#########
 	#
 	if(method == "parentChildOldMergeRoot" | method == "parentChildOldQueryPBDB"){
+		dataTransform <- apply(dataTransform, 2, as.character)
 		# need two things: a table of parent-child relationships as IDs
 			#and a look-up table of IDs and taxon names
 		# 
@@ -478,7 +459,7 @@ makePBDBtaxonTree <- function(data, rank,
 			nCount <- nCount+1
 			#get new relations: will 'anchor' the floaters
 			anchors <- match(floaters,pcAll[,2])
-			pcMat <- rbind(pcMat,pcAll[anchors[!is.na(anchors)],])	#bind to pcMat
+			pcMat <- rbind(pcMat, pcAll[anchors[!is.na(anchors)],])	#bind to pcMat
 			floatersNew <- getFloatAncPBDB(pcDat = pcMat)	#recalculate float
 			#stopping condition, as this is a silly while() loop...
 			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
@@ -664,6 +645,7 @@ parseParentPBDBData <- function(parentData){
 		,
 		"parent_no" = as.numeric(parentData[,"parent_no"]),
 		"taxon_no" = as.numeric(parentData[,"taxon_no"]))
+	rownames(result) <- NULL
 	return(result)
 	}
 
@@ -672,25 +654,29 @@ parseParentPBDBData <- function(parentData){
 getFloatAncPBDB <- function(pcDat){
 	#identify IDs of parents floating without ancestors of their own
 	res <- unique(pcDat[
-		sapply(pcDat[,1], function(x) 
-			all(x != pcDat[,2])
+		sapply(pcDat$parent_no, function(x) 
+			all(x != pcDat$child_no)
 			)
 		,1])
 	return(res)
 	}
 
 
-getAllParents<-function(inputData){
+getAllParents<-function(inputData, status){
 	parData<-parseParentPBDBData(inputData)
 	noParentMatch<-findNoParentMatch(parData)
 	while(sum(noParentMatch)>1){
 		floatingParentNum <- unique(parData$parent_no[noParentMatch])
-		dataNew<-queryMissingParents(floatingParentNum)
+		dataNew<-queryMissingParents(floatingParentNum, status=status)
 		parData<-rbind(parData,dataNew)
 		noParentMatch<-findNoParentMatch(parData)
 		}
 	if(sum(noParentMatch)!=1){
 		stop("Cannot find a single common ancestor by tracing parents")
+		}
+	if(nrow(parData) != nrow(unique(parData))){
+		print(parData)
+		stop("getAllParents added duplicate parent-child relationships, see print-out above")
 		}
 	return(parData)
 	}
@@ -701,23 +687,67 @@ findNoParentMatch<-function(parData){
 	return(res)
 	}
 
+	
+constructParentChildMatrixPBDB <- function(initPCmat, parData){
+	# starting from desired tip OTUs, work backwards to a common ancestor from the full parData
+	if(nrow(initPCmat) != nrow(unique(initPCmat))){
+		print(initPCmat)
+		stop("initial parent-child matrix had duplicate parent-child relationships, see print-out above")
+		}
+	newPCmat <- initPCmat
+	# find floating parents in current newPCmat
+	#identify IDs of parents floating without ancestors of their own
+	floaters <- getFloatAncPBDB(pcDat = newPCmat)
+	# use a while loop to complete the parent-child matrix
+	while(length(floaters)>1){	#so only ONE root can float
+		# get new relations: will 'anchor' the floaters
+		anchors <- match(floaters, parData$taxon_no)
+		anchorMat <- parData[anchors, c("parent_no", "taxon_no")]
+		# bind to newPCmat
+		newPCmat <- rbind(newPCmat,anchorMat)
+		if(nrow(newPCmat) != nrow(unique(newPCmat))){
+			print(newPCmat)
+			stop("annotated pcMat had duplicate parent-child relationships, see print-out above")
+			}
+		# recalculate floater taxa
+		floatersNew <- getFloatAncPBDB(pcDat = newPCmat)	#recalculate float
+		if( length(floatersNew)>1 & identical(floaters,floatersNew) ){
+			stop(paste0(
+				"Provided PBDB Dataset does not appear to have a \n",
+				"  monophyletic set of parent-child relationship pairs. \n",
+				"Multiple taxa appear to be listed as parents, but are not \n",
+				"  listed themselves so have no parents listed: \n",
+				paste0(floaters,
+					collapse = ", "
+					),
+				paste0(
+					parData$taxon_name[match(floaters,
+						parData$taxon_no)],
+					collapse = ", "
+					)
+				))	
+		}else{
+			floaters <- floatersNew
+			}
+		}
+	return(newPCmat)
+	}	
 
-getTaxaIDsDesiredRank<-function(data,rank){
-	# filter out lower than selected rank (for tip taxa)
-		# so need to know which ranks are lower/higher
-	# get taxon rank translation vectors for compact vocab
-	taxRankPBDB <- getTaxRankPBDB()
-	# translate rank to a number
-	rankID <- which(rank == taxRankPBDB)
-	# translate taxon_rank to a number
-	numTaxonRank <- sapply(data[,"taxon_rank"],
-		function(x) which(x == taxRankPBDB))		
-	#now need to put together parentChild table
-	# get taxon ID numbers of just those of desired rank
-	desiredIDs <- data[rankID == numTaxonRank, "parent_no"]
-	desiredIDs <- as.numeric(desiredIDs)
-	return(desiredIDs)
-	}
+#getTaxaIDsDesiredRank<-function(data, rank){
+#	# filter out lower than selected rank (for tip taxa)
+#		# so need to know which ranks are lower/higher
+#	# get taxon rank translation vectors for compact vocab
+#	taxRankPBDB <- getTaxRankPBDB()
+#	# translate rank to a number
+#	# translate taxon_rank to a number
+#	numTaxonRank <- sapply(data[,"taxon_rank"],
+#		function(x) which(x == taxRankPBDB))		
+#	#now need to put together parentChild table
+#	# get taxon ID numbers of just those of desired rank
+#	desiredIDs <- data[rankID == numTaxonRank, "parent_no"]
+#	desiredIDs <- as.numeric(desiredIDs)
+#	return(desiredIDs)
+#	}
 
 
 	

@@ -50,7 +50,7 @@ the respective clade.
 \description{
 This function is designed to avoid methodological
 issues with getting sensible consensus summary topologies from posteriors samples of
-tip-dated, sampled-ancestor trees out-dated by Mr Bayes. This function will obtain samples of posterior trees,
+tip-dated, sampled-ancestor trees output by Mr Bayes. This function will obtain samples of posterior trees,
 from external files, remove the specified burn-in,
 and output an undated summary tree of clades (splits) indicated on the output tree, as a particular posterior 
 probability threshold. Posterior probabilities may be appended to the nodes of the output phylogeny.
@@ -94,6 +94,11 @@ halfCompatTree <- tipDatingCompatabilitySummaryMrB(
  	compatibilityThreshold = 0.5,
  	labelPostProb = TRUE
  	)
+
+# let's try plotting it with posterior probabilities as node labels
+plot(halfCompatTree)
+nodelabels(halfCompatTree$node.label)
+ 
 }
 
 }

@@ -13,9 +13,12 @@ columns (reading left-to-right). Invariant columns (i.e. taxa that all
 tip taxa are in) are allowed, but all but the most 'shallow' of such invariant taxa are
 dropped prior to transformation to a taxon-tree phylogeny object.}
 
-\item{cleanTree}{By default, the tree is run through a series of post-processing, including having singles collapsed,
-nodes reordered and being written out as a Newick string and read back in, to ensure functionality with ape functions
-and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
+\item{cleanTree}{When \code{TRUE} (the default), the tree is run through a series of
+post-processing, including having singles collapsed,
+nodes reordered and being written out as a Newick string and read
+back in, to ensure functionality with ape functions
+and ape-derived functions. If \code{FALSE}, none of this post-processing
+is done and users should beware, as such trees can
 lead to hard-crashes of R.}
 }
 \value{

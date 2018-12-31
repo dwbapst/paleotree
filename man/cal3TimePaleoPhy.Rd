@@ -356,7 +356,7 @@ your dataset. Remember that the FADs (earliest dates) given to timePaleoPhy
 #Simulate some fossil ranges with simFossilRecord
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 #simulate a fossil record with imperfect sampling with sampleRanges
 rangesCont <- sampleRanges(taxa,r = 0.5)
@@ -431,7 +431,7 @@ ttree <- cal3TimePaleoPhy(cladoDrop,rangesCont,brRate = divRate,extRate = divRat
 #example with time in discrete intervals
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 #simulate a fossil record with imperfect sampling with sampleRanges()
 rangesCont <- sampleRanges(taxa,r = 0.5)

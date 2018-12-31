@@ -17,9 +17,12 @@ are not listed as parents in \code{parentChild}. Alternatively, \code{tipSet = "
 will add a tip to every internal node with the parent-taxon name encapsulated in
 parentheses.}
 
-\item{cleanTree}{By default, the tree is run through a series of post-processing, including having singles collapsed,
-nodes reordered and being written out as a Newick string and read back in, to ensure functionality with ape functions
-and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
+\item{cleanTree}{When \code{TRUE} (the default), the tree is run through a series of
+post-processing, including having singles collapsed,
+nodes reordered and being written out as a Newick string and read
+back in, to ensure functionality with ape functions
+and ape-derived functions. If \code{FALSE}, none of this post-processing
+is done and users should beware, as such trees can
 lead to hard-crashes of R.}
 }
 \value{
@@ -97,7 +100,7 @@ pokeTree <- parentChild2taxonTree(pokexample_bad2)
 	 # simulated datasets from simFossilRecord, like so:
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 # need to reorder the columns so parents (ancestors) first, then children 
 parentChild2taxonTree(taxa[,2:1])

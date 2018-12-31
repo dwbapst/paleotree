@@ -158,7 +158,7 @@ quickAncPlotter <- function(tree,ancData,cex){
     ancCol <- (1:ncol(ancData))+1
         plot(tree,show.tip.label = FALSE,no.margin = TRUE,direction = "upwards")
         tiplabels(pch = 16,pie = ancData[(1:Ntip(tree)),],cex = cex,piecol = ancCol,
-	    col = 0)
+		    col = 0)
     nodelabels(pie = ancData[-(1:Ntip(tree)),],cex = cex,piecol = ancCol)	
     }
 
@@ -276,7 +276,7 @@ layout(1)
      #such as "," or "\\"... it can only be *one* symbol, though
 
 # all of this machinery should function just fine in minCharChange
-	# again, by default polySymbol = "&" (included anyway here for kicks)
+		# again, by default polySymbol = "&" (included anyway here for kicks)
 minCharChange(tree, trait = charPoly, polySymbol = "&")
 }
 }

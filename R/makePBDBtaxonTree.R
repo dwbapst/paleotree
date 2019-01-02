@@ -112,8 +112,18 @@
 # will be removed silently. Only duplicates of the taxonomic rank of interest
 # will actually result in an error message.
 
+#' @param annotatedDuplicateNames A logical determining whether duplicate taxon names,
+#' when found in the Paleobiology Database for taxa (presumably reflecting an issue with
+#' taxa being obsolete but with incomplete seniority data), should be annotated to include
+#' sequential numbers so to modify them, via function \code{\link{base:make.unique}}.
+#' This only applies to
+#' \code{method = "parentChild"}, with the default option being
+#' \code{annotatedDuplicateNames = TRUE}. If more than 26 duplicates are found, an error
+#' is issued. If this argument is \code{FALSE}, an error is issued if duplicate taxon
+#' names are found.
+
 #' @return
-#' A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. See additional details
+#' A phylogeny of class \code{phylo}, where each tip is a taxon of the given 'rank'. See additional details
 #' regarding branch lengths can be found in the sub-algorithms used to create the taxon-tree by this function:
 #' \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}.
 #'
@@ -277,12 +287,16 @@
 #' }
 #' 
 
+
+
+
 #' @name makePBDBtaxonTree
 #' @rdname makePBDBtaxonTree
 #' @export
 makePBDBtaxonTree <- function(data, rank,
 					method = "parentChild", #solveMissing = NULL,
 					tipSet = "nonParents", cleanTree = TRUE,
+					annotatedDuplicateNames = TRUE,
 					APIversion = "1.2"){		
 	############################################################
 	############################################################
@@ -333,7 +347,8 @@ makePBDBtaxonTree <- function(data, rank,
 		# FIND ALL PARENTS FIRST
 			# three column matrix with taxon name, taxon ID, parent ID
 			# (in that order)
-		parData<- getAllParents(dataTransform,status="all")
+		parData<- getAllParents(dataTransform,
+			status="all", annotatedDuplicateNames = annotatedDuplicateNames)
 		#
 		#######################################
 		# NOW FILTER OUT TIP TAXA WE WANT
@@ -347,9 +362,11 @@ makePBDBtaxonTree <- function(data, rank,
 		# get parent-child matrix for just desired OTUs 
 			# start matrix with those parent-child relationships
 			# subset these from parData using the taxon ID numbers
-		pcMat <- subsetParDataPBDB(subsetNum = tipIDs, parData = parData)			
+		pcMat <- subsetParDataPBDB(subsetNum = tipIDs,
+			parData = parData)			
 		# starting from desired tip OTUs, work backwards to a common ancestor from the full parData
-		pcMat<-constructParentChildMatrixPBDB(initPCmat=pcMat, parData=parData)	
+		pcMat<-constructParentChildMatrixPBDB(initPCmat=pcMat,
+			parData = parData)	
 		#################################
 		# convert parent-child matrix to accepted taxon names
 		#print(pcMat)
@@ -660,7 +677,7 @@ parseParentPBDBData <- function(parentData){
 	return(result)
 	}
 
-getAllParents<-function(inputData, status){
+getAllParents<-function(inputData, status, annotatedDuplicateNames = TRUE){
 	parData<-parseParentPBDBData(inputData)
 	noParentMatch<-findNoParentMatch(parData)
 	while(sum(noParentMatch)>1){
@@ -669,12 +686,25 @@ getAllParents<-function(inputData, status){
 		parData<-rbind(parData,dataNew)
 		noParentMatch<-findNoParentMatch(parData)
 		}
+	# TESTS
 	if(sum(noParentMatch)!=1){
 		stop("Cannot find a single common ancestor by tracing parents")
 		}
 	if(nrow(parData) != nrow(unique(parData))){
 		print(parData[duplicated(parData),])
 		stop("getAllParents added duplicate parent-child relationships, see print-out above")
+		}
+	if(length(parData$taxon_no) != length(unique(parData$taxon_no))){
+		print(parData[duplicated(parData$taxon_no),])
+		stop("getAllParents added duplicate child taxa, see print-out above")
+		}
+	if(length(parData$taxon_name) != length(unique(parData$taxon_name))){
+		if(annotatedDuplicateNames){
+			parData$taxon_name <- make.unique(as.character(parData$taxon_name))
+		}else{
+			print(parData[duplicated(parData$taxon_name),])
+			stop("getAllParents added duplicate accepted taxon names, see print-out above")
+			}
 		}
 	return(parData)
 	}

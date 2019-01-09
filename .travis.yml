@@ -1,5 +1,13 @@
 # as of 04-17-15 can be just
 
+addons:
+  apt:
+    packages:
+      - libgsl2
+      - gsl-bin
+      - libgsl-dev
+      - libmagick++-dev
+
 language: r
 sudo: required
 

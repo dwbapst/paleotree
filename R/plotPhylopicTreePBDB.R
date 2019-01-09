@@ -3,19 +3,6 @@
 
 #' @inheritParams
 
-#' @param
-
-#' @return
-
-#' @seealso
-
-#' @author David W. Bapst
-
-#' @references
-#' 
-
-#' @examples
-#' 
 
 
 
@@ -44,12 +31,22 @@
 # and thus can be trimmed as margin to be trimmed by the function
 
 
+#' @return
 
+#' @seealso
+#' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
+#' and \code{\link{plotPhylopicTreePBDB}}.
 
-# now plot with phylopic images
-plotPhylopicTreePBDB(tree = taxaTree, 
-	taxaDataPBDB = taxaDataPBDB)
+#' @author David W. Bapst
 
+# @references 
+
+#' @examples
+#' 
+#' # now plot with phylopic images
+#' plotPhylopicTreePBDB(tree = taxaTree, 
+#' 	taxaDataPBDB = taxaDataPBDB)
+#' 
 
 
 #' @name plotPhylopicTreePBDB

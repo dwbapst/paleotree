@@ -1,7 +1,5 @@
 #' @details
 
-#' @inheritParams
-
 #' @param
 
 #' @return
@@ -11,10 +9,13 @@
 #' @aliases getCladeTaxaPBDB getSpecificTaxonTreePBDB
 
 #' @seealso
+#' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
+#' and \code{\link{plotPhylopicTreePBDB}}.
+
 
 #' @author David W. Bapst
 
-#' @references
+# @references
 
 #' @examples
 

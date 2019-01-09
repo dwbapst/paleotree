@@ -1,18 +1,35 @@
 #' @details
 
-#' @inheritParams
+#' @param taxaTree A tree with tip taxon names matching the taxon names
+#' in \code{taxaData}. Probably a taxon tree estimated
+#' with \code{\link{makePBDBtaxonTree}}.
 
-#' @param
+#' @param taxaData A data table of taxonomic information obtained
+#' using the Paleobiology Database's API for a set of taxa that
+#' includes the tip taxa on \code{taxaTree}, generated with
+#' parameter \code{show=app} so that appearance times are included.
+
+#' @param minBranchLen Following dating using the appearance times taken directly
+#' from the PBDB for each tip taxon and node, the tree may then be assessed with
+#' the minimum branch length algorithm, as applied by \code{\link{minBranchLength}}.
+#' If \code{minBranchLen = 0}, the default, this step is skipped. It may be necessary
+#' to set \code{minBranchLen} higher than zero to differentiate nodes in cases
+#' with poor stratigraphic congruency, so that derived taxa are the first taxa
+#' observed in a group.
+
+#' @param plot If \code{TRUE}, the resulting dated tree is plotted.
 
 #' @return
 
 #' @aliases
 
 #' @seealso
+#' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
+#' and \code{\link{plotPhylopicTreePBDB}}.
 
 #' @author David W. Bapst
 
-#' @references
+# @references
 
 #' @examples
 
@@ -30,7 +47,7 @@ dateTaxonTreePBDB <- function(
 	if(!any(colnames(taxaData)!="lastapp_min_ma")){
 		stop(paste0(
 			"input taxaTree must have a taxaData element of PBDB data",
-			"generated using"))
+			"generated with show=app"))
 		}
 	############################
 	# get tip min ages

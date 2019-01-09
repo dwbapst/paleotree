@@ -143,6 +143,8 @@
 #' and users should consult their manual pages for additional details:
 #'
 #' \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}
+#' 
+#' Closely related functions for 
 #'
 #' Other functions for manipulating PBDB data can be found at \code{\link{taxonSortPBDBocc}},
 #' \code{\link{occData2timeList}}, and the example data at \code{\link{graptPBDB}}.
@@ -158,26 +160,6 @@
 #' @examples
 #' \dontrun{
 #' 
-#' easyGetPBDBtaxa <- function(taxon,
-#' 		show = c("class","img","app","parent"),
-#' 		status = "accepted"){
-#' 	##########################################
-#' 	# 12-30-18: modified for API version 1.2
-#' 	#let's get some taxonomic data
-#' 	taxaData <- read.csv(
-#' 		paste0("http://paleobiodb.org/",
-#' 			"data1.2/taxa/list.txt?base_name=", taxon,
-#' 			"&show=",paste0(show,collapse = ","),
-#' 			# status -> all, accepted, valid
-#' 				# accepted -> only senior synonyms
-#' 				# valid -> snior synonyms + valid subjective synonyms
-#' 				# all -> valid taxa + repressed invalid taxa
-#' 			"&taxon_status=",status
-#' 			),
-#' 	    stringsAsFactors = FALSE)
-#' 	#######################################
-#' 	return(taxaData)
-#' 	}
 #' 
 #' #graptolites
 #' graptData <- easyGetPBDBtaxa("Graptolithina")

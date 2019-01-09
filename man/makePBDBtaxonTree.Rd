@@ -2,10 +2,13 @@
 % Please edit documentation in R/makePBDBtaxonTree.R
 \name{makePBDBtaxonTree}
 \alias{makePBDBtaxonTree}
+\alias{plotTaxonTreePBDB}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
 makePBDBtaxonTree(data, rank, method = "parentChild", tipSet = "nonParents",
-  cleanTree = TRUE, APIversion = "1.2")
+  cleanTree = TRUE, annotatedDuplicateNames = TRUE, APIversion = "1.2")
+
+plotTaxonTreePBDB(taxontree, edgeLength = 1)
 }
 \arguments{
 \item{data}{A table of taxonomic data collected from
@@ -69,13 +72,23 @@ and ape-derived functions. If \code{FALSE}, none of this post-processing
 is done and users should beware, as such trees can
 lead to hard-crashes of R.}
 
+\item{annotatedDuplicateNames}{A logical determining whether duplicate taxon names,
+when found in the Paleobiology Database for taxa (presumably reflecting an issue with
+taxa being obsolete but with incomplete seniority data), should be annotated to include
+sequential numbers so to modify them, via function \code{\link{base:make.unique}}.
+This only applies to
+\code{method = "parentChild"}, with the default option being
+\code{annotatedDuplicateNames = TRUE}. If more than 26 duplicates are found, an error
+is issued. If this argument is \code{FALSE}, an error is issued if duplicate taxon
+names are found.}
+
 \item{APIversion}{Version of the Paleobiology Database API used by
 \code{makePBDBtaxonTree} when \code{method  = "parentChild"} or
 \code{method  = "parentChildOldQueryPBDB"} is used. The current default
 is \code{APIversion = "1.2"}, the most recent API version as of 12/11/2018.}
 }
 \value{
-A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. See additional details
+A phylogeny of class \code{phylo}, where each tip is a taxon of the given 'rank'. See additional details
 regarding branch lengths can be found in the sub-algorithms used to create the taxon-tree by this function:
 \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}.
 
@@ -116,26 +129,6 @@ macroevolutionary studies as reconstructed phylogenies
 \examples{
 \dontrun{
 
-easyGetPBDBtaxa <- function(taxon,
-		show = c("class","img","app","parent"),
-		status = "accepted"){
-	##########################################
-	# 12-30-18: modified for API version 1.2
-	#let's get some taxonomic data
-	taxaData <- read.csv(
-		paste0("http://paleobiodb.org/",
-			"data1.2/taxa/list.txt?base_name=", taxon,
-			"&show=",paste0(show,collapse = ","),
-			# status -> all, accepted, valid
-				# accepted -> only senior synonyms
-				# valid -> snior synonyms + valid subjective synonyms
-				# all -> valid taxa + repressed invalid taxa
-			"&taxon_status=",status
-			),
-	    stringsAsFactors = FALSE)
-	#######################################
-	return(taxaData)
-	}
 
 #graptolites
 graptData <- easyGetPBDBtaxa("Graptolithina")
@@ -256,6 +249,8 @@ to create the taxon-tree within this function,
 and users should consult their manual pages for additional details:
 
 \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}
+
+Closely related functions for 
 
 Other functions for manipulating PBDB data can be found at \code{\link{taxonSortPBDBocc}},
 \code{\link{occData2timeList}}, and the example data at \code{\link{graptPBDB}}.

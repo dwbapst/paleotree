@@ -4,6 +4,8 @@
 \alias{communityEcology}
 \alias{pairwiseSpearmanRho}
 \alias{HurlbertPIE}
+\alias{PIE}
+\alias{ProbabilityInterspecificEncounter}
 \alias{HurlbertPIE}
 \title{Miscellaneous Functions for Community Ecology}
 \usage{
@@ -13,11 +15,15 @@ pairwiseSpearmanRho(x, dropAbsent = "bothAbsent", asDistance = FALSE,
 HurlbertPIE(x, nAnalyze = Inf)
 }
 \arguments{
-\item{x}{The community abundance matrix. Must be a matrix with two dimensions for
-\code{pairwiseSpearmanRho}; if a vector is supplied to \code{HurlbertPIE}, then
-it is treated as if it was matrix with a single row and number of columns equal to
-its length. Taxonomic units are assumed to be the columns and sites (samples)
- are assumed to be the rows, for both functions.}
+\item{x}{The community abundance matrix. Taxonomic units are assumed to be
+the columns and sites (samples) are assumed to be the rows, for both
+functions. The abundances can be absolute counts of specimens for particular
+taxa in each sample, or it can be proportional (relative) abundances, where
+all taxon abundances at a site are divided by the total number of specimens
+collected at that site. For function \code{pairwiseSpearmanRho}, the input
+\code{x} should be a matrix with two dimensions. For \code{HurlbertPIE}, a
+vector (an object with only one dimension) will be treated as if it was
+matrix with a single row and number of columns equal to its length.}
 
 \item{dropAbsent}{Should absent taxa be dropped? Must be one of either 'bothAbsent' (drop taxa
 absent in both sites for a given pairwise comparison),'eitherAbsent' (drop taxa absent in either
@@ -82,7 +88,7 @@ users to apply Hurlbert's PIE to only a subselection of the most abundant taxa.
 \examples{
 
 # let's load some example data:
-# a classic dataset collected by Satoshi and Okido from the Kanto region
+# a classic dataset collected by Satoshi & Okido from the Kanto region
 
 data(kanto)
 
@@ -144,6 +150,12 @@ par(parX)
 
 #and we can see that the Tower has extremely low unevenness
 	#...overly high abundance of ghosts?
+
+# NOTE it doesn't matter whether we use absolute abundances
+# or proportional (relative) abundances
+kantoProp<-t(apply(kanto,1,function(x) x/sum(x)))
+kantoPropPIE <- HurlbertPIE(kantoProp)
+identical(kantoPIE,kantoPropPIE)
 
 #let's look at evenness of 5 most abundant taxa
 kantoPIE_5 <- HurlbertPIE(kanto,nAnalyze = 5)

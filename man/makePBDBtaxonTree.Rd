@@ -2,13 +2,13 @@
 % Please edit documentation in R/makePBDBtaxonTree.R
 \name{makePBDBtaxonTree}
 \alias{makePBDBtaxonTree}
-\alias{plotTaxonTreePBDB}
+\alias{plotTaxaTreePBDB}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
 makePBDBtaxonTree(data, rank, method = "parentChild", tipSet = "nonParents",
   cleanTree = TRUE, annotatedDuplicateNames = TRUE, APIversion = "1.2")
 
-plotTaxonTreePBDB(taxontree, edgeLength = 1)
+plotTaxaTreePBDB(taxaTree, edgeLength = 1)
 }
 \arguments{
 \item{data}{A table of taxonomic data collected from
@@ -75,8 +75,8 @@ lead to hard-crashes of R.}
 \item{annotatedDuplicateNames}{A logical determining whether duplicate taxon names,
 when found in the Paleobiology Database for taxa (presumably reflecting an issue with
 taxa being obsolete but with incomplete seniority data), should be annotated to include
-sequential numbers so to modify them, via function \code{\link{base:make.unique}}.
-This only applies to
+sequential numbers so to modify them, via function\code{base}'s
+\code{\link[base]{make.unique}}. This only applies to
 \code{method = "parentChild"}, with the default option being
 \code{annotatedDuplicateNames = TRUE}. If more than 26 duplicates are found, an error
 is issued. If this argument is \code{FALSE}, an error is issued if duplicate taxon
@@ -86,6 +86,13 @@ names are found.}
 \code{makePBDBtaxonTree} when \code{method  = "parentChild"} or
 \code{method  = "parentChildOldQueryPBDB"} is used. The current default
 is \code{APIversion = "1.2"}, the most recent API version as of 12/11/2018.}
+
+\item{taxaTree}{A phylogeny of class \code{phylo}, presumably a taxon tree as output from
+\code{makePBDBtaxonTree} with higher-taxon names as node labels.}
+
+\item{edgeLength}{The edge length that the plotted tree should be plotted
+with (\code{plotTaxaTreePBDB} plots phylogenies as non-ultrametric,
+not as a cladogram with aligned tips).}
 }
 \value{
 A phylogeny of class \code{phylo}, where each tip is a taxon of the given 'rank'. See additional details
@@ -103,12 +110,15 @@ Similar issues also effect the identification of parent taxa, as the accepted na
 parent ID number is only provided in version 1.2 of the API.
 }
 \description{
-This function creates phylogeny-like object of type
-\code{phylo} from the taxonomic information
+The function \code{makePBDBtaxonTree} creates phylogeny-like 
+object of class \code{phylo} from the taxonomic information
 recorded in a taxonomy download from the PBDB for
 a given group. Two different algorithms are provided,
 the default being based on parent-child taxon relationships,
-the other based on the nested Linnean hierarchy.
+the other based on the nested Linnean hierarchy. The function
+\code{plotTaxaTreePBDB} is also provided as a minor helper
+function for optimally plotting the labeled topologies that are
+output by \code{makePBDBtaxonTree}.
 }
 \details{
 This function should not be taken too seriously.

@@ -1,11 +1,16 @@
 #' Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database
 #'
-#' This function creates phylogeny-like object of type
-#' \code{phylo} from the taxonomic information
+#' The function \code{makePBDBtaxonTree} creates phylogeny-like 
+#' object of class \code{phylo} from the taxonomic information
 #' recorded in a taxonomy download from the PBDB for
 #' a given group. Two different algorithms are provided,
 #' the default being based on parent-child taxon relationships,
-#' the other based on the nested Linnean hierarchy.
+#' the other based on the nested Linnean hierarchy. The function
+#' \code{plotTaxaTreePBDB} is also provided as a minor helper
+#' function for optimally plotting the labeled topologies that are
+#' output by \code{makePBDBtaxonTree}.
+#' 
+ 
 
 #' @details
 #' This function should not be taken too seriously.
@@ -115,12 +120,19 @@
 #' @param annotatedDuplicateNames A logical determining whether duplicate taxon names,
 #' when found in the Paleobiology Database for taxa (presumably reflecting an issue with
 #' taxa being obsolete but with incomplete seniority data), should be annotated to include
-#' sequential numbers so to modify them, via function \code{\link{base:make.unique}}.
-#' This only applies to
+#' sequential numbers so to modify them, via function\code{base}'s
+#' \code{\link[base]{make.unique}}. This only applies to
 #' \code{method = "parentChild"}, with the default option being
 #' \code{annotatedDuplicateNames = TRUE}. If more than 26 duplicates are found, an error
 #' is issued. If this argument is \code{FALSE}, an error is issued if duplicate taxon
 #' names are found.
+
+#' @param taxaTree A phylogeny of class \code{phylo}, presumably a taxon tree as output from
+#' \code{makePBDBtaxonTree} with higher-taxon names as node labels.
+
+#' @param edgeLength The edge length that the plotted tree should be plotted
+#' with (\code{plotTaxaTreePBDB} plots phylogenies as non-ultrametric,
+#' not as a cladogram with aligned tips).
 
 #' @return
 #' A phylogeny of class \code{phylo}, where each tip is a taxon of the given 'rank'. See additional details
@@ -268,7 +280,6 @@
 #'
 #' }
 #' 
-
 
 
 
@@ -528,18 +539,22 @@ makePBDBtaxonTree <- function(data, rank,
 	return(tree)
 	}
 
+	
+
+	
+	
 #' @rdname makePBDBtaxonTree
 #' @export	
-plotTaxonTreePBDB<-function(taxontree, edgeLength = 1){
-	taxontree$edge.length <- rep(edgeLength ,Nedge(taxontree))
-	taxontree$edge.length [taxontree$edge[,2] <= Ntip(taxontree)] <- edgeLength/5
-	taxontree$root.edge <- edgeLength*1.5
-	plot(taxontree,
+plotTaxaTreePBDB<-function(taxaTree, edgeLength = 1){
+	taxaTree$edge.length <- rep(edgeLength ,Nedge(taxaTree))
+	taxaTree$edge.length [taxaTree$edge[,2] <= Ntip(taxaTree)] <- edgeLength/5
+	taxaTree$root.edge <- edgeLength*1.5
+	plot(taxaTree,
 		show.tip.label = FALSE,
     		no.margin = TRUE,
 		root.edge=TRUE,
 		edge.width = 0.2)
-	nodelabels(taxontree$node.label,
+	nodelabels(taxaTree$node.label,
 		cex=0.5, 
 		adj = c(1.1,0.5))
 	}

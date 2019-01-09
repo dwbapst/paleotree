@@ -16,9 +16,9 @@
 
 
 
-#' @param phylopicIDsPBDB ID numbers for images from Phylopic
-#', as given by the Paleobiology Database's API under the output
-#' \code{image_no} (given when \code{show = img}).
+# @param phylopicIDsPBDB ID numbers for images from Phylopic,
+# as given by the Paleobiology Database's API under the output
+# \code{image_no} (given when \code{show = img}).
 
 # note size is vertical, proportional to the space between tips
 	# max horizontal size stops flat / long phylopics from becoming overly huge
@@ -43,10 +43,14 @@
 
 #' @examples
 #' 
-#' # now plot with phylopic images
-#' plotPhylopicTreePBDB(tree = taxaTree, 
-#' 	taxaDataPBDB = taxaDataPBDB)
+#' \donttest{
 #' 
+#' 
+#' # now plot with phylopic images
+#' plotPhylopicTreePBDB(tree = tree, 
+#' 	taxaDataPBDB = taxaData)
+#' 
+#' }
 
 
 #' @name plotPhylopicTreePBDB
@@ -92,7 +96,7 @@ plotPhylopicTreePBDB <- function(
 	# now get the last plotting environment
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
 	# get the device's aspect ratio
-	devAspRatio <- dev.size()[1] / dev.size()[2]
+	devAspRatio <- grDevices::dev.size()[1] / grDevices::dev.size()[2]
 	# get the plot's own aspect ratio
 	plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
 	# true aspect ratio is their product apparently
@@ -214,9 +218,9 @@ getPhyloPicPNG<-function(
 			# as a diagnostic mode
 		layout(1:3)
 		par(mar=c(0,0,0,0))
-		image(sliceOriginal)
-		image(sliceContrasted)
-		image(picPNG [,,4])
+		graphics::image(sliceOriginal)
+		graphics::image(sliceContrasted)
+		graphics::image(picPNG [,,4])
 		}
 	return(picPNG)
 	}

@@ -546,6 +546,24 @@ makePBDBtaxonTree <- function(data, rank,
 	return(tree)
 	}
 
+#' @rdname makePBDBtaxonTree
+#' @export	
+plotTaxonTreePBDB<-function(taxontree, edgeLength = 1){
+	taxontree$edge.length <- rep(edgeLength ,Nedge(taxontree))
+	taxontree$edge.length [taxontree$edge[,2] <= Ntip(taxontree)] <- edgeLength/5
+	taxontree$root.edge <- edgeLength*1.5
+	plot(taxontree,
+		show.tip.label = FALSE,
+    		no.margin = TRUE,
+		root.edge=TRUE,
+		edge.width = 0.2)
+	nodelabels(taxontree$node.label,
+		cex=0.5, 
+		adj = c(1.1,0.5))
+	}
+	
+	
+	
 #hidden function, don't import
 translatePBDBtaxa <- function(data){
 	# Do some translation

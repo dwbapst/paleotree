@@ -14,6 +14,8 @@ Imports:
 	graphics,
 	grDevices,
 	methods,
+	png,
+	RCurl,
 	utils
 Suggests: testthat
 ByteCompile: TRUE

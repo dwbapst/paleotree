@@ -94,6 +94,8 @@
 #' @importFrom grDevices rainbow dev.new
 #' @importFrom methods is
 #' @importFrom utils read.csv type.convert read.table
+#' @importFrom png readPNG 
+#' @importFrom RCurl getURLContent 
 
 
 NULL

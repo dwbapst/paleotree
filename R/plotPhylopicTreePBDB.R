@@ -1,10 +1,35 @@
+#' @details
+#' 
+
+#' @inheritParams
+
+#' @param
+
+#' @return
+
+#' @seealso
+
+#' @author David W. Bapst
+
+#' @references
+#' 
+
+#' @examples
+#' 
 
 
 
+#' @param tree 
+#' @param phylopicIDsPBDB = NULL 
+#' @param size = 0.9
+#' @param noiseThreshold = 0.1
+#' @param extraMargin = 0.2
+#' @param rescalePNG = TRUE
+#' @param trimPNG = TRUE
 
 
 
-#' @par phylopicIDsPBDB ID numbers for images from Phylopic
+#' @param phylopicIDsPBDB ID numbers for images from Phylopic
 #', as given by the Paleobiology Database's API under the output
 #' \code{image_no} (given when \code{show = img}).
 
@@ -20,8 +45,20 @@
 
 
 
-plotPhylopicTreePBDB <- function(tree, 
-		phylopicIDsPBDB = NULL, 
+
+# now plot with phylopic images
+plotPhylopicTreePBDB(tree = taxaTree, 
+	taxaDataPBDB = taxaDataPBDB)
+
+
+
+#' @name plotPhylopicTreePBDB
+#' @rdname plotPhylopicTreePBDB
+#' @export
+plotPhylopicTreePBDB <- function(
+		tree, 
+		taxaDataPBDB,
+		# phylopicIDsPBDB = NULL, 
 		size = 0.9,
 		noiseThreshold = 0.1,
 		extraMargin = 0.2,
@@ -34,13 +71,10 @@ plotPhylopicTreePBDB <- function(tree,
 			# (from Phylopic, duh)
 		# as pictorial replacements for the tip labels
 	############
-	#	
-	# require(png);require(RCurl);require(ape)
-	source("D:\\dave\\workspace\\paleotree\\R\\plotPhylopicTreePBDB.R")
-	#
 	# check or obtain the phylopic IDs from PBDB
 	phylopicIDsPBDB <- getPhyloPicIDNum(
-		phylopicIDsPBDB = phylopicIDsPBDB,
+		taxaData = taxaDataPBDB,
+		#phylopicIDsPBDB = phylopicIDsPBDB,
 		tree = tree)
 	##############################################
 	# plot a tree but with blank tip labels
@@ -122,10 +156,15 @@ plotPhylopicTreePBDB <- function(tree,
 	}
 
 
-getPhyloPicPNG<-function(picID, noiseThreshold=0.1,
+getPhyloPicPNG<-function(
+		picID, noiseThreshold = 0.1,
 		rescalePNG = TRUE, trimPNG = TRUE,
 		plotComparison = FALSE){
 	############################################
+	#	
+	# require(png);require(RCurl)
+	# png::readPNG RCurl::getURLContent
+	#
 	# GET IMAGE
 	# get the URL address for the pic via API
 	apiPicURL <- paste0(
@@ -187,16 +226,17 @@ getPhyloPicPNG<-function(picID, noiseThreshold=0.1,
 
 
 
-getPhyloPicIDNum <- function(phylopicIDsPBDB, tree){
+getPhyloPicIDNum <- function(taxaData, tree){
 	# check or obtain the phylopic IDs from PBDB
 	#
-	if(is.null(phylopicIDsPBDB)){
+	if(is.null(taxaData)){
 		# get image ID numbers using PBDB API calls for each
 			# tip taxon in the tree using the tip labels
-		tiptaxa <- paste0(tree$tip.label,collapse = ",")
+		tiptaxa <- paste0(tree$tip.label, 
+			collapse = ",")
 		apiAddressTaxa <- paste0(
-			"http://paleobiodb.org/data1.2/taxa/list.txt?name=",taxa,
-			"&rel=exact&show=img"
+			"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
+			taxa, "&rel=exact&show=img"
 			)	
 		# call PBDB API
 		tiptaxaData <- read.csv(apiAddressTaxa,
@@ -206,13 +246,20 @@ getPhyloPicIDNum <- function(phylopicIDsPBDB, tree){
 			match(tree$tip.label, tiptaxaData $taxon_name)]
 		names(phylopicIDsPBDB) <- tree$tip.label
 	}else{
+		#
+		# get phylo pic IDs and label with tip labels
+		phylopicIDsPBDB <- as.character(taxaData$image_no[
+			match(taxaTree$tip.label, taxaData$taxon_name)])
+		names(phylopicIDsPBDB) <- taxaTree$tip.label
+		#
 		# CHECKS
 		# does the provided number of IDs equal the number
 			# of tips?
 		if(length(phylopicIDsPBDB) != Ntip(tree)){
 			#print(tree)
 			#print(phylopicIDsPBDB)
-			stop(paste0("If provided, phylopicIDsPBDB must be have the same",
+			stop(paste0(
+				"If provided, phylopicIDsPBDB must be have the same",
 				" length as the number of tips on the input tree"))
 			}
 		# make sure its a character vector
@@ -239,6 +286,7 @@ getPhyloPicIDNum <- function(phylopicIDsPBDB, tree){
 		}
 	# make sure phylopicIDsPBDB is sorted relative to tip order
 	phylopicIDsPBDB <- phylopicIDsPBDB[
-		match(tree$tip.label, names(phylopicIDsPBDB))]
+		match(tree$tip.label, names(phylopicIDsPBDB))
+		]
 	return(phylopicIDsPBDB)
 	}

@@ -19,6 +19,10 @@
 #' @seealso
 #' \code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}}, \code{\link{makePBDBtaxonTree}}, \code{\link{plotOccData}}
 
+#' @references
+#' Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
+#' application programming interface. \emph{Paleobiology} 42(1):1-7.
+
 #' @source 
 #' See examples for the full R code used to obtain the data from the API.
 #' You can find the Paleobiology Database at \url{http://paleobiodb.org}

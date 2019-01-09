@@ -39,7 +39,9 @@
 
 #' @author David W. Bapst
 
-# @references 
+#' @references
+#' Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
+#' application programming interface. \emph{Paleobiology} 42(1):1-7. 
 
 #' @examples
 #' 
@@ -58,7 +60,7 @@
 #' @export
 plotPhylopicTreePBDB <- function(
 		tree, 
-		taxaDataPBDB,
+		taxaDataPBDB = taxaTree$taxaData,
 		# phylopicIDsPBDB = NULL, 
 		size = 0.9,
 		noiseThreshold = 0.1,
@@ -237,7 +239,7 @@ getPhyloPicIDNum <- function(taxaData, tree){
 			collapse = ",")
 		apiAddressTaxa <- paste0(
 			"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
-			taxa, "&rel=exact&show=img"
+			tiptaxa, "&rel=exact&show=img"
 			)	
 		# call PBDB API
 		tiptaxaData <- read.csv(apiAddressTaxa,
@@ -250,8 +252,8 @@ getPhyloPicIDNum <- function(taxaData, tree){
 		#
 		# get phylo pic IDs and label with tip labels
 		phylopicIDsPBDB <- as.character(taxaData$image_no[
-			match(taxaTree$tip.label, taxaData$taxon_name)])
-		names(phylopicIDsPBDB) <- taxaTree$tip.label
+			match(tree$tip.label, taxaData$taxon_name)])
+		names(phylopicIDsPBDB) <- tree$tip.label
 		#
 		# CHECKS
 		# does the provided number of IDs equal the number

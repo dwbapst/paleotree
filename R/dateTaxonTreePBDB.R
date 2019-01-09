@@ -1,10 +1,15 @@
+#' Date a Taxon-Topology from the Paleobiology Database Using Appearance Data from the API
+#' 
+#' The function \code{dateTaxonTreePBDB} takes a topology of  The required input is a topology with tip and internal node labels corresponding to taxa in the Paleobiology Database, and a table of data (containing those same tip and node taxa) obtained from the taxa-list functionality of the Paleobiology Database's API, with appearance times output.
+
 #' @details
+#' The dating by 
 
 #' @param taxaTree A tree with tip taxon names matching the taxon names
-#' in \code{taxaData}. Probably a taxon tree estimated
+#' in \code{taxaDataPBDB}. Probably a taxon tree estimated
 #' with \code{\link{makePBDBtaxonTree}}.
 
-#' @param taxaData A data table of taxonomic information obtained
+#' @param taxaDataPBDB A data table of taxonomic information obtained
 #' using the Paleobiology Database's API for a set of taxa that
 #' includes the tip taxa on \code{taxaTree}, generated with
 #' parameter \code{show=app} so that appearance times are included.
@@ -20,16 +25,21 @@
 #' @param plot If \code{TRUE}, the resulting dated tree is plotted.
 
 #' @return
+#' Returns a dated phylogeny of class \code{phylo}, with an additional element
+#' \code{$taxaDataPBDB} added containing the input \code{taxaDataPBDB}, as this might be
+#' called by other functions.
 
 #' @aliases
 
 #' @seealso
-#' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
+#' See \code{\link{gettaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
 #' and \code{\link{plotPhylopicTreePBDB}}.
 
 #' @author David W. Bapst
 
-# @references
+#' @references
+#' Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
+#' application programming interface. \emph{Paleobiology} 42(1):1-7.
 
 #' @examples
 
@@ -38,25 +48,23 @@
 #' @export
 dateTaxonTreePBDB <- function(
 		taxaTree,
-		taxaData = taxaTree$taxaData,
+		taxaDataPBDB = taxaTree$taxaDataPBDB,
 		minBranchLen = 0,
 		plot = FALSE){
 	###################################
-	taxaTree <- taxaTree
-	taxaData <- taxaTree$taxaData
-	if(!any(colnames(taxaData)!="lastapp_min_ma")){
+	if(!any(colnames(taxaDataPBDB)!="lastapp_min_ma")){
 		stop(paste0(
-			"input taxaTree must have a taxaData element of PBDB data",
+			"input taxaTree must have a taxaDataPBDB element of PBDB data",
 			"generated with show=app"))
 		}
 	############################
 	# get tip min ages
 	# first replace min ages with 0 if "is_extant" is "extant"
-	taxaData$lastapp_min_ma[taxaData$is_extant == "extant"] <- 0
+	taxaDataPBDB$lastapp_min_ma[taxaDataPBDB$is_extant == "extant"] <- 0
 	#
 	# now sort based on tip labels
-	tipMinAges <- taxaData$lastapp_min_ma[
-		match(taxaTree$tip.label, taxaData$taxon_name)]
+	tipMinAges <- taxaDataPBDB$lastapp_min_ma[
+		match(taxaTree$tip.label, taxaDataPBDB$taxon_name)]
 	#
 	# get node ages
 	nodeNames<-paste0(taxaTree$node.label,collapse=",")
@@ -102,6 +110,6 @@ dateTaxonTreePBDB <- function(
 		}
 	###################
 	# return
-	datedTree$taxaData <- taxaData
+	datedTree$taxaDataPBDB <- taxaDataPBDB
 	return(datedTree)
 	}

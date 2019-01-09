@@ -1,4 +1,4 @@
-#' Converting Occurrences Data to a timeList Data Object
+#' Converting Occurrences Data to a \code{timeList} Data Object
 #'
 #' This function converts occurrence data, given as a list where each element
 #' is a different taxon's occurrence table (containing minimum and maximum ages

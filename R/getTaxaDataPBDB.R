@@ -1,3 +1,7 @@
+#' Obtaining Data for Sets of Taxa From Paleobiology Database API
+#' 
+#' The Paleobiology Database API () is very easy to use, and generally any data one wishes to collect
+
 #' @details
 
 #' @param
@@ -15,7 +19,10 @@
 
 #' @author David W. Bapst
 
-# @references
+#' @references
+#' Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
+#' application programming interface. \emph{Paleobiology} 42(1):1-7.
+
 
 #' @examples
 
@@ -28,7 +35,10 @@
 	# all -> valid taxa + repressed invalid taxa
 
 
-
+#' @param taxon A single name of a of a higher taxon which you wish to catch
+#' all taxonomic 'children' (included members - i.e. subtaxa) of, from 
+#' within the Paleobiology Database.
+	
 
 #' @rdname getTaxaDataPBDB
 #' @export
@@ -36,6 +46,11 @@ getCladeTaxaPBDB <- function(taxon,
 		show = c("class","img","app","parent"),
 		status = "accepted"){
 	##########################################
+	# check that only a single taxon is given
+	if(length(taxon) != 1){
+		stop("taxon should only be a single name of a higher taxon which you wish to catch all children of")
+		}
+	###################################
 	# 12-30-18: modified for API version 1.2
 	#let's get some taxonomic data
 	taxaData <- read.csv(

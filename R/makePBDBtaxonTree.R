@@ -28,7 +28,7 @@
 #' macroevolutionary studies as reconstructed phylogenies
 #' (Soul and Friedman, 2015.).
 
-#' @param data A table of taxonomic data collected from
+#' @param taxaDataPBDB A table of taxonomic data collected from
 #' the Paleobiology Database, using the taxa list option
 #' with \code{show = class}. Should work with versions 1.1-1.2 of
 #' the API, with either the \code{pbdb} or \code{com} vocab. However,
@@ -83,7 +83,7 @@
 
 #  @param solveMissing Under \code{method  = "parentChild"}, what should \code{makePBDBtaxonTree} do about
 #  multiple 'floating' parent taxa, listed without their own parent taxon information in the input
-#   dataset under \code{data}? Each of these is essentially a separate root taxon, for a different set
+#   dataset under \code{taxaDataPBDB}? Each of these is essentially a separate root taxon, for a different set
 #   of parent-child relationships, and thus poses a problem as far as returning a single phylogeny is
 #   concerned. If \code{solveMissing = NULL} (the default), nothing is done and the operation halts with
 #   an error, reporting the identity of these taxa. Two alternative solutions are offered: first,
@@ -164,10 +164,13 @@
 #' @author David W. Bapst
 
 #' @references
+#' Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
+#' application programming interface. \emph{Paleobiology} 42(1):1-7.
+#' 
 #' Soul, L. C., and M. Friedman. 2015. Taxonomy and Phylogeny Can Yield
 #' Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology} 
 #' (\href{http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract}{Link})
-#' 
+
 
 #' @examples
 #' \dontrun{
@@ -286,7 +289,7 @@
 #' @name makePBDBtaxonTree
 #' @rdname makePBDBtaxonTree
 #' @export
-makePBDBtaxonTree <- function(data, rank,
+makePBDBtaxonTree <- function(taxaDataPBDB, rank,
 					method = "parentChild", #solveMissing = NULL,
 					tipSet = "nonParents", cleanTree = TRUE,
 					annotatedDuplicateNames = TRUE,
@@ -294,10 +297,10 @@ makePBDBtaxonTree <- function(data, rank,
 	############################################################
 	############################################################
 	# library(paleotree);data(graptPBDB);
-	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
-	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
-	# data <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
-	# data <- graptTaxaPBDB; rank = "genus"; method = "Linnean"; 
+	# taxaDataPBDB <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
+	# taxaDataPBDB <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
+	# taxaDataPBDB <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
+	# taxaDataPBDB <- graptTaxaPBDB; rank = "genus"; method = "Linnean"; 
 	#
 	#CHECKS
 	if(length(method) != 1 | !is.character(method)){
@@ -314,8 +317,8 @@ makePBDBtaxonTree <- function(data, rank,
 	#		stop('solveMissing but be either NULL or "queryPBDB" or "mergeRoots"')
 	#		}
 	#	}
-	if(!is(data,"data.frame")){
-		stop("data isn't a data.frame")
+	if(!is(taxaDataPBDB,"data.frame")){
+		stop("taxaDataPBDB isn't a data.frame")
 		}
 	if(length(rank) != 1 | !is.character(rank)){
 		stop("rank must be a single character value")
@@ -329,7 +332,7 @@ makePBDBtaxonTree <- function(data, rank,
 	# CLEAN DATA
 	#
 	#translate to a common vocabulary
-	dataTransform <- translatePBDBtaxa(data)
+	dataTransform <- translatePBDBtaxa(taxaDataPBDB)
 	dataTransform <- unique(dataTransform)
 	#
 	if(method == "parentChild"){
@@ -383,7 +386,7 @@ makePBDBtaxonTree <- function(data, rank,
 		dataTransform <- apply(dataTransform, 2, as.character)
 		#Check if show = class was used
 		if(!any(colnames(dataTransform) == "family")){
-			stop("Data must be a taxonomic download with show = class for method = 'Linnean'")
+			stop("taxaDataPBDB must be a taxonomic download with show = class for method = 'Linnean'")
 			}
 		#message that tipSet (and solveMissing) is ignored
 		message("Linnean taxon-tree option selected, argument 'tipSet' is ignored")
@@ -456,7 +459,7 @@ makePBDBtaxonTree <- function(data, rank,
 		#DONE
 		#
 		#now need to put together parentChild table
-		#first, get table of all parentChild relationships in data
+		#first, get table of all parentChild relationships in taxaDataPBDB
 		pcAll <- cbind(as.numeric(dataTransform[,"parent_no"]), 
 			as.numeric(dataTransform[,"taxon_no"]))
 		#then start creating final matrix: first, those of desired rank
@@ -562,62 +565,63 @@ plotTaxaTreePBDB<-function(taxaTree, edgeLength = 1){
 	
 	
 #hidden function, don't import
-translatePBDBtaxa <- function(data){
+translatePBDBtaxa <- function(taxaDataPBDB){
 	# Do some translation
 	#need to replace any empty string values with NAs (due perhaps to use of read.csv with the API)
-	data[data == ""] <- NA
+	taxaDataPBDB[taxaDataPBDB == ""] <- NA
 	#if com vocab
-	if(any("rnk" == colnames(data))){	
+	if(any("rnk" == colnames(taxaDataPBDB))){	
 		#apparently it doesn't matter if these columns *are* present or not
-		colnames(data)[colnames(data) == "acn"] <- "accepted_name"
-		colnames(data)[colnames(data) == "snp"] <- "senpar_no"
-		colnames(data)[colnames(data) == "rnk"] <- "taxon_rank"
-		colnames(data)[colnames(data) == "nam"] <- "taxon_name"
-		colnames(data)[colnames(data) == "fml"] <- "family"
-		colnames(data)[colnames(data) == "odl"] <- "order"
-		colnames(data)[colnames(data) == "cll"] <- "class"	
-		colnames(data)[colnames(data) == "phl"] <- "phylum"	
-		colnames(data)[colnames(data) == "kgl"] <- "kingdom"
-		colnames(data)[colnames(data) == "par"] <- "parent_no"
-		colnames(data)[colnames(data) == "oid"] <- "taxon_no"
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "acn"] <- "accepted_name"
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "snp"] <- "senpar_no"
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "rnk"] <- "taxon_rank"
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "nam"] <- "taxon_name"
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "fml"] <- "family"
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "odl"] <- "order"
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "cll"] <- "class"	
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "phl"] <- "phylum"	
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "kgl"] <- "kingdom"
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "par"] <- "parent_no"
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "oid"] <- "taxon_no"
 		# taxon rank translation vectors for compact vocab
 		taxRankPBDB <- getTaxRankPBDB()
 		taxRankCOM <- 2:26
 		#change contents of "identified_rank" and "accepted_rank"
-		data$taxon_rank <- sapply(data$taxon_rank,function(x) taxRankPBDB[x == taxRankCOM])
+		taxaDataPBDB$taxon_rank <- sapply(taxaDataPBDB$taxon_rank,function(x)
+			taxRankPBDB[x == taxRankCOM])
 		message("compact vocab detected, relevant fields will be translated")
 		}
 	###########
 	# following are closet cases that mostly only apply to OLD API calls
 	#
-	if(any(colnames(data) == "rank")){
+	if(any(colnames(taxaDataPBDB) == "rank")){
 		#if 1.1 and vocab is pbdb
-		colnames(data)[colnames(data) == "rank"] <- "taxon_rank"
+		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "rank"] <- "taxon_rank"
 		}	
 	#
-	if(any(colnames(data) == "accepted_name")){
+	if(any(colnames(taxaDataPBDB) == "accepted_name")){
 		#if 1.2 and there is an accepted_name column..
 			#fill empty accepted_name values with taxon_name
-		nameFormal <- data[,"accepted_name"]
-		nameFormal[is.na(nameFormal)] <- as.character(data[is.na(nameFormal),"taxon_name"])
+		nameFormal <- taxaDataPBDB[,"accepted_name"]
+		nameFormal[is.na(nameFormal)] <- as.character(taxaDataPBDB[is.na(nameFormal),"taxon_name"])
 		#replace taxon_name
-		data[,"taxon_name"] <- nameFormal
+		taxaDataPBDB[,"taxon_name"] <- nameFormal
 		#
 		#replace taxon_no with accepted_no
-		taxNum <- data[,"accepted_no"]
-		taxNum[is.na(taxNum)] <- as.character(data[is.na(taxNum),"taxon_no"])	
-		data[,"taxon_no"] <- taxNum			
+		taxNum <- taxaDataPBDB[,"accepted_no"]
+		taxNum[is.na(taxNum)] <- as.character(taxaDataPBDB[is.na(taxNum),"taxon_no"])	
+		taxaDataPBDB[,"taxon_no"] <- taxNum			
 		#
 		}
-	if(any(colnames(data)=="senpar_no")){
-		#if this is OLD v1.2 data, and there is a senpar_no column
+	if(any(colnames(taxaDataPBDB)=="senpar_no")){
+		#if this is OLD v1.2 taxaDataPBDB, and there is a senpar_no column
 			# replace parent_no in the same way with senpar_no
-		parNum <- data[,"senpar_no"]
-		parNum[is.na(parNum)] <- as.character(data[is.na(parNum),"parent_no"])	
-		data[,"parent_no"] <- parNum
+		parNum <- taxaDataPBDB[,"senpar_no"]
+		parNum[is.na(parNum)] <- as.character(taxaDataPBDB[is.na(parNum),"parent_no"])	
+		taxaDataPBDB[,"parent_no"] <- parNum
 		}
 	#
-	return(data)
+	return(taxaDataPBDB)
 	}
 
 getTaxRankPBDB<-function(){
@@ -653,8 +657,7 @@ queryMissingParents <- function(taxaID,
 	#
 	# let's get some taxonomic data
 	floatData <- read.csv(
-		paste0("http://paleobiodb.org/",
-			"data",APIversion,
+		paste0("http://paleobiodb.org/data",APIversion,
 			"/taxa/list.txt?taxon_id=",paste0(taxaID,collapse=","),
 				### should we take all or only ACCEPTED parents?
 			 "&rel=exact&status=",status,

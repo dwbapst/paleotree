@@ -76,8 +76,13 @@ getSpecificTaxonTreePBDB <- function(taxa,
 		status = "accepted",
 		plot = FALSE){
 	#####################################
-	taxa <- paste0(taxa,
-		collapse=",")
+	
+	if(length(taxa)>1){
+		# collapse taxa to a vector
+		taxa <- paste0(taxa,
+			collapse=",")		
+		}
+
 	apiAddressTaxa <- paste0(
 		"http://paleobiodb.org/data1.2/taxa/list.txt?name=",taxa,
 		"&show=",paste0(show,collapse = ","),

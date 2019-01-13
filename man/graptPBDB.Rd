@@ -56,6 +56,10 @@ table(graptTaxaPBDB$taxon_rank)
 barplot(table(graptTaxaPBDB$taxon_rank))
 
 }
+\references{
+Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
+application programming interface. \emph{Paleobiology} 42(1):1-7.
+}
 \seealso{
 \code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}}, \code{\link{makePBDBtaxonTree}}, \code{\link{plotOccData}}
 }

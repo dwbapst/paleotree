@@ -2,7 +2,7 @@
 % Please edit documentation in R/occData2timeList.R
 \name{occData2timeList}
 \alias{occData2timeList}
-\title{Converting Occurrences Data to a timeList Data Object}
+\title{Converting Occurrences Data to a \code{timeList} Data Object}
 \usage{
 occData2timeList(occList, intervalType = "dateRange")
 }

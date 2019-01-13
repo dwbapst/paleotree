@@ -5,13 +5,14 @@
 \alias{plotTaxaTreePBDB}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
-makePBDBtaxonTree(data, rank, method = "parentChild", tipSet = "nonParents",
-  cleanTree = TRUE, annotatedDuplicateNames = TRUE, APIversion = "1.2")
+makePBDBtaxonTree(taxaDataPBDB, rank, method = "parentChild",
+  tipSet = "nonParents", cleanTree = TRUE, annotatedDuplicateNames = TRUE,
+  APIversion = "1.2")
 
 plotTaxaTreePBDB(taxaTree, edgeLength = 1)
 }
 \arguments{
-\item{data}{A table of taxonomic data collected from
+\item{taxaDataPBDB}{A table of taxonomic data collected from
 the Paleobiology Database, using the taxa list option
 with \code{show = class}. Should work with versions 1.1-1.2 of
 the API, with either the \code{pbdb} or \code{com} vocab. However,
@@ -249,6 +250,9 @@ nodelabels(timeTree$node.label,cex = 0.5)
 
 }
 \references{
+Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
+application programming interface. \emph{Paleobiology} 42(1):1-7.
+
 Soul, L. C., and M. Friedman. 2015. Taxonomy and Phylogeny Can Yield
 Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology} 
 (\href{http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract}{Link})

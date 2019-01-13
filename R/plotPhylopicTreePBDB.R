@@ -1,17 +1,22 @@
+#' Plot a Phylogeny with Organismal Silhouettes from PhyloPic, Called Via the Paleobiology Database API
+
 #' @details
 #' 
-
-#' @inheritParams
 
 
 
 
 #' @param tree 
-#' @param phylopicIDsPBDB = NULL 
+#' @param phylopicIDsPBDB  NULL 
+
 #' @param size = 0.9
+
 #' @param noiseThreshold = 0.1
+
 #' @param extraMargin = 0.2
+
 #' @param rescalePNG = TRUE
+
 #' @param trimPNG = TRUE
 
 
@@ -32,6 +37,8 @@
 
 
 #' @return
+#' This function returns nothing - it just plots the input tree with
+#' silhouettes from the PhyloPic database.
 
 #' @seealso
 #' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
@@ -42,6 +49,7 @@
 #' @references
 #' Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
 #' application programming interface. \emph{Paleobiology} 42(1):1-7. 
+#' 
 
 #' @examples
 #' 
@@ -53,6 +61,7 @@
 #' 	taxaDataPBDB = taxaData)
 #' 
 #' }
+#' 
 
 
 #' @name plotPhylopicTreePBDB

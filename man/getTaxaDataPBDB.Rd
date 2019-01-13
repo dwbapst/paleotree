@@ -12,7 +12,7 @@ getCladeTaxaPBDB(taxon, show = c("class", "img", "app", "parent"),
 
 getSpecificTaxonTreePBDB(taxa, PDFfile = "myPBDBphylogeny.pdf",
   show = c("class", "img", "app", "parent"), status = "accepted",
-  plot = FALSE)
+  addressOnly = FALSE)
 }
 \arguments{
 \item{taxon}{A single name of a of a higher taxon which you wish to catch
@@ -21,6 +21,10 @@ within the Paleobiology Database.}
 }
 \description{
 The Paleobiology Database API () is very easy to use, and generally any data one wishes to collect
+}
+\examples{
+
+#an example here
 }
 \references{
 Peters, S. E., and M. McClennen. 2015. The Paleobiology Database

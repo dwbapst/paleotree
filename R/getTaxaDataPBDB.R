@@ -25,6 +25,8 @@
 
 
 #' @examples
+#' 
+#' #an example here
 
 
 
@@ -74,15 +76,13 @@ getSpecificTaxonTreePBDB <- function(taxa,
 		PDFfile = "myPBDBphylogeny.pdf",
 		show = c("class","img","app","parent"),
 		status = "accepted",
-		plot = FALSE){
+		addressOnly = FALSE){
 	#####################################
-	
 	if(length(taxa)>1){
 		# collapse taxa to a vector
 		taxa <- paste0(taxa,
 			collapse=",")		
 		}
-
 	apiAddressTaxa <- paste0(
 		"http://paleobiodb.org/data1.2/taxa/list.txt?name=",taxa,
 		"&show=",paste0(show,collapse = ","),

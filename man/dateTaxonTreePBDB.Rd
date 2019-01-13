@@ -38,6 +38,10 @@ The function \code{dateTaxonTreePBDB} takes a topology of  The required input is
 \details{
 The dating by
 }
+\examples{
+
+#an example here
+}
 \references{
 Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
 application programming interface. \emph{Paleobiology} 42(1):1-7.

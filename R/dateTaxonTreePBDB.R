@@ -42,6 +42,9 @@
 #' application programming interface. \emph{Paleobiology} 42(1):1-7.
 
 #' @examples
+#' 
+#' #an example here
+
 
 #' @name dateTaxonTreePBDB
 #' @rdname dateTaxonTreePBDB

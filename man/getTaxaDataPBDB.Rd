@@ -3,24 +3,60 @@
 \name{getTaxaDataPBDB}
 \alias{getTaxaDataPBDB}
 \alias{getCladeTaxaPBDB}
-\alias{getSpecificTaxonTreePBDB}
-\alias{getSpecificTaxonTreePBDB}
+\alias{getSpecificTaxaPBDB}
+\alias{getSpecificTaxaPBDB}
 \title{Obtaining Data for Sets of Taxa From Paleobiology Database API}
 \usage{
-getCladeTaxaPBDB(taxon, show = c("class", "img", "app", "parent"),
-  status = "accepted")
+getCladeTaxaPBDB(taxon, show = c("class", "parent", "app", "img", "entname"),
+  status = "accepted", urlOnly = FALSE)
 
-getSpecificTaxonTreePBDB(taxa, PDFfile = "myPBDBphylogeny.pdf",
-  show = c("class", "img", "app", "parent"), status = "accepted",
-  addressOnly = FALSE)
+getSpecificTaxaPBDB(taxa, show = c("class", "parent", "app", "img",
+  "entname"), status = "accepted", urlOnly = FALSE)
 }
 \arguments{
 \item{taxon}{A single name of a of a higher taxon which you wish to catch
 all taxonomic 'children' (included members - i.e. subtaxa) of, from 
 within the Paleobiology Database.}
+
+\item{show}{Which variables should be requested from the Paleobiology
+Database? The default is to include classification (\code{"class"}),
+parent-child taxon information (\code{"parent"}), information on each
+taxon's first and last appearance (\code{"app"}), information on the
+PhyloPic silhouette images assigned to that taxon (\code{"img"}), and
+the names of those who entered and authorized the taxonomic data you
+have downloaded (\code{"entname"}). Multiple variable blocks can be
+given as a single character string, with desired variable selections
+separated by a comma with no whitespace (ex. \code{"class,img,app"}) or 
+as a vector of character strings (ex. \code{c("class", "img", "app")}),
+which will then formatted for use in the API call. Other options that
+you might want to include, such as information on ecospace or taphonomy,
+can be included: please refer to the full list at
+the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
+
+\item{urlOnly}{If \code{FALSE} (the default), then the
+function behaves as expected, the API is called and a
+data table pulled from the Paleobiology Database is returned.
+If \code{urlOnly = TRUE}, the URL of the API call is returned
+instead as a character string.}
+
+\item{taxa}{A character vector listing taxa of interest that the user
+wishes to download information on from the Paleobiology Database.
+Multiple taxa can be listed as a single character string, with desired taxa
+separated by a comma with no whitespace (ex.
+\code{"Homo,Pongo,Gorilla"}) or as a vector of character strings
+(ex. \code{c("Homo", "Pongo", "Gorilla")}),
+which will then formatted for use in the API call.}
+}
+\value{
+These functions return a \code{data.frame} containing
+variables pulled for the requested taxon selection.
+This behavior can be modified by argument \code{urlOnly}.
 }
 \description{
 The Paleobiology Database API () is very easy to use, and generally any data one wishes to collect
+}
+\details{
+The
 }
 \examples{
 

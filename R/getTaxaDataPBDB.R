@@ -3,14 +3,67 @@
 #' The Paleobiology Database API () is very easy to use, and generally any data one wishes to collect
 
 #' @details
+#' The
 
-#' @param
+
+
+#' @param taxon A single name of a of a higher taxon which you wish to catch
+#' all taxonomic 'children' (included members - i.e. subtaxa) of, from 
+#' within the Paleobiology Database.
+
+#' @param taxa A character vector listing taxa of interest that the user
+#' wishes to download information on from the Paleobiology Database.
+#' Multiple taxa can be listed as a single character string, with desired taxa
+#' separated by a comma with no whitespace (ex.
+#' \code{"Homo,Pongo,Gorilla"}) or as a vector of character strings
+#' (ex. \code{c("Homo", "Pongo", "Gorilla")}),
+#' which will then formatted for use in the API call.
+	
+#' @param show Which variables should be requested from the Paleobiology
+#' Database? The default is to include classification (\code{"class"}),
+#' parent-child taxon information (\code{"parent"}), information on each
+#' taxon's first and last appearance (\code{"app"}), information on the
+#' PhyloPic silhouette images assigned to that taxon (\code{"img"}), and
+#' the names of those who entered and authorized the taxonomic data you
+#' have downloaded (\code{"entname"}). Multiple variable blocks can be
+#' given as a single character string, with desired variable selections
+#' separated by a comma with no whitespace (ex. \code{"class,img,app"}) or 
+#' as a vector of character strings (ex. \code{c("class", "img", "app")}),
+#' which will then formatted for use in the API call. Other options that
+#' you might want to include, such as information on ecospace or taphonomy,
+#' can be included: please refer to the full list at
+#' the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.
+
+	
+#' @status What taxonomic status should the pull taxa have? 
+#' The default is \code{status = "accepted"}, which means 
+#' only those taxa that are both valid taxa and 
+#' \emph{the accepted senior homonym}. Other typical statuses
+#' to consider are \code{"valid"}, which is all valid taxa:
+#' senior homonyms and valid subjective synonyms, and \code{"all"},
+#' which will return all valid taxa and all otherwise repressed invalid taxa.
+#' For additional statuses that you can request, please see the documentation at the 
+#' \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.
+	
+	# status -> all, accepted, valid
+	# accepted -> only senior synonyms
+	# valid -> snior synonyms + valid subjective synonyms
+	# all -> valid taxa + repressed invalid taxa
+
+#' @param urlOnly If \code{FALSE} (the default), then the
+#' function behaves as expected, the API is called and a
+#' data table pulled from the Paleobiology Database is returned.
+#' If \code{urlOnly = TRUE}, the URL of the API call is returned
+#' instead as a character string. 
 
 #' @return
+#' These functions return a \code{data.frame} containing
+#' variables pulled for the requested taxon selection.
+#' This behavior can be modified by argument \code{urlOnly}.
 
 #' @name getTaxaDataPBDB
 
-#' @aliases getCladeTaxaPBDB getSpecificTaxonTreePBDB
+#' @aliases getCladeTaxaPBDB getSpecificTaxaPBDB
 
 #' @seealso
 #' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
@@ -31,22 +84,11 @@
 
 
 
-# status -> all, accepted, valid
-	# accepted -> only senior synonyms
-	# valid -> snior synonyms + valid subjective synonyms
-	# all -> valid taxa + repressed invalid taxa
-
-
-#' @param taxon A single name of a of a higher taxon which you wish to catch
-#' all taxonomic 'children' (included members - i.e. subtaxa) of, from 
-#' within the Paleobiology Database.
-	
-
 #' @rdname getTaxaDataPBDB
 #' @export
 getCladeTaxaPBDB <- function(taxon,
-		show = c("class","img","app","parent"),
-		status = "accepted"){
+		show = c("class", "parent", "app", "img", "entname"),
+		status = "accepted", urlOnly = FALSE){
 	##########################################
 	# check that only a single taxon is given
 	if(length(taxon) != 1){
@@ -55,8 +97,7 @@ getCladeTaxaPBDB <- function(taxon,
 	###################################
 	# 12-30-18: modified for API version 1.2
 	#let's get some taxonomic data
-	taxaData <- read.csv(
-		paste0("http://paleobiodb.org/",
+	requestURLPBDB <- paste0("http://paleobiodb.org/",
 			"data1.2/taxa/list.txt?base_name=", taxon,
 			"&show=",paste0(show,collapse = ","),
 			# status -> all, accepted, valid
@@ -64,26 +105,29 @@ getCladeTaxaPBDB <- function(taxon,
 				# valid -> snior synonyms + valid subjective synonyms
 				# all -> valid taxa + repressed invalid taxa
 			"&taxon_status=",status
-			),
-	    stringsAsFactors = FALSE)
+			)
+	if(urlOnly){
+		res <- requestURLPBDB
+	}else{
+		res <- getPBDBtaxaCSV(requestURLPBDB)
+		}
 	#######################################
-	return(taxaData)
+	return(res)
 	}
 
 #' @rdname getTaxaDataPBDB
 #' @export
-getSpecificTaxonTreePBDB <- function(taxa,
-		PDFfile = "myPBDBphylogeny.pdf",
-		show = c("class","img","app","parent"),
+getSpecificTaxaPBDB <- function(taxa,
+		show = c("class", "parent", "app", "img", "entname"),
 		status = "accepted",
-		addressOnly = FALSE){
+		urlOnly = FALSE){
 	#####################################
 	if(length(taxa)>1){
 		# collapse taxa to a vector
 		taxa <- paste0(taxa,
 			collapse=",")		
 		}
-	apiAddressTaxa <- paste0(
+	requestURLPBDB <- paste0(
 		"http://paleobiodb.org/data1.2/taxa/list.txt?name=",taxa,
 		"&show=",paste0(show,collapse = ","),
 		# status -> all, accepted, valid
@@ -92,15 +136,25 @@ getSpecificTaxonTreePBDB <- function(taxa,
 			# all -> valid taxa + repressed invalid taxa
 		"&taxon_status=",status
 		)
-	# browseURL(apiAddressTaxa)
-	#####################################
-	taxaData <- read.csv(apiAddressTaxa,
-		stringsAsFactors = FALSE)
+	if(urlOnly){
+		res <- requestURLPBDB
+		# browseURL(apiAddressTaxa)
+	}else{
+		res <- getPBDBtaxaCSV(requestURLPBDB)
+		}
 	##################################
 	# return
-	return(taxaData)
+	return(res)
 	}	
 
+getPBDBtaxaCSV <- function(requestURL){
+	scan(requestURL)
 
 
+	res<- read.csv(
+		,
+	    stringsAsFactors = FALSE)
+	###############
+	return(res)
+	}	
 

@@ -1,13 +1,21 @@
 #' Plot a Phylogeny with Organismal Silhouettes from PhyloPic, Called Via the Paleobiology Database API
+#' 
+#' This function will take a phylogeny, preferably a taxonomy-tree
+#' created from classification information and/or parent-child taxon
+#' information pulled from the Paleobiology Database via function
+#' \code{\link{makePBDBtaxonTree}}, and use the
+#' Paleobiology Database's API to plot silhouettes of each given tip taxon
+#' in replacement of their normal tip labels.
+
 
 #' @details
-#' 
+#' This function preferably will pull the identifiers for which images are to be associated with the tip taxa from \code{taxaDataPBDB$image_no}. By default, \code{taxaDataPBDB} itself is assumed to be an element of \code{tree} named \code{tree$taxaData}, as the PBDB data table used to construct the tree is appended to the output tree when \code{\link{makePBDBtaxonTree}} is used to construct a taxonomy-tree. If the functions listed in \code{\link{getTaxaDataPBDB}} are used to obtain the taxonomic data, this table will include the \code{image_no} variable, which is the image identifier numbers needed to call PNGs from the Paleobiology Database API. If \code{taxaDataPBDB} isn't provided, either by the user directly, or as an element of \code{tree}. 
 
 
 
 
 #' @param tree 
-#' @param phylopicIDsPBDB  NULL 
+#' @param taxaDataPBDB  See \emph{Details}.
 
 #' @param size = 0.9
 

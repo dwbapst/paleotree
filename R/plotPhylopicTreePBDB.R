@@ -14,18 +14,31 @@
 
 
 
-#' @param tree 
-#' @param taxaDataPBDB  See \emph{Details}.
+#' @param tree A phylogeny of class \code{phylo} which will be
+#' plotted, with the terminal tip taxa replaced by silhouettes.
+#' The tree will be plotted with edge lengths.
 
-#' @param size = 0.9
+#' @param taxaDataPBDB  A \code{data.frame} of taxonomic data from
+#' the Paleobiology Database containing an \code{$image_no} variable,
+#' as returned when \code{show = "img"} is used. See \emph{Details}.
 
-#' @param noiseThreshold = 0.1
+#' @param size The default is \code{size = 0.9}.
 
-#' @param extraMargin = 0.2
+#' @param noiseThreshold A threshold for noise in the PNG from Phylopic
+#' to be treated as meaningless noise (i.e. a color that is effectively
+#' whitespace) and thus can be trimmed as empty margin which can be
+#' trimmed before the silhouette is plotted. The units for this argument
+#' are on a scale from 0 to 1, with 0 being true white space, and values
+#' between 0 and 0.5 representing colors closer to whitespace than true
+#' black. The default is \code{noiseThreshold = 0.1}.
 
-#' @param rescalePNG = TRUE
 
-#' @param trimPNG = TRUE
+
+#' @param extraMargin The default is \code{extraMargin = 0.2}.
+
+#' @param rescalePNG If \code{TRUE} (the default), 
+
+#' @param trimPNG If \code{TRUE} (the default),
 
 
 
@@ -77,7 +90,7 @@
 #' @export
 plotPhylopicTreePBDB <- function(
 		tree, 
-		taxaDataPBDB = taxaTree$taxaData,
+		taxaDataPBDB = tree$taxaData,
 		# phylopicIDsPBDB = NULL, 
 		size = 0.9,
 		noiseThreshold = 0.1,

@@ -33,6 +33,16 @@ you might want to include, such as information on ecospace or taphonomy,
 can be included: please refer to the full list at
 the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
 
+\item{status}{What taxonomic status should the pull taxa have? 
+The default is \code{status = "accepted"}, which means 
+only those taxa that are both valid taxa and 
+\emph{the accepted senior homonym}. Other typical statuses
+to consider are \code{"valid"}, which is all valid taxa:
+senior homonyms and valid subjective synonyms, and \code{"all"},
+which will return all valid taxa and all otherwise repressed invalid taxa.
+For additional statuses that you can request, please see the documentation at the 
+\href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
+
 \item{urlOnly}{If \code{FALSE} (the default), then the
 function behaves as expected, the API is called and a
 data table pulled from the Paleobiology Database is returned.

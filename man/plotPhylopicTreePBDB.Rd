@@ -4,24 +4,34 @@
 \alias{plotPhylopicTreePBDB}
 \title{Plot a Phylogeny with Organismal Silhouettes from PhyloPic, Called Via the Paleobiology Database API}
 \usage{
-plotPhylopicTreePBDB(tree, taxaDataPBDB = taxaTree$taxaData, size = 0.9,
+plotPhylopicTreePBDB(tree, taxaDataPBDB = tree$taxaData, size = 0.9,
   noiseThreshold = 0.1, extraMargin = 0.2, rescalePNG = TRUE,
   trimPNG = TRUE)
 }
 \arguments{
-\item{tree}{}
+\item{tree}{A phylogeny of class \code{phylo} which will be
+plotted, with the terminal tip taxa replaced by silhouettes.
+The tree will be plotted with edge lengths.}
 
-\item{taxaDataPBDB}{See \emph{Details}.}
+\item{taxaDataPBDB}{A \code{data.frame} of taxonomic data from
+the Paleobiology Database containing an \code{$image_no} variable,
+as returned when \code{show = "img"} is used. See \emph{Details}.}
 
-\item{size}{= 0.9}
+\item{size}{The default is \code{size = 0.9}.}
 
-\item{noiseThreshold}{= 0.1}
+\item{noiseThreshold}{A threshold for noise in the PNG from Phylopic
+to be treated as meaningless noise (i.e. a color that is effectively
+whitespace) and thus can be trimmed as empty margin which can be
+trimmed before the silhouette is plotted. The units for this argument
+are on a scale from 0 to 1, with 0 being true white space, and values
+between 0 and 0.5 representing colors closer to whitespace than true
+black. The default is \code{noiseThreshold = 0.1}.}
 
-\item{extraMargin}{= 0.2}
+\item{extraMargin}{The default is \code{extraMargin = 0.2}.}
 
-\item{rescalePNG}{= TRUE}
+\item{rescalePNG}{If \code{TRUE} (the default),}
 
-\item{trimPNG}{= TRUE}
+\item{trimPNG}{If \code{TRUE} (the default),}
 }
 \value{
 This function returns nothing - it just plots the input tree with

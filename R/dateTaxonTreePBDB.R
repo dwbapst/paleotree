@@ -29,8 +29,6 @@
 #' \code{$taxaDataPBDB} added containing the input \code{taxaDataPBDB}, as this might be
 #' called by other functions.
 
-#' @aliases
-
 #' @seealso
 #' See \code{\link{gettaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
 #' and \code{\link{plotPhylopicTreePBDB}}.

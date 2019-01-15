@@ -35,7 +35,7 @@
 #' the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.
 
 	
-#' @status What taxonomic status should the pull taxa have? 
+#' @param status What taxonomic status should the pull taxa have? 
 #' The default is \code{status = "accepted"}, which means 
 #' only those taxa that are both valid taxa and 
 #' \emph{the accepted senior homonym}. Other typical statuses

@@ -8,10 +8,10 @@
 \title{Obtaining Data for Sets of Taxa From Paleobiology Database API}
 \usage{
 getCladeTaxaPBDB(taxon, show = c("class", "parent", "app", "img", "entname"),
-  status = "accepted", urlOnly = FALSE)
+  status = "accepted", urlOnly = FALSE, stopIfMissing = FALSE)
 
 getSpecificTaxaPBDB(taxa, show = c("class", "parent", "app", "img",
-  "entname"), status = "accepted", urlOnly = FALSE)
+  "entname"), status = "accepted", urlOnly = FALSE, stopIfMissing = FALSE)
 }
 \arguments{
 \item{taxon}{A single name of a of a higher taxon which you wish to catch
@@ -48,6 +48,10 @@ function behaves as expected, the API is called and a
 data table pulled from the Paleobiology Database is returned.
 If \code{urlOnly = TRUE}, the URL of the API call is returned
 instead as a character string.}
+
+\item{stopIfMissing}{If some taxa within the requested set appear
+to be missing from the Paleobiology Database's taxonomy table, should
+the function halt with an error?}
 
 \item{taxa}{A character vector listing taxa of interest that the user
 wishes to download information on from the Paleobiology Database.

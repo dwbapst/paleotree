@@ -56,6 +56,10 @@
 #' If \code{urlOnly = TRUE}, the URL of the API call is returned
 #' instead as a character string. 
 
+#' @param stopIfMissing If some taxa within the requested set appear
+#' to be missing from the Paleobiology Database's taxonomy table, should
+#' the function halt with an error?
+
 #' @return
 #' These functions return a \code{data.frame} containing
 #' variables pulled for the requested taxon selection.
@@ -88,7 +92,7 @@
 #' @export
 getCladeTaxaPBDB <- function(taxon,
 		show = c("class", "parent", "app", "img", "entname"),
-		status = "accepted", urlOnly = FALSE){
+		status = "accepted", urlOnly = FALSE, stopIfMissing=FALSE){
 	##########################################
 	# check that only a single taxon is given
 	if(length(taxon) != 1){
@@ -109,7 +113,7 @@ getCladeTaxaPBDB <- function(taxon,
 	if(urlOnly){
 		res <- requestURLPBDB
 	}else{
-		res <- getPBDBtaxaCSV(requestURLPBDB)
+		res <- getPBDBtaxaCSV(requestURLPBDB, stopIfMissing=stopIfMissing)
 		}
 	#######################################
 	return(res)
@@ -120,7 +124,7 @@ getCladeTaxaPBDB <- function(taxon,
 getSpecificTaxaPBDB <- function(taxa,
 		show = c("class", "parent", "app", "img", "entname"),
 		status = "accepted",
-		urlOnly = FALSE){
+		urlOnly = FALSE, stopIfMissing=FALSE){
 	#####################################
 	if(length(taxa)>1){
 		# collapse taxa to a vector
@@ -140,19 +144,36 @@ getSpecificTaxaPBDB <- function(taxa,
 		res <- requestURLPBDB
 		# browseURL(apiAddressTaxa)
 	}else{
-		res <- getPBDBtaxaCSV(requestURLPBDB)
+		res <- getPBDBtaxaCSV(requestURLPBDB, stopIfMissing=stopIfMissing)
 		}
 	##################################
 	# return
 	return(res)
 	}	
 
-getPBDBtaxaCSV <- function(requestURL){
-	scan(requestURL)
-
-
-	res<- read.csv(
-		,
+getPBDBtaxaCSV <- function(requestURL, stopIfMissing=FALSE){
+	linesOut <- readLines(requestURL)
+	if(any(linesOut == "\"Records:\"")){
+		# then there must be errors, report them
+		isWarning <- startsWith(linesOut, 
+			prefix = "\"Warning:\",")
+		for(i in which(isWarning)){
+			errorMsg <- linesOut[i]
+			errorMsg <- gsub("\"Warning:\",\"",
+				"", errorMsg)
+			warning(errorMsg)
+			}
+		if(stopIfMissing){
+			stop(paste0(
+				"Some taxa not found in PBDB taxonomy table,",
+				" see warnings and check API request URL: \n",
+				requestURL
+				))
+			}
+		lineRemove <- c(which(isWarning),which(linesOut == "\"Records:\""))
+		linesOut<-linesOut[-lineRemove]
+		}
+	res<- read.csv(linesOut,
 	    stringsAsFactors = FALSE)
 	###############
 	return(res)

@@ -63,7 +63,8 @@
 #' 
 #' layout(1)
 
-#' @name minBranchLength
+#' @name minBranchLength 
+#' @aliases minBranchLen minimumBranchLen minimumBranchLength 
 #' @rdname minBranchLength
 #' @export
 minBranchLength <- function(tree, mbl){	

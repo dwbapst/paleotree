@@ -40,42 +40,62 @@ character transitions against finding reversals.}
 functionality across the entire tree until the number of nodes stabilizes. If FALSE, polytomies are only passed a single
 time.}
 
-\item{cost}{A matrix of the cost (i.e. number of steps) necessary to change between states of the input
-character trait. If \code{NULL} (the
-default), the character is assumed to be unordered with equal cost to change from any state to another.
-Cost matrices only impact the "MPR" algorithm; if a cost matrix is given but \code{type = "ACCTRAN"}, an error
-is issued.}
+\item{cost}{A matrix of the cost (i.e. number of steps) necessary to
+change between states of the input character trait.
+If \code{NULL} (the default), the character is assumed to be
+unordered with equal cost to change from any state to another.
+Cost matrices only impact the "MPR" algorithm; if a cost matrix
+is given but \code{type = "ACCTRAN"}, an error is issued.}
 
-\item{ambiguity}{A vector of values which indicate ambiguous (i.e. missing or unknown) character state codings
-in supplied \code{trait} data. Taxa coded ambiguously as treated as being equally likely to be any state coding.
-By default, \code{NA} values and "?" symbols are treated as ambiguous character codings, in agreement with behavior 
+\item{ambiguity}{A vector of values which indicate ambiguous
+(i.e. missing or unknown) character state codings
+in supplied \code{trait} data. Taxa coded ambiguously as treated
+as being equally likely to be any state coding.
+By default, \code{NA} values and "?" symbols are treated as
+ambiguous character codings, in agreement with behavior 
 of functions in packages \code{phangorn} and \code{Claddis}. 
-This argument is designed to mirror an hidden argument with an identical name in function \code{phyDat} in package {phangorn}.}
+This argument is designed to mirror an hidden argument with
+an identical name in function \code{phyDat} in package \code{phangorn}.}
 
-\item{dropAmbiguity}{A logical. If \code{TRUE} (which is not the default), all taxa with ambiguous codings as defined
-by argument \code{ambiguity} will be dropped prior to ancestral nodes being inferred. This may result in too few taxa.}
+\item{dropAmbiguity}{A logical. If \code{TRUE} (which is not
+the default), all taxa with ambiguous codings as defined
+by argument \code{ambiguity} will be dropped prior to ancestral
+nodes being inferred. This may result in too few taxa.}
 
-\item{polySymbol}{A single symbol which separates alternative states for polymorphic codings; the default symbol is
-\code{"&"}, following the output by \code{Claddis}'s \code{ReadMorphNexus} function, where polymorphic taxa are indicated
+\item{polySymbol}{A single symbol which separates alternative
+states for polymorphic codings; the default symbol is
+\code{"&"}, following the output by \code{Claddis}'s
+\code{ReadMorphNexus} function, where polymorphic taxa are indicated
 by default with a string with state labels separated by an \code{"&"} symbol.
-For example, a taxon coded as polymorphic for states 1 or 2, would be indicated by the string "1&2".
-\code{polySymbol} is used to break up these strings and automatically construct a fitting \code{contrast} table
+For example, a taxon coded as polymorphic for states
+1 or 2, would be indicated by the string \code{"1&2"}.
+\code{polySymbol} is used to break up these strings
+and automatically construct a fitting \code{contrast} table
 for use with this data, including for ambiguous character state codings.}
 
-\item{contrast}{A matrix of type integer with cells of 0 and 1, where each row is labeled with a string value
-used for indicating character states in \code{trait}, and each column is labeled with the formal state label to
-be used for assign taxa to particular character states. A value of 1 indicates that the respective coding string for
-that row should be interpreted as reflecting the character state listed for that column. A coding could reflect
-multiple states (such as might occur when taxa are polymorphic for some morphological character), so the sums of
-rows and columns can sum to more than 1. 
-If \code{contrast} is not \code{NULL} (the default), the arguments will nullify 
-This argument is designed to mirror an hidden argument with an identical name in function \code{phyDat} in package {phangorn}.
-This structure is based on the \code{\link{contrasts}} tables used for statistical evaluation of factors.
+\item{contrast}{A matrix of type integer with cells of 0
+and 1, where each row is labeled with a string value
+used for indicating character states in \code{trait},
+and each column is labeled with the formal state label to
+be used for assign taxa to particular character states.
+A value of 1 indicates that the respective coding string for
+that row should be interpreted as reflecting the character
+state listed for that column. A coding could reflect multiple
+states (such as might occur when taxa are polymorphic for
+some morphological character), so the sums of rows and
+columns can sum to more than 1.  If \code{contrast} is
+not \code{NULL} (the default), the arguments will nullify
+This argument is designed to mirror an hidden argument with
+an identical name in function \code{phyDat} in package {phangorn}.
+This structure is based on \code{phangorn}'s use of
+\code{contrasts} table used for statistical evaluation of factors.
 See the \code{phangorn} vignette "Special features of phangorn" for more details
 on its implementation within \code{phangorn} including an example.
-See examples below for the construction of an example contrast matrix for character data with polymorphisms, 
-coded as character data output by \code{Claddis}'s \code{ReadMorphNexus} function, where polymorphic taxa are indicated
-with a string with state labels separated by an \code{"&"} symbol.}
+See examples below for the construction of an example contrast
+matrix for character data with polymorphisms, coded as character
+data output by \code{Claddis}'s \code{ReadMorphNexus} function,
+where polymorphic taxa are indicated with a string with
+state labels separated by an \code{"&"} symbol.}
 }
 \value{
 Returns the resulting tree, which may be fully resolved, partly more resolved or not more resolved at all

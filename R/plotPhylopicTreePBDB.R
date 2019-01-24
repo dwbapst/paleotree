@@ -40,6 +40,14 @@
 
 #' @param trimPNG If \code{TRUE} (the default),
 
+#' @param makeMonochrome If \code{TRUE}, PhyloPic silhouettes are
+#' forced to be purely monochrome black-and-white, with no gray
+#' scale. Most of the silhouettes are binary black-and-white already
+#' but some aren't, but those gray-scale values (sometimes?) seem
+#' to exist to indicate very fine features. However, maybe an image
+#' is far too much gray-scale, in which case users can try this
+#' option to force all silhouettes to be monochrome.
+#' The default is \code{FALSE}.
 
 
 # @param phylopicIDsPBDB ID numbers for images from Phylopic,
@@ -96,7 +104,8 @@ plotPhylopicTreePBDB <- function(
 		noiseThreshold = 0.1,
 		extraMargin = 0.2,
 		rescalePNG = TRUE,
-		trimPNG = TRUE
+		trimPNG = TRUE,
+		makeMonochrome = FALSE
 		){		
 	#########################################
 	# uses calls to the Paleobiology Database's API
@@ -132,7 +141,7 @@ plotPhylopicTreePBDB <- function(
 	# get the plot's own aspect ratio
 	plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
 	# true aspect ratio is their product apparently
-	plotAspRatio <- plotAspRatio * devAspRatio 
+	plotAspRatio <- plotAspRatio / devAspRatio 
 	#
 	# pause 3 seconds so we don't spam the API
 	Sys.sleep(3)
@@ -141,6 +150,7 @@ plotPhylopicTreePBDB <- function(
 		picPNG <- getPhyloPicPNG(picID = phylopicIDsPBDB[i], 
 			noiseThreshold = noiseThreshold,
 			rescalePNG = rescalePNG,
+			makeMonochrome = makeMonochrome,
 			trimPNG = trimPNG)
 		#
 		#########################################
@@ -192,6 +202,7 @@ plotPhylopicTreePBDB <- function(
 getPhyloPicPNG<-function(
 		picID, noiseThreshold = 0.1,
 		rescalePNG = TRUE, trimPNG = TRUE,
+		makeMonochrome = FALSE,
 		plotComparison = FALSE){
 	############################################
 	#	
@@ -217,6 +228,7 @@ getPhyloPicPNG<-function(
 		#rescale pic so that min is 0 and max is 1
 		picPNG[,,4] <- picPNG[,,4]-abs(min(picPNG[,,4]))
 		picPNG <- picPNG/max(picPNG)
+		#picPNG <- picPNG^0.75
 		}
 	#
 	###################
@@ -242,6 +254,10 @@ getPhyloPicPNG<-function(
 		#
 		# remove whitespace from all slices of the array
 		picPNG <- picPNG[saveRows,saveCols,]
+		}
+	##############
+	if(makeMonochrome){
+		picPNG <- picPNG^0.001
 		}
 	##############
 	#

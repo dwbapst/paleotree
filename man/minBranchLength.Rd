@@ -2,6 +2,9 @@
 % Please edit documentation in R/minBranchLength.R
 \name{minBranchLength}
 \alias{minBranchLength}
+\alias{minBranchLen}
+\alias{minimumBranchLen}
+\alias{minimumBranchLength}
 \title{Scales Edge Lengths of a Phylogeny to a Minimum Branch Length}
 \usage{
 minBranchLength(tree, mbl)

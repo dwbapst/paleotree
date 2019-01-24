@@ -15,7 +15,7 @@ with \code{\link{makePBDBtaxonTree}}.}
 \item{taxaDataPBDB}{A data table of taxonomic information obtained
 using the Paleobiology Database's API for a set of taxa that
 includes the tip taxa on \code{taxaTree}, generated with
-parameter \code{show=app} so that appearance times are included.}
+parameter \code{show = app} so that appearance times are included.}
 
 \item{minBranchLen}{Following dating using the appearance times taken directly
 from the PBDB for each tip taxon and node, the tree may then be assessed with
@@ -34,7 +34,8 @@ Returns a dated phylogeny of class \code{phylo}, with an additional element
 called by other functions.
 }
 \description{
-The function \code{dateTaxonTreePBDB} takes a topology of  The required input is a topology with tip and internal node labels corresponding to taxa in the Paleobiology Database, and a table of data (containing those same tip and node taxa) obtained from the taxa-list functionality of the Paleobiology Database's API, with appearance times output.
+The function \code{dateTaxonTreePBDB} takes a topology of  
+The required input is a topology with tip and internal node labels corresponding to taxa in the Paleobiology Database, and a table of data (containing those same tip and node taxa) obtained from the taxa-list functionality of the Paleobiology Database's API, with appearance times output.
 }
 \details{
 The dating by
@@ -48,7 +49,7 @@ Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
 application programming interface. \emph{Paleobiology} 42(1):1-7.
 }
 \seealso{
-See \code{\link{gettaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
+See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
 and \code{\link{plotPhylopicTreePBDB}}.
 }
 \author{

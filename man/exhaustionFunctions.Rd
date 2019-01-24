@@ -25,7 +25,7 @@ codings (a morphological 'matrix'), with taxon units
 as rows and characters as columns.}
 
 \item{charTypes}{A vector of length equal to
-the number of chaacters in \code{charData}, with elements indicating
+the number of characters in \code{charData}, with elements indicating
 whether the corresponding character in \code{charData}
 is \code{"unordered"} or \code{"ordered"}. However,
 if \code{length(charTypes) = 1}, then it is repeated for all taxa.
@@ -35,28 +35,36 @@ The default value for this argument is \code{"unordered"}.}
 of the tip labels as given by \code{tip.label},}
 
 \item{firstAppearances}{A vector, with length equal to the
-same number of taxa (rows) as in \code{charData}, in the same corresponding order.}
+same number of taxa (rows) as in
+\code{charData}, in the same corresponding order.}
 
 \item{missingCharValue}{The string value indicating a missing
 character coding value, by default \code{"?"}.}
 
 \item{inapplicableValue}{The string value indicating an
-inapplicable character coding value, by default \code{"-"}.}
+inapplicable character coding value, by default \code{"-"}.
+the extraction of this is automated if you use .}
 
 \item{exhaustion_info}{The list of results output
 from function \code{accioExhaustionCurve}.}
 
-\item{changesType}{A single character value, indicating the character change data
+\item{changesType}{A single character value,
+indicating the character change data
 to be assessed from the result of the character
-exhaustion analysis, must be one of either 'totalAcc' (to the total number of
-accumulated character changes, ideal for modeling the size and distribution of
-\emph{state} space) or 'charAlt' (to plot the total number of character alterations,
-ideal for modeling the size and distribution of \emph{character} space).}
+exhaustion analysis, must be one of either
+\code{'totalAcc'} (to the total number of
+accumulated character changes, ideal for
+modeling the size and distribution of
+\emph{state} space) or \code{'charAlt'}
+(to plot the total number of character alterations,
+ideal for modeling the size and
+distribution of \emph{character} space).}
 
 \item{models}{A vector of type \code{character} naming models to be fit.
 Default is \code{c("exponential","gamma","lognormal","zipf")}.}
 
-\item{xlab}{Label for the X axis; \code{"Total Characters"} by default.}
+\item{xlab}{Label for the X axis;
+\code{"Total Characters"} by default.}
 
 \item{ylab}{Label for the Y axis. If not provided by the user,
 a label based on the \code{changesType} argument will be used.}
@@ -64,7 +72,7 @@ a label based on the \code{changesType} argument will be used.}
 \item{main}{Main title label for the plot. If not provided by
 the user, a label based on the \code{changesType} argument will be used.}
 
-\item{xsize}{Parameter controling size of the axes,
+\item{xsize}{Parameter controlling size of the axes,
 which are forced to be symmetric.}
 }
 \value{
@@ -76,9 +84,12 @@ The second element of this list is named \code{State_Derivations} and is
 a count of how often each state, across all characters, was derived relative
 to the primitive position along each internode edge.
 
-The output of \code{accioBestAcquisitionModel} is a list object containing
-information on the best-fit model, the parameters of that model, the calculated
-probabilition distribution for that model at the same intervals, for use in quantile plots.	
+The output of \code{accioBestAcquisitionModel}
+is a list object containing
+information on the best-fit model, the
+parameters of that model, the calculated
+probabilition distribution for that model
+at the same intervals, for use in quantile plots.	
 
 \code{charExhaustPlot} produces a plot, and outputs no data.
 }
@@ -91,7 +102,7 @@ Evolution).
 \details{
 \code{accioExhaustionCurve} uses a Sankoff parsimony ancestral-reconstruction
 algorithm (written by PJ Wagner, \emph{not} the one from \code{phangorn} used
-elsewhere in paleotree) to calculate character changes across each branch
+elsewhere in \code{paleotree}) to calculate character changes across each branch
 (internode edge) of a tree, and then reports the counts of character state
 
 \code{accioBestAcquisitionModel} takes output from \code{accioExhaustionCurve},
@@ -103,21 +114,23 @@ produces a plot of the observed character change data against the
 expectation under the best-fit model.
 
 
-The functions \code{accioBestAcquisitionModel}  and \code{charExhaustPlot} offer
+The functions \code{accioBestAcquisitionModel} 
+and \code{charExhaustPlot} offer
 users two different options for examining character change: \code{totalAcc}
 fits models to the total accumulated number of state changes over the phylogeny,
 thus using exhaustion to explor the size and distribution of character space. The
 other option \code{charAlt} fits models to the number of character that alter from
 primitive to derived over phylogeny, thus reflecting the size and distribution of state space.
 
-\code{accioExhaustionCurve} can order its reconstruction of change by stratigraphic order of first appearances. It is unclear what this means.
+\code{accioExhaustionCurve} can order its reconstruction
+of change by stratigraphic order of first appearances. It is unclear what this means.
 }
 \note{
 This family of functios presented here were originally written 
 by Peter J. Wagner, and then modified and adapted by David W.
 Bapst for wider release  in a CRAN-distributed
 package: \code{paleotree}. This makes the code presented here
-a very different beast than typical paleotree code, for
+a very different beast than typical \code{paleotree} code, for
 example, there are fewer tests of correct input type, length, etc.
 }
 \examples{
@@ -163,7 +176,8 @@ states among fossil taxa. \emph{Evolution} 54(2):365-386.
 \seealso{
 Also see \code{paleotree} functions \code{\link{minCharChange}} and
 \code{\link{ancPropStateMat}}, the latter of which is a wrapper
-for \code{phangorn}'s function \code{\link[phangorn]{ancestral.pars}}.
+for \code{phangorn}'s function
+\code{\link[phangorn:ancestral.pml]{ancestral.pars}}.
 }
 \author{
 Initially written by Peter J. Wagner, with modification

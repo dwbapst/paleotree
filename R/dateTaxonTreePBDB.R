@@ -1,6 +1,7 @@
 #' Date a Taxon-Topology from the Paleobiology Database Using Appearance Data from the API
 #' 
-#' The function \code{dateTaxonTreePBDB} takes a topology of  The required input is a topology with tip and internal node labels corresponding to taxa in the Paleobiology Database, and a table of data (containing those same tip and node taxa) obtained from the taxa-list functionality of the Paleobiology Database's API, with appearance times output.
+#' The function \code{dateTaxonTreePBDB} takes a topology of  
+#' The required input is a topology with tip and internal node labels corresponding to taxa in the Paleobiology Database, and a table of data (containing those same tip and node taxa) obtained from the taxa-list functionality of the Paleobiology Database's API, with appearance times output.
 
 #' @details
 #' The dating by 
@@ -12,7 +13,7 @@
 #' @param taxaDataPBDB A data table of taxonomic information obtained
 #' using the Paleobiology Database's API for a set of taxa that
 #' includes the tip taxa on \code{taxaTree}, generated with
-#' parameter \code{show=app} so that appearance times are included.
+#' parameter \code{show = app} so that appearance times are included.
 
 #' @param minBranchLen Following dating using the appearance times taken directly
 #' from the PBDB for each tip taxon and node, the tree may then be assessed with
@@ -31,7 +32,7 @@
 #' called by other functions.
 
 #' @seealso
-#' See \code{\link{gettaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
+#' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
 #' and \code{\link{plotPhylopicTreePBDB}}.
 
 #' @author David W. Bapst

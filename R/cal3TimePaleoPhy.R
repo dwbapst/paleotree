@@ -179,22 +179,28 @@
 #' A second option is \code{dateTreatment = "minMax"}, which
 #' treats these dates as minimum and maximum bounds on single point dates. Under this option,
 #' all taxa in the analysis will be treated as being point dates, such that the first appearance
-#' is also the last. These dates will be pulled under a uniform distribution. If \code{dateTreatment = "minMax"} is used,
-#' \code{FAD.only} and  becomes meaningless, and the use of it will return an error message. A third option
-#' is \code{dateTreatment = "randObs"}. This assumes that the dates in the matrix are first and last appearance times,
-#' but that the desired time of observation is unknown. Thus, this is much like \code{dateTreatment = "firstLast"} except
+#' is also the last. These dates will be pulled under a uniform distribution.
+#' If \code{dateTreatment = "minMax"} is used,
+#' \code{FAD.only} and  becomes meaningless, and the use of it will return an error message. 
+#' A third option is \code{dateTreatment = "randObs"}. This assumes
+#' that the dates in the matrix are first and last appearance times,
+#' but that the desired time of observation is unknown.
+#' Thus, this is much like \code{dateTreatment = "firstLast"} except
 #' the effective time of observation (the taxon's LAD under
 #' \code{dateTreatment = "firstLast"}) is treated as an uncertain date, and
-#' is randomly sampled between the first and last appearance times. The FAD still is treated as a fixed number, used
+#' is randomly sampled between the first and last appearance times.
+#' The FAD still is treated as a fixed number, used
 #' for dating the nodes. In previous versions of paleotree, this
 #' was called in \code{cal3timePaleoPhy} using the argument \code{rand.obs}, which has been removed
 #' for clarity. This temporal uncertainty in times of observation might be useful if
 #' a user is interested in applying phylogeny-based approaches to studying trait evolution, but have
-#' per-taxon measurements of traits that come from museum specimens with uncertain temporal placement.
+#' per-taxon measurements of traits that come from museum
+#' specimens with uncertain temporal placement.
 #' With both arguments \code{dateTreatment = "minMax"} and
 #' \code{dateTreatment = "randObs"}, the sampling of dates from random distributions should
 #' compel users to produce many time-scaled trees for any given analytical purpose.
-#' Note that  \code{dateTreatment = "minMax"} returns an error in 'bin' time-scaling functions; please use
+#' Note that  \code{dateTreatment = "minMax"} returns an error
+#' in 'bin' time-scaling functions; please use
 #' \code{points.occur} instead.
 
 # @param rand.obs Should the tips represent observation times uniform
@@ -230,9 +236,10 @@
 #' divergences will be allowed to occur after this minimum age.
 
 #' @param FAD.only Should the tips represent observation times at the start of
-#' the taxon ranges? \code{FAD.only = TRUE}, the resulting output is similar to when terminal ranges are no
-#' added on with \code{timePaleoPhy}. If \code{FAD.only = TRUE} and {dateTreatment = "minMax"}
-#' or {dateTreatment = "randObs"}, the
+#' the taxon ranges? \code{FAD.only = TRUE}, the resulting output
+#' is similar to when terminal ranges are no
+#' added on with \code{timePaleoPhy}. If \code{FAD.only = TRUE}
+#' and {dateTreatment = "minMax"} or {dateTreatment = "randObs"}, the
 #' function will stop and a warning will be produced, as these combinations imply
 #' contradictory sets of times of observation.
 
@@ -269,8 +276,8 @@
 #' out what is going wrong.
 
 #' @param verboseWarnings if \code{TRUE} (the default), then various warnings and messages
-#'  regarding best practices will be issued to the console about the analysis. If \code{FALSE},
-#' the function will run as quietly as possible.
+#' regarding best practices will be issued to the console about the analysis. 
+#' If \code{FALSE},the function will run as quietly as possible.
 
 #' @param nonstoch.bin If true, dates are not stochastically pulled from
 #' uniform distributions. See below for more details.
@@ -344,46 +351,65 @@
 #' 	nTotalTaxa = c(30,40), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' #simulate a fossil record with imperfect sampling with sampleRanges
-#' rangesCont <- sampleRanges(taxa,r = 0.5)
+#' rangesCont <- sampleRanges(taxa, r = 0.5)
 #' #let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
-#' cladogram <- taxa2cladogram(taxa,plot = TRUE)
+#' cladogram <- taxa2cladogram(taxa, plot = TRUE)
 #' #this library allows one to use rate calibrated type time-scaling methods (Bapst, in prep.)
 #' #to use these, we need an estimate of the sampling rate (we set it to 0.5 above)
 #' likFun <- make_durationFreqCont(rangesCont)
-#' srRes <- optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
-#'       method = "L-BFGS-B",control = list(maxit = 1000000))
+#' srRes <- optim(parInit(likFun),likFun,
+#'     lower = parLower(likFun),upper = parUpper(likFun),
+#'     method = "L-BFGS-B",control = list(maxit = 1000000))
 #' sRate <- srRes[[1]][2]
 #' # we also need extinction rate and branching rate
 #'    # we can get extRate from getSampRateCont too
-#' #we'll assume extRate = brRate (ala Foote et al., 1999); may not always be a good assumption
+#' #we'll assume extRate = brRate (ala Foote et al., 1999)
+#'     # this may not always be a good assumption!
 #' divRate <- srRes[[1]][1]
-#' #now let's try cal3TimePaleoPhy, which time-scales using a sampling rate to calibrate
-#' #This can also resolve polytomies based on sampling rates, with some stochastic decisions
-#' ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
+#' 
+#' # now let's try cal3TimePaleoPhy, which time-scales using a sampling rate to calibrate
+#' # This can also resolve polytomies based on sampling rates, with some stochastic decisions
+#' ttree <- cal3TimePaleoPhy(cladogram, rangesCont,
+#'     brRate = divRate,extRate = divRate,
 #'     sampRate = sRate,ntrees = 1,plot = TRUE)
 #' #notice the warning it gives!
 #' phyloDiv(ttree)
 #' 
 #' #by default, cal3TimePaleoPhy may predict indirect ancestor-descendant relationships
 #' #can turn this off by setting anc.wt = 0
-#' ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
-#'     sampRate = sRate,ntrees = 1,anc.wt = 0,plot = TRUE)
+#' ttree <- cal3TimePaleoPhy(cladogram,rangesCont,
+#'     brRate = divRate,extRate = divRate,
+#'     sampRate = sRate,ntrees = 1,
+#'     anc.wt = 0,plot = TRUE)
+#' 
+#' 
 #' 
 #' \donttest{
 #' #let's look at how three trees generated with very different time of obs. look
-#' ttreeFAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
-#'     FAD.only = TRUE,dateTreatment = "firstLast",sampRate = sRate,ntrees = 1,plot = TRUE)
-#' ttreeRand <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
-#'     FAD.only = FALSE,dateTreatment = "randObs",sampRate = sRate,ntrees = 1,plot = TRUE)
+#' ttreeFAD <- cal3TimePaleoPhy(cladogram, rangesCont,
+#'     brRate = divRate,extRate = divRate,
+#'     FAD.only = TRUE,dateTreatment = "firstLast",
+#'     sampRate = sRate,ntrees = 1,plot = TRUE)
+#' ttreeRand <- cal3TimePaleoPhy(cladogram, rangesCont,
+#'     brRate = divRate,extRate = divRate,
+#'     FAD.only = FALSE,dateTreatment = "randObs",
+#'     sampRate = sRate,ntrees = 1,plot = TRUE)
 #' #by default the time of observations are the LADs
-#' ttreeLAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
-#'     FAD.only = FALSE,dateTreatment = "randObs",sampRate = sRate,ntrees = 1,plot = TRUE)
+#' ttreeLAD <- cal3TimePaleoPhy(cladogram, rangesCont,
+#'     brRate = divRate,extRate = divRate,
+#'     FAD.only = FALSE,dateTreatment = "randObs",
+#'     sampRate = sRate,ntrees = 1,plot = TRUE)
+#' 
+#' # and let's plot
 #' layout(1:3)
 #' parOrig <- par(no.readonly = TRUE)
 #' par(mar = c(0,0,0,0))
-#' plot(ladderize(ttreeFAD));text(5,5,"time.obs = FAD",cex = 1.5,pos = 4)
-#' plot(ladderize(ttreeRand));text(5,5,"time.obs = Random",cex = 1.5,pos = 4)
-#' plot(ladderize(ttreeLAD));text(5,5,"time.obs = LAD",cex = 1.5,pos = 4)
+#' plot(ladderize(ttreeFAD));text(5,5,
+#'     "time.obs = FAD",cex = 1.5,pos = 4)
+#' plot(ladderize(ttreeRand));text(5,5,
+#'     "time.obs = Random",cex = 1.5,pos = 4)
+#' plot(ladderize(ttreeLAD));text(5,5,
+#'     "time.obs = LAD",cex = 1.5,pos = 4)
 #' layout(1); par(parOrig)
 #' 
 #' #to get a fair sample of trees, let's increase ntrees
@@ -393,7 +419,10 @@
 #' layout(matrix(1:9,3,3))
 #' parOrig <- par(no.readonly = TRUE)
 #' par(mar = c(0,0,0,0))
-#' for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label = FALSE)}
+#' for(i in 1:9){
+#'     plot(ladderize(ttrees[[i]]),
+#'          show.tip.label = FALSE)
+#'     }
 #' layout(1)
 #' par(parOrig)
 #' #they are all a bit different!
@@ -405,7 +434,10 @@
 #' #let's say we have (molecular??) evidence that node #5 is at least 1200 time-units ago
 #' #to use node.mins, first need to drop any unshared taxa
 #' droppers <- cladogram$tip.label[is.na(
-#'       match(cladogram$tip.label,names(which(!is.na(rangesCont[,1])))))]
+#'     match(cladogram$tip.label,
+#'            names(which(!is.na(rangesCont[,1]))))
+#'     )]
+#' # and then drop those taxa
 #' cladoDrop <- drop.tip(cladogram, droppers)
 #' # now make vector same length as number of nodes
 #' nodeDates <- rep(NA, Nnode(cladoDrop))
@@ -426,38 +458,53 @@
 #' rangesDisc <- binTimeData(rangesCont,int.length = 1)
 #' #we can do something very similar for the discrete time data (can be a bit slow)
 #' likFun <- make_durationFreqDisc(rangesDisc)
-#' spRes <- optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
-#'       method = "L-BFGS-B",control = list(maxit = 1000000))
+#' spRes <- optim(parInit(likFun),likFun,
+#'     lower = parLower(likFun),upper = parUpper(likFun),
+#'     method = "L-BFGS-B",control = list(maxit = 1000000))
 #' sProb <- spRes[[1]][2]
-#' #but that's the sampling PROBABILITY per bin, not the instantaneous rate of change
-#' #we can use sProb2sRate() to get the rate. We'll need to also tell it the int.length
+
+#' #but that's the sampling PROBABILITY per bin
+#'     # NOT the instantaneous rate of change
+#' #we can use sProb2sRate() to get the rate
+#'     # We'll need to also tell it the int.length
 #' sRate1 <- sProb2sRate(sProb,int.length = 1)
 #' #we also need extinction rate and branching rate (see above)
 #'     #need to divide by int.length...
 #' divRate <- spRes[[1]][1]/1
-#' #estimates that r = 0.3... kind of low (simulated sampling rate is 0.5)
-#' #Note: for real data, you may need to use an average int.length (no constant length)
-#' ttree <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate = divRate,extRate = divRate,
+#' #estimates that r = 0.3... 
+#'     # tat's kind of low (simulated sampling rate is 0.5)
+#' #Note: for real data, you may need to use an average int.length 
+#'     # (i.e. if intervals aren't all the same duration)
+#' ttree <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,
+#'     brRate = divRate,extRate = divRate,
 #'     sampRate = sRate1,ntrees = 1,plot = TRUE)
 #' phyloDiv(ttree)
 #' #can also force the appearance timings not to be chosen stochastically
-#' ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate = divRate,extRate = divRate,
-#'     sampRate = sRate1,ntrees = 1,nonstoch.bin = TRUE,plot = TRUE)
+#' ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,
+#'     brRate = divRate,extRate = divRate,
+#'     sampRate = sRate1,ntrees = 1,
+#'     nonstoch.bin = TRUE,plot = TRUE)
 #' phyloDiv(ttree1)
 #'
 #' # testing node.mins in bin_cal3TimePaleoPhy
-#' ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate = divRate,extRate = divRate,
-#'     sampRate = sRate1,ntrees = 1,node.mins = nodeDates,plot = TRUE)
+#' ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,
+#'     brRate = divRate,extRate = divRate,
+#'     sampRate = sRate1,ntrees = 1,
+#'     node.mins = nodeDates,plot = TRUE)
 #' # with randres = TRUE
-#' ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate = divRate,extRate = divRate,
-#'     sampRate = sRate1,ntrees = 1,randres = TRUE,node.mins = nodeDates,plot = TRUE)
+#' ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,
+#'     brRate = divRate,extRate = divRate,
+#'     sampRate = sRate1,ntrees = 1,
+#'     randres = TRUE,node.mins = nodeDates,plot = TRUE)
 #' 
 #' 
 #' #example with multiple values of anc.wt
 #' ancWt <- sample(0:1,nrow(rangesDisc[[2]]),replace = TRUE)
 #' names(ancWt) <- rownames(rangesDisc[[2]])
-#' ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate = divRate,extRate = divRate,
-#'     sampRate = sRate1,ntrees = 1,anc.wt = ancWt,plot = TRUE)
+#' ttree1 <- bin_cal3TimePaleoPhy(cladogram, rangesDisc,
+#'     brRate = divRate, extRate = divRate,
+#'     sampRate = sRate1, ntrees = 1,
+#'     anc.wt = ancWt, plot = TRUE)
 #' }
 #' 
 
@@ -515,14 +562,19 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 		}
 	#first clean out all taxa which are NA or missing in timeData	
 	if(ntrees<1){
-		stop("ntrees<1")
+		stop("ntrees cannot be less than 1")
 		}
 	# warnings, not fatal errors
 	if(ntrees == 1 & verboseWarnings){
 		warning("Do not interpret a single cal3 time-scaled tree, regardless of other arguments!")
 		}
 	#originalInputTree <- tree
-	droppers <- tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
+	droppers <- tree$tip.label[
+		is.na(match(tree$tip.label,
+			names(
+				which(!is.na(timeData[,1])))
+			))
+		]
 	if(length(droppers)>0){
 		if(length(droppers) == Ntip(tree)){
 			stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
@@ -568,9 +620,10 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 	Ps <- sapply(tree$tip.label,function(x) pqr2Ps(brRate[x],extRate[x],sampRate[x]))
 	names(Ps) <- tree$tip.label
 	#timescale with timePaleoPhy to get "basic" timetree
-	ttree1 <- timePaleoPhy(tree = tree,timeData = timeData,
-		type = "basic",dateTreatment = "firstLast",
-		node.mins = node.mins,add.term = FALSE,inc.term.adj = FALSE)
+	ttree1 <- timePaleoPhy(tree = tree, timeData = timeData,
+		type = "basic", dateTreatment = "firstLast",
+		node.mins = node.mins, 
+		add.term = FALSE, inc.term.adj = FALSE)
 	#identify which nodes are min-locked; make sure to update when resolving polytomies
 	if(length(node.mins)>0){
 		locked_nodesOrig <- which(!is.na(node.mins))+Ntip(tree)
@@ -592,7 +645,10 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 				}
 		}else{
 			if(dateTreatment == "minMax"){
-				datesUniffy <- apply(timeData,1,function(x) runif(1,x[2],x[1]))
+				datesUniffy <- apply(
+					timeData,1,function(x)
+					runif(1,x[2],x[1])
+					)
 				timeData1 <- cbind(datesUniffy,datesUniffy,0)
 				}
 			timeData1 <- cbind(timeData,0)
@@ -834,55 +890,77 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 					#if adj.obs.wt, if anc.wt>0 & diffLAD>0 & d1's LAD is before d2's FAD...
 				if(adj.obs.wt & d1ancWt>0 & d1diffLAD>0 & (dlen1+d1rng+step.size)<dlen2){
 					adj_max <- max(dlen2,d1diffLAD+(dlen1+d1rng))
-					adj_zips <- seq((dlen1+d1rng)+step.size,adj_max,by = step.size) 	#the zips we ain't looking at
+					# get the zips we *ain't* looking at
+					adj_zips <- seq((dlen1+d1rng)+step.size,adj_max,by = step.size) 	
 					#08-01-12: getting the density via the Cal3 algorithm
 					#waiting time from zip (branching point) to FAD1
-					gap1 <- ifelse(adj_zips>dlen1,0,dlen1-adj_zips)		#restrict to be dlen1 if longer than dlen1 (FAD1-time, prob 0 anyway!)
-					gap2 <- dlen2-adj_zips			#waiting time from branching point to FAD2
+						#restrict to be dlen1 if longer than dlen1 
+						# (FAD1-time, prob 0 anyway!)
+					gap1 <- ifelse(adj_zips>dlen1,0,dlen1-adj_zips)		
+					#gap 2 is waiting time from branching point to FAD2
+					gap2 <- dlen2-adj_zips			
 					#waiting time from stem to FAD1 OR branch node (zip)
 					gapStem2zip <- ifelse((stem_len+dlen1)>(stem_len+adj_zips),
 						stem_len+adj_zips,stem_len+dlen1)
 					adj_totalgap <- gap1+gap2+gapStem2zip
-					#07-31-12: Given a lack of other options, gamma(shape = 2,rate = r+p*Ps) distribution best fit
-						#under different combinations with p = q = r,p = q>r and p = q<r
-						#admittedly not a perfect fit, though!
+					#07-31-12: Given a lack of other options, 
+						# gamma(shape = 2,rate = r+p*Ps) distribution best fit
+						# under different combinations with p = q = r,p = q>r and p = q<r
+						# admittedly not a perfect fit, though!
 					adj_linDense <- dgamma(totalgap,shape = 2,rate = d2SR+(d2BR*d2Ps))
-					linDensity[length(linDensity)] <- linDensity[length(linDensity)]+sum(adj_linDense*d1ancWt)
+					linDensity[length(linDensity)] <- (
+						linDensity[length(linDensity)] + sum(adj_linDense*d1ancWt)
+						)
 					nAdjZip <- nAdjZip+1
 					}
 				#new as of 08-21-12
 				linDensity[is.na(linDensity)] <- 0
-				if(sum(linDensity) == 0){linDensity[length(linDensity)] <- 1}
-				linDensity1 <- linDensity/sum(linDensity)
+				if(sum(linDensity) == 0){
+					linDensity[length(linDensity)] <- 1
+					}
+				linDensity1 <- linDensity / sum(linDensity)
 				ch_zip <- sample(poss_zip,1,prob = linDensity1)	#pick zipper location
 				#record sampled zip_prob
-				sampledLogLike <- c(sampledLogLike,log(linDensity1[ch_zip]))
+				sampledLogLike <- c(sampledLogLike, log(linDensity1[ch_zip]))
 				#calculate new branch lengths, adding terminal ranges to tips
-				new_dlen1 <- ifelse(ch_zip>dlen1,NA,dlen1-ch_zip)			#If not budding or anagenesis
+				#If not budding or anagenesis...
+				new_dlen1 <- ifelse(ch_zip>dlen1, NA, dlen1-ch_zip)			
 				new_dlen2 <- dlen2-ch_zip		
-				if(is.na(new_dlen1)){							#if budding or anagensis
-					if(ch_zip == max_zip & dlen1+d1rng<dlen2){ 			#if anagensis
+				#but if budding or anagensis
+				if(is.na(new_dlen1)){							
+					#if anagensis
+					if(ch_zip == max_zip & dlen1+d1rng<dlen2){ 			
 						anags <- c(anags,ktree$tip.label[dnode1])
 						new_dlen1 <- 0
-					}else{								#if budding
+					}else{								
+						#if budding
 						budds <- c(budds,ktree$tip.label[dnode1])
 						new_dlen1 <- d1rng+dlen1-ch_zip
-				}}else{new_dlen1 <- ifelse(!is.na(d1rng),new_dlen1+d1rng,new_dlen1)}	#if tip, add term range
-				new_dlen2 <- ifelse(!is.na(d2rng),new_dlen2+d2rng,new_dlen2)		#if tip, add rng to new dlen
+						}
+				}else{
+					#if tip, add term range
+					new_dlen1 <- ifelse(!is.na(d1rng),new_dlen1+d1rng,new_dlen1)
+						}	
+				#if tip, add rng to new dlen
+				new_dlen2 <- ifelse(!is.na(d2rng), new_dlen2+d2rng, new_dlen2)		
 				#rescale branches according to their new lengths
-				if(node != (Ntip(ktree)+1)){	#if not root
-					ktree$edge.length[ktree$edge[,2] == node] <- ch_zip-min_zip	#change stem length
+				if(node != (Ntip(ktree)+1)){	
+					#if not root, change stem length
+					ktree$edge.length[ktree$edge[,2] == node] <- ch_zip-min_zip	
 					}
 				ktree$edge.length[match(dnode1,ktree$edge[,2])] <- new_dlen1
 				ktree$edge.length[match(dnode2,ktree$edge[,2])] <- new_dlen2
 				if(diagnosticMode){
 					print(c(node,ch_zip-min_zip,new_dlen1,new_dlen2))
 					}
-				nodes <- nodes[-1]			#update nodes
+				#update nodes
+				nodes <- nodes[-1]			
 			}}
 		ktree <- reorder(collapse.singles(ktree),"cladewise")
-		ktree$anag.tips <- anags	#record the number of anagenetic ancestors
-		ktree$budd.tips <- budds	#record the number of budding ancestors	
+		#record the number of anagenetic ancestors
+		ktree$anag.tips <- anags
+		#record the number of budding ancestors	
+		ktree$budd.tips <- budds	
 		ktree$nAdjZip <- nAdjZip
 		#record sampled log-likelihoods
 		ktree$sampledLogLike <- sampledLogLike
@@ -890,31 +968,44 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 		#now add root.time: because NO TIPS ARE DROPPED (due to anagenesis) can calculate this now
 			#must be calculated on LADs because the terminal ranges are added to the TREE!!!
 			#should be time of earliest LAD + distance of root from earliest tip
-		ktree$root.time <- max(timeData1[ktree$tip.label,2])+min(node.depth.edgelength(ktree)[1:Ntip(ktree)])	
-		names(ktree$edge.length) <- names(ktree$tip.label) <- names(ktree$budd.tips) <- names(ktree$anag.tips) <- NULL
+		ktree$root.time <- (
+			max(timeData1[ktree$tip.label,2])
+			+ min(node.depth.edgelength(ktree)[1:Ntip(ktree)])
+			)
+		# remove names from stuff
+		names(ktree$edge.length) <- NULL
+		names(ktree$tip.label) <- NULL
+		names(ktree$budd.tips) <- NULL
+		names(ktree$anag.tips) <- NULL
 		#stuff for checking if things are correct
 		tipdiffs <- cbind(	diff(sort(-timeData1[,2])),
 					diff(sort(node.depth.edgelength(ktree)[1:Ntip(ktree)])),
-					diff(sort(-timeData1[,2]))-diff(sort(node.depth.edgelength(ktree)[1:Ntip(ktree)])))	
+					diff(sort(-timeData1[,2]))
+						-diff(sort(node.depth.edgelength(ktree)[1:Ntip(ktree)])))	
 		test1 <- all(tipdiffs[,3]<tolerance)
 		test2 <- identical(names(sort(-timeData1[,2])),
 				ktree$tip.label[order(node.depth.edgelength(ktree)[1:Ntip(ktree)])])
 		#test 2 does not work if any LADS are same
 		if(length(unique(timeData1[,2]))<Ntip(tree)){
 			test2 <- TRUE
-			}	
+			}
+		## evaluate tests
 		if(all(c(test1,test2))){
 			ktree$test <- "passed"
 		}else{
-			warning("Warning: Terminal tips improperly aligned, cause unknown. Use ouput with care.")
+			warning("Warning: Terminal tips improperly aligned, cause unknown. Use output with care.")
 			}
+		##############
 		if(plot){
 			parOrig <- par(no.readonly = TRUE)
 			par(mar = c(2.5,2.5,1,2.5))
 			layout(matrix(1:3,3,))
-			plot(ladderize(tree),show.tip.label = TRUE,use.edge.length = FALSE)
-			plot(ladderize(ttree1),show.tip.label = TRUE);axisPhylo()			
-			plot(ladderize(ktree),show.tip.label = TRUE);axisPhylo()
+			plot(ladderize(tree),
+				show.tip.label = TRUE,use.edge.length = FALSE)
+			plot(ladderize(ttree1),
+				show.tip.label = TRUE);axisPhylo()			
+			plot(ladderize(ktree),
+				show.tip.label = TRUE);axisPhylo()
 			layout(1)
 			par(parOrig)		
 			}

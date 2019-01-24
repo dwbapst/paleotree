@@ -40,8 +40,8 @@ only those taxa that are both valid taxa and
 to consider are \code{"valid"}, which is all valid taxa:
 senior homonyms and valid subjective synonyms, and \code{"all"},
 which will return all valid taxa and all otherwise repressed invalid taxa.
-For additional statuses that you can request, please see the documentation at the 
-\href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
+For additional statuses that you can request, please see the documentation at  
+the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
 
 \item{urlOnly}{If \code{FALSE} (the default), then the
 function behaves as expected, the API is called and a
@@ -67,7 +67,7 @@ variables pulled for the requested taxon selection.
 This behavior can be modified by argument \code{urlOnly}.
 }
 \description{
-The Paleobiology Database API () is very easy to use, and generally any data one wishes to collect
+The Paleobiology Database API (\href{http://paleobiodb.org/data1.2}{link}) is very easy to use, and generally any data one wishes to collect
 }
 \details{
 The

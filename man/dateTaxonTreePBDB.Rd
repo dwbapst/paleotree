@@ -5,7 +5,7 @@
 \title{Date a Taxon-Topology from the Paleobiology Database Using Appearance Data from the API}
 \usage{
 dateTaxonTreePBDB(taxaTree, taxaDataPBDB = taxaTree$taxaDataPBDB,
-  minBranchLen = 0, plot = FALSE)
+  minBranchLen = 0, plotTree = FALSE)
 }
 \arguments{
 \item{taxaTree}{A tree with tip taxon names matching the taxon names
@@ -25,7 +25,8 @@ to set \code{minBranchLen} higher than zero to differentiate nodes in cases
 with poor stratigraphic congruency, so that derived taxa are the first taxa
 observed in a group.}
 
-\item{plot}{If \code{TRUE}, the resulting dated tree is plotted.}
+\item{plotTree}{If \code{TRUE}, the resulting dated tree is plotted.
+This is \code{FALSE} by default.}
 }
 \value{
 Returns a dated phylogeny of class \code{phylo}, with an additional element

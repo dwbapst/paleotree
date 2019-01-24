@@ -90,7 +90,7 @@
 #' @export
 plotPhylopicTreePBDB <- function(
 		tree, 
-		taxaDataPBDB = tree$taxaData,
+		taxaDataPBDB = tree$taxaDataPBDB,
 		# phylopicIDsPBDB = NULL, 
 		size = 0.9,
 		noiseThreshold = 0.1,
@@ -171,7 +171,7 @@ plotPhylopicTreePBDB <- function(
 		##################################################
 		#adjust the position of the sides for the image
 		#
-		xAdj <- (picSize /2) / (picAspRatio*plotAspRatio) 
+		xAdj <- (picSize/2) * (plotAspRatio/picAspRatio) 
 		yAdj <- picSize /2
 		#
 		##################################################

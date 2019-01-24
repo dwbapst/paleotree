@@ -1,6 +1,6 @@
 #' Obtaining Data for Sets of Taxa From Paleobiology Database API
 #' 
-#' The Paleobiology Database API () is very easy to use, and generally any data one wishes to collect
+#' The Paleobiology Database API (\href{http://paleobiodb.org/data1.2}{link}) is very easy to use, and generally any data one wishes to collect
 
 #' @details
 #' The
@@ -42,8 +42,8 @@
 #' to consider are \code{"valid"}, which is all valid taxa:
 #' senior homonyms and valid subjective synonyms, and \code{"all"},
 #' which will return all valid taxa and all otherwise repressed invalid taxa.
-#' For additional statuses that you can request, please see the documentation at the 
-#' \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.
+#' For additional statuses that you can request, please see the documentation at  
+#' the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.
 	
 	# status -> all, accepted, valid
 	# accepted -> only senior synonyms
@@ -60,7 +60,7 @@
 #' to be missing from the Paleobiology Database's taxonomy table, should
 #' the function halt with an error?
 
-#' @return
+#' @return 
 #' These functions return a \code{data.frame} containing
 #' variables pulled for the requested taxon selection.
 #' This behavior can be modified by argument \code{urlOnly}.
@@ -69,7 +69,7 @@
 
 #' @aliases getCladeTaxaPBDB getSpecificTaxaPBDB
 
-#' @seealso
+#' @seealso 
 #' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
 #' and \code{\link{plotPhylopicTreePBDB}}.
 
@@ -88,8 +88,8 @@
 
 
 
-#' @rdname getTaxaDataPBDB
-#' @export
+#' @rdname getTaxaDataPBDB 
+#' @export 
 getCladeTaxaPBDB <- function(taxon,
 		show = c("class", "parent", "app", "img", "entname"),
 		status = "accepted", urlOnly = FALSE, stopIfMissing=FALSE){
@@ -119,8 +119,8 @@ getCladeTaxaPBDB <- function(taxon,
 	return(res)
 	}
 
-#' @rdname getTaxaDataPBDB
-#' @export
+#' @rdname getTaxaDataPBDB 
+#' @export 
 getSpecificTaxaPBDB <- function(taxa,
 		show = c("class", "parent", "app", "img", "entname"),
 		status = "accepted",
@@ -173,7 +173,7 @@ getPBDBtaxaCSV <- function(requestURL, stopIfMissing=FALSE){
 		lineRemove <- c(which(isWarning),which(linesOut == "\"Records:\""))
 		linesOut<-linesOut[-lineRemove]
 		}
-	res<- read.csv(linesOut,
+	res<- read.csv(text = linesOut,
 	    stringsAsFactors = FALSE)
 	###############
 	return(res)

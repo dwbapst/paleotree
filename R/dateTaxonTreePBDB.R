@@ -22,7 +22,8 @@
 #' with poor stratigraphic congruency, so that derived taxa are the first taxa
 #' observed in a group.
 
-#' @param plot If \code{TRUE}, the resulting dated tree is plotted.
+#' @param plotTree If \code{TRUE}, the resulting dated tree is plotted.
+#' This is \code{FALSE} by default.
 
 #' @return
 #' Returns a dated phylogeny of class \code{phylo}, with an additional element
@@ -51,7 +52,7 @@ dateTaxonTreePBDB <- function(
 		taxaTree,
 		taxaDataPBDB = taxaTree$taxaDataPBDB,
 		minBranchLen = 0,
-		plot = FALSE){
+		plotTree = FALSE){
 	###################################
 	if(!any(colnames(taxaDataPBDB)!="lastapp_min_ma")){
 		stop(paste0(
@@ -104,7 +105,7 @@ dateTaxonTreePBDB <- function(
 		}
 	#
 	#################
-	if(plot){
+	if(plotTree){
 		plot(datedTree, main=plotName,
 			show.node.label=FALSE, cex=0.5)
 		axisPhylo()

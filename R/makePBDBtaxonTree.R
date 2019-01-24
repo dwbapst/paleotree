@@ -539,6 +539,7 @@ makePBDBtaxonTree <- function(taxaDataPBDB, rank,
 		tree$parentChild <- pcMat
 		}
 	####################
+	tree$taxaDataPBDB <- taxaDataPBDB
 	return(tree)
 	}
 

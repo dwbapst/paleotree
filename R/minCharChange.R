@@ -262,8 +262,10 @@
 #' ancMPR <- ancPropStateMat(retioTree, 
 #'         trait = retioChar[,2], 
 #'         type = "MPR")
-#' quickAncPlotter(retioTree,ancMPR,cex = 0.5)
-#' text(x = 4,y = 5,"type = 'MPR'",cex = 1.5)
+#' quickAncPlotter(retioTree,
+#'    ancMPR, cex = 0.5)
+#' text(x = 4,y = 5,
+#'    "type = 'MPR'", cex = 1.5)
 #' 
 #' minCharChange(retioTree,
 #'         trait = retioChar[,2],
@@ -283,8 +285,8 @@
 #' ancMPR <- ancPropStateMat(tree, 
 #'         trait = char, 
 #'         type = "MPR")
-#  #unordered, ACCTRAN
-#  ancACCTRAN <- ancPropStateMat(tree, 
+#' #unordered, ACCTRAN
+#' ancACCTRAN <- ancPropStateMat(tree, 
 #'         trait = char, 
 #'         type = "ACCTRAN")
 #' #ordered, MPR
@@ -293,18 +295,19 @@
 #'         orderedChar = TRUE, 
 #'         type = "MPR")
 #' 
-#  #let's compare MPR versus ACCTRAN results
-#  layout(1:2)
-#  quickAncPlotter(tree,
+#'  #let's compare MPR versus ACCTRAN results
+#'  layout(1:2)
+#'  quickAncPlotter(tree,
 #'         ancMPR, cex = 0.3)
-#  text(x = 8, y = 15,
+#'  text(x = 8, y = 15,
 #'         "type = 'MPR'", cex = 1.5)
-#  quickAncPlotter(tree,
+#'  quickAncPlotter(tree,
 #'         ancACCTRAN, cex = 0.3)
-#  text(x = 9, y = 15,
+#'  text(x = 9, y = 15,
 #'         "type = 'ACCTRAN'",cex = 1.5)
-#  #MPR has much more uncertainty in node estimates
-#  	#but that doesn't mean ACCTRAN is preferable
+#' 
+#'  # MPR has much more uncertainty in node estimates
+#' 	 # but that doesn't mean ACCTRAN is preferable
 #'
 #' #let's compare unordered versus ordered under MPR
 #' layout(1:2)
@@ -317,6 +320,7 @@
 #' text(x = 9, y = 15,
 #'         "ordered char\nMPR", cex = 1.5)
 #' layout(1)
+#' 
 #' 
 #' \dontrun{
 #' # what ancPropStateMat automates (with lots of checks):
@@ -340,8 +344,8 @@
 #'         trait = char,
 #'         type = "MPR")
 #'
-#  #and now with ACCTRAN
-#  minCharChange(tree,
+#'  # and now with ACCTRAN
+#'  minCharChange(tree,
 #'         trait = char,
 #'         type = "ACCTRAN")
 #'
@@ -420,10 +424,10 @@
 #'         "auto-constructed\ncontrast", cex = 1.3)
 #' layout(1)
 #' 
-#' #look pretty similar!
+#' # look pretty similar!
 #' 
-#' #i.e. the default polySymbol = "&", but could be a different symbol
-#'      #such as "," or "\"... it can only be *one* symbol, though
+#' # i.e. the default polySymbol = "&", but could be a different symbol
+#'      # such as "," or "\"... it can only be *one* symbol, though
 #' 
 #' # all of this machinery should function just fine in minCharChange
 #' 		# again, by default polySymbol = "&" (included anyway here for kicks)

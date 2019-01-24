@@ -103,7 +103,7 @@ plotPhylopicTreePBDB <- function(
 		# to construct a phylogeny with phylopics
 			# (from Phylopic, duh)
 		# as pictorial replacements for the tip labels
-	############
+	###############################################
 	# check or obtain the phylopic IDs from PBDB
 	phylopicIDsPBDB <- getPhyloPicIDNum(
 		taxaData = taxaDataPBDB,
@@ -162,7 +162,7 @@ plotPhylopicTreePBDB <- function(
 		# GET THE COORDINATES
 		#
 		# offset is size/2 by default
-		offset <- size*0.9/plotAspRatio
+		offset <- size*0.9* plotAspRatio
 		#
 		#points(lastPP$xx,lastPP$yy)	
 		x<-lastPP$xx[i]+offset

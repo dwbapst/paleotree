@@ -26,6 +26,18 @@
 #' @param plotTree If \code{TRUE}, the resulting dated tree is plotted.
 #' This is \code{FALSE} by default.
 
+#' @param tipTaxonDateUsed Controls what date for a taxon from the PBDB
+#' is used for 'when' the tip should be placed in the dated phylogeny
+#' produced by this function. The default, \code{tipTaxonDateUsed = "shallowestAge"}
+#' will use the minimum age of the last appearance time of that taxon, which if it
+#' is extant will be 0, and if it is extinct, will be the maximum constraint on the
+#' age of its last appearance (i.e. the last time we saw it before it went extinct).
+#' Other options are "deepestAge", which is the oldest possible first appearance time
+#' from the PBDB, i.e. the maximum age constraint for the first appearance. As closely
+#' related taxa often first occur in the same short interval of geologic time, due to
+#' diversification bursts and/or the heterogeneity of fossil preservation, this may
+#' result in confusing polytomies of many terminal taxa with no terminal branch lengths.
+
 #' @return
 #' Returns a dated phylogeny of class \code{phylo}, with an additional element
 #' \code{$taxaDataPBDB} added containing the input \code{taxaDataPBDB}, as this might be
@@ -46,6 +58,9 @@
 #' #an example here
 
 
+
+
+
 #' @name dateTaxonTreePBDB
 #' @rdname dateTaxonTreePBDB
 #' @export
@@ -53,6 +68,7 @@ dateTaxonTreePBDB <- function(
 		taxaTree,
 		taxaDataPBDB = taxaTree$taxaDataPBDB,
 		minBranchLen = 0,
+		tipTaxonDateUsed = "shallowestAge",
 		plotTree = FALSE){
 	###################################
 	if(!any(colnames(taxaDataPBDB)!="lastapp_min_ma")){
@@ -61,17 +77,32 @@ dateTaxonTreePBDB <- function(
 			"generated with show=app"))
 		}
 	############################
-	# get tip min ages
-	# first replace min ages with 0 if "is_extant" is "extant"
-	taxaDataPBDB$lastapp_min_ma[taxaDataPBDB$is_extant == "extant"] <- 0
+	# replace min & max last appearance ages
+		# with 0 if "is_extant" is "extant"
+	taxaDataPBDB[taxaDataPBDB$is_extant == "extant",
+		c("lastapp_min_ma","lastapp_max_ma")] <- 0
+	###########################################
+	# get four date taxon ranges for all tip taxa
+	# match tip-taxa to taxa-data
+		#sort based on tip labels
+	tipMatches <- match(taxaTree$tip.label, taxaDataPBDB$taxon_name)
 	#
-	# now sort based on tip labels
-	tipMinAges <- taxaDataPBDB$lastapp_min_ma[
-		match(taxaTree$tip.label, taxaDataPBDB$taxon_name)]
+	tipTaxonFourDateRanges <- taxaDataPBDB[tipMatches,
+		c("firstapp_max_ma","firstapp_min_ma",
+			"lastapp_max_ma","lastapp_min_ma")]
+	# select the right tipAges based on tipTaxonDateUsed
+	if(tipTaxonDateUsed == "shallowestAge"){
+		tipAges <- tipTaxonFourDateRanges$lastapp_min_ma
+		}
+	if(tipTaxonDateUsed == "deepestAge"){
+		tipAges <- tipTaxonFourDateRanges$firstapp_max_ma
+		}
 	#
+	#############################################
 	# get node ages
 	nodeNames<-paste0(taxaTree$node.label,collapse=",")
-	apiAddressNodes <- paste0("http://paleobiodb.org/data1.2/taxa/list.txt?name=",
+	apiAddressNodes <- paste0(
+		"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
 		nodeNames,"&show=app,parent"
 		)
 	# browseURL(apiAddressNodes)
@@ -81,7 +112,7 @@ dateTaxonTreePBDB <- function(
 	nodeMaxAges <- nodeData$firstapp_max_ma[
 		match(taxaTree$node.label, nodeData$taxon_name)]
 	# construct tip+node age vector
-	allAges <- as.numeric(c(tipMinAges,nodeMaxAges))
+	allAges <- as.numeric(c(tipAges, nodeMaxAges))
 	##########################################
 	# get dated tree
 	datedTree <- nodeDates2branchLengths(
@@ -111,8 +142,13 @@ dateTaxonTreePBDB <- function(
 			show.node.label=FALSE, cex=0.5)
 		axisPhylo()
 		}
-	###################
-	# return
+	###################		
+	# output four date taxon ranges for all tip taxa
+		# (for strap or otherwise)	
+	rownames(tipTaxonFourDateRanges) <- taxaTree$tip.label
+	datedTree$tipTaxonFourDateRanges <- tipTaxonFourDateRanges
+	# output the original taxaDataPBDB
 	datedTree$taxaDataPBDB <- taxaDataPBDB
+	# return
 	return(datedTree)
 	}

@@ -5,7 +5,7 @@
 \title{Date a Taxon-Topology from the Paleobiology Database Using Appearance Data from the API}
 \usage{
 dateTaxonTreePBDB(taxaTree, taxaDataPBDB = taxaTree$taxaDataPBDB,
-  minBranchLen = 0, plotTree = FALSE)
+  minBranchLen = 0, tipTaxonDateUsed = "shallowestAge", plotTree = FALSE)
 }
 \arguments{
 \item{taxaTree}{A tree with tip taxon names matching the taxon names
@@ -24,6 +24,18 @@ If \code{minBranchLen = 0}, the default, this step is skipped. It may be necessa
 to set \code{minBranchLen} higher than zero to differentiate nodes in cases
 with poor stratigraphic congruency, so that derived taxa are the first taxa
 observed in a group.}
+
+\item{tipTaxonDateUsed}{Controls what date for a taxon from the PBDB
+is used for 'when' the tip should be placed in the dated phylogeny
+produced by this function. The default, \code{tipTaxonDateUsed = "shallowestAge"}
+will use the minimum age of the last appearance time of that taxon, which if it
+is extant will be 0, and if it is extinct, will be the maximum constraint on the
+age of its last appearance (i.e. the last time we saw it before it went extinct).
+Other options are "deepestAge", which is the oldest possible first appearance time
+from the PBDB, i.e. the maximum age constraint for the first appearance. As closely
+related taxa often first occur in the same short interval of geologic time, due to
+diversification bursts and/or the heterogeneity of fossil preservation, this may
+result in confusing polytomies of many terminal taxa with no terminal branch lengths.}
 
 \item{plotTree}{If \code{TRUE}, the resulting dated tree is plotted.
 This is \code{FALSE} by default.}

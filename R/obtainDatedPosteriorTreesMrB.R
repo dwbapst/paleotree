@@ -348,11 +348,11 @@ obtainDatedPosteriorTreesMrB <- function(
 			attr(outTree,"fixedTable") <- fixedTable
 			#message("For use in R with paleotree and other packages, you may want to set the root age")
 			if(!is(outTree,"multiPhylo")){
-				#message("Simply use function setRootAges() next")
-				outTree<-setRootAges(outTree)
-			}else{
 				#message("Simply use function setRootAge() next")
 				outTree<-setRootAge(outTree)
+			}else{
+				#message("Simply use function setRootAges() next")
+				outTree<-setRootAges(outTree)
 				}
 			}
 		return(outTree)

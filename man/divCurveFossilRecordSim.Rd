@@ -5,8 +5,8 @@
 \title{Diversity-Curve Plotting for Simulations of Diversification and Sampling In the Fossil Record}
 \usage{
 divCurveFossilRecordSim(fossilRecord, merge.cryptic = TRUE,
-  plotLegend = TRUE, legendPosition = "topleft", curveColors = c("black",
-  "red"), curveLineTypes = c(1, 2))
+  plotLegend = TRUE, legendPosition = "topleft",
+  curveColors = c("black", "red"), curveLineTypes = c(1, 2))
 }
 \arguments{
 \item{fossilRecord}{A list object output by \code{simFossilRecord}, often composed

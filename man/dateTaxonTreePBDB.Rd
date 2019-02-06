@@ -5,7 +5,8 @@
 \title{Date a Taxon-Topology from the Paleobiology Database Using Appearance Data from the API}
 \usage{
 dateTaxonTreePBDB(taxaTree, taxaDataPBDB = taxaTree$taxaDataPBDB,
-  minBranchLen = 0, tipTaxonDateUsed = "shallowestAge", plotTree = FALSE)
+  minBranchLen = 0, tipTaxonDateUsed = "shallowestAge",
+  plotTree = FALSE)
 }
 \arguments{
 \item{taxaTree}{A tree with tip taxon names matching the taxon names

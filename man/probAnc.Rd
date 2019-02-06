@@ -4,8 +4,8 @@
 \alias{probAnc}
 \title{Probability of being a sampled ancestor of another sampled taxon}
 \usage{
-probAnc(p, q, R, mode = "budding", analysis = "directDesc", Mmax = 85,
-  nrep = 10000)
+probAnc(p, q, R, mode = "budding", analysis = "directDesc",
+  Mmax = 85, nrep = 10000)
 }
 \arguments{
 \item{p}{Instantaneous rate of speciation (lambda). If the underlying model assumed is

@@ -6,7 +6,6 @@
 \alias{HurlbertPIE}
 \alias{PIE}
 \alias{ProbabilityInterspecificEncounter}
-\alias{HurlbertPIE}
 \title{Miscellaneous Functions for Community Ecology}
 \usage{
 pairwiseSpearmanRho(x, dropAbsent = "bothAbsent", asDistance = FALSE,

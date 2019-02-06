@@ -4,14 +4,15 @@
 \alias{getTaxaDataPBDB}
 \alias{getCladeTaxaPBDB}
 \alias{getSpecificTaxaPBDB}
-\alias{getSpecificTaxaPBDB}
 \title{Obtaining Data for Sets of Taxa From Paleobiology Database API}
 \usage{
-getCladeTaxaPBDB(taxon, show = c("class", "parent", "app", "img", "entname"),
-  status = "accepted", urlOnly = FALSE, stopIfMissing = FALSE)
+getCladeTaxaPBDB(taxon, show = c("class", "parent", "app", "img",
+  "entname"), status = "accepted", urlOnly = FALSE,
+  stopIfMissing = FALSE)
 
 getSpecificTaxaPBDB(taxa, show = c("class", "parent", "app", "img",
-  "entname"), status = "accepted", urlOnly = FALSE, stopIfMissing = FALSE)
+  "entname"), status = "accepted", urlOnly = FALSE,
+  stopIfMissing = FALSE)
 }
 \arguments{
 \item{taxon}{A single name of a of a higher taxon which you wish to catch

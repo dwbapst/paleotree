@@ -4,7 +4,6 @@
 \alias{durationFreq}
 \alias{make_durationFreqCont}
 \alias{make_durationFreqDisc}
-\alias{make_durationFreqDisc}
 \title{Models of Sampling and Extinction for Taxonomic Duration Datasets}
 \usage{
 make_durationFreqCont(timeData, groups = NULL, drop.extant = TRUE,

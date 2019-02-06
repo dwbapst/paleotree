@@ -4,22 +4,22 @@
 \alias{cal3TimePaleoPhy}
 \alias{bin_cal3TimePaleoPhy}
 \alias{cal3}
-\alias{bin_cal3TimePaleoPhy}
 \title{Three Rate Calibrated 'a posteriori' Time-Scaling of Paleo-Phylogenies}
 \usage{
 cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1,
   anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
-  FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200, step.size = 0.1,
-  randres = FALSE, noisyDrop = TRUE, verboseWarnings = TRUE,
-  diagnosticMode = FALSE, tolerance = 1e-04, plot = FALSE)
-
-bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
-  anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
-  FAD.only = FALSE, sites = NULL, point.occur = FALSE,
-  nonstoch.bin = FALSE, adj.obs.wt = TRUE, root.max = 200,
+  FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200,
   step.size = 0.1, randres = FALSE, noisyDrop = TRUE,
-  verboseWarnings = TRUE, tolerance = 1e-04, diagnosticMode = FALSE,
+  verboseWarnings = TRUE, diagnosticMode = FALSE, tolerance = 1e-04,
   plot = FALSE)
+
+bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate,
+  ntrees = 1, anc.wt = 1, node.mins = NULL,
+  dateTreatment = "firstLast", FAD.only = FALSE, sites = NULL,
+  point.occur = FALSE, nonstoch.bin = FALSE, adj.obs.wt = TRUE,
+  root.max = 200, step.size = 0.1, randres = FALSE,
+  noisyDrop = TRUE, verboseWarnings = TRUE, tolerance = 1e-04,
+  diagnosticMode = FALSE, plot = FALSE)
 }
 \arguments{
 \item{tree}{An unscaled cladogram of fossil taxa, of class \code{phylo}. Tip labels

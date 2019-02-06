@@ -4,7 +4,8 @@
 \alias{horizonSampRate}
 \title{Estimate Sampling Rate from Sampling Horizon Data (Solow and Smith, 1997)}
 \usage{
-horizonSampRate(sampOcc = NULL, durations = NULL, nCollections = NULL)
+horizonSampRate(sampOcc = NULL, durations = NULL,
+  nCollections = NULL)
 }
 \arguments{
 \item{sampOcc}{A list with the number of elements equal to the number of taxa,

@@ -5,8 +5,6 @@
 \alias{taxicDivCont}
 \alias{taxicDivDisc}
 \alias{phyloDiv}
-\alias{taxicDivDisc}
-\alias{phyloDiv}
 \title{Diversity Curves}
 \usage{
 taxicDivCont(timeData, int.length = 1, int.times = NULL, plot = TRUE,

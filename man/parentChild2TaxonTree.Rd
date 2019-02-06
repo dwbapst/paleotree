@@ -4,7 +4,8 @@
 \alias{parentChild2taxonTree}
 \title{Create a Taxonomy-Based Phylogeny ('Taxon Tree') from a Table of Parent-Child Taxon Relationships}
 \usage{
-parentChild2taxonTree(parentChild, tipSet = "nonParents", cleanTree = TRUE)
+parentChild2taxonTree(parentChild, tipSet = "nonParents",
+  cleanTree = TRUE)
 }
 \arguments{
 \item{parentChild}{A two-column matrix of type \code{character} where

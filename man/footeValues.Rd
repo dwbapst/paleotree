@@ -4,8 +4,8 @@
 \alias{footeValues}
 \title{Calculates Values for Foote's Inverse Survivorship Analyses}
 \usage{
-footeValues(p, q, r, PA_n = 0, PB_1 = 0, p_cont = TRUE, q_cont = TRUE,
-  Nb = 1)
+footeValues(p, q, r, PA_n = 0, PB_1 = 0, p_cont = TRUE,
+  q_cont = TRUE, Nb = 1)
 }
 \arguments{
 \item{p}{Instantaneous origination/branching rate of taxa. Under 

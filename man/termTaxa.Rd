@@ -9,9 +9,6 @@
 \alias{simTermTaxaAdvanced}
 \alias{trueTermTaxaTree}
 \alias{deadTree}
-\alias{simTermTaxaAdvanced}
-\alias{trueTermTaxaTree}
-\alias{deadTree}
 \title{Simulating Extinct Clades of Monophyletic Taxa}
 \usage{
 simTermTaxa(ntaxa, sumRate = 0.2)

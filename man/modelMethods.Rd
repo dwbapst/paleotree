@@ -17,32 +17,18 @@
 \alias{parUpper}
 \alias{parUpper.constrained}
 \alias{parUpper.paleotreeFunc}
-\alias{parnames.paleotreeFunc}
-\alias{parnames.constrained}
 \alias{parnames<-}
 \alias{parnames<-.constrained}
 \alias{parnames<-.paleotreeFunc}
-\alias{parbounds}
-\alias{parbounds.paleotreeFunc}
-\alias{parbounds.constrained}
 \alias{parbounds<-}
 \alias{parbounds<-.constrained}
 \alias{parbounds<-.paleotreeFunc}
-\alias{parLower}
-\alias{parLower.constrained}
-\alias{parLower.paleotreeFunc}
 \alias{parLower<-}
 \alias{parLower<-.constrained}
 \alias{parLower<-.paleotreeFunc}
-\alias{parUpper}
-\alias{parUpper.constrained}
-\alias{parUpper.paleotreeFunc}
 \alias{parUpper<-}
 \alias{parUpper<-.constrained}
 \alias{parUpper<-.paleotreeFunc}
-\alias{parInit}
-\alias{parInit.constrained}
-\alias{parInit.paleotreeFunc}
 \title{Model Function Methods: Parameter Names, Bounds and Initial Values}
 \usage{
 parnames(x, ...)

@@ -7,10 +7,6 @@
 \alias{dropExtant}
 \alias{addTermBranchLength}
 \alias{fixRootTime}
-\alias{dropExtinct}
-\alias{dropExtant}
-\alias{addTermBranchLength}
-\alias{fixRootTime}
 \alias{dropPaleoTip}
 \alias{bindPaleoTip}
 \title{Modify, Drop or Bind Terminal Branches of Various Types (Mainly for Paleontological Phylogenies)}

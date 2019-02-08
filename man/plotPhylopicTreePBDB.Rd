@@ -6,7 +6,8 @@
 \usage{
 plotPhylopicTreePBDB(tree, taxaDataPBDB = tree$taxaDataPBDB,
   size = 0.9, noiseThreshold = 0.1, extraMargin = 0.2,
-  rescalePNG = TRUE, trimPNG = TRUE, makeMonochrome = FALSE)
+  rescalePNG = TRUE, trimPNG = TRUE, makeMonochrome = FALSE,
+  cacheDir = NULL)
 }
 \arguments{
 \item{tree}{A phylogeny of class \code{phylo} which will be
@@ -41,6 +42,10 @@ to exist to indicate very fine features. However, maybe an image
 is far too much gray-scale, in which case users can try this
 option to force all silhouettes to be monochrome.
 The default is \code{FALSE}.}
+
+\item{cacheDir}{If not \code{NULL}, first look here for a cached
+version of the images. This makes loading faster.
+The default is \code{NULL}.}
 }
 \value{
 This function returns nothing - it just plots the input tree with
@@ -63,7 +68,7 @@ This function preferably will pull the identifiers for which images are to be as
 
 
 # now plot with phylopic images
-plotPhylopicTreePBDB(tree = tree, 
+plotPhylopicTreePBDB(tree = tree,
 	taxaDataPBDB = taxaData)
 
 }

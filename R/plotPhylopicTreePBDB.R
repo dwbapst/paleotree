@@ -225,12 +225,12 @@ plotPhylopicTreePBDB <- function(
 #' @export
 
 cachePhyloPicPNG <- function(
-	tree, taxaDataPBDB= tree$taxaDataPBDB, cacheDir
+	tree, taxaDataPBDB= tree$taxaDataPBDB, cacheDir, ...
 ){
 	ids <- getPhyloPicIDNum(taxaData=taxaDataPBDB, tree=tree)
 	for(i in seq_along(ids)) {
-		picPNG <- getPhyloPicPNG(ids[i])
-		magick::image_write(picPNG, path=file.path(cacheDir, paste0(ids[i], ".png")), format="png")
+		picPNG <- getPhyloPicPNG(ids[i], ...)
+		png::writePNG(picPNG, target=file.path(cacheDir, paste0(ids[i], ".png")))
 	}
 }
 
@@ -267,10 +267,10 @@ getPhyloPicPNG<-function(
 	#  image(picPNG [,,4])
 	########################
 	# RESCALE PALETTE
-	sliceOriginal <- picPNG[,,4]
+	sliceOriginal <- picPNG[,,dim(picPNG)[3]]
 	if(rescalePNG){
 		#rescale pic so that min is 0 and max is 1
-		picPNG[,,4] <- picPNG[,,4]-abs(min(picPNG[,,4]))
+		picPNG[,,dim(picPNG)[3]] <- picPNG[,,dim(picPNG)[3]]-abs(min(picPNG[,,dim(picPNG)[3]]))
 		picPNG <- picPNG/max(picPNG)
 		#picPNG <- picPNG^0.75
 		}
@@ -278,7 +278,7 @@ getPhyloPicPNG<-function(
 	###################
 	# TRIM THE PHYLOPIC
 		# lots of phylopics have contiguous whitespace at the top/bottom
-	sliceContrasted <- picPNG[,,4]
+	sliceContrasted <- picPNG[,,dim(picPNG)[3]]
 	if(trimPNG){
 		sliceContrasted[sliceContrasted  < noiseThreshold] <- 0
 		# find all rows of the PNG from the top AND bottom
@@ -312,7 +312,7 @@ getPhyloPicPNG<-function(
 		par(mar=c(0,0,0,0))
 		graphics::image(sliceOriginal)
 		graphics::image(sliceContrasted)
-		graphics::image(picPNG [,,4])
+		graphics::image(picPNG [,,dim(picPNG)[3]])
 		}
 	return(picPNG)
 	}

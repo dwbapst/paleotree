@@ -4,7 +4,7 @@
 \alias{cachePhyloPicPNG}
 \title{Cache phylopic images for a tree}
 \usage{
-cachePhyloPicPNG(tree, taxaDataPBDB = tree$taxaDataPBDB, cacheDir, ...)
+cachePhyloPicPNG(tree, taxaDataPBDB, cacheDir)
 }
 \arguments{
 \item{tree}{A phylogeny of class \code{phylo} which will be

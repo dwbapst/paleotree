@@ -53,6 +53,8 @@
 #' version of the images. This makes loading faster.
 #' The default is \code{NULL}.
 
+#' @param ... Other arguments to pass to plotting code
+
 
 # @param phylopicIDsPBDB ID numbers for images from Phylopic,
 # as given by the Paleobiology Database's API under the output
@@ -110,7 +112,8 @@ plotPhylopicTreePBDB <- function(
 		rescalePNG = TRUE,
 		trimPNG = TRUE,
 		makeMonochrome = FALSE,
-		cacheDir = NULL
+		cacheDir = NULL,
+		...
 		){
 	#########################################
 	# uses calls to the Paleobiology Database's API
@@ -137,7 +140,7 @@ plotPhylopicTreePBDB <- function(
 	par(new = TRUE)
 	plot.phylo(tree,
 		x.lim = new_xlim,
-		show.tip.label = FALSE)
+		show.tip.label = FALSE, ...)
 	##########################################
 	# now get the last plotting environment
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
@@ -225,12 +228,12 @@ plotPhylopicTreePBDB <- function(
 #' @export
 
 cachePhyloPicPNG <- function(
-	tree, taxaDataPBDB= tree$taxaDataPBDB, cacheDir, ...
+	tree, taxaDataPBDB, cacheDir
 ){
 	ids <- getPhyloPicIDNum(taxaData=taxaDataPBDB, tree=tree)
 	for(i in seq_along(ids)) {
-		picPNG <- getPhyloPicPNG(ids[i], ...)
-		png::writePNG(picPNG, target=file.path(cacheDir, paste0(ids[i], ".png")))
+		picPNG <- getPhyloPicPNG(ids[i])
+		magick::image_write(picPNG, path=file.path(cacheDir, paste0(ids[i], ".png")), format="png")
 	}
 }
 
@@ -267,10 +270,10 @@ getPhyloPicPNG<-function(
 	#  image(picPNG [,,4])
 	########################
 	# RESCALE PALETTE
-	sliceOriginal <- picPNG[,,dim(picPNG)[3]]
+	sliceOriginal <- picPNG[,,4]
 	if(rescalePNG){
 		#rescale pic so that min is 0 and max is 1
-		picPNG[,,dim(picPNG)[3]] <- picPNG[,,dim(picPNG)[3]]-abs(min(picPNG[,,dim(picPNG)[3]]))
+		picPNG[,,4] <- picPNG[,,4]-abs(min(picPNG[,,4]))
 		picPNG <- picPNG/max(picPNG)
 		#picPNG <- picPNG^0.75
 		}
@@ -278,7 +281,7 @@ getPhyloPicPNG<-function(
 	###################
 	# TRIM THE PHYLOPIC
 		# lots of phylopics have contiguous whitespace at the top/bottom
-	sliceContrasted <- picPNG[,,dim(picPNG)[3]]
+	sliceContrasted <- picPNG[,,4]
 	if(trimPNG){
 		sliceContrasted[sliceContrasted  < noiseThreshold] <- 0
 		# find all rows of the PNG from the top AND bottom
@@ -312,7 +315,7 @@ getPhyloPicPNG<-function(
 		par(mar=c(0,0,0,0))
 		graphics::image(sliceOriginal)
 		graphics::image(sliceContrasted)
-		graphics::image(picPNG [,,dim(picPNG)[3]])
+		graphics::image(picPNG [,,4])
 		}
 	return(picPNG)
 	}

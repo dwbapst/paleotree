@@ -134,7 +134,7 @@ plotPhylopicTreePBDB <- function(
 		# *not* plotting a tree
 	outPlot <- plot.phylo(tree,
 		plot=FALSE,
-		show.tip.label=FALSE)
+		show.tip.label=FALSE, ...)
 	old_xlim <- outPlot$x.lim[2]
 	new_xlim <- old_xlim * (1 + extraMargin)
 	par(new = TRUE)

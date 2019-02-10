@@ -7,7 +7,7 @@
 plotPhylopicTreePBDB(tree, taxaDataPBDB = tree$taxaDataPBDB,
   size = 0.9, noiseThreshold = 0.1, extraMargin = 0.2,
   rescalePNG = TRUE, trimPNG = TRUE, makeMonochrome = FALSE,
-  cacheDir = NULL, ...)
+  cacheDir = NULL, focalTaxon = NULL, ...)
 }
 \arguments{
 \item{tree}{A phylogeny of class \code{phylo} which will be
@@ -46,6 +46,8 @@ The default is \code{FALSE}.}
 \item{cacheDir}{If not \code{NULL}, first look here for a cached
 version of the images. This makes loading faster.
 The default is \code{NULL}.}
+
+\item{focalTaxon}{If not \code{NULL}, which taxon to highlight red}
 
 \item{...}{Other arguments to pass to plotting code}
 }

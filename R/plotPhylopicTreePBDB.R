@@ -53,6 +53,8 @@
 #' version of the images. This makes loading faster.
 #' The default is \code{NULL}.
 
+#' @param focalTaxon If not \code{NULL}, which taxon to highlight red
+
 #' @param ... Other arguments to pass to plotting code
 
 
@@ -113,6 +115,7 @@ plotPhylopicTreePBDB <- function(
 		trimPNG = TRUE,
 		makeMonochrome = FALSE,
 		cacheDir = NULL,
+		focalTaxon = NULL,
 		...
 		){
 	#########################################
@@ -197,7 +200,13 @@ plotPhylopicTreePBDB <- function(
 		#
 		##################################################
 		# plot the picPNG using graphics::rasterImage
-		graphics::rasterImage(picPNG,
+		picPNG_raster <- grDevices::as.raster(picPNG)
+		if(!is.null(focalTaxon)) {
+			if(tree$tip.label[i]==focalTaxon) {
+				picPNG_raster[which(picPNG_raster=="#000000FF")] <- "#FF0000FF"
+			}
+		}
+		graphics::rasterImage(picPNG_raster,
 			xleft = x - xAdj ,
 			ybottom = y - yAdj ,
 			xright = x + xAdj ,

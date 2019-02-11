@@ -74,8 +74,7 @@
 
 
 #' @return
-#' This function returns nothing - it just plots the input tree with
-#' silhouettes from the PhyloPic database.
+#' This returns the positions for elements in the tree
 
 #' @seealso
 #' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
@@ -215,7 +214,7 @@ plotPhylopicTreePBDB <- function(
 			)
 		# cool
 		}
-	# what to return? nothing I guess
+		return(lastPP)
 	}
 
 #' Cache phylopic images for a tree

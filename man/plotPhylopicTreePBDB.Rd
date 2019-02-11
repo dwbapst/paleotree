@@ -52,8 +52,7 @@ The default is \code{NULL}.}
 \item{...}{Other arguments to pass to plotting code}
 }
 \value{
-This function returns nothing - it just plots the input tree with
-silhouettes from the PhyloPic database.
+This returns the positions for elements in the tree
 }
 \description{
 This function will take a phylogeny, preferably a taxonomy-tree

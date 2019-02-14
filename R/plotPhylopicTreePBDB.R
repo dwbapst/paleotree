@@ -54,15 +54,11 @@
 # as given by the Paleobiology Database's API under the output
 # \code{image_no} (given when \code{show = img}).
 
-# note size is vertical, proportional to the space between tips
-	# max horizontal size stops flat / long phylopics from becoming overly huge
+#' @param ... Additional arguments, passed to
+#' \code{plot.phylo} for plotting of the tree. These
+#' additional arguments may be passed to \code{plot},
+#' and from there to \code{plot}.
 
-# set x.lim so plot x limits is * (1 + extraMargin)
-# where 1 is the tree height (effectively)
-
-# noiseThreshold threshold for noise in the PNG from Phylopic to be
-# treated as meaningless noise (i.e. a color that is effectively whitespace)
-# and thus can be trimmed as margin to be trimmed by the function
 
 
 #' @return
@@ -93,6 +89,18 @@
 #' 
 
 
+
+# note size is vertical, proportional to the space between tips
+	# max horizontal size stops flat / long phylopics from becoming overly huge
+
+# set x.lim so plot x limits is * (1 + extraMargin)
+# where 1 is the tree height (effectively)
+
+# noiseThreshold threshold for noise in the PNG from Phylopic to be
+# treated as meaningless noise (i.e. a color that is effectively whitespace)
+# and thus can be trimmed as margin to be trimmed by the function
+
+
 #' @name plotPhylopicTreePBDB
 #' @rdname plotPhylopicTreePBDB
 #' @export
@@ -105,7 +113,8 @@ plotPhylopicTreePBDB <- function(
 		extraMargin = 0.2,
 		rescalePNG = TRUE,
 		trimPNG = TRUE,
-		makeMonochrome = FALSE
+		makeMonochrome = FALSE,
+		...
 		){		
 	#########################################
 	# uses calls to the Paleobiology Database's API
@@ -124,15 +133,23 @@ plotPhylopicTreePBDB <- function(
 		# where 1 is the tree height (effectively)
 	# calculate new x.lim by
 		# *not* plotting a tree
-	outPlot <- plot.phylo(tree,
-		plot=FALSE,
-		show.tip.label=FALSE)
+	outPlot <- 	plot.phylo(
+		tree,
+		x.lim = new_xlim,
+		show.tip.label = FALSE,
+		...
+		)
 	old_xlim <- outPlot$x.lim[2]
 	new_xlim <- old_xlim * (1 + extraMargin)
+	#####
 	par(new = TRUE)
-	plot.phylo(tree,
+	#####
+	plot.phylo(
+		tree,
 		x.lim = new_xlim,
-		show.tip.label = FALSE)
+		show.tip.label = FALSE,
+		...
+		)
 	##########################################
 	# now get the last plotting environment
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)

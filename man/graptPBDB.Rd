@@ -49,12 +49,16 @@ pie(sort(table(graptOccPBDB$authorizer)))
 
 # Let's look at age resolution of these occurrences
 hist(graptOccPBDB$early_age-graptOccPBDB$late_age,
-	main = "Age Resolution of Occurrences", xlab = "Ma")
+		main = "Age Resolution of Occurrences", xlab = "Ma")
 
 #distribution of taxa among taxonomic ranks
 table(graptTaxaPBDB$taxon_rank)
 barplot(table(graptTaxaPBDB$taxon_rank))
 
+}
+\references{
+Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
+application programming interface. \emph{Paleobiology} 42(1):1-7.
 }
 \seealso{
 \code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}}, \code{\link{makePBDBtaxonTree}}, \code{\link{plotOccData}}

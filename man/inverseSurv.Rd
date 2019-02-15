@@ -6,8 +6,9 @@
 \alias{invSurv}
 \title{Inverse Survivorship Models in the Fossil Record}
 \usage{
-make_inverseSurv(timeList, groups = NULL, p_cont = TRUE, q_cont = TRUE,
-  PA_n = "fixed", PB_1 = 0, Nb = 1, drop.extant = TRUE)
+make_inverseSurv(timeList, groups = NULL, p_cont = TRUE,
+  q_cont = TRUE, PA_n = "fixed", PB_1 = 0, Nb = 1,
+  drop.extant = TRUE)
 }
 \arguments{
 \item{timeList}{A 2 column matrix with the first and last occurrences of taxa
@@ -211,7 +212,7 @@ thus forewarned of this essentially 'beta' status of this function.
 # let's simulate some taxon ranges from an imperfectly sampled fossil record
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 rangesCont <- sampleRanges(taxa,r = 0.5)
 #bin the ranges into discrete time intervals

@@ -94,7 +94,7 @@
 #' 	 # simulated datasets from simFossilRecord, like so:
 #' set.seed(444)
 #' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#'	nTotalTaxa = c(30,40), nExtant = 0)
+#' 	nTotalTaxa = c(30,40), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' # need to reorder the columns so parents (ancestors) first, then children 
 #' parentChild2taxonTree(taxa[,2:1])

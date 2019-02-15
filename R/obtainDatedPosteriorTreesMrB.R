@@ -231,7 +231,7 @@ obtainDatedPosteriorTreesMrB <- function(
 			}
 		fixedTable <- getMrBFixedAgesFromNexus(originalNexusFile)
 		if(nrow(fixedTable)==0 & getRootAges){
-			stop("No fixed ages found for obtainting $root.time, cannot use argument getRootAges = TRUE")
+			stop("No fixed ages found for obtaining $root.time, cannot use argument getRootAges = TRUE")
 			}
 	}else{
 		fixedTable <- NULL
@@ -347,7 +347,7 @@ obtainDatedPosteriorTreesMrB <- function(
 		if(!is.null(fixedTable)){
 			attr(outTree,"fixedTable") <- fixedTable
 			#message("For use in R with paleotree and other packages, you may want to set the root age")
-			if(!is(outTree,"multiPhylo")){
+			if(is(outTree,"multiPhylo")){
 				#message("Simply use function setRootAges() next")
 				outTree<-setRootAges(outTree)
 			}else{

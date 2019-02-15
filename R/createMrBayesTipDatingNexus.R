@@ -110,7 +110,7 @@
 #' determined entirely by the fossilized birth-death prior, with no impact from a
 #' presupposed morphological clock (thus a 'clock-less analysis').
 
-#' @param runName The name of the run, used for naming the log files. 
+#' @param runName The name of the run, used for naming the log files and MCMC output files. 
 #' If not set, the name will be taken from the name given for outputting
 #' the NEXUS script (\code{newFile}). If \code{newFile} is not given, and
 #' \code{runName} is not set by the user, the default run name will be  "new_run_paleotree".
@@ -118,6 +118,11 @@
 #' @param doNotRun If \code{TRUE}, the commands that cause a script to automatically begin running in 
 #' \emph{MrBayes} will be left out. Useful for troubleshooting initial runs of scripts for non-fatal errors and
 #' warnings (such as ignored constraints). Default for this argument is \code{FALSE}.
+
+#' @param autoCloseMrB If \code{TRUE}, the MrBayes script created by this function will
+#' 'autoclose', so that when an MCMC run finishes the specified number of generations,
+#' it does not interactively check whether to continue the MCMC. This is often necessary
+#' for batch analyses.
 
 #' @param treeConstraints An object of class \code{phylo}, 
 #' from which (if \code{treeConstraints} is supplied) the set topological constraints are derived, as
@@ -131,8 +136,21 @@
 #' The default is a model which makes very 'strong' assumptions about the process of morphological evolution,
 #' while the 'relaxed' alternative allows for considerably more heterogeneity in the rate
 #' of morphological evolution across characters, and in the forward and reverse transition
-#' rates between states. Note that in both cases, the character data is assumed to be filtered
-#' to only parsimony-informative characters, without autapomorphies.
+#' rates between states. Also see argument \code{morphFiltered}.
+
+#' @param morphFiltered This argument controls what type of filtering the input
+#' morphological data is assumed to have been collected under. The likelihood of
+#' the character data will be modified to take into account the apparent filtering
+#' (Lewis, 2001; Allman et al., 2010). The default value, \code{"parsInf"}, forces
+#' characters to be treated as if they were collected as part of a parsimony-based
+#' study, with constant characters and autapomorphies (characters that only differ
+#' in state in a single taxon unit) ignored or otherwise filtered out, and any such
+#' characters in the presented matrix will be ignored. \code{morphFiltered = "variable"}
+#' assumes that while constant characters are still filtered out (e.g. it is
+#' difficult or impossible to count the number of morphological characters that
+#' show no variation across a group), the autapomorphies were intentionally collected
+#' and included in the presented matrix. Thus, constant characters in the included
+#' matrix will be ignored, but autapomorphies will be considered. 
 
 #' @param cleanNames If \code{TRUE} (the default), then special characters
 #' (currently, this only contains the forward-slashes: '/') are removed from
@@ -293,8 +311,10 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 							collapseUniform = TRUE,anchorTaxon = TRUE,
 							newFile = NULL,origNexusFile = NULL, 
 							parseOriginalNexus = TRUE,createEmptyMorphMat = TRUE,
-							orderedChars=NULL, morphModel = "strong",
-							runName = NULL, ngen = "100000000", doNotRun = FALSE,
+							orderedChars=NULL, 
+							morphModel = "strong", morphFiltered = "parsInf",
+							runName = NULL, ngen = "100000000",
+							doNotRun = FALSE, autoCloseMrB = FALSE,
 							cleanNames = TRUE, printExecute = TRUE){
 	################################################################################################
 	#         # a wooper of a function ... here's some ASCII from artist 'Psyduck'
@@ -652,6 +672,8 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 		}
 	# use run name as log file name
 	logfileline <- paste0('log start filename = "',runName,'.out" replace;')
+	# use run name for MCMC output files
+	outputNameLine <- paste0('Filename = "',runName,'"')
 	########################################################
 	#	
 	if(is.null(treeConstraints)){
@@ -677,10 +699,13 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 		ingroupBlock = ingroupConstraint,
 		ageBlock = ageCalibrations, 
 		constraintBlock = topologicalConstraints,
-		orderedChars=orderedChars,		
+		orderedChars=orderedChars,
+		autoCloseMrB = autoCloseMrB,
 		morphModel = morphModel, 
+		morphFiltered = morphFiltered,
 		ngen = ngen, 
-		doNotRun = doNotRun)
+		doNotRun = doNotRun,
+		outputNameLine = outputNameLine)
 	###############################################
 	# combine morph matrix block with MrBayes command block
 	finalText <- c(morphNexus,MrBayesBlock)
@@ -782,8 +807,12 @@ makeEmptyMorphNexusMrB <- function(taxonNames){
 
 
 
-makeMrBayesBlock <- function(logBlock,ingroupBlock,ageBlock,orderedChars,
-							constraintBlock,morphModel = "strong",ngen = 100000000,doNotRun = FALSE){
+makeMrBayesBlock <- function(logBlock, ingroupBlock,
+							ageBlock, orderedChars, autoCloseMrB,
+							constraintBlock, morphModel = "strong",
+							morphFiltered="parsInf",
+							ngen = 100000000, doNotRun = FALSE,
+							outputNameLine = outputNameLine){
 #########################################################################################						
 	###
 	### # what follows will look very messy due to its untabbed nature
@@ -797,9 +826,14 @@ begin mrbayes;
      William Gearty, Graham Slater, Davey Wright, and guided by the 
 	 recommendations of Matzke and Wright, 2016, Biol. Lett.]
 
-[no autoclose, I like it to ask, but you might want it]
-	[set autoclose = yes;]
-"
+[autoclose, I like it to ask (the default), but you might want it - if so, set to 'yes']"
+
+if(autoCloseMrB){
+	block1 <- c(block1,"set autoclose = yes;\n")
+}else{
+	block1 <- c(block1,"[set autoclose = yes;]\n")
+	}
+
 ##########################################################################
 block2 <- "
 [DATA]
@@ -835,7 +869,17 @@ if(!is.null(orderedChars)){
 	}
 
 ##############################################################################
-morphModelBlock_Strong <- "
+if(morphFiltered == "parsInf"){
+	filteredType <- "informative"
+	}
+if(morphFiltered == "variable"){
+	filteredType <- "variable"
+	}
+if(is.null(filteredType)){
+	stop("morphFiltered must be one of 'parsInf' or 'variable'")
+	}
+
+morphModelBlock_Strong <- paste0("
 
 [CHARACTER MODELS]
 	
@@ -844,16 +888,18 @@ morphModelBlock_Strong <- "
 	[default: use pars-informative coding]
 	
 	[set coding and rates - default below maximizes information content]
-		lset  nbetacat = 5 rates = equal Coding = informative; [equal rate variation]
+		lset  nbetacat = 5 rates = equal Coding = ",
+filteredType,
+		"; [equal rate variation]
 		[lset  nbetacat = 5 rates = gamma Coding = informative;   [gamma distributed rate variation]]
 			[gamma distributed rates may cause divide by zero problems with non-fixed symdiri]
 	[symdirhyperpr prior, fixed vs. variable]	
 		prset symdirihyperpr = fixed(infinity);		
 		[prset symdirihyperpr = uniform(1,10);      [this range seems to avoid divide by zero error]]
 
-"
+")
 
-morphModelBlock_Relaxed <- "
+morphModelBlock_Relaxed <- paste0("
 
 [CHARACTER MODELS]
 	
@@ -862,14 +908,16 @@ morphModelBlock_Relaxed <- "
 	[default: use pars-informative coding]
 	
 	[set coding and rates - default below maximizes information content]
-		[lset  nbetacat = 5 rates = equal Coding = informative; [equal rate variation]]
+		[lset  nbetacat = 5 rates = equal Coding = ",
+filteredType,
+		"; [equal rate variation]]
 		lset  nbetacat = 5 rates = gamma Coding = informative;   [gamma distributed rate variation]
 			[gamma distributed rates may cause divide by zero problems with non-fixed symdiri]
 	[symdirhyperpr prior, fixed vs. variable]	
 		[prset symdirihyperpr = fixed(infinity);]		
 		prset symdirihyperpr = uniform(1,10);      [this range seems to avoid divide by zero error]
 
-"
+")
 	
 #############################################################################
 block4 <- "
@@ -950,7 +998,7 @@ runBlock <- "
 		morphModelBlock <- morphModelBlock_Relaxed
 		}
 	# insert ngen
-	block5 <- paste0(block5a,ngen,block5b)
+	block5 <- paste0(block5a,ngen," ",outputNameLine,block5b)
 	####################
 	finalBlock <- c(
 		block1,

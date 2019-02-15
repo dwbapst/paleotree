@@ -7,7 +7,7 @@
 #' 
 #' \code{accioExhaustionCurve} uses a Sankoff parsimony ancestral-reconstruction
 #' algorithm (written by PJ Wagner, \emph{not} the one from \code{phangorn} used
-#' elsewhere in paleotree) to calculate character changes across each branch
+#' elsewhere in \code{paleotree}) to calculate character changes across each branch
 #' (internode edge) of a tree, and then reports the counts of character state
 #" changes, new state changes, etc. 
 #' 
@@ -21,21 +21,23 @@
 #'
 
 #' @details
-#' The functions \code{accioBestAcquisitionModel}  and \code{charExhaustPlot} offer
+#' The functions \code{accioBestAcquisitionModel} 
+#' and \code{charExhaustPlot} offer
 #' users two different options for examining character change: \code{totalAcc}
 #' fits models to the total accumulated number of state changes over the phylogeny,
 #' thus using exhaustion to explor the size and distribution of character space. The
 #' other option \code{charAlt} fits models to the number of character that alter from
 #' primitive to derived over phylogeny, thus reflecting the size and distribution of state space.
 #' 
-#' \code{accioExhaustionCurve} can order its reconstruction of change by stratigraphic order of first appearances. It is unclear what this means.
+#' \code{accioExhaustionCurve} can order its reconstruction
+#' of change by stratigraphic order of first appearances. It is unclear what this means.
 
 #' @param charData A \code{data.frame} of morphological character
 #' codings (a morphological 'matrix'), with taxon units
 #' as rows and characters as columns.
 
 #' @param charTypes A vector of length equal to
-#' the number of chaacters in \code{charData}, with elements indicating
+#' the number of characters in \code{charData}, with elements indicating
 #' whether the corresponding character in \code{charData}
 #' is \code{"unordered"} or \code{"ordered"}. However,
 #' if \code{length(charTypes) = 1}, then it is repeated for all taxa.
@@ -45,7 +47,8 @@
 #' of the tip labels as given by \code{tip.label}, 
 
 #' @param firstAppearances A vector, with length equal to the
-#' same number of taxa (rows) as in \code{charData}, in the same corresponding order.
+#' same number of taxa (rows) as in
+#' \code{charData}, in the same corresponding order.
 
 #' @param missingCharValue The string value indicating a missing
 #' character coding value, by default \code{"?"}.
@@ -53,7 +56,8 @@
 #' @param inapplicableValue The string value indicating an
 #' inapplicable character coding value, by default \code{"-"}.
 
-# @param changes A vector counting character change; the extraction of this is automated if you use .
+# @param changes A vector counting character change;
+#' the extraction of this is automated if you use .
 
 #' @param phyloTree A phylogenetic tree of class \code{phylo} as used by package \code{ape}.
 
@@ -63,14 +67,20 @@
 #' @param exhaustion_info The list of results output
 #' from function \code{accioExhaustionCurve}.
 
-#' @param changesType A single character value, indicating the character change data
+#' @param changesType A single character value,
+#' indicating the character change data
 #' to be assessed from the result of the character
-#' exhaustion analysis, must be one of either 'totalAcc' (to the total number of
-#' accumulated character changes, ideal for modeling the size and distribution of
-#' \emph{state} space) or 'charAlt' (to plot the total number of character alterations,
-#' ideal for modeling the size and distribution of \emph{character} space).
+#' exhaustion analysis, must be one of either
+#' \code{'totalAcc'} (to the total number of
+#' accumulated character changes, ideal for
+#' modeling the size and distribution of
+#' \emph{state} space) or \code{'charAlt'}
+#' (to plot the total number of character alterations,
+#' ideal for modeling the size and
+#' distribution of \emph{character} space).
 
-#' @param xlab Label for the X axis; \code{"Total Characters"} by default.
+#' @param xlab Label for the X axis;
+#' \code{"Total Characters"} by default.
 
 #' @param ylab Label for the Y axis. If not provided by the user,
 #' a label based on the \code{changesType} argument will be used.
@@ -78,7 +88,7 @@
 #' @param main Main title label for the plot. If not provided by
 #' the user, a label based on the \code{changesType} argument will be used.
 
-#' @param xsize Parameter controling size of the axes,
+#' @param xsize Parameter controlling size of the axes,
 #' which are forced to be symmetric.
 
 #' @return
@@ -90,9 +100,12 @@
 #' a count of how often each state, across all characters, was derived relative
 #' to the primitive position along each internode edge.
 #' 
-#' The output of \code{accioBestAcquisitionModel} is a list object containing
-#' information on the best-fit model, the parameters of that model, the calculated
-#' probabilition distribution for that model at the same intervals, for use in quantile plots.	
+#' The output of \code{accioBestAcquisitionModel}
+#' is a list object containing
+#' information on the best-fit model, the
+#' parameters of that model, the calculated
+#' probabilition distribution for that model
+#' at the same intervals, for use in quantile plots.	
 #' 
 #' \code{charExhaustPlot} produces a plot, and outputs no data.
 	
@@ -103,13 +116,14 @@
 #' by Peter J. Wagner, and then modified and adapted by David W.
 #' Bapst for wider release  in a CRAN-distributed
 #' package: \code{paleotree}. This makes the code presented here
-#' a very different beast than typical paleotree code, for
+#' a very different beast than typical \code{paleotree} code, for
 #' example, there are fewer tests of correct input type, length, etc.
 
 #' @seealso
 #' Also see \code{paleotree} functions \code{\link{minCharChange}} and
 #' \code{\link{ancPropStateMat}}, the latter of which is a wrapper
-#' for \code{phangorn}'s function \code{\link[phangorn]{ancestral.pars}}.
+#' for \code{phangorn}'s function
+#' \code{\link[phangorn:ancestral.pml]{ancestral.pars}}.
 
 #' @author 
 #' Initially written by Peter J. Wagner, with modification
@@ -135,21 +149,24 @@
 #' # replace missing values
 #' charMat[is.na(charMatDicrano)] <- "?"
 #' 
-#' # the 'outgroup' is Exigraptus, first taxon listed in the matrix
-#' exhaustionResults <- accioExhaustionCurve(phyloTree = dicranoTree,
+#' # the 'outgroup' is Exigraptus
+#'    # also the first taxon listed in the matrix
+#' exhaustionResults <- accioExhaustionCurve(
+#'    phyloTree = dicranoTree,
 #'    charData = charMat, charTypes = "unordered",
 #'    outgroup = "Exigraptus_uniformis")
 #'
 #' # fits models to exhaustion for total accumulation
-#' accioBestAcquisitionModel(exhaustion_info = exhaustionResults,
-#'  changesType = "totalAcc", 	
-#'  models = c("exponential","gamma","lognormal","zipf")) 
+#' accioBestAcquisitionModel(
+#'    exhaustion_info = exhaustionResults,
+#'    changesType = "totalAcc", 	
+#'    models = c("exponential","gamma","lognormal","zipf")) 
 #' 
-#' # plot of exhausation of total accumulation of character states
+#' # plot of exhaustion of total accumulation of character states
 #' charExhaustPlot(exhaustion_info = exhaustionResults,
 #' 	   changesType = "totalAcc")
 #' 
-#' # plot of exhausation of character alterations
+#' # plot of exhaustion of character alterations
 #' charExhaustPlot(exhaustion_info = exhaustionResults,
 #' 	   changesType = "charAlt")
 #' 
@@ -181,9 +198,14 @@
 #' @name exhaustionFunctions
 #' @rdname exhaustionFunctions
 #' @export
-accioExhaustionCurve <- function(phyloTree,charData,
-	charTypes = "unordered",outgroup = NULL,firstAppearances = NULL,
-	missingCharValue = "?",inapplicableValue = "-")	{
+accioExhaustionCurve <- function(
+		phyloTree,charData,
+		charTypes = "unordered",
+		outgroup = NULL,
+		firstAppearances = NULL,
+		missingCharValue = "?",
+		inapplicableValue = "-" ){
+	##################################################################
 	#
 	# sorry pete, but paleotree is camelCase... ;)
 	#
@@ -195,7 +217,8 @@ accioExhaustionCurve <- function(phyloTree,charData,
 		stop("Number of tips on phylotree doesn't match number of taxa in charData")
 		}
 	mtree <- phyloTree
-	mtree$tip.label <- match(phyloTree$tip.label,rownames(charData))
+	mtree$tip.label <- match(phyloTree$tip.label,
+		rownames(charData))
 	mtree <- accio_matrix_tree_from_ape_tree(mtree)	
 	#
 	# based on routine used in Wagner (2000).  Uses simple parsimony optimization
@@ -228,8 +251,13 @@ accioExhaustionCurve <- function(phyloTree,charData,
 			}
 		}
 	#
-	char_history <- accio_minimum_steps_history(mtree = mtree,charData = charData,charTypes = charTypes,
-		missingCharValue = missingCharValue,inapplicableValue = inapplicableValue,outgroupID = outgroupID)
+	char_history <- accio_minimum_steps_history(
+		mtree = mtree,
+		charData = charData,
+		charTypes = charTypes,
+		missingCharValue = missingCharValue,
+		inapplicableValue = inapplicableValue,
+		outgroupID = outgroupID)
 	#
 	if (is.null(firstAppearances))	{
 		# order branches from base of the tree
@@ -256,13 +284,18 @@ accioExhaustionCurve <- function(phyloTree,charData,
 	rb <- length(rel_branches)
 	#
 	char_deriv <- vector(length = nchar)
-	exhaust_matrix <- matrix(0,max(char_history$Changes[,2]),max(char_history$Changes[,3]))
+	exhaust_matrix <- matrix(0,
+		max(char_history$Changes[,2]),
+		max(char_history$Changes[,3])
+		)
 	found <- total_steps <- novel_chars <- novel_states <- 0
 	for (b in 1:rb)	{
 		br <- rel_branches[b]
 		#br_ch <- sum(char_history$Changes[,1] == br)
 		#if (br_ch>0)	{
-		local_change <- subset(char_history$Changes,char_history$Changes[,1] == br)
+		local_change <- subset(
+			char_history$Changes,
+			char_history$Changes[,1] == br)
 		char_deriv[local_change[,2]] <- char_deriv[local_change[,2]]+1
 		novel_chars <- novel_chars + sum(char_deriv[local_change[,2]] == 1)
 		for (d in 1:branch_derivs[br])	{
@@ -274,7 +307,9 @@ accioExhaustionCurve <- function(phyloTree,charData,
 				st <- local_change[3]
 				}
 			exhaust_matrix[ch,st] <- exhaust_matrix[ch,st]+1
-			if (exhaust_matrix[ch,st] == 1)	novel_states <- novel_states+1
+			if (exhaust_matrix[ch,st] == 1){
+				novel_states <- novel_states+1
+				}
 			}
 		total_steps <- total_steps+branch_derivs[br]
 		if (exhaust_order[b]<10){
@@ -368,13 +403,20 @@ accioBestAcquisitionModel <- function(exhaustion_info,changesType,
 			}
 		}
 	output <- list(best_model,best_H,best_dist)
-	names(output) <- c("Best_Model","Best_Model_Parameters","Best_Distribution")
+	names(output) <- c(
+		"Best_Model",
+		"Best_Model_Parameters",
+		"Best_Distribution")
 	return(output)
 	}
 
 #' @rdname exhaustionFunctions
 #' @export
-charExhaustPlot <- function(exhaustion_info,changesType,xlab = "Total Characters",ylab = NULL,main = NULL,xsize = 3){
+charExhaustPlot <- function(
+		exhaustion_info, changesType, 
+		xlab = "Total Characters", ylab = NULL,
+		main = NULL, xsize = 3){
+	#############################################
 	#
 	abcissa <- xlab
 	#
@@ -383,12 +425,18 @@ charExhaustPlot <- function(exhaustion_info,changesType,xlab = "Total Characters
 		}
 	exhaustion <- exhaustion_info$Exhaustion
 	nstep <- max(exhaustion_info$Exhaustion[,1])
-	best_exhaustion <- accioBestAcquisitionModel(exhaustion_info = exhaustion_info,
-			changesType = changesType, models = c("exponential","gamma","lognormal","zipf"))
+	best_exhaustion <- accioBestAcquisitionModel(
+			exhaustion_info = exhaustion_info,
+			changesType = changesType, 
+			models = c("exponential","gamma","lognormal","zipf")
+			)
 	# get the best model for the size and distribution of character/state space
 	ba <- best_exhaustion$Best_Distribution
 	after3 <- exhaustion[2,1]
-	hba <- expected_exhaustion_curve(rel_ab_dist = ba, nstep, after3, length(ba))
+	hba <- expected_exhaustion_curve(
+		rel_ab_dist = ba, 
+		nstep, after3, length(ba)
+		)
 	#
 	mxx <- 10*ceiling(max(exhaustion[,1])/10)
 	if (mxx<100)	{
@@ -412,13 +460,22 @@ charExhaustPlot <- function(exhaustion_info,changesType,xlab = "Total Characters
 		}else{
 			main_title <- main
 			}	
-		plot(NA,type = 'n',axes = FALSE,main = main_title,
-			xlab = abcissa,ylab = ordinate,
-			xlim = c(0,mxx),ylim = c(0,mxx))
+		plot(NA,type = 'n',
+			axes = FALSE,
+			main = main_title,
+			xlab = abcissa,
+			ylab = ordinate,
+			xlim = c(0,mxx),
+			ylim = c(0,mxx)
+			)
 		draw_symmetric_axes(mxx,xsize)
 		#
 		lines((1:nstep),hba,lwd = 2,lty = 3)
-		points(exhaustion[,1],exhaustion[,3],pch = 21,bg = "green",cex = 1.25)
+		points(exhaustion[,1],
+		       exhaustion[,3],
+			   pch = 21,
+			   bg = "green",
+			   cex = 1.25)
 		}
 	#
 	if(changesType == "charAlt"){
@@ -432,13 +489,21 @@ charExhaustPlot <- function(exhaustion_info,changesType,xlab = "Total Characters
 		}else{
 			main_title <- main
 			}	
-		plot(NA,type = 'n',axes = FALSE,main = main_title,
-			xlab = abcissa,ylab = ordinate,
-			xlim = c(0,mxx),ylim = c(0,mxx))
+		plot(NA,type = 'n',
+		    axes = FALSE,
+			main = main_title,
+			xlab = abcissa,
+			ylab = ordinate,
+			xlim = c(0,mxx),
+			ylim = c(0,mxx))
 		draw_symmetric_axes(mxx,xsize)
 		#
 		lines((1:nstep),hba,lwd = 2,lty = 2)
-		points(exhaustion[,1],exhaustion[,2],pch = 21,bg = "skyblue",cex = 1.25)
+		points(exhaustion[,1],
+		       exhaustion[,2],
+			   pch = 21,
+			   bg = "skyblue",
+			   cex = 1.25)
 		}
 	#
 	#layout(1)
@@ -454,8 +519,13 @@ charExhaustPlot <- function(exhaustion_info,changesType,xlab = "Total Characters
 ### ROUTINES TO RECONSTRUCT CHARACTER CHANGE
 
 # get history of character evolution implied by minimum steps
-accio_minimum_steps_history <- function(mtree,charData,charTypes,missingCharValue = "?",
-		inapplicableValue = "-",outgroupID = outgroupID)	{
+accio_minimum_steps_history <- function(
+		mtree, 
+		charData, charTypes, 
+		missingCharValue = "?",
+		inapplicableValue = "-",
+		outgroupID = outgroupID){
+	###############################################
 	# mtree: matrix tree, where each row gives the branches stemming from a node
 	# charData: character data
 	# charTypes: 1 for unordered, 0 for ordered
@@ -469,33 +539,43 @@ accio_minimum_steps_history <- function(mtree,charData,charTypes,missingCharValu
 	for (c in 1:nchar)	{
 		cvector <- charData[,c]
 		type <- charTypes[c]
-		char_evolution <- Sankoff_character(mtree = mtree,cvector = cvector,
-			type = type,missingCharValue = missingCharValue,
-			inapplicableValue = inapplicableValue,outgroupID = outgroupID)
+		char_evolution <- Sankoff_character(
+			mtree = mtree,
+			cvector = cvector,
+			type = type, 
+			missingCharValue = missingCharValue,
+			inapplicableValue = inapplicableValue,
+			outgroupID = outgroupID)
 		steps[c] <- char_evolution$Steps
 		if (c == 1)	{
 			full_matrix <- char_evolution$States
 			changes_matrix <- char_evolution$Derivation
 			}	else	{
-			full_matrix <- cbind(full_matrix,char_evolution$States)
-			changes_matrix <- cbind(changes_matrix,char_evolution$Derivation)
+			full_matrix <- cbind(full_matrix,
+				char_evolution$States)
+			changes_matrix <- cbind(changes_matrix,
+				char_evolution$Derivation)
 			}
 		}
 	char_labels <- vector(length = nchar)
-	for (c in 1:nchar)	{
-		if (c<10)	{
-			if (nchar<10)	{
+	for (c in 1:nchar){
+		if (c<10){
+			if (nchar<10){
 				char_labels[c] <- paste("ch_",c,sep = "")
-				}	else if (nchar>9 && nchar<100)	{
-				char_labels[c] <- paste("ch_0",c,sep = "")
-				}	else	{
-				char_labels[c] <- paste("ch_00",c,sep = "")
-				}
-			}	else if (c<100)	{
-				if (nchar<100)	{
-				char_labels[c] <- paste("ch_",c,sep = "")
-				}	else	{
-				char_labels[c] <- paste("ch_0",c,sep = "")
+				}else{
+					if(nchar>9 && nchar<100){
+						char_labels[c] <- paste("ch_0",c,sep = "")
+					}else{
+						char_labels[c] <- paste("ch_00",c,sep = "")
+						}
+					}
+			}else{
+				if (c<100){
+					if (nchar<100){
+						char_labels[c] <- paste("ch_",c,sep = "")
+					}else{
+						char_labels[c] <- paste("ch_0",c,sep = "")
+					}
 				}
 			}
 		}

@@ -7,10 +7,6 @@
 \alias{pqsRate2sProb}
 \alias{qsProb2Comp}
 \alias{qsRate2Comp}
-\alias{sRate2sProb}
-\alias{pqsRate2sProb}
-\alias{qsProb2Comp}
-\alias{qsRate2Comp}
 \title{Converting Sampling Estimates}
 \usage{
 sProb2sRate(R, int.length = 1)

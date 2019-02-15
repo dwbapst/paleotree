@@ -49,7 +49,7 @@ dropExtinct.
    #of diversification...in the past!
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 taxicDivCont(taxa)
 #that's the whole diversity curve

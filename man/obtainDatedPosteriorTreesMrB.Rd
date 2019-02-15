@@ -4,9 +4,9 @@
 \alias{obtainDatedPosteriorTreesMrB}
 \title{Get the Sample of Posterior Trees from a Dated Phylogenetic Analysis with MrBayes (Or a Summary Tree, such as the MCCT)}
 \usage{
-obtainDatedPosteriorTreesMrB(runFile, nRuns = 2, burnin = 0.5, outputTrees,
-  labelPostProb = FALSE, getFixedTimes = FALSE, getRootAges = FALSE,
-  originalNexusFile = NULL, file = NULL)
+obtainDatedPosteriorTreesMrB(runFile, nRuns = 2, burnin = 0.5,
+  outputTrees, labelPostProb = FALSE, getFixedTimes = FALSE,
+  getRootAges = FALSE, originalNexusFile = NULL, file = NULL)
 }
 \arguments{
 \item{runFile}{A filename in the current directory, or a path to a file that is either a .p 

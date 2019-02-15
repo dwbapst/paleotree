@@ -174,7 +174,7 @@
 #' 
 #' set.seed(444)
 #' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#'	nTotalTaxa = c(30,40), nExtant = 0)
+#' 	nTotalTaxa = c(30,40), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' layout(1:2)
 #' #let's see what the 'true' diversity curve looks like in this case
@@ -205,7 +205,7 @@
 #' #testing with cryptic speciation
 #' layout(1)
 #' recordCrypt <- simFossilRecord(p = 0.1, q = 0.1, prop.cryptic = 0.5, nruns = 1,
-#'	nTotalTaxa = c(20,30), nExtant = 0)
+#' 	nTotalTaxa = c(20,30), nExtant = 0)
 #' taxaCrypt <- fossilRecord2fossilTaxa(recordCrypt)
 #' rangesCrypt <- sampleRanges(taxaCrypt,r = 0.5)
 #' taxicDivCont(rangesCrypt)
@@ -213,7 +213,7 @@
 #' #an example of hat-shaped models (beta distributions) when there are live taxa
 #' set.seed(444)
 #' recordLive <- simFossilRecord(p = 0.1, q = 0.05, nruns = 1,
-#'	nTotalTaxa = c(5,100),nExtant = c(10,100))
+#' 	nTotalTaxa = c(5,100),nExtant = c(10,100))
 #' taxaLive <- fossilRecord2fossilTaxa(recordLive)
 #' #with end-points of live taxa at random points in the hat
 #' rangesLive <- sampleRanges(taxaLive,r = 0.1,alpha = 4,beta = 4,randLiveHat = TRUE,plot = TRUE)

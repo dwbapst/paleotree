@@ -3,19 +3,19 @@
 \name{timePaleoPhy}
 \alias{timePaleoPhy}
 \alias{bin_timePaleoPhy}
-\alias{bin_timePaleoPhy}
 \title{Typical 'a posteriori' Time-Scaling Approaches For Paleontological Phylogenies}
 \usage{
-timePaleoPhy(tree, timeData, type = "basic", vartime = NULL, ntrees = 1,
-  randres = FALSE, timeres = FALSE, add.term = FALSE,
-  inc.term.adj = FALSE, dateTreatment = "firstLast", node.mins = NULL,
-  noisyDrop = TRUE, plot = FALSE)
+timePaleoPhy(tree, timeData, type = "basic", vartime = NULL,
+  ntrees = 1, randres = FALSE, timeres = FALSE, add.term = FALSE,
+  inc.term.adj = FALSE, dateTreatment = "firstLast",
+  node.mins = NULL, noisyDrop = TRUE, plot = FALSE)
 
 bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL,
-  ntrees = 1, nonstoch.bin = FALSE, randres = FALSE, timeres = FALSE,
-  sites = NULL, point.occur = FALSE, add.term = FALSE,
-  inc.term.adj = FALSE, dateTreatment = "firstLast", node.mins = NULL,
-  noisyDrop = TRUE, plot = FALSE)
+  ntrees = 1, nonstoch.bin = FALSE, randres = FALSE,
+  timeres = FALSE, sites = NULL, point.occur = FALSE,
+  add.term = FALSE, inc.term.adj = FALSE,
+  dateTreatment = "firstLast", node.mins = NULL, noisyDrop = TRUE,
+  plot = FALSE)
 }
 \arguments{
 \item{tree}{An unscaled cladogram of fossil taxa, of class \code{phylo}. Tip labels
@@ -357,7 +357,7 @@ ttree <- bin_timePaleoPhy(tree = retioTree,timeList = retioRanges,type = "mbl",
 #Simulate some fossil ranges with simFossilRecord
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 #simulate a fossil record with imperfect sampling with sampleRanges
 rangesCont <- sampleRanges(taxa,r = 0.5)

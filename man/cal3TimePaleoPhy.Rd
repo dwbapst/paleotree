@@ -4,22 +4,22 @@
 \alias{cal3TimePaleoPhy}
 \alias{bin_cal3TimePaleoPhy}
 \alias{cal3}
-\alias{bin_cal3TimePaleoPhy}
 \title{Three Rate Calibrated 'a posteriori' Time-Scaling of Paleo-Phylogenies}
 \usage{
 cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1,
   anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
-  FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200, step.size = 0.1,
-  randres = FALSE, noisyDrop = TRUE, verboseWarnings = TRUE,
-  diagnosticMode = FALSE, tolerance = 1e-04, plot = FALSE)
-
-bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate, ntrees = 1,
-  anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
-  FAD.only = FALSE, sites = NULL, point.occur = FALSE,
-  nonstoch.bin = FALSE, adj.obs.wt = TRUE, root.max = 200,
+  FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200,
   step.size = 0.1, randres = FALSE, noisyDrop = TRUE,
-  verboseWarnings = TRUE, tolerance = 1e-04, diagnosticMode = FALSE,
+  verboseWarnings = TRUE, diagnosticMode = FALSE, tolerance = 1e-04,
   plot = FALSE)
+
+bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate,
+  ntrees = 1, anc.wt = 1, node.mins = NULL,
+  dateTreatment = "firstLast", FAD.only = FALSE, sites = NULL,
+  point.occur = FALSE, nonstoch.bin = FALSE, adj.obs.wt = TRUE,
+  root.max = 200, step.size = 0.1, randres = FALSE,
+  noisyDrop = TRUE, verboseWarnings = TRUE, tolerance = 1e-04,
+  diagnosticMode = FALSE, plot = FALSE)
 }
 \arguments{
 \item{tree}{An unscaled cladogram of fossil taxa, of class \code{phylo}. Tip labels
@@ -80,28 +80,35 @@ in \code{timeData} as a column of precise first and last appearances.
 A second option is \code{dateTreatment = "minMax"}, which
 treats these dates as minimum and maximum bounds on single point dates. Under this option,
 all taxa in the analysis will be treated as being point dates, such that the first appearance
-is also the last. These dates will be pulled under a uniform distribution. If \code{dateTreatment = "minMax"} is used,
-\code{FAD.only} and  becomes meaningless, and the use of it will return an error message. A third option
-is \code{dateTreatment = "randObs"}. This assumes that the dates in the matrix are first and last appearance times,
-but that the desired time of observation is unknown. Thus, this is much like \code{dateTreatment = "firstLast"} except
+is also the last. These dates will be pulled under a uniform distribution.
+If \code{dateTreatment = "minMax"} is used,
+\code{FAD.only} and  becomes meaningless, and the use of it will return an error message. 
+A third option is \code{dateTreatment = "randObs"}. This assumes
+that the dates in the matrix are first and last appearance times,
+but that the desired time of observation is unknown.
+Thus, this is much like \code{dateTreatment = "firstLast"} except
 the effective time of observation (the taxon's LAD under
 \code{dateTreatment = "firstLast"}) is treated as an uncertain date, and
-is randomly sampled between the first and last appearance times. The FAD still is treated as a fixed number, used
+is randomly sampled between the first and last appearance times.
+The FAD still is treated as a fixed number, used
 for dating the nodes. In previous versions of paleotree, this
 was called in \code{cal3timePaleoPhy} using the argument \code{rand.obs}, which has been removed
 for clarity. This temporal uncertainty in times of observation might be useful if
 a user is interested in applying phylogeny-based approaches to studying trait evolution, but have
-per-taxon measurements of traits that come from museum specimens with uncertain temporal placement.
+per-taxon measurements of traits that come from museum
+specimens with uncertain temporal placement.
 With both arguments \code{dateTreatment = "minMax"} and
 \code{dateTreatment = "randObs"}, the sampling of dates from random distributions should
 compel users to produce many time-scaled trees for any given analytical purpose.
-Note that  \code{dateTreatment = "minMax"} returns an error in 'bin' time-scaling functions; please use
+Note that  \code{dateTreatment = "minMax"} returns an error
+in 'bin' time-scaling functions; please use
 \code{points.occur} instead.}
 
 \item{FAD.only}{Should the tips represent observation times at the start of
-the taxon ranges? \code{FAD.only = TRUE}, the resulting output is similar to when terminal ranges are no
-added on with \code{timePaleoPhy}. If \code{FAD.only = TRUE} and {dateTreatment = "minMax"}
-or {dateTreatment = "randObs"}, the
+the taxon ranges? \code{FAD.only = TRUE}, the resulting output
+is similar to when terminal ranges are no
+added on with \code{timePaleoPhy}. If \code{FAD.only = TRUE}
+and {dateTreatment = "minMax"} or {dateTreatment = "randObs"}, the
 function will stop and a warning will be produced, as these combinations imply
 contradictory sets of times of observation.}
 
@@ -127,8 +134,8 @@ relative to sampling in the fossil record?}
 having a matching entry in the time data will be listed in a system message.}
 
 \item{verboseWarnings}{if \code{TRUE} (the default), then various warnings and messages
- regarding best practices will be issued to the console about the analysis. If \code{FALSE},
-the function will run as quietly as possible.}
+regarding best practices will be issued to the console about the analysis. 
+If \code{FALSE},the function will run as quietly as possible.}
 
 \item{diagnosticMode}{If \code{TRUE}, \code{cal3timePaleoPhy} will return to the
 console and to graphic devices an enormous number of messages, plots and
@@ -356,49 +363,68 @@ your dataset. Remember that the FADs (earliest dates) given to timePaleoPhy
 #Simulate some fossil ranges with simFossilRecord
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 #simulate a fossil record with imperfect sampling with sampleRanges
-rangesCont <- sampleRanges(taxa,r = 0.5)
+rangesCont <- sampleRanges(taxa, r = 0.5)
 #let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
-cladogram <- taxa2cladogram(taxa,plot = TRUE)
+cladogram <- taxa2cladogram(taxa, plot = TRUE)
 #this library allows one to use rate calibrated type time-scaling methods (Bapst, in prep.)
 #to use these, we need an estimate of the sampling rate (we set it to 0.5 above)
 likFun <- make_durationFreqCont(rangesCont)
-srRes <- optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
-      method = "L-BFGS-B",control = list(maxit = 1000000))
+srRes <- optim(parInit(likFun),likFun,
+    lower = parLower(likFun),upper = parUpper(likFun),
+    method = "L-BFGS-B",control = list(maxit = 1000000))
 sRate <- srRes[[1]][2]
 # we also need extinction rate and branching rate
    # we can get extRate from getSampRateCont too
-#we'll assume extRate = brRate (ala Foote et al., 1999); may not always be a good assumption
+#we'll assume extRate = brRate (ala Foote et al., 1999)
+    # this may not always be a good assumption!
 divRate <- srRes[[1]][1]
-#now let's try cal3TimePaleoPhy, which time-scales using a sampling rate to calibrate
-#This can also resolve polytomies based on sampling rates, with some stochastic decisions
-ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
+
+# now let's try cal3TimePaleoPhy, which time-scales using a sampling rate to calibrate
+# This can also resolve polytomies based on sampling rates, with some stochastic decisions
+ttree <- cal3TimePaleoPhy(cladogram, rangesCont,
+    brRate = divRate,extRate = divRate,
     sampRate = sRate,ntrees = 1,plot = TRUE)
 #notice the warning it gives!
 phyloDiv(ttree)
 
 #by default, cal3TimePaleoPhy may predict indirect ancestor-descendant relationships
 #can turn this off by setting anc.wt = 0
-ttree <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
-    sampRate = sRate,ntrees = 1,anc.wt = 0,plot = TRUE)
+ttree <- cal3TimePaleoPhy(cladogram,rangesCont,
+    brRate = divRate,extRate = divRate,
+    sampRate = sRate,ntrees = 1,
+    anc.wt = 0,plot = TRUE)
+
+
 
 \donttest{
 #let's look at how three trees generated with very different time of obs. look
-ttreeFAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
-    FAD.only = TRUE,dateTreatment = "firstLast",sampRate = sRate,ntrees = 1,plot = TRUE)
-ttreeRand <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
-    FAD.only = FALSE,dateTreatment = "randObs",sampRate = sRate,ntrees = 1,plot = TRUE)
+ttreeFAD <- cal3TimePaleoPhy(cladogram, rangesCont,
+    brRate = divRate,extRate = divRate,
+    FAD.only = TRUE,dateTreatment = "firstLast",
+    sampRate = sRate,ntrees = 1,plot = TRUE)
+ttreeRand <- cal3TimePaleoPhy(cladogram, rangesCont,
+    brRate = divRate,extRate = divRate,
+    FAD.only = FALSE,dateTreatment = "randObs",
+    sampRate = sRate,ntrees = 1,plot = TRUE)
 #by default the time of observations are the LADs
-ttreeLAD <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRate,
-    FAD.only = FALSE,dateTreatment = "randObs",sampRate = sRate,ntrees = 1,plot = TRUE)
+ttreeLAD <- cal3TimePaleoPhy(cladogram, rangesCont,
+    brRate = divRate,extRate = divRate,
+    FAD.only = FALSE,dateTreatment = "randObs",
+    sampRate = sRate,ntrees = 1,plot = TRUE)
+
+# and let's plot
 layout(1:3)
 parOrig <- par(no.readonly = TRUE)
 par(mar = c(0,0,0,0))
-plot(ladderize(ttreeFAD));text(5,5,"time.obs = FAD",cex = 1.5,pos = 4)
-plot(ladderize(ttreeRand));text(5,5,"time.obs = Random",cex = 1.5,pos = 4)
-plot(ladderize(ttreeLAD));text(5,5,"time.obs = LAD",cex = 1.5,pos = 4)
+plot(ladderize(ttreeFAD));text(5,5,
+    "time.obs = FAD",cex = 1.5,pos = 4)
+plot(ladderize(ttreeRand));text(5,5,
+    "time.obs = Random",cex = 1.5,pos = 4)
+plot(ladderize(ttreeLAD));text(5,5,
+    "time.obs = LAD",cex = 1.5,pos = 4)
 layout(1); par(parOrig)
 
 #to get a fair sample of trees, let's increase ntrees
@@ -408,7 +434,10 @@ ttrees <- cal3TimePaleoPhy(cladogram,rangesCont,brRate = divRate,extRate = divRa
 layout(matrix(1:9,3,3))
 parOrig <- par(no.readonly = TRUE)
 par(mar = c(0,0,0,0))
-for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label = FALSE)}
+for(i in 1:9){
+    plot(ladderize(ttrees[[i]]),
+         show.tip.label = FALSE)
+    }
 layout(1)
 par(parOrig)
 #they are all a bit different!
@@ -420,7 +449,10 @@ multiDiv(ttrees)
 #let's say we have (molecular??) evidence that node #5 is at least 1200 time-units ago
 #to use node.mins, first need to drop any unshared taxa
 droppers <- cladogram$tip.label[is.na(
-      match(cladogram$tip.label,names(which(!is.na(rangesCont[,1])))))]
+    match(cladogram$tip.label,
+           names(which(!is.na(rangesCont[,1]))))
+    )]
+# and then drop those taxa
 cladoDrop <- drop.tip(cladogram, droppers)
 # now make vector same length as number of nodes
 nodeDates <- rep(NA, Nnode(cladoDrop))
@@ -431,7 +463,7 @@ ttree <- cal3TimePaleoPhy(cladoDrop,rangesCont,brRate = divRate,extRate = divRat
 #example with time in discrete intervals
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 #simulate a fossil record with imperfect sampling with sampleRanges()
 rangesCont <- sampleRanges(taxa,r = 0.5)
@@ -441,38 +473,52 @@ cladogram <- taxa2cladogram(taxa,plot = TRUE)
 rangesDisc <- binTimeData(rangesCont,int.length = 1)
 #we can do something very similar for the discrete time data (can be a bit slow)
 likFun <- make_durationFreqDisc(rangesDisc)
-spRes <- optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
-      method = "L-BFGS-B",control = list(maxit = 1000000))
+spRes <- optim(parInit(likFun),likFun,
+    lower = parLower(likFun),upper = parUpper(likFun),
+    method = "L-BFGS-B",control = list(maxit = 1000000))
 sProb <- spRes[[1]][2]
-#but that's the sampling PROBABILITY per bin, not the instantaneous rate of change
-#we can use sProb2sRate() to get the rate. We'll need to also tell it the int.length
+#but that's the sampling PROBABILITY per bin
+    # NOT the instantaneous rate of change
+#we can use sProb2sRate() to get the rate
+    # We'll need to also tell it the int.length
 sRate1 <- sProb2sRate(sProb,int.length = 1)
 #we also need extinction rate and branching rate (see above)
     #need to divide by int.length...
 divRate <- spRes[[1]][1]/1
-#estimates that r = 0.3... kind of low (simulated sampling rate is 0.5)
-#Note: for real data, you may need to use an average int.length (no constant length)
-ttree <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate = divRate,extRate = divRate,
+#estimates that r = 0.3... 
+    # tat's kind of low (simulated sampling rate is 0.5)
+#Note: for real data, you may need to use an average int.length 
+    # (i.e. if intervals aren't all the same duration)
+ttree <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,
+    brRate = divRate,extRate = divRate,
     sampRate = sRate1,ntrees = 1,plot = TRUE)
 phyloDiv(ttree)
 #can also force the appearance timings not to be chosen stochastically
-ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate = divRate,extRate = divRate,
-    sampRate = sRate1,ntrees = 1,nonstoch.bin = TRUE,plot = TRUE)
+ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,
+    brRate = divRate,extRate = divRate,
+    sampRate = sRate1,ntrees = 1,
+    nonstoch.bin = TRUE,plot = TRUE)
 phyloDiv(ttree1)
 
 # testing node.mins in bin_cal3TimePaleoPhy
-ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate = divRate,extRate = divRate,
-    sampRate = sRate1,ntrees = 1,node.mins = nodeDates,plot = TRUE)
+ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,
+    brRate = divRate,extRate = divRate,
+    sampRate = sRate1,ntrees = 1,
+    node.mins = nodeDates,plot = TRUE)
 # with randres = TRUE
-ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,brRate = divRate,extRate = divRate,
-    sampRate = sRate1,ntrees = 1,randres = TRUE,node.mins = nodeDates,plot = TRUE)
+ttree <- bin_cal3TimePaleoPhy(cladoDrop,rangesDisc,
+    brRate = divRate,extRate = divRate,
+    sampRate = sRate1,ntrees = 1,
+    randres = TRUE,node.mins = nodeDates,plot = TRUE)
 
 
 #example with multiple values of anc.wt
 ancWt <- sample(0:1,nrow(rangesDisc[[2]]),replace = TRUE)
 names(ancWt) <- rownames(rangesDisc[[2]])
-ttree1 <- bin_cal3TimePaleoPhy(cladogram,rangesDisc,brRate = divRate,extRate = divRate,
-    sampRate = sRate1,ntrees = 1,anc.wt = ancWt,plot = TRUE)
+ttree1 <- bin_cal3TimePaleoPhy(cladogram, rangesDisc,
+    brRate = divRate, extRate = divRate,
+    sampRate = sRate1, ntrees = 1,
+    anc.wt = ancWt, plot = TRUE)
 }
 
 }

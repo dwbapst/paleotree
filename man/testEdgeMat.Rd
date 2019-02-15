@@ -4,7 +4,6 @@
 \alias{testEdgeMat}
 \alias{cleanNewPhylo}
 \alias{cleanTree}
-\alias{cleanNewPhylo}
 \title{Test the Edge Matrix of a '\code{phylo}' Phylogeny Object for Inconsistencies}
 \usage{
 testEdgeMat(tree)

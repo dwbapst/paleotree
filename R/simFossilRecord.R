@@ -498,7 +498,7 @@
 #' # high variability that seems to then smooth out as turnover decreases
 #'
 #' # And duration what about duration-dependent processes?
-#'		# let's do a duration-dep extinction equation:
+#' 		# let's do a duration-dep extinction equation:
 #' durDepExt <- "0.01+(0.01*D)"
 #'
 #' # okay, let's take it for a spin
@@ -692,7 +692,7 @@
 #'
 #' # an example using startTaxa to have more initial taxa
 #' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1,
-#'	nTotalTaxa = 100, startTaxa = 20, plot = TRUE)
+#' 	nTotalTaxa = 100, startTaxa = 20, plot = TRUE)
 #'
 #' ######################################################
 #' 
@@ -723,8 +723,8 @@
 #' # we can be really odd and condition on having a single taxon
 #' set.seed(1)
 #' record <- simFossilRecord(p = 0.1,
-#'	q = 0.1, r = 0.1, nTotalTaxa = 1,
-#'	totalTime = c(10,20), plot = TRUE)
+#' 	q = 0.1, r = 0.1, nTotalTaxa = 1,
+#' 	totalTime = c(10,20), plot = TRUE)
 #'
 #' ########################################################
 #' 
@@ -747,7 +747,7 @@
 #' 	nExtant = 10, nTotalTaxa = 100, modern.samp.prob = 0,
 #' 	print.runs = TRUE, plot = TRUE)
 #' 
-#'	
+#' 	
 #' # We can set up a test to make sure that no extant taxa somehow get
 #' # returned in many simulations with extinct-only conditioning:
 #' res <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
@@ -756,8 +756,8 @@
 #'    any(sapply(z,function(x) x[[1]][5] == 1))))
 #' # test if any are still alive
 #' if(anyLive){
-#'	stop("Runs have extant taxa under conditioning for none?")
-#'	}
+#' 	stop("Runs have extant taxa under conditioning for none?")
+#' 	}
 #'
 #' }
 #'

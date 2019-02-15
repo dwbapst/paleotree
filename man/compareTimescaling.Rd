@@ -4,7 +4,6 @@
 \alias{compareTimescaling}
 \alias{compareNodeAges}
 \alias{compareTermBranches}
-\alias{compareTermBranches}
 \title{Comparing the Time-Scaling of Trees}
 \usage{
 compareNodeAges(tree1, tree2, dropUnshared = FALSE)
@@ -82,7 +81,7 @@ to a terminal branch which is five time-units longer.
 
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 #get the true tree
 tree1 <- taxa2phylo(taxa)

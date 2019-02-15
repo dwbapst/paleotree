@@ -68,7 +68,7 @@ the simulated data is retained.
 \donttest{
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 #let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
 layout(1:2)
@@ -79,7 +79,7 @@ tree <- taxa2phylo(taxa,plot = TRUE)
 
 #testing with cryptic speciation
 recordCrypt <- simFossilRecord(p = 0.1, q = 0.1, prop.cryptic = 0.5, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxaCrypt <- fossilRecord2fossilTaxa(recordCrypt)
 layout(1:2)
 parOrig <- par(no.readonly = TRUE)

@@ -3,13 +3,12 @@
 \name{minCharChange}
 \alias{minCharChange}
 \alias{ancPropStateMat}
-\alias{ancPropStateMat}
 \title{Estimating the Minimum Number of Character Transitions Using Maximum Parsimony}
 \usage{
 minCharChange(trait, tree, randomMax = 10000, maxParsimony = TRUE,
-  orderedChar = FALSE, type = "MPR", cost = NULL, printMinResult = TRUE,
-  ambiguity = c(NA, "?"), dropAmbiguity = FALSE, polySymbol = "&",
-  contrast = NULL)
+  orderedChar = FALSE, type = "MPR", cost = NULL,
+  printMinResult = TRUE, ambiguity = c(NA, "?"),
+  dropAmbiguity = FALSE, polySymbol = "&", contrast = NULL)
 
 ancPropStateMat(trait, tree, orderedChar = FALSE, type = "MPR",
   cost = NULL, ambiguity = c(NA, "?"), dropAmbiguity = FALSE,
@@ -26,106 +25,165 @@ consistent with the reconstructed ancestral states from \code{ancestral.pars} wi
 of character state transitions. If the number of potential solutions is less than randomMax, then
 solutions are exhaustively searched.}
 
-\item{maxParsimony}{If maxParsimony is TRUE (the default) then only solutions with the smallest
-number of total transitions examined will be returned. Note that since solutions are stochastically
-'guessed' at, and the number of possible solutions may not be exhaustively searched, there may have
-been solutions not examined with a lower number of transitions even if \code{maxParsimony = TRUE}. Regardless,
-one may want to do \code{maxParsimony = FALSE} if one is interested in whether there are solutions with a
+\item{maxParsimony}{If maxParsimony is \code{TRUE} (the default) then only solutions
+with the smallest number of total transitions examined will be returned.
+Note that since solutions are stochastically 'guessed' at, and the number
+of possible solutions may not be exhaustively searched, there may have
+been solutions not examined with a lower number of transitions
+even if \code{maxParsimony = TRUE}. Regardless, one may want to
+do \code{maxParsimony = FALSE} if one is interested in whether there are solutions with a
 smaller number of gains or losses and thus wants to return all solutions.}
 
-\item{orderedChar}{If TRUE (not the default), then the character will be reconstructed with a cost (step)
-matrix of a linear, ordered character. This is not applicable if \code{type = "ACCTRAN"}, as cost matrices cannot
-be used with ACCTRAN in \code{ancestral.pars}, and an error will be returned if \code{orderedChar = TRUE} but
-a cost matrix is given, as the only reason to use \code{orderedChar} is to produce a cost matrix automatically.}
+\item{orderedChar}{If \code{TRUE} (not the default), then the
+character will be reconstructed with a cost (step)
+matrix of a linear, ordered character. This is not applicable
+if \code{type = "ACCTRAN"}, as cost matrices cannot
+be used with ACCTRAN in \code{ancestral.pars}, and an error will
+be returned if \code{orderedChar = TRUE} but
+a cost matrix is given, as the only reason to use \code{orderedChar}
+is to produce a cost matrix automatically.}
 
-\item{type}{The parsimony algorithm applied by \code{ancestral.pars}, which can apply one of two:
-"MPR" (the default) is a relatively fast algorithm developed by Hanazawa et al. (1995) and Narushima
-and Hanazawa (1997), which relies on reconstructing the states at each internal node by re-rooting at
-that node.  "ACCTRAN", the 'accelerated transitions' algorithm (Swofford and Maddison, 1987), favors
-character reversal over independent gains when there is ambiguity. The "ACCTRAN" option in
-\code{ancestral.pars} avoids repeated rerooting of the tree to search for a smaller set of maximum-parsimony
-solutions that satisfy the ACCTRAN algorithm, but does so by assigning edge weights.
-As of phangorn v1.99-12, "MPR" is calculated using
-the Sankoff parsimony algorithm, which allows multifurcations (polytomies). This is \emph{not} true for
-"ACCTRAN", which uses the Fitch algorithm, which does not allow for multifurcations. An error
-is returned if a tree with multifurcations is passed and \code{type = "ACCTRAN"}.}
+\item{type}{The parsimony algorithm applied by
+\code{ancestral.pars}, which can apply one of two:
+\code{"MPR"} (the default) is a relatively fast algorithm developed
+by Hanazawa et al. (1995) and Narushima
+and Hanazawa (1997), which relies on reconstructing the
+states at each internal node by re-rooting at
+that node.  \code{"ACCTRAN"}, the "accelerated transitions"
+algorithm (Swofford and Maddison, 1987), favors character reversal
+over independent gains when there is ambiguity. The \code{"ACCTRAN"} option in
+\code{ancestral.pars} avoids repeated rerooting of the tree to
+search for a smaller set of maximum-parsimony solutions that satisfy
+the \code{"ACCTRAN"} algorithm, but does so by assigning edge weights.
+As of phangorn v1.99-12, "MPR" is calculated using the Sankoff parsimony
+algorithm, which allows multifurcations (polytomies). This is \emph{not} true for
+\code{"ACCTRAN"}, which uses the Fitch algorithm, which does not allow
+for multifurcations. An error is returned if a tree with multifurcations
+is passed and a user tries \code{type = "ACCTRAN"}.}
 
-\item{cost}{A matrix of the cost (i.e. number of steps) necessary to change between states of the input
-character trait. If \code{NULL} (the
-default), the character is assumed to be unordered with equal cost to change from any state to another.
-Cost matrices only impact the "MPR" algorithm; if a cost matrix is given but \code{type = "ACCTRAN"}, an error
-is issued.}
+\item{cost}{A matrix of the cost (i.e. number of steps) necessary to
+change between states of the input character trait.
+If \code{NULL} (the default), the character is assumed to be
+unordered with equal cost to change from any state to another.
+Cost matrices only impact the "MPR" algorithm; if a cost matrix
+is given but \code{type = "ACCTRAN"}, an error is issued.}
 
-\item{printMinResult}{If TRUE (the default), a summary of the results is printed to the terminal. The
-information in this summary may be more detailed if the results of the analysis are simpler (i.e. 
-fewer unique solutions).}
+\item{printMinResult}{If \code{TRUE} (the default), a summary of
+the results is printed to the terminal. The information in this summary
+may be more detailed if the results of the analysis are
+simpler (i.e.  fewer unique solutions).}
 
-\item{ambiguity}{A vector of values which indicate ambiguous (i.e. missing or unknown) character state codings
-in supplied \code{trait} data. Taxa coded ambiguously as treated as being equally likely to be any state coding.
-By default, \code{NA} values and "?" symbols are treated as ambiguous character codings, in agreement with behavior 
+\item{ambiguity}{A vector of values which indicate ambiguous
+(i.e. missing or unknown) character state codings
+in supplied \code{trait} data. Taxa coded ambiguously as treated
+as being equally likely to be any state coding.
+By default, \code{NA} values and "?" symbols are treated as
+ambiguous character codings, in agreement with behavior 
 of functions in packages \code{phangorn} and \code{Claddis}. 
-This argument is designed to mirror an hidden argument with an identical name in function \code{phyDat} in package {phangorn}.}
+This argument is designed to mirror an hidden argument with
+an identical name in function \code{phyDat} in package \code{phangorn}.}
 
-\item{dropAmbiguity}{A logical. If \code{TRUE} (which is not the default), all taxa with ambiguous codings as defined
-by argument \code{ambiguity} will be dropped prior to ancestral nodes being inferred. This may result in too few taxa.}
+\item{dropAmbiguity}{A logical. If \code{TRUE} (which is not
+the default), all taxa with ambiguous codings as defined
+by argument \code{ambiguity} will be dropped prior to ancestral
+nodes being inferred. This may result in too few taxa.}
 
-\item{polySymbol}{A single symbol which separates alternative states for polymorphic codings; the default symbol is
-\code{"&"}, following the output by \code{Claddis}'s \code{ReadMorphNexus} function, where polymorphic taxa are indicated
+\item{polySymbol}{A single symbol which separates alternative
+states for polymorphic codings; the default symbol is
+\code{"&"}, following the output by \code{Claddis}'s
+\code{ReadMorphNexus} function, where polymorphic taxa are indicated
 by default with a string with state labels separated by an \code{"&"} symbol.
-For example, a taxon coded as polymorphic for states 1 or 2, would be indicated by the string "1&2".
-\code{polySymbol} is used to break up these strings and automatically construct a fitting \code{contrast} table
+For example, a taxon coded as polymorphic for states
+1 or 2, would be indicated by the string \code{"1&2"}.
+\code{polySymbol} is used to break up these strings
+and automatically construct a fitting \code{contrast} table
 for use with this data, including for ambiguous character state codings.}
 
-\item{contrast}{A matrix of type integer with cells of 0 and 1, where each row is labeled with a string value
-used for indicating character states in \code{trait}, and each column is labeled with the formal state label to
-be used for assign taxa to particular character states. A value of 1 indicates that the respective coding string for
-that row should be interpreted as reflecting the character state listed for that column. A coding could reflect
-multiple states (such as might occur when taxa are polymorphic for some morphological character), so the sums of
-rows and columns can sum to more than 1. 
-If \code{contrast} is not \code{NULL} (the default), the arguments will nullify 
-This argument is designed to mirror an hidden argument with an identical name in function \code{phyDat} in package {phangorn}.
-This structure is based on the \code{\link{contrasts}} tables used for statistical evaluation of factors.
+\item{contrast}{A matrix of type integer with cells of 0
+and 1, where each row is labeled with a string value
+used for indicating character states in \code{trait},
+and each column is labeled with the formal state label to
+be used for assign taxa to particular character states.
+A value of 1 indicates that the respective coding string for
+that row should be interpreted as reflecting the character
+state listed for that column. A coding could reflect multiple
+states (such as might occur when taxa are polymorphic for
+some morphological character), so the sums of rows and
+columns can sum to more than 1.  If \code{contrast} is
+not \code{NULL} (the default), the arguments will nullify
+This argument is designed to mirror an hidden argument with
+an identical name in function \code{phyDat} in package {phangorn}.
+This structure is based on \code{phangorn}'s use of
+\code{contrasts} table used for statistical evaluation of factors.
 See the \code{phangorn} vignette "Special features of phangorn" for more details
 on its implementation within \code{phangorn} including an example.
-See examples below for the construction of an example contrast matrix for character data with polymorphisms, 
-coded as character data output by \code{Claddis}'s \code{ReadMorphNexus} function, where polymorphic taxa are indicated
-with a string with state labels separated by an \code{"&"} symbol.}
+See examples below for the construction of an example contrast
+matrix for character data with polymorphisms, coded as character
+data output by \code{Claddis}'s \code{ReadMorphNexus} function,
+where polymorphic taxa are indicated with a string with
+state labels separated by an \code{"&"} symbol.}
 
-\item{returnContrast}{If TRUE, the contrast table used by \code{ancestral.pars} will be output instead for
-user evaluation that polymorphic symbols and ambiguous states are being parsed correctly.}
+\item{returnContrast}{If \code{TRUE}, the contrast table
+used by \code{ancestral.pars} will be output instead for
+user evaluation that polymorphic symbols and ambiguous
+states are being parsed correctly.}
 }
 \value{
-By default, \code{ancPropStateMat} returns a matrix, with rows corresponding to the ID numbers of tips and nodes in
-\code{$edge}, and columns corresponding to character states, with the value representing the proportional
-weight of that node being that state under the algorithm used (known tip values are always 1).
-If argument \code{returnContrast} is \code{TRUE} then \code{ancPropStateMat} will instead return the final
-contrast table used by \code{phyDat} for interpreting character state strings.
+By default, \code{ancPropStateMat} returns a matrix,
+with rows corresponding to the ID numbers of tips and nodes in
+\code{$edge}, and columns corresponding to character
+states, with the value representing the proportional
+weight of that node being that state under the
+algorithm used (known tip values are always 1). If argument
+\code{returnContrast} is \code{TRUE} then
+\code{ancPropStateMat} will instead return the final
+contrast table used by \code{phyDat} for
+interpreting character state strings.
 
-\code{minCharChange} invisibly returns a list containing the following elements, several of which are printed
-by default to the console, as controlled by argument \code{printMinResult}:
+\code{minCharChange} invisibly returns a list containing
+the following elements, several of which are printed
+by default to the console, as controlled by
+argument \code{printMinResult}:
 
 \describe{
- \item{\code{message}}{Describes the performance of \code{minCharChange} at searching for a minimum solution.}
-\item{\code{sumTransitions}}{A vector recording the total number of necessary transitions (sum total of gains
-and losses/reversal) for each solution; effectively the parsimony cost of each solution.}
-\item{\code{minTransitions}}{A symmetrical matrix with number of rows and columns equal to the number of
-character states, with values in each cell indicating the minimum number of transitions from one ancestral
-state (i.e. the rows) to a descendant state (i.e. the columns), taken across the set of kept solutions
-(dependent on which are kept as decided by argument \code{maxParsimony}).  Generally guaranteed not to
-add up to the number of edges contained within the input tree, and thus may not represent any realistic
-evolutionary scenario but does represent a conservative approach for asking 'what is the smallest possible
-number of transitions from 0 to 1' or 'smallest possible number of transitions from 1 to 0', independently
-of each other.}
-\item{\code{solutionArray}}{A three-dimensional array, where for each solution, we have a matrix with edges
-for rows and two columns indicating the ancestral and child nodes of that edge, with values indicating the
+ \item{\code{message}}{Describes the performance of
+\code{minCharChange} at searching for a minimum solution.}
+\item{\code{sumTransitions}}{A vector recording the total
+number of necessary transitions (sum total of gains
+and losses/reversal) for each solution;
+effectively the parsimony cost of each solution.}
+\item{\code{minTransitions}}{A symmetrical matrix
+with number of rows and columns equal to the number of
+character states, with values in each cell indicating
+the minimum number of transitions from one ancestral
+state (i.e. the rows) to a descendant state (i.e.
+the columns), taken across the set of kept solutions
+(dependent on which are kept as decided by
+argument \code{maxParsimony}).  Generally guaranteed not to
+add up to the number of edges contained within the input
+tree, and thus may not represent any realistic
+evolutionary scenario but does represent a conservative
+approach for asking 'what is the smallest possible
+number of transitions from 0 to 1' or 'smallest possible
+number of transitions from 1 to 0', independently of each other.}
+\item{\code{solutionArray}}{A three-dimensional array,
+where for each solution, we have a matrix with edges
+for rows and two columns indicating the ancestral and
+child nodes of that edge, with values indicating the
 states inferred for those nodes in a particular solution.}
-\item{\code{transitionArray}}{A labeled three-dimensional array where for each solution we have a symmetrical
-matrix with number of rows and columns equal to the number of character states, with values in each cell
-indicating the total number of transitions from one ancestral state (i.e. the rows) to a descendant state
+\item{\code{transitionArray}}{A labeled three-dimensional
+array where for each solution we have a symmetrical
+matrix with number of rows and columns equal to the
+number of character states, with values in each cell
+indicating the total number of transitions from one
+ancestral state (i.e. the rows) to a descendant state
 (i.e. the columns).}
-\item{\code{transitionSumChanges}}{Which is a three column matrix with a row for every solution, with the
-values in the three columns measuring the number of edges (branches) inferred to respectively have gains,
-no change or losses (i.e. reversals), as calculated relative to the order of character states.}
+\item{\code{transitionSumChanges}}{Which is a three
+column matrix with a row for every solution, with the
+values in the three columns measuring the number of
+edges (branches) inferred to respectively have gains,
+no change or losses (i.e. reversals), as calculated
+relative to the order of character states.}
 }
 }
 \description{
@@ -136,30 +194,44 @@ discrete character data. \code{minCharChange} relies on \code{ancPropStateMat}, 
 for \code{phangorn}'s function \code{ancestral.pars}.
 }
 \details{
-The wrapper function \code{ancPropStateMat} simply automates the application of functions
-\code{ancestral.pars} and \code{phyDat} from \code{phangorn}, along with several additional checks
+The wrapper function \code{ancPropStateMat} simply automates
+the application of functions \code{ancestral.pars} and \code{phyDat}
+from \code{phangorn}, along with several additional checks
 and code to present the result as a matrix, rather than a specialized list. 
 
-Note that although the default \code{orderedChar} argument assumes that multistate characters are unordered,
-the results of character change will always be reported as gains and losses relative to the numbering of the
-states in the output \code{transitionSumChanges}, exactly as if they had been ordered. In the case
+Note that although the default \code{orderedChar} argument
+assumes that multistate characters are unordered,
+the results of character change will always be reported as
+gains and losses relative to the numbering of the
+states in the output \code{transitionSumChanges}, exactly
+as if they had been ordered. In the case
 where the character is actually ordered, this may be
-considered a conservative approach, as using a parsimony algorithm for unordered character states allows fewer
-gains or losses to be counted on branches where multiple gains and losses are reported. If the character is
-presumably unordered \emph{and multistate}, however, then the gains and losses division
-is \emph{arbitrary nonsense} and should be combined to
-to obtain the total number of character changes.
+considered a conservative approach, as using a parsimony
+algorithm for unordered character states allows fewer
+gains or losses to be counted on branches where multiple
+gains and losses are reported. If the character is
+presumably unordered \emph{and multistate}, however,
+then the gains and losses division is \emph{arbitrary nonsense}
+and should be combined to to obtain the total number of character changes.
 }
 \examples{
 \donttest{
 # let's write a quick & dirty ancestral trait plotting function
 
-quickAncPlotter <- function(tree,ancData,cex){
+quickAncPlotter <- function(tree, ancData, cex){
     ancCol <- (1:ncol(ancData))+1
-        plot(tree,show.tip.label = FALSE,no.margin = TRUE,direction = "upwards")
-        tiplabels(pch = 16,pie = ancData[(1:Ntip(tree)),],cex = cex,piecol = ancCol,
-	    col = 0)
-    nodelabels(pie = ancData[-(1:Ntip(tree)),],cex = cex,piecol = ancCol)	
+        plot(tree,
+           show.tip.label = FALSE,
+           no.margin = TRUE, 
+           direction = "upwards")
+        tiplabels(pch = 16,
+           pie = ancData[(1:Ntip(tree)),],
+           cex = cex,
+           piecol = ancCol,
+           col = 0)
+    nodelabels(pie = ancData[-(1:Ntip(tree)),],
+        cex = cex,
+        piecol = ancCol)	
     }
 
 # example with retiolitid graptolite data
@@ -167,34 +239,68 @@ quickAncPlotter <- function(tree,ancData,cex){
 data(retiolitinae)
 
 #unordered, MPR
-ancMPR <- ancPropStateMat(retioTree, trait = retioChar[,2], type = "MPR")
-quickAncPlotter(retioTree,ancMPR,cex = 0.5)
-text(x = 4,y = 5,"type = 'MPR'",cex = 1.5)
+ancMPR <- ancPropStateMat(retioTree, 
+        trait = retioChar[,2], 
+        type = "MPR")
+quickAncPlotter(retioTree,
+   ancMPR, cex = 0.5)
+text(x = 4,y = 5,
+   "type = 'MPR'", cex = 1.5)
 
-minCharChange(retioTree,trait = retioChar[,2],type = "MPR")
+minCharChange(retioTree,
+        trait = retioChar[,2],
+        type = "MPR")
 
 # with simulated data
 
 set.seed(444)
 tree <- rtree(50)
 #simulate under a likelihood model
-char <- rTraitDisc(tree,k = 3,rate = 0.7)
+char <- rTraitDisc(tree, 
+        k = 3, rate = 0.7)
 tree$edge.length <- NULL
 tree <- ladderize(tree)
 
 #unordered, MPR
-ancMPR <- ancPropStateMat(tree, trait = char, type = "MPR")
+ancMPR <- ancPropStateMat(tree, 
+        trait = char, 
+        type = "MPR")
+#unordered, ACCTRAN
+ancACCTRAN <- ancPropStateMat(tree, 
+        trait = char, 
+        type = "ACCTRAN")
 #ordered, MPR
-ancMPRord <- ancPropStateMat(tree, trait = char, orderedChar = TRUE, type = "MPR")
+ancMPRord <- ancPropStateMat(tree, 
+        trait = char, 
+        orderedChar = TRUE, 
+        type = "MPR")
 
+ #let's compare MPR versus ACCTRAN results
+ layout(1:2)
+ quickAncPlotter(tree,
+        ancMPR, cex = 0.3)
+ text(x = 8, y = 15,
+        "type = 'MPR'", cex = 1.5)
+ quickAncPlotter(tree,
+        ancACCTRAN, cex = 0.3)
+ text(x = 9, y = 15,
+        "type = 'ACCTRAN'",cex = 1.5)
+
+ # MPR has much more uncertainty in node estimates
+	 # but that doesn't mean ACCTRAN is preferable
 
 #let's compare unordered versus ordered under MPR
 layout(1:2)
-quickAncPlotter(tree,ancMPR,cex = 0.3)
-text(x = 8,y = 15,"unordered char\\nMPR",cex = 1.5)
-quickAncPlotter(tree,ancMPRord,cex = 0.3)
-text(x = 9,y = 15,"ordered char\\nMPR",cex = 1.5)
+quickAncPlotter(tree,
+        ancMPR, cex = 0.3)
+text(x = 8, y = 15,
+        "unordered char\\nMPR", cex = 1.5)
+quickAncPlotter(tree,
+        ancMPRord,cex = 0.3)
+text(x = 9, y = 15,
+        "ordered char\\nMPR", cex = 1.5)
 layout(1)
+
 
 \dontrun{
 # what ancPropStateMat automates (with lots of checks):
@@ -203,14 +309,25 @@ require(phangorn)
 char1 <- matrix(char,,1)
 rownames(char1) <- names(char)
 #translate into something for phangorn to read
-char1 <- phyDat(char1,type = "USER",levels = sort(unique(char1)))
-x <- ancestral.pars(tree,char1,type = "MPR")
-y <- ancestral.pars(tree,char1,type = "ACCTRAN")
+char1 <- phyDat(char1,
+        type = "USER",
+        levels = sort(unique(char1))
+        )
+x <- ancestral.pars(tree,
+        char1,type = "MPR")
+y <- ancestral.pars(tree,
+        char1,type = "ACCTRAN")
 }
 
 #estimating minimum number of transitions with MPR 
-minCharChange(tree,trait = char,type = "MPR")
+minCharChange(tree,
+        trait = char,
+        type = "MPR")
 
+ # and now with ACCTRAN
+ minCharChange(tree,
+        trait = char,
+        type = "ACCTRAN")
 
 #POLYMORPHISM IN CHARACTER DATA
 
@@ -218,7 +335,10 @@ minCharChange(tree,trait = char,type = "MPR")
 # example trait data with a polymorphic taxon
      # separated with '&' symbol
 # similar to polymorphic data output by ReadMorphNexus from package Claddis
-charPoly <- as.character(c(1,2,NA,0,0,1,"1&2",2,0,NA,0,2,1,1,"1&2"))
+charPoly <- as.character(
+        c(1,2,NA,0,0,1,"1&2",
+            2,0,NA,0,2,1,1,"1&2")
+            )
 #simulate a tree with 16 taxa
 set.seed(444)
 tree <- rtree(15)
@@ -231,14 +351,18 @@ charPoly
     #can build row by row, by hand
 
 #first, build contrast matrix for basic states
-contrast012 <- rbind(c(1,0,0),c(0,1,0),c(0,0,1))
+contrast012 <- rbind(c(1,0,0),
+                     c(0,1,0),
+                     c(0,0,1))
 colnames(contrast012) <- rownames(contrast012) <- 0:2
 contrast012
 
 #add polymorphic state and NA ambiguity as new rows
 contrastPoly <- c(0,1,1)
 contrastNA <- c(1,1,1)
-contrastNew <- rbind(contrast012,'1&2' = contrastPoly,contrastNA)
+contrastNew <- rbind(contrast012,
+        '1&2' = contrastPoly,
+        contrastNA)
 rownames(contrastNew)[5] <- NA
 
 #let's look at contrast
@@ -246,17 +370,23 @@ contrastNew
 
 # now try this contrast table we've assembled
     # default: unordered, MPR
-ancPoly <- ancPropStateMat(tree, trait = charPoly, contrast = contrastNew)
+ancPoly <- ancPropStateMat(tree, 
+        trait = charPoly, 
+        contrast = contrastNew)
 
 # but...!
 # we can also do it automatically, 
     # by default, states with '&' are automatically treated
     # as polymorphic character codings by ancPropStateMat
-ancPolyAuto <- ancPropStateMat(tree, trait = charPoly, polySymbol = "&")
+ancPolyAuto <- ancPropStateMat(tree,
+        trait = charPoly, 
+        polySymbol = "&")
 
 # but does this match what the table we constructed?
-ancPropStateMat(tree, trait = charPoly,
-		polySymbol = "&", returnContrast = TRUE)
+ancPropStateMat(tree, 
+        trait = charPoly,
+		   polySymbol = "&", 
+        returnContrast = TRUE)
 
 # compare to contrastNew above!
 # only difference should be the default ambiguous
@@ -264,38 +394,50 @@ ancPropStateMat(tree, trait = charPoly,
 
 #compare reconstructions
 layout(1:2)
-quickAncPlotter(tree,ancPoly,cex = 0.5)
-text(x = 3.5,y = 1.2,"manually-constructed\\ncontrast",cex = 1.3)
-quickAncPlotter(tree,ancPolyAuto,cex = 0.5)
-text(x = 3.5,y = 1.2,"auto-constructed\\ncontrast",cex = 1.3)
+quickAncPlotter(tree,
+        ancPoly, cex = 0.5)
+text(x = 3.5, y = 1.2,
+        "manually-constructed\\ncontrast", cex = 1.3)
+quickAncPlotter(tree,
+        ancPolyAuto, cex = 0.5)
+text(x = 3.5, y = 1.2,
+        "auto-constructed\\ncontrast", cex = 1.3)
 layout(1)
 
-#look pretty similar!
+# look pretty similar!
 
-#i.e. the default polySymbol = "&", but could be a different symbol
-     #such as "," or "\\"... it can only be *one* symbol, though
+# i.e. the default polySymbol = "&", but could be a different symbol
+     # such as "," or "\\"... it can only be *one* symbol, though
 
 # all of this machinery should function just fine in minCharChange
-	# again, by default polySymbol = "&" (included anyway here for kicks)
-minCharChange(tree, trait = charPoly, polySymbol = "&")
+		# again, by default polySymbol = "&" (included anyway here for kicks)
+minCharChange(tree, 
+        trait = charPoly, 
+        polySymbol = "&")
 }
 }
 \references{
-Hanazawa, M., H. Narushima, and N. Minaka. 1995. Generating most parsimonious reconstructions on
-a tree: A generalization of the Farris-Swofford-Maddison method. Discrete Applied Mathematics
+Hanazawa, M., H. Narushima, and N. Minaka. 1995.
+Generating most parsimonious reconstructions on
+a tree: A generalization of the Farris-Swofford-Maddison
+method. Discrete Applied Mathematics
 56(2-3):245-265.
 
-Narushima, H., and M. Hanazawa. 1997. A more efficient algorithm for MPR problems in phylogeny.
+Narushima, H., and M. Hanazawa. 1997. A more efficient
+algorithm for MPR problems in phylogeny.
 Discrete Applied Mathematics 80(2-3):231-238.
 
-Schliep, K. P. 2011. phangorn: phylogenetic analysis in R. \emph{Bioinformatics} 27(4):592-593.
+Schliep, K. P. 2011. phangorn: phylogenetic analysis
+in R. \emph{Bioinformatics} 27(4):592-593.
 
-Swofford, D. L., and W. P. Maddison. 1987. Reconstructing ancestral character states under
-Wagner parsimony. Mathematical Biosciences 87(2):199-229.
+Swofford, D. L., and W. P. Maddison. 1987.
+Reconstructing ancestral character states under
+Wagner parsimony. \emph{Mathematical Biosciences} 87(2):199-229.
 }
 \seealso{
-The functions described here are effectively wrappers of \code{phangorn}'s function
-\code{\link[phangorn]{ancestral.pars}}.
+The functions described here are effectively
+wrappers of \code{phangorn}'s function
+\code{\link[phangorn:ancestral.pml]{ancestral.pars}}.
 }
 \author{
 David W. Bapst

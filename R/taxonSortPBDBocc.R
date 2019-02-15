@@ -77,9 +77,13 @@
 #' @author 
 #' David W. Bapst, but partly inspired by Matthew Clapham's \code{cleanTaxon} 
 #' (found at \href{https://github.com/mclapham/PBDB-R-scripts/blob/master/taxonClean.R}{this location} on github) and
-#' R package paleobioDB's \code{pbdb_temp_range} function (found
+#' R package \code{paleobioDB}'s \code{pbdb_temp_range} function (found
 #' at  \href{https://github.com/ropensci/paleobioDB/blob/master/R/pbdb_temporal_functions.R#L64-178 }{this location} 
 #' on github.
+
+#' @references
+#' Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
+#' application programming interface. \emph{Paleobiology} 42(1):1-7.
 
 #' @examples
 #' #load example graptolite PBDB occ dataset

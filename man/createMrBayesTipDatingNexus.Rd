@@ -6,13 +6,14 @@
 \title{Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes}
 \usage{
 createMrBayesTipDatingNexus(tipTimes, outgroupTaxa = NULL,
-  treeConstraints = NULL, ageCalibrationType, whichAppearance = "first",
-  treeAgeOffset, minTreeAge = NULL, collapseUniform = TRUE,
-  anchorTaxon = TRUE, newFile = NULL, origNexusFile = NULL,
-  parseOriginalNexus = TRUE, createEmptyMorphMat = TRUE,
-  orderedChars = NULL, morphModel = "strong", runName = NULL,
-  ngen = "100000000", doNotRun = FALSE, cleanNames = TRUE,
-  printExecute = TRUE)
+  treeConstraints = NULL, ageCalibrationType,
+  whichAppearance = "first", treeAgeOffset, minTreeAge = NULL,
+  collapseUniform = TRUE, anchorTaxon = TRUE, newFile = NULL,
+  origNexusFile = NULL, parseOriginalNexus = TRUE,
+  createEmptyMorphMat = TRUE, orderedChars = NULL,
+  morphModel = "strong", morphFiltered = "parsInf", runName = NULL,
+  ngen = "100000000", doNotRun = FALSE, autoCloseMrB = FALSE,
+  cleanNames = TRUE, printExecute = TRUE)
 }
 \arguments{
 \item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
@@ -151,10 +152,23 @@ and 'relaxed assumptions' models described by Bapst, Schreiber and Carlson (Syst
 The default is a model which makes very 'strong' assumptions about the process of morphological evolution,
 while the 'relaxed' alternative allows for considerably more heterogeneity in the rate
 of morphological evolution across characters, and in the forward and reverse transition
-rates between states. Note that in both cases, the character data is assumed to be filtered
-to only parsimony-informative characters, without autapomorphies.}
+rates between states. Also see argument \code{morphFiltered}.}
 
-\item{runName}{The name of the run, used for naming the log files. 
+\item{morphFiltered}{This argument controls what type of filtering the input
+morphological data is assumed to have been collected under. The likelihood of
+the character data will be modified to take into account the apparent filtering
+(Lewis, 2001; Allman et al., 2010). The default value, \code{"parsInf"}, forces
+characters to be treated as if they were collected as part of a parsimony-based
+study, with constant characters and autapomorphies (characters that only differ
+in state in a single taxon unit) ignored or otherwise filtered out, and any such
+characters in the presented matrix will be ignored. \code{morphFiltered = "variable"}
+assumes that while constant characters are still filtered out (e.g. it is
+difficult or impossible to count the number of morphological characters that
+show no variation across a group), the autapomorphies were intentionally collected
+and included in the presented matrix. Thus, constant characters in the included
+matrix will be ignored, but autapomorphies will be considered.}
+
+\item{runName}{The name of the run, used for naming the log files and MCMC output files. 
 If not set, the name will be taken from the name given for outputting
 the NEXUS script (\code{newFile}). If \code{newFile} is not given, and
 \code{runName} is not set by the user, the default run name will be  "new_run_paleotree".}
@@ -165,6 +179,11 @@ Default (\code{ngen = 100000000}) is very high.}
 \item{doNotRun}{If \code{TRUE}, the commands that cause a script to automatically begin running in 
 \emph{MrBayes} will be left out. Useful for troubleshooting initial runs of scripts for non-fatal errors and
 warnings (such as ignored constraints). Default for this argument is \code{FALSE}.}
+
+\item{autoCloseMrB}{If \code{TRUE}, the MrBayes script created by this function will
+'autoclose', so that when an MCMC run finishes the specified number of generations,
+it does not interactively check whether to continue the MCMC. This is often necessary
+for batch analyses.}
 
 \item{cleanNames}{If \code{TRUE} (the default), then special characters
 (currently, this only contains the forward-slashes: '/') are removed from

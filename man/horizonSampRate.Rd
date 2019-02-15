@@ -4,7 +4,8 @@
 \alias{horizonSampRate}
 \title{Estimate Sampling Rate from Sampling Horizon Data (Solow and Smith, 1997)}
 \usage{
-horizonSampRate(sampOcc = NULL, durations = NULL, nCollections = NULL)
+horizonSampRate(sampOcc = NULL, durations = NULL,
+  nCollections = NULL)
 }
 \arguments{
 \item{sampOcc}{A list with the number of elements equal to the number of taxa,
@@ -55,7 +56,7 @@ do not need to be known: its only the number of collections that matters.
 #let's try a simulation example:
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(30,40), nExtant = 0)
+	nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 sampledOccurrences <- sampleRanges(taxa,r = 0.5,ranges.only = FALSE)
 

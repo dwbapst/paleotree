@@ -2,64 +2,101 @@
 % Please edit documentation in R/makePBDBtaxonTree.R
 \name{makePBDBtaxonTree}
 \alias{makePBDBtaxonTree}
+\alias{plotTaxaTreePBDB}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
-makePBDBtaxonTree(data, rank, method = "parentChild", solveMissing = NULL,
-  tipSet = "nonParents", cleanTree = TRUE, APIversion = "1.1")
+makePBDBtaxonTree(taxaDataPBDB, rank, method = "parentChild",
+  tipSet = "nonParents", cleanTree = TRUE,
+  annotatedDuplicateNames = TRUE, APIversion = "1.2")
+
+plotTaxaTreePBDB(taxaTree, edgeLength = 1)
 }
 \arguments{
-\item{data}{A table of taxonomic data collected from the Paleobiology Database, using the taxa list option
-with show = phylo. Should work with versions 1.1-1.2 of the API, with either the 'pbdb' or 'com' vocab. However,
-as 'accepted_name' is not available in API v1.1, the resulting tree will have a taxon's *original* name and not
+\item{taxaDataPBDB}{A table of taxonomic data collected from
+the Paleobiology Database, using the taxa list option
+with \code{show = class}. Should work with versions 1.1-1.2 of
+the API, with either the \code{pbdb} or \code{com} vocab. However,
+as \code{accepted_name} is not available in API v1.1, the resulting
+tree will have a taxon's *original* name and not
 any formally updated name.}
 
-\item{rank}{The selected taxon rank; must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'.}
+\item{rank}{The selected taxon rank; must be one of 'species',
+'genus', 'family', 'order', 'class' or 'phylum'.}
 
-\item{method}{Controls which algorithm is used for calculating the taxon-tree: either \code{method  = } \code{"parentChild"}
-(the default option) which converts the listed binary parent-child taxon relationships from the input PBDB data,
-or \code{method = "Linnean"}, which converts a taxon-tree by creating a table of the Linnean
-taxonomic assignments (family, order, etc), which are provided when
-option 'show = phylo' is used in PBDB API calls.}
-
-\item{solveMissing}{Under \code{method  = } \code{"parentChild"}, what should \code{makePBDBtaxonTree} do about
-multiple 'floating' parent taxa, listed without their own parent taxon information in the input
- dataset under \code{data}? Each of these is essentially a separate root taxon, for a different set
- of parent-child relationships, and thus poses a problem as far as returning a single phylogeny is
- concerned. If \code{solveMissing = NULL} (the default), nothing is done and the operation halts with
- an error, reporting the identity of these taxa. Two alternative solutions are offered: first,
- \code{solveMissing  = } \code{"mergeRoots"} will combine these disparate potential roots and link them to an
- artificially-constructed pseudo-root, which at least allows for visualization of the taxonomic
- structure in a limited dataset. Secondly, \code{solveMissing  = } \code{"queryPBDB"} queries the Paleobiology
- Database repeatedly via the API for information on parent taxa of the 'floating' parents, and continues
- within a \code{while()} loop until only one such unassigned parent taxon remains. This latter option may
- talk a long time or never finish, depending on the linearity and taxonomic structures encountered in the
- PBDB taxonomic data; i.e. if someone a taxon was ultimately its own indirect child in some grand loop by
- mistake, then under this option \code{makePBDBtaxonTree} might never finish. In cases where taxonomy is
- bad due to weird and erroneous taxonomic assignments reported by the PBDB, this routine may search all
- the way back to a very ancient and deep taxon, such as the Eukaryota taxon.
-Users should thus use \code{solveMissing  = } \code{"queryPBDB"} only with caution.}
+\item{method}{Controls which algorithm is used for calculating
+the taxon-tree. The default option is \code{method  = "parentChild"}
+which converts the listed binary parent-child taxon relationships in
+the Paleobiology Database- these parent-child relationships (if missing
+from the input dataset) are autofilled using API calls to the
+Paleobiology Database. Alternatively, users may use
+\code{method = "Linnean"}, which converts the table of Linnean taxonomic
+assignments (family, order, etc as provided by \code{show = class} in
+PBDB API calls) into a taxon-tree. Two methods formerly both implemented
+under \code{method  = "parentChild"} are also available as
+\code{method = "parentChildOldMergeRoot"} and \code{method = "parentChildOldQueryPBDB"}
+respectively. Both of these use similar algorithms as the current
+\code{method  = "parentChild"} but differ in how they treat taxa with
+parents missing from the input taxonomic dataset.
+\code{method = "parentChildOldQueryPBDB"} behaves most similar
+to \code{method = "parentChild"}  in that it queries the Paleobiology
+Database via the API , but repeatedly does so for information on parent
+taxa of the 'floating' parents, and continues within a \code{while}
+loop until only one such unassigned parent taxon remains. This latter
+option may talk a long time or never finish, depending on the
+linearity and taxonomic structures encountered in the PBDB taxonomic
+data; i.e. if someone a taxon was ultimately its own indirect child
+in some grand loop by mistake, then under this option
+\code{makePBDBtaxonTree} might never finish. In cases where taxonomy
+is bad due to weird and erroneous taxonomic assignments reported by
+the PBDB, this routine may search all the way back to a very ancient
+and deep taxon, such as the \emph{Eukaryota} taxon.
+\code{method = "parentChildOldMergeRoot"} will combine these disparate
+potential roots and link them to an artificially-constructed
+pseudo-root, which at least allows for visualization of the taxonomic
+structure in a limited dataset. This latter option will be fully
+offline, as it does nto do any additional API calls
+of the Paleobiology Database, unlike other options.}
 
 \item{tipSet}{This argument only impacts analyses where the argument
-\code{method  = } \code{"parentChild"} is also used. This \code{tipSet} controls
+\code{method  = "parentChild"} is also used. This \code{tipSet} controls
 which taxa are selected as tip taxa for the
-output tree. The default \code{tipSet  = } \code{"nonParents"} selects all child taxa which
+output tree. The default \code{tipSet  = "nonParents"} selects all child taxa which
 are not listed as parents in \code{parentChild}. Alternatively, \code{tipSet = "all"}
 will add a tip to every internal node with the parent-taxon name encapsulated in
 parentheses.}
 
-\item{cleanTree}{By default, the tree is run through a series of post-processing, including having singles collapsed,
-nodes reordered and being written out as a Newick string and read back in, to ensure functionality with ape functions
-and ape-derived functions. If FALSE, none of this post-processing is done and users should beware, as such trees can
+\item{cleanTree}{When \code{TRUE} (the default), the tree is run through a series of
+post-processing, including having singles collapsed,
+nodes reordered and being written out as a Newick string and read
+back in, to ensure functionality with ape functions
+and ape-derived functions. If \code{FALSE}, none of this post-processing
+is done and users should beware, as such trees can
 lead to hard-crashes of R.}
 
-\item{APIversion}{Version of the Paleobiology Database API used by \code{makePBDBtaxonTree} when
-\code{solveMissing  = } \code{"queryPBDB"}. The current default is "1.1", which is the only option available
-as of 05/05/2015. In the future, the improved API version "1.2" will be released on the public
-PBDB server, which will become the new default for this function, but the option to return to "1.1"
-behavior will be retained for .}
+\item{annotatedDuplicateNames}{A logical determining whether duplicate taxon names,
+when found in the Paleobiology Database for taxa (presumably reflecting an issue with
+taxa being obsolete but with incomplete seniority data), should be annotated to include
+sequential numbers so to modify them, via function\code{base}'s
+\code{\link[base]{make.unique}}. This only applies to
+\code{method = "parentChild"}, with the default option being
+\code{annotatedDuplicateNames = TRUE}. If more than 26 duplicates are found, an error
+is issued. If this argument is \code{FALSE}, an error is issued if duplicate taxon
+names are found.}
+
+\item{APIversion}{Version of the Paleobiology Database API used by
+\code{makePBDBtaxonTree} when \code{method  = "parentChild"} or
+\code{method  = "parentChildOldQueryPBDB"} is used. The current default
+is \code{APIversion = "1.2"}, the most recent API version as of 12/11/2018.}
+
+\item{taxaTree}{A phylogeny of class \code{phylo}, presumably a taxon tree as output from
+\code{makePBDBtaxonTree} with higher-taxon names as node labels.}
+
+\item{edgeLength}{The edge length that the plotted tree should be plotted
+with (\code{plotTaxaTreePBDB} plots phylogenies as non-ultrametric,
+not as a cladogram with aligned tips).}
 }
 \value{
-A phylogeny of class 'phylo', where each tip is a taxon of the given 'rank'. See additional details
+A phylogeny of class \code{phylo}, where each tip is a taxon of the given 'rank'. See additional details
 regarding branch lengths can be found in the sub-algorithms used to create the taxon-tree by this function:
 \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}.
 
@@ -74,74 +111,91 @@ Similar issues also effect the identification of parent taxa, as the accepted na
 parent ID number is only provided in version 1.2 of the API.
 }
 \description{
-This function creates phylogeny-like object of type \code{phylo} from the taxonomic information
-recorded in a taxonomy download from the PBDB for a given group. Two different algorithms are provided,
-the default being based on parent-child taxon relationships, the other based on the nested Linnean hierarchy.
+The function \code{makePBDBtaxonTree} creates phylogeny-like 
+object of class \code{phylo} from the taxonomic information
+recorded in a taxonomy download from the PBDB for
+a given group. Two different algorithms are provided,
+the default being based on parent-child taxon relationships,
+the other based on the nested Linnean hierarchy. The function
+\code{plotTaxaTreePBDB} is also provided as a minor helper
+function for optimally plotting the labeled topologies that are
+output by \code{makePBDBtaxonTree}.
 }
 \details{
-This function should not be taken too seriously. Many groups in the Paleobiology Database have
-out-of-date or very incomplete taxonomic information. This function is meant to help visualize
-what information is present, and by use of time-scaling functions, allow us to visualize the intersection
-of temporal and phylogenetic, mainly to look for incongruence due to either incorrect taxonomic placements,
+This function should not be taken too seriously.
+Many groups in the Paleobiology Database have
+out-of-date or very incomplete taxonomic information.
+This function is meant to help visualize
+what information is present, and by use of time-scaling
+functions, allow us to visualize the intersection
+of temporal and phylogenetic, mainly to look for incongruence
+due to either incorrect taxonomic placements,
 erroneous occurrence data or both. 
 
-Note however that, contrary to common opinion among some paleontologists, taxon-trees may be just as useful for 
-macroevolutionary studies as reconstructed phylogenies (Soul and Friedman, in press.).
+Note however that, contrary to common opinion among some
+paleontologists, taxon-trees may be just as useful for 
+macroevolutionary studies as reconstructed phylogenies
+(Soul and Friedman, 2015.).
 }
 \examples{
 \dontrun{
 
-easyGetPBDBtaxa <- function(taxon,show = c("phylo","img","app")){
-	#let's get some taxonomic data
-	taxaData <- read.csv(paste0("http://paleobiodb.org/",
-		"data1.1/taxa/list.txt?base_name = ",taxon,
-		"&rel = all_children&show = ",
-	paste0(show,collapse = ","),"&status = senior"),
-	stringsAsFactors = FALSE)
-	return(taxaData)
-	}
 
 #graptolites
 graptData <- easyGetPBDBtaxa("Graptolithina")
 graptTree <- makePBDBtaxonTree(graptData,"genus",
-	method = "parentChild", solveMissing = "queryPBDB")
+	   method = "parentChild")
 #try Linnean
 graptTree <- makePBDBtaxonTree(graptData,"genus",
-	method = "Linnean")
-plot(graptTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
+	   method = "Linnean")
+
+# plot it!
+plot(graptTree,show.tip.label = FALSE,
+    no.margin = TRUE,edge.width = 0.35)
 nodelabels(graptTree$node.label,adj = c(0,1/2))
 
+#################
 #conodonts
 conoData <- easyGetPBDBtaxa("Conodonta")
 conoTree <- makePBDBtaxonTree(conoData,"genus",
-	method = "parentChild", solveMissing = "queryPBDB")
-plot(conoTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
+	   method = "parentChild")
+
+# plot it!
+plot(conoTree,show.tip.label = FALSE,
+   no.margin = TRUE,edge.width = 0.35)
 nodelabels(conoTree$node.label,adj = c(0,1/2))
 
+############################
 #asaphid trilobites
 asaData <- easyGetPBDBtaxa("Asaphida")
 asaTree <- makePBDBtaxonTree(asaData,"genus",
-	method = "parentChild", solveMissing = "queryPBDB")
-plot(asaTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
+	   method = "parentChild")
+
+# plot it!
+plot(asaTree,show.tip.label = FALSE,
+   no.margin = TRUE,edge.width = 0.35)
 nodelabels(asaTree$node.label,adj = c(0,1/2))
 
 #Ornithischia
 ornithData <- easyGetPBDBtaxa("Ornithischia")
 ornithTree <- makePBDBtaxonTree(ornithData,"genus",
-	method = "parentChild", solveMissing = "queryPBDB")
+	  method = "parentChild")
 #try Linnean
 #need to drop repeated taxon first: Hylaeosaurus
-ornithData <- ornithData[-(which(ornithData[,"taxon_name"] == "Hylaeosaurus")[1]),]
+ornithData <- ornithData[
+   -(which(ornithData[,"taxon_name"] == "Hylaeosaurus")[1]),]
 ornithTree <- makePBDBtaxonTree(ornithData,"genus",
-	method = "Linnean")
-plot(ornithTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
+	  method = "Linnean")
+plot(ornithTree,show.tip.label = FALSE,
+   no.margin = TRUE,edge.width = 0.35)
 nodelabels(ornithTree$node.label,adj = c(0,1/2))
 
 #Rhynchonellida
 rynchData <- easyGetPBDBtaxa("Rhynchonellida")
 rynchTree <- makePBDBtaxonTree(rynchData,"genus",
-	method = "parentChild", solveMissing = "queryPBDB")
-plot(rynchTree,show.tip.label = FALSE,no.margin = TRUE,edge.width = 0.35)
+	  method = "parentChild")
+plot(rynchTree, show.tip.label = FALSE, 
+   no.margin = TRUE, edge.width = 0.35)
 nodelabels(rynchTree$node.label,adj = c(0,1/2))
 
 #some of these look pretty messy!
@@ -157,24 +211,29 @@ nodelabels(rynchTree$node.label,adj = c(0,1/2))
 data(graptPBDB)
 
 #get the taxon tree: Linnean method
-graptTree <- makePBDBtaxonTree(graptTaxaPBDB, "genus", method = "Linnean")
-plot(graptTree,cex = 0.4)
-nodelabels(graptTree$node.label,cex = 0.5)
+graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
+    "genus", method = "Linnean")
+plot(graptTree, cex = 0.4)
+nodelabels(graptTree$node.label, cex = 0.5)
 
 #get the taxon tree: parentChild method
-graptTree <- makePBDBtaxonTree(graptTaxaPBDB, "genus", method = "parentChild")
+graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
+    "genus", method = "parentChild")
 plot(graptTree,cex = 0.4)
 nodelabels(graptTree$node.label,cex = 0.5)
 
 #get time data from occurrences
-graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,rank = "genus",onlyFormal = FALSE)
+graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,
+    rank = "genus", onlyFormal = FALSE)
 graptTimeGenus <- occData2timeList(occList = graptOccGenus)
 
 #let's time-scale the parentChild tree with paleotree
-	# use minimum branch length for visualization
+		# use minimum branch length for visualization
 		# and nonstoch.bin so we plot maximal ranges
-timeTree <- bin_timePaleoPhy(graptTree,timeList = graptTimeGenus,
-	nonstoch.bin = TRUE,type = "mbl",vartime = 3)
+timeTree <- bin_timePaleoPhy(graptTree,
+    timeList = graptTimeGenus,
+    nonstoch.bin = TRUE,
+    type = "mbl", vartime = 3)
 
 #drops a lot of taxa; some of this is due to mispellings, etc
 
@@ -183,14 +242,18 @@ timeTree <- bin_timePaleoPhy(graptTree,timeList = graptTimeGenus,
 
 #make pretty plot with library strap
 library(strap)
-geoscalePhylo(timeTree, ages = timeTree$ranges.used)
+geoscalePhylo(timeTree,
+    ages = timeTree$ranges.used)
 nodelabels(timeTree$node.label,cex = 0.5)
 
 }
 
 }
 \references{
-Soul, L. C., and M. Friedman. In Press. Taxonomy and Phylogeny Can Yield
+Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
+application programming interface. \emph{Paleobiology} 42(1):1-7.
+
+Soul, L. C., and M. Friedman. 2015. Taxonomy and Phylogeny Can Yield
 Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology} 
 (\href{http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract}{Link})
 }
@@ -200,6 +263,8 @@ to create the taxon-tree within this function,
 and users should consult their manual pages for additional details:
 
 \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}
+
+Closely related functions for 
 
 Other functions for manipulating PBDB data can be found at \code{\link{taxonSortPBDBocc}},
 \code{\link{occData2timeList}}, and the example data at \code{\link{graptPBDB}}.

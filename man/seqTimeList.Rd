@@ -55,7 +55,7 @@ of the randomized seqTimeList procedure and such solutions should probably be ig
 #Simulate some fossil ranges with simFossilRecord
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-nTotalTaxa = c(60,80), nExtant = 0)
+	nTotalTaxa = c(60,80), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 #simulate a fossil record with imperfect sampling with sampleRanges()
 rangesCont <- sampleRanges(taxa,r = 0.1)

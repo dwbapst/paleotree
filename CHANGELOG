@@ -1,5 +1,8 @@
-Version - 3.1.4 -
+Version - 3.1.9 - 02-15-19 (Not Released to CRAN)
 -Updates to timePaleoPhy and cal3 documentation for dateTreatment argument, thanks to Armin Eisler for pointing out some inaccuracies in the text.
+-Updated some (but not all) functions related to use of PBDB data to use the proper 1.2 API, and made sure usage was properly accounted for.
+-Added functions for getting taxonomic data for clades, or for a specific list of taxa from the PBDB, which previously had existed in proto form in examples.
+-Added a function for plotting a tree with phylopics from the PBDB - this function currently does not allow for a lot of flexibility and is a work in progress.
 
 Version - 3.1.3 - 10-01-18
 -Added function twoWayEcologyCluster for doing two-way R-mode & Q-mode cluster analyses of proportional abundance datasets from community ecology

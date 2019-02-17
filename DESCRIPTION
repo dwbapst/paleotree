@@ -16,7 +16,8 @@ Imports:
 	methods,
 	png,
 	RCurl,
-	utils
+	utils,
+	magick
 Suggests: testthat
 ByteCompile: TRUE
 Maintainer: David W. Bapst <dwbapst@gmail.com>
@@ -41,5 +42,6 @@ Description: Provides tools for transforming, a posteriori time-scaling, and
     time-scaled phylogenies or unscaled cladograms that reflect the relationships
     among taxon units.
 License: CC0
+Encoding: UTF-8
 URL: https://github.com/dwbapst/paleotree
 RoxygenNote: 6.1.1

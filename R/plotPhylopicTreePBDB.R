@@ -236,12 +236,12 @@ plotPhylopicTreePBDB <- function(
 #' @export
 
 cachePhyloPicPNG <- function(
-	tree, taxaDataPBDB, cacheDir
+	tree, taxaDataPBDB=tree$taxaDataPBDB, cacheDir
 ){
 	ids <- getPhyloPicIDNum(taxaData=taxaDataPBDB, tree=tree)
 	for(i in seq_along(ids)) {
 		picPNG <- getPhyloPicPNG(ids[i])
-		magick::image_write(picPNG, path=file.path(cacheDir, paste0(ids[i], ".png")), format="png")
+		png::writePNG(picPNG, target=file.path(cacheDir, paste0(ids[i], ".png")))
 	}
 }
 

@@ -13,7 +13,6 @@
 
 
 
-
 #' @param tree A phylogeny of class \code{phylo} which will be
 #' plotted, with the terminal tip taxa replaced by silhouettes.
 #' The tree will be plotted with edge lengths.
@@ -60,10 +59,21 @@
 #' and from there to \code{plot}.
 
 
+#' @param cacheDir If not \code{NULL}, first look here for a cached
+#' version of the images. This makes loading faster.
+#' The default is \code{NULL}.
+
+# @param focalTaxon If not \code{NULL}, which taxon to highlight red
+
+#### would be better to treat this as a vector of same length as
+#### number of tip taxa, for which to indicate colors of
+
+# @param ... Other arguments to pass to plotting code
+
+
 
 #' @return
-#' This function returns nothing - it just plots the input tree with
-#' silhouettes from the PhyloPic database.
+#' Thisfunction silently returns the positions for elements in the tree
 
 #' @seealso
 #' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
@@ -114,6 +124,8 @@ plotPhylopicTreePBDB <- function(
 		rescalePNG = TRUE,
 		trimPNG = TRUE,
 		makeMonochrome = FALSE,
+		cacheDir = NULL,
+		focalTaxon = NULL,
 		...
 		){		
 	#########################################
@@ -160,15 +172,23 @@ plotPhylopicTreePBDB <- function(
 	# true aspect ratio is their product apparently
 	plotAspRatio <- plotAspRatio / devAspRatio 
 	#
+	
+	
+	
 	# pause 3 seconds so we don't spam the API
-	Sys.sleep(3)
+	#Sys.sleep(3)
+	
+	
+	
 	for (i in 1:lastPP$Ntip){
 		# GET IMAGE
 		picPNG <- getPhyloPicPNG(picID = phylopicIDsPBDB[i], 
 			noiseThreshold = noiseThreshold,
 			rescalePNG = rescalePNG,
 			makeMonochrome = makeMonochrome,
-			trimPNG = trimPNG)
+			trimPNG = trimPNG,
+			cacheDir = cacheDir
+			)
 		#
 		#########################################
 		#get aspect ratio
@@ -203,7 +223,21 @@ plotPhylopicTreePBDB <- function(
 		#
 		##################################################
 		# plot the picPNG using graphics::rasterImage
-		graphics::rasterImage(picPNG,
+
+		
+		# want color?
+			# this code will make a single 'focal' taxon a bright red
+			
+		picPNG_raster <- grDevices::as.raster(picPNG)
+		if(!is.null(focalTaxon)) {
+			if(tree$tip.label[i]==focalTaxon) {
+				picPNG_raster[which(picPNG_raster=="#000000FF")] <- "#FF0000FF"
+			}
+		}
+		
+		
+		
+		graphics::rasterImage(picPNG,	
 			xleft = x - xAdj ,
 			ybottom = y - yAdj ,
 			xright = x + xAdj ,
@@ -212,7 +246,13 @@ plotPhylopicTreePBDB <- function(
 			)
 		# cool
 		}
-	# what to return? nothing I guess
+	modPhyloPlotInfo <- lastPP
+	# add stuff here about what we did to the phylo plot
+	
+
+
+	
+	return(invisible(modPhyloPlotInfo))
 	}
 
 
@@ -226,13 +266,15 @@ getPhyloPicPNG<-function(
 	# require(png);require(RCurl)
 	# png::readPNG RCurl::getURLContent
 	#
+	# pause 1 second
+	Sys.sleep(runif(1,1,2))
+	#
 	# GET IMAGE
 	# get the URL address for the pic via API
 	apiPicURL <- paste0(
 		"http://paleobiodb.org/data1.2/taxa/thumb.png?id=",
 		picID)
-	# pause 1 second
-	Sys.sleep(runif(1,1,2))
+	#
 	# get picPNG		
 	picPNG <-  png::readPNG(RCurl::getURLContent(apiPicURL))
 	############

@@ -1,3 +1,6 @@
+Version - 3.2.0 - 
+-
+
 Version - 3.1.9 - 02-15-19 (Not Released to CRAN)
 -Updates to timePaleoPhy and cal3 documentation for dateTreatment argument, thanks to Armin Eisler for pointing out some inaccuracies in the text.
 -Updated some (but not all) functions related to use of PBDB data to use the proper 1.2 API, and made sure usage was properly accounted for.

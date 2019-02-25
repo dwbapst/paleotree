@@ -182,7 +182,7 @@ plotPhylopicTreePBDB <- function(
 	
 	for (i in 1:lastPP$Ntip){
 		# GET IMAGE
-		picPNG <- getPhyloPicPNG(picID = phylopicIDsPBDB[i], 
+		picPNG <- getPhyloPicPNG(picID_PBDB = phylopicIDsPBDB[i], 
 			noiseThreshold = noiseThreshold,
 			rescalePNG = rescalePNG,
 			makeMonochrome = makeMonochrome,
@@ -257,8 +257,10 @@ plotPhylopicTreePBDB <- function(
 
 
 getPhyloPicPNG<-function(
-		picID, noiseThreshold = 0.1,
-		rescalePNG = TRUE, trimPNG = TRUE,
+		picID_PBDB, 
+		noiseThreshold = 0.1,
+		rescalePNG = TRUE, 
+		trimPNG = TRUE,
 		makeMonochrome = FALSE,
 		plotComparison = FALSE){
 	############################################
@@ -273,7 +275,7 @@ getPhyloPicPNG<-function(
 	# get the URL address for the pic via API
 	apiPicURL <- paste0(
 		"http://paleobiodb.org/data1.2/taxa/thumb.png?id=",
-		picID)
+		picID_PBDB)
 	#
 	# get picPNG		
 	picPNG <-  png::readPNG(RCurl::getURLContent(apiPicURL))

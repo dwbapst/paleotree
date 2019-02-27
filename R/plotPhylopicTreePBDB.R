@@ -21,7 +21,7 @@
 #' the Paleobiology Database containing an \code{$image_no} variable,
 #' as returned when \code{show = "img"} is used. See \emph{Details}.
 
-#' @param size The default is \code{size = 0.9}.
+#' @param sizeScale The default is \code{sizeScale = 0.9}.
 
 #' @param noiseThreshold A threshold for noise in the PNG from Phylopic
 #' to be treated as meaningless noise (i.e. a color that is effectively
@@ -100,8 +100,8 @@
 
 
 
-# note size is vertical, proportional to the space between tips
-	# max horizontal size stops flat / long phylopics from becoming overly huge
+# note sizeScale is vertical, proportional to the space between tips
+	# max horizontal sizeScale stops flat / long phylopics from becoming overly huge
 
 # set x.lim so plot x limits is * (1 + extraMargin)
 # where 1 is the tree height (effectively)
@@ -118,7 +118,7 @@ plotPhylopicTreePBDB <- function(
 		tree, 
 		taxaDataPBDB = tree$taxaDataPBDB,
 		# phylopicIDsPBDB = NULL, 
-		size = 0.9,
+		sizeScale = 0.9,
 		noiseThreshold = 0.1,
 		extraMargin = 0.2,
 		rescalePNG = TRUE,
@@ -196,6 +196,10 @@ plotPhylopicTreePBDB <- function(
 			)
 
 
+plotSinglePhyloPic <- function(){
+	sizeScale = 0.9,
+	lastPP,focalTaxon
+	}			
 			
 			
 		#
@@ -204,21 +208,21 @@ plotPhylopicTreePBDB <- function(
 			# ratio of # of pixel dimensions
 		picAspRatio <- dim(picPNG)[1]/dim(picPNG)[2]
 		#############################################
-		# adjustment of size
-			# need to modify size relative to aspect ratio
+		# adjustment of sizeScale
+			# need to modify sizeScale relative to aspect ratio
 		if(picAspRatio < 1){
 			# its flatish so correct it by aspect ratio
-			picSize <- size * (picAspRatio^0.7)
+			picSize <- sizeScale * (picAspRatio^0.7)
 		}else{
 			# then its skinny, not flat
 			# don't do anything
-			picSize <- size 
+			picSize <- sizeScale 
 			}
 		###########################################
 		# GET THE COORDINATES
 		#
-		# offset is size/2 by default
-		offset <- size*0.9* plotAspRatio
+		# offset is sizeScale/2 by default
+		offset <- sizeScale*0.9* plotAspRatio
 		#
 		#points(lastPP$xx,lastPP$yy)	
 		x<-lastPP$xx[i]+offset
@@ -253,6 +257,8 @@ plotPhylopicTreePBDB <- function(
 			ytop = y + yAdj,
 			interpolate = TRUE
 			)
+			
+			
 		# cool
 		}
 	modPhyloPlotInfo <- lastPP

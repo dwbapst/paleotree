@@ -63,7 +63,19 @@
 #' version of the images. This makes loading faster.
 #' The default is \code{NULL}.
 
-# @param focalTaxon If not \code{NULL}, which taxon to highlight red
+# @param taxaColor If not \code{NULL},
+
+# if NULL, all are black
+# type character
+# if its length 1
+# if its a value that matches a tip label, color that taxon "red"
+# if its a value that does not match a tip label, coerce that colors
+	# if not colors, FAIL
+# if its not length 1, it must be same length as number of tips
+	# if not same length as number of tips, FAIL
+# in which case each value color is expected
+	# if not a color, FAIL
+	
 
 #### would be better to treat this as a vector of same length as
 #### number of tip taxa, for which to indicate colors of
@@ -125,7 +137,7 @@ plotPhylopicTreePBDB <- function(
 		trimPNG = TRUE,
 		makeMonochrome = FALSE,
 		cacheDir = NULL,
-		focalTaxon = NULL,
+		taxaColor = NULL,
 		...
 		){		
 	#########################################
@@ -135,10 +147,43 @@ plotPhylopicTreePBDB <- function(
 		# as pictorial replacements for the tip labels
 	###############################################
 	# check or obtain the phylopic IDs from PBDB
-	phylopicIDsPBDB <- getPhyloPicIDNum(
+	phylopicIDsPBDB <- getPhyloPicIDNumFromPBDB(
 		taxaData = taxaDataPBDB,
 		#phylopicIDsPBDB = phylopicIDsPBDB,
 		tree = tree)
+	###############################################
+	# determine colors for every taxon using taxaColor
+	
+		
+	# if taxaColor is NULL, all are 'black'
+		# just make it black
+		# make all taxonColor NULL
+		taxaColor <- rep(NULL,Ntip(tree))
+	
+	# else, taxaColor must be type character
+		# if not, FAIL
+	# if its length 1
+		# if its a value that matches a tip label, color that taxon "red"
+	
+		#this code will make a single 'focal' taxon a bright red	
+			# red is "#FF0000FF"
+		
+		
+		# if its a value that does not match a tip label, coerce to a color
+			# if not colors, FAIL
+			# if colors, all taxa will be in that color
+			# coerce to a hex value
+			
+	# if its not length 1, it must be same length as number of tips
+		# if not same length as number of tips, FAIL
+		# if right length, value is expected to be a color
+			# if not a color, FAIL
+		# if colors, each taxa will be in that color, in same order as tip.labels
+			# coerce to a hex value		
+
+	
+	
+	
 	##############################################
 	# plot a tree but with blank tip labels
 		# set x.lim so plot x limits is * (1 + extraMargin)
@@ -195,71 +240,20 @@ plotPhylopicTreePBDB <- function(
 			cacheDir = cacheDir
 			)
 
+	
+		 
+		
+		plotSinglePhyloPic(
+			picPNG = picPNG,
+			whichTip = i,
+			lastPP = lastPP,
+			sizeScale = sizeScale,
+			taxonColor = taxaColor[i]
+			)	
+				
+		
+		
 
-plotSinglePhyloPic <- function(){
-	sizeScale = 0.9,
-	lastPP,focalTaxon
-	}			
-			
-			
-		#
-		#########################################
-		#get aspect ratio
-			# ratio of # of pixel dimensions
-		picAspRatio <- dim(picPNG)[1]/dim(picPNG)[2]
-		#############################################
-		# adjustment of sizeScale
-			# need to modify sizeScale relative to aspect ratio
-		if(picAspRatio < 1){
-			# its flatish so correct it by aspect ratio
-			picSize <- sizeScale * (picAspRatio^0.7)
-		}else{
-			# then its skinny, not flat
-			# don't do anything
-			picSize <- sizeScale 
-			}
-		###########################################
-		# GET THE COORDINATES
-		#
-		# offset is sizeScale/2 by default
-		offset <- sizeScale*0.9* plotAspRatio
-		#
-		#points(lastPP$xx,lastPP$yy)	
-		x<-lastPP$xx[i]+offset
-		y<-lastPP$yy[i]
-		#
-		##################################################
-		#adjust the position of the sides for the image
-		#
-		xAdj <- (picSize/2) * (plotAspRatio/picAspRatio) 
-		yAdj <- picSize /2
-		#
-		##################################################
-		# plot the picPNG using graphics::rasterImage
-
-		
-		# want color?
-			# this code will make a single 'focal' taxon a bright red
-			
-		picPNG_raster <- grDevices::as.raster(picPNG)
-		if(!is.null(focalTaxon)) {
-			if(tree$tip.label[i]==focalTaxon) {
-				picPNG_raster[which(picPNG_raster=="#000000FF")] <- "#FF0000FF"
-			}
-		}
-		
-		
-		
-		graphics::rasterImage(picPNG,	
-			xleft = x - xAdj ,
-			ybottom = y - yAdj ,
-			xright = x + xAdj ,
-			ytop = y + yAdj,
-			interpolate = TRUE
-			)
-			
-			
-		# cool
 		}
 	modPhyloPlotInfo <- lastPP
 	# add stuff here about what we did to the phylo plot
@@ -271,43 +265,8 @@ plotSinglePhyloPic <- function(){
 	}
 
 
-getPhyloPicPNG_PBDB<-function(
-		picID_PBDB, 
-		noiseThreshold = 0.1,
-		rescalePNG = TRUE, 
-		trimPNG = TRUE,
-		makeMonochrome = FALSE,
-		plotComparison = FALSE){
-	############################################
-	#	
-	# require(png);require(RCurl)
-	# png::readPNG RCurl::getURLContent
-	#
-	# pause 1 second
-	Sys.sleep(runif(1,1,2))
-	#
-	# GET IMAGE
-	# get the URL address for the pic via API
-	apiPicURL <- paste0(
-		"http://paleobiodb.org/data1.2/taxa/thumb.png?id=",
-		picID_PBDB)
-	#
-	# get picPNG		
-	picPNG <-  png::readPNG(RCurl::getURLContent(apiPicURL))
-	############
-	# phylopic PNG is on the fourth slice
-	#  image(picPNG [,,4])
-	########################
-	return(picPNG)
-	}
 
-
-
-
-	
-	
-	
-getPhyloPic<-function(
+getPhyloPicPNG<-function(
 		picPND, 
 		noiseThreshold = 0.1,
 		rescalePNG = TRUE, 
@@ -326,6 +285,7 @@ getPhyloPic<-function(
 				)
 			)
 		}
+	
 		
 		
 	picPNG <- prepPhyloPic(picPNG, 
@@ -339,129 +299,75 @@ getPhyloPic<-function(
 	}		
 
 
-	
-getPhyloPicIDNum <- function(taxaData, tree){
-	# check or obtain the PBDB phylopic IDs from PBDB
-		# get the phylopic-specific IDs  as well
-	#
-	if(is.null(taxaData)){
-		# get image ID numbers using PBDB API calls for each
-			# tip taxon in the tree using the tip labels
-		tiptaxa <- paste0(tree$tip.label, 
-			collapse = ",")
-		apiAddressTaxa <- paste0(
-			"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
-			tiptaxa, "&rel=exact&show=img"
-			)	
-		# call PBDB API
-		tiptaxaData <- read.csv(apiAddressTaxa,
-			stringsAsFactors = FALSE)
-		# get the image IDs
-		phylopicIDsPBDB<- tiptaxaData $image_no[
-			match(tree$tip.label, tiptaxaData $taxon_name)]
-		names(phylopicIDsPBDB) <- tree$tip.label
-	}else{
-		#
-		# get phylo pic IDs and label with tip labels
-		phylopicIDsPBDB <- as.character(taxaData$image_no[
-			match(tree$tip.label, taxaData$taxon_name)])
-		names(phylopicIDsPBDB) <- tree$tip.label
-		#
-		# CHECKS
-		# does the provided number of IDs equal the number
-			# of tips?
-		if(length(phylopicIDsPBDB) != Ntip(tree)){
-			#print(tree)
-			#print(phylopicIDsPBDB)
-			stop(paste0(
-				"If provided, phylopicIDsPBDB must be have the same",
-				" length as the number of tips on the input tree"))
-			}
-		# make sure its a character vector
-		if(!is.character(phylopicIDsPBDB)){
-			phylopicIDsPBDB <- as.character(phylopicIDsPBDB)
-			if(!is.character(phylopicIDsPBDB)){		
-				stop("Cannot coerce phylopicIDsPBDB to be type character")
-				}
-			}
-		# Are there NAs or blanks?
-		if(any(is.na(phylopicIDsPBDB))){
-			stop("If provided, phylopicIDsPBDB cannot contain any NA values")
-			}
-		if(any(phylopicIDsPBDB == "")){
-			stop("If provided, phylopicIDsPBDB cannot contain any blank values")
-			}
-		# make sure user provided IDs are labeled
-		if(length(names(phylopicIDsPBDB)) != Ntip(tree)){
-			print(length(names(phylopicIDsPBDB)))
-			print(phylopicIDsPBDB)
-			stop(paste0("If provided, phylopicIDsPBDB must have",
-				" labels matching the tree's tip labels"))	
-			}
-		}
-	# make sure phylopicIDsPBDB is sorted relative to tip order
-	phylopicIDsPBDB <- phylopicIDsPBDB[
-		match(tree$tip.label, names(phylopicIDsPBDB))
-		]
-	return(phylopicIDsPBDB)
-	}
 
-prepPhyloPic<-function(
-		picPNG, 
-		noiseThreshold = 0.1,
-		rescalePNG = TRUE, 
-		trimPNG = TRUE,
-		makeMonochrome = FALSE,
-		plotComparison = FALSE){
-	############################################
-	# RESCALE PALETTE
-	sliceOriginal <- picPNG[,,4]
-	if(rescalePNG){
-		#rescale pic so that min is 0 and max is 1
-		picPNG[,,4] <- picPNG[,,4]-abs(min(picPNG[,,4]))
-		picPNG <- picPNG/max(picPNG)
-		#picPNG <- picPNG^0.75
-		}
-	#
-	###################
-	# TRIM THE PHYLOPIC
-		# lots of phylopics have contiguous whitespace at the top/bottom
-	sliceContrasted <- picPNG[,,4]
-	if(trimPNG){
-		sliceContrasted[sliceContrasted  < noiseThreshold] <- 0
-		# find all rows of the PNG from the top AND bottom
-			# that are non-contiguous whitespace
-			# these are to be SAVED
-			# use 'contrasted' version
-		saveRows <- ((cumsum(apply(sliceContrasted , 1, sum)) > 0)
-			 & rev(cumsum(rev(apply(sliceContrasted , 1, sum))) > 0))
+	
+	
+plotSinglePhyloPic <- function(
+		picPNG,
+		whichTip,
+		lastPP,
+		sizeScale = 0.9,
+		taxonColor = NULL
+		){
 		#
-		# turns out lots phylopics also have whitespace on their left/right
-			# need to trim this too
-		# find all COLUMNS of the PNG from the RIGHT AND LEFT
-			# that are non-contiguous whitespace
-			# these are to be SAVED
-		saveCols <- ((cumsum(apply(sliceContrasted , 2, sum)) > 0)
-			 & rev(cumsum(rev(apply(sliceContrasted , 2, sum))) > 0))
-		#
-		# remove whitespace from all slices of the array
-		picPNG <- picPNG[saveRows,saveCols,]
+	#########################################
+	#get aspect ratio
+		# ratio of # of pixel dimensions
+	picAspRatio <- dim(picPNG)[1]/dim(picPNG)[2]
+	#############################################
+	# adjustment of sizeScale
+		# need to modify sizeScale relative to aspect ratio
+	if(picAspRatio < 1){
+		# its flatish so correct it by aspect ratio
+		picSize <- sizeScale * (picAspRatio^0.7)
+	}else{
+		# then its skinny, not flat
+		# don't do anything
+		picSize <- sizeScale 
 		}
-	##############
-	if(makeMonochrome){
-		picPNG <- picPNG^0.001
-		}
-	##############
+	###########################################
+	# GET THE COORDINATES
 	#
-	if(plotComparison){
-		# plots a comparison of three images
-			# as a diagnostic mode
-		layout(1:3)
-		par(mar=c(0,0,0,0))
-		graphics::image(sliceOriginal)
-		graphics::image(sliceContrasted)
-		graphics::image(picPNG [,,4])
+	# offset is sizeScale/2 by default
+	offset <- sizeScale*0.9* plotAspRatio
+	#
+	#points(lastPP$xx,lastPP$yy)	
+	x<-lastPP$xx[whichTip]+offset
+	y<-lastPP$yy[whichTip]
+	#
+	##################################################
+	#adjust the position of the sides for the image
+	#
+	xAdj <- (picSize/2) * (plotAspRatio/picAspRatio) 
+	yAdj <- picSize /2
+	#
+	##################################################
+	# plot the picPNG using graphics::rasterImage
+	picPNG_raster <- grDevices::as.raster(picPNG)
+	# want color?
+		# replaces all black tiles with the color in taxonColor
+	if(!is.null(taxonColor)){
+		picPNG_raster[which(picPNG_raster=="#000000FF")] <- taxonColor
 		}
-	return(picPNG)
-	}
+	# now plot the phylopic
+	graphics::rasterImage(picPNG,	
+		xleft = x - xAdj ,
+		ybottom = y - yAdj ,
+		xright = x + xAdj ,
+		ytop = y + yAdj,
+		interpolate = TRUE
+		)
+	# cool
+
+	
+	
+	
+	}	
+
+
+
+	
+
+
+
 	

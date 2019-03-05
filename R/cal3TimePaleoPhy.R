@@ -940,21 +940,21 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 							){
 							###################################
 							adj_max <- max(add_nodes[i,2],
-								plin[j,9]+plin[j,7])
+								plin[j,9] + plin[j,7])
 							#the zips we ain't looking at
-							adj_zips <- seq(plin[j,7]+step.size,
+							adj_zips <- seq(plin[j,7] + step.size,
 								adj_max,
 								by = step.size) 	
 							#08-01-12: getting the density via the Cal3 algorithm
 							#waiting time from FAD1 to zip
-							gap1 <- plin[j,6]-adj_zips		
+							gap1 <- plin[j,6] - adj_zips		
 							#waiting time from branching point to FAD1
-							gap1 <- ifelse(gap1>0,gap1,0)		
+							gap1 <- ifelse(gap1>0, gap1,0)		
 							#waiting time from branching point to FAD2
-							gap2 <- add_nodes[i,2]-adj_zips			
+							gap2 <- add_nodes[i,2] - adj_zips			
 							#waiting time from stem to FAD1 OR br node
-							gapStem2zip <- ifelse(plin[j,6]>adj_zips,adj_zips,plin[j,6])	
-							adj_totalgap <- gap1+gap2+gapStem2zip
+							gapStem2zip <- ifelse(plin[j,6]>adj_zips, adj_zips,plin[j,6])	
+							adj_totalgap <- gap1 + gap2 + gapStem2zip
 							#07-31-12: Given a lack of other options
 								# gamma(shape = 2,rate = r+p*Ps) distribution best fit
 								# under different combinations with p = q = r,p = q>r and p = q<r

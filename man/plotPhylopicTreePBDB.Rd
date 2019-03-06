@@ -5,8 +5,10 @@
 \title{Plot a Phylogeny with Organismal Silhouettes from PhyloPic, Called Via the Paleobiology Database API}
 \usage{
 plotPhylopicTreePBDB(tree, taxaDataPBDB = tree$taxaDataPBDB,
-  size = 0.9, noiseThreshold = 0.1, extraMargin = 0.2,
-  rescalePNG = TRUE, trimPNG = TRUE, makeMonochrome = FALSE)
+  taxaColor = NULL, cacheDir = "//cachedPhyloPicPNGs",
+  cacheImage = TRUE, sizeScale = 0.9, noiseThreshold = 0.1,
+  extraMargin = 0.2, rescalePNG = TRUE, trimPNG = TRUE,
+  makeMonochrome = FALSE, ...)
 }
 \arguments{
 \item{tree}{A phylogeny of class \code{phylo} which will be
@@ -17,7 +19,28 @@ The tree will be plotted with edge lengths.}
 the Paleobiology Database containing an \code{$image_no} variable,
 as returned when \code{show = "img"} is used. See \emph{Details}.}
 
-\item{size}{The default is \code{size = 0.9}.}
+\item{taxaColor}{Controls the color of plotted PhyloPics. Can either be \code{NULL}
+(the default, all taxa will be plotted as black), or a character vector that is either
+length 1, or the same length as the number of taxa. If \code{taxaColor} is length 1,
+then the value is either interpreted as matching a tip label (in which case, the
+named taxon will be highlighted in bright red), or as a color, which all PhyloPics
+will then be plotted as that color. If the vector is the same length as the number
+of taxa on \code{tree}, each value should be a character value of a
+named color in base R, allowing user control over each PhyloPic
+individually.}
+
+\item{cacheDir}{If not \code{NULL}, this value is used as 
+the name of a sub-directory of the working directory for which to look for
+(or store) cached versions of PhyloPic PNGs to save on processing speed
+and the need to pull the images from an external PNG.
+If \code{NULL}, then cached images will not be checked for, and images downloaded will not be cached.
+The default is}
+
+\item{cacheImage}{If \code{TRUE} (the default), images downloaded from the Paleobiology
+Database and/or the PhyloPic Database will be cached to save on processing speed
+and avoid the need to pull the images from an external PNG.}
+
+\item{sizeScale}{The default is \code{sizeScale = 0.9}.}
 
 \item{noiseThreshold}{A threshold for noise in the PNG from Phylopic
 to be treated as meaningless noise (i.e. a color that is effectively
@@ -41,10 +64,20 @@ to exist to indicate very fine features. However, maybe an image
 is far too much gray-scale, in which case users can try this
 option to force all silhouettes to be monochrome.
 The default is \code{FALSE}.}
+
+\item{...}{Additional arguments, passed to
+\code{plot.phylo} for plotting of the tree. These
+additional arguments may be passed to \code{plot},
+and from there to \code{plot}.}
+
+\item{transparency}{A numeric value between 0 and 1, either length 1, or the same
+length as the number of tips on \code{tree}. This indicates the transparency of
+either all the plotted PhyloPics, or allows user control over each PhyloPic
+individually. The default is 1, which represents maximum opaqueness,
+applied to all PhyloPics.}
 }
 \value{
-This function returns nothing - it just plots the input tree with
-silhouettes from the PhyloPic database.
+Thisfunction silently returns the positions for elements in the tree
 }
 \description{
 This function will take a phylogeny, preferably a taxonomy-tree

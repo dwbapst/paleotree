@@ -19,6 +19,7 @@ Imports:
 	utils
 Suggests: testthat
 ByteCompile: TRUE
+Encoding: UTF-8
 Maintainer: David W. Bapst <dwbapst@gmail.com>
 BugReports: https://github.com/dwbapst/paleotree/issues
 Description: Provides tools for transforming, a posteriori time-scaling, and

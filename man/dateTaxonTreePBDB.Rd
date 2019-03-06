@@ -47,8 +47,13 @@ Returns a dated phylogeny of class \code{phylo}, with an additional element
 called by other functions.
 }
 \description{
-The function \code{dateTaxonTreePBDB} takes a topology of  
-The required input is a topology with tip and internal node labels corresponding to taxa in the Paleobiology Database, and a table of data (containing those same tip and node taxa) obtained from the taxa-list functionality of the Paleobiology Database's API, with appearance times output.
+The function \code{dateTaxonTreePBDB} takes a input consisting of
+a topology, with tip and internal node labels corresponding to
+taxa in the Paleobiology Database, and a table of data (containing those same tip and
+node taxa) obtained from the taxa-list functionality of the Paleobiology Database's API,
+with appearance times. This function will then output a tree with nodes reflecting the
+ages of the respective higher taxa, based on their earliest times of appearance
+from the Paleobiology Database.
 }
 \details{
 The dating by

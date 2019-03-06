@@ -137,7 +137,7 @@ plotPhylopicTreePBDB <- function(
 		# phylopicIDsPBDB = NULL, 
 		taxaColor = NULL,
 		######################
-		cacheDir = "\cachedPhyloPicPNGs",
+		cacheDir = "//cachedPhyloPicPNGs",
 		cacheImage = TRUE,		
 		#######################
 		sizeScale = 0.9,
@@ -218,8 +218,8 @@ plotPhylopicTreePBDB <- function(
 			rescalePNG = rescalePNG, 
 			trimPNG = trimPNG,
 			makeMonochrome = makeMonochrome,
-			plotComparison = plotComparison)
-			}
+			plotComparison = plotComparison
+			)
 		##################################
 		# PLOT IMAGE
 		plotSinglePhyloPic(
@@ -239,7 +239,7 @@ plotPhylopicTreePBDB <- function(
 
 getPhyloPicPNG<-function(
 		picID_pbdb, 
-		cacheDir = "\cachedPhyloPicPNGs",
+		cacheDir = "//cachedPhyloPicPNGs",
 		cacheImage = TRUE
 		){
 	####################################################

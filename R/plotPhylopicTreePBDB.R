@@ -270,11 +270,10 @@ getPhyloPicPNG<-function(
 	# if that doesn't work
 		# try to load from phylopic using PBDB UID
 	if(is.null(picPNG)){
-		picUID <- read.csv(
-			paste0("https://paleobiodb.org/data1.2/taxa/thumb.txt?id="
-				,picID_PBDB),
-			stringsAsFactors = FALSE)$uid
-		picUID <- picUIDdataTable$uid
+		picUID <- paste0("https://paleobiodb.org/data1.2/taxa/thumb.txt?id="
+							,picID_PBDB)
+		picUID <- read.csv(picUID, stringsAsFactors = FALSE)
+		picUID <- picUID$uid
 		picPNG <- getPhyloPicFromPhyloPic(picUID)
 		}
 	################################################

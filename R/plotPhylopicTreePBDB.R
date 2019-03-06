@@ -53,10 +53,6 @@
 # as given by the Paleobiology Database's API under the output
 # \code{image_no} (given when \code{show = img}).
 
-#' @param ... Additional arguments, passed to
-#' \code{plot.phylo} for plotting of the tree. These
-#' additional arguments may be passed to \code{plot},
-#' and from there to \code{plot}.
 
 
 #' @param cacheDir If not \code{NULL}, this value is used as 
@@ -66,7 +62,9 @@
 #' If \code{NULL}, then cached images will not be checked for, and images downloaded will not be cached.
 #' The default is 
 
-#' @param cacheImage If \code{TRUE} (the default), images downloaded from the Paleobiology Database and/or the PhyloPic Database will 
+#' @param cacheImage If \code{TRUE} (the default), images downloaded from the Paleobiology
+#' Database and/or the PhyloPic Database will be cached to save on processing speed
+#' and avoid the need to pull the images from an external PNG.
 
 #' @param taxaColor Controls the color of plotted PhyloPics. Can either be \code{NULL}
 #' (the default, all taxa will be plotted as black), or a character vector that is either
@@ -84,8 +82,10 @@
 #' individually. The default is 1, which represents maximum opaqueness,
 #' applied to all PhyloPics.
 	
-
-# @param ... Other arguments to pass to plotting code
+#' @param ... Additional arguments, passed to
+#' \code{plot.phylo} for plotting of the tree. These
+#' additional arguments may be passed to \code{plot},
+#' and from there to \code{plot}.
 
 
 
@@ -231,14 +231,10 @@ plotPhylopicTreePBDB <- function(
 			)	
 		}
 	modPhyloPlotInfo <- lastPP
-	# add stuff here about what we did to the phylo plot
-	
-
-
-	
+	# add stuff here about what we did to the phylo plot?
+		# like what?
 	return(invisible(modPhyloPlotInfo))
 	}
-
 
 
 getPhyloPicPNG<-function(
@@ -351,3 +347,62 @@ plotSinglePhyloPic <- function(
 		)
 	# cool	
 	}	
+
+prepPhyloPic<-function(
+		picPNG, 
+		noiseThreshold = 0.1,
+		rescalePNG = TRUE, 
+		trimPNG = TRUE,
+		makeMonochrome = FALSE,
+		plotComparison = FALSE){
+	############################################
+	# RESCALE PALETTE
+	sliceOriginal <- picPNG[,,4]
+	if(rescalePNG){
+		#rescale pic so that min is 0 and max is 1
+		picPNG[,,4] <- picPNG[,,4]-abs(min(picPNG[,,4]))
+		picPNG <- picPNG/max(picPNG)
+		#picPNG <- picPNG^0.75
+		}
+	#
+	###################
+	# TRIM THE PHYLOPIC
+		# lots of phylopics have contiguous whitespace at the top/bottom
+	sliceContrasted <- picPNG[,,4]
+	if(trimPNG){
+		sliceContrasted[sliceContrasted  < noiseThreshold] <- 0
+		# find all rows of the PNG from the top AND bottom
+			# that are non-contiguous whitespace
+			# these are to be SAVED
+			# use 'contrasted' version
+		saveRows <- ((cumsum(apply(sliceContrasted , 1, sum)) > 0)
+			 & rev(cumsum(rev(apply(sliceContrasted , 1, sum))) > 0))
+		#
+		# turns out lots phylopics also have whitespace on their left/right
+			# need to trim this too
+		# find all COLUMNS of the PNG from the RIGHT AND LEFT
+			# that are non-contiguous whitespace
+			# these are to be SAVED
+		saveCols <- ((cumsum(apply(sliceContrasted , 2, sum)) > 0)
+			 & rev(cumsum(rev(apply(sliceContrasted , 2, sum))) > 0))
+		#
+		# remove whitespace from all slices of the array
+		picPNG <- picPNG[saveRows,saveCols,]
+		}
+	##############
+	if(makeMonochrome){
+		picPNG <- picPNG^0.001
+		}
+	##############
+	#
+	if(plotComparison){
+		# plots a comparison of three images
+			# as a diagnostic mode
+		layout(1:3)
+		par(mar=c(0,0,0,0))
+		graphics::image(sliceOriginal)
+		graphics::image(sliceContrasted)
+		graphics::image(picPNG [,,4])
+		}
+	return(picPNG)
+	}

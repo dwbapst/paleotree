@@ -135,65 +135,6 @@ getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
 	return(phylopicIDsPBDB)
 	}
 	
-prepPhyloPic<-function(
-		picPNG, 
-		noiseThreshold = 0.1,
-		rescalePNG = TRUE, 
-		trimPNG = TRUE,
-		makeMonochrome = FALSE,
-		plotComparison = FALSE){
-	############################################
-	# RESCALE PALETTE
-	sliceOriginal <- picPNG[,,4]
-	if(rescalePNG){
-		#rescale pic so that min is 0 and max is 1
-		picPNG[,,4] <- picPNG[,,4]-abs(min(picPNG[,,4]))
-		picPNG <- picPNG/max(picPNG)
-		#picPNG <- picPNG^0.75
-		}
-	#
-	###################
-	# TRIM THE PHYLOPIC
-		# lots of phylopics have contiguous whitespace at the top/bottom
-	sliceContrasted <- picPNG[,,4]
-	if(trimPNG){
-		sliceContrasted[sliceContrasted  < noiseThreshold] <- 0
-		# find all rows of the PNG from the top AND bottom
-			# that are non-contiguous whitespace
-			# these are to be SAVED
-			# use 'contrasted' version
-		saveRows <- ((cumsum(apply(sliceContrasted , 1, sum)) > 0)
-			 & rev(cumsum(rev(apply(sliceContrasted , 1, sum))) > 0))
-		#
-		# turns out lots phylopics also have whitespace on their left/right
-			# need to trim this too
-		# find all COLUMNS of the PNG from the RIGHT AND LEFT
-			# that are non-contiguous whitespace
-			# these are to be SAVED
-		saveCols <- ((cumsum(apply(sliceContrasted , 2, sum)) > 0)
-			 & rev(cumsum(rev(apply(sliceContrasted , 2, sum))) > 0))
-		#
-		# remove whitespace from all slices of the array
-		picPNG <- picPNG[saveRows,saveCols,]
-		}
-	##############
-	if(makeMonochrome){
-		picPNG <- picPNG^0.001
-		}
-	##############
-	#
-	if(plotComparison){
-		# plots a comparison of three images
-			# as a diagnostic mode
-		layout(1:3)
-		par(mar=c(0,0,0,0))
-		graphics::image(sliceOriginal)
-		graphics::image(sliceContrasted)
-		graphics::image(picPNG [,,4])
-		}
-	return(picPNG)
-	}
-	
 matchTaxaColor <- function(
 			taxaColorOld, 
 			taxaNames,

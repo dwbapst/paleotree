@@ -59,26 +59,31 @@
 #' and from there to \code{plot}.
 
 
-#' @param cacheDir If not \code{NULL}, first look here for a cached
-#' version of the images. This makes loading faster.
-#' The default is \code{NULL}.
+#' @param cacheDir If not \code{NULL}, this value is used as 
+#' the name of a sub-directory of the working directory for which to look for
+#' (or store) cached versions of PhyloPic PNGs to save on processing speed
+#' and the need to pull the images from an external PNG.
+#' If \code{NULL}, then cached images will not be checked for, and images downloaded will not be cached.
+#' The default is 
 
-# @param taxaColor If not \code{NULL},
+#' @param cacheImage If \code{TRUE} (the default), images downloaded from the Paleobiology Database and/or the PhyloPic Database will 
 
-# if NULL, all are black
-# type character
-# if its length 1
-# if its a value that matches a tip label, color that taxon "red"
-# if its a value that does not match a tip label, coerce that colors
-	# if not colors, FAIL
-# if its not length 1, it must be same length as number of tips
-	# if not same length as number of tips, FAIL
-# in which case each value color is expected
-	# if not a color, FAIL
+#' @param taxaColor Controls the color of plotted PhyloPics. Can either be \code{NULL}
+#' (the default, all taxa will be plotted as black), or a character vector that is either
+#' length 1, or the same length as the number of taxa. If \code{taxaColor} is length 1,
+#' then the value is either interpreted as matching a tip label (in which case, the
+#' named taxon will be highlighted in bright red), or as a color, which all PhyloPics
+#' will then be plotted as that color. If the vector is the same length as the number
+#' of taxa on \code{tree}, each value should be a character value of a
+#' named color in base R, allowing user control over each PhyloPic
+#' individually.
+
+#' @param transparency A numeric value between 0 and 1, either length 1, or the same
+#' length as the number of tips on \code{tree}. This indicates the transparency of
+#' either all the plotted PhyloPics, or allows user control over each PhyloPic
+#' individually. The default is 1, which represents maximum opaqueness,
+#' applied to all PhyloPics.
 	
-
-#### would be better to treat this as a vector of same length as
-#### number of tip taxa, for which to indicate colors of
 
 # @param ... Other arguments to pass to plotting code
 
@@ -113,7 +118,7 @@
 
 
 # note sizeScale is vertical, proportional to the space between tips
-	# max horizontal sizeScale stops flat / long phylopics from becoming overly huge
+	# max horizontal sizeScale stops flat / long PhyloPics from becoming overly huge
 
 # set x.lim so plot x limits is * (1 + extraMargin)
 # where 1 is the tree height (effectively)
@@ -130,19 +135,22 @@ plotPhylopicTreePBDB <- function(
 		tree, 
 		taxaDataPBDB = tree$taxaDataPBDB,
 		# phylopicIDsPBDB = NULL, 
+		taxaColor = NULL,
+		######################
+		cacheDir = "\cachedPhyloPicPNGs",
+		cacheImage = TRUE,		
+		#######################
 		sizeScale = 0.9,
 		noiseThreshold = 0.1,
 		extraMargin = 0.2,
 		rescalePNG = TRUE,
 		trimPNG = TRUE,
 		makeMonochrome = FALSE,
-		cacheDir = NULL,
-		taxaColor = NULL,
 		...
 		){		
 	#########################################
 	# uses calls to the Paleobiology Database's API
-		# to construct a phylogeny with phylopics
+		# to construct a phylogeny with PhyloPics
 			# (from Phylopic, duh)
 		# as pictorial replacements for the tip labels
 	###############################################
@@ -153,37 +161,11 @@ plotPhylopicTreePBDB <- function(
 		tree = tree)
 	###############################################
 	# determine colors for every taxon using taxaColor
-	
-		
-	# if taxaColor is NULL, all are 'black'
-		# just make it black
-		# make all taxonColor NULL
-		taxaColor <- rep(NULL,Ntip(tree))
-	
-	# else, taxaColor must be type character
-		# if not, FAIL
-	# if its length 1
-		# if its a value that matches a tip label, color that taxon "red"
-	
-		#this code will make a single 'focal' taxon a bright red	
-			# red is "#FF0000FF"
-		
-		
-		# if its a value that does not match a tip label, coerce to a color
-			# if not colors, FAIL
-			# if colors, all taxa will be in that color
-			# coerce to a hex value
-			
-	# if its not length 1, it must be same length as number of tips
-		# if not same length as number of tips, FAIL
-		# if right length, value is expected to be a color
-			# if not a color, FAIL
-		# if colors, each taxa will be in that color, in same order as tip.labels
-			# coerce to a hex value		
-
-	
-	
-	
+	taxaColor <- matchTaxaColor(
+		taxaColor = taxaColor, 
+		taxaNames = tree$tip.label,
+		transparency = transparency
+		)	
 	##############################################
 	# plot a tree but with blank tip labels
 		# set x.lim so plot x limits is * (1 + extraMargin)
@@ -216,15 +198,12 @@ plotPhylopicTreePBDB <- function(
 	plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
 	# true aspect ratio is their product apparently
 	plotAspRatio <- plotAspRatio / devAspRatio 
+	##################################################
 	#
-	
-	
-	
 	# pause 3 seconds so we don't spam the API
 	#Sys.sleep(3)
-	
-	
-	
+	#	
+	########################################
 	for (i in 1:lastPP$Ntip){
 		##########################
 		# GET IMAGE
@@ -250,10 +229,6 @@ plotPhylopicTreePBDB <- function(
 			sizeScale = sizeScale,
 			taxonColor = taxaColor[i]
 			)	
-				
-		
-		
-
 		}
 	modPhyloPlotInfo <- lastPP
 	# add stuff here about what we did to the phylo plot
@@ -268,14 +243,16 @@ plotPhylopicTreePBDB <- function(
 
 getPhyloPicPNG<-function(
 		picID_pbdb, 
-		cacheDir = NULL
+		cacheDir = "\cachedPhyloPicPNGs",
+		cacheImage = TRUE
 		){
+	####################################################
 	# first try to find and load a cached version
 	# if that doesn't work
 		# try to load from phylopic using PBDB UID
 	# if that doesn't work
 		# try to load the image from PBDB		
-	cacheLater <- FALSE
+	notCached <- FALSE
 	picPNG <- NULL
 	###########################################
 	# First try to get a cached version
@@ -286,7 +263,7 @@ getPhyloPicPNG<-function(
 		if(file.exists(cachePath)){
 			picPNG <- png:readPNG(cachePath)
 		}else{
-			cacheImage <- TRUE
+			notCached <- TRUE
 			}
 		}
 	##################################################
@@ -304,17 +281,18 @@ getPhyloPicPNG<-function(
 		picPNG <- getPhyloPicPNG_PBDB(picID_PBDB = picID_pbdb)
 		}
 	#########################
-	if(cacheImage){
-		
+	if(cacheImage & notCached){
+		png::writePNG(picPNG,
+			target=file.path(
+				cacheDir,
+				paste0(picID_pbdb, ".png")
+				)
+			)
 		}
-		
 	#########
 	return(picPNG)	
 	}		
 
-
-
-	
 	
 plotSinglePhyloPic <- function(
 		picPNG,
@@ -371,17 +349,5 @@ plotSinglePhyloPic <- function(
 		ytop = y + yAdj,
 		interpolate = TRUE
 		)
-	# cool
-
-	
-	
-	
+	# cool	
 	}	
-
-
-
-	
-
-
-
-	

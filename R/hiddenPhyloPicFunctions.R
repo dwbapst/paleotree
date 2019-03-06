@@ -194,9 +194,96 @@ prepPhyloPic<-function(
 	return(picPNG)
 	}
 	
+matchTaxaColor <- function(
+			taxaColorOld, 
+			taxaNames,
+			transparency = 1
+			){
+		###########################################
+		taxaColorNew <- rep(NULL, length(taxaNames))
+		if(!is.null(taxaColorOld)){
+			# if taxaColorOld is NULL, all are 'black'
+				# just make it black
+				# make all taxonColor NULL
+			# don't have to anything because its already null!
+			##
+			##
+			if(!is.character(taxaColorOld)){
+				# else, taxaColorOld must be type character
+					# if not, FAIL
+				stop("taxaColor must be either NULL or type character")
+				}
+			if(length(taxaColorOld)==1){
+				# if its length 1
+					# if its a value that matches a tip label, color that taxon "red"
+				if(any(taxaColorOld == taxaNames)){
+					#this code will make a single 'focal' taxon a bright red	
+						# red is "#FF0000FF"
+					taxaColorNew[taxaNames == taxaColorOld] <- "red"
+				}else{
+					# if its a value that does not match a tip label, coerce to a color
+						# if not colors, FAIL (will check later when converting to hex values)
+						# if colors, all taxa will be in that color
+					taxaColorNew <- rep(taxaColorOld ,length(taxaNames))
+					}
+			}else{
+				if(length(taxaColorOld) != length(taxaNames)){
+					# if its not length 1, it must be same length as number of tips
+						# if not same length as number of tips, FAIL
+					stop("If taxaColor is not null or length 1, it must be the same length as number of tips")
+					}
+				# if colors, each taxa will be in that color, in same order as tip.labels
+					# if right length, value is expected to be a color
+				taxaColorNew <- taxaColorOld
+				# if not colors, FAIL (will check later when converting to hex values)
+				}	
+		}
+	if(any(is.null(taxaColorNew))){
+		#
+		if(length(transparency) == 1){
+			transparency <- rep(transparency, length(taxaNames))
+		}else{
+			if(length(transparency) == length(taxaNames)){
+				stop("If transparency is not length 1, it must be the same length as number of tips")
+				}
+			}
+		#
+		for(i in which(!is.null(taxaColorNew))){
+			# coerce all non null values to a hex value
+				# red should be "#FF0000FF"
+			# if not a color, FAIL
+			taxaColorNew[i] <- convertColor2Hex(
+				colorName = taxaColorNew[i]
+				)
+			}
+		}
+	return(taxaColorNew)
+	}
 
-
-
+convertColor2Hex <- function(
+		colorName,
+		transparency = 1
+		){
+	######################
+	# check that transparency is between 0 and 1
+	if(transparency<0 | transparency>1){
+		stop("transparency values must be between 0 and 1")
+		}
+	alpha <- transparency * 255
+	############################
+	# coerce all non null values to a hex value
+	newColor <- t(col2rgb(colorName))
+	#
+	newColor <- rgb(
+		newColor,
+		alpha = alpha,
+		maxColorValue = 255
+		)
+	# red should be "#FF0000FF"
+			# yep!
+	# if not a color, FAIL	
+	return(newColor)
+	}
 
 ## Cache phylopic images for a tree
 ## 

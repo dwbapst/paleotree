@@ -214,19 +214,3 @@ prepPhyloPic<-function(
 
 ## @param cacheDir Where to save the output PNGs
 
-## @export
-
-cachePhyloPicPNG <- function(
-		cacheDir
-		){
-	#################
-	ids <- getPhyloPicIDNum(taxaData=taxaDataPBDB, tree=tree)
-	for(i in seq_along(ids)) {
-		picPNG <- getPhyloPicPNG(ids[i])
-		png::writePNG(picPNG,
-			target=file.path(cacheDir,
-				paste0(ids[i], ".png")
-				)
-			)
-	}
-}

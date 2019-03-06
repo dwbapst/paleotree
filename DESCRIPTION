@@ -11,6 +11,7 @@ Imports:
 	phangorn (>= 2.0.0),
 	stats,
 	phytools (>= 0.6-00),
+	jsonlite,
 	graphics,
 	grDevices,
 	methods,

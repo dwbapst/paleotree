@@ -96,6 +96,7 @@
 #' @importFrom utils read.csv type.convert read.table
 #' @importFrom png readPNG 
 #' @importFrom RCurl getURLContent 
+#' @importFrom jsonlite fromJSON
 
 
 NULL

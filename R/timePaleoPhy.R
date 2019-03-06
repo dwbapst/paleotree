@@ -606,7 +606,7 @@ timePaleoPhy <- function(tree,timeData,type = "basic",vartime = NULL,ntrees = 1,
 	for(ntr in 1:ntrees){
 		#resolve nodes, if tree is not binary
 		tree <- savetree
-		if(!is.binary.tree(savetree)  | !is.rooted(savetree)){
+		if(!ape::is.binary.phylo(savetree)  | !is.rooted(savetree)){
 			if(randres){tree <- multi2di(savetree)}
 			if(timeres){tree <- timeLadderTree(savetree,timeData)}
 			}
@@ -623,7 +623,7 @@ timePaleoPhy <- function(tree,timeData,type = "basic",vartime = NULL,ntrees = 1,
 			#need to figure out which nodes are which now if randres; remake node.mins
 			if(length(droppers)>0){
 				stop("node.mins not compatible with datasets where some taxa are dropped; drop before analysis instead")}
-			if((!is.binary.tree(originalInputTree) | !is.rooted(tree)) & randres){
+			if((!ape::is.binary.phylo(originalInputTree) | !is.rooted(tree)) & randres){
 				origDesc <- lapply(prop.part(originalInputTree),function(x) sort(originalInputTree$tip.label[x]))
 				treeDesc <- lapply(prop.part(tree),function(x) sort(tree$tip.label[x]))
 				node_changes <- match(origDesc,treeDesc)

@@ -373,7 +373,7 @@ phyloDiv <- function(tree,int.length = 0.1,int.times = NULL,plot = TRUE,plotLogR
 	tblen <- int.length
 	if(drop.ZLB){ttree <- dropZLB(ttree)}
 	savetree <- ttree
-	if(!is.binary.tree(ttree) | !is.rooted(tree)){ttree <- multi2di(ttree)}
+	if(!ape::is.binary.phylo(ttree) | !is.rooted(tree)){ttree <- multi2di(ttree)}
 	if(is.null(ttree$root.time)){
 		ntime <- node.depth.edgelength(ttree)
 		ntime <- max(ntime)-ntime

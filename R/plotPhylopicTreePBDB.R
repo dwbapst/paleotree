@@ -226,23 +226,23 @@ plotPhylopicTreePBDB <- function(
 	
 	
 	for (i in 1:lastPP$Ntip){
+		##########################
 		# GET IMAGE
-		
-		
-		
-		
 		picPNG <- getPhyloPicPNG(
 			picID_PBDB = phylopicIDsPBDB[i], 
-			noiseThreshold = noiseThreshold,
-			rescalePNG = rescalePNG,
-			makeMonochrome = makeMonochrome,
-			trimPNG = trimPNG,
 			cacheDir = cacheDir
 			)
-
-	
-		 
-		
+		######################################
+		# PREP IMAGE
+		picPNG <- prepPhyloPic(picPNG, 
+			noiseThreshold = noiseThreshold,
+			rescalePNG = rescalePNG, 
+			trimPNG = trimPNG,
+			makeMonochrome = makeMonochrome,
+			plotComparison = plotComparison)
+			}
+		##################################
+		# PLOT IMAGE
 		plotSinglePhyloPic(
 			picPNG = picPNG,
 			whichTip = i,
@@ -267,33 +267,47 @@ plotPhylopicTreePBDB <- function(
 
 
 getPhyloPicPNG<-function(
-		picPND, 
-		noiseThreshold = 0.1,
-		rescalePNG = TRUE, 
-		trimPNG = TRUE,
-		makeMonochrome = FALSE,
-		plotComparison = FALSE
+		picID_pbdb, 
+		cacheDir = NULL
 		){
-
-
-# First try to get a cached version
+	# first try to find and load a cached version
+	# if that doesn't work
+		# try to load from phylopic using PBDB UID
+	# if that doesn't work
+		# try to load the image from PBDB		
+	cacheLater <- FALSE
 	picPNG <- NULL
+	###########################################
+	# First try to get a cached version
 	if(!is.null(cacheDir)) {
-		try(
-			picPNG <- png::readPNG(
-				file.path(cacheDir, paste0(picID, ".png"))
-				)
-			)
+		cachePath <- file.path(cacheDir,
+					paste0(picID, ".png")
+					)
+		if(file.exists(cachePath)){
+			picPNG <- png:readPNG(cachePath)
+		}else{
+			cacheImage <- TRUE
+			}
 		}
-	
+	##################################################
+	# if that doesn't work
+		# try to load from phylopic using PBDB UID
+	if(is.null(picPNG)){
+		picUIDdataTable <- getPhyloPicUIDdataFromPBDB(picID = picID_pbdb)	
+		picUID <- picUIDdataTable$uid
+		picPNG <- getPhyloPicFromPhyloPic(picUID)
+		}
+	################################################
+	# if that doesn't work
+		# try to load the image from PBDB		
+	if(is.null(picPNG)){
+		picPNG <- getPhyloPicPNG_PBDB(picID_PBDB = picID_pbdb)
+		}
+	#########################
+	if(cacheImage){
 		
+		}
 		
-	picPNG <- prepPhyloPic(picPNG, 
-		noiseThreshold = noiseThreshold,
-		rescalePNG = rescalePNG, 
-		trimPNG = trimPNG,
-		makeMonochrome = makeMonochrome,
-		plotComparison = plotComparison)
 	#########
 	return(picPNG)	
 	}		

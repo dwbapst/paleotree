@@ -189,7 +189,7 @@ resolveTreeChar <- function(tree, trait, orderedChar = FALSE, stateBias = NULL, 
 		continueRes <- TRUE
 		while(continueRes){
 			tree1 <- resolveTreeCharMechanism(tree2, trait, orderedChar = orderedChar, stateBias = stateBias, type = "MPR", cost = cost)
-			if(is.binary.tree(tree1) & is.rooted(tree1)){continueRes <- FALSE}
+			if(ape::is.binary.phylo(tree1) & is.rooted(tree1)){continueRes <- FALSE}
 			if(Nnode(tree1) == Nnode(tree2)){continueRes <- FALSE}
 			tree2 <- tree1
 			}

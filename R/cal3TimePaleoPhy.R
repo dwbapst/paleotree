@@ -768,7 +768,7 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 			timeData1 <- cbind(timeData,0)
 			}
 		# now randomly resolve if randres
-		if(randres & (!is.binary.tree(ttree1) | !is.rooted(ttree1))){
+		if(randres & (!ape::is.binary.phylo(ttree1) | !is.rooted(ttree1))){
 			ktree <- multi2di(ttree1)
 			# need to updated node locks if any node.mins given
 			if(!identical(locked_nodesOrig,NA)){

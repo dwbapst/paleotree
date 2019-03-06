@@ -5,10 +5,10 @@
 \title{Plot a Phylogeny with Organismal Silhouettes from PhyloPic, Called Via the Paleobiology Database API}
 \usage{
 plotPhylopicTreePBDB(tree, taxaDataPBDB = tree$taxaDataPBDB,
-  taxaColor = NULL, cacheDir = "//cachedPhyloPicPNGs",
-  cacheImage = TRUE, sizeScale = 0.9, noiseThreshold = 0.1,
-  extraMargin = 0.2, rescalePNG = TRUE, trimPNG = TRUE,
-  makeMonochrome = FALSE, ...)
+  taxaColor = NULL, transparency = 1,
+  cacheDir = "//cachedPhyloPicPNGs", cacheImage = TRUE,
+  sizeScale = 0.9, noiseThreshold = 0.1, extraMargin = 0.2,
+  rescalePNG = TRUE, trimPNG = TRUE, makeMonochrome = FALSE, ...)
 }
 \arguments{
 \item{tree}{A phylogeny of class \code{phylo} which will be
@@ -28,6 +28,12 @@ will then be plotted as that color. If the vector is the same length as the numb
 of taxa on \code{tree}, each value should be a character value of a
 named color in base R, allowing user control over each PhyloPic
 individually.}
+
+\item{transparency}{A numeric value between 0 and 1, either length 1, or the same
+length as the number of tips on \code{tree}. This indicates the transparency of
+either all the plotted PhyloPics, or allows user control over each PhyloPic
+individually. The default is 1, which represents maximum opaqueness,
+applied to all PhyloPics.}
 
 \item{cacheDir}{If not \code{NULL}, this value is used as 
 the name of a sub-directory of the working directory for which to look for
@@ -69,12 +75,6 @@ The default is \code{FALSE}.}
 \code{plot.phylo} for plotting of the tree. These
 additional arguments may be passed to \code{plot},
 and from there to \code{plot}.}
-
-\item{transparency}{A numeric value between 0 and 1, either length 1, or the same
-length as the number of tips on \code{tree}. This indicates the transparency of
-either all the plotted PhyloPics, or allows user control over each PhyloPic
-individually. The default is 1, which represents maximum opaqueness,
-applied to all PhyloPics.}
 }
 \value{
 Thisfunction silently returns the positions for elements in the tree
@@ -88,7 +88,16 @@ Paleobiology Database's API to plot silhouettes of each given tip taxon
 in replacement of their normal tip labels.
 }
 \details{
-This function preferably will pull the identifiers for which images are to be associated with the tip taxa from \code{taxaDataPBDB$image_no}. By default, \code{taxaDataPBDB} itself is assumed to be an element of \code{tree} named \code{tree$taxaData}, as the PBDB data table used to construct the tree is appended to the output tree when \code{\link{makePBDBtaxonTree}} is used to construct a taxonomy-tree. If the functions listed in \code{\link{getTaxaDataPBDB}} are used to obtain the taxonomic data, this table will include the \code{image_no} variable, which is the image identifier numbers needed to call PNGs from the Paleobiology Database API. If \code{taxaDataPBDB} isn't provided, either by the user directly, or as an element of \code{tree}.
+This function preferably will pull the identifiers for which images are to
+be associated with the tip taxa from \code{taxaDataPBDB$image_no}. By default,
+\code{taxaDataPBDB} itself is assumed to be an element of \code{tree} named
+\code{tree$taxaData}, as the PBDB data table used to construct the tree is
+appended to the output tree when \code{\link{makePBDBtaxonTree}} is used to
+construct a taxonomy-tree. If the functions listed in \code{\link{getTaxaDataPBDB}}
+are used to obtain the taxonomic data, this table will include the \code{image_no}
+variable, which is the image identifier numbers needed to call PNGs from the
+Paleobiology Database API. If \code{taxaDataPBDB} isn't provided, either by
+the user directly, or as an element of \code{tree}.
 }
 \examples{
 

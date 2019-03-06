@@ -7,11 +7,17 @@
 #' Paleobiology Database's API to plot silhouettes of each given tip taxon
 #' in replacement of their normal tip labels.
 
-
 #' @details
-#' This function preferably will pull the identifiers for which images are to be associated with the tip taxa from \code{taxaDataPBDB$image_no}. By default, \code{taxaDataPBDB} itself is assumed to be an element of \code{tree} named \code{tree$taxaData}, as the PBDB data table used to construct the tree is appended to the output tree when \code{\link{makePBDBtaxonTree}} is used to construct a taxonomy-tree. If the functions listed in \code{\link{getTaxaDataPBDB}} are used to obtain the taxonomic data, this table will include the \code{image_no} variable, which is the image identifier numbers needed to call PNGs from the Paleobiology Database API. If \code{taxaDataPBDB} isn't provided, either by the user directly, or as an element of \code{tree}. 
-
-
+#' This function preferably will pull the identifiers for which images are to
+#' be associated with the tip taxa from \code{taxaDataPBDB$image_no}. By default,
+#' \code{taxaDataPBDB} itself is assumed to be an element of \code{tree} named
+#' \code{tree$taxaData}, as the PBDB data table used to construct the tree is
+#' appended to the output tree when \code{\link{makePBDBtaxonTree}} is used to
+#' construct a taxonomy-tree. If the functions listed in \code{\link{getTaxaDataPBDB}}
+#' are used to obtain the taxonomic data, this table will include the \code{image_no}
+#' variable, which is the image identifier numbers needed to call PNGs from the
+#' Paleobiology Database API. If \code{taxaDataPBDB} isn't provided, either by
+#' the user directly, or as an element of \code{tree}. 
 
 #' @param tree A phylogeny of class \code{phylo} which will be
 #' plotted, with the terminal tip taxa replaced by silhouettes.
@@ -31,6 +37,9 @@
 #' between 0 and 0.5 representing colors closer to whitespace than true
 #' black. The default is \code{noiseThreshold = 0.1}.
 
+# noiseThreshold threshold for noise in the PNG from Phylopic to be
+# treated as meaningless noise (i.e. a color that is effectively whitespace)
+# and thus can be trimmed as margin to be trimmed by the function
 
 
 #' @param extraMargin The default is \code{extraMargin = 0.2}.
@@ -48,12 +57,9 @@
 #' option to force all silhouettes to be monochrome.
 #' The default is \code{FALSE}.
 
-
 # @param phylopicIDsPBDB ID numbers for images from Phylopic,
 # as given by the Paleobiology Database's API under the output
 # \code{image_no} (given when \code{show = img}).
-
-
 
 #' @param cacheDir If not \code{NULL}, this value is used as 
 #' the name of a sub-directory of the working directory for which to look for
@@ -123,9 +129,6 @@
 # set x.lim so plot x limits is * (1 + extraMargin)
 # where 1 is the tree height (effectively)
 
-# noiseThreshold threshold for noise in the PNG from Phylopic to be
-# treated as meaningless noise (i.e. a color that is effectively whitespace)
-# and thus can be trimmed as margin to be trimmed by the function
 
 
 #' @name plotPhylopicTreePBDB
@@ -136,6 +139,7 @@ plotPhylopicTreePBDB <- function(
 		taxaDataPBDB = tree$taxaDataPBDB,
 		# phylopicIDsPBDB = NULL, 
 		taxaColor = NULL,
+		transparency = 1,
 		######################
 		cacheDir = "//cachedPhyloPicPNGs",
 		cacheImage = TRUE,		
@@ -157,12 +161,11 @@ plotPhylopicTreePBDB <- function(
 	# check or obtain the phylopic IDs from PBDB
 	phylopicIDsPBDB <- getPhyloPicIDNumFromPBDB(
 		taxaData = taxaDataPBDB,
-		#phylopicIDsPBDB = phylopicIDsPBDB,
 		tree = tree)
 	###############################################
 	# determine colors for every taxon using taxaColor
 	taxaColor <- matchTaxaColor(
-		taxaColor = taxaColor, 
+		taxaColorOld = taxaColor, 
 		taxaNames = tree$tip.label,
 		transparency = transparency
 		)	
@@ -254,10 +257,10 @@ getPhyloPicPNG<-function(
 	# First try to get a cached version
 	if(!is.null(cacheDir)) {
 		cachePath <- file.path(cacheDir,
-					paste0(picID, ".png")
+					paste0(picID_PBDB, ".png")
 					)
 		if(file.exists(cachePath)){
-			picPNG <- png:readPNG(cachePath)
+			picPNG <- png::readPNG(cachePath)
 		}else{
 			notCached <- TRUE
 			}

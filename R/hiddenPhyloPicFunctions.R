@@ -85,15 +85,17 @@ getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
 		# call PBDB API
 		tiptaxaData <- read.csv(apiAddressTaxa,
 			stringsAsFactors = FALSE)
-		# get the image IDs
-		phylopicIDsPBDB<- tiptaxaData $image_no[
-			match(tree$tip.label, tiptaxaData $taxon_name)]
+		# get the PBDB image IDs and label with tip labels
+		phylopicIDsPBDB<- tiptaxaData$image_no[
+			match(tree$tip.label, tiptaxaData $taxon_name)
+			]
 		names(phylopicIDsPBDB) <- tree$tip.label
 	}else{
 		#
-		# get phylo pic IDs and label with tip labels
-		phylopicIDsPBDB <- as.character(taxaData$image_no[
-			match(tree$tip.label, taxaData$taxon_name)])
+		# get the PBDB image IDs and label with tip labels
+		phylopicIDsPBDB<- tiptaxaData$image_no[
+			match(tree$tip.label, tiptaxaData $taxon_name)
+			]
 		names(phylopicIDsPBDB) <- tree$tip.label
 		#
 		# CHECKS
@@ -136,48 +138,48 @@ getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
 	}
 	
 matchTaxaColor <- function(
-			taxaColorOld, 
-			taxaNames,
-			transparency = 1
-			){
-		###########################################
-		taxaColorNew <- rep(NULL, length(taxaNames))
-		if(!is.null(taxaColorOld)){
-			# if taxaColorOld is NULL, all are 'black'
-				# just make it black
-				# make all taxonColor NULL
-			# don't have to anything because its already null!
-			##
-			##
-			if(!is.character(taxaColorOld)){
-				# else, taxaColorOld must be type character
-					# if not, FAIL
-				stop("taxaColor must be either NULL or type character")
-				}
-			if(length(taxaColorOld)==1){
-				# if its length 1
-					# if its a value that matches a tip label, color that taxon "red"
-				if(any(taxaColorOld == taxaNames)){
-					#this code will make a single 'focal' taxon a bright red	
-						# red is "#FF0000FF"
-					taxaColorNew[taxaNames == taxaColorOld] <- "red"
-				}else{
-					# if its a value that does not match a tip label, coerce to a color
-						# if not colors, FAIL (will check later when converting to hex values)
-						# if colors, all taxa will be in that color
-					taxaColorNew <- rep(taxaColorOld ,length(taxaNames))
-					}
+		taxaColorOld, 
+		taxaNames,
+		transparency = 1
+		){
+	###########################################
+	taxaColorNew <- rep(NULL, length(taxaNames))
+	if(!is.null(taxaColorOld)){
+		# if taxaColorOld is NULL, all are 'black'
+			# just make it black
+			# make all taxonColor NULL
+		# don't have to anything because its already null!
+		##
+		##
+		if(!is.character(taxaColorOld)){
+			# else, taxaColorOld must be type character
+				# if not, FAIL
+			stop("taxaColor must be either NULL or type character")
+			}
+		if(length(taxaColorOld)==1){
+			# if its length 1
+				# if its a value that matches a tip label, color that taxon "red"
+			if(any(taxaColorOld == taxaNames)){
+				#this code will make a single 'focal' taxon a bright red	
+					# red is "#FF0000FF"
+				taxaColorNew[taxaNames == taxaColorOld] <- "red"
 			}else{
-				if(length(taxaColorOld) != length(taxaNames)){
-					# if its not length 1, it must be same length as number of tips
-						# if not same length as number of tips, FAIL
-					stop("If taxaColor is not null or length 1, it must be the same length as number of tips")
-					}
-				# if colors, each taxa will be in that color, in same order as tip.labels
-					# if right length, value is expected to be a color
-				taxaColorNew <- taxaColorOld
-				# if not colors, FAIL (will check later when converting to hex values)
-				}	
+				# if its a value that does not match a tip label, coerce to a color
+					# if not colors, FAIL (will check later when converting to hex values)
+					# if colors, all taxa will be in that color
+				taxaColorNew <- rep(taxaColorOld ,length(taxaNames))
+				}
+		}else{
+			if(length(taxaColorOld) != length(taxaNames)){
+				# if its not length 1, it must be same length as number of tips
+					# if not same length as number of tips, FAIL
+				stop("If taxaColor is not null or length 1, it must be the same length as number of tips")
+				}
+			# if colors, each taxa will be in that color, in same order as tip.labels
+				# if right length, value is expected to be a color
+			taxaColorNew <- taxaColorOld
+			# if not colors, FAIL (will check later when converting to hex values)
+			}	
 		}
 	if(any(is.null(taxaColorNew))){
 		#
@@ -213,9 +215,9 @@ convertColor2Hex <- function(
 	alpha <- transparency * 255
 	############################
 	# coerce all non null values to a hex value
-	newColor <- t(col2rgb(colorName))
+	newColor <- t(grDevices::col2rgb(colorName))
 	#
-	newColor <- rgb(
+	newColor <- grDevices::rgb(
 		newColor,
 		alpha = alpha,
 		maxColorValue = 255

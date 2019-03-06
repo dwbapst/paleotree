@@ -15,14 +15,14 @@ getPhyloPicFromPhyloPic <- function(picUID){
 	picInfoURL <- paste0("http://phylopic.org/api/a/image/",
 		picUID,"?options=credit+licenseURL+pngFiles")
 	if(RCurl::url.exists(picInfoURL)){
-		picInfo <- jsonlite::fromJSON(picInfoURLs[i],  
+		picInfo <- jsonlite::fromJSON(picInfoURL,  
 			simplifyVector = FALSE)
 		#################
 		#
 		if(length(picInfo$result$pngFiles)>0){
 			#need to check if there is a URL at all
 			picPNGurl <- picInfo$result$pngFiles[[
-				length(picInfo$result$pngFiles)
+					length(picInfo$result$pngFiles)
 				]]$url
 			picPNGurl <- paste0("http://phylopic.org",
 				picPNGurl)

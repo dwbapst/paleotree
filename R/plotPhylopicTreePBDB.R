@@ -221,7 +221,7 @@ plotPhylopicTreePBDB <- function(
 			rescalePNG = rescalePNG, 
 			trimPNG = trimPNG,
 			makeMonochrome = makeMonochrome,
-			plotComparison = plotComparison
+			plotComparison = FALSE
 			)
 		##################################
 		# PLOT IMAGE
@@ -229,6 +229,7 @@ plotPhylopicTreePBDB <- function(
 			picPNG = picPNG,
 			whichTip = i,
 			lastPP = lastPP,
+			plotAspRatio = plotAspRatio,
 			sizeScale = sizeScale,
 			taxonColor = taxaColor[i]
 			)	
@@ -298,6 +299,7 @@ plotSinglePhyloPic <- function(
 		whichTip,
 		lastPP,
 		sizeScale = 0.9,
+		plotAspRatio,
 		taxonColor = NULL
 		){
 		#

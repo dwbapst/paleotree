@@ -1,7 +1,7 @@
 # hidden utility functions for getting phylopics
 
 
-getPhyloPicUIDdataFromPBDB <- function(picIDs){
+getPhyloPicUIDsTableFromPBDB <- function(picIDs){
 	imgNumAPIurl <- "https://paleobiodb.org/data1.2/taxa/thumb.txt?id="
 	URLwithNums <- paste0(imgNumAPIurl,picIDs)	
 	names(URLwithNums) <- names(picIDs)
@@ -9,6 +9,8 @@ getPhyloPicUIDdataFromPBDB <- function(picIDs){
           lapply(URLwithNums, read.csv, stringsAsFactors=FALSE))
 	return(res)
 	}
+	
+
 	
 getPhyloPicFromPhyloPic <- function(picUID){
 	# get image info

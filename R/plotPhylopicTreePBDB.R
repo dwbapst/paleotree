@@ -241,7 +241,7 @@ plotPhylopicTreePBDB <- function(
 
 
 getPhyloPicPNG<-function(
-		picID_pbdb, 
+		picID_PBDB, 
 		cacheDir = "//cachedPhyloPicPNGs",
 		cacheImage = TRUE
 		){
@@ -269,7 +269,7 @@ getPhyloPicPNG<-function(
 	# if that doesn't work
 		# try to load from phylopic using PBDB UID
 	if(is.null(picPNG)){
-		picUIDdataTable <- getPhyloPicUIDdataFromPBDB(picID = picID_pbdb)	
+		picUIDdataTable <- getPhyloPicUIDdataFromPBDB(picID = picID_PBDB)	
 		picUID <- picUIDdataTable$uid
 		picPNG <- getPhyloPicFromPhyloPic(picUID)
 		}
@@ -277,14 +277,14 @@ getPhyloPicPNG<-function(
 	# if that doesn't work
 		# try to load the image from PBDB		
 	if(is.null(picPNG)){
-		picPNG <- getPhyloPicPNG_PBDB(picID_PBDB = picID_pbdb)
+		picPNG <- getPhyloPicPNG_PBDB(picID_PBDB = picID_PBDB)
 		}
 	#########################
 	if(cacheImage & notCached){
 		png::writePNG(picPNG,
 			target=file.path(
 				cacheDir,
-				paste0(picID_pbdb, ".png")
+				paste0(picID_PBDB, ".png")
 				)
 			)
 		}

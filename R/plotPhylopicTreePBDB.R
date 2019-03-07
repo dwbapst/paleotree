@@ -41,12 +41,28 @@
 # treated as meaningless noise (i.e. a color that is effectively whitespace)
 # and thus can be trimmed as margin to be trimmed by the function
 
+#' @param removeSurroundingMargin This argument controls the \code{no.margin} argument
+#' in the function \code{plot.phylo}, which controls whether a (very large) margin is 
+#' placed around the plotted tree, or not. By default, \code{plotPhylopicTreePBDB} will
+#' suppress that margin, so that the plotted tree goes (very nearly) to the edges
+#' of the plotting area.
 
-#' @param extraMargin The default is \code{extraMargin = 0.2}.
+#' @param extraMargin How much extra margin should be added to the side of the graph
+#' to which PhyloPics are being added? This value is 0.08 by default, which works well
+#' if the margin surrounding the entire plot is suppressed via argument
+#' \code{removeSurroundingMargin = TRUE}. If the surrounding margin is not suppressed,
+#' plots look mostly okay if users change to \code{extraMargin = 2}. Obviously this value
+#' should be tweaked for every tree, size of plot and aspect ratio for maximum clarity. 
 
-#' @param rescalePNG If \code{TRUE} (the default), 
+#' @param rescalePNG If \code{TRUE} (the default), the downloaded PhyloPic 
+#' has its color values rebalanced to go from the most extreme white
+#' to the most extreme black. Some (especially PBDB's versions) have varying
+#' levels of gray compression-related artifacts and may not be properly
+#' on a black-to-white scale.
 
-#' @param trimPNG If \code{TRUE} (the default),
+#' @param trimPNG If \code{TRUE} (the default), the PhyloPic PNG is trimmed 
+#' to remove extraneous whitespace from the top and bottom, before rescaling 
+#' of the color values of the PNG.
 
 #' @param makeMonochrome If \code{TRUE}, PhyloPic silhouettes are
 #' forced to be purely monochrome black-and-white, with no gray
@@ -134,15 +150,18 @@ plotPhylopicTreePBDB <- function(
 		tree, 
 		taxaDataPBDB = tree$taxaDataPBDB,
 		# phylopicIDsPBDB = NULL, 
+		#######################
+		sizeScale = 0.9,
+		removeSurroundingMargin = TRUE,
+		extraMargin = 0.08,
+		###########################
 		taxaColor = NULL,
 		transparency = 1,
 		######################
 		cacheDir = "cachedPhyloPicPNGs",
 		cacheImage = TRUE,		
-		#######################
-		sizeScale = 0.9,
+		##########################
 		noiseThreshold = 0.1,
-		extraMargin = 0.2,
 		rescalePNG = TRUE,
 		trimPNG = TRUE,
 		makeMonochrome = FALSE,
@@ -175,6 +194,7 @@ plotPhylopicTreePBDB <- function(
 		tree,
 		plot=FALSE,
 		show.tip.label=FALSE,
+		no.margin = removeSurroundingMargin,
 		...)
 	old_xlim <- outPlot$x.lim[2]
 	new_xlim <- old_xlim * (1 + extraMargin)		
@@ -185,6 +205,7 @@ plotPhylopicTreePBDB <- function(
 		tree,
 		x.lim = new_xlim,
 		show.tip.label = FALSE,
+		no.margin = removeSurroundingMargin,
 		...
 		)
 	##########################################
@@ -345,6 +366,7 @@ plotSinglePhyloPic <- function(
 	# want color?
 		# replaces all black tiles with the color in taxonColor
 	if(!is.null(taxonColor)){
+		print(taxonColor)
 		picPNG_raster[which(picPNG_raster=="#000000FF")] <- taxonColor
 		}
 	# now plot the phylopic

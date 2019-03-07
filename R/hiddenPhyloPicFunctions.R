@@ -184,7 +184,7 @@ matchTaxaColor <- function(
 			# if not colors, FAIL (will check later when converting to hex values)
 			}	
 		}
-	if(any(is.null(taxaColorNew))){
+	if(any(!is.null(taxaColorNew))){
 		#
 		if(length(transparency) == 1){
 			transparency <- rep(transparency, length(taxaNames))
@@ -225,6 +225,7 @@ convertColor2Hex <- function(
 		alpha = alpha,
 		maxColorValue = 255
 		)
+	print(newColor)
 	# red should be "#FF0000FF"
 			# yep!
 	# if not a color, FAIL	

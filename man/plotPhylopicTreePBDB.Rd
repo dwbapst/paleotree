@@ -5,10 +5,11 @@
 \title{Plot a Phylogeny with Organismal Silhouettes from PhyloPic, Called Via the Paleobiology Database API}
 \usage{
 plotPhylopicTreePBDB(tree, taxaDataPBDB = tree$taxaDataPBDB,
-  taxaColor = NULL, transparency = 1,
-  cacheDir = "//cachedPhyloPicPNGs", cacheImage = TRUE,
-  sizeScale = 0.9, noiseThreshold = 0.1, extraMargin = 0.2,
-  rescalePNG = TRUE, trimPNG = TRUE, makeMonochrome = FALSE, ...)
+  sizeScale = 0.9, removeSurroundingMargin = TRUE,
+  extraMargin = 0.08, taxaColor = NULL, transparency = 1,
+  cacheDir = "cachedPhyloPicPNGs", cacheImage = TRUE,
+  noiseThreshold = 0.1, rescalePNG = TRUE, trimPNG = TRUE,
+  makeMonochrome = FALSE, ...)
 }
 \arguments{
 \item{tree}{A phylogeny of class \code{phylo} which will be
@@ -18,6 +19,21 @@ The tree will be plotted with edge lengths.}
 \item{taxaDataPBDB}{A \code{data.frame} of taxonomic data from
 the Paleobiology Database containing an \code{$image_no} variable,
 as returned when \code{show = "img"} is used. See \emph{Details}.}
+
+\item{sizeScale}{The default is \code{sizeScale = 0.9}.}
+
+\item{removeSurroundingMargin}{This argument controls the \code{no.margin} argument
+in the function \code{plot.phylo}, which controls whether a (very large) margin is 
+placed around the plotted tree, or not. By default, \code{plotPhylopicTreePBDB} will
+suppress that margin, so that the plotted tree goes (very nearly) to the edges
+of the plotting area.}
+
+\item{extraMargin}{How much extra margin should be added to the side of the graph
+to which PhyloPics are being added? This value is 0.08 by default, which works well
+if the margin surrounding the entire plot is suppressed via argument
+\code{removeSurroundingMargin = TRUE}. If the surrounding margin is not suppressed,
+plots look mostly okay if users change to \code{extraMargin = 2}. Obviously this value
+should be tweaked for every tree, size of plot and aspect ratio for maximum clarity.}
 
 \item{taxaColor}{Controls the color of plotted PhyloPics. Can either be \code{NULL}
 (the default, all taxa will be plotted as black), or a character vector that is either
@@ -46,8 +62,6 @@ The default is}
 Database and/or the PhyloPic Database will be cached to save on processing speed
 and avoid the need to pull the images from an external PNG.}
 
-\item{sizeScale}{The default is \code{sizeScale = 0.9}.}
-
 \item{noiseThreshold}{A threshold for noise in the PNG from Phylopic
 to be treated as meaningless noise (i.e. a color that is effectively
 whitespace) and thus can be trimmed as empty margin which can be
@@ -56,11 +70,15 @@ are on a scale from 0 to 1, with 0 being true white space, and values
 between 0 and 0.5 representing colors closer to whitespace than true
 black. The default is \code{noiseThreshold = 0.1}.}
 
-\item{extraMargin}{The default is \code{extraMargin = 0.2}.}
+\item{rescalePNG}{If \code{TRUE} (the default), the downloaded PhyloPic 
+has its color values rebalanced to go from the most extreme white
+to the most extreme black. Some (especially PBDB's versions) have varying
+levels of gray compression-related artifacts and may not be properly
+on a black-to-white scale.}
 
-\item{rescalePNG}{If \code{TRUE} (the default),}
-
-\item{trimPNG}{If \code{TRUE} (the default),}
+\item{trimPNG}{If \code{TRUE} (the default), the PhyloPic PNG is trimmed 
+to remove extraneous whitespace from the top and bottom, before rescaling 
+of the color values of the PNG.}
 
 \item{makeMonochrome}{If \code{TRUE}, PhyloPic silhouettes are
 forced to be purely monochrome black-and-white, with no gray

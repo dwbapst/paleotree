@@ -85,19 +85,20 @@ getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
 			tiptaxa, "&rel=exact&show=img"
 			)	
 		# call PBDB API
-		tiptaxaData <- read.csv(apiAddressTaxa,
+		taxaData <- read.csv(apiAddressTaxa,
 			stringsAsFactors = FALSE)
 		# get the PBDB image IDs and label with tip labels
-		phylopicIDsPBDB<- tiptaxaData$image_no[
-			match(tree$tip.label, tiptaxaData $taxon_name)
+		phylopicIDsPBDB<- taxaData$image_no[
+			match(tree$tip.label, taxaData$taxon_name)
 			]
 		names(phylopicIDsPBDB) <- tree$tip.label
 	}else{
 		#
 		# get the PBDB image IDs and label with tip labels
-		phylopicIDsPBDB<- tiptaxaData$image_no[
-			match(tree$tip.label, tiptaxaData $taxon_name)
+		phylopicIDsPBDB <- taxaData$image_no[
+			match(tree$tip.label, taxaData$taxon_name)
 			]
+		phylopicIDsPBDB <- as.character(phylopicIDsPBDB)
 		names(phylopicIDsPBDB) <- tree$tip.label
 		#
 		# CHECKS

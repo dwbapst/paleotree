@@ -93,8 +93,6 @@
 #' additional arguments may be passed to \code{plot},
 #' and from there to \code{plot}.
 
-
-
 #' @return
 #' Thisfunction silently returns the positions for elements in the tree
 
@@ -121,8 +119,6 @@
 #' }
 #' 
 
-
-
 # note sizeScale is vertical, proportional to the space between tips
 	# max horizontal sizeScale stops flat / long PhyloPics from becoming overly huge
 
@@ -141,7 +137,7 @@ plotPhylopicTreePBDB <- function(
 		taxaColor = NULL,
 		transparency = 1,
 		######################
-		cacheDir = "//cachedPhyloPicPNGs",
+		cacheDir = "cachedPhyloPicPNGs",
 		cacheImage = TRUE,		
 		#######################
 		sizeScale = 0.9,
@@ -175,14 +171,13 @@ plotPhylopicTreePBDB <- function(
 		# where 1 is the tree height (effectively)
 	# calculate new x.lim by
 		# *not* plotting a tree
-	outPlot <- 	plot.phylo(
+	outPlot <- plot.phylo(
 		tree,
-		x.lim = new_xlim,
-		show.tip.label = FALSE,
-		...
-		)
+		plot=FALSE,
+		show.tip.label=FALSE,
+		...)
 	old_xlim <- outPlot$x.lim[2]
-	new_xlim <- old_xlim * (1 + extraMargin)
+	new_xlim <- old_xlim * (1 + extraMargin)		
 	#####
 	par(new = TRUE)
 	#####
@@ -212,7 +207,8 @@ plotPhylopicTreePBDB <- function(
 		# GET IMAGE
 		picPNG <- getPhyloPicPNG(
 			picID_PBDB = phylopicIDsPBDB[i], 
-			cacheDir = cacheDir
+			cacheDir = cacheDir,
+			cacheImage = cacheImage
 			)
 		######################################
 		# PREP IMAGE
@@ -243,8 +239,8 @@ plotPhylopicTreePBDB <- function(
 
 getPhyloPicPNG<-function(
 		picID_PBDB, 
-		cacheDir = "//cachedPhyloPicPNGs",
-		cacheImage = TRUE
+		cacheDir = NULL,
+		cacheImage = FALSE
 		){
 	####################################################
 	# first try to find and load a cached version
@@ -284,6 +280,13 @@ getPhyloPicPNG<-function(
 		}
 	#########################
 	if(cacheImage & notCached){
+		if(!dir.exists(cacheDir)){
+			dir.create(
+				cacheDir,
+				showWarnings = FALSE
+				)
+			}
+		#
 		png::writePNG(picPNG,
 			target=file.path(
 				cacheDir,

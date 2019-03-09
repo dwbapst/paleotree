@@ -293,8 +293,8 @@ plotPhyloPicTree <- function(
 	# xmin, ymin, xmax, ymax
 	plotDimensions<- list(
 		xmin = par("usr")[1],
-		ymin = par("usr")[2],
-		xmax = par("usr")[3],
+		xmax = par("usr")[2],
+		ymin = par("usr")[3],
 		ymax = par("usr")[4]
 		)
 	plotSizeX <- plotDimensions$xmax - plotDimensions$xmin
@@ -307,19 +307,13 @@ plotPhyloPicTree <- function(
 	# calculate offset as a function of extraMargin and orientation
 	if(orientation == "rightwards"){
 		offset <- plotDimensions$xmax - max(lastPP$xx)
-		print(offset)
-		offset <- offset*(0.7^(1/devAspRatio))
-		print(offset)
-		print(devAspRatio)		
 		}
 	if(orientation == "upwards"){
 		offset <- plotDimensions$ymax - max(lastPP$yy)
-		print(offset)
-		offset <- offset*(0.7^devAspRatio)
-		print(offset)
-		print(devAspRatio)
-		}	
-
+		}
+	#
+	offset <- offset * 0.5
+	#
 	##################################################
 	#
 	# pause 3 seconds so we don't spam the API

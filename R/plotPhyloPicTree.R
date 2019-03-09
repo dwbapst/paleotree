@@ -115,6 +115,9 @@
 #' black are transformed as under the argument \code{colorGradient = "trueMonochrome"},
 #' so that the PhyloPic is expressed with no intermediate gray-scale values.
 
+#' @param orientation Controls the direction the phylogeny is plotted
+#' in - can be either "rightwards" or "upwards".
+
 #' @param transparency A numeric value between 0 and 1, either length 1, or the same
 #' length as the number of tips on \code{tree}. This indicates the transparency of
 #' either all the plotted PhyloPics, or allows user control over each PhyloPic
@@ -175,6 +178,7 @@ plotPhyloPicTree <- function(
 		sizeScale = 0.9,
 		removeSurroundingMargin = TRUE,
 		extraMargin = 0.08,
+		orientation = "rightwards",
 		###########################
 		taxaColor = NULL,
 		transparency = 1,
@@ -210,6 +214,13 @@ plotPhyloPicTree <- function(
 				"' are reserved and cannot be directly passed to plot.phylo; see documentation"
 			))
 		}
+	#############################################
+	# test that orientation is one of the two values it can be
+	if(length(orientation)!=1){
+		stop("argument orientation must be a single value")}
+	if(orientation != "upwards" & orientation != "rightwards"){
+		stop('only orientation values of "upwards" and "rightwards" are currently accepted')
+		}
 	#################################################
 	# check or obtain the phylopic IDs from PBDB
 	phylopicIDsPBDB <- getPhyloPicIDNumFromPBDB(
@@ -230,18 +241,28 @@ plotPhyloPicTree <- function(
 		# *not* plotting a tree
 	outPlot <- plot.phylo(
 		tree,
+		direction = orientation,
 		plot=FALSE,
 		show.tip.label=FALSE,
 		no.margin = removeSurroundingMargin,
 		...)
-	old_xlim <- outPlot$x.lim[2]
-	new_xlim <- old_xlim * (1 + extraMargin)		
+	# modify margins based on orientation
+	if(orientation == "upwards"){
+		new_xlim <- outPlot$x.lim[2] 
+		new_ylim <- outPlot$y.lim[2] * (1 + extraMargin)
+		}
+	if(orientation == "rightwards"){
+		new_xlim <- outPlot$x.lim[2] * (1 + extraMargin)
+		new_ylim <- outPlot$y.lim[2] 
+		}
 	#####
 	par(new = TRUE)
 	#####
 	plot.phylo(
 		tree,
 		x.lim = new_xlim,
+		y.lim = new_ylim,
+		direction = orientation,
 		show.tip.label = FALSE,
 		no.margin = removeSurroundingMargin,
 		...

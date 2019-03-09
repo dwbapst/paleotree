@@ -6,10 +6,10 @@
 \usage{
 plotPhyloPicTree(tree, taxaDataPBDB = tree$taxaDataPBDB,
   sizeScale = 0.9, removeSurroundingMargin = TRUE,
-  extraMargin = 0.08, taxaColor = NULL, transparency = 1,
-  cacheDir = "cachedPhyloPicPNGs", cacheImage = TRUE,
-  noiseThreshold = 0.1, rescalePNG = TRUE, trimPNG = TRUE,
-  colorGradient = NULL, ...)
+  extraMargin = 0.08, orientation = "rightwards", taxaColor = NULL,
+  transparency = 1, cacheDir = "cachedPhyloPicPNGs",
+  cacheImage = TRUE, noiseThreshold = 0.1, rescalePNG = TRUE,
+  trimPNG = TRUE, colorGradient = NULL, ...)
 }
 \arguments{
 \item{tree}{A phylogeny of class \code{phylo} which will be
@@ -34,6 +34,9 @@ if the margin surrounding the entire plot is suppressed via argument
 \code{removeSurroundingMargin = TRUE}. If the surrounding margin is not suppressed,
 plots look mostly okay if users change to \code{extraMargin = 2}. Obviously this value
 should be tweaked for every tree, size of plot and aspect ratio for maximum clarity.}
+
+\item{orientation}{Controls the direction the phylogeny is plotted
+in - can be either "rightwards" or "upwards".}
 
 \item{taxaColor}{Controls the color of plotted PhyloPics. Can either be \code{NULL}
 (the default, all taxa will be plotted as black), or a character vector that is either

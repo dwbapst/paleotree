@@ -1,6 +1,6 @@
-
-
+library(paleotree)
 set.seed(444)
+
 record <- simFossilRecord(
 	p = 0.1, q = 0.1, 
 	nruns = 1,

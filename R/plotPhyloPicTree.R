@@ -204,7 +204,7 @@ plotPhyloPicTree <- function(
 		"no.margin", "plot", "xlim", "ylim")
 	dotArgNames <- names(list(...))
 	if(any(!is.na(match(reservedPlotArgs, dotArgNames)))){
-		matchingReservd <- match(reservedPlotArgs, dotArgNames)[
+		matchingReserved <- match(reservedPlotArgs, dotArgNames)[
 			!is.na(match(reservedPlotArgs, dotArgNames))
 			]
 		matchingReserved <- dotArgNames[matchingReserved]
@@ -312,6 +312,7 @@ plotPhyloPicTree <- function(
 			picPNG = picPNG,
 			whichTip = i,
 			lastPP = lastPP,
+			orientation = orientation,
 			plotAspRatio = plotAspRatio,
 			sizeScale = sizeScale,
 			taxonColor = taxaColor[i]
@@ -390,9 +391,10 @@ plotSinglePhyloPic <- function(
 		picPNG,
 		whichTip,
 		lastPP,
-		sizeScale = 0.9,
+		sizeScale,
+		orientation,
 		plotAspRatio,
-		taxonColor = NULL
+		taxonColor 
 		){
 		#
 	#########################################
@@ -417,14 +419,26 @@ plotSinglePhyloPic <- function(
 	offset <- sizeScale*0.9* plotAspRatio
 	#
 	#points(lastPP$xx,lastPP$yy)	
-	x<-lastPP$xx[whichTip]+offset
-	y<-lastPP$yy[whichTip]
 	#
 	##################################################
-	#adjust the position of the sides for the image
 	#
-	xAdj <- (picSize/2) * (plotAspRatio/picAspRatio) 
-	yAdj <- picSize /2
+	# modify offset and size adjustment based on orientation
+	if(orientation == "upwards"){
+		x<-lastPP$xx[whichTip]
+		y<-lastPP$yy[whichTip]+offset
+		#adjust the position of the sides for the image
+		#
+		xAdj <- (picSize/2) 
+		yAdj <- picSize /2 * (plotAspRatio/picAspRatio) 
+		}
+	if(orientation == "rightwards"){
+		x<-lastPP$xx[whichTip]+offset
+		y<-lastPP$yy[whichTip]
+		#adjust the position of the sides for the image
+		#
+		xAdj <- (picSize/2) * (plotAspRatio/picAspRatio) 
+		yAdj <- picSize /2
+		}
 	#
 	##################################################
 	# plot the picPNG using graphics::rasterImage

@@ -401,6 +401,48 @@ plotSinglePhyloPic <- function(
 	#get aspect ratio
 		# ratio of # of pixel dimensions
 	picAspRatio <- dim(picPNG)[1]/dim(picPNG)[2]
+	#
+	#points(lastPP$xx,lastPP$yy)	
+	#
+	xyCoords <- getCoordsPhyloPic(
+		picAspRatio = picAspRatio,
+		orientation = orientation, 
+		xx = lastPP$xx,
+		yy = lastPP$yy
+		)
+	#
+	##################################################
+	# plot the picPNG using graphics::rasterImage
+	picPNG_raster <- grDevices::as.raster(picPNG)
+	# want color?
+		# replaces all black tiles with the color in taxonColor
+	if(!is.null(taxonColor)){
+		#print(taxonColor)
+		picPNG_raster[which(picPNG_raster=="#000000FF")] <- taxonColor
+		#graphics::rasterImage(picPNG_raster [,,4])
+		#stop()
+		}
+	# now plot the phylopic
+	graphics::rasterImage(
+		image = picPNG_raster,	
+		xleft = xyCoords$xleft,
+		ybottom = xyCoords$ybottom,
+		xright = xyCoords$xright,
+		ytop = xyCoords$ytop,
+		interpolate = TRUE
+		)
+	# cool	
+	}		
+
+
+getCoordsPhyloPic <- function(
+	picAspRatio,
+	orientation, 
+	xx,
+	yy
+	){
+
+
 	#############################################
 	# adjustment of sizeScale
 		# need to modify sizeScale relative to aspect ratio
@@ -417,11 +459,10 @@ plotSinglePhyloPic <- function(
 	#
 	# offset is sizeScale/2 by default
 	offset <- sizeScale*0.9* plotAspRatio
-	#
-	#points(lastPP$xx,lastPP$yy)	
-	#
-	##################################################
-	#
+
+
+
+
 	# modify offset and size adjustment based on orientation
 	if(orientation == "upwards"){
 		x<-lastPP$xx[whichTip]
@@ -439,28 +480,20 @@ plotSinglePhyloPic <- function(
 		xAdj <- (picSize/2) * (plotAspRatio/picAspRatio) 
 		yAdj <- picSize /2
 		}
-	#
-	##################################################
-	# plot the picPNG using graphics::rasterImage
-	picPNG_raster <- grDevices::as.raster(picPNG)
-	# want color?
-		# replaces all black tiles with the color in taxonColor
-	if(!is.null(taxonColor)){
-		#print(taxonColor)
-		picPNG_raster[which(picPNG_raster=="#000000FF")] <- taxonColor
-		#graphics::rasterImage(picPNG_raster [,,4])
-		#stop()
-		}
-	# now plot the phylopic
-	graphics::rasterImage(picPNG_raster,	
+	
+		
+		
+	finalCoords <- list(
 		xleft = x - xAdj ,
 		ybottom = y - yAdj ,
 		xright = x + xAdj ,
 		ytop = y + yAdj,
-		interpolate = TRUE
 		)
-	# cool	
-	}		
+	return(finalCoords)
+	}	
+	
+
+		
 	
 prepPhyloPic<-function(
 		picPNG, 

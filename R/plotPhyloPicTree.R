@@ -253,7 +253,7 @@ plotPhyloPicTree <- function(
 	# modify margins based on orientation
 	if(orientation == "rightwards"){
 		# adjust extraMargin by aspect ratio
-		extraMargin <- extraMargin/(devAspRatio)
+		extraMargin <- extraMargin/(devAspRatio^2)
 		#
 		new_xlim <- c(outPlot$x.lim[1], 
 			outPlot$x.lim[2] * (1 + extraMargin))
@@ -287,19 +287,37 @@ plotPhyloPicTree <- function(
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
 	#
 	# get the plot's own aspect ratio
-	plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
+	#plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
+	# no better to get from par("usr")
+	plotDimensions <- par("usr")
+	# xmin, ymin, xmax, ymax
+	plotDimensions<- list(
+		xmin = par("usr")[1],
+		ymin = par("usr")[2],
+		xmax = par("usr")[3],
+		ymax = par("usr")[4]
+		)
+	plotSizeX <- plotDimensions$xmax - plotDimensions$xmin
+	plotSizeY <- plotDimensions$ymax - plotDimensions$ymin
+	plotAspRatio <- plotSizeX / plotSizeY
 	#
 	# true aspect ratio is their product apparently
 	plotAspRatio <- plotAspRatio / devAspRatio 
 	#
 	# calculate offset as a function of extraMargin and orientation
 	if(orientation == "rightwards"){
-		offset <- lastPP$x.lim[2] - max(lastPP$xx)
-		offset <- offset/0.5
+		offset <- plotDimensions$xmax - max(lastPP$xx)
+		print(offset)
+		offset <- offset*(0.7^(1/devAspRatio))
+		print(offset)
+		print(devAspRatio)		
 		}
 	if(orientation == "upwards"){
-		offset <- lastPP$y.lim[2] - max(lastPP$yy)
-		offset <- offset/0.5
+		offset <- plotDimensions$ymax - max(lastPP$yy)
+		print(offset)
+		offset <- offset*(0.7^devAspRatio)
+		print(offset)
+		print(devAspRatio)
 		}	
 
 	##################################################

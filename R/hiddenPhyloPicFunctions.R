@@ -146,11 +146,13 @@ matchTaxaColor <- function(
 		transparency = 1
 		){
 	###########################################
-	taxaColorNew <- rep(NULL, length(taxaNames))
+	taxaColorNew <- rep(NA, length(taxaNames))
+	#print(taxaNames)
+	#
 	if(!is.null(taxaColorOld)){
 		# if taxaColorOld is NULL, all are 'black'
 			# just make it black
-			# make all taxonColor NULL
+			# make all taxonColor NA
 		# don't have to anything because its already null!
 		##
 		##
@@ -176,7 +178,7 @@ matchTaxaColor <- function(
 			if(length(taxaColorOld) != length(taxaNames)){
 				# if its not length 1, it must be same length as number of tips
 					# if not same length as number of tips, FAIL
-				stop("If taxaColor is not null or length 1, it must be the same length as number of tips")
+				stop("If taxaColor is not NULL or length 1, it must be the same length as number of tips")
 				}
 			# if colors, each taxa will be in that color, in same order as tip.labels
 				# if right length, value is expected to be a color
@@ -184,7 +186,7 @@ matchTaxaColor <- function(
 			# if not colors, FAIL (will check later when converting to hex values)
 			}	
 		}
-	if(any(!is.null(taxaColorNew))){
+	if(any(!is.na(taxaColorNew))){
 		#
 		if(length(transparency) == 1){
 			transparency <- rep(transparency, length(taxaNames))
@@ -194,7 +196,10 @@ matchTaxaColor <- function(
 				}
 			}
 		#
-		for(i in which(!is.null(taxaColorNew))){
+		#print(taxaColorNew)
+		#print(which(!is.na(taxaColorNew)))
+		#
+		for(i in which(!is.na(taxaColorNew))){
 			# coerce all non null values to a hex value
 				# red should be "#FF0000FF"
 			# if not a color, FAIL
@@ -225,7 +230,8 @@ convertColor2Hex <- function(
 		alpha = alpha,
 		maxColorValue = 255
 		)
-	print(newColor)
+	#print(newColor)
+	#
 	# red should be "#FF0000FF"
 			# yep!
 	# if not a color, FAIL	

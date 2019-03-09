@@ -43,7 +43,7 @@
 
 #' @param removeSurroundingMargin This argument controls the \code{no.margin} argument
 #' in the function \code{plot.phylo}, which controls whether a (very large) margin is 
-#' placed around the plotted tree, or not. By default, \code{plotPhylopicTreePBDB} will
+#' placed around the plotted tree, or not. By default, \code{plotPhyloPicTreePBDB} will
 #' suppress that margin, so that the plotted tree goes (very nearly) to the edges
 #' of the plotting area.
 
@@ -64,14 +64,29 @@
 #' to remove extraneous whitespace from the top and bottom, before rescaling 
 #' of the color values of the PNG.
 
-#' @param makeMonochrome If \code{TRUE}, PhyloPic silhouettes are
-#' forced to be purely monochrome black-and-white, with no gray
-#' scale. Most of the silhouettes are binary black-and-white already
-#' but some aren't, but those gray-scale values (sometimes?) seem
+# @param makeMonochrome If \code{TRUE}, PhyloPic silhouettes are
+# forced to be purely monochrome black-and-white, with no gray
+# scale. Most of the silhouettes are binary black-and-white already
+# but some aren't, but those gray-scale values (sometimes?) seem
+# to exist to indicate very fine features. However, maybe an image
+# is far too much gray-scale, in which case users can try this
+# option to force all silhouettes to be monochrome.
+# The default is \code{FALSE}.
+
+#' @param colorGradient Controls the depth gradient of color for the PhyloPics.
+#' For typical plotting in black color, this means adjusting
+#' the grayscale (and possibly removing any gray scale). 
+#' Most of the silhouettes are binary black-and-white already but some
+#' aren't, but those gray-scale values (sometimes?) seem
 #' to exist to indicate very fine features. However, maybe an image
-#' is far too much gray-scale, in which case users can try this
-#' option to force all silhouettes to be monochrome.
-#' The default is \code{FALSE}.
+#' is far too much gray-scale, in which case users can apply this argument.
+#' If \code{colorGradient = NULL} (the default), then nothing is adjusted.
+#' If \code{colorGradient = "trueMonochrome"}, the entire image's gradients are
+#' simplified to a duality: either fully colored or fully transparent.
+#' If \code{colorGradient = "increaseDisparity"}, then a slightly less
+#' extreme option is applied, with values transformed to greatly remove
+#' in-between gray-scale value, shifting them toward color or
+#' not-color without making the sihoullete purely monochrome.
 
 # @param phylopicIDsPBDB ID numbers for images from Phylopic,
 # as given by the Paleobiology Database's API under the output
@@ -96,7 +111,9 @@
 #' will then be plotted as that color. If the vector is the same length as the number
 #' of taxa on \code{tree}, each value should be a character value of a
 #' named color in base R, allowing user control over each PhyloPic
-#' individually.
+#' individually. All PhyloPics expressed in colors other than the default
+#' black are transformed as under the argument \code{colorGradient = "trueMonochrome"},
+#' so that the PhyloPic is expressed with no intermediate gray-scale values.
 
 #' @param transparency A numeric value between 0 and 1, either length 1, or the same
 #' length as the number of tips on \code{tree}. This indicates the transparency of
@@ -107,14 +124,17 @@
 #' @param ... Additional arguments, passed to
 #' \code{plot.phylo} for plotting of the tree. These
 #' additional arguments may be passed to \code{plot},
-#' and from there to \code{plot}.
+#' and from there to \code{plot}. 
+#' Some arguments are reserved and cannot be passed,
+#' particularly: \code{direction}, \code{show.tip.label},
+#' \code{no.margin}, \code{plot}, \code{xlim}, and\code{ylim}.
 
 #' @return
-#' Thisfunction silently returns the positions for elements in the tree
+#' This function silently returns the positions for elements in the tree
 
 #' @seealso
 #' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
-#' and \code{\link{plotPhylopicTreePBDB}}.
+#' and \code{\link{plotPhyloPicTreePBDB}}.
 
 #' @author David W. Bapst
 
@@ -129,7 +149,7 @@
 #' 
 #' 
 #' # now plot with phylopic images
-#' plotPhylopicTreePBDB(tree = tree, 
+#' plotPhyloPicTreePBDB(tree = tree, 
 #' 	taxaDataPBDB = taxaData)
 #' 
 #' }
@@ -143,10 +163,11 @@
 
 
 
-#' @name plotPhylopicTreePBDB
-#' @rdname plotPhylopicTreePBDB
+
+#' @name plotPhyloPicTreePBDB
+#' @rdname plotPhyloPicTreePBDB
 #' @export
-plotPhylopicTreePBDB <- function(
+plotPhyloPicTreePBDB <- function(
 		tree, 
 		taxaDataPBDB = tree$taxaDataPBDB,
 		# phylopicIDsPBDB = NULL, 
@@ -164,15 +185,32 @@ plotPhylopicTreePBDB <- function(
 		noiseThreshold = 0.1,
 		rescalePNG = TRUE,
 		trimPNG = TRUE,
-		makeMonochrome = FALSE,
+		colorGradient = NULL,
 		...
 		){		
 	#########################################
 	# uses calls to the Paleobiology Database's API
+		# or the phylopic API
 		# to construct a phylogeny with PhyloPics
-			# (from Phylopic, duh)
-		# as pictorial replacements for the tip labels
+	# used as pictorial replacements for the tip labels
+	# images taken directory from Phylopic, or PBDB
 	###############################################
+	# check that reserved arguments are not in ...
+	reservedPlotArgs <- c("direction", "show.tip.label",
+		"no.margin", "plot", "xlim", "ylim")
+	dotArgNames <- names(list(...))
+	if(any(!is.na(match(reservedPlotArgs, dotArgNames)))){
+		matchingReservd <- match(reservedPlotArgs, dotArgNames)[
+			!is.na(match(reservedPlotArgs, dotArgNames))
+			]
+		matchingReserved <- dotArgNames[matchingReserved]
+		stop(paste0(
+			"arguments '",
+				paste0(matchingReserved, collapse= "' & '"),
+				"' are reserved and cannot be directly passed to plot.phylo; see documentation"
+			))
+		}
+	#################################################
 	# check or obtain the phylopic IDs from PBDB
 	phylopicIDsPBDB <- getPhyloPicIDNumFromPBDB(
 		taxaData = taxaDataPBDB,
@@ -233,11 +271,18 @@ plotPhylopicTreePBDB <- function(
 			)
 		######################################
 		# PREP IMAGE
+		# if this pic is colored, make it truly monochrome
+		if(is.na(taxaColor[i])){
+			colorGradientTaxon <- colorGradient
+		}else{
+			colorGradientTaxon <- "trueMonochrome"
+			}
+		#
 		picPNG <- prepPhyloPic(picPNG, 
 			noiseThreshold = noiseThreshold,
 			rescalePNG = rescalePNG, 
 			trimPNG = trimPNG,
-			makeMonochrome = makeMonochrome,
+			colorGradient = colorGradientTaxon,
 			plotComparison = FALSE
 			)
 		##################################
@@ -366,11 +411,13 @@ plotSinglePhyloPic <- function(
 	# want color?
 		# replaces all black tiles with the color in taxonColor
 	if(!is.null(taxonColor)){
-		print(taxonColor)
+		#print(taxonColor)
 		picPNG_raster[which(picPNG_raster=="#000000FF")] <- taxonColor
+		#graphics::rasterImage(picPNG_raster [,,4])
+		#stop()
 		}
 	# now plot the phylopic
-	graphics::rasterImage(picPNG,	
+	graphics::rasterImage(picPNG_raster,	
 		xleft = x - xAdj ,
 		ybottom = y - yAdj ,
 		xright = x + xAdj ,
@@ -378,14 +425,14 @@ plotSinglePhyloPic <- function(
 		interpolate = TRUE
 		)
 	# cool	
-	}	
-
+	}		
+	
 prepPhyloPic<-function(
 		picPNG, 
 		noiseThreshold = 0.1,
 		rescalePNG = TRUE, 
 		trimPNG = TRUE,
-		makeMonochrome = FALSE,
+		colorGradient = NULL,
 		plotComparison = FALSE){
 	############################################
 	# RESCALE PALETTE
@@ -422,7 +469,12 @@ prepPhyloPic<-function(
 		picPNG <- picPNG[saveRows,saveCols,]
 		}
 	##############
-	if(makeMonochrome){
+	if(colorGradient == "trueMonochrome"){
+		picPNG <- picPNG^0.001
+		picPNG[picPNG < 0.2] <- 0
+		picPNG[picPNG >= 0.2] <- 1
+		}
+	if(colorGradient == "increaseDisparity"){
 		picPNG <- picPNG^0.001
 		}
 	##############

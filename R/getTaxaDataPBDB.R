@@ -71,7 +71,7 @@
 
 #' @seealso 
 #' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
-#' and \code{\link{plotPhylopicTreePBDB}}.
+#' and \code{\link{plotPhyloPicTreePBDB}}.
 
 
 #' @author David W. Bapst

@@ -234,6 +234,12 @@ plotPhyloPicTree <- function(
 		transparency = transparency
 		)	
 	##############################################
+	# get the device's aspect ratio
+	devAspRatio <- grDevices::dev.size()[1] / grDevices::dev.size()[2]
+	# adjust extraMargin by aspect ratio
+	extraMargin <- extraMargin/devAspRatio
+	offset <- (1+(extraMargin*0.75))
+	#
 	# plot a tree but with blank tip labels
 		# set x.lim so plot x limits is * (1 + extraMargin)
 		# where 1 is the tree height (effectively)
@@ -270,8 +276,6 @@ plotPhyloPicTree <- function(
 	##########################################
 	# now get the last plotting environment
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
-	# get the device's aspect ratio
-	devAspRatio <- grDevices::dev.size()[1] / grDevices::dev.size()[2]
 	# get the plot's own aspect ratio
 	plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
 	# true aspect ratio is their product apparently
@@ -312,7 +316,7 @@ plotPhyloPicTree <- function(
 			picPNG = picPNG,
 			whichTip = i,
 			lastPP = lastPP,
-			extraMargin = extraMargin,
+			offset = offset,
 			orientation = orientation,
 			plotAspRatio = plotAspRatio,
 			sizeScale = sizeScale,
@@ -324,5 +328,3 @@ plotPhyloPicTree <- function(
 		# like what?
 	return(invisible(modPhyloPlotInfo))
 	}
-
-

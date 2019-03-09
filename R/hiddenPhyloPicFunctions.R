@@ -281,23 +281,23 @@ getCoordsPhyloPic <- function(
 		# GET THE COORDINATES
 		#
 		# offset is sizeScale/2 by default
-		offset <- sizeScale*0.9* plotAspRatio
+		offset <- sizeScale * 0.9 * plotAspRatio
 		#
 		x<-xx+offset
 		y<-yy
 		#adjust the position of the sides for the image
 		#
 		xAdj <- (picSize/2) * (plotAspRatio/picAspRatio) 
-		yAdj <- picSize /2
+		yAdj <- picSize/2
 		}
 	###############
 	###
 	if(orientation == "upwards"){
 		# adjustment of sizeScale
 			# need to modify sizeScale relative to aspect ratio
-		if(picAspRatio > 1){
+		if(picAspRatio > 100){
 			# its skinny so correct it by aspect ratio
-			picSize <- sizeScale * (picAspRatio^0.7)
+			picSize <- sizeScale * (picAspRatio^1)
 		}else{
 			# then its flattish, don't do anything
 			picSize <- sizeScale 
@@ -306,14 +306,14 @@ getCoordsPhyloPic <- function(
 		# GET THE COORDINATES
 		#
 		# offset is sizeScale/2 by default
-		offset <- sizeScale*0.9* plotAspRatio
+		offset <- sizeScale * 0.5 * 1/plotAspRatio
 		#
 		x<-xx
 		y<-yy+offset
 		#adjust the position of the sides for the image
 		#
-		xAdj <- (picSize/2) 
-		yAdj <- picSize /2 * (plotAspRatio/picAspRatio) 
+		xAdj <- picSize/2 * (plotAspRatio/picAspRatio) 
+		yAdj <- (picSize/2) 
 		}
 	######
 	#		

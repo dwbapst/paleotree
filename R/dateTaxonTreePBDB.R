@@ -56,7 +56,7 @@
 
 #' @seealso
 #' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
-#' and \code{\link{plotPhyloPicTreePBDB}}.
+#' and \code{\link{plotPhyloPicTree}}.
 
 #' @author David W. Bapst
 

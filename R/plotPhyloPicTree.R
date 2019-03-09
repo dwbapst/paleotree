@@ -43,7 +43,7 @@
 
 #' @param removeSurroundingMargin This argument controls the \code{no.margin} argument
 #' in the function \code{plot.phylo}, which controls whether a (very large) margin is 
-#' placed around the plotted tree, or not. By default, \code{plotPhyloPicTreePBDB} will
+#' placed around the plotted tree, or not. By default, \code{plotPhyloPicTree} will
 #' suppress that margin, so that the plotted tree goes (very nearly) to the edges
 #' of the plotting area.
 
@@ -134,7 +134,7 @@
 
 #' @seealso
 #' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
-#' and \code{\link{plotPhyloPicTreePBDB}}.
+#' and \code{\link{plotPhyloPicTree}}.
 
 #' @author David W. Bapst
 
@@ -149,7 +149,7 @@
 #' 
 #' 
 #' # now plot with phylopic images
-#' plotPhyloPicTreePBDB(tree = tree, 
+#' plotPhyloPicTree(tree = tree, 
 #' 	taxaDataPBDB = taxaData)
 #' 
 #' }
@@ -164,10 +164,10 @@
 
 
 
-#' @name plotPhyloPicTreePBDB
-#' @rdname plotPhyloPicTreePBDB
+#' @name plotPhyloPicTree
+#' @rdname plotPhyloPicTree
 #' @export
-plotPhyloPicTreePBDB <- function(
+plotPhyloPicTree <- function(
 		tree, 
 		taxaDataPBDB = tree$taxaDataPBDB,
 		# phylopicIDsPBDB = NULL, 

@@ -405,10 +405,12 @@ plotSinglePhyloPic <- function(
 	#points(lastPP$xx,lastPP$yy)	
 	#
 	xyCoords <- getCoordsPhyloPic(
+		xx = lastPP$xx[whichTip],
+		yy = lastPP$yy[whichTip],
+		sizeScale = sizeScale,
+		plotAspRatio = plotAspRatio,
 		picAspRatio = picAspRatio,
-		orientation = orientation, 
-		xx = lastPP$xx,
-		yy = lastPP$yy
+		orientation = orientation			
 		)
 	#
 	##################################################
@@ -433,67 +435,6 @@ plotSinglePhyloPic <- function(
 		)
 	# cool	
 	}		
-
-
-getCoordsPhyloPic <- function(
-	picAspRatio,
-	orientation, 
-	xx,
-	yy
-	){
-
-
-	#############################################
-	# adjustment of sizeScale
-		# need to modify sizeScale relative to aspect ratio
-	if(picAspRatio < 1){
-		# its flatish so correct it by aspect ratio
-		picSize <- sizeScale * (picAspRatio^0.7)
-	}else{
-		# then its skinny, not flat
-		# don't do anything
-		picSize <- sizeScale 
-		}
-	###########################################
-	# GET THE COORDINATES
-	#
-	# offset is sizeScale/2 by default
-	offset <- sizeScale*0.9* plotAspRatio
-
-
-
-
-	# modify offset and size adjustment based on orientation
-	if(orientation == "upwards"){
-		x<-lastPP$xx[whichTip]
-		y<-lastPP$yy[whichTip]+offset
-		#adjust the position of the sides for the image
-		#
-		xAdj <- (picSize/2) 
-		yAdj <- picSize /2 * (plotAspRatio/picAspRatio) 
-		}
-	if(orientation == "rightwards"){
-		x<-lastPP$xx[whichTip]+offset
-		y<-lastPP$yy[whichTip]
-		#adjust the position of the sides for the image
-		#
-		xAdj <- (picSize/2) * (plotAspRatio/picAspRatio) 
-		yAdj <- picSize /2
-		}
-	
-		
-		
-	finalCoords <- list(
-		xleft = x - xAdj ,
-		ybottom = y - yAdj ,
-		xright = x + xAdj ,
-		ytop = y + yAdj,
-		)
-	return(finalCoords)
-	}	
-	
-
-		
 	
 prepPhyloPic<-function(
 		picPNG, 

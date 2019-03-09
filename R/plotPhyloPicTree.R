@@ -250,19 +250,19 @@ plotPhyloPicTree <- function(
 		no.margin = removeSurroundingMargin,
 		...)
 	# modify margins based on orientation
-	if(orientation == "upwards"){
-		# adjust extraMargin by aspect ratio
-		extraMargin <- extraMargin/(devAspRatio^0.7)
-		#
-		new_xlim <- outPlot$x.lim[2] 
-		new_ylim <- outPlot$y.lim[2] * (1 + extraMargin)
-		}
 	if(orientation == "rightwards"){
 		# adjust extraMargin by aspect ratio
-		extraMargin <- extraMargin*(devAspRatio^0.7)
+		extraMargin <- extraMargin/(devAspRatio^2)
 		#
 		new_xlim <- outPlot$x.lim[2] * (1 + extraMargin)
 		new_ylim <- outPlot$y.lim[2] 
+		}
+	if(orientation == "upwards"){
+		# adjust extraMargin by aspect ratio
+		extraMargin <- extraMargin*(devAspRatio^2)
+		#
+		new_xlim <- outPlot$x.lim[2] 
+		new_ylim <- outPlot$y.lim[2] * (1 + extraMargin)
 		}
 	#####
 	par(new = TRUE)
@@ -288,7 +288,7 @@ plotPhyloPicTree <- function(
 	plotAspRatio <- plotAspRatio / devAspRatio 
 	#
 	# calculate offset as a function of extraMargin
-	offset <- (1+(extraMargin*0.5))
+	offset <- (1+(extraMargin*0.7))
 	##################################################
 	#
 	# pause 3 seconds so we don't spam the API

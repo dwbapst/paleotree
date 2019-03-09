@@ -236,9 +236,6 @@ plotPhyloPicTree <- function(
 	##############################################
 	# get the device's aspect ratio
 	devAspRatio <- grDevices::dev.size()[1] / grDevices::dev.size()[2]
-	# adjust extraMargin by aspect ratio
-	extraMargin <- extraMargin/devAspRatio
-	offset <- (1+(extraMargin*0.75))
 	#
 	# plot a tree but with blank tip labels
 		# set x.lim so plot x limits is * (1 + extraMargin)
@@ -254,10 +251,16 @@ plotPhyloPicTree <- function(
 		...)
 	# modify margins based on orientation
 	if(orientation == "upwards"){
+		# adjust extraMargin by aspect ratio
+		extraMargin <- extraMargin/(devAspRatio^0.7)
+		#
 		new_xlim <- outPlot$x.lim[2] 
 		new_ylim <- outPlot$y.lim[2] * (1 + extraMargin)
 		}
 	if(orientation == "rightwards"){
+		# adjust extraMargin by aspect ratio
+		extraMargin <- extraMargin*(devAspRatio^0.7)
+		#
 		new_xlim <- outPlot$x.lim[2] * (1 + extraMargin)
 		new_ylim <- outPlot$y.lim[2] 
 		}
@@ -273,13 +276,19 @@ plotPhyloPicTree <- function(
 		no.margin = removeSurroundingMargin,
 		...
 		)
+	#
 	##########################################
 	# now get the last plotting environment
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+	#
 	# get the plot's own aspect ratio
 	plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
+	#
 	# true aspect ratio is their product apparently
 	plotAspRatio <- plotAspRatio / devAspRatio 
+	#
+	# calculate offset as a function of extraMargin
+	offset <- (1+(extraMargin*0.5))
 	##################################################
 	#
 	# pause 3 seconds so we don't spam the API

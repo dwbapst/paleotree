@@ -81,7 +81,7 @@ getCoordsPhyloPic <- function(
 		#
 		# offset is sizeScale/2 by default
 		# offset <- sizeScale * 0.9 * plotAspRatio
-		x<-xx * offset
+		x<-xx + offset
 		y<-yy
 		#
 		#adjust the position of the sides for the image
@@ -97,7 +97,7 @@ getCoordsPhyloPic <- function(
 		# offset is sizeScale/2 by default
 		# offset <- sizeScale *  #* plotAspRatio
 		x<-xx
-		y<-yy * offset
+		y<-yy + offset
 		#
 		#adjust the position of the sides for the image
 		#

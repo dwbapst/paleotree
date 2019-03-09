@@ -68,7 +68,7 @@ application programming interface. \emph{Paleobiology} 42(1):1-7.
 }
 \seealso{
 See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
-and \code{\link{plotPhyloPicTreePBDB}}.
+and \code{\link{plotPhyloPicTree}}.
 }
 \author{
 David W. Bapst

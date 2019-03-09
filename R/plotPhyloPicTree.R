@@ -312,6 +312,7 @@ plotPhyloPicTree <- function(
 			picPNG = picPNG,
 			whichTip = i,
 			lastPP = lastPP,
+			extraMargin = extraMargin,
 			orientation = orientation,
 			plotAspRatio = plotAspRatio,
 			sizeScale = sizeScale,
@@ -392,6 +393,7 @@ plotSinglePhyloPic <- function(
 		whichTip,
 		lastPP,
 		sizeScale,
+		extraMargin,
 		orientation,
 		plotAspRatio,
 		taxonColor 
@@ -408,6 +410,7 @@ plotSinglePhyloPic <- function(
 		xx = lastPP$xx[whichTip],
 		yy = lastPP$yy[whichTip],
 		sizeScale = sizeScale,
+		extraMargin = extraMargin,
 		plotAspRatio = plotAspRatio,
 		picAspRatio = picAspRatio,
 		orientation = orientation			

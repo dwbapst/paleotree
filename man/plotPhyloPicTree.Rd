@@ -9,7 +9,7 @@ plotPhyloPicTree(tree, taxaDataPBDB = tree$taxaDataPBDB,
   orientation = "rightwards", taxaColor = NULL, transparency = 1,
   cacheDir = "cachedPhyloPicPNGs", cacheImage = TRUE,
   noiseThreshold = 0.1, rescalePNG = TRUE, trimPNG = TRUE,
-  colorGradient = NULL, ...)
+  colorGradient = "original", ...)
 }
 \arguments{
 \item{tree}{A phylogeny of class \code{phylo} which will be
@@ -85,7 +85,7 @@ Most of the silhouettes are binary black-and-white already but some
 aren't, but those gray-scale values (sometimes?) seem
 to exist to indicate very fine features. However, maybe an image
 is far too much gray-scale, in which case users can apply this argument.
-If \code{colorGradient = NULL} (the default), then nothing is adjusted.
+If \code{colorGradient = "original"} (the default), then nothing is adjusted.
 If \code{colorGradient = "trueMonochrome"}, the entire image's gradients are
 simplified to a duality: either fully colored or fully transparent.
 If \code{colorGradient = "increaseDisparity"}, then a slightly less

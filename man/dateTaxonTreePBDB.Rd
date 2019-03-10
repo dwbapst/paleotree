@@ -60,7 +60,55 @@ The dating by
 }
 \examples{
 
-#an example here
+\donttest{
+
+library(paleotree)
+
+taxaAnimals<-c("Archaeopteryx", "Eldredgeops",
+	"Corvus", "Acropora", "Velociraptor", "Gorilla", 
+	"Olenellus", "Lingula", "Dunkleosteus",
+	"Tyrannosaurus", "Triceratops", "Giraffa",
+	"Megatheriidae", "Aedes", "Histiodella",
+	"Rhynchotrema", "Pecten", "Homo", "Dimetrodon",
+	"Nemagraptus", "Panthera", "Anomalocaris")
+
+data <-getSpecificTaxaPBDB(taxaAnimals)
+tree <- makePBDBtaxonTree(data, rank = "genus") 
+
+#get the ranges 
+timeTree <- dateTaxonTreePBDB(tree)
+
+plotPhyloPicTree(tree = timeTree)
+axisPhylo()
+
+}
+
+\dontrun{
+
+# example using strap
+
+rangesFourDate<-timeTree$tipTaxonFourDateRanges
+colnames(rangesMinMax )<-c("FAD","LAD")
+
+library(strap)
+#now plot it
+strap::geoscalePhylo(
+	tree=timeTree,
+	direction = "upwards",
+	ages=rangesMinMax,
+	cex.tip=0.7,
+	cex.ts=0.55,
+	cex.age=0.5,
+	width=3,
+	tick.scale = 50,
+	quat.rm=TRUE,
+	boxes = "Period",
+	arotate = 90,
+	units=c("Eon","Period","Era"),
+	x.lim=c(650,-20))
+
+}
+
 }
 \references{
 Peters, S. E., and M. McClennen. 2015. The Paleobiology Database

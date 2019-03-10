@@ -80,7 +80,7 @@
 #' aren't, but those gray-scale values (sometimes?) seem
 #' to exist to indicate very fine features. However, maybe an image
 #' is far too much gray-scale, in which case users can apply this argument.
-#' If \code{colorGradient = NULL} (the default), then nothing is adjusted.
+#' If \code{colorGradient = "original"} (the default), then nothing is adjusted.
 #' If \code{colorGradient = "trueMonochrome"}, the entire image's gradients are
 #' simplified to a duality: either fully colored or fully transparent.
 #' If \code{colorGradient = "increaseDisparity"}, then a slightly less
@@ -203,7 +203,7 @@ plotPhyloPicTree <- function(
 		noiseThreshold = 0.1,
 		rescalePNG = TRUE,
 		trimPNG = TRUE,
-		colorGradient = NULL,
+		colorGradient = "original",
 		...
 		){		
 	#########################################

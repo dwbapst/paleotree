@@ -150,10 +150,31 @@
 #' 
 #' \donttest{
 #' 
-#' 
 #' # now plot with phylopic images
 #' plotPhyloPicTree(tree = tree, 
 #' 	taxaDataPBDB = taxaData)
+#' 
+#' 
+#' plotPhyloPicTree(tree = tree,
+#' 	 taxaColor = "green")
+#' 
+#' par(bg="black")
+#' taxaColors <- rep("white",Ntip(tree))
+#' taxaColors[4] <- "red"
+#' plotPhyloPicTree(
+#' 	tree = tree, 
+#' 	orientation = "upwards",
+#' 	edge.color = "white",
+#' 	taxaColor=taxaColors)
+#' 
+#' }
+#' 
+#' \dontrun{
+#' 
+#' #first time
+#' system.time(plotPhyloPicTree(tree = tree))
+#' # second time
+#' system.time(plotPhyloPicTree(tree = tree))
 #' 
 #' }
 #' 

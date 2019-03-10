@@ -272,35 +272,19 @@ plotPhyloPicTree <- function(
 	OneUserCoordUnitY_in_UserCoordUnitX <- OneUserCoordUnitY_in_InchesY / OneUserCoordUnitX_in_InchesX
 	# calculate how many horizontal user coords are equivalent to how many vertical user coord
 	OneUserCoordUnitX_in_UserCoordUnitY <- OneUserCoordUnitX_in_InchesX / OneUserCoordUnitY_in_InchesY
-	#
-	print(OneUserCoordUnitX_in_InchesX)
-	print(OneUserCoordUnitY_in_InchesY)
-	print(OneUserCoordUnitX_in_UserCoordUnitY)
-	print(OneUserCoordUnitY_in_UserCoordUnitX)
 	#	
 	# modify margins based on orientation
 	if(orientation == "rightwards"){
-		# adjust extraMargin by aspect ratio
-		#if(devAspRatio>1){
-		#	extraMargin <- extraMargin /(devAspRatio)
-		#	}
-		#
+		# extra margin is one vertical unit, in horizontal user coord units
+			# adjust by aspect ratio and sizescale/2
 		extraMargin <- OneUserCoordUnitY_in_UserCoordUnitX * (sizeScale/2) / devAspRatio
-		#
 		new_xlim[2] <- new_xlim[2] + extraMargin
-		#new_xlim <- c(outPlot$x.lim[1], 
-		#	outPlot$x.lim[2] * (1 + extraMargin))
 		}
 	if(orientation == "upwards"){
-		# adjust extraMargin by aspect ratio
-		#if(devAspRatio<1){
-			extraMargin <- extraMargin*(devAspRatio)
-		#	}
-		#
-		new_xlim <- c(outPlot$x.lim[1], 
-			outPlot$x.lim[2])
-		new_ylim <- c(outPlot$y.lim[1], 
-			outPlot$y.lim[2] * (1 + extraMargin))
+		# extra margin is one horizontal unit, in vertical user coord units
+			# adjust by aspect ratio and sizescale/2
+		extraMargin <- OneUserCoordUnitX_in_UserCoordUnitY * (sizeScale/2) * devAspRatio
+		new_ylim[2] <- new_ylim[2] + extraMargin
 		}
 	#####
 	par(new = TRUE)

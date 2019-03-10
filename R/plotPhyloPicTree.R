@@ -241,6 +241,7 @@ plotPhyloPicTree <- function(
 	#
 	# get the device's aspect ratio
 	devAspRatio <- grDevices::dev.size()[1] / grDevices::dev.size()[2]
+	#
 	# get the x and y lims of the previous plot
 	new_xlim <- c(outPlot$x.lim[1], 
 		outPlot$x.lim[2])	
@@ -249,13 +250,9 @@ plotPhyloPicTree <- function(
 	plotSizeX <- new_xlim[2] - new_xlim[1] 
 	plotSizeY <- new_ylim[2] - new_ylim[1]
 	#
-	# calculate one unit of the vertical user coordinates
-	# get from par("usr")
-	#plotDimensions <- par("usr")
-	# xmin, ymin, xmax, ymax
-	#plotSizeX <- plotDimensions[2] - plotDimensions[1]
-	#plotSizeY <- plotDimensions[4] - plotDimensions[3]
-
+	# could also get from par("usr")
+	#plotSizeX <- par("usr")[2] - par("usr")[1]
+	#plotSizeY <- par("usr")[4] - par("usr")[3]
 	#
 	# get how many user coord units are in inches for each axis
 	OneUserCoordUnitX_in_InchesX <- grDevices::dev.size()[1] / plotSizeX

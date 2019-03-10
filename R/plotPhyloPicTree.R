@@ -304,7 +304,7 @@ plotPhyloPicTree <- function(
 	# true aspect ratio is their product apparently
 	plotAspRatio <- plotAspRatio / devAspRatio 
 	#
-	# calculate offset as a function of extraMargin and orientation
+	# calculate offset as a function of orientation and plot limits
 	if(orientation == "rightwards"){
 		offset <- plotDimensions$xmax - max(lastPP$xx)
 		}

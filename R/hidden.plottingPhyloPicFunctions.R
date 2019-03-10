@@ -60,49 +60,57 @@ getCoordsPhyloPic <- function(
 		picAspRatio,
 		orientation
 		){
+	#############
+	# modify offset and size adjustment based on orientation
+	#
+	if(orientation == "rightwards"){
 	############################################
 	# adjustment of sizeScale
 		# need to modify sizeScale relative to aspect ratio
 	if(picAspRatio < 1){
 		# its flatish so correct it by aspect ratio
-		picSize <- sizeScale * (picAspRatio^0.7)
+		picSize <- sizeScale * (picAspRatio)
 	}else{
 		# then its skinny, not flat
 		# don't do anything
 		picSize <- sizeScale 
 		}
 	#
-	#############
-	# modify offset and size adjustment based on orientation
-	#
-	if(orientation == "rightwards"){
+
 		###########################################
 		# GET THE COORDINATES
-		#
-		# offset is sizeScale/2 by default
-		# offset <- sizeScale * 0.9 * plotAspRatio
-		x<-xx + offset
-		y<-yy
+		# add offset calculated based on the plot limits
+		x <- xx + offset
+		y <- yy
 		#
 		#adjust the position of the sides for the image
-		#
 		xAdj <- (picSize/2) * (plotAspRatio/picAspRatio) 
-		yAdj <- picSize/2
+		yAdj <- (picSize/2)
 		}
 	###############
 	###
 	if(orientation == "upwards"){
+		############################################
+	# adjustment of sizeScale
+		# need to modify sizeScale relative to aspect ratio
+	if(picAspRatio < 1){
+		# its flatish so correct it by aspect ratio
+		picSize <- sizeScale 
+	}else{
+		# then its skinny, not flat
+		# don't do anything
+		picSize <- sizeScale / (picAspRatio)
+		}
+	#
+
 		# GET THE COORDINATES
-		#
-		# offset is sizeScale/2 by default
-		# offset <- sizeScale *  #* plotAspRatio
-		x<-xx
-		y<-yy + offset
+		# add offset calculated based on the plot limits
+		x <- xx
+		y <- yy + offset
 		#
 		#adjust the position of the sides for the image
-		#
-		xAdj <- picSize/2 * (plotAspRatio/picAspRatio) 
-		yAdj <- (picSize/2) 
+		xAdj <- (picSize/2) #* (plotAspRatio/picAspRatio) 
+		yAdj <- (picSize/2) / (plotAspRatio/picAspRatio) 
 		}
 	######
 	#		

@@ -234,9 +234,6 @@ plotPhyloPicTree <- function(
 		transparency = transparency
 		)	
 	##############################################
-	# get the device's aspect ratio
-	devAspRatio <- grDevices::dev.size()[1] / grDevices::dev.size()[2]
-	#
 	# plot a tree but with blank tip labels
 		# set x.lim so plot x limits is * (1 + extraMargin)
 		# where 1 is the tree height (effectively)
@@ -250,17 +247,49 @@ plotPhyloPicTree <- function(
 		no.margin = removeSurroundingMargin,
 		...)
 	#
+	# get the device's aspect ratio
+	devAspRatio <- grDevices::dev.size()[1] / grDevices::dev.size()[2]
+	# get the x and y lims of the previous plot
+	new_xlim <- c(outPlot$x.lim[1], 
+		outPlot$x.lim[2])	
+	new_ylim <- c(outPlot$y.lim[1], 
+		outPlot$y.lim[2])	
+	#
+	# calculate one unit of the vertical user coordinates
+	# get from par("usr")
+	plotDimensions <- par("usr")
+	# xmin, ymin, xmax, ymax
+	#plotSizeX <- plotDimensions[2] - plotDimensions[1]
+	#plotSizeY <- plotDimensions[4] - plotDimensions[3]
+	plotSizeX <- outPlot$x.lim[2] - outPlot$x.lim[1] 
+	plotSizeY <- outPlot$y.lim[2] - outPlot$y.lim[1]
+	#
+	# get how many user coord units are in inches for each axis
+	OneUserCoordUnitX_in_InchesX <- grDevices::dev.size()[1] / plotSizeX
+	OneUserCoordUnitY_in_InchesY <- grDevices::dev.size()[2] / plotSizeY
+	#
+	# calculate how many horizontal user coords are equivalent to how many vertical user coord
+	OneUserCoordUnitY_in_UserCoordUnitX <- OneUserCoordUnitY_in_InchesY / OneUserCoordUnitX_in_InchesX
+	# calculate how many horizontal user coords are equivalent to how many vertical user coord
+	OneUserCoordUnitX_in_UserCoordUnitY <- OneUserCoordUnitX_in_InchesX / OneUserCoordUnitY_in_InchesY
+	#
+	print(OneUserCoordUnitX_in_InchesX)
+	print(OneUserCoordUnitY_in_InchesY)
+	print(OneUserCoordUnitX_in_UserCoordUnitY)
+	print(OneUserCoordUnitY_in_UserCoordUnitX)
+	#	
 	# modify margins based on orientation
 	if(orientation == "rightwards"){
 		# adjust extraMargin by aspect ratio
 		#if(devAspRatio>1){
-			extraMargin <- extraMargin /(devAspRatio)
+		#	extraMargin <- extraMargin /(devAspRatio)
 		#	}
 		#
-		new_xlim <- c(outPlot$x.lim[1], 
-			outPlot$x.lim[2] * (1 + extraMargin))
-		new_ylim <- c(outPlot$y.lim[1], 
-			outPlot$y.lim[2])
+		extraMargin <- OneUserCoordUnitY_in_UserCoordUnitX * (sizeScale/2) / devAspRatio
+		#
+		new_xlim[2] <- new_xlim[2] + extraMargin
+		#new_xlim <- c(outPlot$x.lim[1], 
+		#	outPlot$x.lim[2] * (1 + extraMargin))
 		}
 	if(orientation == "upwards"){
 		# adjust extraMargin by aspect ratio
@@ -292,7 +321,7 @@ plotPhyloPicTree <- function(
 	#
 	# get the plot's own aspect ratio
 	#plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
-	# no better to get from par("usr")
+	# actually... better to get from par("usr")
 	plotDimensions <- par("usr")
 	# xmin, ymin, xmax, ymax
 	plotDimensions<- list(

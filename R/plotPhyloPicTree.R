@@ -253,7 +253,9 @@ plotPhyloPicTree <- function(
 	# modify margins based on orientation
 	if(orientation == "rightwards"){
 		# adjust extraMargin by aspect ratio
-		extraMargin <- extraMargin/(devAspRatio^2)
+		#if(devAspRatio>1){
+			extraMargin <- extraMargin /(devAspRatio)
+		#	}
 		#
 		new_xlim <- c(outPlot$x.lim[1], 
 			outPlot$x.lim[2] * (1 + extraMargin))
@@ -262,7 +264,9 @@ plotPhyloPicTree <- function(
 		}
 	if(orientation == "upwards"){
 		# adjust extraMargin by aspect ratio
-		extraMargin <- extraMargin*(devAspRatio)
+		#if(devAspRatio<1){
+			extraMargin <- extraMargin*(devAspRatio)
+		#	}
 		#
 		new_xlim <- c(outPlot$x.lim[1], 
 			outPlot$x.lim[2])

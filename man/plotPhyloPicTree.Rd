@@ -6,10 +6,10 @@
 \usage{
 plotPhyloPicTree(tree, taxaDataPBDB = tree$taxaDataPBDB,
   sizeScale = 0.9, removeSurroundingMargin = TRUE,
-  extraMargin = 0.08, orientation = "rightwards", taxaColor = NULL,
-  transparency = 1, cacheDir = "cachedPhyloPicPNGs",
-  cacheImage = TRUE, noiseThreshold = 0.1, rescalePNG = TRUE,
-  trimPNG = TRUE, colorGradient = NULL, ...)
+  orientation = "rightwards", taxaColor = NULL, transparency = 1,
+  cacheDir = "cachedPhyloPicPNGs", cacheImage = TRUE,
+  noiseThreshold = 0.1, rescalePNG = TRUE, trimPNG = TRUE,
+  colorGradient = NULL, ...)
 }
 \arguments{
 \item{tree}{A phylogeny of class \code{phylo} which will be
@@ -27,13 +27,6 @@ in the function \code{plot.phylo}, which controls whether a (very large) margin 
 placed around the plotted tree, or not. By default, \code{plotPhyloPicTree} will
 suppress that margin, so that the plotted tree goes (very nearly) to the edges
 of the plotting area.}
-
-\item{extraMargin}{How much extra margin should be added to the side of the graph
-to which PhyloPics are being added? This value is 0.08 by default, which works well
-if the margin surrounding the entire plot is suppressed via argument
-\code{removeSurroundingMargin = TRUE}. If the surrounding margin is not suppressed,
-plots look mostly okay if users change to \code{extraMargin = 2}. Obviously this value
-should be tweaked for every tree, size of plot and aspect ratio for maximum clarity.}
 
 \item{orientation}{Controls the direction the phylogeny is plotted
 in - can be either "rightwards" or "upwards".}

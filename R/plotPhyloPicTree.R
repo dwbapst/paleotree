@@ -47,12 +47,12 @@
 #' suppress that margin, so that the plotted tree goes (very nearly) to the edges
 #' of the plotting area.
 
-#' @param extraMargin How much extra margin should be added to the side of the graph
-#' to which PhyloPics are being added? This value is 0.08 by default, which works well
-#' if the margin surrounding the entire plot is suppressed via argument
-#' \code{removeSurroundingMargin = TRUE}. If the surrounding margin is not suppressed,
-#' plots look mostly okay if users change to \code{extraMargin = 2}. Obviously this value
-#' should be tweaked for every tree, size of plot and aspect ratio for maximum clarity. 
+# @param extraMargin How much extra margin should be added to the side of the graph
+# to which PhyloPics are being added? This value is 0.08 by default, which works well
+# if the margin surrounding the entire plot is suppressed via argument
+# \code{removeSurroundingMargin = TRUE}. If the surrounding margin is not suppressed,
+# plots look mostly okay if users change to \code{extraMargin = 2}. Obviously this value
+# should be tweaked for every tree, size of plot and aspect ratio for maximum clarity. 
 
 #' @param rescalePNG If \code{TRUE} (the default), the downloaded PhyloPic 
 #' has its color values rebalanced to go from the most extreme white
@@ -158,13 +158,6 @@
 #' }
 #' 
 
-# note sizeScale is vertical, proportional to the space between tips
-	# max horizontal sizeScale stops flat / long PhyloPics from becoming overly huge
-
-# set x.lim so plot x limits is * (1 + extraMargin)
-# where 1 is the tree height (effectively)
-
-
 
 
 #' @name plotPhyloPicTree
@@ -174,10 +167,10 @@ plotPhyloPicTree <- function(
 		tree, 
 		taxaDataPBDB = tree$taxaDataPBDB,
 		# phylopicIDsPBDB = NULL, 
+		#extraMargin = 0.08,
 		#######################
 		sizeScale = 0.9,
 		removeSurroundingMargin = TRUE,
-		extraMargin = 0.08,
 		orientation = "rightwards",
 		###########################
 		taxaColor = NULL,
@@ -235,8 +228,7 @@ plotPhyloPicTree <- function(
 		)	
 	##############################################
 	# plot a tree but with blank tip labels
-		# set x.lim so plot x limits is * (1 + extraMargin)
-		# where 1 is the tree height (effectively)
+		# so can adjust x.lim to include an extra margin
 	# calculate new x.lim by
 		# *not* plotting a tree
 	outPlot <- plot.phylo(
@@ -254,15 +246,16 @@ plotPhyloPicTree <- function(
 		outPlot$x.lim[2])	
 	new_ylim <- c(outPlot$y.lim[1], 
 		outPlot$y.lim[2])	
+	plotSizeX <- new_xlim[2] - new_xlim[1] 
+	plotSizeY <- new_ylim[2] - new_ylim[1]
 	#
 	# calculate one unit of the vertical user coordinates
 	# get from par("usr")
-	plotDimensions <- par("usr")
+	#plotDimensions <- par("usr")
 	# xmin, ymin, xmax, ymax
 	#plotSizeX <- plotDimensions[2] - plotDimensions[1]
 	#plotSizeY <- plotDimensions[4] - plotDimensions[3]
-	plotSizeX <- outPlot$x.lim[2] - outPlot$x.lim[1] 
-	plotSizeY <- outPlot$y.lim[2] - outPlot$y.lim[1]
+
 	#
 	# get how many user coord units are in inches for each axis
 	OneUserCoordUnitX_in_InchesX <- grDevices::dev.size()[1] / plotSizeX

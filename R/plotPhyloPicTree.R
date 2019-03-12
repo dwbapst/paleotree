@@ -190,6 +190,7 @@ plotPhyloPicTree <- function(
 		# phylopicIDsPBDB = NULL, 
 		#extraMargin = 0.08,
 		#######################
+		maxAgeDepth = NULL,
 		sizeScale = 0.9,
 		removeSurroundingMargin = TRUE,
 		orientation = "rightwards",
@@ -235,8 +236,37 @@ plotPhyloPicTree <- function(
 	if(orientation != "upwards" & orientation != "rightwards"){
 		stop('only orientation values of "upwards" and "rightwards" are currently accepted')
 		}
+	############################################
+
+	if(is.null(maxAgeDepth)){
+		ageLimInput <- NULL
+	}else{
+		if(length(maxAgeDepth) != 1 | !is.numeric(maxAgeDepth)){
+			stop("maxAgeDepth must be a numeric vector of length 1 if provided")
+			}
+		# test if the tree even has edge lengths
+			# if it does, see if the edge lengths mean anything 
+		if(is.null(tree$edge.length)){
+			stop("maxAgeDepth provided but input tree has no branch lengths, and thus is undated - please reconcile")
+		}else{
+			youngestTipAge <- max(node.depth.edgelength(tree))
+			ageLimInput <- c(maxAgeDepth, youngestTipAge)
+			}
+	#
+	# assign depending on orientation
+	if(orientation == "rightwards"){
+		xlimInput <- ageLimInput
+		ylimInput <- NULL
+		}
+	if(orientation == "upwards"){
+		xlimInput <- NULL
+		ylimInput <- ageLimInput		
+		}
+	
+	
 	#################################################
 	# check or obtain the phylopic IDs from PBDB
+		
 	phylopicIDsPBDB <- getPhyloPicIDNumFromPBDB(
 		taxaData = taxaDataPBDB,
 		tree = tree)
@@ -254,10 +284,12 @@ plotPhyloPicTree <- function(
 		# *not* plotting a tree
 	outPlot <- plot.phylo(
 		tree,
-		direction = orientation,
-		plot=FALSE,
 		show.tip.label=FALSE,
+		x.lim = xlimInput,
+		y.lim = ylimInput,
+		direction = orientation,
 		no.margin = removeSurroundingMargin,
+		plot=FALSE,
 		...)
 	#
 	# get the device's aspect ratio

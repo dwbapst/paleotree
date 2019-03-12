@@ -33,7 +33,7 @@ plotSinglePhyloPic <- function(
 	picPNG_raster <- grDevices::as.raster(picPNG)
 	# want color?
 		# replaces all black tiles with the color in taxonColor
-	if(!is.null(taxonColor)){
+	if(!is.na(taxonColor)){
 		#print(taxonColor)
 		picPNG_raster[which(picPNG_raster=="#000000FF")] <- taxonColor
 		#graphics::rasterImage(picPNG_raster [,,4])

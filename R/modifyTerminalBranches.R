@@ -23,21 +23,19 @@
 #' If the input tree has a \code{$root.time} element, as expected for most paleo-tree
 #' objects handled by this library, that \code{$root.time} is adjusted if the relative
 #' time of the root divergence changes when terminal branches are dropped.
-#' Adjusted root.times are only given if the input tree has root.times.
+#' This is typically performed via the function \code{\link{fixRootTime}}.
+#' Adjusted \code{$root.time} elements are only given if
+#' the input tree has a \code{$root.time} element.
 #' 
 #' \code{addTermBranchLength} adds an amount equal to the argument \code{addtime} to the
 #' terminal branch lengths of the tree. If there is a \code{$root.time} element, this
 #' is increased by an amount equal to \code{addtime}. A negative amount can be input
 #' to reduce the length of terminal branches. However, if negative branch
-#' lengths are produced, the function fails and a warning is produced. This function
-#' does \emph{not} call \code{fixRootTime}, so the root.time elements in the result tree may
+#' lengths are produced, the function fails and a warning is produced.
+#' The function \code{addTermBranchLength} does \emph{not} call \code{fixRootTime},
+#' so the root.time elements in the result tree may
 #' be nonsensical, particularly if negative amounts are input.
 #' 
-#' When a tree is modified, such as having tips dropped or branches extended,
-#' \code{fixRootTime} can be used to find the new \code{$root.time}. It is mainly used as a
-#' utility function called by a majority of the other functions discussed
-#' in this help file.
-#'
 #' \code{dropPaleoTip} is a wrapper for ape's \code{\link{drop.tip}} which also modifies the
 #' \code{$root.time} element if necessary, using \code{fixRootTime}. Similarly,
 #' bindPaleoTip is a wrapper for phytool's \code{bind.tip} which allows tip age

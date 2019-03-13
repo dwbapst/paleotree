@@ -13,8 +13,8 @@
 
 #' This is typically perfomed via the function \code{\link{fixRootTime}}.
 
-#' @param treeOrig A \code{phylo} object of a time-scaled phylogeny with a \code{$root.time}
-#' element.
+#' @param treeOrig A \code{phylo} object of a time-scaled
+#' phylogeny with a \code{$root.time} element.
 
 #' @param treeNew A \code{phylo} object containing a
 #' modified form of \code{treeOrig} (with
@@ -140,8 +140,40 @@ fixRootTime <- function(
 		treeNew$root.time <- treeOrig$root.time-(orig_dist-new_dist)
 		}
 	if(consistentDepth){
-		if(round(max(node.depth.edgelength(treeNew)) - treeNew$root.time)>0){
-			stop("fixRootTime isn't fixing correctly, root.time less than max tip-to-root length!")}
+		#if(round(max(node.depth.edgelength(treeNew)) - treeNew$root.time)>0){
+		#	stop("fixRootTime isn't fixing correctly, root.time less than max tip-to-root length!")}
+		#
+		checkRootTime(treeNew, stopIfFail)
 		}
 	return(treeNew)
 	}
+	
+	
+
+# not exported
+checkRootTime <- function(tree, stopIfFail = FALSE){	
+	# check that the tree and its root age makes sense
+	if(!is.null(tree$root.time) & !is.null(tree$edge.length)){
+		if(round(max(node.depth.edgelength(tree)) - tree$root.time)>0){
+			#tree$root.time < max(node.depth.edgelength(tree))
+			if(stopIfFail){
+				stop(paste0("Max tip-to-root tree depth (",
+					round(max(node.depth.edgelength(tree))),
+					") is greater than root age(",
+					round(tree$root.time),
+					"), so tips are in the future",
+					"\nSomething has probably gone very wrong"))
+				}else{
+				warning(paste0("Max tip-to-root tree depth (",
+					round(max(node.depth.edgelength(tree))),
+					") is greater than root age(",
+					round(tree$root.time),
+					"), so tips are in the future",
+					"\nSomething has probably gone very wrong"))
+				}
+			res <- FALSE
+		}else{
+			res <- TRUE
+			}
+		}
+	}			

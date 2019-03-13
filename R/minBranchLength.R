@@ -1,10 +1,10 @@
 #' Scales Edge Lengths of a Phylogeny to a Minimum Branch Length
 #' 
 #' Rescales a tree with edge lengths so that all edge lengths
-#' are at least some minimum branch length (mbl).
+#' are at least some minimum branch length ("MBL" or 'mbl').
 #' Edge lengths are transformed so they are
 #' greater than or equal to the input minimum branch length, by
-#' subtracting edge length from more rootward edges
+#' subtracting edge length from more root-ward edges
 #' and added to later branches. 
 #' This may or may not change the age of the root divergence, depending on the
 #' distribution of short branch lengths close to the root.
@@ -18,18 +18,18 @@
 #' instead, allowing users to apply \code{minBranchLength}
 #' to trees that already have edge lengths.
 
-#' @param tree A phylogeny with edge lengths of class 'phylo'.
+#' @param tree A phylogeny with edge lengths of class \code{phylo}.
 
 #' @param mbl The minimum branch length 
 
-#' @param If \code{TRUE} (the default), the input tree is checked for
-#' a root age given as \code{$root.time} and if pesent it is checked
+#' @param modifyRootAge If \code{TRUE} (the default), the input tree is checked for
+#' a root age given as \code{$root.time} and if present it is checked
 #' and fixed for any possible movement backwards due to short
 #' branches close to the root node.
 
 
 #' @return
-#' A phylogeny with edge lengths of class 'phylo'.
+#' A phylogeny with edge lengths of class \code{phylo}.
 
 #' @seealso
 #' This function was originally an internal
@@ -96,7 +96,7 @@
 #' @aliases minBranchLen minimumBranchLen minimumBranchLength 
 #' @rdname minBranchLength
 #' @export
-minBranchLength <- function(tree, mbl, fixRootAge = TRUE){	
+minBranchLength <- function(tree, mbl, modifyRootAge = TRUE){	
 	#require(phangorn)
 	#test arguments
 	#tree - a tree with edge lengths
@@ -152,8 +152,8 @@ minBranchLength <- function(tree, mbl, fixRootAge = TRUE){
 	############################################
 	# Fix the root age, if present... 
 		# if that has been pushed back further
-	if(!is.null(timetree$root.time)){
-		
+	if(!is.null(timetree$root.time & fixRootAge)){
+		if(!is.null(tree$root.time)){tree1 <- fixRootTime(tree,tree1)}
 		}
 	#############################
 	return(timetree)

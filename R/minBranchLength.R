@@ -169,7 +169,8 @@ minBranchLength <- function(tree, mbl, modifyRootAge = TRUE){
 		timetree <- fixRootTime(
 			treeNew = timetree,
 			treeOrig = tree,
-			fixingMethod = "matchCladeTransferNodeAge")
+			fixingMethod = "rescaleUsingTipToRootDist",
+			testConsistentDepth = TRUE)
 		}
 	#############################
 	return(timetree)

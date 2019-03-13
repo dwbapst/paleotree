@@ -152,7 +152,7 @@ minBranchLength <- function(tree, mbl, modifyRootAge = TRUE){
 	############################################
 	# Fix the root age, if present... 
 		# if that has been pushed back further
-	if(!is.null(timetree$root.time & modifyRootAge)){
+	if(!is.null(timetree$root.time) & modifyRootAge){
 		timetree <- fixRootTime(treeNew = timetree,
 			treeOrig = tree)
 		}

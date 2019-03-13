@@ -40,7 +40,8 @@
 #' \code{treeNew} is the \code{$root.time} of \code{treeOrig}, adjusted
 #' based on the change in total tree depth between \code{treeOrig} and
 #' \code{treeNew}, as measured between the root and
-#' the first matching taxon in both trees. The later is how \code{fixRootTime} functioned by default
+#' the first matching taxon in both trees. The later is 
+#' how \code{fixRootTime} functioned by default
 #' prior to paleotree v2.3.
 
 

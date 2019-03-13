@@ -7,27 +7,27 @@
 \alias{minimumBranchLength}
 \title{Scales Edge Lengths of a Phylogeny to a Minimum Branch Length}
 \usage{
-minBranchLength(tree, mbl, fixRootAge = TRUE)
+minBranchLength(tree, mbl, modifyRootAge = TRUE)
 }
 \arguments{
-\item{tree}{A phylogeny with edge lengths of class 'phylo'.}
+\item{tree}{A phylogeny with edge lengths of class \code{phylo}.}
 
 \item{mbl}{The minimum branch length}
 
-\item{If}{\code{TRUE} (the default), the input tree is checked for
-a root age given as \code{$root.time} and if pesent it is checked
+\item{modifyRootAge}{If \code{TRUE} (the default), the input tree is checked for
+a root age given as \code{$root.time} and if present it is checked
 and fixed for any possible movement backwards due to short
 branches close to the root node.}
 }
 \value{
-A phylogeny with edge lengths of class 'phylo'.
+A phylogeny with edge lengths of class \code{phylo}.
 }
 \description{
 Rescales a tree with edge lengths so that all edge lengths
-are at least some minimum branch length (mbl).
+are at least some minimum branch length ("MBL" or 'mbl').
 Edge lengths are transformed so they are
 greater than or equal to the input minimum branch length, by
-subtracting edge length from more rootward edges
+subtracting edge length from more root-ward edges
 and added to later branches. 
 This may or may not change the age of the root divergence, depending on the
 distribution of short branch lengths close to the root.

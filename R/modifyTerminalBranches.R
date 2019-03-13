@@ -262,9 +262,13 @@ dropZLB <- function(tree){
 	drop_t <- (tree$edge[,2])[drop_e]
 	if((Ntip(tree)-length(drop_t))>1){
 		tree1 <- drop.tip(tree,drop_t)
-		if(!is.null(tree$root.time)){tree1 <- fixRootTime(tree,tree1)}
+		if(!is.null(tree$root.time)){
+			tree1 <- fixRootTime(treeOrig = tree, treeNew = tree1)
+			}
 		res <- tree1
-	}else{res <- NA}
+	}else{
+		res <- NA
+		}
 	return(res)
 	}
 	
@@ -292,7 +296,7 @@ dropExtinct <- function(tree,tol = 0.01,ignore.root.time = FALSE){
 		#now need to add $root.time given the droppers
 		#should be root.time MINUS distance from furthest tip in tree PLUS distance from latest tip to root of stree
 		#stree$root.time <- tree$root.time-max(dnode)+max(dist.nodes(stree)[1:Ntip(stree),Ntip(stree)+1])
-		stree <- fixRootTime(tree,stree)
+		stree <- fixRootTime(treeOrig = tree, treeNew = stree)
 		}
 	return(stree)
 	}
@@ -319,7 +323,7 @@ dropExtant <- function(tree,tol = 0.01){
 		#now need to add $root.time given the droppers
 		#should be root.time MINUS distance from earliest tip in tree PLUS distance from earliest tip to root of stree
 		#stree$root.time <- tree$root.time-min(dnode)+min(dist.nodes(stree)[1:Ntip(stree),Ntip(stree)+1])
-		stree <- fixRootTime(tree,stree)
+		stree <- fixRootTime(treeOrig = tree, treeNew = stree)
 		}
 	return(stree)
 	}
@@ -332,10 +336,16 @@ addTermBranchLength <- function(tree,addtime = 0.001){
 	if(!inherits(tree,"phylo")){
 		stop("tree must be of class 'phylo'")
 		}
-
-	tree$edge.length[tree$edge[,2]<(Ntip(tree)+1)] <- tree$edge.length[tree$edge[,2]<(Ntip(tree)+1)]+addtime
-	if(any(tree$edge.length<0)){stop("tree has negative branch lengths!")}
-	if(!is.null(tree$root.time)){tree$root.time <- tree$root.time+addtime}
+	#
+	branchSel <- tree$edge[,2]<(Ntip(tree)+1)
+	newBrLen <- tree$edge.length[branchSel]+addtime
+	tree$edge.length[newBrLen] <- newBrLen
+	if(any(tree$edge.length<0)){
+		stop("tree has negative branch lengths!")
+		}
+	if(!is.null(tree$root.time)){
+		tree$root.time <- tree$root.time + addtime
+		}
 	return(tree)
 	}
 
@@ -344,8 +354,8 @@ addTermBranchLength <- function(tree,addtime = 0.001){
 #' @export
 dropPaleoTip <- function(tree, ...){
 	tree1 <- drop.tip(phy = tree, ...)
-	tree2 <- fixRootTime(tree,tree1)
-	return(tree2)
+	tree1 <- fixRootTime(treeOrig = tree, treeNew = tree1)
+	return(tree1)
 	}
 	
 #' @rdname modifyTerminalBranches
@@ -383,8 +393,8 @@ bindPaleoTip <- function(tree, tipLabel, nodeAttach = NULL, tipAge = NULL,
 		}
 	# check root.time
 	if(is.null(tree$root.time)){
-		message(
-			"Warning: no tree$root.time! Setting root.time such that latest tip is at present (time = 0)"
+		warning(
+			"No tree$root.time given; Setting root.time such that latest tip is at present (time = 0)"
 			)
 		tree$root.time <- max(node.depth.edgelength(tree))
 		}
@@ -420,8 +430,12 @@ bindPaleoTip <- function(tree, tipLabel, nodeAttach = NULL, tipAge = NULL,
 			stop("Negative edgeLength given ?!")
 			}
 		}
-	tree1 <- bind.tip(tree, tip.label = tipLabel, where = nodeAttach,
-		position = positionBelow, edge.length = newLength)
+	tree1 <- bind.tip(tree, 
+		tip.label = tipLabel, 
+		where = nodeAttach,
+		position = positionBelow, 
+		edge.length = newLength
+		)
 	# fix root.time if nodeAttach = root ID of tree and positionBelow>0
 	if(nodeAttach == (Ntip(tree)+1) & positionBelow>0){
 		#adjust root.time by the positionBelow

@@ -134,7 +134,7 @@ fixRootTime <- function(
 	if(length(fixingMethod) != 1){
 		stop("fixingMethod must be length 1")
 		}
-	if(fixingMethod != "matchCladeTransferNodeAge" | fixingMethod != "rescaleUsingTipToRootDist"){
+	if(fixingMethod != "matchCladeTransferNodeAge" & fixingMethod != "rescaleUsingTipToRootDist"){
 		stop('fixingMethod must be one of "matchCladeTransferNodeAge" or "rescaleUsingTipToRootDist"')
 		}
 	#

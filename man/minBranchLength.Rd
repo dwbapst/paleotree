@@ -87,6 +87,18 @@ plot(tree2,show.tip.label = FALSE)
 axisPhylo()
 
 layout(1)
+
+# check that root ages aren't being left unmodified
+   # create a tree with lots of ZBLs at the root
+x <- stree(10)
+x$edge.length <- runif(Nedge(x))
+x <- multi2di(x)
+# give it a root age
+x$root.time <- max(node.depth.edgelength(x))
+
+z <- minBranchLength(tree = x, mbl = 1)
+plot(z)
+
 }
 \seealso{
 This function was originally an internal

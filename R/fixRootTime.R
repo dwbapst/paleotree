@@ -144,7 +144,7 @@ fixRootTime <- function(
 		#if(round(max(node.depth.edgelength(treeNew)) - treeNew$root.time)>0){
 		#	stop("fixRootTime isn't fixing correctly, root.time less than max tip-to-root length!")}
 		#
-		checkRootTime(treeNew, stopIfFail)
+		checkRootTime(treeNew, stopIfFail = TRUE)
 		}
 	return(treeNew)
 	}

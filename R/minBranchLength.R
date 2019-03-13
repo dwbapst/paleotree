@@ -126,28 +126,29 @@ minBranchLength <- function(tree, mbl, modifyRootAge = TRUE){
 		# calculate, simultaneously, the changes in debt
 			# and branch lengthening required as go down tree
 		# change branch lengths; hypothetically, debt should then equal zero...
-		if(length(mom)>1){for(i in 2:length(mom)){
-			selNodes_mom <- timetree$edge[,1] == mom[i]
-			selNodes_child <- timetree$edge[,2] == mom[i-1]
-			selNodes_MC <- selNodes_mom & selNodes_child
-			selNodes_MnotC <- selNodes_mom & !selNodes_child
-			#
-			small <- min(timetree$edge.length[selNodes_mom])
-			mom_blen <- timetree$edge.length[selNodes_MC]
-			debt[i] <- max(debt[i-1] - max(mom_blen-mbl,0),0) + max(mbl-small,0) 
-			timetree$edge.length[selNodes_MC] <- mom_blen + max(mbl-small,0) - max(
-				min(
-					max(
-						mom_blen-mbl,0
-						)
-					,debt[i-1]
-					)
-				,0
-				) 
-			# was i on drugs when i wrote that??
-			#
-			timetree$edge.length[selNodes_MnotC] <-  timetree$edge.length[selNodes_MnotC] + debt[i]
-			}}
+		if(length(mom)>1){
+			for(i in 2:length(mom)){
+				selNodes_mom <- timetree$edge[,1] == mom[i]
+				selNodes_child <- timetree$edge[,2] == mom[i-1]
+				selNodes_MC <- selNodes_mom & selNodes_child
+				selNodes_MnotC <- selNodes_mom & !selNodes_child
+				#
+				small <- min(timetree$edge.length[selNodes_mom])
+				mom_blen <- timetree$edge.length[selNodes_MC]
+				#
+				maxMBLdiff <- max(mom_blen-mbl, 0)
+				maxMBLsmall <- max(mbl-small, 0) 
+				#
+				debt[i] <- max(debt[i-1] - maxMBLdiff, 0) + maxMBLsmall
+				#
+				smallDiff <- max(0, min(maxMBLdiff, debt[i-1]))
+				#
+				timetree$edge.length[selNodes_MC] <- mom_blen + maxMBLsmall - smallDiff
+				# was i on drugs when i wrote that??
+				#
+				timetree$edge.length[selNodes_MnotC] <-  timetree$edge.length[selNodes_MnotC] + debt[i]
+				}
+			}
 		}
 	############################################
 	# Fix the root age, if present... 

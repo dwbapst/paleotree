@@ -206,6 +206,30 @@
 #' 	orientation = "upwards",
 #' 	depthAxisPhylo= TRUE)
 #' 
+#' ########
+#' # adjusting a tree to ignore a very old root
+#' 
+#' # let's pretend that metazoans are extremely old
+#' treeOldRoot <- timeTree
+#' rootEdges <- timeTree$edge[,1] == (Ntip(timeTree)+1)
+#' rootEdgeLen <- timeTree$edge.length[rootEdges]
+#' treeOldRoot$edge.length[rootEdges] <- rootEdgeLen + 1500
+#' treeOldRoot$root.time <- NULL
+#' 
+#' # plot it
+#' plot(treeOldRoot)
+#' axisPhylo()
+#' # yep, that's really old
+#' 
+#' # let's plot it now with the PhyloPic
+#' plotPhyloPicTree(tree = treeOldRoot,
+#' 	depthAxisPhylo = TRUE)
+#' 
+#' # let's crop that old lineage
+#' plotPhyloPicTree(tree = treeOldRoot,
+#' 	maxAgeDepth = 500,
+#' 	depthAxisPhylo = TRUE)
+#' # cool!
 #' 
 #' ##################################
 #' # playing with colors

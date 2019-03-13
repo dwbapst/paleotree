@@ -316,8 +316,12 @@ plotPhyloPicTree <- function(
 		if(is.null(tree$edge.length)){
 			stop("maxAgeDepth provided but input tree has no branch lengths, and thus is undated - please reconcile")
 		}else{
+			# in absolute time
+			ageLimInput <- c(maxAgeDepth, 0)
+			# but now need to make from root = 0
+				# subtract from the age of the youngest tip
 			youngestTipAge <- max(node.depth.edgelength(tree))
-			ageLimInput <- c(maxAgeDepth, youngestTipAge)
+			ageLimInput <- youngestTipAge - ageLimInput
 			}
 		}
 	# assign limits depending on orientation

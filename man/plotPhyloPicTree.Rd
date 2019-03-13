@@ -150,16 +150,51 @@ the user directly, or as an element of \code{tree}.
 
 \donttest{
 
-# now plot with phylopic images
-plotPhyloPicTree(tree = tree, 
-	taxaDataPBDB = taxaData)
+library(paleotree)
+
+taxaAnimals<-c("Archaeopteryx", "Eldredgeops",
+	"Corvus", "Acropora", "Velociraptor", "Gorilla", 
+	"Olenellus", "Lingula", "Dunkleosteus",
+	"Tyrannosaurus", "Triceratops", "Giraffa",
+	"Megatheriidae", "Aedes", "Histiodella",
+	"Rhynchotrema", "Pecten", "Homo", "Dimetrodon",
+	"Nemagraptus", "Panthera", "Anomalocaris")
+
+data <-getSpecificTaxaPBDB(taxaAnimals)
+tree <- makePBDBtaxonTree(data, rank = "genus") 
+
+plotPhyloPicTree(tree = tree)
+
+# let's plot upwards but at a funny size
+dev.new(height = 5, width = 10)
+plotPhyloPicTree(tree = tree,
+	 orientation = "upwards") 
+
+# dated tree plotting
+
+#date the tree 
+timeTree <- dateTaxonTreePBDB(tree, minBranchLen = 10)
+
+plotPhyloPicTree(tree = timeTree)
+
+# plotting the dated tree with an axis
+plotPhyloPicTree(tree = timeTree,
+	depthAxisPhylo= TRUE)
+# now upwards!
+plotPhyloPicTree(tree = timeTree,
+	orientation = "upwards",
+	depthAxisPhylo= TRUE)
 
 
+##################################
+# playing with colors
 plotPhyloPicTree(tree = tree,
 	 taxaColor = "green")
 
+# inverting the colors
 par(bg="black")
 taxaColors <- rep("white",Ntip(tree))
+# making a red giraffe
 taxaColors[4] <- "red"
 plotPhyloPicTree(
 	tree = tree, 
@@ -168,8 +203,10 @@ plotPhyloPicTree(
 	taxaColor=taxaColors)
 
 }
-
+####################################
 \dontrun{
+# let's check out speed increase from caching!
+    # can try this on your own machine
 
 #first time
 system.time(plotPhyloPicTree(tree = tree))

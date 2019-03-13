@@ -123,8 +123,9 @@ minBranchLength <- function(tree, mbl, fixRootAge = TRUE){
 		debt <- mbl - min(timetree$edge.length[selNodes])
 		timetree$edge.length[selNodes] <- timetree$edge.length[selNodes] + debt[1]
 		#make vector of smallest brlen with each mom node as anc
-		#calculate, simultaneously, the changes in debt and branch lengthening required as go down tree
-		#change branch lengths; hypothetically, debt should then equal zero...
+		# calculate, simultaneously, the changes in debt
+			# and branch lengthening required as go down tree
+		# change branch lengths; hypothetically, debt should then equal zero...
 		if(length(mom)>1){for(i in 2:length(mom)){
 			selNodes_mom <- timetree$edge[,1] == mom[i]
 			selNodes_child <- timetree$edge[,2] == mom[i-1]
@@ -149,7 +150,8 @@ minBranchLength <- function(tree, mbl, fixRootAge = TRUE){
 			}}
 		}
 	############################################
-	# Fix the root age, if present... if that has been pushed back further
+	# Fix the root age, if present... 
+		# if that has been pushed back further
 	if(!is.null(timetree$root.time)){
 		
 		}

@@ -668,7 +668,7 @@ timePaleoPhy <- function(tree,timeData,type = "basic",vartime = NULL,ntrees = 1,
 			#if (type = "mbl") scales up all branches greater than vartime and subtracts from lower
 				#as long as there are branches smaller than vartime
 			if(is.na(vartime)){stop("No Minimum Branch Length Value Given!")}
-			ttree <- minBranchLength(tree = ttree,mbl = vartime)
+			ttree <- minBranchLength(tree = ttree, mbl = vartime)
 			}
 		if(type == "equal"|type == "equal_paleotree_legacy"|type == "equal_date.phylo_legacy"){	#G. Lloyd's "equal" method(s)
 			if(type == "equal"){

@@ -54,7 +54,7 @@
 #' resulting tree is output.
 #' 
 
-#' @aliases dropZLB dropExtinct dropExtant addTermBranchLength fixRootTime
+#' @aliases dropZLB dropExtinct dropExtant addTermBranchLength 
 
 #' @param tree A phylogeny as a phylo object. \code{dropPaleoTip} requires this
 #' input object to also have a \code{tree$root.time} element. If not provided for
@@ -71,25 +71,6 @@
 #' if the operation alters the \code{tree$root.time}.
 
 #' @param addtime Extra amount of time to add to all terminal branch lengths.
-
-#' @param treeOrig A \code{phylo} object of a time-scaled phylogeny with a \code{$root.time}
-#' element.
-
-#' @param treeNew A \code{phylo} object containing a modified form of \code{treeOrig} (with
-#' no extra tip taxa added, but possibly with some tip taxa removed).
-
-#' @param consistentDepth A logical, either \code{TRUE} or \code{FALSE}. If \code{TRUE} (the default)
-#' the tree's root-to-furthest-tip depth is tested to make sure this depth is
-#' not greater than the new \code{$root.time} appended to the output tree.
-
-#' @param nodeAgeTransfer A logical. If \code{TRUE}, the \code{$root.time} of the new tree is determined by
-#' comparing the clades of taxa between the two input trees. The new root age assigned is the age of
-#' (\emph{1}) the \code{treeOrig} clade that contains \emph{all} taxa present in \code{treeNew} and, if the set of (1)
-#' contains multiple clades, (\emph{2}) the clade in the first set that contains the fewest taxa not in
-#' \code{treeNew}. If \code{FALSE}, the \code{root.time} assigned to \code{treeNew} is the \code{$root.time} of \code{treeOrig}, adjusted
-#' based on the change in total tree depth between \code{treeOrig} and \code{treeNew}, as measured between the root and
-#' the first matching taxon in both trees. The later is how \code{fixRootTime} functioned by default
-#' prior to paleotree v2.3.
 
 #' @param ... additional arguments passed to dropPaleoTip are passed to \code{\link{drop.tip}}.
 
@@ -113,7 +94,7 @@
 #' @param noNegativeEdgeLength Return an error if a negative terminal edge length is calculated
 #' for the new tip.
 
-#' @return Gives back a modified phylogeny as a phylo object, generally with a
+#' @return Gives back a modified phylogeny as a \code{phylo} object, generally with a
 #' modified \code{$root.time} element.
 
 #' @author David W. Bapst. The functions \code{dropTipPaleo} and \code{bindTipPaleo} are modified imports of
@@ -359,69 +340,7 @@ addTermBranchLength <- function(tree,addtime = 0.001){
 	if(!is.null(tree$root.time)){tree$root.time <- tree$root.time+addtime}
 	return(tree)
 	}
-	
-#' @rdname modifyTerminalBranches
-#' @export
-fixRootTime <- function(treeOrig,treeNew,consistentDepth = TRUE,nodeAgeTransfer = TRUE){
-	# UNUSED FUNCTION?
-	#treeDepth <- function(tree){
-	#	#require(ape)
-	#	max(dist.nodes(tree)[,Ntip(tree)+1])
-	#	}
-	#
-	#require(ape)
-	if(!inherits(treeOrig, "phylo")){
-		stop("treeOrig is not of class phylo")}
-	if(!inherits(treeNew, "phylo")){
-		stop("treeNew is not of class phylo")}
-	if(is.null(treeOrig$root.time)){
-		stop("ERROR: treeOrig passed to fixRootTime with no $root.time??")}
-	#also need a warning message if taxa present in treeNew that aren't in treeOrig
-	taxaNewNM <- treeNew$tip.label[sapply(treeNew$tip.label,function(x) !any(x == treeOrig$tip.label))]
-	if(length(taxaNewNM)>0){
-		stop(paste("taxa:",taxaNewNM,"are present in treeNew but not treeOrig"))}
-	#two different ways to fix the root time
-	if(nodeAgeTransfer){
-		##NEW WAY 11-28-14
-			#If TRUE, the root.time of the new tree is determined by
-			#comparing the clades of taxa between the two input trees. The new root age assigned is the age of
-			#(\emph{1}) the treeOrig clade that contains *all* taxa present in treeNew and, if the set of (1)
-			#contains multiple clades, (\emph{2}) the clade in the (1) set that contains the fewest taxa not in
-			#treeNew.
-		dates <- dateNodes(treeOrig,labelDates = FALSE,tolerance = 0.001)
-		treeDesc <- lapply(Descendants(treeOrig),function(x) sort(treeOrig$tip.label[x]))
-		#treeRootNew <- sort(treeNew$tip.label[Descendants(treeNew)[[Ntip(treeNew)+1]]]) #no
-		#the descendants of treeNew's root are ALL the taxa in treeNEW
-		#So which treeOrig clades contain ALL taxa in treeNew?
-		allNewTaxa <- sapply(treeDesc,function(x) all(sapply(treeNew$tip.label,function(y) any(y == x)))) #logical vector
-		#now, if more than one contains all-new-taxa, which of these treeOrig clades minimizes not-shared taxa?
-		if(sum(allNewTaxa)>1){
-			nUnshared <- sapply(treeDesc,function(x) sum(sapply(x,function(y) all(y != treeNew$tip.label)))) #numeric
-			matchRootNew <- which(allNewTaxa & nUnshared == min(nUnshared[allNewTaxa]))
-		}else{
-			matchRootNew <- which(allNewTaxa)
-			}
-		if(length(matchRootNew)>1){stop("More than one node contains these taxa")} #maybe sort by age
-		if(length(matchRootNew)<1){stop("No nodes match the new tree's root, a root age can not be obtained")}
-		treeNew$root.time <- unname(dates[matchRootNew])
-	}else{
-		##OLD WAY
-			#If FALSE, the root.time assigned to treeNew is the root.time of treeOrig, adjusted
-			# based on the change in total tree depth between treeOrig and treeNew,
-				# as measured between the root and the first matching taxon in both trees.
-			# The later is how fixRootTime functioned by default prior to paleotree v2.3.
-		orig_dist <- node.depth.edgelength(treeOrig)[
-			which(treeNew$tip.label[1] == treeOrig$tip.label)
-			]
-		new_dist <- node.depth.edgelength(treeNew)[1]
-		treeNew$root.time <- treeOrig$root.time-(orig_dist-new_dist)
-		}
-	if(consistentDepth){
-		if(round(max(node.depth.edgelength(treeNew)) - treeNew$root.time)>0){
-			stop("fixRootTime isn't fixing correctly, root.time less than max tip-to-root length!")}
-		}
-	return(treeNew)
-	}
+
 	
 #' @rdname modifyTerminalBranches
 #' @export

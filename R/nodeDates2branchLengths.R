@@ -164,5 +164,10 @@ nodeDates2branchLengths <- function(nodeDates, tree, allTipsModern = FALSE){
     tree$edge.length <- edgeLengths
 	# set root age
 	tree$root.time <- allAges[Ntip(tree)+1]
-    return(tree)
+	############################################
+	# check that the tree and its root age makes sense
+	checkRootTimeRes <- checkRootTime(datedTree,
+		stopIfFail = TRUE)
+	##################
+	return(tree)
     }

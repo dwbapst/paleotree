@@ -5,9 +5,9 @@
 \title{Plot a Phylogeny with Organismal Silhouettes from PhyloPic, Called Via the Paleobiology Database API}
 \usage{
 plotPhyloPicTree(tree, taxaDataPBDB = tree$taxaDataPBDB,
-  maxAgeDepth = NULL, sizeScale = 0.9,
+  maxAgeDepth = NULL, depthAxisPhylo = FALSE, sizeScale = 0.9,
   removeSurroundingMargin = TRUE, orientation = "rightwards",
-  taxaColor = NULL, transparency = 1,
+  resetGrPar = TRUE, taxaColor = NULL, transparency = 1,
   cacheDir = "cachedPhyloPicPNGs", cacheImage = TRUE,
   noiseThreshold = 0.1, rescalePNG = TRUE, trimPNG = TRUE,
   colorGradient = "original", ...)
@@ -26,6 +26,12 @@ branch lengths (age depth for a dated tree). The portion of the phylogeny
 older than this date will not be shown. \code{NULL} by default. If provided,
 the input tree must have branch lengths in \code{tree$edge.length}.}
 
+\item{depthAxisPhylo}{If \code{TRUE}, the \code{ape} function
+\code{axisPhylo} is run to add an axis of the tree depth to
+the tree, which must have branch lengths. \code{FALSE} by default.
+If \code{removeSurroundingMargin = TRUE}, which removes extraneous margins,
+the margins of the plot will be adjusted to make room for the plotted axis.}
+
 \item{sizeScale}{The default is \code{sizeScale = 0.9}.}
 
 \item{removeSurroundingMargin}{This argument controls the \code{no.margin} argument
@@ -36,6 +42,12 @@ of the plotting area.}
 
 \item{orientation}{Controls the direction the phylogeny is plotted
 in - can be either "rightwards" or "upwards".}
+
+\item{resetGrPar}{If \code{TRUE} (the default), the graphic parameters are
+reset, so that choices of margins and coordinate system manipulation done
+as part of this function do not impact the next plot made in this graphic
+device. If you need to add additional elements to the plot after running
+this function within R, you should set this argument to \code{FALSE}.}
 
 \item{taxaColor}{Controls the color of plotted PhyloPics. Can either be \code{NULL}
 (the default, all taxa will be plotted as black), or a character vector that is either
@@ -108,7 +120,11 @@ particularly: \code{direction}, \code{show.tip.label},
 \code{no.margin}, \code{plot}, \code{xlim}, and\code{ylim}.}
 }
 \value{
-This function silently returns the positions for elements in the tree
+This function silently returns the positions for elements in the
+tree (.e. the environmental information obtained about the
+previous plotting environment of the tree as plotted), along
+with a saved set of the graphic parameters as they were
+at the end of the function's run.
 }
 \description{
 This function will take a phylogeny, preferably a taxonomy-tree

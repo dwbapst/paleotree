@@ -407,10 +407,12 @@ fixRootTime <- function(treeOrig,treeNew,consistentDepth = TRUE,nodeAgeTransfer 
 	}else{
 		##OLD WAY
 			#If FALSE, the root.time assigned to treeNew is the root.time of treeOrig, adjusted
-			# based on the change in total tree depth between treeOrig and treeNew, as measured between the root and
-			# the first matching taxon in both trees. The later is how fixRootTime functioned by default
-			# prior to paleotree v2.3.
-		orig_dist <- node.depth.edgelength(treeOrig)[which(treeNew$tip.label[1] == treeOrig$tip.label)]
+			# based on the change in total tree depth between treeOrig and treeNew,
+				# as measured between the root and the first matching taxon in both trees.
+			# The later is how fixRootTime functioned by default prior to paleotree v2.3.
+		orig_dist <- node.depth.edgelength(treeOrig)[
+			which(treeNew$tip.label[1] == treeOrig$tip.label)
+			]
 		new_dist <- node.depth.edgelength(treeNew)[1]
 		treeNew$root.time <- treeOrig$root.time-(orig_dist-new_dist)
 		}
@@ -457,16 +459,22 @@ bindPaleoTip <- function(tree, tipLabel, nodeAttach = NULL, tipAge = NULL,
 			}
 	}else{
 		if(positionBelow>tree$edge.length[tree$edge[,2] == nodeAttach]){
-			stop("positionBelow cannot be greater than the $edge.length of the edge below nodeAttach")
+			stop(
+				"positionBelow cannot be greater than the $edge.length of the edge below nodeAttach"
+				)
 			}
 		}
 	# check root.time
 	if(is.null(tree$root.time)){
-		message("Warning: no tree$root.time! Setting root.time such that latest tip is at present (time = 0)")
+		message(
+			"Warning: no tree$root.time! Setting root.time such that latest tip is at present (time = 0)"
+			)
 		tree$root.time <- max(node.depth.edgelength(tree))
 		}
 	#
-	if(is.null(tree$edge.length)){stop("bindTipPaleo is for trees with edge lengths")}
+	if(is.null(tree$edge.length)){
+		stop("bindTipPaleo is for trees with edge lengths")
+		}
 	#
 	if(is.null(edgeLength)){
 		if(!is.null(tipAge)){
@@ -500,7 +508,7 @@ bindPaleoTip <- function(tree, tipLabel, nodeAttach = NULL, tipAge = NULL,
 	# fix root.time if nodeAttach = root ID of tree and positionBelow>0
 	if(nodeAttach == (Ntip(tree)+1) & positionBelow>0){
 		#adjust root.time by the positionBelow
-		tree1$root.time <- tree1$root.time+positionBelow
+		tree1$root.time <- tree1$root.time + positionBelow
 		}
 	if(!is.null(tree1$root.edge)){
 		if(tree1$root.edge == 0){tree1$root.edge <- NULL}

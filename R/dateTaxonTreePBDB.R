@@ -117,15 +117,6 @@
 #' 
 
 
-
-
-
-
-
-
-
-
-
 #' @name dateTaxonTreePBDB
 #' @rdname dateTaxonTreePBDB
 #' @export
@@ -185,6 +176,9 @@ dateTaxonTreePBDB <- function(
 		tree = taxaTree,
 		allTipsModern = FALSE)
 	#
+	############################################
+	# check that the tree and its root age makes sense
+	#checkRes <- checkRootTime(datedTree)			
 	#################################
 	if(minBranchLen>0){
 		# take care of zero length branches
@@ -201,6 +195,10 @@ dateTaxonTreePBDB <- function(
 		plotName <- "Dated Phylogeny"
 		}
 	#
+	############################################
+	# check that the tree and its root age makes sense
+	checkRootTimeRes <- checkRootTime(datedTree,
+		stopIfFail = TRUE)
 	#################
 	if(plotTree){
 		plot(datedTree, main=plotName,

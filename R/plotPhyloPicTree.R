@@ -120,6 +120,18 @@
 #' black are transformed as under the argument \code{colorGradient = "trueMonochrome"},
 #' so that the PhyloPic is expressed with no intermediate gray-scale values.
 
+#' @param depthAxisPhylo If \code{TRUE}, the \code{ape} function
+#' \code{axisPhylo} is run to add an axis of the tree depth to
+#' the tree, which must have branch lengths. \code{FALSE} by default.
+#' If \code{removeSurroundingMargin = TRUE}, which removes extraneous margins,
+#' the margins of the plot will be adjusted to make room for the plotted axis.
+
+#' @param resetGrPar If \code{TRUE} (the default), the graphic parameters are
+#' reset, so that choices of margins and coordinate system manipulation done
+#' as part of this function do not impact the next plot made in this graphic
+#' device. If you need to add additional elements to the plot after running
+#' this function within R, you should set this argument to \code{FALSE}.
+
 #' @param orientation Controls the direction the phylogeny is plotted
 #' in - can be either "rightwards" or "upwards".
 
@@ -138,7 +150,11 @@
 #' \code{no.margin}, \code{plot}, \code{xlim}, and\code{ylim}.
 
 #' @return
-#' This function silently returns the positions for elements in the tree
+#' This function silently returns the positions for elements in the
+#' tree (.e. the environmental information obtained about the
+#' previous plotting environment of the tree as plotted), along
+#' with a saved set of the graphic parameters as they were
+#' at the end of the function's run.
 
 #' @seealso
 #' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
@@ -196,9 +212,12 @@ plotPhyloPicTree <- function(
 		#extraMargin = 0.08,
 		#######################
 		maxAgeDepth = NULL,
+		depthAxisPhylo = FALSE,
+		####################
 		sizeScale = 0.9,
 		removeSurroundingMargin = TRUE,
 		orientation = "rightwards",
+		resetGrPar = TRUE,
 		###########################
 		taxaColor = NULL,
 		transparency = 1,
@@ -219,6 +238,9 @@ plotPhyloPicTree <- function(
 	# used as pictorial replacements for the tip labels
 	# images taken directory from PhyloPic, or PBDB
 	###############################################
+	# save original graphic par
+	oldPar<-par(no.readonly = TRUE)
+	##########################
 	# check that reserved arguments are not in ...
 	reservedPlotArgs <- c("direction", "show.tip.label",
 		"no.margin", "plot", "xlim", "ylim")
@@ -242,6 +264,10 @@ plotPhyloPicTree <- function(
 		stop('only orientation values of "upwards" and "rightwards" are currently accepted')
 		}
 	############################################
+	# check that the tree and its root age makes sense
+	checkRes <- checkRootTime(tree)			
+	#############################
+	# check maxAgeDepth
 	if(is.null(maxAgeDepth)){
 		ageLimInput <- NULL
 	}else{
@@ -257,8 +283,7 @@ plotPhyloPicTree <- function(
 			ageLimInput <- c(maxAgeDepth, youngestTipAge)
 			}
 		}
-	#
-	# assign depending on orientation
+	# assign limits depending on orientation
 	if(orientation == "rightwards"){
 		xlimInput <- ageLimInput
 		ylimInput <- NULL
@@ -267,7 +292,7 @@ plotPhyloPicTree <- function(
 		xlimInput <- NULL
 		ylimInput <- ageLimInput		
 		}
-		#################################################
+	#################################################
 	# check or obtain the phylopic IDs from PBDB	
 	phylopicIDsPBDB <- getPhyloPicIDNumFromPBDB(
 		taxaData = taxaDataPBDB,
@@ -279,6 +304,22 @@ plotPhyloPicTree <- function(
 		taxaNames = tree$tip.label,
 		transparency = transparency
 		)	
+	############################################
+	if(depthAxisPhylo & is.null(tree$edge.length)){
+		stop(paste0("depthAxisPhylo is TRUE but tree doesn't have branch lengths -",
+			"\nWhy do you want to plot a phylo axis on a tree with no branch lengths??"
+			))
+		}
+	if(removeSurroundingMargin & depthAxisPhylo){
+		# reset removeSurroundingMargin
+		removeSurroundingMargin <- FALSE
+		if(orientation == "rightwards"){
+			par(mar = c(2.5,0,0,0))
+			}
+		if(orientation == "upwards"){
+			par(mar = c(0,0,0,2.5))		
+			}		
+		}
 	##############################################
 	# plot a tree but with blank tip labels
 		# so can adjust x.lim to include an extra margin
@@ -344,6 +385,16 @@ plotPhyloPicTree <- function(
 		...
 		)
 	#
+	##########################################
+	# plot axisPhylo if depthAxisPhylo 
+	if(depthAxisPhylo){
+		if(orientation == "rightwards"){
+			axisPhylo(side=1)
+			}
+		if(orientation == "upwards"){
+			axisPhylo(side=4)	
+			}		
+		}
 	##########################################
 	# now get the last plotting environment
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
@@ -422,5 +473,12 @@ plotPhyloPicTree <- function(
 	modPhyloPlotInfo <- lastPP
 	# add stuff here about what we did to the phylo plot?
 		# like what?
+	# adjusted graphic parameters
+	modPhyloPlotInfo$savedPar <- par(no.readonly = TRUE)
+	# reset graphic par
+	if(resetGrPar){
+		suppressWarnings(par(oldPar))
+		}
+	#
 	return(invisible(modPhyloPlotInfo))
 	}

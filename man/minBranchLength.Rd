@@ -7,25 +7,36 @@
 \alias{minimumBranchLength}
 \title{Scales Edge Lengths of a Phylogeny to a Minimum Branch Length}
 \usage{
-minBranchLength(tree, mbl)
+minBranchLength(tree, mbl, fixRootAge = TRUE)
 }
 \arguments{
 \item{tree}{A phylogeny with edge lengths of class 'phylo'.}
 
 \item{mbl}{The minimum branch length}
+
+\item{If}{\code{TRUE} (the default), the input tree is checked for
+a root age given as \code{$root.time} and if pesent it is checked
+and fixed for any possible movement backwards due to short
+branches close to the root node.}
 }
 \value{
 A phylogeny with edge lengths of class 'phylo'.
 }
 \description{
-Rescales a tree with edge lengths so that all edge lengths are at least some minimum branch length (mbl),
-without changing the relative distance of the tips from the root node. Edge lengths are transformed so they are
-greater than or equal to the input minimum branch length, by subtracting edge length from more rootward edges
-and added to later branches.
+Rescales a tree with edge lengths so that all edge lengths
+are at least some minimum branch length (mbl).
+Edge lengths are transformed so they are
+greater than or equal to the input minimum branch length, by
+subtracting edge length from more rootward edges
+and added to later branches. 
+This may or may not change the age of the root divergence, depending on the
+distribution of short branch lengths close to the root.
 }
 \details{
-This function was formally an internal segment in \code{\link{timePaleoPhy}}, and now is called by \code{timePaleoPhy}
-instead, allowing users to apply \code{minBranchLength} to trees that already have edge lengths.
+This function was formally an internal segment in
+\code{\link{timePaleoPhy}}, and now is called by \code{timePaleoPhy}
+instead, allowing users to apply \code{minBranchLength}
+to trees that already have edge lengths.
 }
 \examples{
 
@@ -78,8 +89,11 @@ axisPhylo()
 layout(1)
 }
 \seealso{
-This function was originally an internal piece of \code{\link{timePaleoPhy}}, which implements the minimum branch
-length time-scaling method along with others, which may be what you're looking for
+This function was originally an internal
+piece of \code{\link{timePaleoPhy}},
+which implements the minimum branch
+length time-scaling method along with others,
+which may be what you're looking for
 (instead of this miscellaneous function).
 }
 \author{

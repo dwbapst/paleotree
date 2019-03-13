@@ -75,8 +75,7 @@ getCoordsPhyloPic <- function(
 		# don't do anything
 		picSize <- sizeScale 
 		}
-	#
-
+		#
 		###########################################
 		# GET THE COORDINATES
 		# add offsetPic calculated based on the plot limits
@@ -101,8 +100,7 @@ getCoordsPhyloPic <- function(
 		# don't do anything
 		picSize <- sizeScale / (picAspRatio)
 		}
-	#
-
+		#
 		# GET THE COORDINATES
 		# add offsetPic calculated based on the plot limits
 		x <- xx

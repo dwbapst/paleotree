@@ -2,7 +2,7 @@
 
 checkRootTime <- function(tree, stopIfFail = FALSE){	
 	# check that the tree and its root age makes sense
-	if(exists(tree$root.time) & exists(tree$edge.length)){
+	if(!is.null(tree$root.time) & !is.null(tree$edge.length)){
 		if(tree$root.time < max(node.depth.edgelength(tree))){
 			if(stopIfFail){
 				stop(paste0("Total tree depth (",

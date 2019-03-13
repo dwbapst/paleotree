@@ -1,24 +1,42 @@
 #' Scales Edge Lengths of a Phylogeny to a Minimum Branch Length
 #' 
-#' Rescales a tree with edge lengths so that all edge lengths are at least some minimum branch length (mbl),
-#' without changing the relative distance of the tips from the root node. Edge lengths are transformed so they are
-#' greater than or equal to the input minimum branch length, by subtracting edge length from more rootward edges
+#' Rescales a tree with edge lengths so that all edge lengths
+#' are at least some minimum branch length (mbl).
+#' Edge lengths are transformed so they are
+#' greater than or equal to the input minimum branch length, by
+#' subtracting edge length from more rootward edges
 #' and added to later branches. 
+#' This may or may not change the age of the root divergence, depending on the
+#' distribution of short branch lengths close to the root.
+
+#  OLD: 'without changing the relative distance of the tips from the root node.'
+# 03-13-19 THAT IS AN EVIL LIE DAVID, THIS TOTALLY CHANGES THE ROOT AGE
 
 #' @details
-#' This function was formally an internal segment in \code{\link{timePaleoPhy}}, and now is called by \code{timePaleoPhy}
-#' instead, allowing users to apply \code{minBranchLength} to trees that already have edge lengths.
+#' This function was formally an internal segment in
+#' \code{\link{timePaleoPhy}}, and now is called by \code{timePaleoPhy}
+#' instead, allowing users to apply \code{minBranchLength}
+#' to trees that already have edge lengths.
 
 #' @param tree A phylogeny with edge lengths of class 'phylo'.
 
 #' @param mbl The minimum branch length 
 
+#' @param If \code{TRUE} (the default), the input tree is checked for
+#' a root age given as \code{$root.time} and if pesent it is checked
+#' and fixed for any possible movement backwards due to short
+#' branches close to the root node.
+
+
 #' @return
 #' A phylogeny with edge lengths of class 'phylo'.
 
 #' @seealso
-#' This function was originally an internal piece of \code{\link{timePaleoPhy}}, which implements the minimum branch
-#' length time-scaling method along with others, which may be what you're looking for
+#' This function was originally an internal
+#' piece of \code{\link{timePaleoPhy}},
+#' which implements the minimum branch
+#' length time-scaling method along with others,
+#' which may be what you're looking for
 #' (instead of this miscellaneous function).
 
 #' @author 
@@ -70,7 +88,7 @@
 #' plot(tree,show.tip.label = FALSE)
 #' axisPhylo()
 #' plot(tree2,show.tip.label = FALSE)
-#'axisPhylo()
+#' axisPhylo()
 #' 
 #' layout(1)
 
@@ -78,7 +96,7 @@
 #' @aliases minBranchLen minimumBranchLen minimumBranchLength 
 #' @rdname minBranchLength
 #' @export
-minBranchLength <- function(tree, mbl){	
+minBranchLength <- function(tree, mbl, fixRootAge = TRUE){	
 	#require(phangorn)
 	#test arguments
 	#tree - a tree with edge lengths
@@ -110,21 +128,31 @@ minBranchLength <- function(tree, mbl){
 		if(length(mom)>1){for(i in 2:length(mom)){
 			selNodes_mom <- timetree$edge[,1] == mom[i]
 			selNodes_child <- timetree$edge[,2] == mom[i-1]
+			selNodes_MC <- selNodes_mom & selNodes_child
+			selNodes_MnotC <- selNodes_mom & !selNodes_child
+			#
 			small <- min(timetree$edge.length[selNodes_mom])
-			mom_blen <- timetree$edge.length[selNodes_mom & selNodes_child]
+			mom_blen <- timetree$edge.length[selNodes_MC]
 			debt[i] <- max(debt[i-1] - max(mom_blen-mbl,0),0) + max(mbl-small,0) 
-			timetree$edge.length[selNodes_mom & selNodes_child] <- 
-				mom_blen - max(min(max(mom_blen-mbl,0),debt[i-1]),0) + max(mbl-small,0)
-			timetree$edge.length[selNodes_mom & !selNodes_child] <-  
-				timetree$edge.length[selNodes_mom & !selNodes_child] + debt[i]
+			timetree$edge.length[selNodes_MC] <- mom_blen + max(mbl-small,0) - max(
+				min(
+					max(
+						mom_blen-mbl,0
+						)
+					,debt[i-1]
+					)
+				,0
+				) 
+			# was i on drugs when i wrote that??
+			#
+			timetree$edge.length[selNodes_MnotC] <-  timetree$edge.length[selNodes_MnotC] + debt[i]
 			}}
 		}
 	############################################
-	# check that the tree and its root age makes sense
-		# technically this function shouldn't cause
-		# tree depth to become greater than root age
-	checkRootTimeRes <- checkRootTime(tree = timetree,
-		stopIfFail = TRUE)
+	# Fix the root age, if present... if that has been pushed back further
+	if(!is.null(timetree$root.time)){
+		
+		}
 	#############################
 	return(timetree)
 	}

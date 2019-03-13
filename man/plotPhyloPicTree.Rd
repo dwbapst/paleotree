@@ -5,8 +5,9 @@
 \title{Plot a Phylogeny with Organismal Silhouettes from PhyloPic, Called Via the Paleobiology Database API}
 \usage{
 plotPhyloPicTree(tree, taxaDataPBDB = tree$taxaDataPBDB,
-  sizeScale = 0.9, removeSurroundingMargin = TRUE,
-  orientation = "rightwards", taxaColor = NULL, transparency = 1,
+  maxAgeDepth = NULL, sizeScale = 0.9,
+  removeSurroundingMargin = TRUE, orientation = "rightwards",
+  taxaColor = NULL, transparency = 1,
   cacheDir = "cachedPhyloPicPNGs", cacheImage = TRUE,
   noiseThreshold = 0.1, rescalePNG = TRUE, trimPNG = TRUE,
   colorGradient = "original", ...)
@@ -19,6 +20,11 @@ The tree will be plotted with edge lengths.}
 \item{taxaDataPBDB}{A \code{data.frame} of taxonomic data from
 the Paleobiology Database containing an \code{$image_no} variable,
 as returned when \code{show = "img"} is used. See \emph{Details}.}
+
+\item{maxAgeDepth}{The maximum tree depth displayed for a tree given with
+branch lengths (age depth for a dated tree). The portion of the phylogeny
+older than this date will not be shown. \code{NULL} by default. If provided,
+the input tree must have branch lengths in \code{tree$edge.length}.}
 
 \item{sizeScale}{The default is \code{sizeScale = 0.9}.}
 
@@ -60,7 +66,7 @@ The default is}
 Database and/or the PhyloPic Database will be cached to save on processing speed
 and avoid the need to pull the images from an external PNG.}
 
-\item{noiseThreshold}{A threshold for noise in the PNG from Phylopic
+\item{noiseThreshold}{A threshold for noise in the PNG from PhyloPic
 to be treated as meaningless noise (i.e. a color that is effectively
 whitespace) and thus can be trimmed as empty margin which can be
 trimmed before the silhouette is plotted. The units for this argument

@@ -5,7 +5,7 @@ plotSinglePhyloPic <- function(
 		whichTip,
 		lastPP,
 		sizeScale,
-		offset,
+		offsetPic,
 		orientation,
 		plotAspRatio,
 		taxonColor 
@@ -22,7 +22,7 @@ plotSinglePhyloPic <- function(
 		xx = lastPP$xx[whichTip],
 		yy = lastPP$yy[whichTip],
 		sizeScale = sizeScale,
-		offset = offset,
+		offsetPic = offsetPic,
 		plotAspRatio = plotAspRatio,
 		picAspRatio = picAspRatio,
 		orientation = orientation			
@@ -55,13 +55,13 @@ getCoordsPhyloPic <- function(
 		xx,
 		yy,
 		sizeScale,
-		offset,
+		offsetPic,
 		plotAspRatio,
 		picAspRatio,
 		orientation
 		){
 	#############
-	# modify offset and size adjustment based on orientation
+	# modify offsetPic and size adjustment based on orientation
 	#
 	if(orientation == "rightwards"){
 	############################################
@@ -79,8 +79,8 @@ getCoordsPhyloPic <- function(
 
 		###########################################
 		# GET THE COORDINATES
-		# add offset calculated based on the plot limits
-		x <- xx + offset
+		# add offsetPic calculated based on the plot limits
+		x <- xx + offsetPic
 		y <- yy
 		#
 		#adjust the position of the sides for the image
@@ -104,9 +104,9 @@ getCoordsPhyloPic <- function(
 	#
 
 		# GET THE COORDINATES
-		# add offset calculated based on the plot limits
+		# add offsetPic calculated based on the plot limits
 		x <- xx
-		y <- yy + offset
+		y <- yy + offsetPic
 		#
 		#adjust the position of the sides for the image
 		xAdj <- (picSize/2) #* (plotAspRatio/picAspRatio) 

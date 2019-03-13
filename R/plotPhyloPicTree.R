@@ -29,7 +29,12 @@
 
 #' @param sizeScale The default is \code{sizeScale = 0.9}.
 
-#' @param noiseThreshold A threshold for noise in the PNG from Phylopic
+#' @param maxAgeDepth The maximum tree depth displayed for a tree given with
+#' branch lengths (age depth for a dated tree). The portion of the phylogeny
+#' older than this date will not be shown. \code{NULL} by default. If provided,
+#' the input tree must have branch lengths in \code{tree$edge.length}.
+
+#' @param noiseThreshold A threshold for noise in the PNG from PhyloPic
 #' to be treated as meaningless noise (i.e. a color that is effectively
 #' whitespace) and thus can be trimmed as empty margin which can be
 #' trimmed before the silhouette is plotted. The units for this argument
@@ -37,7 +42,7 @@
 #' between 0 and 0.5 representing colors closer to whitespace than true
 #' black. The default is \code{noiseThreshold = 0.1}.
 
-# noiseThreshold threshold for noise in the PNG from Phylopic to be
+# noiseThreshold threshold for noise in the PNG from PhyloPic to be
 # treated as meaningless noise (i.e. a color that is effectively whitespace)
 # and thus can be trimmed as margin to be trimmed by the function
 
@@ -88,7 +93,7 @@
 #' in-between gray-scale value, shifting them toward color or
 #' not-color without making the sihoullete purely monochrome.
 
-# @param phylopicIDsPBDB ID numbers for images from Phylopic,
+# @param phylopicIDsPBDB ID numbers for images from PhyloPic,
 # as given by the Paleobiology Database's API under the output
 # \code{image_no} (given when \code{show = img}).
 
@@ -212,7 +217,7 @@ plotPhyloPicTree <- function(
 		# or the phylopic API
 		# to construct a phylogeny with PhyloPics
 	# used as pictorial replacements for the tip labels
-	# images taken directory from Phylopic, or PBDB
+	# images taken directory from PhyloPic, or PBDB
 	###############################################
 	# check that reserved arguments are not in ...
 	reservedPlotArgs <- c("direction", "show.tip.label",
@@ -237,7 +242,6 @@ plotPhyloPicTree <- function(
 		stop('only orientation values of "upwards" and "rightwards" are currently accepted')
 		}
 	############################################
-
 	if(is.null(maxAgeDepth)){
 		ageLimInput <- NULL
 	}else{
@@ -252,6 +256,7 @@ plotPhyloPicTree <- function(
 			youngestTipAge <- max(node.depth.edgelength(tree))
 			ageLimInput <- c(maxAgeDepth, youngestTipAge)
 			}
+		}
 	#
 	# assign depending on orientation
 	if(orientation == "rightwards"){
@@ -262,11 +267,8 @@ plotPhyloPicTree <- function(
 		xlimInput <- NULL
 		ylimInput <- ageLimInput		
 		}
-	
-	
-	#################################################
-	# check or obtain the phylopic IDs from PBDB
-		
+		#################################################
+	# check or obtain the phylopic IDs from PBDB	
 	phylopicIDsPBDB <- getPhyloPicIDNumFromPBDB(
 		taxaData = taxaDataPBDB,
 		tree = tree)
@@ -364,15 +366,15 @@ plotPhyloPicTree <- function(
 	# true aspect ratio is their product apparently
 	plotAspRatio <- plotAspRatio / devAspRatio 
 	#
-	# calculate offset as a function of orientation and plot limits
+	# calculate offsetPic as a function of orientation and plot limits
 	if(orientation == "rightwards"){
-		offset <- plotDimensions$xmax - max(lastPP$xx)
+		offsetPic <- plotDimensions$xmax - max(lastPP$xx)
 		}
 	if(orientation == "upwards"){
-		offset <- plotDimensions$ymax - max(lastPP$yy)
+		offsetPic <- plotDimensions$ymax - max(lastPP$yy)
 		}
 	#
-	offset <- offset * 0.5
+	offsetPic <- offsetPic * 0.5
 	#
 	##################################################
 	#
@@ -410,7 +412,7 @@ plotPhyloPicTree <- function(
 			picPNG = picPNG,
 			whichTip = i,
 			lastPP = lastPP,
-			offset = offset,
+			offsetPic = offsetPic,
 			orientation = orientation,
 			plotAspRatio = plotAspRatio,
 			sizeScale = sizeScale,

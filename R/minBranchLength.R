@@ -123,7 +123,7 @@ minBranchLength <- function(tree, mbl){
 	# check that the tree and its root age makes sense
 		# technically this function shouldn't cause
 		# tree depth to become greater than root age
-	checkRootTimeRes <- checkRootTime(tree = timeTree,
+	checkRootTimeRes <- checkRootTime(tree = timetree,
 		stopIfFail = TRUE)
 	#############################
 	return(timetree)

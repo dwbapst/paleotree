@@ -135,8 +135,16 @@ dateTaxonTreePBDB <- function(
 	############################
 	# replace min & max last appearance ages
 		# with 0 if "is_extant" is "extant"
-	taxaDataPBDB[taxaDataPBDB$is_extant == "extant",
-		c("lastapp_min_ma","lastapp_max_ma")] <- 0
+	isExtant <- taxaDataPBDB$is_extant == "extant"
+	lastAppTimes <- c("lastapp_min_ma","lastapp_max_ma")
+	firstAppTimes <- c("firstapp_min_ma","firstapp_max_ma")
+	taxaDataPBDB[isExtant, lastAppTimes] <- 0
+	# if both first appearance times for a taxon are NA (no fossil occurrences)
+		# and its extant, put in 0 for its first appearance time
+	hasNAFirstApps <- apply(taxaDataPBDB[,firstAppTimes],1,
+		function(x) is.na(x[1]) & is.na(x[2])
+		)
+	taxaDataPBDB[isExtant & hasNAFirstApps, firstAppTimes] <- 0
 	###########################################
 	# get four date taxon ranges for all tip taxa
 	# match tip-taxa to taxa-data

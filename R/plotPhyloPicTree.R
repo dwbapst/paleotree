@@ -91,11 +91,30 @@
 #' If \code{colorGradient = "increaseDisparity"}, then a slightly less
 #' extreme option is applied, with values transformed to greatly remove
 #' in-between gray-scale value, shifting them toward color or
-#' not-color without making the sihoullete purely monochrome.
+#' not-color without making the silhouette purely monochrome.
 
 # @param phylopicIDsPBDB ID numbers for images from PhyloPic,
 # as given by the Paleobiology Database's API under the output
 # \code{image_no} (given when \code{show = img}).
+
+#' @param addTaxonStratDurations If \code{TRUE}, solid color boxes are
+#' plotted on the tree to indicated known taxon ranges, from the oldest 
+#' possible for the oldest known observation of that taxon, to the youngest 
+#' possible age for the youngest known observation of that taxon. This 
+#' information needs to be supplied as input, see argument \code{taxaStratRanges}.
+#' If \code{FALSE} (the default), nothing happens.
+
+#' @param stratDurationBoxWidth The width of the stratigraphic duration boxes
+#' plotted for taxa on the tree. By default, this is 0.7 units. If
+#' \code{addTaxonStratDurations = FALSE} (the default), this argument affects nothing.
+
+#' @param taxaStratRanges A matrix of four-date range information, as is often
+#' used when converting Paleobiology Database taxon data to a dated tree. By
+#' default, this is expected to be located at \code{timeTree$tipTaxonFourDateRanges},
+#' which is where such data is placed by default by the function
+#' \code{\link{dateTaxonTreePBDB}}. If \code{addTaxonStratDurations = FALSE}
+#' (the default), this data is not checked for.
+
 
 #' @param cacheDir If not \code{NULL}, this value is used as 
 #' the name of a sub-directory of the working directory for which to look for
@@ -261,8 +280,6 @@
 #' }
 #' 
 
-
-
 #' @name plotPhyloPicTree
 #' @rdname plotPhyloPicTree
 #' @export
@@ -274,6 +291,10 @@ plotPhyloPicTree <- function(
 		#######################
 		maxAgeDepth = NULL,
 		depthAxisPhylo = FALSE,
+		#######################
+		addTaxonStratDurations = FALSE,
+		taxaStratRanges = timeTree$tipTaxonFourDateRanges,
+		stratDurationBoxWidth = 0.7,
 		####################
 		sizeScale = 0.9,
 		removeSurroundingMargin = TRUE,
@@ -334,8 +355,11 @@ plotPhyloPicTree <- function(
 		if(is.null(tree$edge.length)){
 			stop("addTaxonStratDurations is inapplicable for undated trees - input tree has no branch lengths")
 		}else{
+			if(is.null(taxaStratRanges)){
+				stop("addTaxonStratDurations = TRUE, but taxaStratRanges not supplied")
+				}
 			ranges <- getSortedMinMaxStratRanges(timeTree = tree,
-				rangesFourDate = tree$tipTaxonFourDateRanges)
+				rangesFourDate = )
 			}
 	}else{
 		ranges<-NULL	
@@ -513,8 +537,8 @@ plotPhyloPicTree <- function(
 		newXY <- plotTaxonStratDurations(
 			rangesMinMax = rangesRescaled,
 			orientation = orientation,
-			XX = lastPP$xx, YY = lastPP$yy
-			boxWidth = 0.7, 
+			XX = lastPP$xx, YY = lastPP$yy,
+			boxWidth = stratDurationBoxWidth, 
 			boxCol = taxaColor)
 	}else{
 		newXY <- list(XX = lastPP$xx,

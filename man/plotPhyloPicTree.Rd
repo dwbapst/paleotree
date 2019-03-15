@@ -5,7 +5,10 @@
 \title{Plot a Phylogeny with Organismal Silhouettes from PhyloPic, Called Via the Paleobiology Database API}
 \usage{
 plotPhyloPicTree(tree, taxaDataPBDB = tree$taxaDataPBDB,
-  maxAgeDepth = NULL, depthAxisPhylo = FALSE, sizeScale = 0.9,
+  maxAgeDepth = NULL, depthAxisPhylo = FALSE,
+  addTaxonStratDurations = FALSE,
+  taxaStratRanges = timeTree$tipTaxonFourDateRanges,
+  stratDurationBoxWidth = 0.7, sizeScale = 0.9,
   removeSurroundingMargin = TRUE, orientation = "rightwards",
   resetGrPar = TRUE, taxaColor = NULL, transparency = 1,
   cacheDir = "cachedPhyloPicPNGs", cacheImage = TRUE,
@@ -31,6 +34,24 @@ the input tree must have branch lengths in \code{tree$edge.length}.}
 the tree, which must have branch lengths. \code{FALSE} by default.
 If \code{removeSurroundingMargin = TRUE}, which removes extraneous margins,
 the margins of the plot will be adjusted to make room for the plotted axis.}
+
+\item{addTaxonStratDurations}{If \code{TRUE}, solid color boxes are
+plotted on the tree to indicated known taxon ranges, from the oldest 
+possible for the oldest known observation of that taxon, to the youngest 
+possible age for the youngest known observation of that taxon. This 
+information needs to be supplied as input, see argument \code{taxaStratRanges}.
+If \code{FALSE} (the default), nothing happens.}
+
+\item{taxaStratRanges}{A matrix of four-date range information, as is often
+used when converting Paleobiology Database taxon data to a dated tree. By
+default, this is expected to be located at \code{timeTree$tipTaxonFourDateRanges},
+which is where such data is placed by default by the function
+\code{\link{dateTaxonTreePBDB}}. If \code{addTaxonStratDurations = FALSE}
+(the default), this data is not checked for.}
+
+\item{stratDurationBoxWidth}{The width of the stratigraphic duration boxes
+plotted for taxa on the tree. By default, this is 0.7 units. If
+\code{addTaxonStratDurations = FALSE} (the default), this argument affects nothing.}
 
 \item{sizeScale}{The default is \code{sizeScale = 0.9}.}
 
@@ -109,7 +130,7 @@ simplified to a duality: either fully colored or fully transparent.
 If \code{colorGradient = "increaseDisparity"}, then a slightly less
 extreme option is applied, with values transformed to greatly remove
 in-between gray-scale value, shifting them toward color or
-not-color without making the sihoullete purely monochrome.}
+not-color without making the silhouette purely monochrome.}
 
 \item{...}{Additional arguments, passed to
 \code{plot.phylo} for plotting of the tree. These

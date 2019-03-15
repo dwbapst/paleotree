@@ -223,10 +223,23 @@
 #' # plotting the dated tree with an axis
 #' plotPhyloPicTree(tree = timeTree,
 #' 	depthAxisPhylo= TRUE)
+#' 
 #' # now upwards!
 #' plotPhyloPicTree(tree = timeTree,
 #' 	orientation = "upwards",
 #' 	depthAxisPhylo= TRUE)
+#' 
+#' ###################################
+#' plotting a time tree with stratigraphic ranges
+#' 
+#' 
+#' plotPhyloPicTree(tree = timeTree,
+#'    addTaxonStratDurations = TRUE)
+#' 
+#' plotPhyloPicTree(tree = timeTree,
+#'    addTaxonStratDurations = TRUE,
+#'    orientation = "upwards",
+#'    depthAxisPhylo= TRUE)
 #' 
 #' ########
 #' # adjusting a tree to ignore a very old root

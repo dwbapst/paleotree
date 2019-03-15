@@ -24,10 +24,9 @@ getSortedMinMaxStratRanges <- function(timeTree,
 plotTaxonStratDurations <- function(
 		rangesMinMax,
 		orientation,
-		XX <- lastPP$xx,
-		YY <- lastPP$yy,
+		XX, YY,
 		boxWidth = 0.7,
-		boxCol = "black"
+		boxCol 
 		){
 	########################
 	#
@@ -41,7 +40,8 @@ plotTaxonStratDurations <- function(
 				xright = ageMin,
 				ytop = yCent + (boxWidth/2),
 				ybottom = yCent - (boxWidth/2),
-				col = boxCol
+				col = boxCol[i],
+				border = boxCol[i]
 				)
 			# get new xx and yy for end of ranges
 			XX[i] <- ageMin
@@ -58,7 +58,8 @@ plotTaxonStratDurations <- function(
 				ybottom = ageMax,
 				xleft = xCent - (boxWidth/2),
 				xright = xCent + (boxWidth/2),
-				col = boxCol
+				col = boxCol[i],
+				border = boxCol[i]
 				)
 			# get new xx and yy for end of ranges
 			XX[i] <- xCent

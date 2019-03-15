@@ -330,9 +330,8 @@ plotPhyloPicTree <- function(
 	#############################
 	ranges <- getSortedMinMaxStratRanges(timeTree = tree,
 		rangesFourDate = tree$tipTaxonFourDateRanges)
-
-# need to adjust tree so that plotting takes into account range ages
-
+	# need to adjust tree so that plotting takes into account range ages
+	
 
 
 
@@ -480,7 +479,8 @@ plotPhyloPicTree <- function(
 			rangesMinMax = ranges,
 			orientation = orientation,
 			XX = lastPP$xx, YY = lastPP$yy
-			boxWidth = 0.7, boxCol = "black")
+			boxWidth = 0.7, 
+			boxCol = taxaColor)
 	}else{
 		newXY <- list(XX = lastPP$xx,
 			YY = lastPP$yy)

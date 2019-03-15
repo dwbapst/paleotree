@@ -341,6 +341,12 @@ plotPhyloPicTree <- function(
 		ranges<-NULL	
 		}
 	#############################
+	# get root age if not already present
+	if(!is.null(tree$edge.length) $ is.null(tree$root.time)){
+		# not sure how this could happen but...
+		tree$root.time <- max(node.depth.edgelength(tree))
+		}
+	#############################
 	# get maximum age depth, which should be a function of maxAgeDepth and tree depth only
 	if(is.null(maxAgeDepth)){
 		if(is.null(tree$edge.length)){
@@ -361,6 +367,7 @@ plotPhyloPicTree <- function(
 			maxAgeLim <- maxAgeDepth
 			}
 		}
+	###################################
 	# now need to get minAgeLim
 		# need to adjust tree so that plotting takes into account range ages	
 	if(is.null(ranges)){
@@ -373,16 +380,18 @@ plotPhyloPicTree <- function(
 	}else{
 		minAgeLim <- min(ranges)
 		}
-	
-	
-	ageLimInput <- c(maxAgeLim, minAgeLim)
-	# but now need to make from root = 0
-		# subtract from the age of the youngest tip			
-
-	
-
-			ageLimInput <- youngestTipAge - ageLimInput	
-	
+	############
+	if(is.na(maxAgeLim) & is.na(minAgeLim)){
+		ageLimInput <- NULL
+	}else{
+		ageLimInput <- c(maxAgeLim, minAgeLim)
+		# but now need to make from root = 0
+			# subtract from the age of the root, which will become zero		
+		ageLimInput<- tree$root.time - c(maxAgeLim, minAgeLim)
+		# rescale ranges relative to the maximum age depth
+		rangesRescaled <- tree$root.time - ranges	
+		}
+	##################
 	# assign limits depending on orientation
 	if(orientation == "rightwards"){
 		xlimInput <- ageLimInput
@@ -531,10 +540,10 @@ plotPhyloPicTree <- function(
 	#
 	# calculate offsetPic as a function of orientation and plot limits
 	if(orientation == "rightwards"){
-		offsetPic <- plotDimensions$xmax - max(newXY$XX)
+		offsetPic <- plotDimensions$xmax - max(lastPP$x.lim)
 		}
 	if(orientation == "upwards"){
-		offsetPic <- plotDimensions$ymax - max(newXY$YY)
+		offsetPic <- plotDimensions$ymax - max(lastPP$y.lim)
 		}
 	#
 	offsetPic <- offsetPic * 0.5

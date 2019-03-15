@@ -3,7 +3,8 @@
 plotSinglePhyloPic <- function(
 		picPNG,
 		whichTip,
-		lastPP,
+		XX,
+		YY,
 		sizeScale,
 		offsetPic,
 		orientation,
@@ -16,11 +17,11 @@ plotSinglePhyloPic <- function(
 		# ratio of # of pixel dimensions
 	picAspRatio <- dim(picPNG)[1]/dim(picPNG)[2]
 	#
-	#points(lastPP$xx,lastPP$yy)	
+	#points(XX, YY)	
 	#
 	xyCoords <- getCoordsPhyloPic(
-		xx = lastPP$xx[whichTip],
-		yy = lastPP$yy[whichTip],
+		xx = XX[whichTip],
+		yy = YY[whichTip],
 		sizeScale = sizeScale,
 		offsetPic = offsetPic,
 		plotAspRatio = plotAspRatio,

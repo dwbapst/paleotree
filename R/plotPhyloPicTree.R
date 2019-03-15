@@ -328,6 +328,17 @@ plotPhyloPicTree <- function(
 	# check that the tree and its root age makes sense
 	checkRes <- checkRootTime(tree)			
 	#############################
+	ranges <- getSortedMinMaxStratRanges(timeTree = tree,
+		rangesFourDate = tree$tipTaxonFourDateRanges)
+
+# need to adjust tree so that plotting takes into account range ages
+
+
+
+
+
+
+	#############################
 	# check maxAgeDepth
 	if(is.null(maxAgeDepth)){
 		ageLimInput <- NULL
@@ -463,7 +474,18 @@ plotPhyloPicTree <- function(
 	##########################################
 	# now get the last plotting environment
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
-	#
+	############################################
+	if(addTaxonStratDurations){
+		newXY <- plotTaxonStratDurations(
+			rangesMinMax = ranges,
+			orientation = orientation,
+			XX = lastPP$xx, YY = lastPP$yy
+			boxWidth = 0.7, boxCol = "black")
+	}else{
+		newXY <- list(XX = lastPP$xx,
+			YY = lastPP$yy)
+		}
+	#########################################################
 	# get the plot's own aspect ratio
 	#plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
 	# actually... better to get from par("usr")
@@ -484,10 +506,10 @@ plotPhyloPicTree <- function(
 	#
 	# calculate offsetPic as a function of orientation and plot limits
 	if(orientation == "rightwards"){
-		offsetPic <- plotDimensions$xmax - max(lastPP$xx)
+		offsetPic <- plotDimensions$xmax - max(newXY$XX)
 		}
 	if(orientation == "upwards"){
-		offsetPic <- plotDimensions$ymax - max(lastPP$yy)
+		offsetPic <- plotDimensions$ymax - max(newXY$YY)
 		}
 	#
 	offsetPic <- offsetPic * 0.5
@@ -527,7 +549,8 @@ plotPhyloPicTree <- function(
 		plotSinglePhyloPic(
 			picPNG = picPNG,
 			whichTip = i,
-			lastPP = lastPP,
+			XX = newXY$XX,
+			YY = newXY$YY,
 			offsetPic = offsetPic,
 			orientation = orientation,
 			plotAspRatio = plotAspRatio,
@@ -540,6 +563,8 @@ plotPhyloPicTree <- function(
 		# like what?
 	# adjusted graphic parameters
 	modPhyloPlotInfo$savedPar <- par(no.readonly = TRUE)
+	# adjusted XY
+	modPhyloPlotInfo$newXY <- newXY
 	# reset graphic par
 	if(resetGrPar){
 		suppressWarnings(par(oldPar))

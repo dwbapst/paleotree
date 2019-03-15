@@ -1,15 +1,33 @@
 
 
+
+
+	
+ranges <- getSortedMinMaxStratRanges(timeTree = tree,
+		rangesFourDate = tree$tipTaxonFourDateRanges)
+
 # need to adjust tree so that plotting takes into account range ages
 
 
 
 
 
-	plot(timeTree , show.tip.label = FALSE)
-	axisPhylo()
-	#
-	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+
+		
+if(addTaxonStratDurations){
+	newXY <- plotTaxonStratDurations(
+		rangesMinMax = ranges,
+		orientation = orientation,
+		XX = lastPP$xx, YY = lastPP$yy
+		boxWidth = 0.7, boxCol = "black")
+}else{
+	newXY <- list(XX = lastPP$xx,
+		YY = lastPP$yy)
+	}
+
+		
+
 
 getSortedMinMaxStratRanges <- function(timeTree,
 		rangesFourDate = timeTree$tipTaxonFourDateRanges
@@ -31,16 +49,6 @@ getSortedMinMaxStratRanges <- function(timeTree,
 		}
 	return(rangesMinMaxSorted)
 	}
-
-	
-ranges <- getSortedMinMaxStratRanges(timeTree = tree,
-		rangesFourDate = tree$tipTaxonFourDateRanges)
-
-plotTaxonStratDurations(
-		rangesMinMax = ranges,
-		orientation = orientation,
-		XX = lastPP$xx, YY = lastPP$yy
-		boxWidth = 0.7, boxCol = "black")
 		
 		
 plotTaxonStratDurations <- function(
@@ -88,6 +96,6 @@ plotTaxonStratDurations <- function(
 			}		
 		}		
 	# return newXX,YY
-	newXY <- cbind(XX = XX, YY = YY)
+	newXY <- list(XX = XX, YY = YY)
 	return(newXY)
 	}

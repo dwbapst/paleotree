@@ -359,14 +359,14 @@ plotPhyloPicTree <- function(
 				stop("addTaxonStratDurations = TRUE, but taxaStratRanges not supplied")
 				}
 			ranges <- getSortedMinMaxStratRanges(timeTree = tree,
-				rangesFourDate = )
+				rangesFourDate = taxaStratRanges)
 			}
 	}else{
 		ranges<-NULL	
 		}
 	#############################
 	# get root age if not already present
-	if(!is.null(tree$edge.length) $ is.null(tree$root.time)){
+	if(!is.null(tree$edge.length) & is.null(tree$root.time)){
 		# not sure how this could happen but...
 		tree$root.time <- max(node.depth.edgelength(tree))
 		}

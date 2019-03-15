@@ -10,11 +10,12 @@ getSortedMinMaxStratRanges <- function(timeTree,rangesFourDate ){
 	# transform rangesMinMax for
 	   # same backwards timescale as tree
 	#rangesMinMax <- timeTree$root.time - rangesMinMax
-	rangesMinMaxSorted <- 
+	rangesMinMaxSorted <- matrix(,Ntip(timeTree),2)
 	for(i in 1:Ntip(timeTree)){
 		whichRanges <- rownames(rangesMinMax) == timeTree$tip.label[i]
 		rangesMinMaxSorted[i,] <- rangesMinMax[whichRanges,]
 		}
+	rownames(rangesMinMaxSorted) <- timeTree$tip.label
 	return(rangesMinMaxSorted)
 	}
 		

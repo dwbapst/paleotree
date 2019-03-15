@@ -564,10 +564,10 @@ plotPhyloPicTree <- function(
 	#
 	# calculate offsetPic as a function of orientation and plot limits
 	if(orientation == "rightwards"){
-		offsetPic <- plotDimensions$xmax - max(lastPP$x.lim)
+		offsetPic <- plotDimensions$xmax - max(lastPP$xx)
 		}
 	if(orientation == "upwards"){
-		offsetPic <- plotDimensions$ymax - max(lastPP$y.lim)
+		offsetPic <- plotDimensions$ymax - max(lastPP$yy)
 		}
 	#
 	offsetPic <- offsetPic * 0.5

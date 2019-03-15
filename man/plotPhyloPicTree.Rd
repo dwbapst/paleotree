@@ -6,7 +6,7 @@
 \usage{
 plotPhyloPicTree(tree, taxaDataPBDB = tree$taxaDataPBDB,
   maxAgeDepth = NULL, depthAxisPhylo = FALSE,
-  addTaxonStratDurations = FALSE,
+  colorAxisPhylo = "black", addTaxonStratDurations = FALSE,
   taxaStratRanges = tree$tipTaxonFourDateRanges,
   stratDurationBoxWidth = 0.7, sizeScale = 0.9,
   removeSurroundingMargin = TRUE, orientation = "rightwards",
@@ -34,6 +34,10 @@ the input tree must have branch lengths in \code{tree$edge.length}.}
 the tree, which must have branch lengths. \code{FALSE} by default.
 If \code{removeSurroundingMargin = TRUE}, which removes extraneous margins,
 the margins of the plot will be adjusted to make room for the plotted axis.}
+
+\item{colorAxisPhylo}{A color in which the axis for the phylogenetic's depth
+(generally a time-scale) will be plotted in, for both the axis, its
+tickmarks, and the labels for the tickmarks.}
 
 \item{addTaxonStratDurations}{If \code{TRUE}, solid color boxes are
 plotted on the tree to indicated known taxon ranges, from the oldest 

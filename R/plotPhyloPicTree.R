@@ -115,6 +115,9 @@
 #' \code{\link{dateTaxonTreePBDB}}. If \code{addTaxonStratDurations = FALSE}
 #' (the default), this data is not checked for.
 
+#' @param colorAxisPhylo A color in which the axis for the phylogenetic's depth
+#' (generally a time-scale) will be plotted in, for both the axis, its
+#' tickmarks, and the labels for the tickmarks.
 
 #' @param cacheDir If not \code{NULL}, this value is used as 
 #' the name of a sub-directory of the working directory for which to look for
@@ -291,6 +294,7 @@ plotPhyloPicTree <- function(
 		#######################
 		maxAgeDepth = NULL,
 		depthAxisPhylo = FALSE,
+		colorAxisPhylo  = "black",
 		#######################
 		addTaxonStratDurations = FALSE,
 		taxaStratRanges = tree$tipTaxonFourDateRanges,
@@ -522,10 +526,12 @@ plotPhyloPicTree <- function(
 	# plot axisPhylo if depthAxisPhylo 
 	if(depthAxisPhylo){
 		if(orientation == "rightwards"){
-			axisPhylo(side=1)
+			axisPhylo(side=1,
+				col = colorAxisPhylo, col.axis = colorAxisPhylo)
 			}
 		if(orientation == "upwards"){
-			axisPhylo(side=4)	
+			axisPhylo(side=4,
+				col = colorAxisPhylo, col.axis = colorAxisPhylo)
 			}		
 		}
 	##########################################
@@ -564,10 +570,10 @@ plotPhyloPicTree <- function(
 	#
 	# calculate offsetPic as a function of orientation and plot limits
 	if(orientation == "rightwards"){
-		offsetPic <- plotDimensions$xmax - max(lastPP$xx)
+		offsetPic <- plotDimensions$xmax - max(newXY$XX)
 		}
 	if(orientation == "upwards"){
-		offsetPic <- plotDimensions$ymax - max(lastPP$yy)
+		offsetPic <- plotDimensions$ymax - max(newXY$YY)
 		}
 	#
 	offsetPic <- offsetPic * 0.5

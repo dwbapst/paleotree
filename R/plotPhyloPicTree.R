@@ -110,7 +110,7 @@
 
 #' @param taxaStratRanges A matrix of four-date range information, as is often
 #' used when converting Paleobiology Database taxon data to a dated tree. By
-#' default, this is expected to be located at \code{timeTree$tipTaxonFourDateRanges},
+#' default, this is expected to be located at \code{tree$tipTaxonFourDateRanges},
 #' which is where such data is placed by default by the function
 #' \code{\link{dateTaxonTreePBDB}}. If \code{addTaxonStratDurations = FALSE}
 #' (the default), this data is not checked for.
@@ -293,7 +293,7 @@ plotPhyloPicTree <- function(
 		depthAxisPhylo = FALSE,
 		#######################
 		addTaxonStratDurations = FALSE,
-		taxaStratRanges = timeTree$tipTaxonFourDateRanges,
+		taxaStratRanges = tree$tipTaxonFourDateRanges,
 		stratDurationBoxWidth = 0.7,
 		####################
 		sizeScale = 0.9,

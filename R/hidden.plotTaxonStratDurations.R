@@ -1,9 +1,7 @@
 
-getSortedMinMaxStratRanges <- function(timeTree,
-		rangesFourDate = timeTree$tipTaxonFourDateRanges
-		){
+getSortedMinMaxStratRanges <- function(timeTree,rangesFourDate ){
+	#rangesFourDate <- timeTree$tipTaxonFourDateRanges	
 	#########################
-	rangesFourDate <- timeTree$tipTaxonFourDateRanges	
 	# get the ranges
 	rangesMinMax <- rangesFourDate[
 		,c("firstapp_max_ma","lastapp_min_ma")
@@ -35,7 +33,7 @@ plotTaxonStratDurations <- function(
 			yCent <- YY[i]
 			ageMax <- rangesMinMax[i,"firstMax"]
 			ageMin <- rangesMinMax[i,"lastMin"]
-			rect(	
+			graphics::rect(	
 				xleft = ageMax, 
 				xright = ageMin,
 				ytop = yCent + (boxWidth/2),
@@ -50,10 +48,10 @@ plotTaxonStratDurations <- function(
 		}
 	if(orientation == "upwards"){
 		for(i in 1:nrow(rangesMinMax)){
-			XCent <- XX[i]
+			xCent <- XX[i]
 			ageMax <- rangesMinMax[i,"firstMax"]
 			ageMin <- rangesMinMax[i,"lastMin"]
-			rect(	
+			graphics::rect(	
 				ytop = ageMin, 
 				ybottom = ageMax,
 				xleft = xCent - (boxWidth/2),

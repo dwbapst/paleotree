@@ -328,19 +328,26 @@ plotPhyloPicTree <- function(
 	# check that the tree and its root age makes sense
 	checkRes <- checkRootTime(tree)			
 	#############################
-	ranges <- getSortedMinMaxStratRanges(timeTree = tree,
-		rangesFourDate = tree$tipTaxonFourDateRanges)
-	# need to adjust tree so that plotting takes into account range ages
-	
-
-
-
-
-
+	# get ranges if addTaxonStratDurations
+		# then need to adjust tree so that plotting takes into account range ages
+	if(addTaxonStratDurations){
+		if(is.null(tree$edge.length)){
+			stop("addTaxonStratDurations is inapplicable for undated trees - input tree has no branch lengths")
+		}else{
+			ranges <- getSortedMinMaxStratRanges(timeTree = tree,
+				rangesFourDate = tree$tipTaxonFourDateRanges)
+			}
+	}else{
+		ranges<-NULL	
+		}
 	#############################
-	# check maxAgeDepth
+	# get maximum age depth, which should be a function of maxAgeDepth and tree depth only
 	if(is.null(maxAgeDepth)){
-		ageLimInput <- NULL
+		if(is.null(tree$edge.length)){
+			maxAgeLim <- NA
+		}else{
+			maxAgeLim <- tree$root.time
+			}
 	}else{
 		if(length(maxAgeDepth) != 1 | !is.numeric(maxAgeDepth)){
 			stop("maxAgeDepth must be a numeric vector of length 1 if provided")
@@ -351,13 +358,31 @@ plotPhyloPicTree <- function(
 			stop("maxAgeDepth provided but input tree has no branch lengths, and thus is undated - please reconcile")
 		}else{
 			# in absolute time
-			ageLimInput <- c(maxAgeDepth, 0)
-			# but now need to make from root = 0
-				# subtract from the age of the youngest tip
-			youngestTipAge <- max(node.depth.edgelength(tree))
-			ageLimInput <- youngestTipAge - ageLimInput
+			maxAgeLim <- maxAgeDepth
 			}
 		}
+	# now need to get minAgeLim
+		# need to adjust tree so that plotting takes into account range ages	
+	if(is.null(ranges)){
+		if(is.null(tree$edge.length)){
+			minAgeLim <- NA
+		}else{
+			furthestTipDist <- max(node.depth.edgelength(tree))
+			minAgeLim <- tree$root.time - furthestTipDist
+			}		
+	}else{
+		minAgeLim <- min(ranges)
+		}
+	
+	
+	ageLimInput <- c(maxAgeLim, minAgeLim)
+	# but now need to make from root = 0
+		# subtract from the age of the youngest tip			
+
+	
+
+			ageLimInput <- youngestTipAge - ageLimInput	
+	
 	# assign limits depending on orientation
 	if(orientation == "rightwards"){
 		xlimInput <- ageLimInput
@@ -475,8 +500,9 @@ plotPhyloPicTree <- function(
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
 	############################################
 	if(addTaxonStratDurations){
+		#
 		newXY <- plotTaxonStratDurations(
-			rangesMinMax = ranges,
+			rangesMinMax = rangesRescaled,
 			orientation = orientation,
 			XX = lastPP$xx, YY = lastPP$yy
 			boxWidth = 0.7, 
@@ -489,9 +515,8 @@ plotPhyloPicTree <- function(
 	# get the plot's own aspect ratio
 	#plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
 	# actually... better to get from par("usr")
-	plotDimensions <- par("usr")
-	# xmin, ymin, xmax, ymax
-	plotDimensions<- list(
+		# xmin, ymin, xmax, ymax
+	plotDimensions <- list(
 		xmin = par("usr")[1],
 		xmax = par("usr")[2],
 		ymin = par("usr")[3],

@@ -11,7 +11,7 @@ getSortedMinMaxStratRanges <- function(timeTree,
 	colnames(rangesMinMax) <- c("firstMax","lastMin")
 	# transform rangesMinMax for
 	   # same backwards timescale as tree
-	rangesMinMax <- timeTree$root.time - rangesMinMax
+	#rangesMinMax <- timeTree$root.time - rangesMinMax
 	rangesMinMaxSorted <- 
 	for(i in 1:Ntip(timeTree)){
 		whichRanges <- rownames(rangesMinMax) == timeTree$tip.label[i]
@@ -30,7 +30,7 @@ plotTaxonStratDurations <- function(
 		){
 	########################
 	#
-	if(orientation == "rightwards"){
+	if(orientation == "rightwards"){	
 		for(i in 1:nrow(rangesMinMax)){
 			yCent <- YY[i]
 			ageMax <- rangesMinMax[i,"firstMax"]

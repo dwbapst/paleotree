@@ -212,8 +212,7 @@ plotPhyloPicTree(tree = timeTree,
 	depthAxisPhylo= TRUE)
 
 ###################################
-plotting a time tree with stratigraphic ranges
-
+# plotting a time tree with stratigraphic ranges
 
 plotPhyloPicTree(tree = timeTree,
    addTaxonStratDurations = TRUE)

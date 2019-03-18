@@ -173,21 +173,34 @@
 
 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' 
+#' #get some example occurrence and taxonomic data
+#' data(graptPBDB)
 #' 
-#' #graptolites
-#' graptData <- easyGetPBDBtaxa("Graptolithina")
-#' graptTree <- makePBDBtaxonTree(graptData,"genus",
-#' 	   method = "parentChild")
-#' #try Linnean
-#' graptTree <- makePBDBtaxonTree(graptData,"genus",
-#' 	   method = "Linnean")
+#' #get the taxon tree: Linnean method
+#' graptTreeLinnean <- makePBDBtaxonTree(graptTaxaPBDB,
+#'     "genus", method = "Linnean")
+#' plotPBDBtaxonTree(graptTreeLinnean)
+#'
+#' #get the taxon tree: parentChild method
+#' graptTreeParentChild <- makePBDBtaxonTree(graptTaxaPBDB,
+#'     "genus", method = "parentChild")
+#' plotPBDBtaxonTree(graptTreeParentChild)
 #' 
 #' # plot it!
-#' plot(graptTree,show.tip.label = FALSE,
-#'     no.margin = TRUE,edge.width = 0.35)
-#' nodelabels(graptTree$node.label,adj = c(0,1/2))
+#' # let's make a simple helper function
+#'    # for plotting these taxon trees
+#' plotPBDBtaxonTree <- function(tree){
+#'    plot(tree,show.tip.label = FALSE,
+#'        no.margin = TRUE,edge.width = 0.35)
+#'    nodelabels(tree$node.label,adj = c(0,1/2))
+#' 	  }
+#'
+#' 
+#' plotPBDBtaxonTree(graptTreeParentChild)
+#' plotPBDBtaxonTree(graptTreeLinnean)
+#' 
 #' 
 #' #################
 #' #conodonts
@@ -196,9 +209,7 @@
 #' 	   method = "parentChild")
 #' 
 #' # plot it!
-#' plot(conoTree,show.tip.label = FALSE,
-#'    no.margin = TRUE,edge.width = 0.35)
-#' nodelabels(conoTree$node.label,adj = c(0,1/2))
+#' plotPBDBtaxonTree(conoTree)
 #' 
 #' ############################
 #' #asaphid trilobites
@@ -207,9 +218,7 @@
 #' 	   method = "parentChild")
 #' 
 #' # plot it!
-#' plot(asaTree,show.tip.label = FALSE,
-#'    no.margin = TRUE,edge.width = 0.35)
-#' nodelabels(asaTree$node.label,adj = c(0,1/2))
+#' plotPBDBtaxonTree(asaTree)
 #' 
 #' #Ornithischia
 #' ornithData <- easyGetPBDBtaxa("Ornithischia")
@@ -221,68 +230,35 @@
 #'    -(which(ornithData[,"taxon_name"] == "Hylaeosaurus")[1]),]
 #' ornithTree <- makePBDBtaxonTree(ornithData,"genus",
 #' 	  method = "Linnean")
-#' plot(ornithTree,show.tip.label = FALSE,
-#'    no.margin = TRUE,edge.width = 0.35)
-#' nodelabels(ornithTree$node.label,adj = c(0,1/2))
+#' plotPBDBtaxonTree(ornithTree)
 #' 
 #' #Rhynchonellida
 #' rynchData <- easyGetPBDBtaxa("Rhynchonellida")
 #' rynchTree <- makePBDBtaxonTree(rynchData,"genus",
 #' 	  method = "parentChild")
-#' plot(rynchTree, show.tip.label = FALSE, 
-#'    no.margin = TRUE, edge.width = 0.35)
-#' nodelabels(rynchTree$node.label,adj = c(0,1/2))
+#' plotPBDBtaxonTree(rynchTree)
 #' 
 #' #some of these look pretty messy!
 #' 
 #' }
 #' 
-#' ###################################
-#' \donttest{
-#' 
-#' #let's try time-scaling the graptolite tree
-#' 
-#' #get some example occurrence and taxonomic data
-#' data(graptPBDB)
-#' 
-#' #get the taxon tree: Linnean method
-#' graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
-#'     "genus", method = "Linnean")
-#' plot(graptTree, cex = 0.4)
-#' nodelabels(graptTree$node.label, cex = 0.5)
-#'
-#' #get the taxon tree: parentChild method
-#' graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
-#'     "genus", method = "parentChild")
-#' plot(graptTree,cex = 0.4)
-#' nodelabels(graptTree$node.label,cex = 0.5)
-#' 
-#' #get time data from occurrences
-#' graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,
-#'     rank = "genus", onlyFormal = FALSE)
-#' graptTimeGenus <- occData2timeList(occList = graptOccGenus)
-#' 
-#' #let's time-scale the parentChild tree with paleotree
-#' 		# use minimum branch length for visualization
-#' 		# and nonstoch.bin so we plot maximal ranges
-#' timeTree <- bin_timePaleoPhy(graptTree,
-#'     timeList = graptTimeGenus,
-#'     nonstoch.bin = TRUE,
-#'     type = "mbl", vartime = 3)
-#' 
-#' #drops a lot of taxa; some of this is due to mispellings, etc
-#' 
-#' }
-#' \dontrun{
-#' 
-#' #make pretty plot with library strap
-#' library(strap)
-#' geoscalePhylo(timeTree,
-#'     ages = timeTree$ranges.used)
-#' nodelabels(timeTree$node.label,cex = 0.5)
-#'
-#' }
-#' 
+
+
+### OLD EXAMPLE CODE
+# #get time data from occurrences
+# graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,
+#     rank = "genus", onlyFormal = FALSE)
+# graptTimeGenus <- occData2timeList(occList = graptOccGenus)
+# 
+# #let's time-scale the parentChild tree with paleotree
+# 		# use minimum branch length for visualization
+# 		# and nonstoch.bin so we plot maximal ranges
+# timeTree <- bin_timePaleoPhy(graptTree,
+#     timeList = graptTimeGenus,
+#     nonstoch.bin = TRUE,
+#     type = "mbl", vartime = 3)
+# 
+# #drops a lot of taxa; some of this is due to mispellings, etc
 
 
 

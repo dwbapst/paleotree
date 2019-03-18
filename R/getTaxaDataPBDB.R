@@ -82,10 +82,33 @@
 
 
 #' @examples
+#' \donttest{
 #' 
-#' #an example here
-
-
+#' #graptolites
+#' graptData <- getCladeTaxaPBDB("Graptolithina")
+#' dim(graptData)
+#' sum(graptData$taxon_rank=="genus")
+#' 
+#' # so we can see that our call for graptolithina returned 
+#' 	# a large number of taxa, a large portion of which are
+#' 	# individual genera
+#' # (554 and 318 respectively, as of 03-18-19)
+#' 
+#' tetrapodList<-c("Archaeopteryx", "Columba", "Ectopistes",
+#'	"Corvus", "Velociraptor", "Baryonyx", "Bufo",
+#'	"Rhamphorhynchus", "Quetzalcoatlus", "Natator",
+#'	"Tyrannosaurus", "Triceratops", "Gavialis",
+#'	"Brachiosaurus", "Pteranodon", "Crocodylus",
+#'	"Alligator", "Giraffa", "Felis", "Ambystoma",
+#' 	"Homo", "Dimetrodon", "Coleonyx", "Equus",
+#'	"Sphenodon", "Amblyrhynchus")
+#' 
+#' tetrapodData <-getSpecificTaxaPBDB(tetrapodList)
+#' dim(tetrapodData)
+#' sum(tetrapodData$taxon_rank=="genus")
+#' # should be 26, with all 26 as genera
+#' }
+#' 
 
 
 #' @rdname getTaxaDataPBDB 

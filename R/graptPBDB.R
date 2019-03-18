@@ -8,16 +8,20 @@
 #' @aliases graptPBDB graptOccPBDB graptTaxaPBDB
 
 #' @details
-#' This example PBDB data is included here for testing functions involving occurrence data and taxonomy
+#' This example PBDB data is included here for testing
+#' functions involving occurrence data and taxonomy
 #' in \code{paleotree}.
 
 #' @format 
-#' The example occurrence dataset (\code{graptOccPBDB}) is a data.frame consisting of 5900 occurrences (rows) and 35 variables (columns).
-#' The example taxonomy dataset (\code{graptTaxaPBDB}) is a data.frame consisting of 364 formal taxa (rows) and 53 variables (columns).
+#' The example occurrence dataset (\code{graptOccPBDB}) is a
+#' data.frame consisting of 5900 occurrences (rows) and 35 variables (columns).
+#' The example taxonomy dataset (\code{graptTaxaPBDB}) is a
+#' data.frame consisting of 364 formal taxa (rows) and 53 variables (columns).
 #' Variables are coded in the 'pbdb' vocabulary of the PBDB API v1.2.
 
 #' @seealso
-#' \code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}}, \code{\link{makePBDBtaxonTree}}, \code{\link{plotOccData}}
+#' \code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}},
+#' \code{\link{makePBDBtaxonTree}}, \code{\link{plotOccData}}
 
 #' @references
 #' Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
@@ -55,11 +59,13 @@
 #' pie(sort(table(graptOccPBDB$enterer)))
 #' # and now who authorized it
 #' pie(sort(table(graptOccPBDB$authorizer)))
-#' # I apologize for using pie charts.
+#' 
+#' # I *sort of* apologize for using pie charts.
 #' 
 #' # Let's look at age resolution of these occurrences
-#' hist(graptOccPBDB$early_age-graptOccPBDB$late_age,
-#' 		main = "Age Resolution of Occurrences", xlab = "Ma")
+#' hist(graptOccPBDB$early_age - graptOccPBDB$late_age,
+#' 		main = "Age Resolution of Occurrences",
+#'		xlab = "Ma")
 #' 
 #' #distribution of taxa among taxonomic ranks
 #' table(graptTaxaPBDB$taxon_rank)

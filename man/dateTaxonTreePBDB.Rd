@@ -62,8 +62,6 @@ The dating by
 
 \donttest{
 
-library(paleotree)
-
 taxaAnimals<-c("Archaeopteryx", "Eldredgeops",
 	"Corvus", "Acropora", "Velociraptor", "Gorilla", 
 	"Olenellus", "Lingula", "Dunkleosteus",
@@ -78,8 +76,8 @@ tree <- makePBDBtaxonTree(data, rank = "genus")
 #get the ranges 
 timeTree <- dateTaxonTreePBDB(tree)
 
-plotPhyloPicTree(tree = timeTree)
-axisPhylo()
+plotPhyloPicTree(tree = timeTree,
+     depthAxisPhylo = TRUE)
 
 }
 

@@ -296,7 +296,7 @@
 #' 
 #' data <-getSpecificTaxaPBDB(tetrapodList)
 #' 
-#' tree <- makePBDBtaxonTree(data, rank = "genus") 
+#' tree <- makePBDBtaxonTree(data, rank = "genus")
 #' 
 #' plotPhyloPicTree(tree = tree)
 #' 
@@ -364,9 +364,6 @@
 #' dev.off()
 #' shell.exec(file)
 #' 
-#' }
-
-
 #' }
 #' 
 

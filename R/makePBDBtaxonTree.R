@@ -11,7 +11,6 @@
 #' output by \code{makePBDBtaxonTree}.
 #' 
  
-
 #' @details
 #' This function should not be taken too seriously.
 #' Many groups in the Paleobiology Database have
@@ -81,41 +80,22 @@
 #' offline, as it does nto do any additional API calls
 #' of the Paleobiology Database, unlike other options.
 
-#  @param solveMissing Under \code{method  = "parentChild"}, what should \code{makePBDBtaxonTree} do about
-#  multiple 'floating' parent taxa, listed without their own parent taxon information in the input
-#   dataset under \code{taxaDataPBDB}? Each of these is essentially a separate root taxon, for a different set
-#   of parent-child relationships, and thus poses a problem as far as returning a single phylogeny is
-#   concerned. If \code{solveMissing = NULL} (the default), nothing is done and the operation halts with
-#   an error, reporting the identity of these taxa. Two alternative solutions are offered: first,
-#   \code{solveMissing  = "mergeRoots"} will combine these disparate potential roots and link them to an
-#   artificially-constructed pseudo-root, which at least allows for visualization of the taxonomic
-#   structure in a limited dataset. Secondly, \code{solveMissing  = "queryPBDB"} queries the Paleobiology
-#   Database repeatedly via the API for information on parent taxa of the 'floating' parents, and continues
-#   within a \code{while()} loop until only one such unassigned parent taxon remains. This latter option may
-#   talk a long time or never finish, depending on the linearity and taxonomic structures encountered in the
-#   PBDB taxonomic data; i.e. if someone a taxon was ultimately its own indirect child in some grand loop by
-#   mistake, then under this option \code{makePBDBtaxonTree} might never finish. In cases where taxonomy is
-#   bad due to weird and erroneous taxonomic assignments reported by the PBDB, this routine may search all
-#   the way back to a very ancient and deep taxon, such as the Eukaryota taxon.
-#  Users should thus use \code{solveMissing  = "queryPBDB"} only with caution.
 
-#' @param tipSet This argument only impacts analyses where the argument
-#' \code{method  = "parentChild"} is also used. This \code{tipSet} controls
-#' which taxa are selected as tip taxa for the
-#' output tree. The default \code{tipSet  = "nonParents"} selects all child taxa which
-#' are not listed as parents in \code{parentChild}. Alternatively, \code{tipSet = "all"}
-#' will add a tip to every internal node with the parent-taxon name encapsulated in
-#' parentheses.
+
+#' @param tipSet This argument only impacts analyses where 
+#' \code{method  = "parentChild"} is used. This \code{tipSet} argument controls
+#' which taxa are selected as tip taxa for the output tree. 
+#' \code{tipSet  = "nonParents"} selects all child taxa which
+#' are not listed as parents in \code{parentChild}.
+#' Alternatively, \code{tipSet = "all"} will add a tip to every
+#' internal node with the parent-taxon name encapsulated in parentheses.
+#' The default is \code{NULL} - if \code{NULL} and \code{method  = "parentChild"},
+#' then \code{tipSet }  is set to {= "nonParents"}.
 
 #' @param APIversion Version of the Paleobiology Database API used by
 #' \code{makePBDBtaxonTree} when \code{method  = "parentChild"} or
 #' \code{method  = "parentChildOldQueryPBDB"} is used. The current default
 #' is \code{APIversion = "1.2"}, the most recent API version as of 12/11/2018.
-
-# @param cleanDuplicate If \code{TRUE} (\emph{not} the default), duplicated taxa of a
-# taxonomic rank \emph{not} selected by argument \code{rank}
-# will be removed silently. Only duplicates of the taxonomic rank of interest
-# will actually result in an error message.
 
 #' @param annotatedDuplicateNames A logical determining whether duplicate taxon names,
 #' when found in the Paleobiology Database for taxa (presumably reflecting an issue with
@@ -179,14 +159,16 @@
 #' data(graptPBDB)
 #' 
 #' #get the taxon tree: Linnean method
-#' graptTreeLinnean <- makePBDBtaxonTree(graptTaxaPBDB,
-#'     "genus", method = "Linnean")
-#' plotPBDBtaxonTree(graptTreeLinnean)
+#' graptTreeLinnean <- makePBDBtaxonTree(
+#'     taxaDataPBDB = graptTaxaPBDB,
+#'     rank = "genus",
+#'     method = "Linnean")
 #'
 #' #get the taxon tree: parentChild method
-#' graptTreeParentChild <- makePBDBtaxonTree(graptTaxaPBDB,
-#'     "genus", method = "parentChild")
-#' plotPBDBtaxonTree(graptTreeParentChild)
+#' graptTreeParentChild <- makePBDBtaxonTree(
+#'     taxaDataPBDB = graptTaxaPBDB,
+#'     rank = "genus",
+#'     method = "parentChild")
 #' 
 #' # plot it!
 #' # let's make a simple helper function
@@ -199,14 +181,17 @@
 #'
 #' 
 #' plotPBDBtaxonTree(graptTreeParentChild)
+#' 
 #' plotPBDBtaxonTree(graptTreeLinnean)
 #' 
 #' 
-#' #################
+#' ########################
 #' #conodonts
 #' conoData <- easyGetPBDBtaxa("Conodonta")
-#' conoTree <- makePBDBtaxonTree(conoData,"genus",
-#' 	   method = "parentChild")
+#' conoTree <- makePBDBtaxonTree(
+#'     taxaDataPBDB = conoData,
+#'     rank = "genus",
+#'     method = "parentChild")
 #' 
 #' # plot it!
 #' plotPBDBtaxonTree(conoTree)
@@ -214,28 +199,40 @@
 #' ############################
 #' #asaphid trilobites
 #' asaData <- easyGetPBDBtaxa("Asaphida")
-#' asaTree <- makePBDBtaxonTree(asaData,"genus",
-#' 	   method = "parentChild")
+#' asaTree <- makePBDBtaxonTree(
+#'     taxaDataPBDB = asaData,
+#'     rank = "genus",
+#'     method = "parentChild")
 #' 
 #' # plot it!
 #' plotPBDBtaxonTree(asaTree)
 #' 
+#' ########################
 #' #Ornithischia
 #' ornithData <- easyGetPBDBtaxa("Ornithischia")
-#' ornithTree <- makePBDBtaxonTree(ornithData,"genus",
-#' 	  method = "parentChild")
-#' #try Linnean
-#' #need to drop repeated taxon first: Hylaeosaurus
-#' ornithData <- ornithData[
-#'    -(which(ornithData[,"taxon_name"] == "Hylaeosaurus")[1]),]
-#' ornithTree <- makePBDBtaxonTree(ornithData,"genus",
-#' 	  method = "Linnean")
+#' ornithTree <- makePBDBtaxonTree(
+#'     taxaDataPBDB = ornithData,
+#'     rank = "genus",
+#'     method = "parentChild")
 #' plotPBDBtaxonTree(ornithTree)
 #' 
+#' #try Linnean
+#' #need to drop repeated taxon first: Hylaeosaurus
+#' findHylaeo <- which(ornithData[,"taxon_name"] == "Hylaeosaurus")
+#' # remove the first Hylaeosaurus
+#' ornithData <- ornithData[-(findHylaeo[1]),]
+#' ornithTree <- makePBDBtaxonTree(ornithData,
+#'     rank = "genus",
+#'     method = "Linnean")
+#' plotPBDBtaxonTree(ornithTree)
+#' 
+#' ########################
 #' #Rhynchonellida
 #' rynchData <- easyGetPBDBtaxa("Rhynchonellida")
-#' rynchTree <- makePBDBtaxonTree(rynchData,"genus",
-#' 	  method = "parentChild")
+#' rynchTree <- makePBDBtaxonTree(
+#'     taxaDataPBDB = rynchData,
+#'     rank = "genus",
+#'     method = "parentChild")
 #' plotPBDBtaxonTree(rynchTree)
 #' 
 #' #some of these look pretty messy!
@@ -244,30 +241,13 @@
 #' 
 
 
-### OLD EXAMPLE CODE
-# #get time data from occurrences
-# graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,
-#     rank = "genus", onlyFormal = FALSE)
-# graptTimeGenus <- occData2timeList(occList = graptOccGenus)
-# 
-# #let's time-scale the parentChild tree with paleotree
-# 		# use minimum branch length for visualization
-# 		# and nonstoch.bin so we plot maximal ranges
-# timeTree <- bin_timePaleoPhy(graptTree,
-#     timeList = graptTimeGenus,
-#     nonstoch.bin = TRUE,
-#     type = "mbl", vartime = 3)
-# 
-# #drops a lot of taxa; some of this is due to mispellings, etc
-
-
 
 #' @name makePBDBtaxonTree
 #' @rdname makePBDBtaxonTree
 #' @export
 makePBDBtaxonTree <- function(taxaDataPBDB, rank,
 					method = "parentChild", #solveMissing = NULL,
-					tipSet = "nonParents", cleanTree = TRUE,
+					tipSet = NULL, cleanTree = TRUE,
 					annotatedDuplicateNames = TRUE,
 					APIversion = "1.2"){		
 	############################################################
@@ -315,6 +295,9 @@ makePBDBtaxonTree <- function(taxaDataPBDB, rank,
 		# need two things: a table of parent-child relationships as IDs
 			#and a look-up table of IDs and taxon names
 		# 
+		if(is.null(tipSet)){
+			tipSet <- "nonParents"
+			}
 		##############################
 		# FIND ALL PARENTS FIRST
 			# three column matrix with taxon name, taxon ID, parent ID
@@ -365,7 +348,9 @@ makePBDBtaxonTree <- function(taxaDataPBDB, rank,
 			stop("taxaDataPBDB must be a taxonomic download with show = class for method = 'Linnean'")
 			}
 		#message that tipSet (and solveMissing) is ignored
-		message("Linnean taxon-tree option selected, argument 'tipSet' is ignored")
+		if(!is.null(tipSet)){
+			message("Linnean taxon-tree option selected, argument 'tipSet' is ignored")
+			}
 		#now check and return an error if duplicate taxa of selected rank
 		nDup <- sapply(nrow(dataTransform),function(x)
 			sum(dataTransform[,"taxon_name"] == dataTransform[x,"taxon_name"])>1
@@ -801,4 +786,44 @@ subsetParDataPBDB <- function(subsetNum,parData){
 #	}
 
 
+# OLD DOC
+
+### OLD EXAMPLE CODE
+# #get time data from occurrences
+# graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,
+#     rank = "genus", onlyFormal = FALSE)
+# graptTimeGenus <- occData2timeList(occList = graptOccGenus)
+# 
+# #let's time-scale the parentChild tree with paleotree
+# 		# use minimum branch length for visualization
+# 		# and nonstoch.bin so we plot maximal ranges
+# timeTree <- bin_timePaleoPhy(graptTree,
+#     timeList = graptTimeGenus,
+#     nonstoch.bin = TRUE,
+#     type = "mbl", vartime = 3)
+# 
+# #drops a lot of taxa; some of this is due to mispellings, etc
+
+#   @param solveMissing Under \code{method  = "parentChild"}, what should \code{makePBDBtaxonTree} do about
+#   multiple 'floating' parent taxa, listed without their own parent taxon information in the input
+#   dataset under \code{taxaDataPBDB}? Each of these is essentially a separate root taxon, for a different set
+#   of parent-child relationships, and thus poses a problem as far as returning a single phylogeny is
+#   concerned. If \code{solveMissing = NULL} (the default), nothing is done and the operation halts with
+#   an error, reporting the identity of these taxa. Two alternative solutions are offered: first,
+#   \code{solveMissing  = "mergeRoots"} will combine these disparate potential roots and link them to an
+#   artificially-constructed pseudo-root, which at least allows for visualization of the taxonomic
+#   structure in a limited dataset. Secondly, \code{solveMissing  = "queryPBDB"} queries the Paleobiology
+#   Database repeatedly via the API for information on parent taxa of the 'floating' parents, and continues
+#   within a \code{while()} loop until only one such unassigned parent taxon remains. This latter option may
+#   talk a long time or never finish, depending on the linearity and taxonomic structures encountered in the
+#   PBDB taxonomic data; i.e. if someone a taxon was ultimately its own indirect child in some grand loop by
+#   mistake, then under this option \code{makePBDBtaxonTree} might never finish. In cases where taxonomy is
+#   bad due to weird and erroneous taxonomic assignments reported by the PBDB, this routine may search all
+#   the way back to a very ancient and deep taxon, such as the Eukaryota taxon.
+#   Users should thus use \code{solveMissing  = "queryPBDB"} only with caution.
+
+#   @param cleanDuplicate If \code{TRUE} (\emph{not} the default), duplicated taxa of a
+#   taxonomic rank \emph{not} selected by argument \code{rank}
+#   will be removed silently. Only duplicates of the taxonomic rank of interest
+#   will actually result in an error message.
 	

@@ -171,6 +171,184 @@ variable, which is the image identifier numbers needed to call PNGs from the
 Paleobiology Database API. If \code{taxaDataPBDB} isn't provided, either by
 the user directly, or as an element of \code{tree}.
 }
+\examples{
+
+\donttest{
+
+library(paleotree)
+
+taxaAnimals<-c("Archaeopteryx", "Eldredgeops",
+	"Corvus", "Acropora", "Velociraptor", "Gorilla", 
+	"Olenellus", "Lingula", "Dunkleosteus",
+	"Tyrannosaurus", "Triceratops", "Giraffa",
+	"Megatheriidae", "Aedes", "Histiodella",
+	"Rhynchotrema", "Pecten", "Homo", "Dimetrodon",
+	"Nemagraptus", "Panthera", "Anomalocaris")
+
+data <-getSpecificTaxaPBDB(taxaAnimals)
+tree <- makePBDBtaxonTree(data, rank = "genus") 
+
+plotPhyloPicTree(tree = tree)
+
+# let's plot upwards but at a funny size
+dev.new(height = 5, width = 10)
+plotPhyloPicTree(tree = tree,
+	 orientation = "upwards") 
+
+# dated tree plotting
+
+#date the tree 
+timeTree <- dateTaxonTreePBDB(tree, minBranchLen = 10)
+
+plotPhyloPicTree(tree = timeTree)
+
+# plotting the dated tree with an axis
+plotPhyloPicTree(tree = timeTree,
+	depthAxisPhylo= TRUE)
+
+# now upwards!
+plotPhyloPicTree(tree = timeTree,
+	orientation = "upwards",
+	depthAxisPhylo= TRUE)
+
+###################################
+# plotting a time tree with stratigraphic ranges
+
+plotPhyloPicTree(tree = timeTree,
+   addTaxonStratDurations = TRUE)
+
+plotPhyloPicTree(tree = timeTree,
+   addTaxonStratDurations = TRUE,
+   orientation = "upwards",
+   depthAxisPhylo= TRUE)
+
+########
+# adjusting a tree to ignore a very old root
+
+# let's pretend that metazoans are extremely old
+treeOldRoot <- timeTree
+rootEdges <- timeTree$edge[,1] == (Ntip(timeTree)+1)
+rootEdgeLen <- timeTree$edge.length[rootEdges]
+treeOldRoot$edge.length[rootEdges] <- rootEdgeLen + 1500
+treeOldRoot$root.time <- NULL
+
+# plot it
+plot(treeOldRoot)
+axisPhylo()
+# yep, that's really old
+
+# let's plot it now with the PhyloPic
+plotPhyloPicTree(tree = treeOldRoot,
+	depthAxisPhylo = TRUE)
+
+# let's crop that old lineage
+plotPhyloPicTree(tree = treeOldRoot,
+	maxAgeDepth = 500,
+	depthAxisPhylo = TRUE)
+# cool!
+
+##################################
+# playing with colors
+plotPhyloPicTree(tree = tree,
+	 taxaColor = "green")
+
+# inverting the colors
+par(bg="black")
+taxaColors <- rep("white",Ntip(tree))
+# making a red giraffe
+taxaColors[4] <- "red"
+plotPhyloPicTree(
+	tree = tree, 
+	orientation = "upwards",
+	edge.color = "white",
+	taxaColor=taxaColors)
+
+######################################
+# let's try some different phylopics
+	  # like a nice tree of commonly known tetrapods
+
+tetrapodList<-c("Archaeopteryx", "Columba", "Ectopistes",
+	"Corvus", "Velociraptor", "Baryonyx", "Bufo",
+	"Rhamphorhynchus", "Quetzalcoatlus", "Natator",
+	"Tyrannosaurus", "Triceratops", "Gavialis",
+	"Brachiosaurus", "Pteranodon", "Crocodylus",
+	"Alligator", "Giraffa", "Felis", "Ambystoma",
+ 	"Homo", "Dimetrodon", "Coleonyx", "Equus",
+	"Sphenodon", "Amblyrhynchus")
+
+data <-getSpecificTaxaPBDB(tetrapodList)
+
+tree <- makePBDBtaxonTree(data, rank = "genus")
+
+plotPhyloPicTree(tree = tree)
+
+
+}
+####################################
+\dontrun{
+# let's check out speed increase from caching!
+    # can try this on your own machine
+
+#first time
+system.time(plotPhyloPicTree(tree = tree))
+# second time
+system.time(plotPhyloPicTree(tree = tree))
+
+##################################
+# make a pretty plot
+
+taxaSeventyEight <- c(
+	"Archaeopteryx", "Pinus", "Procoptodon", "Olenellus", "Eldredgeops",
+	"Quetzalcoatlus", "Homo", "Tyrannosaurus", "Triceratops", "Giraffa",
+	"Bolivina", "Cancer", "Dicellograptus", "Dunkleosteus", "Solanum",
+	"Anomalocaris", "Climacograptus", "Halysites", "Cyrtograptus", 
+	"Procoptodon", "Megacerops", "Moropus", "Dimetrodon", "Lingula",
+	"Rhynchosaurus", "Equus", "Megaloceros", "Rhynchotrema", "Pecten",
+	"Echinaster", "Eocooksonia", "Neospirifer", # "Prototaxites", 
+	"Cincinnaticrinus", "Nemagraptus", "Monograptus", "Pongo", "Acropora",
+	"Histiodella", "Agathiceras", "Juramaia", "Opabinia", "Arandaspis",
+	"Corvus", "Plethodon", "Latimeria", "Phrynosoma", "Araucarioxylon",
+	"Velociraptor", "Hylonomus", "Elginerpeton", "Rhyniognatha",
+	"Tyto", "Dromaius", "Solenopsis", "Gorilla", "Ginkgo", "Terebratella", 
+	"Caretta", "Crocodylus", "Rosa", "Prunus", "Lycopodium", "Meganeura",
+	"Diplodocus", "Brachiosaurus", "Hepaticae", "Canadaspis", "Pikaia",
+	"Smilodon", "Mammuthus", "Exaeretodon", "Redondasaurus", "Dimetrodon",
+	"Megatheriidae", "Metasequoia", "Aedes", "Panthera", "Megalonyx")
+
+data <-getSpecificTaxaPBDB(taxaSeventyEight)
+tree <- makePBDBtaxonTree(data, rank = "genus") 
+
+timeTree <- dateTaxonTreePBDB(tree,
+  minBranchLen = 10)
+
+date <- format(Sys.time(), "\%m-\%d-\%y")
+file <- paste0(
+"tree_taxa78_phylopic_stratTree_",
+	date, ".pdf")
+
+png(file = file,
+	height = 5, width = 12, 
+	units = "in", res = 300)
+par(bg="black")
+par(mar=c(0,0,3,0))
+taxaColors <- rep("white", Ntip(timeTree))
+taxaColors[4] <- "red"
+
+plotPhyloPicTree(
+	tree = timeTree, 
+	orientation = "upwards",
+	addTaxonStratDurations = TRUE,
+	edge.color = "white",
+	maxAgeDepth = 700,
+	taxaColor=taxaColors,
+	depthAxisPhylo = TRUE,
+	colorAxisPhylo = "white")
+dev.off()
+shell.exec(file)
+
+}
+
+}
 \references{
 Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
 application programming interface. \emph{Paleobiology} 42(1):1-7.

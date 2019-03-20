@@ -7,9 +7,9 @@
 \alias{graptTaxaPBDB}
 \title{Example Occurrence and Taxonomic Datasets of the Graptolithina from the Paleobiology Database}
 \format{The example occurrence dataset (\code{graptOccPBDB}) is a
-data.frame consisting of 5900 occurrences (rows) and 35 variables (columns).
+\code{data.frame} consisting of 5900 occurrences (rows) and 35 variables (columns).
 The example taxonomy dataset (\code{graptTaxaPBDB}) is a
-data.frame consisting of 364 formal taxa (rows) and 53 variables (columns).
+\code{data.frame} consisting of 364 formal taxa (rows) and 53 variables (columns).
 Variables are coded in the 'pbdb' vocabulary of the PBDB API v1.2.}
 \source{
 See examples for the full R code used to obtain the data from the API.

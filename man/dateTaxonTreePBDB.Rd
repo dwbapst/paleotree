@@ -113,7 +113,7 @@ Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
 application programming interface. \emph{Paleobiology} 42(1):1-7.
 }
 \seealso{
-See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
+See \code{\link{getDataPBDB}}, \code{\link{makePBDBtaxonTree}},
 and \code{\link{plotPhyloPicTree}}.
 }
 \author{

@@ -165,7 +165,7 @@ be associated with the tip taxa from \code{taxaDataPBDB$image_no}. By default,
 \code{taxaDataPBDB} itself is assumed to be an element of \code{tree} named
 \code{tree$taxaData}, as the PBDB data table used to construct the tree is
 appended to the output tree when \code{\link{makePBDBtaxonTree}} is used to
-construct a taxonomy-tree. If the functions listed in \code{\link{getTaxaDataPBDB}}
+construct a taxonomy-tree. If the functions listed in \code{\link{getDataPBDB}}
 are used to obtain the taxonomic data, this table will include the \code{image_no}
 variable, which is the image identifier numbers needed to call PNGs from the
 Paleobiology Database API. If \code{taxaDataPBDB} isn't provided, either by
@@ -354,7 +354,7 @@ Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
 application programming interface. \emph{Paleobiology} 42(1):1-7.
 }
 \seealso{
-See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
+See \code{\link{getDataPBDB}}, \code{\link{makePBDBtaxonTree}},
 and \code{\link{plotPhyloPicTree}}.
 }
 \author{

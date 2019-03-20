@@ -49,16 +49,25 @@ with the 'pbdb' vocabulary. However, datasets are passed to internal function \c
 which attempts to correct any necessary field names and field contents used by
 \code{taxonSortPBDBocc}.
 
-This function can pull either \emph{just} the 'formally' identified and synonymized taxa in a given table of occurrence
-data or pull \emph{in addition} occurrences listed under informal taxa of the sought taxonomic rank. Only formal taxa
-are sorted by default; this is controlled by argument \code{onlyFormal}. Pulling the informally-listed taxonomic
-occurrences is often necessary in some groups that have received little focused taxonomic effort, such that many
-species are linked to their generic taxon ID and never received a species-level taxonomic ID in the PBDB.
-Pulling both formal and informally listed taxonomic occurrences is a hierarchical process and performed in
-stages: formal taxa are identified first, informal taxa are identified from the occurrences that are
-'leftover', and informal occurrences with name labels that match a previously sorted formally listed
-taxon are concatenated to the 'formal' occurrences for that same taxon, rather than
-being listed under separate elements of the list as if they were separate taxa.
+This function can pull either \emph{just} the 'formally' identified
+and synonymized taxa in a given table of occurrence
+data or pull \emph{in addition} occurrences listed under informal
+taxa of the sought taxonomic rank. Only formal taxa
+are sorted by default; this is controlled by argument \code{onlyFormal}.
+Pulling the informally-listed taxonomic
+occurrences is often necessary in some groups that have received
+little focused taxonomic effort, such that many
+species are linked to their generic taxon ID and never received
+a species-level taxonomic ID in the PBDB.
+Pulling both formal and informally listed taxonomic occurrences
+is a hierarchical process and performed in
+stages: formal taxa are identified first, informal taxa are
+identified from the occurrences that are
+'leftover', and informal occurrences with name labels
+that match a previously sorted formally listed
+taxon are concatenated to the 'formal' occurrences for that same taxon,
+rather than being listed under separate elements
+of the list as if they were separate taxa.
 This function is simpler than similar functions that inspired it
 by using the input"rank" to both filter occurrences and directly
 reference a taxon's accepted taxonomic placement, rather than a
@@ -130,76 +139,6 @@ occSpeciesEverything <- taxonSortPBDBocc(graptOccPBDB,
 		rank = "species",
 		onlyFormal = FALSE, cleanUncertain = FALSE)
 length(occSpeciesEverything)
-
-\dontrun{
-
-# simple function for getting occurrence data from API v1.1 
-easyGetPBDBocc <- function(taxa,show = c("ident","phylo")){
-  #cleans PBDB occurrence downloads of warnings
-  taxa <- paste(taxa,collapse = ",")
-	taxa <- paste(unlist(strsplit(taxa,"_")),collapse = "\%20")
-	show <- paste(show,collapse = ",")
-	command <- paste0(
-		"http://paleobiodb.org/data1.2/occs/list.txt?base_name = ",
-		taxa,"&show = ",show,"&limit = all",
-		collapse = "")
-	command <- paste(unlist(strsplit(command,split = " ")),
-		collapse = "\%20")
-	downData <- readLines(command)
-	if(length(grep("Warning",downData)) != 0){
-		start <- grep("Records",downData)
-		warn <- downData[1:(start-1)]
-		warn <- sapply(warn, function(x) 
-			paste0(unlist(strsplit(unlist(strsplit(x,'"')),",")),
-		 		collapse = ""))
-		warn <- paste0(warn,collapse = "\\n")
-		names(warn) <- NULL
-		mat <- downData[-(1:start)]
-		mat <- read.csv(textConnection(mat))
-		message(warn)
-	}else{
-		mat <- downData
-		mat <- read.csv(textConnection(mat))
-		}
-	return(mat)
-	}
-
-#try a PBDB API download with lots of synonymization
-	#this should have only 1 species
-#old way:
-#acoData <- read.csv(paste0("http://paleobiodb.org/data1.1/occs/list.txt?",
-#	"base_name = Acosarina\%20minuta&show = ident,phylo&limit = all"))
-# with easyGetPBDBocc:
-acoData <- easyGetPBDBocc("Acosarina minuta")
-x <- taxonSortPBDBocc(acoData, rank = "species", onlyFormal = FALSE)
-names(x)
-
-#make sure works with API v1.1
-dicelloData <- read.csv(paste0("http://paleobiodb.org",
-	"/data1.1/occs/list.txt?base_name = Dicellograptus",
-	"&show = ident,phylo&limit = all"))
-dicelloOcc2 <- taxonSortPBDBocc(dicelloData, rank = "species", onlyFormal = FALSE)
-names(dicelloOcc2)
-
-#make sure works with compact vocab v1.1
-dicelloData <- read.csv(paste0("http://paleobiodb.org",
-	"/data1.1/occs/list.txt?base_name = Dicellograptus",
-	"&show = ident,phylo&limit = all&vocab = com"))
-dicelloOccCom1 <- taxonSortPBDBocc(dicelloData,
-		 rank = "species", onlyFormal = FALSE)
-names(dicelloOccCom1)
-head(dicelloOccCom1[[1]])[,1:7]
-
-#make sure works with compact vocab v1.2
-dicelloData <- read.csv(paste0("http://paleobiodb.org",
-	"/data1.2/occs/list.txt?base_name = Dicellograptus",
-	"&show = ident,phylo&limit = all&vocab = com"))
-dicelloOccCom1 <- taxonSortPBDBocc(dicelloData,
-		 rank = "species", onlyFormal = FALSE)
-names(dicelloOccCom1)
-head(dicelloOccCom1[[1]])[,1:7]
-
-}
 
 }
 \references{

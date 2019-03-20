@@ -174,7 +174,7 @@ plotPBDBtaxonTree(graptTreeLinnean)
 
 ########################
 #conodonts
-conoData <- easyGetPBDBtaxa("Conodonta")
+conoData <- getCladeTaxaPBDB("Conodonta")
 conoTree <- makePBDBtaxonTree(
     taxaDataPBDB = conoData,
     rank = "genus",
@@ -185,7 +185,7 @@ plotPBDBtaxonTree(conoTree)
 
 ############################
 #asaphid trilobites
-asaData <- easyGetPBDBtaxa("Asaphida")
+asaData <- getCladeTaxaPBDB("Asaphida")
 asaTree <- makePBDBtaxonTree(
     taxaDataPBDB = asaData,
     rank = "genus",
@@ -196,7 +196,7 @@ plotPBDBtaxonTree(asaTree)
 
 ########################
 #Ornithischia
-ornithData <- easyGetPBDBtaxa("Ornithischia")
+ornithData <- getCladeTaxaPBDB("Ornithischia")
 ornithTree <- makePBDBtaxonTree(
     taxaDataPBDB = ornithData,
     rank = "genus",
@@ -215,7 +215,7 @@ plotPBDBtaxonTree(ornithTree)
 
 ########################
 #Rhynchonellida
-rynchData <- easyGetPBDBtaxa("Rhynchonellida")
+rynchData <- getCladeTaxaPBDB("Rhynchonellida")
 rynchTree <- makePBDBtaxonTree(
     taxaDataPBDB = rynchData,
     rank = "genus",

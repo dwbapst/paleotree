@@ -1,5 +1,5 @@
 #' Model Function Methods: Parameter Names, Bounds and Initial Values
-#'
+#' 
 #' A large number of functions for obtaining and modifying the parameters
 #' of likelihood models made in paleotree. These functions allow users to obtain
 #' or set parameter names, or obtain and set parameter bounds, both of which
@@ -10,7 +10,7 @@
 
 #' @details
 #' Parameter names cannot be changed for a constrained function.
-#'
+#' 
 #' The parInit function calls the bounds for each parameter and gives a randomly
 #' selected value selected from a uniform distribution, using the parameter bounds
 #' for each parameter as the bounds on the uniform distribution. This users a
@@ -24,7 +24,7 @@
 #' upper bounds I set for parameters in many of the likelihood functions) and
 #' thus users should always try slightly different values to see if the resulting
 #' maximum likelihood parameter values change.
-#'
+#' 
 #' As parInit depends on the upper and lower bounds attribute, no function is offered
 #' to allow it to be replaced (as there is nothing to replace!).
 
@@ -100,7 +100,7 @@
 #' parbounds(constrainFun)
 #' parInit(constrainFun)
 #' #but cannot rename parameter for constrained function!
-#'
+#' 
 
 #parnames
 

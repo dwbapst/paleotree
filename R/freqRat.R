@@ -90,13 +90,13 @@
 #' #now we can apply freqRat to get sampling probability
 #' SampProb <- freqRat(rangesDisc,plot = TRUE)
 #' SampProb
-#'
+#' 
 #' #est. R = ~0.25 
 #' #Not wildly accurate, is it?
-#'
+#' 
 #' #can also calculate extinction rate per interval of time
 #' freqRat(rangesDisc,calcExtinction = TRUE)
-#'
+#' 
 #' #est. ext rate = ~0.44 per interval
 #' #5 time-unit intervals, so ~0.44 / 5 = ~0.08 per time-unite
 #' #That's pretty close to the generating value of 0.01, used in sampleRanges

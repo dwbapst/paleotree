@@ -1,5 +1,5 @@
 #' Construct a Stochastic Sequenced Time-List from an Unsequenced Time-List
-#'
+#' 
 #' This function randomly samples from a timeList object (i.e. a list composed of a matrix of interval start and end
 #' dates and a matrix of taxon first and last intervals), to find a set of taxa and intervals that do not overlap,
 #' output as a new timeList object.
@@ -14,17 +14,17 @@
 #' This function offers an approach to avoid this issue in large datasets by randomly subsampling
 #' the available taxa and intervals to produce stochastic
 #' sets of ranges composed of data drawn from non-overlapping intervals. 
-#'
+#' 
 #' This function is stochastic and thus should be set for many runs to produce many such solutions. Additionally,
 #' all solutions found are returned, and users may wish to sort amongst these to maximize the number of intervals and 
 #' number of taxa returned. A single solution which maximizes returned taxa and intervals may not be a precise enough approach
 #' to estimating sampling rates, however, given the uncertainty in data. Thus, many runs should always be considered.
-#'
+#' 
 #' By default, solutions are searched for without consideration to the length of intervals used (i.e. the selection of intervals is 'unweighted').
 #' Alternatively, we can 'weight' selection toward the smallest intervals in the set, using the argument \code{weightSampling}. Smaller
 #' intervals presumably overlap less and thus should retain more taxa and intervals of more equal length. However, in practice with empirical datasets,
 #' the package author finds these approaches do not seem to produce very different estimates.
-#'
+#' 
 #' For some datasets, many solutions found using seqTimeList may return infinite sampling values. This is often due to saving too many taxa
 #' found in single intervals to the exclusion of longer-ranging taxa (see the example). This excess of single interval taxa is a clear artifact
 #' of the randomized seqTimeList procedure and such solutions should probably be ignored.

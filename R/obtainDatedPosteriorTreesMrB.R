@@ -100,7 +100,7 @@
 #' to obtain fixed tip ages, and then scaling the resulting output to absolute time using
 #' the argument \code{setRootAges = TRUE}, which obtains a \code{$root.time} element for each tree
 #' using the functions \code{\link{setRootAge}} and \code{\link{setRootAges}} (for single and multiple phylogenies).
-#'
+#' 
 
 
 #' @seealso 
@@ -124,12 +124,12 @@
 #'  	runFile = "C:\\myTipDatingAnalysis\\MrB_run_fossil_05-10-17.nex.run1.t",
 #'  	nRuns = 2, burnin = 0.5,
 #' 		outputTrees = "MCCT", file = NULL)
-#'
+#' 
 #' MAP <- obtainDatedPosteriorTreesMrB(
 #'  	runFile = "C:\\myTipDatingAnalysis\\MrB_run_fossil_05-10-17.nex.run1.t",
 #'  	nRuns = 2, burnin = 0.5, getFixedTimes = TRUE,
 #' 		outputTrees = "MAP", file = NULL)
-#'
+#' 
 #' # get a root age from the fixed ages for tips
 #' setRootAge(tree = MAP)
 #' 
@@ -139,12 +139,12 @@
 #'  	nRuns = 2, burnin = 0.5, getFixedTimes = TRUE,
 #'  	getRootAges = TRUE,
 #' 		outputTrees = 100, file = NULL)
-#'
+#' 
 # # set the root age using the fixed ages
 # setRootAges(trees = hundredRandomlySelectedTrees)
 #' 
 #' }
-#'
+#' 
 
 
 

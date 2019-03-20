@@ -1,11 +1,11 @@
 #' Models of Sampling and Extinction for Taxonomic Duration Datasets
-#'
+#' 
 #' These functions construct likelihood models of the observed frequency
 #' of taxon durations, given either in discrete (\code{make_durationFreqDisc}) 
 #' or continuous time (\code{make_durationFreqCont}). These models can then be
 #' constrained using functions available in this package and/or analyzed 
 #' with commonly used optimizing functions.
-#'
+#' 
 #' @details
 #' These functions effectively replace two older functions in paleotree, now removed,
 #' \code{getSampRateCont} and \code{getSampProbDisc}. The
@@ -14,7 +14,7 @@
 #' constrains on parameter values. Differences in time intervals, or any
 #' other conceivable discrete differences in parameters, can be modeled
 #' using the generic \code{groups} argument in these functions.
-#'
+#' 
 #' These functions use likelihood functions presented by Foote (1997).
 #' These analyses are ideally applied to data from single stratigraphic section
 #' but potentially are applicable to regional or global datasets, although the
@@ -24,7 +24,7 @@
 #' decreasing, i.e. the present day is zero and older dates are 'larger'. On
 #' the contrary, relative time is in intervals with non-zero integers that
 #' increase sequentially beginning with 1, from earliest to oldest.
-#'
+#' 
 #' For \code{make_durationFreqDisc}, the intervals in timeList should be
 #' non-overlapping sequential intervals of roughly equal length. These
 #' should be in relative time as described above, so the earliest interval
@@ -46,7 +46,7 @@
 #' likelihood surface can be very flat in some cases, particularly for small
 #' datasets (<100 taxa). If the optimizer does not converge, consider
 #' increasing iterations or changing the starting values.
-#'
+#' 
 
 #' @param timeData Two-column matrix of per-taxon first and last occurrence
 #' given in continuous time, relative to the modern (i.e. older dates are also
@@ -105,7 +105,7 @@
 #' similar optimizing functions, which attempt to minimize support values). See the
 #' functions listed at \code{\link{modelMethods}} for manipulating and examining
 #' such functions and \code{\link{constrainParPaleo}} for constraining parameters.
-#'
+#' 
 #' Parameters in the output functions are named 'q' for the instantaneous per-capita
 #' extinction rate, 'r' for the instantaneous per-capita sampling rate and 'R' for
 #' the per-interval taxonomic sampling probability. Groupings follow the parameter
@@ -113,12 +113,12 @@
 #' least group 1 (of a grouping with a single group), such that make_durationFreqCont
 #' by default creates a function with parameters named 'q.1' and 'r.1', while
 #' make_durationFreqDisc creates a function with parameters named 'q.1' and 'R.1'.
-#'
+#' 
 #' Note that the 'q' parameters estimated by \code{make_durationFreqDisc} is scaled to 
 #' per lineage intervals and not to per lineage time-units. If intervals are the same length, this
 #' can be easily corrected by multiplying 1 by the interval length. It is unclear
 #' how to treat uneven intervals and I urge workers to consider multiple strategies.
-#'
+#' 
 #' For translating these sampling probabilities and sampling rates, see
 #' \code{\link{SamplingConv}}.
 

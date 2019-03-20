@@ -1,7 +1,7 @@
 #' Probability of being a sampled ancestor of another sampled taxon
-#'
+#' 
 #' Uses models from Foote (1996) to calculate the probability 
-#'
+#' 
 #' probAnc obtains the probability of sampling a descendant of a 
 #' morphotaxon in the fossil record, given the sampling probability 
 #' and estimates of origination and extinction rates. These values are 
@@ -17,7 +17,7 @@
 #' ancestor, no matter how distant. See the argument \code{analysis} for 
 #' details. Mode of differentiation can also be varied
 #' for three different models, see the argument \code{mode}.
-#'
+#' 
 #' This probability is calculated including the probability that extinction might
 #' occur before any descendants are produced. Thus, if \code{p = q}, the probability of 
 #' a taxon going extinct before it produces any descendants will be 0.5, which 
@@ -49,7 +49,7 @@
 
 #' @examples
 #' #examples, run at very low nrep for sake of speed (examples need to be fast)
-#'
+#' 
 #' #default: probability of sampling a direct descendant
 #' probAnc(p = 0.1, q = 0.1, R = 0.5, 
 #'    mode = "budding", analysis = "directDesc",nrep = 100)
@@ -59,7 +59,7 @@
 #'    mode = "bifurcating", analysis = "directDesc",nrep = 100)
 #' probAnc(p = 0.1, q = 0.1, R = 0.5, 
 #'    mode = "anagenesis", analysis = "directDesc",nrep = 100)
-#'
+#' 
 #' #probability of having sampled indirect descendants of a taxon
 #' probAnc(p = 0.1, q = 0.1, R = 0.5, 
 #'    mode = "budding", analysis = "indirectDesc",nrep = 100)	#default
@@ -67,7 +67,7 @@
 #'    mode = "bifurcating", analysis = "indirectDesc",nrep = 100)
 #' probAnc(p = 0.1, q = 0.1, R = 0.5, 
 #'    mode = "anagenesis", analysis = "indirectDesc",nrep = 100)
-#'
+#' 
 
 #'@export
 probAnc <- function(p,q,R,mode = "budding",analysis = "directDesc",Mmax = 85,nrep = 10000){

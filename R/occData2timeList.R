@@ -1,5 +1,5 @@
 #' Converting Occurrences Data to a \code{timeList} Data Object
-#'
+#' 
 #' This function converts occurrence data, given as a list where each element
 #' is a different taxon's occurrence table (containing minimum and maximum ages
 #' for each occurrence), to the 'timeList' format, consisting of a list composed
@@ -11,10 +11,10 @@
 #' datasets sorted by \code{\link{taxonSortPBDBocc}} or any data object where occurrence data
 #' (i.e. age bounds for each occurrence) for different taxa is separated into different elements
 #' of a named list. 
-#'
+#' 
 #' \subsection{The argument intervalType}{
 
-#'
+#' 
 #' The argument \code{intervalType} controls the algorithm used for obtain first and last interval bounds for
 #' each taxon, of which there are several to select from:intervalType
 #' \describe{
@@ -43,7 +43,7 @@
 #' with the age range of the latest-most occurrence and (1) obtains their earliest boundary ages and returns
 #' the latest-most earliest age boundary among these overlapping occurrences and (2) obtains their latest
 #' boundary ages and returns the earliest-most latest age boundary among these overlapping occurrences. 
-#'
+#' 
 #' On theoretical grounds, one could probably describe the zone-of-overlap algorithm as minimizing
 #' taxonomic age ranges by assuming that all overlapping occurrences at the start and end of a taxon's
 #' range probably describe a very similar first and last appearance (FADs and LADs), and thus picks the
@@ -53,7 +53,7 @@
 #' range of a taxon might be well outside the bounds obtained using the zone-of-overlap algorithm. A more
 #' conservative approach is the \code{"dateRange"} algorithm which finds the smallest possible bounds on the
 #' endpoints of a taxon's range without ignoring uncertainty from any particular set of occurrences.} }
-#'
+#' 
 #' }
 #' 
 
@@ -111,7 +111,7 @@
 #' #yep, identical
 #' 
 #' #so how much uncertainty was gained by using dateRange?
-#'
+#' 
 #' # write a simple function for getting uncertainty in first and last
 #' 		# appearance dates from a timeList object
 #' sumAgeUncert <- function(timeList){
@@ -119,7 +119,7 @@
 #' 	perOcc <- (fourDate[,1]-fourDate[,2])+(fourDate[,3]-fourDate[,4])
 #' 	sum(perOcc)
 #' 	}
-#'
+#' 
 #' #total amount of uncertainty in occRange dataset
 #' sumAgeUncert(graptOccRange)
 #' #total amount of uncertainty in dateRange dataset

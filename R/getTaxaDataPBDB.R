@@ -1,6 +1,8 @@
-#' Obtaining Data for Sets of Taxa From Paleobiology Database API
+#' Obtaining Data for Taxa or Occurrences From Paleobiology Database API
 #' 
-#' The Paleobiology Database API (\href{http://paleobiodb.org/data1.2}{link}) is very easy to use, and generally any data one wishes to collect
+#' The Paleobiology Database API (\href{http://paleobiodb.org/data1.2}{link})
+#' is very easy to use, and generally any data one wishes to collect can be obtained
+#' in R through a variety of ways - the simplest being to wrap a data retrieval request to the API, specified for CSV output, with R function \code{read.csv}. The functions listed here, however, are some simple helper functions 
 
 #' @details
 #' The
@@ -65,12 +67,13 @@
 #' variables pulled for the requested taxon selection.
 #' This behavior can be modified by argument \code{urlOnly}.
 
-#' @name getTaxaDataPBDB
+#' @name getDataPBDB
 
 #' @aliases getCladeTaxaPBDB getSpecificTaxaPBDB
 
 #' @seealso 
-#' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
+#' See \code{\link{makePBDBtaxonTree}},
+#' \code{\link{makePBDBtaxonTree}},
 #' and \code{\link{plotPhyloPicTree}}.
 
 
@@ -111,7 +114,7 @@
 #' 
 
 
-#' @rdname getTaxaDataPBDB 
+#' @rdname getDataPBDB 
 #' @export 
 getCladeTaxaPBDB <- function(taxon,
 		show = c("class", "parent", "app", "img", "entname"),
@@ -142,7 +145,7 @@ getCladeTaxaPBDB <- function(taxon,
 	return(res)
 	}
 
-#' @rdname getTaxaDataPBDB 
+#' @rdname getDataPBDB 
 #' @export 
 getSpecificTaxaPBDB <- function(taxa,
 		show = c("class", "parent", "app", "img", "entname"),

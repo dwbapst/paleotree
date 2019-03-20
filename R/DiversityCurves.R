@@ -47,7 +47,7 @@
 #' See the documentation for the time-scaling  function 
 #'\code{\link{bin_timePaleoPhy}} and the simulation function 
 #' \code{\link{binTimeData}} for more information on formatting.
-#'
+#' 
 #' Unlike some paleotree functions, such as  perCapitaRates, the intervals
 #' can be overlapping or of unequal length. The diversity curve functions
 #' deal with such issues by assuming taxa occur from the base of the interval
@@ -135,7 +135,7 @@
 #' #taxicDivDisc with the retiolinae dataset
 #' data(retiolitinae)
 #' taxicDivDisc(retioRanges)
-#'
+#' 
 #' #simulation examples
 #' set.seed(444)
 #' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,

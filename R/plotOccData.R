@@ -1,5 +1,5 @@
 #' Plotting Occurrence Data Across Taxa
-#'
+#' 
 #' \code{plotOccData} takes occurrence data which has been sorted into a by-taxon list,
 #' such as that output by \code{taxonSortPBDBocc} or may be output by simulations using
 #' \code{sampleRanges} and produces a plot showing the age uncertainty associated with
@@ -8,7 +8,7 @@
 #' @details
 #' This function was originally conceived of in the following blog post: 
 #' \href{http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html}{Link}
-#'
+#' 
 
 #' @param occList A list where every element is a table of occurrence data for a different taxon,
 #' such as that returned by \code{\link{taxonSortPBDBocc}}. The occurrence data can be either a 
@@ -54,7 +54,7 @@
 #' 
 #' #this isn't too many occurrences, because there are so few
 #'     #formal grapt species in the PBDB
-#'
+#' 
 #' #genera is messier...
 #' 
 #' #get formal genera

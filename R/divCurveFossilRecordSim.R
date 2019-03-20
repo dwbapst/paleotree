@@ -1,5 +1,5 @@
 #' Diversity-Curve Plotting for Simulations of Diversification and Sampling In the Fossil Record
-#'
+#' 
 #' An extremely simple plotting function, which plots the original taxonomic diversity
 #' versus the sampled taxonomic diversity, for use with output from the function \code{simFossilRecord}.
 #' If sampling processes were not included in the model, then it plots simply the
@@ -39,14 +39,14 @@
 #' @author David W. Bapst
 
 #' @examples
-#'
+#' 
 #' set.seed(44)
 #' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1,
 #' 	nTotalTaxa = c(20,30) ,nExtant = 0, plot = FALSE)
 #' 
 #' # now let's plot it
 #' divCurveFossilRecordSim(record)
-#'
+#' 
 
 #' @name divCurveFossilRecordSim
 #' @rdname divCurveFossilRecordSim

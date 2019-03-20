@@ -1,5 +1,5 @@
 #' Create a Taxonomy-Based Phylogeny ('Taxon Tree') from a Table of Parent-Child Taxon Relationships
-#'
+#' 
 #' This function takes a two-column matrix of taxon names,
 #' indicating a set of binary parent-taxon:child-taxon 
 #' paired relationships with a common root, and returns
@@ -32,7 +32,7 @@
 #' @return
 #' A phylogeny of class 'phylo', with tip taxa as controlled by argument \code{tipSet}.
 #' The output tree is returned with no edge lengths.
-#'
+#' 
 #' The names of higher taxa than the tips should be appended as the element $node.label for the internal nodes.
 
 #' @seealso \code{\link{makePBDBtaxonTree}}, \code{\link{taxonTable2taxonTree}}
@@ -52,11 +52,11 @@
 #' #Default: tipSet = 'nonParents'
 #' pokeTree <- parentChild2taxonTree(pokexample, tipSet = "nonParents")
 #' plot(pokeTree);nodelabels(pokeTree$node.label)
-#'
+#' 
 #' #Get ALL taxa as tips with tipSet = 'all'
 #' pokeTree <- parentChild2taxonTree(pokexample, tipSet = "all")
 #' plot(pokeTree);nodelabels(pokeTree$node.label)
-#'
+#' 
 #' 
 #' \dontrun{
 #' 
@@ -82,10 +82,10 @@
 #' 	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
 #' 	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"),
 #' 	c("Umbrarcheota","Gengar"))
-#'
+#' 
 #' #this should return an error, as Shelloidea is its own parent
 #' pokeTree <- parentChild2taxonTree(pokexample_bad2)
-#'
+#' 
 #' }
 #' 
 #' 
@@ -100,7 +100,7 @@
 #' parentChild2taxonTree(taxa[,2:1])
 #' # now note that it issues a warning that the input wasn't type character
 #'    # and it will be coerced to be such
-#'
+#' 
 
 
 #' @name parentChild2taxonTree

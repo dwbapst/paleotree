@@ -1,5 +1,5 @@
 #' Create a Taxonomy-Based Phylogeny ('Taxon Tree') from a Hierarchical Table of Taxonomy Memberships
-#'
+#' 
 #' This function takes a matrix of taxon names,
 #' indicating a set of hierarchical taxonomic relationships
 #' conveyed as nested placements for a set of tip-taxa (listed in
@@ -27,7 +27,7 @@
 #' two genera emanating from a node representing a class but with a very short (length = 1) branch
 #' and a long branch (length = 3) means one genus is simply placed in the class, with no family or order listed
 #' while the one on the long branch is within an order and family that is otherwise monogeneric.
-#'
+#' 
 #' The names of higher taxa than the tips should be appended as the element $node.label for the internal nodes.
 
 #' @seealso \code{\link{makePBDBtaxonTree}}, \code{\link{parentChild2taxonTree}}
@@ -35,7 +35,7 @@
 #' @author David W. Bapst
 
 #' @examples
-#'
+#' 
 #' #let's create a small, really cheesy example
 #' pokeTable <- rbind(cbind("Pokezooa","Shelloidea","Squirtadae",
 #' 		c("Squirtle","Blastoise","Wartortle")),
@@ -47,7 +47,7 @@
 #' 
 #' pokeTree <- taxonTable2taxonTree(pokeTable)
 #' plot(pokeTree);nodelabels(pokeTree$node.label)
-#'
+#' 
 
 #' @name taxonTable2taxonTree
 #' @rdname taxonTable2taxonTree

@@ -1,5 +1,5 @@
 #' Transform a Topology into a Set of Constraint Commands for MrBayes
-#'
+#' 
 #' Takes a phylogeny in the form of an object of class \code{phylo} and
 #' outputs a set of topological constraints for \emph{MrBayes} as a set of character
 #' strings, either printed in the R console or in a named text file, which

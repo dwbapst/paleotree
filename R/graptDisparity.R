@@ -6,7 +6,7 @@
 #' species-level taxa from Bapst et al. (2012, PNAS). Also includes a pre-calculated
 #' distance matrix based on the character matrix, using the algorithm applied by Bapst
 #' et al (2012). Interval dates for biostratigraphic zones is taken from Sadler et al. 2011.
-#'
+#' 
 
 #' @details 
 #' The character matrix contains characters of two differing types with a (very) small but
@@ -14,7 +14,7 @@
 #' use of an unconventional ad hoc distance metric for the published analysis, resulting
 #' in a (very slightly) non-Euclidean distance matrix. This breaks some assumptions of
 #' some statistical analyses or requires special corrections, such as with PCO.
-#'
+#' 
 #' Note that taxonomic data were collected only for species present within an interval
 #' defined by the base of the Uncinatus biozone (~448.57 Ma) to the end of the cyphus
 #' biozone (~439.37 Ma). Many taxa have first and last appearance dates listed in \code{graptRanges}
@@ -29,40 +29,40 @@
 #' @docType data
 
 #' @format This dataset is composed of three objects: 
-#'
+#' 
 #' \describe{
 #' \item{graptCharMatrix}{A matrix composed of mixed character data
 #' and a group code for 183 graptoloid taxa, with rows named with species
 #' names and columns named with character names.}
-#'
+#' 
 #' \item{graptRanges}{A list containing two matrices: the first matrix
 #' describes the first and last interval times for 20 graptolite biozones
 #' and the second matrix contains the first and last appearances of 183
 #' graptolite species in those same biozones. (In other words, graptRanges
 #' has the 'timeList' format called by some paleotree functions).}
-#'
+#' 
 #' \item{graptDistMat}{A 183x183 matrix of pair-wise distances (dissimilarities)
 #' for the 183 graptolite species, using the algorithm for discrete characters
 #' and min-max range values described in Bapst et al.}}
-#'
+#' 
 
 #' @source 
 #' Source for stratigraphic ranges and character data: 
-#'
+#' 
 #' Bapst, D. W., P. C. Bullock, M. J. Melchin, H. D. Sheets, and C. E. Mitchell.
 #' 2012. Graptoloid diversity and disparity became decoupled during the Ordovician
 #' mass extinction. \emph{Proceedings of the National Academy of Sciences}
 #' 109(9):3428-3433.
 #' 
 #' Source for interval dates for graptolite zones: 
-#'
+#' 
 #' Sadler, P. M., R. A. Cooper,
 #' and M. Melchin. 2009. High-resolution, early Paleozoic (Ordovician-Silurian)
 #' time scales. \emph{Geological Society of America Bulletin} 121(5-6):887-906.
 
 #' @seealso 
 #' For more example graptolite datasets, see \code{\link{retiolitinae}}
-#'
+#' 
 #' This data was added mainly to provide an example dataset
 #' for \code{\link{nearestNeighborDist}}
 
@@ -96,19 +96,19 @@
 #' 		colors()[124],"blue",colors()[556])
 #' 
 #' ##########
-#'
+#' 
 #' #plot diversity curve of taxa
 #' taxicDivDisc(graptRanges)
-#'
+#' 
 #' #but the actual study interval for the data is much smaller
 #' abline(v = 448.57,lwd = 3) #start of study interval
 #' abline(v = 439.37,lwd = 3) #end of study interval
-#'
+#' 
 #' #plot diversity curve just for study interval
 #' taxicDivDisc(graptRanges, timelims = c(448.57,439.37))
-#'
+#' 
 #' ############
-#'
+#' 
 #' #distance matrix is given as graptDistMat
 #'    #to calculate yourself, see code below in DoNotRun section
 #' 
@@ -155,9 +155,9 @@
 #' 
 #' 
 #' ##########m##############
-#'
+#' 
 #' \dontrun{ 
-#'
+#' 
 #' #calculate a distance matrix (very slow!)
 #' #Bapst et al. calculated as # char diffs / total # of chars
 #'    #but both calculated for only non-missing characters for both taxa

@@ -1,5 +1,5 @@
 #' Example Occurrence and Taxonomic Datasets of the Graptolithina from the Paleobiology Database
-#'
+#' 
 #' Example datasets consisting of (a) occurrence data and (b) taxonomic data
 #' downloaded from the Paleobiology Database API for the Graptolithina.
 
@@ -14,9 +14,9 @@
 
 #' @format 
 #' The example occurrence dataset (\code{graptOccPBDB}) is a
-#' data.frame consisting of 5900 occurrences (rows) and 35 variables (columns).
+#' \code{data.frame} consisting of 5900 occurrences (rows) and 35 variables (columns).
 #' The example taxonomy dataset (\code{graptTaxaPBDB}) is a
-#' data.frame consisting of 364 formal taxa (rows) and 53 variables (columns).
+#' \code{data.frame} consisting of 364 formal taxa (rows) and 53 variables (columns).
 #' Variables are coded in the 'pbdb' vocabulary of the PBDB API v1.2.
 
 #' @seealso
@@ -40,21 +40,21 @@
 #' @docType data
 
 #' @examples
-#'
+#' 
 #' \dontrun{
 #' 
 #' #original code used to obtain this dataset on March 21st, 2015
 #' 		# using version 1.2 of the Paleobiology Database API
-#'
+#' 
 #' # (sorry, URLs removed as they lead to the PBDB test server...)
 #' 
 #' save(graptOccPBDB,graptTaxaPBDB,file = "graptPBDB.rdata")
-#'
+#' 
 #' }
-#'
+#' 
 #' # load archived example data
 #' data(graptPBDB)
-#'
+#' 
 #' # let's visualize who entered the majority of the occurrence data
 #' pie(sort(table(graptOccPBDB$enterer)))
 #' # and now who authorized it
@@ -70,5 +70,5 @@
 #' #distribution of taxa among taxonomic ranks
 #' table(graptTaxaPBDB$taxon_rank)
 #' barplot(table(graptTaxaPBDB$taxon_rank))
-#'
+#' 
 NULL

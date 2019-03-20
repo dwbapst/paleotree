@@ -1,5 +1,5 @@
 #' Turn a Character String of the Right-Hand Side of an Equation into an R Function
-#'
+#' 
 #' \code{equation2function} converts the right-hand side of an equation that can be written
 #' as a single line (like the right-hand side of an object of class \code{formula}) and
 #' creates an R function which calls the variables within as arguments and returns values
@@ -30,11 +30,11 @@
 #' foo <- equation2function("x+y")
 #' foo
 #' foo(x = 4,y = 0.1)
-#'
+#' 
 #' foo <- equation2function("x+2*sqrt(2*y+3)^2")
 #' foo
 #' foo(x = 4,y = 0.1)
-#'
+#' 
 #' # what about weird long argument names and spaces
 #' foo <- equation2function("stegosaur + 0.4 * P")
 #' foo

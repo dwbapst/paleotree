@@ -1,5 +1,5 @@
 #' Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database
-#'
+#' 
 #' The function \code{makePBDBtaxonTree} creates phylogeny-like 
 #' object of class \code{phylo} from the taxonomic information
 #' recorded in a taxonomy download from the PBDB for
@@ -21,7 +21,7 @@
 #' of temporal and phylogenetic, mainly to look for incongruence
 #' due to either incorrect taxonomic placements,
 #' erroneous occurrence data or both. 
-#'
+#' 
 #' Note however that, contrary to common opinion among some
 #' paleontologists, taxon-trees may be just as useful for 
 #' macroevolutionary studies as reconstructed phylogenies
@@ -118,11 +118,11 @@
 #' A phylogeny of class \code{phylo}, where each tip is a taxon of the given 'rank'. See additional details
 #' regarding branch lengths can be found in the sub-algorithms used to create the taxon-tree by this function:
 #' \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}.
-#'
+#' 
 #' Depending on the \code{method}
 #' used, either the element \code{$parentChild} or \code{$taxonTable} is added to the list structure of
 #' the output phylogeny object, which was used as input for one of the two algorithms mentioned above.
-#'
+#' 
 #' Please note that when applied to output from the taxa option of the API version 1.1, the taxon names
 #' returned are the \emph{original} taxon names as 'accepted_name' is not available in API v1.1, while
 #' under API v1.2, the returned taxon names should be the most up-to-date formal names for those taxa.
@@ -133,11 +133,11 @@
 #' Two other functions in paleotree are used as sub-algorithms by \code{makePBDBtaxonTree}
 #' to create the taxon-tree within this function,
 #' and users should consult their manual pages for additional details:
-#'
+#' 
 #' \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}
 #' 
 #' Closely related functions for 
-#'
+#' 
 #' Other functions for manipulating PBDB data can be found at \code{\link{taxonSortPBDBocc}},
 #' \code{\link{occData2timeList}}, and the example data at \code{\link{graptPBDB}}.
 
@@ -163,7 +163,7 @@
 #'     taxaDataPBDB = graptTaxaPBDB,
 #'     rank = "genus",
 #'     method = "Linnean")
-#'
+#' 
 #' #get the taxon tree: parentChild method
 #' graptTreeParentChild <- makePBDBtaxonTree(
 #'     taxaDataPBDB = graptTaxaPBDB,
@@ -178,7 +178,7 @@
 #'        no.margin = TRUE,edge.width = 0.35)
 #'    nodelabels(tree$node.label,adj = c(0,1/2))
 #' 	  }
-#'
+#' 
 #' 
 #' plotPBDBtaxonTree(graptTreeParentChild)
 #' 
@@ -187,7 +187,7 @@
 #' 
 #' ########################
 #' #conodonts
-#' conoData <- easyGetPBDBtaxa("Conodonta")
+#' conoData <- getCladeTaxaPBDB("Conodonta")
 #' conoTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = conoData,
 #'     rank = "genus",
@@ -198,7 +198,7 @@
 #' 
 #' ############################
 #' #asaphid trilobites
-#' asaData <- easyGetPBDBtaxa("Asaphida")
+#' asaData <- getCladeTaxaPBDB("Asaphida")
 #' asaTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = asaData,
 #'     rank = "genus",
@@ -209,7 +209,7 @@
 #' 
 #' ########################
 #' #Ornithischia
-#' ornithData <- easyGetPBDBtaxa("Ornithischia")
+#' ornithData <- getCladeTaxaPBDB("Ornithischia")
 #' ornithTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = ornithData,
 #'     rank = "genus",
@@ -228,7 +228,7 @@
 #' 
 #' ########################
 #' #Rhynchonellida
-#' rynchData <- easyGetPBDBtaxa("Rhynchonellida")
+#' rynchData <- getCladeTaxaPBDB("Rhynchonellida")
 #' rynchTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = rynchData,
 #'     rank = "genus",

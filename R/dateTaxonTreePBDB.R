@@ -55,7 +55,7 @@
 #' called by other functions.
 
 #' @seealso
-#' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
+#' See \code{\link{getDataPBDB}}, \code{\link{makePBDBtaxonTree}},
 #' and \code{\link{plotPhyloPicTree}}.
 
 #' @author David W. Bapst

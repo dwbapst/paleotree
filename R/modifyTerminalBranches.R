@@ -41,7 +41,7 @@
 #' bindPaleoTip is a wrapper for phytool's \code{bind.tip} which allows tip age
 #' as input and modifies the \code{$root.time} element if necessary (i.e. if a tip
 #' is added to edge leading up to the root).
-#'
+#' 
 #' Note that for \code{bindPaleoTip}, tips added below the root are subtracted from
 #' any existing \code{$root.edge} element,
 #' as per behavior of \code{link{bind.tip}} and \code{\link{bind.tree}}.
@@ -130,7 +130,7 @@
 #' phyloDiv(tree1)
 #' tree2 <- dropExtant(tree)
 #' phyloDiv(tree2)
-#'
+#' 
 #' #graphics.off()
 #' 
 #' #example using addTermBranchLength
@@ -142,13 +142,13 @@
 #' #########################
 #' #test dropPaleoTip
 #' 	#(and fixRootTime by extension...)
-#'
+#' 
 #' #simple example
 #' tree <- read.tree(text = "(A:3,(B:2,(C:5,D:3):2):3);")
 #' tree$root.time <- 10
 #' plot(tree,no.margin = FALSE)
 #' axisPhylo()
-#'
+#' 
 #' # now a series of tests, dropping various tips
 #' (test <- dropPaleoTip(tree,"A")$root.time) #  = 7
 #' (test[2] <- dropPaleoTip(tree,"B")$root.time) #  = 10
@@ -161,7 +161,7 @@
 #' 
 #' # is it all good? if not, fail so paleotree fails...
 #' if(!identical(test,c(7,10,10,10,5,10,7,7))){stop("fixRootTime fails!")}
-#'
+#' 
 #' 
 #' ##############
 #' #testing bindPaleoTip
@@ -175,7 +175,7 @@
 #' \dontrun{
 #' 
 #' require(phytools)
-#'
+#' 
 #' #bindPaleoTip effectively wraps bind.tip from phytools
 #' # using a conversion like below
 #' 
@@ -183,16 +183,16 @@
 #' node <- 6
 #' 
 #' #new length = the root time - tipAge - nodeheight(tree,node)
-#'
+#' 
 #' newLength <- tree$root.time-tipAge-nodeheight(tree,node)
 #' tree1 <- bind.tip(tree,"tip.label",where = node,edge.length = newLength)
 #' 
 #' layout(1:2)
 #' plot(tree);axisPhylo()
 #' plot(tree1);axisPhylo()
-#'
+#' 
 #' }
-#'
+#' 
 #' # now with bindPaleoTip
 #' 
 #' 

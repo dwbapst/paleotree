@@ -1,5 +1,5 @@
 #' Estimate Sampling Rate from Sampling Horizon Data (Solow and Smith, 1997)
-#'
+#' 
 #' This function implements the exact maximum likelihood estimator for the
 #' instantaneous sampling rate from Solow and Smith (1997, Paleobiology),
 #' which is based on the relationship between the number of collections for a
@@ -10,9 +10,9 @@
 #' collections for each taxon, and a vector \eqn{D}, giving the precise duration
 #' for each taxon, we can use the following maximum likelihood estimator from
 #' Solow and Smith (1997) to obtain the instantaneous sampling rate:
-#'
+#' 
 #' \eqn{samplingRate = (sum(N-1)^2)/(sum(D)*sum(N))}
-#'
+#' 
 #' This method is exclusively for datasets with very precisely dated horizons,
 #' such as microfossils from deep sea cores with very precise age models. The
 #' first and last appearance must be known very precisely to provide an equally
@@ -45,7 +45,7 @@
 #' Duration frequency methods (Foote and Raup, 1996; Foote, 1997) use
 #' ranges alone to estimate sampling parameters, implemented in
 #' \code{\link{durationFreq}}.
-#'
+#' 
 #' Also see the conversion functions for sampling parameters at
 #' \code{\link{SamplingConv}}.
 

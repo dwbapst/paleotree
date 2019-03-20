@@ -12,7 +12,7 @@
 #' the 'Van Valen' rate metrics, these are not implemented here, but could be
 #' estimated using the matrix invisibly output by this function (See Foote,
 #' 2000, for the relevant equations for calculating these).
-#'
+#' 
 #' The timeList object should be a list composed of two matrices, the first
 #' matrix giving by-interval start and end times (in absolute time), the second
 #' matrix giving the by-taxon first and last appearances in the intervals
@@ -23,7 +23,7 @@
 #' begins at time 0 and ends at time 0. See the documentation for the time-scaling 
 #' function \code{\link{bin_timePaleoPhy}} and the simulation function 
 #' \code{\link{binTimeData}} for more information on formatting.
-#'
+#' 
 #' Unlike some functions in paleotree, such as the diversity curve functions,
 #' intervals must be both sequential and non-overlapping. The diversity curve
 #' functions deal with such issues by assuming taxa occur from the base of the
@@ -83,7 +83,7 @@
 #' #with the retiolinae dataset
 #' data(retiolitinae)
 #' perCapitaRates(retioRanges)
-#'
+#' 
 #' #Simulate some fossil ranges with simFossilRecord
 #' set.seed(444)
 #' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
@@ -114,7 +114,7 @@
 #' rangesDisc <- binTimeData(rangesCont,int.length = 5)
 #' #and now get per-capita rates
 #' perCapitaRates(rangesDisc)
-#'
+#' 
 #' @export
 perCapitaRates <- function(timeList,plot = TRUE,logRates = FALSE,drop.extant = FALSE,isExtant = NULL,jitter = TRUE,legendPosition = "topleft"){
 	#

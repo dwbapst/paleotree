@@ -113,14 +113,14 @@
 #' be mistaken as the FADs and LADs desired by \code{cal3TimePaleoPhy}, as \code{cal3TimePaleoPhy} 
 #' will use the earliest dates provided to calibrate node ages, which is either
 #' an overly conservative approach to time-scaling or fairly nonsensical.
-#'
+#' 
 #' Alternatively to using \code{cal3TimePaleoPhy}, \code{bin_cal3TimePaleoPhy} is a wrapper of 
 #' \code{cal3TimePaleoPhy} which produces time-scaled trees for datasets which only have 
 #' interval data available. For each output tree, taxon first and last appearance 
 #' dates are placed within their listed intervals under a uniform distribution. 
 #' Thus, a large sample of time-scaled trees will approximate the uncertainty in 
 #' the actual timing of the FADs and LADs. 
-#'
+#' 
 #' The input \code{timeList} object can have overlapping (i.e. non-sequential) intervals,
 #' and intervals of uneven size. Taxa alive in the modern should be listed as last 
 #' occurring in a time interval that begins at time 0 and ends at time 0. If taxa 
@@ -130,7 +130,7 @@
 #' taxa are assumed to first and last appear in the fossil record at different points
 #' in time, with some positive duration. The sites matrix can be used to force
 #' only a portion of taxa to have simultaneous first and last appearances.
-#'
+#' 
 #' By setting the argument \code{nonstoch.bin} to \code{TRUE} in \code{bin_cal3TimePaleoPhy}, the
 #' dates are NOT stochastically pulled from uniform bins but instead FADs are
 #' assigned to the earliest time of whichever interval they were placed in and
@@ -144,7 +144,7 @@
 #' A tutorial for applying the time-scaling functions in paleotree,
 #' particularly the cal3 method, along with an example using real (graptolite)
 #' data, can be found at the following link:
-#'
+#' 
 #' http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
 #' 
 #' @rdname cal3TimePaleoPhy
@@ -287,7 +287,7 @@
 #' argument ntrees. All trees are output with an element \code{$root.time}. This is
 #' the time of the root on the tree and is important for comparing patterns
 #' across trees.
-#'
+#' 
 #' Additional elements are \code{sampledLogLike} and \code{$sumLogLike} which respectively
 #' record a vector containing
 #' the 'log-densities' of the various node-ages selected for each tree by the 'zipper'
@@ -295,7 +295,7 @@
 #' log-likelihood values, they may not be true likelihoods, as node ages are conditional on the other
 #' ages selected by other nodes. However, these values may give an indication about the relative
 #' optimality of a set of trees output by the cal3 functions.
-#'
+#' 
 #' Trees created with \code{bin_cal3TimePaleoPhy} will output with some additional
 #' elements, in particular \code{$ranges.used}, a matrix which records the
 #' continuous-time ranges generated for time-scaling each tree. (Essentially a
@@ -307,7 +307,7 @@
 #' defined by the probability of intervals of unobserved evolutionary history.
 #' This means analyses MUST be done over many cal3 time-scaled trees for
 #' analytical rigor! No one tree is correct.
-#'
+#' 
 #' Similarly, please account for stratigraphic uncertainty in your analysis.
 #' Unless you have exceptionally resolved data, use a wrapper with the cal3
 #' function, either the provided \code{bin_cal3TimePaleoPhy} or code a wrapper
@@ -582,7 +582,7 @@
 #'     nonstoch.bin = TRUE,
 #'     plot = TRUE)
 #' phyloDiv(ttree1)
-#'
+#' 
 #' # testing node.mins in bin_cal3TimePaleoPhy
 #' ttree <- bin_cal3TimePaleoPhy(cladoDrop,
 #'     rangesDisc,

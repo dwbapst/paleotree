@@ -11,7 +11,7 @@
 #' 
 #' @details 
 #' \emph{Time-Scaling Methods}
-#'
+#' 
 #' These functions are an attempt to unify and collect previously used and
 #' discussed 'a posteriori' methods for time-scaling phylogenies of fossil taxa.
 #' Unfortunately, it can be difficult to attribute some time-scaling methods to
@@ -44,7 +44,7 @@
 #' emulate older ordering algorithms for 'equal' which are now deprecated, as they do not
 #' match the underlying logic of the original 'equal' algorithm and do not minimize down-passes
 #' when adjusting branch lengths on the time-scaled tree.
-#'
+#' 
 #' The root age can be adjusted backwards in time by either increasing by
 #' an arbitrary amount (via the \code{vartime}  argument) or by setting the
 #' root age directly (via the \code{node.mins} argument); conversely, the
@@ -93,14 +93,14 @@
 #' 
 #' As with many functions in the \code{paleotree} library, absolute time is always
 #' decreasing, i.e. the present day is zero.
-#'
+#' 
 #' As of August 2014, please note that the branch-ordering algorithm used in 'equal' has changed
 #' to match the current algorithm used by \code{DatePhylo} in package \code{strap}, and that two legacy
 #' versions of 'equal' have been added to this function, respectively representing how \code{timePaleoPhy}
 #' and \code{DatePhylo} (and its predecessor \code{date.phylo}) applied the 'equal' time-scaling method.
 #' 
 #' \emph{Interpretation of Taxon Ages in timePaleoPhy}
-#'
+#' 
 #' \code{timePaleoPhy} is \emph{primarily} designed for direct application to datasets where taxon first 
 #' and last appearances are precisely known in continuous time, with no stratigraphic
 #' uncertainty. This is an uncommon form of data to have from the fossil record, 
@@ -110,7 +110,7 @@
 #' and maximum absolute ages for the fossil collections that a taxon is known
 #' is known from. Presumably, the first and last appearances of that taxon in
 #' the fossil record is at unknown dates within these bounds. 
-#'
+#' 
 #' As of paleotree version 2.0. the treatment of taxon ages in
 #' \code{timePaleoPhy} is handled by the argument \code{dateTreatment}.
 #' \emph{By default,} this argument is set to 'firstLast' which means the matrix of ages are treated
@@ -128,9 +128,9 @@
 #' fixed, but the 'last appearance' dates as unknown. In previous versions of paleotree,
 #' this third option was enacted with the argument \code{rand.obs}, which has been removed for
 #' clarity.
-#'
+#' 
 #' \emph{Interpretation of Taxon Ages in bin_timePaleoPhy}
-#'
+#' 
 #' As an alternative to using \code{timePaleoPhy}, \code{bin_timePaleoPhy} is a wrapper of 
 #' \code{timePaleoPhy} which produces time-scaled trees for datasets which only have 
 #' interval data available. For each output tree, taxon first and last appearance 
@@ -140,7 +140,7 @@
 #' may be more logical via \code{bin_timePaleoPhy}, as it is tied to specific interval bounds,
 #' and there are more options available for certain types of age uncertainty, such as for cases
 #' where specimens come from the same fossil site.
-#'
+#' 
 #' The input \code{timeList} object for \code{bin_timePaleoPhy} can have overlapping
 #' (i.e. non-sequential) intervals, and intervals of uneven size. Taxa alive in the modern should be listed as last 
 #' occurring in a time interval that begins at time 0 and ends at time 0. If taxa 
@@ -159,9 +159,9 @@
 #' 
 #' If \code{timeData} or the elements of \code{timeList} are actually \code{data.frames} (as output
 #' by \code{read.csv} or \code{read.table}), these will be coerced to a matrix.
-#'
+#' 
 #' \emph{Tutorial} 
-#'
+#' 
 #' A tutorial for applying the time-scaling functions in paleotree, along with
 #' an example using real (graptolite) data, can be found here:
 #' http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
@@ -340,7 +340,7 @@
 
 #' @seealso \code{\link{cal3TimePaleoPhy}}, \code{\link{binTimeData}},
 #' \code{\link{multi2di}}
-#'
+#' 
 #' For an alternative time-scaling function, which includes the 'ruta' method
 #' that weights the time-scaling of branches by estimates of character change
 #' along with implementations of the 'basic' and 'equal' methods described here,
@@ -350,7 +350,7 @@
 #' Bapst, D. W. 2013. A stochastic rate-calibrated method for time-scaling
 #' phylogenies of fossil taxa. \emph{Methods in Ecology and Evolution}.
 #' 4(8):724-733.
-#'
+#' 
 #' Bapst, D. W. 2014. Assessing the effect of time-scaling methods on
 #' phylogeny-based analyses in the fossil record. \bold{Paleobiology}
 #' \bold{40}(3):331-351.
@@ -376,7 +376,7 @@
 #' evolutionary patterns. Blackwell Scientific, Oxford.
 
 #' @examples
-#'
+#' 
 #' # examples with empirical data
 #' 
 #' #load data
@@ -400,7 +400,7 @@
 #' 	vartime = 1, ntrees = 1, plot = TRUE)
 #' 
 #' ###################
-#'
+#' 
 #' # examples with simulated data
 #' 
 #' #Simulate some fossil ranges with simFossilRecord
@@ -495,7 +495,7 @@
 #' ttreeB3 <- bin_timePaleoPhy(cladogram,rangesDisc,type = "basic",ntrees = 1,
 #'     nonstoch.bin = TRUE,randres = TRUE,add.term = TRUE,plot = FALSE)
 #' phyloDiv(ttreeB3)
-#'
+#' 
 #' # testing node.mins in bin_timePaleoPhy
 #' ttree <- bin_timePaleoPhy(cladoDrop,rangesDisc,type = "basic",ntrees = 1,
 #'     add.term = TRUE,randres = FALSE,node.mins = nodeDates,plot = TRUE)
@@ -516,7 +516,7 @@
 #' ttree3$root.time;plot(ttree3);axisPhylo()
 #' -apply(ranges1,1,diff)
 #' }
-#'
+#' 
 #' @export
 timePaleoPhy <- function(tree,timeData,type = "basic",vartime = NULL,ntrees = 1,randres = FALSE,timeres = FALSE,add.term = FALSE,
 	inc.term.adj = FALSE,dateTreatment = "firstLast",node.mins = NULL,noisyDrop = TRUE,plot = FALSE){

@@ -82,13 +82,13 @@
 #' \donttest{
 #' 
 #' #testing dropPaleoTip... and fixRootTime by extension
-#'
+#' 
 #' #simple example
 #' tree <- read.tree(text = "(A:3,(B:2,(C:5,D:3):2):3);")
 #' tree$root.time <- 10
 #' plot(tree,no.margin = FALSE)
 #' axisPhylo()
-#'
+#' 
 #' # now a series of tests, dropping various tips
 #' (test <- dropPaleoTip(tree,"A")$root.time) #  = 7
 #' (test[2] <- dropPaleoTip(tree,"B")$root.time) #  = 10

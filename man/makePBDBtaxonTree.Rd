@@ -172,29 +172,27 @@ plotPBDBtaxonTree(graptTreeParentChild)
 plotPBDBtaxonTree(graptTreeLinnean)
 
 
-########################
+####################################################
+# let's try some other groups
+
 #conodonts
 conoData <- getCladeTaxaPBDB("Conodonta")
 conoTree <- makePBDBtaxonTree(
     taxaDataPBDB = conoData,
     rank = "genus",
     method = "parentChild")
-
 # plot it!
 plotPBDBtaxonTree(conoTree)
 
-############################
 #asaphid trilobites
 asaData <- getCladeTaxaPBDB("Asaphida")
 asaTree <- makePBDBtaxonTree(
     taxaDataPBDB = asaData,
     rank = "genus",
     method = "parentChild")
-
 # plot it!
 plotPBDBtaxonTree(asaTree)
 
-########################
 #Ornithischia
 ornithData <- getCladeTaxaPBDB("Ornithischia")
 ornithTree <- makePBDBtaxonTree(

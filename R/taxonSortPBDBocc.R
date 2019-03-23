@@ -118,6 +118,27 @@
 #' application programming interface. \emph{Paleobiology} 42(1):1-7.
 
 #' @examples
+#' 
+#' 
+#' # getting occurrence data for a genus, sorting it
+#' # Dicellograptus
+#' dicelloData <- getPBDBocc("Dicellograptus")
+#' dicelloOcc2 <- taxonSortPBDBocc(dicelloData, 
+#' 	rank = "species", onlyFormal = FALSE)
+#' names(dicelloOcc2)
+#' 
+#' # try a PBDB API download with lots of synonymization
+#' 	#this should have only 1 species
+#' # old way, using v1.1 of PBDB API:
+#' # acoData <- read.csv(paste0(
+#' #	"http://paleobiodb.org/data1.1/occs/list.txt?",
+#' #	"base_name = Acosarina%20minuta&show=ident,phylo"))
+#' # new way - with getPBDBocc, using v1.2 of PBDB API:
+#' acoData <- getPBDBocc("Acosarina minuta")
+#' acoOcc <- taxonSortPBDBocc(acoData, 
+#' 	rank = "species", onlyFormal = FALSE)
+#' names(acoOcc)
+#' 
 #' #load example graptolite PBDB occ dataset
 #' data(graptPBDB)
 #' 
@@ -149,6 +170,30 @@
 #' 		onlyFormal = FALSE, cleanUncertain = FALSE)
 #' length(occSpeciesEverything)
 #' 
+
+
+#make sure works with compact vocab v1.2
+#dicelloData <- read.csv(paste0("http://paleobiodb.org",
+#	"/data1.2/occs/list.txt?base_name=Dicellograptus",
+#	"&show=ident,phylo&vocab=com"))
+#dicelloOccCom1 <- taxonSortPBDBocc(dicelloData,
+#		 rank = "species", onlyFormal = FALSE)
+#names(dicelloOccCom1)
+#head(dicelloOccCom1[[1]])[,1:7]
+
+#make sure works with compact vocab v1.2
+#dicelloData <- read.csv(paste0("http://paleobiodb.org",
+#	"/data1.2/occs/list.txt?base_name=Dicellograptus",
+#	"&show=ident,phylo&limit=all&vocab=com"))
+#dicelloOccCom1 <- taxonSortPBDBocc(dicelloData,
+#		 rank = "species", onlyFormal = FALSE)
+#names(dicelloOccCom1)
+#head(dicelloOccCom1[[1]])[,1:7]
+
+
+
+
+
 
 #' @name taxonSortPBDBocc
 #' @rdname taxonSortPBDBocc

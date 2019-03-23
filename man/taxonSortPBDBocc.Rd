@@ -109,6 +109,27 @@ to NAs, as they may be due to issues
 with using read.csv to convert API-downloaded data.
 }
 \examples{
+
+
+# getting occurrence data for a genus, sorting it
+# Dicellograptus
+dicelloData <- getPBDBocc("Dicellograptus")
+dicelloOcc2 <- taxonSortPBDBocc(dicelloData, 
+	rank = "species", onlyFormal = FALSE)
+names(dicelloOcc2)
+
+# try a PBDB API download with lots of synonymization
+	#this should have only 1 species
+# old way, using v1.1 of PBDB API:
+# acoData <- read.csv(paste0(
+#	"http://paleobiodb.org/data1.1/occs/list.txt?",
+#	"base_name = Acosarina\%20minuta&show=ident,phylo"))
+# new way - with getPBDBocc, using v1.2 of PBDB API:
+acoData <- getPBDBocc("Acosarina minuta")
+acoOcc <- taxonSortPBDBocc(acoData, 
+	rank = "species", onlyFormal = FALSE)
+names(acoOcc)
+
 #load example graptolite PBDB occ dataset
 data(graptPBDB)
 

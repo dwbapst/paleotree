@@ -4,23 +4,26 @@
 \alias{getDataPBDB}
 \alias{getCladeTaxaPBDB}
 \alias{getSpecificTaxaPBDB}
+\alias{getPBDBocc}
 \title{Obtaining Data for Taxa or Occurrences From Paleobiology Database API}
 \usage{
-getCladeTaxaPBDB(taxon, show = c("class", "parent", "app", "img",
+getCladeTaxaPBDB(taxon, showTaxa = c("class", "parent", "app", "img",
   "entname"), status = "accepted", urlOnly = FALSE,
   stopIfMissing = FALSE)
 
-getSpecificTaxaPBDB(taxa, show = c("class", "parent", "app", "img",
+getSpecificTaxaPBDB(taxa, showTaxa = c("class", "parent", "app", "img",
   "entname"), status = "accepted", urlOnly = FALSE,
   stopIfMissing = FALSE)
+
+getPBDBocc(taxa, showOccs = c("class", "classext", "subgenus", "ident"))
 }
 \arguments{
 \item{taxon}{A single name of a of a higher taxon which you wish to catch
 all taxonomic 'children' (included members - i.e. subtaxa) of, from 
 within the Paleobiology Database.}
 
-\item{show}{Which variables should be requested from the Paleobiology
-Database? The default is to include classification (\code{"class"}),
+\item{showTaxa}{Which variables for taxonomic data should be requested
+from the Paleobiology Database? The default is to include classification (\code{"class"}),
 parent-child taxon information (\code{"parent"}), information on each
 taxon's first and last appearance (\code{"app"}), information on the
 PhyloPic silhouette images assigned to that taxon (\code{"img"}), and
@@ -61,6 +64,17 @@ separated by a comma with no whitespace (ex.
 \code{"Homo,Pongo,Gorilla"}) or as a vector of character strings
 (ex. \code{c("Homo", "Pongo", "Gorilla")}),
 which will then formatted for use in the API call.}
+
+\item{showOccs}{Which variables for occurrence data should be requested
+from the Paleobiology Database? The default is to include classification (\code{"class"}),
+classification identifiers (\code{"classext"}), genus and subgenus
+identifiers (\code{"subgenus"}), and species-level identifiers (\code{"ident"}).
+Multiple variable blocks can be given as a single character string, with desired
+variable selections separated by a comma with no whitespace (ex.
+\code{"class,subgenus,ident"}) or  as a vector of character strings
+(ex. \code{c("class", "subgenus", "ident")}), which will then formatted for
+use in the API call. For full list of other options that you might want to include, please refer
+to \href{https://paleobiodb.org/data1.2/occs/list_doc.html}{documentation for the API}.}
 }
 \value{
 These functions return a \code{data.frame} containing
@@ -70,7 +84,11 @@ This behavior can be modified by argument \code{urlOnly}.
 \description{
 The Paleobiology Database API (\href{http://paleobiodb.org/data1.2}{link})
 is very easy to use, and generally any data one wishes to collect can be obtained
-in R through a variety of ways - the simplest being to wrap a data retrieval request to the API, specified for CSV output, with R function \code{read.csv}. The functions listed here, however, are some simple helper functions
+in R through a variety of ways - the simplest being to wrap a data retrieval request
+to the API, specified for CSV output, with R function \code{read.csv}. The functions
+listed here, however, are some simple helper functions for doing tasks common to
+users of this package - downloading occurrence data, or taxonomic information,
+for particular clades, or for a list of specific taxa.
 }
 \details{
 The
@@ -101,6 +119,9 @@ tetrapodData <-getSpecificTaxaPBDB(tetrapodList)
 dim(tetrapodData)
 sum(tetrapodData$taxon_rank=="genus")
 # should be 26, with all 26 as genera
+
+# get some occurrence data
+
 }
 
 }

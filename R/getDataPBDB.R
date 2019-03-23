@@ -2,10 +2,16 @@
 #' 
 #' The Paleobiology Database API (\href{http://paleobiodb.org/data1.2}{link})
 #' is very easy to use, and generally any data one wishes to collect can be obtained
-#' in R through a variety of ways - the simplest being to wrap a data retrieval request to the API, specified for CSV output, with R function \code{read.csv}. The functions listed here, however, are some simple helper functions 
+#' in R through a variety of ways - the simplest being to wrap a data retrieval request
+#' to the API, specified for CSV output, with R function \code{read.csv}. The functions
+#' listed here, however, are some simple helper functions for doing tasks common to
+#' users of this package - downloading occurrence data, or taxonomic information,
+#' for particular clades, or for a list of specific taxa.
 
 #' @details
 #' The
+
+
 
 
 
@@ -21,8 +27,8 @@
 #' (ex. \code{c("Homo", "Pongo", "Gorilla")}),
 #' which will then formatted for use in the API call.
 	
-#' @param show Which variables should be requested from the Paleobiology
-#' Database? The default is to include classification (\code{"class"}),
+#' @param showTaxa Which variables for taxonomic data should be requested
+#' from the Paleobiology Database? The default is to include classification (\code{"class"}),
 #' parent-child taxon information (\code{"parent"}), information on each
 #' taxon's first and last appearance (\code{"app"}), information on the
 #' PhyloPic silhouette images assigned to that taxon (\code{"img"}), and
@@ -35,6 +41,17 @@
 #' you might want to include, such as information on ecospace or taphonomy,
 #' can be included: please refer to the full list at
 #' the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.
+
+#' @param showOccs Which variables for occurrence data should be requested
+#' from the Paleobiology Database? The default is to include classification (\code{"class"}),
+#' classification identifiers (\code{"classext"}), genus and subgenus
+#' identifiers (\code{"subgenus"}), and species-level identifiers (\code{"ident"}).
+#' Multiple variable blocks can be given as a single character string, with desired
+#' variable selections separated by a comma with no whitespace (ex.
+#' \code{"class,subgenus,ident"}) or  as a vector of character strings
+#' (ex. \code{c("class", "subgenus", "ident")}), which will then formatted for
+#' use in the API call. For full list of other options that you might want to include, please refer
+#' to \href{https://paleobiodb.org/data1.2/occs/list_doc.html}{documentation for the API}.
 
 	
 #' @param status What taxonomic status should the pull taxa have? 
@@ -110,14 +127,29 @@
 #' dim(tetrapodData)
 #' sum(tetrapodData$taxon_rank=="genus")
 #' # should be 26, with all 26 as genera
+#' 
+#' # get some occurrence data
+#' 
+
+
 #' }
 #' 
+
+
+# getPBDBocc 
+	# occs documentation
+	# https://paleobiodb.org/data1.2/occs/list_doc.html
+	#
+	# simple function for getting occurrence data from API v1.2 
+			 #cleans PBDB occurrence downloads of warnings
+
+
 
 
 #' @rdname getDataPBDB 
 #' @export 
 getCladeTaxaPBDB <- function(taxon,
-		show = c("class", "parent", "app", "img", "entname"),
+		showTaxa = c("class", "parent", "app", "img", "entname"),
 		status = "accepted", urlOnly = FALSE, stopIfMissing=FALSE){
 	##########################################
 	# check that only a single taxon is given
@@ -129,7 +161,7 @@ getCladeTaxaPBDB <- function(taxon,
 	#let's get some taxonomic data
 	requestURLPBDB <- paste0("http://paleobiodb.org/",
 			"data1.2/taxa/list.txt?base_name=", taxon,
-			"&show=",paste0(show,collapse = ","),
+			"&show=",paste0(showTaxa,collapse = ","),
 			# status -> all, accepted, valid
 				# accepted -> only senior synonyms
 				# valid -> snior synonyms + valid subjective synonyms
@@ -148,7 +180,7 @@ getCladeTaxaPBDB <- function(taxon,
 #' @rdname getDataPBDB 
 #' @export 
 getSpecificTaxaPBDB <- function(taxa,
-		show = c("class", "parent", "app", "img", "entname"),
+		showTaxa = c("class", "parent", "app", "img", "entname"),
 		status = "accepted",
 		urlOnly = FALSE, stopIfMissing=FALSE){
 	#####################################
@@ -159,7 +191,7 @@ getSpecificTaxaPBDB <- function(taxa,
 		}
 	requestURLPBDB <- paste0(
 		"http://paleobiodb.org/data1.2/taxa/list.txt?name=",taxa,
-		"&show=",paste0(show,collapse = ","),
+		"&show=",paste0(showTaxa,collapse = ","),
 		# status -> all, accepted, valid
 			# accepted -> only senior synonyms
 			# valid -> snior synonyms + valid subjective synonyms
@@ -205,3 +237,42 @@ getPBDBtaxaCSV <- function(requestURL, stopIfMissing=FALSE){
 	return(res)
 	}	
 
+
+#' @rdname getDataPBDB 
+#' @export 
+getPBDBocc <- function(taxa, 
+		showOccs = c("class", "classext", "subgenus", "ident")
+		){
+	#############
+	# occs documentation
+	# https://paleobiodb.org/data1.2/occs/list_doc.html
+	#
+	# simple function for getting occurrence data from API v1.2 
+			 #cleans PBDB occurrence downloads of warnings
+	taxa <- paste(taxa,collapse = ",")
+	taxa <- paste(unlist(strsplit(taxa,"_")),collapse = "%20")
+	showOccs <- paste(showOccs,collapse = ",")
+	command <- paste0(
+		"http://paleobiodb.org/data1.2/occs/list.txt?base_name = ",
+		taxa,"&show = ",showOccs,"&limit = all",
+		collapse = "")
+	command <- paste(unlist(strsplit(command,split = " ")),
+		collapse = "%20")
+	downData <- readLines(command)
+	if(length(grep("Warning",downData)) != 0){
+		start <- grep("Records",downData)
+		warn <- downData[1:(start-1)]
+		warn <- sapply(warn, function(x) 
+			paste0(unlist(strsplit(unlist(strsplit(x,'"')),",")),
+		 		collapse = ""))
+		warn <- paste0(warn,collapse = "\n")
+		names(warn) <- NULL
+		mat <- downData[-(1:start)]
+		mat <- read.csv(textConnection(mat))
+		message(warn)
+	}else{
+		mat <- downData
+		mat <- read.csv(textConnection(mat))
+		}
+	return(mat)
+	}

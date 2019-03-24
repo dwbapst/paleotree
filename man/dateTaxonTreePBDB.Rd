@@ -56,7 +56,9 @@ ages of the respective higher taxa, based on their earliest times of appearance
 from the Paleobiology Database.
 }
 \details{
-The dating by
+The dating by this function is very simplistic, representing a rather
+straight interpretation of what the PBDB reports. The dated trees
+produced should not be taken overly seriously.
 }
 \examples{
 

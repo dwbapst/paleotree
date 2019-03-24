@@ -71,8 +71,11 @@
 #' \code{\link{bin_timePaleoPhy}}, \code{\link{bin_cal3TimePaleoPhy}} and \code{\link{taxicDivDisc}}
 
 #' @seealso
-#' \code{\link{taxonSortPBDBocc}}, \code{\link{plotOccData}} and the
-#' example graptolite dataset at \code{\link{graptPBDB}}
+#' Occurrence data as commonly used with \code{paleotree} functions can
+#' be obtained with \code{link{getPBDBocc}}, and sorted into taxa by 
+#' \code{\link{taxonSortPBDBocc}}, and further explored with this function and
+#' \code{\link{plotOccData}}. Also, see the example graptolite dataset
+#' at \code{\link{graptPBDB}}
 
 #' @author 
 #' David W. Bapst, with the 'dateRange' algorithm suggested by Jon Marcot.

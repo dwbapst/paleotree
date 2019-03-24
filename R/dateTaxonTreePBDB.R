@@ -9,13 +9,9 @@
 #' from the Paleobiology Database.
 
 #' @details
-#' The dating by 
-
-
-
-
-
-
+#' The dating by this function is very simplistic, representing a rather
+#' straight interpretation of what the PBDB reports. The dated trees
+#' produced should not be taken overly seriously.
 
 #' @param taxaTree A tree with tip taxon names matching the taxon names
 #' in \code{taxaDataPBDB}. Probably a taxon tree estimated
@@ -127,8 +123,9 @@ dateTaxonTreePBDB <- function(
 	###################################
 	if(!any(colnames(taxaDataPBDB)!="lastapp_min_ma")){
 		stop(paste0(
-			"input taxaTree must have a taxaDataPBDB element of PBDB data",
-			"generated with show=app"))
+			"a data table of PBDB variables, generated with show=app",
+			" must be provided either directly",
+			"or as a taxaDataPBDB element of taxaTrees"))
 		}
 	############################
 	# replace min & max last appearance ages
@@ -144,14 +141,20 @@ dateTaxonTreePBDB <- function(
 		)
 	taxaDataPBDB[isExtant & hasNAFirstApps, firstAppTimes] <- 0
 	###########################################
+	#hasNAApps <- apply(taxaDataPBDB[,
+	#		c(firstAppTimes,lastAppTimes )
+	#		],
+	#	1, function(x) is.na(x[1]) & is.na(x[2])
+	#	)
+	#taxaDataPBDB$taxon_name[hasNAApps] 	
+	###########################################
 	# get four date taxon ranges for all tip taxa
 	# match tip-taxa to taxa-data
 		#sort based on tip labels
 	tipMatches <- match(taxaTree$tip.label, taxaDataPBDB$taxon_name)
 	#
 	tipTaxonFourDateRanges <- taxaDataPBDB[tipMatches,
-		c("firstapp_max_ma","firstapp_min_ma",
-			"lastapp_max_ma","lastapp_min_ma")]
+		c(firstAppTimes,lastAppTimes )]
 	# select the right tipAges based on tipTaxonDateUsed
 	if(tipTaxonDateUsed == "shallowestAge"){
 		tipAges <- tipTaxonFourDateRanges$lastapp_min_ma
@@ -159,10 +162,15 @@ dateTaxonTreePBDB <- function(
 	if(tipTaxonDateUsed == "deepestAge"){
 		tipAges <- tipTaxonFourDateRanges$firstapp_max_ma
 		}
+	##########################################
+	# check tipAges for NAs
+	if(any(is.na(tipAges))){
+		stop("tip ages as given contain NAs")
+		}
 	#
 	#############################################
 	# get node ages
-	nodeNames<-paste0(taxaTree$node.label,collapse=",")
+	nodeNames<-paste0(taxaTree$node.label, collapse=",")
 	apiAddressNodes <- paste0(
 		"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
 		nodeNames,"&show=app,parent"
@@ -176,7 +184,14 @@ dateTaxonTreePBDB <- function(
 	# construct tip+node age vector
 	allAges <- as.numeric(c(tipAges, nodeMaxAges))
 	##########################################
+	# check nodeMaxAges for NAs
+	if(any(is.na(nodeMaxAges))){
+		stop("node ages as obtained from PBDB contain NAs??")
+		}
+	##########################################
 	# get dated tree
+	print(taxaTree)
+	print(allAges)
 	datedTree <- nodeDates2branchLengths(
 		nodeDates = allAges,
 		tree = taxaTree,
@@ -193,7 +208,8 @@ dateTaxonTreePBDB <- function(
 			mbl = minBranchLen)
 		datedTree<-ladderize(datedTree)
 		#
-		plotName <- paste0("Dated Phylogeny (",
+		plotName <- paste0(
+			"Dated Phylogeny (",
 			minBranchLen,
 			" Minimum Branch Length)"
 			)

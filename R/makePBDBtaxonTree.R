@@ -243,9 +243,11 @@
 #' @name makePBDBtaxonTree
 #' @rdname makePBDBtaxonTree
 #' @export
-makePBDBtaxonTree <- function(taxaDataPBDB, rank,
+makePBDBtaxonTree <- function(
+					taxaDataPBDB, rank,
 					method = "parentChild", #solveMissing = NULL,
-					tipSet = NULL, cleanTree = TRUE,
+					tipSet = NULL, 
+					cleanTree = TRUE,
 					annotatedDuplicateNames = TRUE,
 					APIversion = "1.2"){		
 	############################################################
@@ -315,17 +317,23 @@ makePBDBtaxonTree <- function(taxaDataPBDB, rank,
 		# get parent-child matrix for just desired OTUs 
 			# start matrix with those parent-child relationships
 			# subset these from parData using the taxon ID numbers
-		pcMat <- subsetParDataPBDB(subsetNum = tipIDs,
-			parData = parData)			
+		pcMat <- subsetParDataPBDB(
+			subsetNum = tipIDs,
+			parData = parData
+			)			
 		# starting from desired tip OTUs, work backwards to a common ancestor from the full parData
-		pcMat<-constructParentChildMatrixPBDB(initPCmat=pcMat,
-			parData = parData)	
+		pcMat<-constructParentChildMatrixPBDB(
+			initPCmat=pcMat,
+			parData = parData
+			)	
+		print(pcMat)
 		#################################
 		# convert parent-child matrix to accepted taxon names
 		#print(pcMat)
 		pcMat <- apply(pcMat, 1:2, 
 			convertParentChildMatNames,
-			parData = parData)
+			parData = parData
+			)
 		# remove "NODE" root-stem 
 		pcMat <- pcMat[pcMat[,1] != "NODE", ]
 		############################
@@ -340,170 +348,25 @@ makePBDBtaxonTree <- function(taxaDataPBDB, rank,
 	##############
 	#
 	if(method == "Linnean"){
-		dataTransform <- apply(dataTransform, 2, as.character)
-		#Check if show = class was used
-		if(!any(colnames(dataTransform) == "family")){
-			stop("taxaDataPBDB must be a taxonomic download with show = class for method = 'Linnean'")
-			}
-		#message that tipSet (and solveMissing) is ignored
-		if(!is.null(tipSet)){
-			message("Linnean taxon-tree option selected, argument 'tipSet' is ignored")
-			}
-		#now check and return an error if duplicate taxa of selected rank
-		nDup <- sapply(nrow(dataTransform),function(x)
-			sum(dataTransform[,"taxon_name"] == dataTransform[x,"taxon_name"])>1
-			 & dataTransform[x,"taxon_rank"] == rank
+		tree <- getLinneanTaxonTreePBDB(
+			dataTransform = dataTransform, 
+			tipSet = tipSet,
+			cleanTree = cleanTree
 			)
-		if(any(nDup)){
-			stop(
-				paste0(
-					"Duplicate taxa of selected rank: ",
-					paste0("(",which(nDup),") ",
-					dataTransform[nDup,"taxon_name"],
-					collapse = ", ")
-					)
-				)
-			}
-		#filter on rank
-		dataTransform <- dataTransform[dataTransform[,"taxon_rank"] == rank,]
-		#
-		#get the taxonomic fields you want
-		#from API documentation: "phylum","class","order","family","genus"  
-			# apparently 'kingdom' dropped from v1.2 API
-		taxonFields <- c(
-			#"kingdom",
-			"phylum", "class",
-			"order", "family",
-			"taxon_name")
-		#print(colnames(dataTransform))
-		taxonData <- dataTransform[,taxonFields]
-		taxonData <- apply(taxonData,2,as.character)
-		tree <- taxonTable2taxonTree(taxonTable = taxonData,cleanTree = cleanTree)
-		tree$taxonTable <- taxonData
 		}
 	#########
 	#
 	if(method == "parentChildOldMergeRoot" | method == "parentChildOldQueryPBDB"){
-		dataTransform <- apply(dataTransform, 2, as.character)
-		# need two things: a table of parent-child relationships as IDs
-			#and a look-up table of IDs and taxon names
-		# 
-		# filer out lower than selected rank
-		# 
-		# translate rank and taxon_rank to a number
-		# taxon rank translation vectors for compact vocab
-		taxRankPBDB <- getTaxRankPBDB()
-		rankID <- which(rank == taxRankPBDB)
-		numTaxonRank <- sapply(dataTransform[,"taxon_rank"],
-			function(x) which(x == taxRankPBDB))		
-		#drop taxa below specified rank
-		dataTransform <- dataTransform[rankID <= numTaxonRank,]
-		#also recreate numTaxonRank
-		numTaxonRank <- sapply(dataTransform[,"taxon_rank"],
-			function(x) which(x == taxRankPBDB))		
-		#
-		#create lookup table for taxon names
-		taxonNameTable <- cbind(
-			as.numeric(dataTransform[,"taxon_no"]), 
-			as.character(dataTransform[,"accepted_name"])
-			)
-		#add parents not listed
-		parentFloat <- unique(dataTransform[,"parent_no"])
-		parentFloat <- parentFloat[is.na(match(parentFloat, taxonNameTable[,1]))]
-		taxonNameTable <- rbind(taxonNameTable,
-			cbind(parentFloat,
-				paste("ID:", as.character(parentFloat))
-				)
-			)
-		#DONE
-		#
-		#now need to put together parentChild table
-		#first, get table of all parentChild relationships in taxaDataPBDB
-		pcAll <- cbind(as.numeric(dataTransform[,"parent_no"]), 
-			as.numeric(dataTransform[,"taxon_no"]))
-		#then start creating final matrix: first, those of desired rank
-		pcMat <- pcAll[rankID == numTaxonRank,]
-		#identify IDs of parents floating without ancestors of their own
-		floaters <- getFloatAncPBDB(pcDat = pcMat)
-		#
-		nCount <- 0	#start tracing back
-		while(length(floaters)>1){	#so only ONE root can float
-			nCount <- nCount+1
-			#get new relations: will 'anchor' the floaters
-			anchors <- match(floaters,pcAll[,2])
-			pcMat <- rbind(pcMat, pcAll[anchors[!is.na(anchors)],])	#bind to pcMat
-			floatersNew <- getFloatAncPBDB(pcDat = pcMat)	#recalculate float
-			#stopping condition, as this is a silly while() loop...
-			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
-				#if(!is.null(solveMissing)){
-					if(method == "parentChildOldQueryPBDB"){
-						floatData <- queryMissingParents(
-							taxaID = floatersNew, 
-							APIversion = APIversion
-							)	
-						#update taxon names in taxonNameTable
-						whichUpdate <- match(floatData[,"taxon_no"],taxonNameTable[,1])
-						taxonNameTable[whichUpdate[!is.na(whichUpdate)],2] <- floatData[
-							!is.na(whichUpdate),"taxon_name"]
-						#add any new parent taxa to taxonNameTable
-						parentFloat <- unique(floatData[,"parent_no"])
-						parentFloat <- parentFloat[is.na(match(parentFloat,taxonNameTable[,1]))]
-						if(length(parentFloat)>0){
-							taxonNameTable <- rbind(taxonNameTable,
-								cbind(parentFloat,paste("ID:",as.character(parentFloat))))
-							}
-						#update parentChildMat, parentChildAll
-						newEntries <- floatData[,c("parent_no","taxon_no")]
-						pcMat <- rbind(pcMat,newEntries)
-						pcAll <- rbind(pcAll,newEntries)
-						}
-					if(method == "parentChildOldMergeRoot"){
-						pcMat <- rbind(pcMat,cbind("ArtificialRoot",floaters))
-						taxonNameTable <- rbind(taxonNameTable,c("ArtificialRoot","ArtificialRoot"))
-						message(paste0(
-							"Multiple potential root-taxa artificially merged at a common root: \n",
-							paste0(taxonNameTable[match(floaters,taxonNameTable[,1]),2]
-								,collapse = ", ")))
-						}
-					#regardless of method used, recalculate floaters
-					floaters <- getFloatAncPBDB(pcDat = pcMat)
-				if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
-					stop(
-						paste0("Provided PBDB Dataset does not appear to have a \n",
-							"  monophyletic set of parent-child relationship pairs. \n",
-							"Multiple taxa appear to be listed as parents, but are not \n",
-							"  listed themselves so have no parents listed: \n",
-							paste0(
-								taxonNameTable[match(floaters,taxonNameTable[,1]),2],
-								collapse = ", "
-								)
-							)
-						)
-					}
-			}else{
-				floaters <- floatersNew
-				}
-			}
-		pcMat <- apply(pcMat,2,as.character)
-		#
-		# 
-		tree <- parentChild2taxonTree(parentChild = pcMat,
+		tree <- parentChildPBDBOld(
+			dataTransform = dataTransform, 
 			tipSet = tipSet,
-			cleanTree = cleanTree)
-		#convert tip.label and node.label to taxon names from taxonNameTable
-		tree$tip.label <- taxonNameTable[match(tree$tip.label,
-			taxonNameTable[,1]),2]
-		tree$node.label <- taxonNameTable[match(tree$node.label, 
-			taxonNameTable[,1]),2]
-		tree$parentChild <- pcMat
+			cleanTree = cleanTree
+			)
 		}
 	####################
 	tree$taxaDataPBDB <- taxaDataPBDB
 	return(tree)
-	}
-
-	
-
+	}		
 	
 	
 #' @rdname makePBDBtaxonTree
@@ -718,7 +581,8 @@ constructParentChildMatrixPBDB <- function(initPCmat, parData){
 	# use a while loop to complete the parent-child matrix
 	while(length(floaters)>1){	#so only ONE root can float
 		# get new relations: will 'anchor' the floaters
-		anchorMat <- subsetParDataPBDB(subsetNum = floaters, parData = parData)
+		anchorMat <- subsetParDataPBDB(subsetNum = floaters,
+			parData = parData)
 		# bind to newPCmat
 		newPCmat <- rbind(newPCmat,anchorMat)
 		if(nrow(newPCmat) != nrow(unique(newPCmat))){
@@ -729,7 +593,7 @@ constructParentChildMatrixPBDB <- function(initPCmat, parData){
 		floatersNew <- getFloatAncPBDB(pcDat = newPCmat)	#recalculate float
 		#
 		# put in a stopping condition for the love of god
-		if( length(floatersNew)>1 & identical(floaters,floatersNew) ){
+		if(length(floatersNew)>1 & identical(floaters,floatersNew) ){
 			stop(paste0(
 				"Provided PBDB Dataset does not appear to have a \n",
 				"  monophyletic set of parent-child relationship pairs. \n",
@@ -750,6 +614,9 @@ constructParentChildMatrixPBDB <- function(initPCmat, parData){
 		}
 	return(newPCmat)
 	}	
+
+
+
 	
 subsetParDataPBDB <- function(subsetNum,parData){
 	# pull parent-child relationships for a set of taxon numbers from parData
@@ -765,6 +632,63 @@ subsetParDataPBDB <- function(subsetNum,parData){
 	rownames(subsetMat)<-as.character(parData$taxon_no[subsetRows])
 	return(subsetMat)
 	}
+
+
+
+getLinneanTaxonTreePBDB <- function(dataTransform, tipSet, cleanTree){
+	#########
+	dataTransform <- apply(dataTransform, 2, as.character)
+	#Check if show = class was used
+	if(!any(colnames(dataTransform) == "family")){
+		stop("taxaDataPBDB must be a taxonomic download with show = class for method = 'Linnean'")
+		}
+	#message that tipSet (and solveMissing) is ignored
+	if(!is.null(tipSet)){
+		message("Linnean taxon-tree option selected, argument 'tipSet' is ignored")
+		}
+	#now check and return an error if duplicate taxa of selected rank
+	nDup <- sapply(nrow(dataTransform),function(x)
+		sum(dataTransform[,"taxon_name"] == dataTransform[x,"taxon_name"])>1
+		 & dataTransform[x,"taxon_rank"] == rank
+		)
+	if(any(nDup)){
+		stop(
+			paste0(
+				"Duplicate taxa of selected rank: ",
+				paste0("(", which(nDup), ") ",
+					dataTransform[nDup,"taxon_name"],
+					collapse = ", "
+					)
+				)
+			)
+		}
+	#filter on rank
+	dataTransform <- dataTransform[dataTransform[,"taxon_rank"] == rank,]
+	#
+	#get the taxonomic fields you want
+	#from API documentation: "phylum","class","order","family","genus"  
+		# apparently 'kingdom' dropped from v1.2 API
+	taxonFields <- c(
+		#"kingdom",
+		"phylum", "class",
+		"order", "family",
+		"taxon_name")
+	#print(colnames(dataTransform))
+	taxonData <- dataTransform[,taxonFields]
+	taxonData <- apply(taxonData,2,as.character)
+	tree <- taxonTable2taxonTree(
+		taxonTable = taxonData,
+		cleanTree = cleanTree
+		)
+	tree$taxonTable <- taxonData
+	return(tree)
+	}
+		
+
+
+
+
+
 	
 	
 #getTaxaIDsDesiredRank<-function(data, rank){
@@ -824,4 +748,130 @@ subsetParDataPBDB <- function(subsetNum,parData){
 #   taxonomic rank \emph{not} selected by argument \code{rank}
 #   will be removed silently. Only duplicates of the taxonomic rank of interest
 #   will actually result in an error message.
+
+
+parentChildPBDBOld <- function(dataTransform, tipSet, cleanTree){
+	dataTransform <- apply(dataTransform, 2, as.character)
+	# need two things: a table of parent-child relationships as IDs
+		#and a look-up table of IDs and taxon names
+	# 
+	# filer out lower than selected rank
+	# 
+	# translate rank and taxon_rank to a number
+	# taxon rank translation vectors for compact vocab
+	taxRankPBDB <- getTaxRankPBDB()
+	rankID <- which(rank == taxRankPBDB)
+	numTaxonRank <- sapply(dataTransform[,"taxon_rank"],
+		function(x) which(x == taxRankPBDB))		
+	#drop taxa below specified rank
+	dataTransform <- dataTransform[rankID <= numTaxonRank,]
+	#also recreate numTaxonRank
+	numTaxonRank <- sapply(dataTransform[,"taxon_rank"],
+		function(x) which(x == taxRankPBDB))		
+	#
+	#create lookup table for taxon names
+	taxonNameTable <- cbind(
+		as.numeric(dataTransform[,"taxon_no"]), 
+		as.character(dataTransform[,"accepted_name"])
+		)
+	#add parents not listed
+	parentFloat <- unique(dataTransform[,"parent_no"])
+	parentFloat <- parentFloat[is.na(match(parentFloat, taxonNameTable[,1]))]
+	taxonNameTable <- rbind(taxonNameTable,
+		cbind(parentFloat,
+			paste("ID:", as.character(parentFloat))
+			)
+		)
+	#print(taxonNameTable)
+	#DONE
+	#
+	#now need to put together parentChild table
+	#first, get table of all parentChild relationships in taxaDataPBDB
+	pcAll <- cbind(as.numeric(dataTransform[,"parent_no"]), 
+		as.numeric(dataTransform[,"taxon_no"]))
+	#then start creating final matrix: first, those of desired rank
+	pcMat <- pcAll[rankID == numTaxonRank,]
+	#identify IDs of parents floating without ancestors of their own
+	floaters <- getFloatAncPBDB(pcDat = pcMat)
+	#
+	nCount <- 0	#start tracing back
+	while(length(floaters)>1){	#so only ONE root can float
+		nCount <- nCount+1
+		#get new relations: will 'anchor' the floaters
+		anchors <- match(floaters,pcAll[,2])
+		pcMat <- rbind(pcMat, pcAll[anchors[!is.na(anchors)],])	#bind to pcMat
+		floatersNew <- getFloatAncPBDB(pcDat = pcMat)	#recalculate float
+		#stopping condition, as this is a silly while() loop...
+		if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
+			#if(!is.null(solveMissing)){
+				if(method == "parentChildOldQueryPBDB"){
+					floatData <- queryMissingParents(
+						taxaID = floatersNew, 
+						APIversion = APIversion
+						)	
+					#update taxon names in taxonNameTable
+					whichUpdate <- match(floatData[,"taxon_no"],taxonNameTable[,1])
+					replaceFloatName <- floatData[!is.na(whichUpdate), "taxon_name"]
+					whichUpdate <- whichUpdate[!is.na(whichUpdate)]
+					taxonNameTable[whichUpdate,2] <- replaceFloatName
+					#add any new parent taxa to taxonNameTable
+					parentFloat <- unique(floatData[,"parent_no"])
+					matchingFloat <- is.na(match(parentFloat, taxonNameTable[,1]))
+					parentFloat <- parentFloat[matchingFloat]
+					#
+					if(length(parentFloat)>0){
+						taxonNameTable <- rbind(taxonNameTable,
+							cbind(parentFloat, paste("ID:", as.character(parentFloat))))
+						}
+					#update parentChildMat, parentChildAll
+					newEntries <- floatData[,c("parent_no","taxon_no")]
+					pcMat <- rbind(pcMat,newEntries)
+					pcAll <- rbind(pcAll,newEntries)
+					}
+				if(method == "parentChildOldMergeRoot"){
+					pcMat <- rbind(pcMat,cbind("ArtificialRoot",floaters))
+					taxonNameTable <- rbind(taxonNameTable,
+						c("ArtificialRoot","ArtificialRoot"))
+					message(paste0(
+						"Multiple potential root-taxa artificially merged at a common root: \n",
+						paste0(taxonNameTable[match(floaters,taxonNameTable[,1]),2]
+							,collapse = ", ")))
+					}
+				#regardless of method used, recalculate floaters
+				floaters <- getFloatAncPBDB(pcDat = pcMat)
+			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
+				stop(
+					paste0("Provided PBDB Dataset does not appear to have a \n",
+						"  monophyletic set of parent-child relationship pairs. \n",
+						"Multiple taxa appear to be listed as parents, but are not \n",
+						"  listed themselves so have no parents listed: \n",
+						paste0(
+							taxonNameTable[match(floaters,taxonNameTable[,1]),2],
+							collapse = ", "
+							)
+						)
+					)
+				}
+		}else{
+			floaters <- floatersNew
+			}
+		}
+	pcMat <- apply(pcMat,2,as.character)
+	#
+	# 
+	tree <- parentChild2taxonTree(
+		parentChild = pcMat,
+		tipSet = tipSet,
+		cleanTree = cleanTree)
+	#convert tip.label and node.label to taxon names from taxonNameTable
+	tree$tip.label <- taxonNameTable[
+		match(tree$tip.label, taxonNameTable[,1])
+		,2]
+	tree$node.label <- taxonNameTable[
+		match(tree$node.label, taxonNameTable[,1])
+		,2]
+	tree$parentChild <- pcMat
+	return(tree)
+	}
+		
 	

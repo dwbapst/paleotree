@@ -45,7 +45,8 @@ PBDB API and different vocabularies available from the API.
 }
 \details{
 Data input for \code{taxonSortPBDBocc} are expected to be from version 1.2 API
-with the 'pbdb' vocabulary. However, datasets are passed to internal function \code{translatePBDBocc},
+with the 'pbdb' vocabulary. However, datasets are
+passed to internal function \code{translatePBDBocc},
 which attempts to correct any necessary field names and field contents used by
 \code{taxonSortPBDBocc}.
 
@@ -109,7 +110,7 @@ to NAs, as they may be due to issues
 with using read.csv to convert API-downloaded data.
 }
 \examples{
-
+\donttest{
 
 # getting occurrence data for a genus, sorting it
 # Dicellograptus
@@ -130,6 +131,8 @@ acoOcc <- taxonSortPBDBocc(acoData,
 	rank = "species", onlyFormal = FALSE)
 names(acoOcc)
 
+}
+
 #load example graptolite PBDB occ dataset
 data(graptPBDB)
 
@@ -146,7 +149,8 @@ length(occSpeciesFormal)
 #yes, there are fewer 'formal' graptolite species in the PBDB then genera
 
 #get formal and informal species
-occSpeciesInformal <- taxonSortPBDBocc(graptOccPBDB, 
+occSpeciesInformal <- taxonSortPBDBocc(
+     graptOccPBDB, 
 		rank = "species",
 	 onlyFormal = FALSE)
 length(occSpeciesInformal)
@@ -161,21 +165,24 @@ occSpeciesEverything <- taxonSortPBDBocc(graptOccPBDB,
 		onlyFormal = FALSE, cleanUncertain = FALSE)
 length(occSpeciesEverything)
 
+
+
 }
 \references{
 Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
 application programming interface. \emph{Paleobiology} 42(1):1-7.
 }
 \seealso{
-\code{\link{occData2timeList}}, \code{\link{plotOccData}} and the
-example graptolite dataset at \code{\link{graptPBDB}}
+Occurrence data as commonly used with \code{paleotree} functions can
+be obtained with \code{link{getPBDBocc}}. Occurrence data sorted by
+this function might be used with functions \code{\link{occData2timeList}}
+and  \code{\link{plotOccData}}. Also, see the example graptolite dataset
+at \code{\link{graptPBDB}}
 }
 \author{
-David W. Bapst, but partly inspired by Matthew Clapham's \code{cleanTaxon} 
-(found at
+David W. Bapst, but partly inspired by Matthew Clapham's \code{cleanTaxon} (found at
 \href{https://github.com/mclapham/PBDB-R-scripts/blob/master/taxonClean.R}{this location}
-on github) and
-R package \code{paleobioDB}'s \code{pbdb_temp_range} function (found at
+on github) and R package \code{paleobioDB}'s \code{pbdb_temp_range} function (found at
 \href{https://github.com/ropensci/paleobioDB/blob/master/R/pbdb_temporal_functions.R#L64-178 }{this location} 
 on github.
 }

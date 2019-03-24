@@ -70,7 +70,11 @@ plotOccData(occGenus)
 
 }
 \seealso{
-\code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}} 
+Occurrence data as commonly used with \code{paleotree} functions can
+be obtained with \code{link{getPBDBocc}}, and sorted into taxa by 
+\code{\link{taxonSortPBDBocc}}, and further explored with this function and
+\code{\link{occData2timeList}}. Also, see the example graptolite dataset
+at \code{\link{graptPBDB}}
 and the example graptolite dataset at \code{\link{graptPBDB}}
 }
 \author{

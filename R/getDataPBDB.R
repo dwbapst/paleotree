@@ -9,11 +9,9 @@
 #' for particular clades, or for a list of specific taxa.
 
 #' @details
-#' The
-
-
-
-
+#' In many cases, it might be easier to write your own query - these
+#' functions are only made to make getting data for some very specific
+#' applications in \code{paleotree} easier.
 
 #' @param taxon A single name of a of a higher taxon which you wish to catch
 #' all taxonomic 'children' (included members - i.e. subtaxa) of, from 
@@ -89,10 +87,10 @@
 #' @aliases getCladeTaxaPBDB getSpecificTaxaPBDB
 
 #' @seealso 
-#' See \code{\link{makePBDBtaxonTree}},
-#' \code{\link{makePBDBtaxonTree}},
-#' and \code{\link{plotPhyloPicTree}}.
-
+#' See \code{\link{makePBDBtaxonTree}}, \code{\link{makePBDBtaxonTree}},
+#' and \code{\link{plotPhyloPicTree}} for functions that use taxonomic data.
+#' Occurrence data is sorted by taxon via \code{\link{taxonSortPBDBocc}},
+#' and further utilized \code{\link{occData2timeList}} and  \code{\link{plotOccData}}.
 
 #' @author David W. Bapst
 
@@ -128,10 +126,16 @@
 #' sum(tetrapodData$taxon_rank=="genus")
 #' # should be 26, with all 26 as genera
 #' 
-#' # get some occurrence data
+#' #############################################
+#' # Now let's try getting occurrence data
 #' 
-
-
+#' # getting occurrence data for a genus, sorting it
+#' # Dicellograptus
+#' dicelloData <- getPBDBocc("Dicellograptus")
+#' dicelloOcc2 <- taxonSortPBDBocc(dicelloData, 
+#' 	rank = "species", onlyFormal = FALSE)
+#' names(dicelloOcc2)
+#' 
 #' }
 #' 
 

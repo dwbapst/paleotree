@@ -91,7 +91,9 @@ users of this package - downloading occurrence data, or taxonomic information,
 for particular clades, or for a list of specific taxa.
 }
 \details{
-The
+In many cases, it might be easier to write your own query - these
+functions are only made to make getting data for some very specific
+applications in \code{paleotree} easier.
 }
 \examples{
 \donttest{
@@ -120,7 +122,15 @@ dim(tetrapodData)
 sum(tetrapodData$taxon_rank=="genus")
 # should be 26, with all 26 as genera
 
-# get some occurrence data
+#############################################
+# Now let's try getting occurrence data
+
+# getting occurrence data for a genus, sorting it
+# Dicellograptus
+dicelloData <- getPBDBocc("Dicellograptus")
+dicelloOcc2 <- taxonSortPBDBocc(dicelloData, 
+	rank = "species", onlyFormal = FALSE)
+names(dicelloOcc2)
 
 }
 
@@ -130,9 +140,10 @@ Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
 application programming interface. \emph{Paleobiology} 42(1):1-7.
 }
 \seealso{
-See \code{\link{makePBDBtaxonTree}},
-\code{\link{makePBDBtaxonTree}},
-and \code{\link{plotPhyloPicTree}}.
+See \code{\link{makePBDBtaxonTree}}, \code{\link{makePBDBtaxonTree}},
+and \code{\link{plotPhyloPicTree}} for functions that use taxonomic data.
+Occurrence data is sorted by taxon via \code{\link{taxonSortPBDBocc}},
+and further utilized \code{\link{occData2timeList}} and  \code{\link{plotOccData}}.
 }
 \author{
 David W. Bapst

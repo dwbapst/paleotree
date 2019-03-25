@@ -33,7 +33,7 @@ datasets sorted by \code{\link{taxonSortPBDBocc}} or any data object where occur
 (i.e. age bounds for each occurrence) for different taxa is separated into different elements
 of a named list. 
 
-\subsection{The argument intervalType}{
+\subsection{The Usage of the Argument \code{intervalType}}{
 
 The argument \code{intervalType} controls the algorithm used for obtain first and last interval bounds for
 each taxon, of which there are several to select from:intervalType

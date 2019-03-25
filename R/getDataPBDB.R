@@ -257,9 +257,9 @@ getPBDBocc <- function(taxa,
 	taxa <- paste(unlist(strsplit(taxa,"_")),collapse = "%20")
 	showOccs <- paste(showOccs,collapse = ",")
 	command <- paste0(
-		"http://paleobiodb.org/data1.2/occs/list.txt?base_name = ",
-		taxa,"&show = ",showOccs,        
-		# "&limit = all", # not a command in 1.2
+		"http://paleobiodb.org/data1.2/occs/list.txt?base_name=",
+		taxa,"&show=",showOccs,        
+		# "&limit=all", # not a command in 1.2
 		collapse = "")
 	command <- paste(unlist(strsplit(command,split = " ")),
 		collapse = "%20")

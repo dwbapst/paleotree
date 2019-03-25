@@ -12,7 +12,7 @@
 #' (i.e. age bounds for each occurrence) for different taxa is separated into different elements
 #' of a named list. 
 #' 
-#' \subsection{The argument intervalType}{
+#' \subsection{The Usage of the Argument \code{intervalType}}{
 
 #' 
 #' The argument \code{intervalType} controls the algorithm used for obtain first and last interval bounds for
@@ -143,11 +143,11 @@
 #' @name occData2timeList
 #' @rdname occData2timeList
 #' @export
-occData2timeList <- function(occList,intervalType = "dateRange"){
+occData2timeList <- function(occList, intervalType = "dateRange"){
 		#intervalType = "dateRange"
 	#the following is all original, though inspired by paleobioDB code
 	#check intervalType
-	if(!any(intervalType == c("occRange","dateRange","zoneOverlap"))){
+	if(!any(intervalType == c("occRange", "dateRange", "zoneOverlap"))){
 		stop("intervalType must be one of 'dateRange' or 'occRange' or 'zoneOverlap'")}
 	#get just occurrence data with pullOccListData
 	taxaInt <- pullOccListData(occList)
@@ -208,17 +208,21 @@ pullOccListData <- function(occList){
 		stop("Not all occList entries have same number of columns?")}
 	#will assume all data given in this manner either has columns named "" and ""
 		#or has only two columns
+	ageSelector <- NULL
 	if(any(colnames(exOcc) == "early_age") & any(colnames(exOcc) == "late_age")){
 		ageSelector <- c("early_age","late_age")
- 	}else{
-		if(any(colnames(exOcc) == "eag") & any(colnames(exOcc) == "lag")){
-			if(ncol(exOcc) != 2){
-				ageSelector <- 1:2
-			}else{
-				stop("Data is not a list of two-column matrics *and* lacks named age columns (from the PBDB)")
-				}
+		}
+	if(any(colnames(exOcc) == "eag") & any(colnames(exOcc) == "lag")){
+		ageSelector <- c("eag","lag")
+		}
+	if(any(colnames(exOcc) == "max_ma") & any(colnames(exOcc) == "min_ma")){
+		ageSelector <- c("max_ma","min_ma")
+		}		
+	if(is.null(ageSelector)){
+		if(ncol(exOcc) != 2){
+			ageSelector <- 1:2
 		}else{
-			ageSelector <- c("early_age","late_age")
+			stop("Data is not a list of two-column matrics *and* appears to lack named age columns (from the PBDB)")
 			}
 		}
 	#get intervals in which taxa appear

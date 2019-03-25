@@ -177,8 +177,10 @@ dateTaxonTreePBDB <- function(
 		)
 	# drop if any need to be dropped
 	if(any(dropTips)){
-		message("The following tips did not have resolvable appearance times:\n")
-		message(paste0(taxaTree$tip.label[dropTips],collapse = ", \n"))
+		message(paste0("The following tips did not have resolvable",
+			" appearance times and were dropped:"))
+		message(paste0(taxaTree$tip.label[dropTips],
+			collapse = ", "))
 		taxaTree <- drop.tip(taxaTree,
 			tip = which(dropTips)
 			)
@@ -209,29 +211,21 @@ dateTaxonTreePBDB <- function(
 	###############################################
 	# construct tip+node age vector
 	allAges <- as.numeric(c(tipAges, nodeMaxAges))
+	#print(allAges)
 	#
 	# check ages for NAs
 	taxaNAapps <- is.na(allAges)
 	#
-	if(any(itaxaNAapps)){
+	if(any(taxaNAapps)){
 		namesAllAges <- c(taxaTree$tip.label, taxaTree$node.label)
-		nonappNames <- namesAllAges[itaxaNAapps]
+		nonappNames <- namesAllAges[taxaNAapps]
 		nonappNames <- paste0(nonappNames, collapse = ",\n")
 		stop(paste0("Some ages contain NAs: \n",
 			noappNames))
 		}
 	##########################################
-	# check nodeMaxAges for NAs
-	if(any(is.na(nodeMaxAges))){
-		#print(cbind(taxaTree$node.label,nodeMaxAges))
-		print(
-			
-			)
-		stop("node ages as obtained from PBDB contain NAs??")
-		}
-	##########################################
-	print(taxaTree)
-	print(allAges)
+	#print(taxaTree)
+	#print(allAges)
 	#
 	# get dated tree
 	datedTree <- nodeDates2branchLengths(
@@ -245,10 +239,10 @@ dateTaxonTreePBDB <- function(
 	#################################
 	if(minBranchLen>0){
 		# take care of zero length branches
-		datedTree<-minBranchLength(
+		datedTree <- minBranchLength(
 			tree = datedTree,
 			mbl = minBranchLen)
-		datedTree<-ladderize(datedTree)
+		datedTree <- ladderize(datedTree)
 		#
 		plotName <- paste0(
 			"Dated Phylogeny (",
@@ -259,26 +253,35 @@ dateTaxonTreePBDB <- function(
 		plotName <- "Dated Phylogeny"
 		}
 	#
+	#print("a")
+	#
 	############################################
 	# check that the tree and its root age makes sense
 	checkRootTimeRes <- checkRootTime(datedTree,
 		stopIfFail = TRUE)
 	#################
 	if(plotTree){
-		plot(datedTree, main=plotName,
-			show.node.label=FALSE, cex=0.5)
+		plot(datedTree, 
+			main = plotName,
+			show.node.label = FALSE, 
+			cex = 0.5)
 		axisPhylo()
 		}
 	###################		
 	# output four date taxon ranges for all tip taxa
 		# (for strap or otherwise)	
-	rownames(tipTaxonFourDateRanges) <- taxaTree$tip.label
-	datedTree$tipTaxonFourDateRanges <- tipTaxonFourDateRanges
+	rownames(fourDateRanges) <- taxaTree$tip.label
+	datedTree$tipTaxonFourDateRanges <- fourDateRanges
+	#
+	#print("b")
+	#
 	# output the original taxaDataPBDB
 	datedTree$taxaDataPBDB <- taxaDataPBDB
 	# return
 	return(datedTree)
 	}
+
+
 
 processTaxonAppData <- function(dataPBDB, dropZeroOccurrenceTaxa){
 	#

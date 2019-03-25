@@ -218,8 +218,8 @@ dateTaxonTreePBDB <- function(
 	#
 	if(any(taxaNAapps)){
 		namesAllAges <- c(taxaTree$tip.label, taxaTree$node.label)
-		nonappNames <- namesAllAges[taxaNAapps]
-		nonappNames <- paste0(nonappNames, collapse = ",\n")
+		noappNames <- namesAllAges[taxaNAapps]
+		noappNames <- paste0(noappNames, collapse = ",\n")
 		stop(paste0("Some ages contain NAs: \n",
 			noappNames))
 		}
@@ -272,6 +272,11 @@ dateTaxonTreePBDB <- function(
 		# (for strap or otherwise)	
 	rownames(fourDateRanges) <- taxaTree$tip.label
 	datedTree$tipTaxonFourDateRanges <- fourDateRanges
+	# and ranges used - return deepest and shallowest time
+	datedTree$ranges.used <- fourDateRanges[,
+		c("firstapp_max_ma","lastapp_min_ma")
+		]
+	colnames(datedTree$ranges.used) <- c("FAD", "LAD")
 	#
 	#print("b")
 	#

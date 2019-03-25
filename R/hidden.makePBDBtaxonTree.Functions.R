@@ -366,7 +366,7 @@ getLinneanTaxonTreePBDB <- function(dataTransform, tipSet, cleanTree){
 #   will actually result in an error message.
 
 
-parentChildPBDBOld <- function(dataTransform, tipSet, cleanTree){
+parentChildPBDBOld <- function(dataTransform, tipSet, cleanTree, method, APIversion){
 	dataTransform <- apply(dataTransform, 2, as.character)
 	# need two things: a table of parent-child relationships as IDs
 		#and a look-up table of IDs and taxon names

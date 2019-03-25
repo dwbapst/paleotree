@@ -365,7 +365,9 @@ makePBDBtaxonTree <- function(
 		tree <- parentChildPBDBOld(
 			dataTransform = dataTransform, 
 			tipSet = tipSet,
-			cleanTree = cleanTree
+			cleanTree = cleanTree,
+			method = method, 
+			APIversion = APIversion
 			)
 		}
 	####################

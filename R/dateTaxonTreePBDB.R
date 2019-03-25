@@ -45,6 +45,11 @@
 #' diversification bursts and/or the heterogeneity of fossil preservation, this may
 #' result in confusing polytomies of many terminal taxa with no terminal branch lengths.
 
+#' @param dropZeroOccurrenceTaxa If \code{TRUE}, the default, then extinct taxa
+#' or extinct clades found to have zero occurrences in the Paleobiology Database
+#' are removed. If this option isn't used, the function will likely fail as nodes
+#' or tips with \code{NA} ages listed cannot be processed by \code{parentChild2TaxonTree}.
+
 #' @return
 #' Returns a dated phylogeny of class \code{phylo}, with an additional element
 #' \code{$taxaDataPBDB} added containing the input \code{taxaDataPBDB}, as this might be
@@ -111,6 +116,7 @@
 #' 
 
 
+
 #' @name dateTaxonTreePBDB
 #' @rdname dateTaxonTreePBDB
 #' @export
@@ -119,6 +125,7 @@ dateTaxonTreePBDB <- function(
 		taxaDataPBDB = taxaTree$taxaDataPBDB,
 		minBranchLen = 0,
 		tipTaxonDateUsed = "shallowestAge",
+		dropZeroOccurrenceTaxa = TRUE,
 		plotTree = FALSE){
 	###################################
 	if(!any(colnames(taxaDataPBDB)!="lastapp_min_ma")){
@@ -128,75 +135,110 @@ dateTaxonTreePBDB <- function(
 			"or as a taxaDataPBDB element of taxaTrees"))
 		}
 	############################
-	# replace min & max last appearance ages
-		# with 0 if "is_extant" is "extant"
-	isExtant <- taxaDataPBDB$is_extant == "extant"
 	lastAppTimes <- c("lastapp_min_ma","lastapp_max_ma")
 	firstAppTimes <- c("firstapp_min_ma","firstapp_max_ma")
-	taxaDataPBDB[isExtant, lastAppTimes] <- 0
-	# if both first appearance times for a taxon are NA (no fossil occurrences)
-		# and its extant, put in 0 for its first appearance time
-	hasNAFirstApps <- apply(taxaDataPBDB[,firstAppTimes],1,
-		function(x) is.na(x[1]) & is.na(x[2])
+	#
+	############################################################
+	# 03-24-19
+	# why don't I get all tip and node data simultaneously?
+	#
+	# get node ages
+	nodeNames <- taxaTree$node.label
+	# remove any ".1" in the taxon names
+		# hopefully there aren't any "." in the real taxon names... sigh...
+	nodeNames <- sapply(strsplit(nodeNames,split=".",fixed=TRUE),function(x) x[[1]])
+	# remove nodeNames not in taxaDataPBDB
+	nodeNamesNoMatch <- sapply(nodeNames,function(x) all(x != taxaDataPBDB$taxon_name))
+	if(any(nodeNamesNoMatch)){
+		nodeNames <- nodeNames[nodeNamesNoMatch]
+			# get API URL
+		nodeNames <- paste0(nodeNames, collapse=",")
+		apiAddressNodes <- paste0(
+			"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
+			nodeNames,"&show=app,parent"
+			)
+		# browseURL(apiAddressNodes)
+		nodeData <- read.csv(apiAddressNodes ,
+			stringsAsFactors = FALSE)
+		# combine with taxon data
+			# reducing scope to same columns as nodeData
+		taxaDataReduced <-  taxaDataPBDB[,colnames(nodeData)]
+		combData <- rbind(taxaDataReduced, nodeData)
+		appData <- processTaxonAppData(dataPBDB = combData, 
+			dropZeroOccurrenceTaxa = dropZeroOccurrenceTaxa)
+	}else{
+		appData <- processTaxonAppData(dataPBDB = taxaDataPBDB, 
+			dropZeroOccurrenceTaxa = dropZeroOccurrenceTaxa)
+		}
+	#################
+	# drop tips not in appData
+	dropTips <- sapply(taxaTree$tip.label,
+		function(x) all(x != appData$taxon_name)
 		)
-	taxaDataPBDB[isExtant & hasNAFirstApps, firstAppTimes] <- 0
-	###########################################
-	#hasNAApps <- apply(taxaDataPBDB[,
-	#		c(firstAppTimes,lastAppTimes )
-	#		],
-	#	1, function(x) is.na(x[1]) & is.na(x[2])
-	#	)
-	#taxaDataPBDB$taxon_name[hasNAApps] 	
-	###########################################
+	# drop if any need to be dropped
+	if(any(dropTips)){
+		message("The following tips did not have resolvable appearance times:\n")
+		message(paste0(taxaTree$tip.label[dropTips],collapse = ", \n"))
+		taxaTree <- drop.tip(taxaTree,
+			tip = which(dropTips)
+			)
+		}
+	# now, hopefully, none of the remaining tips/nodes
+		# do not have NA appearance times...
+	###########################
+	# get node max ages
+	nodeMaxAges <- appData$firstapp_max_ma[
+		match(taxaTree$node.label, appData$taxon_name)
+		]
+	# 
+	####################################################
 	# get four date taxon ranges for all tip taxa
 	# match tip-taxa to taxa-data
 		#sort based on tip labels
-	tipMatches <- match(taxaTree$tip.label, taxaDataPBDB$taxon_name)
+	tipMatches <- match(taxaTree$tip.label, appData$taxon_name)
 	#
-	tipTaxonFourDateRanges <- taxaDataPBDB[tipMatches,
-		c(firstAppTimes,lastAppTimes )]
+	fourDateRanges <- appData[tipMatches,
+		c(firstAppTimes,lastAppTimes )]	
 	# select the right tipAges based on tipTaxonDateUsed
-	if(tipTaxonDateUsed == "shallowestAge"){
-		tipAges <- tipTaxonFourDateRanges$lastapp_min_ma
-		}
 	if(tipTaxonDateUsed == "deepestAge"){
-		tipAges <- tipTaxonFourDateRanges$firstapp_max_ma
+		tipAges <- fourDateRanges$firstapp_max_ma
 		}
-	##########################################
-	# check tipAges for NAs
-	if(any(is.na(tipAges))){
-		stop("tip ages as given contain NAs")
+	if(tipTaxonDateUsed == "shallowestAge"){
+		tipAges <- fourDateRanges$lastapp_min_ma
 		}
-	#
-	#############################################
-	# get node ages
-	nodeNames<-paste0(taxaTree$node.label, collapse=",")
-	apiAddressNodes <- paste0(
-		"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
-		nodeNames,"&show=app,parent"
-		)
-	# browseURL(apiAddressNodes)
-	nodeData <- read.csv(apiAddressNodes ,
-		stringsAsFactors = FALSE)
-	# get node max ages
-	nodeMaxAges <- nodeData$firstapp_max_ma[
-		match(taxaTree$node.label, nodeData$taxon_name)]
+	###############################################
 	# construct tip+node age vector
 	allAges <- as.numeric(c(tipAges, nodeMaxAges))
+	#
+	# check ages for NAs
+	taxaNAapps <- is.na(allAges)
+	#
+	if(any(itaxaNAapps)){
+		namesAllAges <- c(taxaTree$tip.label, taxaTree$node.label)
+		nonappNames <- namesAllAges[itaxaNAapps]
+		nonappNames <- paste0(nonappNames, collapse = ",\n")
+		stop(paste0("Some ages contain NAs: \n",
+			noappNames))
+		}
 	##########################################
 	# check nodeMaxAges for NAs
 	if(any(is.na(nodeMaxAges))){
+		#print(cbind(taxaTree$node.label,nodeMaxAges))
+		print(
+			
+			)
 		stop("node ages as obtained from PBDB contain NAs??")
 		}
 	##########################################
-	# get dated tree
 	print(taxaTree)
 	print(allAges)
+	#
+	# get dated tree
 	datedTree <- nodeDates2branchLengths(
 		nodeDates = allAges,
 		tree = taxaTree,
-		allTipsModern = FALSE)
-	#
+		allTipsModern = FALSE
+		)
 	############################################
 	# check that the tree and its root age makes sense
 	#checkRes <- checkRootTime(datedTree)			
@@ -237,3 +279,45 @@ dateTaxonTreePBDB <- function(
 	# return
 	return(datedTree)
 	}
+
+processTaxonAppData <- function(dataPBDB, dropZeroOccurrenceTaxa){
+	#
+	lastAppTimes <- c("lastapp_min_ma","lastapp_max_ma")
+	firstAppTimes <- c("firstapp_min_ma","firstapp_max_ma")
+	##########################################
+	# identify which taxa are extant
+	isExtant <- dataPBDB$is_extant == "extant"	
+	isExtinct <- dataPBDB$is_extant == "extinct"	
+	hasZeroOcc <- (dataPBDB$n_occs == 0)
+	isExtinctAndZeroOcc <- hasZeroOcc & isExtinct
+	#
+	hasNAFirstApps <- apply(
+		dataPBDB[,firstAppTimes], 1,function(x) is.na(x[1]) & is.na(x[2])
+		)	
+	######################################################
+	if(any(isExtant)){
+		# replace min & max last appearance ages
+			# with 0 if "is_extant" is "extant"
+		dataPBDB[isExtant, lastAppTimes] <- 0
+		# if both first appearance times for a taxon are NA (no fossil occurrences)
+			# and its extant, put in 0 for its first appearance time
+		dataPBDB[isExtant & hasNAFirstApps, firstAppTimes] <- 0
+		}
+	######################################################
+	# 
+	if(any(isExtinctAndZeroOcc) & dropZeroOccurrenceTaxa){
+		#message("Some extinct nodes have zero occurrences and thus no age data - these are removed")
+		dataPBDB <- dataPBDB[-which(isExtinctAndZeroOcc),]
+		}
+	###############################
+	# test if any are still NA for all app times
+	#hasNAApps <- apply(dataPBDB[,
+	#		c(firstAppTimes,lastAppTimes )
+	#		],
+	#	1, function(x) is.na(x[1]) & is.na(x[2])
+	#	)
+	#dataPBDB$taxon_name[hasNAApps] 	
+	#
+	return(dataPBDB)
+	}	
+

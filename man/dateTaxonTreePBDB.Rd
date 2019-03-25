@@ -6,7 +6,7 @@
 \usage{
 dateTaxonTreePBDB(taxaTree, taxaDataPBDB = taxaTree$taxaDataPBDB,
   minBranchLen = 0, tipTaxonDateUsed = "shallowestAge",
-  plotTree = FALSE)
+  dropZeroOccurrenceTaxa = TRUE, plotTree = FALSE)
 }
 \arguments{
 \item{taxaTree}{A tree with tip taxon names matching the taxon names
@@ -37,6 +37,11 @@ from the PBDB, i.e. the maximum age constraint for the first appearance. As clos
 related taxa often first occur in the same short interval of geologic time, due to
 diversification bursts and/or the heterogeneity of fossil preservation, this may
 result in confusing polytomies of many terminal taxa with no terminal branch lengths.}
+
+\item{dropZeroOccurrenceTaxa}{If \code{TRUE}, the default, then extinct taxa
+or extinct clades found to have zero occurrences in the Paleobiology Database
+are removed. If this option isn't used, the function will likely fail as nodes
+or tips with \code{NA} ages listed cannot be processed by \code{parentChild2TaxonTree}.}
 
 \item{plotTree}{If \code{TRUE}, the resulting dated tree is plotted.
 This is \code{FALSE} by default.}

@@ -305,12 +305,6 @@ getLinneanTaxonTreePBDB <- function(dataTransform, tipSet, cleanTree){
 	tree$taxonTable <- taxonData
 	return(tree)
 	}
-		
-
-
-
-
-
 	
 	
 #getTaxaIDsDesiredRank<-function(data, rank){

@@ -104,6 +104,16 @@
 #'     # default variables
 #' graptOccPBDB <- getPBDBocc(taxon)
 #' 
+#' # some PBDB people have names that aren't in ASCII
+#'     # but CRAN hates non-ASCII character, sooo...
+#'     # convert using gtools::ASCIIfy 
+#' levels(graptOccPBDB$enterer) <- gtools::ASCIIfy(
+#'      levels(graptOccPBDB$enterer))
+#' levels(graptOccPBDB$authorizer) <- gtools::ASCIIfy(
+#'      levels(graptOccPBDB$authorizer))
+#' levels(graptOccPBDB$modifier) <- gtools::ASCIIfy(
+#'      levels(graptOccPBDB$modifier))
+#' 
 #' graptOccSort <- taxonSortPBDBocc(graptOccPBDB, 
 #'     rank = selectRank,
 #'     onlyFormal = FALSE, 

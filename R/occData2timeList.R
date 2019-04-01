@@ -222,7 +222,7 @@ pullOccListData <- function(occList){
 		if(ncol(exOcc) != 2){
 			ageSelector <- 1:2
 		}else{
-			stop("Data is not a list of two-column matrics *and* appears to lack named age columns (from the PBDB)")
+			stop("Data is not a two-column matrix of ages *and* data does not appear to be a data frame with named age columns (from the PBDB)")
 			}
 		}
 	#get intervals in which taxa appear

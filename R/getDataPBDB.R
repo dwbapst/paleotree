@@ -245,7 +245,7 @@ getPBDBtaxaCSV <- function(requestURL, stopIfMissing=FALSE){
 #' @rdname getDataPBDB 
 #' @export 
 getPBDBocc <- function(taxa, 
-		showOccs = c("class", "classext", "subgenus", "ident")
+		showOccs = c("class", "classext", "subgenus", "ident", "entname")
 		){
 	#############
 	# occs documentation

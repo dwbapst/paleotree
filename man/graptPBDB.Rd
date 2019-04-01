@@ -46,9 +46,6 @@ selectRank <- "genus"
 
 \dontrun{
 
-taxon <- "Pterobranchia"
-selectRank <- "genus"
-
 library(paleotree)
 
 # get taxon data

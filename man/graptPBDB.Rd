@@ -5,12 +5,16 @@
 \alias{graptPBDB}
 \alias{graptOccPBDB}
 \alias{graptTaxaPBDB}
+\alias{graptTimeTree}
+\alias{graptTree}
 \title{Example Occurrence and Taxonomic Datasets of the Graptolithina from the Paleobiology Database}
 \format{The example occurrence dataset (\code{graptOccPBDB}) is a
 \code{data.frame} consisting of 5900 occurrences (rows) and 35 variables (columns).
 The example taxonomy dataset (\code{graptTaxaPBDB}) is a
 \code{data.frame} consisting of 364 formal taxa (rows) and 53 variables (columns).
-Variables are coded in the 'pbdb' vocabulary of the PBDB API v1.2.}
+Variables are coded in the 'pbdb' vocabulary of the PBDB API v1.2.
+Two phylogeny-like objects, an undated taxon-tree, and a dated version
+of the former, are provided as \code{graptTree} and \code{graptTimeTree} respectively.}
 \source{
 See examples for the full R code used to obtain the data from the API.
 You can find the Paleobiology Database at \url{http://paleobiodb.org}
@@ -42,32 +46,51 @@ selectRank <- "genus"
 
 \dontrun{
 
+taxon <- "Pterobranchia"
+selectRank <- "genus"
+
 library(paleotree)
 
 # get taxon data
 	# default variables
-
 graptTaxaPBDB<-getCladeTaxaPBDB(taxon)
 
-graptTree <- makePBDBtaxontree(graptTaxaPBDB,
-				rank = selectRank,
-				cleanDuplicate = TRUE)
+# get the taxon tree
+graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
+		rank = selectRank)
 
 # date the tree using the ranges
 	# provided directly by the PBDB
 graptTimeTree <- dateTaxonTreePBDB(graptTree)
 
 library(strap)
+dev.new(height=6, width=10)
 geoscalePhylo(graptTimeTree, 
-	ages=graptTimeTree$ranges.used)
+	ages=graptTimeTree$ranges.used
+	)
 nodelabels(graptTimeTree$node.label,
+	cex=0.7,
+	adj=c(0.3,0)
+	)
+
+# slice tree at the Mississippian-Pennslyvannian boundary so
+	# the *two* extant genera don't obfuscate the tree
+graptTimeTreePrePenn <- timeSliceTree(
+	ttree = graptTimeTree,
+	sliceTime = 323.2)
+slicedRanges <- graptTimeTree$ranges.used
+slicedRanges [slicedRanges < 323.2] <- 323.2
+dev.new(height=6, width=10)
+geoscalePhylo(graptTimeTreePrePenn, 
+	ages = slicedRanges 
+	)
+nodelabels(graptTimeTreePrePenn$node.label,
 	cex=0.7,
 	adj=c(0.3,0)
 	)
 
 # we could also date the tree using the occurrence data
 	# default variables
-
 graptOccPBDB <- getPBDBocc(taxon)
 
 graptOccSort <- taxonSortPBDBocc(graptOccPBDB, 
@@ -84,22 +107,24 @@ graptTimeTreeFromOcc <- bin_timePaleoPhy(
 	type = "mbl",
 	vartime = 3)
   
-library(strap)
-geoscalePhylo(
-	graptTimeTreeFromOcc, 
-	ages = graptTimeTreeFromOcc$ranges.used)
-nodelabels(
-	graptTimeTreeFromOcc$node.label,
-	cex = 0.7,
-	adj = c(0.3,0)
+plot(graptTimeTreeFromOcc, show.tip.label=FALSE)
+axisPhylo()
+
+# don't need to slice tree because extant-only taxa were dropped
+dev.new(height=6, width=10)
+geoscalePhylo(graptTimeTreeFromOcc, 
+	ages=graptTimeTreeFromOcc$ranges.used
+	)
+nodelabels(graptTimeTreeFromOcc$node.label,
+	cex=0.7,
+	adj=c(0.3,0)
 	)
 
 save(graptOccPBDB,
 		graptTaxaPBDB,
 		graptTree,
-	graptTimeTree,
-	file = "graptPBDB.rdata")
-
+		graptTimeTree,
+		file = "graptPBDB.rdata")
 }
 
 # load archived example data

@@ -158,12 +158,17 @@ dateTaxonTreePBDB <- function(
 			nodeNames,"&show=app,parent"
 			)
 		# browseURL(apiAddressNodes)
-		nodeData <- read.csv(apiAddressNodes ,
+		nodeData <- read.csv(apiAddressNodes,
 			stringsAsFactors = FALSE)
 		# combine with taxon data
 			# reducing scope to same columns as nodeData
-		taxaDataReduced <-  taxaDataPBDB[,colnames(nodeData)]
-		combData <- rbind(taxaDataReduced, nodeData)
+				#print(colnames(nodeData))
+				#print(colnames(taxaDataPBDB))
+		sharedColNames <- intersect(colnames(nodeData), colnames(taxaDataPBDB))
+		taxaDataReduced <-  taxaDataPBDB[,sharedColNames]
+		nodeDataReduced <- nodeData[,sharedColNames]
+		combData <- rbind(taxaDataReduced, nodeDataReduced)
+		#
 		appData <- processTaxonAppData(dataPBDB = combData, 
 			dropZeroOccurrenceTaxa = dropZeroOccurrenceTaxa)
 	}else{

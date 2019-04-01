@@ -49,73 +49,74 @@
 #' @docType data
 
 #' @examples
-#' 
-#' 
 #' # let's look for pterobranch genera
-#'    # pterobranchs are the larger group containing graptolites
+#'     # pterobranchs are the larger group containing graptolites
 #' 
 #' taxon <- "Pterobranchia"
 #' selectRank <- "genus"
 #' 
 #' \dontrun{
-#' 
 #' library(paleotree)
 #' 
 #' # get taxon data
-#' 	# default variables
+#'     # default variables
 #' graptTaxaPBDB<-getCladeTaxaPBDB(taxon)
 #' 
 #' # get the taxon tree
 #' graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
-#' 		rank = selectRank)
+#'     rank = selectRank
+#'     )
 #' 
 #' # date the tree using the ranges
-#' 	# provided directly by the PBDB
+#'     # provided directly by the PBDB
 #' graptTimeTree <- dateTaxonTreePBDB(graptTree)
 #' 
 #' library(strap)
 #' dev.new(height=6, width=10)
 #' geoscalePhylo(graptTimeTree, 
-#' 	ages=graptTimeTree$ranges.used
-#' 	)
+#'     ages=graptTimeTree$ranges.used
+#'     )
 #' nodelabels(graptTimeTree$node.label,
-#' 	cex=0.7,
-#' 	adj=c(0.3,0)
-#' 	)
+#'     cex=0.7,
+#'     adj=c(0.3,0)
+#'     )
 #' 
 #' # slice tree at the Mississippian-Pennslyvannian boundary so
-#' 	# the *two* extant genera don't obfuscate the tree
+#'     # the *two* extant genera don't obfuscate the tree
 #' graptTimeTreePrePenn <- timeSliceTree(
-#' 	ttree = graptTimeTree,
-#' 	sliceTime = 323.2)
+#'     ttree = graptTimeTree,
+#'     sliceTime = 323.2
+#'     )
 #' slicedRanges <- graptTimeTree$ranges.used
 #' slicedRanges [slicedRanges < 323.2] <- 323.2
+#'
+#' # plot it!
 #' dev.new(height=6, width=10)
 #' geoscalePhylo(graptTimeTreePrePenn, 
-#' 	ages = slicedRanges 
-#' 	)
+#'     ages = slicedRanges 
+#'     )
 #' nodelabels(graptTimeTreePrePenn$node.label,
-#' 	cex=0.7,
-#' 	adj=c(0.3,0)
-#' 	)
+#'     cex=0.7,
+#'     adj=c(0.3,0)
+#'     )
 #' 
 #' # we could also date the tree using the occurrence data
-#' 	# default variables
+#'     # default variables
 #' graptOccPBDB <- getPBDBocc(taxon)
 #' 
 #' graptOccSort <- taxonSortPBDBocc(graptOccPBDB, 
-#' 			rank = selectRank,
-#' 			onlyFormal = FALSE, 
-#' 			cleanUncertain = FALSE)
+#'     rank = selectRank,
+#'     onlyFormal = FALSE, 
+#'     cleanUncertain = FALSE)
 #' 
 #' graptTimeList <- occData2timeList(occList = graptOccSort)
 #' 
 #' graptTimeTreeFromOcc <- bin_timePaleoPhy(
-#' 	graptTree,
-#' 	timeList = graptTimeList,
-#' 	nonstoch.bin = TRUE,
-#' 	type = "mbl",
-#' 	vartime = 3)
+#'     graptTree,
+#'     timeList = graptTimeList,
+#'     nonstoch.bin = TRUE,
+#'     type = "mbl",
+#'     vartime = 3)
 #'   
 #' plot(graptTimeTreeFromOcc, show.tip.label=FALSE)
 #' axisPhylo()
@@ -123,18 +124,20 @@
 #' # don't need to slice tree because extant-only taxa were dropped
 #' dev.new(height=6, width=10)
 #' geoscalePhylo(graptTimeTreeFromOcc, 
-#' 	ages=graptTimeTreeFromOcc$ranges.used
-#' 	)
+#'     ages=graptTimeTreeFromOcc$ranges.used
+#' 	   )
 #' nodelabels(graptTimeTreeFromOcc$node.label,
-#' 	cex=0.7,
-#' 	adj=c(0.3,0)
-#' 	)
+#'     cex=0.7,
+#' 	   adj=c(0.3,0)
+#' 	   )
+#' 
+#' graphics.off()
 #' 
 #' save(graptOccPBDB,
-#' 		graptTaxaPBDB,
-#' 		graptTree,
-#' 		graptTimeTree,
-#' 		file = "graptPBDB.rdata")
+#'      graptTaxaPBDB,
+#'      graptTree,
+#'      graptTimeTree,
+#'      file = "graptPBDB.rdata")
 #' }
 #' 
 #' # load archived example data
@@ -148,12 +151,14 @@
 #' # I *sort of* apologize for using pie charts.
 #' 
 #' # Let's look at age resolution of these occurrences
-#' hist(graptOccPBDB$early_age - graptOccPBDB$late_age,
-#' 		main = "Age Resolution of Occurrences",
-#'		xlab = "Ma")
+#' hist(graptOccPBDB$max_ma - graptOccPBDB$min_ma,
+#'     main = "Age Resolution of Occurrences",
+#'     xlab = "Ma")
 #' 
-#' #distribution of taxa among taxonomic ranks
+#' # use table to calculate distribution 
+#'     #of taxa among taxonomic ranks
 #' table(graptTaxaPBDB$taxon_rank)
+#' 
 #' barplot(table(graptTaxaPBDB$taxon_rank))
 #' 
 NULL

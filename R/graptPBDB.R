@@ -64,7 +64,7 @@
 #' 
 #' # get the taxon tree
 #' graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
-#'     rank = selectRank
+#'     rankTaxon = selectRank
 #'     )
 #' 
 #' # date the tree using the ranges

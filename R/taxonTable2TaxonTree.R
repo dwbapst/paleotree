@@ -52,7 +52,7 @@
 #' @name taxonTable2taxonTree
 #' @rdname taxonTable2taxonTree
 #' @export
-taxonTable2taxonTree <- function(taxonTable,cleanTree = TRUE){
+taxonTable2taxonTree <- function(taxonTable, cleanTree = TRUE){
 	# taxonTable <- taxonData
 	#CHECKS
 	if(length(dim(taxonTable)) != 2 | !is.character(taxonTable)){

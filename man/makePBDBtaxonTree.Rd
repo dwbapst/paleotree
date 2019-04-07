@@ -5,7 +5,7 @@
 \alias{plotTaxaTreePBDB}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
-makePBDBtaxonTree(taxaDataPBDB, rank, method = "parentChild",
+makePBDBtaxonTree(taxaDataPBDB, rankTaxon, method = "parentChild",
   tipSet = NULL, cleanTree = TRUE, annotatedDuplicateNames = TRUE,
   APIversion = "1.2")
 
@@ -20,7 +20,7 @@ as \code{accepted_name} is not available in API v1.1, the resulting
 tree will have a taxon's *original* name and not
 any formally updated name.}
 
-\item{rank}{The selected taxon rank; must be one of 'species',
+\item{rankTaxon}{The selected taxon rank; must be one of 'species',
 'genus', 'family', 'order', 'class' or 'phylum'.}
 
 \item{method}{Controls which algorithm is used for calculating
@@ -98,7 +98,7 @@ with (\code{plotTaxaTreePBDB} plots phylogenies as non-ultrametric,
 not as a cladogram with aligned tips).}
 }
 \value{
-A phylogeny of class \code{phylo}, where each tip is a taxon of the given 'rank'. See additional details
+A phylogeny of class \code{phylo}, where each tip is a taxon of the given \code{rankTaxon}. See additional details
 regarding branch lengths can be found in the sub-algorithms used to create the taxon-tree by this function:
 \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}.
 
@@ -148,28 +148,19 @@ data(graptPBDB)
 #get the taxon tree: Linnean method
 graptTreeLinnean <- makePBDBtaxonTree(
     taxaDataPBDB = graptTaxaPBDB,
-    rank = "genus",
+    rankTaxon = "genus",
     method = "Linnean")
 
 #get the taxon tree: parentChild method
 graptTreeParentChild <- makePBDBtaxonTree(
     taxaDataPBDB = graptTaxaPBDB,
-    rank = "genus",
+    rankTaxon = "genus",
     method = "parentChild")
 
-# plot it!
-# let's make a simple helper function
-   # for plotting these taxon trees
-plotPBDBtaxonTree <- function(tree){
-   plot(tree,show.tip.label = FALSE,
-       no.margin = TRUE,edge.width = 0.35)
-   nodelabels(tree$node.label,adj = c(0,1/2))
-	  }
+# let's plot these and compare them! 
+plotTaxaTreePBDB(graptTreeParentChild)
 
-
-plotPBDBtaxonTree(graptTreeParentChild)
-
-plotPBDBtaxonTree(graptTreeLinnean)
+plotTaxaTreePBDB(graptTreeLinnean)
 
 
 ####################################################
@@ -179,27 +170,27 @@ plotPBDBtaxonTree(graptTreeLinnean)
 conoData <- getCladeTaxaPBDB("Conodonta")
 conoTree <- makePBDBtaxonTree(
     taxaDataPBDB = conoData,
-    rank = "genus",
+    rankTaxon = "genus",
     method = "parentChild")
 # plot it!
-plotPBDBtaxonTree(conoTree)
+plotTaxaTreePBDB(conoTree)
 
 #asaphid trilobites
 asaData <- getCladeTaxaPBDB("Asaphida")
 asaTree <- makePBDBtaxonTree(
     taxaDataPBDB = asaData,
-    rank = "genus",
+    rankTaxon = "genus",
     method = "parentChild")
 # plot it!
-plotPBDBtaxonTree(asaTree)
+plotTaxaTreePBDB(asaTree)
 
 #Ornithischia
 ornithData <- getCladeTaxaPBDB("Ornithischia")
 ornithTree <- makePBDBtaxonTree(
     taxaDataPBDB = ornithData,
-    rank = "genus",
+    rankTaxon = "genus",
     method = "parentChild")
-plotPBDBtaxonTree(ornithTree)
+plotTaxaTreePBDB(ornithTree)
 
 #try Linnean
 #need to drop repeated taxon first: Hylaeosaurus
@@ -207,18 +198,18 @@ findHylaeo <- which(ornithData[,"taxon_name"] == "Hylaeosaurus")
 # remove the first Hylaeosaurus
 ornithData <- ornithData[-(findHylaeo[1]),]
 ornithTree <- makePBDBtaxonTree(ornithData,
-    rank = "genus",
+    rankTaxon = "genus",
     method = "Linnean")
-plotPBDBtaxonTree(ornithTree)
+plotTaxaTreePBDB(ornithTree)
 
 ########################
 #Rhynchonellida
 rynchData <- getCladeTaxaPBDB("Rhynchonellida")
 rynchTree <- makePBDBtaxonTree(
     taxaDataPBDB = rynchData,
-    rank = "genus",
+    rankTaxon = "genus",
     method = "parentChild")
-plotPBDBtaxonTree(rynchTree)
+plotTaxaTreePBDB(rynchTree)
 
 #some of these look pretty messy!
 

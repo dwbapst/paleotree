@@ -35,7 +35,7 @@
 #' tree will have a taxon's *original* name and not
 #' any formally updated name.
 
-#' @param rank The selected taxon rank; must be one of 'species',
+#' @param rankTaxon The selected taxon rank; must be one of 'species',
 #' 'genus', 'family', 'order', 'class' or 'phylum'.
 
 #' @param cleanTree When \code{TRUE} (the default), the tree is run through a series of
@@ -115,7 +115,7 @@
 #' not as a cladogram with aligned tips).
 
 #' @return
-#' A phylogeny of class \code{phylo}, where each tip is a taxon of the given 'rank'. See additional details
+#' A phylogeny of class \code{phylo}, where each tip is a taxon of the given \code{rankTaxon}. See additional details
 #' regarding branch lengths can be found in the sub-algorithms used to create the taxon-tree by this function:
 #' \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}.
 #' 
@@ -161,28 +161,19 @@
 #' #get the taxon tree: Linnean method
 #' graptTreeLinnean <- makePBDBtaxonTree(
 #'     taxaDataPBDB = graptTaxaPBDB,
-#'     rank = "genus",
+#'     rankTaxon = "genus",
 #'     method = "Linnean")
 #' 
 #' #get the taxon tree: parentChild method
 #' graptTreeParentChild <- makePBDBtaxonTree(
 #'     taxaDataPBDB = graptTaxaPBDB,
-#'     rank = "genus",
+#'     rankTaxon = "genus",
 #'     method = "parentChild")
 #' 
-#' # plot it!
-#' # let's make a simple helper function
-#'    # for plotting these taxon trees
-#' plotPBDBtaxonTree <- function(tree){
-#'    plot(tree,show.tip.label = FALSE,
-#'        no.margin = TRUE,edge.width = 0.35)
-#'    nodelabels(tree$node.label,adj = c(0,1/2))
-#' 	  }
+#' # let's plot these and compare them! 
+#' plotTaxaTreePBDB(graptTreeParentChild)
 #' 
-#' 
-#' plotPBDBtaxonTree(graptTreeParentChild)
-#' 
-#' plotPBDBtaxonTree(graptTreeLinnean)
+#' plotTaxaTreePBDB(graptTreeLinnean)
 #' 
 #' 
 #' ####################################################
@@ -192,27 +183,27 @@
 #' conoData <- getCladeTaxaPBDB("Conodonta")
 #' conoTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = conoData,
-#'     rank = "genus",
+#'     rankTaxon = "genus",
 #'     method = "parentChild")
 #' # plot it!
-#' plotPBDBtaxonTree(conoTree)
+#' plotTaxaTreePBDB(conoTree)
 #' 
 #' #asaphid trilobites
 #' asaData <- getCladeTaxaPBDB("Asaphida")
 #' asaTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = asaData,
-#'     rank = "genus",
+#'     rankTaxon = "genus",
 #'     method = "parentChild")
 #' # plot it!
-#' plotPBDBtaxonTree(asaTree)
+#' plotTaxaTreePBDB(asaTree)
 #' 
 #' #Ornithischia
 #' ornithData <- getCladeTaxaPBDB("Ornithischia")
 #' ornithTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = ornithData,
-#'     rank = "genus",
+#'     rankTaxon = "genus",
 #'     method = "parentChild")
-#' plotPBDBtaxonTree(ornithTree)
+#' plotTaxaTreePBDB(ornithTree)
 #' 
 #' #try Linnean
 #' #need to drop repeated taxon first: Hylaeosaurus
@@ -220,18 +211,18 @@
 #' # remove the first Hylaeosaurus
 #' ornithData <- ornithData[-(findHylaeo[1]),]
 #' ornithTree <- makePBDBtaxonTree(ornithData,
-#'     rank = "genus",
+#'     rankTaxon = "genus",
 #'     method = "Linnean")
-#' plotPBDBtaxonTree(ornithTree)
+#' plotTaxaTreePBDB(ornithTree)
 #' 
 #' ########################
 #' #Rhynchonellida
 #' rynchData <- getCladeTaxaPBDB("Rhynchonellida")
 #' rynchTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = rynchData,
-#'     rank = "genus",
+#'     rankTaxon = "genus",
 #'     method = "parentChild")
-#' plotPBDBtaxonTree(rynchTree)
+#' plotTaxaTreePBDB(rynchTree)
 #' 
 #' #some of these look pretty messy!
 #' 
@@ -239,12 +230,25 @@
 #' 
 
 
+ 
+# # plot it!
+# # let's make a simple helper function
+#    # for plotting these taxon trees
+# plotPBDBtaxonTree <- function(tree){
+#    plot(tree,show.tip.label = FALSE,
+#        no.margin = TRUE,edge.width = 0.35)
+#    nodelabels(tree$node.label,adj = c(0,1/2))
+# 	  }
+# 
+
+
+
 
 #' @name makePBDBtaxonTree
 #' @rdname makePBDBtaxonTree
 #' @export
 makePBDBtaxonTree <- function(
-					taxaDataPBDB, rank,
+					taxaDataPBDB, rankTaxon,
 					method = "parentChild", #solveMissing = NULL,
 					tipSet = NULL, 
 					cleanTree = TRUE,
@@ -253,10 +257,10 @@ makePBDBtaxonTree <- function(
 	############################################################
 	############################################################
 	# library(paleotree);data(graptPBDB);
-	# taxaDataPBDB <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
-	# taxaDataPBDB <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
-	# taxaDataPBDB <- graptTaxaPBDB; rank = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
-	# taxaDataPBDB <- graptTaxaPBDB; rank = "genus"; method = "Linnean"; 
+	# taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
+	# taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
+	# taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
+	# taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "Linnean"; 
 	#
 	#CHECKS
 	if(length(method) != 1 | !is.character(method)){
@@ -276,12 +280,12 @@ makePBDBtaxonTree <- function(
 	if(!is(taxaDataPBDB,"data.frame")){
 		stop("taxaDataPBDB isn't a data.frame")
 		}
-	if(length(rank) != 1 | !is.character(rank)){
-		stop("rank must be a single character value")
+	if(length(rankTaxon) != 1 | !is.character(rankTaxon)){
+		stop("rankTaxon must be a single character value")
 		}
 	if(!any(sapply(c("species","genus","family","order","class","phylum"),
-			function(x) x == rank))){
-		stop("rank must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")
+			function(x) x == rankTaxon))){
+		stop("rankTaxon must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")
 		}
 	#
 	#########################################
@@ -308,8 +312,8 @@ makePBDBtaxonTree <- function(
 		#
 		#######################################
 		# NOW FILTER OUT TIP TAXA WE WANT
-		#tipIDs <- getTaxaIDsDesiredRank(data=dataTransform, rank=rank)
-		tipIDs <- dataTransform$taxon_no[dataTransform$taxon_rank==rank]
+		#tipIDs <- getTaxaIDsDesiredRank(data=dataTransform, rank=rankTaxon)
+		tipIDs <- dataTransform$taxon_no[dataTransform$taxon_rank==rankTaxon]
 		# figure out which taxon numbers match tip IDs
 		whichTip <- match(tipIDs, parData$taxon_no)
 		#
@@ -356,7 +360,8 @@ makePBDBtaxonTree <- function(
 		tree <- getLinneanTaxonTreePBDB(
 			dataTransform = dataTransform, 
 			tipSet = tipSet,
-			cleanTree = cleanTree
+			cleanTree = cleanTree,
+			rankTaxon = rankTaxon
 			)
 		}
 	#########

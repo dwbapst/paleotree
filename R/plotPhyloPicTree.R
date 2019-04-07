@@ -204,7 +204,7 @@
 #' 	"Nemagraptus", "Panthera", "Anomalocaris")
 #' 
 #' data <-getSpecificTaxaPBDB(taxaAnimals)
-#' tree <- makePBDBtaxonTree(data, rank = "genus") 
+#' tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
 #' 
 #' plotPhyloPicTree(tree = tree)
 #' 
@@ -296,7 +296,7 @@
 #' 
 #' data <-getSpecificTaxaPBDB(tetrapodList)
 #' 
-#' tree <- makePBDBtaxonTree(data, rank = "genus")
+#' tree <- makePBDBtaxonTree(data, rankTaxon = "genus")
 #' 
 #' plotPhyloPicTree(tree = tree)
 #' 
@@ -334,7 +334,7 @@
 #' 	"Megatheriidae", "Metasequoia", "Aedes", "Panthera", "Megalonyx")
 #' 
 #' data <-getSpecificTaxaPBDB(taxaSeventyEight)
-#' tree <- makePBDBtaxonTree(data, rank = "genus") 
+#' tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
 #' 
 #' timeTree <- dateTaxonTreePBDB(tree,
 #'   minBranchLen = 10)

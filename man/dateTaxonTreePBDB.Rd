@@ -78,7 +78,7 @@ taxaAnimals<-c("Archaeopteryx", "Eldredgeops",
 	"Nemagraptus", "Panthera", "Anomalocaris")
 
 data <-getSpecificTaxaPBDB(taxaAnimals)
-tree <- makePBDBtaxonTree(data, rank = "genus") 
+tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
 
 #get the ranges 
 timeTree <- dateTaxonTreePBDB(tree)

@@ -51,7 +51,7 @@ graptTaxaPBDB<-getCladeTaxaPBDB(taxon)
 
 # get the taxon tree
 graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
-    rank = selectRank
+    rankTaxon = selectRank
     )
 
 # date the tree using the ranges
@@ -90,6 +90,16 @@ nodelabels(graptTimeTreePrePenn$node.label,
 # we could also date the tree using the occurrence data
     # default variables
 graptOccPBDB <- getPBDBocc(taxon)
+
+# some PBDB people have names that aren't in ASCII
+    # but CRAN hates non-ASCII character, sooo...
+    # convert using gtools::ASCIIfy 
+levels(graptOccPBDB$enterer) <- gtools::ASCIIfy(
+     levels(graptOccPBDB$enterer))
+levels(graptOccPBDB$authorizer) <- gtools::ASCIIfy(
+     levels(graptOccPBDB$authorizer))
+levels(graptOccPBDB$modifier) <- gtools::ASCIIfy(
+     levels(graptOccPBDB$modifier))
 
 graptOccSort <- taxonSortPBDBocc(graptOccPBDB, 
     rank = selectRank,

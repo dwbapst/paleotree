@@ -138,8 +138,16 @@ getAllParents<-function(
 	###############################################
 	parData<-parseParentPBDBData(inputData)
 	noParentMatch<-findNoParentMatch(parData)
+	floatingParentNumOld <- NA
 	while(sum(noParentMatch)>1){
 		floatingParentNum <- unique(parData$parent_no[noParentMatch])
+		# checks
+		if(identical(floatingParentNumOld, floatingParentNum)){
+			stop("Some parents not traceable - PBDB not returning single common ancestor by tracing parents")
+		}else{
+			floatingParentNumOld <- floatingParentNum
+			}
+		#
 		dataNew <- queryMissingParents(floatingParentNum, status=status)
 		# add new parents to the top of the matrix 
 			# so if duplicated names are annotated, its the originals that get annotated
@@ -257,7 +265,7 @@ subsetParDataPBDB <- function(subsetNum,parData){
 
 
 
-getLinneanTaxonTreePBDB <- function(dataTransform, tipSet, cleanTree){
+getLinneanTaxonTreePBDB <- function(dataTransform, tipSet, cleanTree, rankTaxon){
 	#########
 	dataTransform <- apply(dataTransform, 2, as.character)
 	#Check if show = class was used
@@ -268,10 +276,10 @@ getLinneanTaxonTreePBDB <- function(dataTransform, tipSet, cleanTree){
 	if(!is.null(tipSet)){
 		message("Linnean taxon-tree option selected, argument 'tipSet' is ignored")
 		}
-	#now check and return an error if duplicate taxa of selected rank
+	#now check and return an error if duplicate taxa of selected rank (rankTaxon)
 	nDup <- sapply(nrow(dataTransform),function(x)
 		sum(dataTransform[,"taxon_name"] == dataTransform[x,"taxon_name"])>1
-		 & dataTransform[x,"taxon_rank"] == rank
+		 & dataTransform[x,"taxon_rank"] == rankTaxon
 		)
 	if(any(nDup)){
 		stop(
@@ -284,8 +292,8 @@ getLinneanTaxonTreePBDB <- function(dataTransform, tipSet, cleanTree){
 				)
 			)
 		}
-	#filter on rank
-	dataTransform <- dataTransform[dataTransform[,"taxon_rank"] == rank,]
+	#filter on rankTaxon
+	dataTransform <- dataTransform[dataTransform[,"taxon_rank"] == rankTaxon,]
 	#
 	#get the taxonomic fields you want
 	#from API documentation: "phylum","class","order","family","genus"  

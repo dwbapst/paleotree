@@ -186,7 +186,7 @@ taxaAnimals<-c("Archaeopteryx", "Eldredgeops",
 	"Nemagraptus", "Panthera", "Anomalocaris")
 
 data <-getSpecificTaxaPBDB(taxaAnimals)
-tree <- makePBDBtaxonTree(data, rank = "genus") 
+tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
 
 plotPhyloPicTree(tree = tree)
 
@@ -278,7 +278,7 @@ tetrapodList<-c("Archaeopteryx", "Columba", "Ectopistes",
 
 data <-getSpecificTaxaPBDB(tetrapodList)
 
-tree <- makePBDBtaxonTree(data, rank = "genus")
+tree <- makePBDBtaxonTree(data, rankTaxon = "genus")
 
 plotPhyloPicTree(tree = tree)
 
@@ -316,7 +316,7 @@ taxaSeventyEight <- c(
 	"Megatheriidae", "Metasequoia", "Aedes", "Panthera", "Megalonyx")
 
 data <-getSpecificTaxaPBDB(taxaSeventyEight)
-tree <- makePBDBtaxonTree(data, rank = "genus") 
+tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
 
 timeTree <- dateTaxonTreePBDB(tree,
   minBranchLen = 10)

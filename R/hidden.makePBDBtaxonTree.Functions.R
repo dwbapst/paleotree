@@ -1,7 +1,10 @@
 # hidden functions for used with makePBDBtaxonTree
 	
-
-translatePBDBtaxa <- function(taxaDataPBDB){
+translatePBDBtaxa <- function(taxaDataPBDB, convertAccepted = TRUE){
+		# if convertAccepted is TRUE, then the taxon name and taxon no will be replaced
+			# with the accepted name and no for that taxon
+			# this is NOT disirable for trying to trace parents in a set of taxa
+	#################
 	# Do some translation
 	#need to replace any empty string values with NAs (due perhaps to use of read.csv with the API)
 	taxaDataPBDB[taxaDataPBDB == ""] <- NA
@@ -35,19 +38,24 @@ translatePBDBtaxa <- function(taxaDataPBDB){
 		colnames(taxaDataPBDB)[colnames(taxaDataPBDB) == "rank"] <- "taxon_rank"
 		}	
 	#
-	if(any(colnames(taxaDataPBDB) == "accepted_name")){
-		#if 1.2 and there is an accepted_name column..
-			#fill empty accepted_name values with taxon_name
-		nameFormal <- taxaDataPBDB[,"accepted_name"]
-		nameFormal[is.na(nameFormal)] <- as.character(taxaDataPBDB[is.na(nameFormal),"taxon_name"])
-		#replace taxon_name
-		taxaDataPBDB[,"taxon_name"] <- nameFormal
-		#
-		#replace taxon_no with accepted_no
-		taxNum <- taxaDataPBDB[,"accepted_no"]
-		taxNum[is.na(taxNum)] <- as.character(taxaDataPBDB[is.na(taxNum),"taxon_no"])	
-		taxaDataPBDB[,"taxon_no"] <- taxNum			
-		#
+	if(convertAccepted){
+		# if convertAccepted is TRUE, then the taxon name and taxon no will be replaced
+			# with the accepted name and no for that taxon
+			# this is NOT disirable for trying to trace parents in a set of taxa
+		if(any(colnames(taxaDataPBDB) == "accepted_name")){
+			#if 1.2 and there is an accepted_name column..
+				#fill empty accepted_name values with taxon_name
+			nameFormal <- taxaDataPBDB[,"accepted_name"]
+			nameFormal[is.na(nameFormal)] <- as.character(taxaDataPBDB[is.na(nameFormal),"taxon_name"])
+			#replace taxon_name
+			taxaDataPBDB[,"taxon_name"] <- nameFormal
+			#
+			#replace taxon_no with accepted_no
+			taxNum <- taxaDataPBDB[,"accepted_no"]
+			taxNum[is.na(taxNum)] <- as.character(taxaDataPBDB[is.na(taxNum),"taxon_no"])	
+			taxaDataPBDB[,"taxon_no"] <- taxNum			
+			#
+			}
 		}
 	if(any(colnames(taxaDataPBDB)=="senpar_no")){
 		#if this is OLD v1.2 taxaDataPBDB, and there is a senpar_no column
@@ -85,7 +93,8 @@ convertParentChildMatNames <- function(taxID, parData){
 	
 queryMissingParents <- function(taxaID,
 		APIversion = "1.2",
-		status = "all"){
+		status = "all",
+		convertAccepted = FALSE){
 	# find missing parents by access API
 	#
 	# drop Eukarya, as it won't return if status = senior under 1.1
@@ -107,12 +116,14 @@ queryMissingParents <- function(taxaID,
 				)
 			)
 		}
-	floatData <- translatePBDBtaxa(floatData)
+	# if convertAccepted is TRUE, then the taxon name and taxon no will be replaced
+		# with the accepted name and no for that taxon
+		# this is NOT disirable for trying to trace parents in a set of taxa
+	floatData <- translatePBDBtaxa(floatData, convertAccepted = convertAccepted)
 	#parse down to just taxon_name, taxon_no, parent_no
 	floatData <- parseParentPBDBData(floatData)
 	return(floatData)
 	}
-
 
 parseParentPBDBData <- function(parentData){
 	#parse down to just taxon_name, taxon_no, parent_no
@@ -128,27 +139,70 @@ parseParentPBDBData <- function(parentData){
 		taxon_no = as.numeric(parentData$taxon_no)
 		)
 	rownames(result) <- NULL
+	# 
+	# check that no taxa are their own parent
+	checkSelfParent <- (result$parent_no == result$taxon_no)
+	if(any(checkSelfParent)){
+		parMatch <- paste0(result$taxon_name, 
+			" (", result$taxon_no,")")
+		parMatch <- paste0(parMatch[checkSelfParent],
+			collapse = ", ")
+		stop(paste0("The following taxa (with taxon_no) are their own parents:\n",
+			parMatch))
+		}
+	#
 	return(result)
+	}
+	
+findNoParentMatch<-function(parData){
+	res <- is.na(match(parData$parent_no, parData$taxon_no))
+	return(res)
 	}
 
 getAllParents<-function(
 		inputData, 
 		status, 
-		annotatedDuplicateNames = TRUE){
+		annotatedDuplicateNames = TRUE,
+		convertAccepted = TRUE){
 	###############################################
 	parData<-parseParentPBDBData(inputData)
 	noParentMatch<-findNoParentMatch(parData)
 	floatingParentNumOld <- NA
 	while(sum(noParentMatch)>1){
+		# get floating parent taxon numbers
 		floatingParentNum <- unique(parData$parent_no[noParentMatch])
+		#
 		# checks
 		if(identical(floatingParentNumOld, floatingParentNum)){
-			stop("Some parents not traceable - PBDB not returning single common ancestor by tracing parents")
+			if(convertAccepted){
+				# well try turning convertAccepted to FALSE
+				convertAccepted <- FALSE
+			}else{
+				#oh, its already false? eh... then give up
+				dataUrlRef <- paste0("http://paleobiodb.org/data",1.2,
+					"/taxa/list.txt?taxon_id=",paste0(floatingParentNum,collapse=","),
+					"&rel=exact&status=",status,"&vocab=pbdb"
+					)
+				print(dataNew)
+				stop(paste0(
+					"PBDB not returning single common ancestor by tracing parents.\n",
+					"Following floating parent numbers are repeated:\n",
+					paste0(floatingParentNum,collapse=", "),
+					"\nThese were not resolved with the new data (printed above).",
+					"\nCheck the following URL:\n",dataUrlRef
+					))				
+				}
+
 		}else{
 			floatingParentNumOld <- floatingParentNum
 			}
 		#
-		dataNew <- queryMissingParents(floatingParentNum, status=status)
+		# get the missing parents
+			# if convertAccepted is TRUE, then the taxon name and taxon no will be replaced
+				# with the accepted name and no for that taxon
+				# this is (probably?) NOT disirable for trying to trace parents in a set of taxa
+		dataNew <- queryMissingParents(floatingParentNum,
+			status = status, convertAccepted = convertAccepted)
 		# add new parents to the top of the matrix 
 			# so if duplicated names are annotated, its the originals that get annotated
 		parData <- rbind(dataNew,parData)
@@ -179,13 +233,6 @@ getAllParents<-function(
 		}
 	return(parData)
 	}
-
-
-findNoParentMatch<-function(parData){
-	res <- is.na(match(parData$parent_no, parData$taxon_no))
-	return(res)
-	}
-
 	
 getFloatAncPBDB <- function(pcDat){
 	#identify IDs of parents floating without ancestors of their own
@@ -233,8 +280,10 @@ constructParentChildMatrixPBDB <- function(initPCmat, parData){
 					collapse = ", "
 					),
 				paste0(
-					parData$taxon_name[match(floaters,
-						parData$taxon_no)],
+					parData$taxon_name[
+						match(floaters,
+							parData$taxon_no)
+						],
 					collapse = ", "
 					)
 				))	
@@ -244,9 +293,6 @@ constructParentChildMatrixPBDB <- function(initPCmat, parData){
 		}
 	return(newPCmat)
 	}	
-
-
-
 	
 subsetParDataPBDB <- function(subsetNum,parData){
 	# pull parent-child relationships for a set of taxon numbers from parData
@@ -262,8 +308,6 @@ subsetParDataPBDB <- function(subsetNum,parData){
 	rownames(subsetMat)<-as.character(parData$taxon_no[subsetRows])
 	return(subsetMat)
 	}
-
-
 
 getLinneanTaxonTreePBDB <- function(dataTransform, tipSet, cleanTree, rankTaxon){
 	#########
@@ -313,66 +357,6 @@ getLinneanTaxonTreePBDB <- function(dataTransform, tipSet, cleanTree, rankTaxon)
 	tree$taxonTable <- taxonData
 	return(tree)
 	}
-	
-	
-#getTaxaIDsDesiredRank<-function(data, rank){
-#	# filter out lower than selected rank (for tip taxa)
-#		# so need to know which ranks are lower/higher
-#	# get taxon rank translation vectors for compact vocab
-#	taxRankPBDB <- getTaxRankPBDB()
-#	# translate rank to a number
-#	# translate taxon_rank to a number
-#	numTaxonRank <- sapply(data[,"taxon_rank"],
-#		function(x) which(x == taxRankPBDB))		
-#	#now need to put together parentChild table
-#	# get taxon ID numbers of just those of desired rank
-#	desiredIDs <- data[rankID == numTaxonRank, "parent_no"]
-#	desiredIDs <- as.numeric(desiredIDs)
-#	return(desiredIDs)
-#	}
-
-
-# OLD DOC
-
-### OLD EXAMPLE CODE
-# #get time data from occurrences
-# graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,
-#     rank = "genus", onlyFormal = FALSE)
-# graptTimeGenus <- occData2timeList(occList = graptOccGenus)
-# 
-# #let's time-scale the parentChild tree with paleotree
-# 		# use minimum branch length for visualization
-# 		# and nonstoch.bin so we plot maximal ranges
-# timeTree <- bin_timePaleoPhy(graptTree,
-#     timeList = graptTimeGenus,
-#     nonstoch.bin = TRUE,
-#     type = "mbl", vartime = 3)
-# 
-# #drops a lot of taxa; some of this is due to mispellings, etc
-
-#   @param solveMissing Under \code{method  = "parentChild"}, what should \code{makePBDBtaxonTree} do about
-#   multiple 'floating' parent taxa, listed without their own parent taxon information in the input
-#   dataset under \code{taxaDataPBDB}? Each of these is essentially a separate root taxon, for a different set
-#   of parent-child relationships, and thus poses a problem as far as returning a single phylogeny is
-#   concerned. If \code{solveMissing = NULL} (the default), nothing is done and the operation halts with
-#   an error, reporting the identity of these taxa. Two alternative solutions are offered: first,
-#   \code{solveMissing  = "mergeRoots"} will combine these disparate potential roots and link them to an
-#   artificially-constructed pseudo-root, which at least allows for visualization of the taxonomic
-#   structure in a limited dataset. Secondly, \code{solveMissing  = "queryPBDB"} queries the Paleobiology
-#   Database repeatedly via the API for information on parent taxa of the 'floating' parents, and continues
-#   within a \code{while()} loop until only one such unassigned parent taxon remains. This latter option may
-#   talk a long time or never finish, depending on the linearity and taxonomic structures encountered in the
-#   PBDB taxonomic data; i.e. if someone a taxon was ultimately its own indirect child in some grand loop by
-#   mistake, then under this option \code{makePBDBtaxonTree} might never finish. In cases where taxonomy is
-#   bad due to weird and erroneous taxonomic assignments reported by the PBDB, this routine may search all
-#   the way back to a very ancient and deep taxon, such as the Eukaryota taxon.
-#   Users should thus use \code{solveMissing  = "queryPBDB"} only with caution.
-
-#   @param cleanDuplicate If \code{TRUE} (\emph{not} the default), duplicated taxa of a
-#   taxonomic rank \emph{not} selected by argument \code{rank}
-#   will be removed silently. Only duplicates of the taxonomic rank of interest
-#   will actually result in an error message.
-
 
 parentChildPBDBOld <- function(dataTransform, tipSet, cleanTree, method, APIversion){
 	dataTransform <- apply(dataTransform, 2, as.character)
@@ -466,9 +450,9 @@ parentChildPBDBOld <- function(dataTransform, tipSet, cleanTree, method, APIvers
 			if(length(floatersNew)>1 & identical(sort(floaters),sort(floatersNew))){
 				stop(
 					paste0("Provided PBDB Dataset does not appear to have a \n",
-						"  monophyletic set of parent-child relationship pairs. \n",
-						"Multiple taxa appear to be listed as parents, but are not \n",
-						"  listed themselves so have no parents listed: \n",
+						 "  monophyletic set of parent-child relationship pairs. \n",
+						 "Multiple taxa appear to be listed as parents, but are not \n",
+						 "  listed themselves so have no parents listed: \n",
 						paste0(
 							taxonNameTable[match(floaters,taxonNameTable[,1]),2],
 							collapse = ", "
@@ -499,3 +483,63 @@ parentChildPBDBOld <- function(dataTransform, tipSet, cleanTree, method, APIvers
 	}
 		
 	
+
+	
+	
+#getTaxaIDsDesiredRank<-function(data, rank){
+#	# filter out lower than selected rank (for tip taxa)
+#		# so need to know which ranks are lower/higher
+#	# get taxon rank translation vectors for compact vocab
+#	taxRankPBDB <- getTaxRankPBDB()
+#	# translate rank to a number
+#	# translate taxon_rank to a number
+#	numTaxonRank <- sapply(data[,"taxon_rank"],
+#		function(x) which(x == taxRankPBDB))		
+#	#now need to put together parentChild table
+#	# get taxon ID numbers of just those of desired rank
+#	desiredIDs <- data[rankID == numTaxonRank, "parent_no"]
+#	desiredIDs <- as.numeric(desiredIDs)
+#	return(desiredIDs)
+#	}
+
+
+# OLD DOC
+
+### OLD EXAMPLE CODE
+# #get time data from occurrences
+# graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,
+#     rank = "genus", onlyFormal = FALSE)
+# graptTimeGenus <- occData2timeList(occList = graptOccGenus)
+# 
+# #let's time-scale the parentChild tree with paleotree
+# 		# use minimum branch length for visualization
+# 		# and nonstoch.bin so we plot maximal ranges
+# timeTree <- bin_timePaleoPhy(graptTree,
+#     timeList = graptTimeGenus,
+#     nonstoch.bin = TRUE,
+#     type = "mbl", vartime = 3)
+# 
+# #drops a lot of taxa; some of this is due to mispellings, etc
+
+#   @param solveMissing Under \code{method  = "parentChild"}, what should \code{makePBDBtaxonTree} do about
+#   multiple 'floating' parent taxa, listed without their own parent taxon information in the input
+#   dataset under \code{taxaDataPBDB}? Each of these is essentially a separate root taxon, for a different set
+#   of parent-child relationships, and thus poses a problem as far as returning a single phylogeny is
+#   concerned. If \code{solveMissing = NULL} (the default), nothing is done and the operation halts with
+#   an error, reporting the identity of these taxa. Two alternative solutions are offered: first,
+#   \code{solveMissing  = "mergeRoots"} will combine these disparate potential roots and link them to an
+#   artificially-constructed pseudo-root, which at least allows for visualization of the taxonomic
+#   structure in a limited dataset. Secondly, \code{solveMissing  = "queryPBDB"} queries the Paleobiology
+#   Database repeatedly via the API for information on parent taxa of the 'floating' parents, and continues
+#   within a \code{while()} loop until only one such unassigned parent taxon remains. This latter option may
+#   talk a long time or never finish, depending on the linearity and taxonomic structures encountered in the
+#   PBDB taxonomic data; i.e. if someone a taxon was ultimately its own indirect child in some grand loop by
+#   mistake, then under this option \code{makePBDBtaxonTree} might never finish. In cases where taxonomy is
+#   bad due to weird and erroneous taxonomic assignments reported by the PBDB, this routine may search all
+#   the way back to a very ancient and deep taxon, such as the Eukaryota taxon.
+#   Users should thus use \code{solveMissing  = "queryPBDB"} only with caution.
+
+#   @param cleanDuplicate If \code{TRUE} (\emph{not} the default), duplicated taxa of a
+#   taxonomic rank \emph{not} selected by argument \code{rank}
+#   will be removed silently. Only duplicates of the taxonomic rank of interest
+#   will actually result in an error message.

@@ -307,7 +307,9 @@ makePBDBtaxonTree <- function(
 			# three column matrix with taxon name, taxon ID, parent ID
 			# (in that order)
 		parData<- getAllParents(dataTransform,
-			status="all", annotatedDuplicateNames = annotatedDuplicateNames)
+			status="all", 
+			annotatedDuplicateNames = annotatedDuplicateNames,
+			convertAccepted = TRUE)
 		#print(parData)
 		#
 		#######################################

@@ -228,19 +228,25 @@
 #' #plot the results
 #' constrFun(results$par, altMode = TRUE)
 #' 
-#' #unconstrained function with ALL of 225 parameters!!!
-#'     # this will take forever to converge
+#' }
+#' \dontrun{
+#' 
+#' #unconstrained function with ALL of the 225 possible parameters!!!
+#'     # this will take forever to converge	
 #' optim(parInit(likFun),likFun,
 #'       lower = parLower(likFun), upper = parUpper(likFun),
 #'       method = "L-BFGS-B", control = list(maxit = 1000000))
+#' 
 #' }
 
 #' @name inverseSurv
 #' @rdname inverseSurv
 #' @export
-make_inverseSurv <- function(timeList,groups = NULL,p_cont = TRUE,q_cont = TRUE,
-	PA_n = "fixed",PB_1 = 0,Nb = 1,drop.extant = TRUE){
-		#
+make_inverseSurv <- function(timeList, groups = NULL,
+	p_cont = TRUE, q_cont = TRUE,
+	PA_n = "fixed", PB_1 = 0, 
+	Nb = 1, drop.extant = TRUE){
+		#########
 	#infer a seperate p, q, r for every interval
 		#PAn can be free or constrained: if last interval is modern, 1, if last interval pre-modern, 0
 		#PB1 can be free or constrained, in which case it is assumed to be 0 (no sampling before the

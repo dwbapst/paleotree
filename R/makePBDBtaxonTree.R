@@ -309,15 +309,18 @@ makePBDBtaxonTree <- function(
 		parData<- getAllParents(dataTransform,
 			status="all", 
 			annotatedDuplicateNames = annotatedDuplicateNames,
-			convertAccepted = TRUE)
+			convertAccepted = FALSE,
+			stopIfSelfParent = FALSE)
 		#print(parData)
 		#
 		#######################################
 		# NOW FILTER OUT TIP TAXA WE WANT
 		#tipIDs <- getTaxaIDsDesiredRank(data=dataTransform, rank=rankTaxon)
 		tipIDs <- dataTransform$taxon_no[dataTransform$taxon_rank==rankTaxon]
+		# check that all of these are unique values
+		tipIDs <- unique(tipIDs)
 		# figure out which taxon numbers match tip IDs
-		whichTip <- match(tipIDs, parData$taxon_no)
+		whichTip <- match(tipIDs, parData$taxon_no)		
 		#
 		###############################
 		# BUILD PARENT-CHILD matrix

@@ -94,7 +94,8 @@ convertParentChildMatNames <- function(taxID, parData){
 queryMissingParents <- function(taxaID,
 		APIversion = "1.2",
 		status = "all",
-		convertAccepted = FALSE){
+		convertAccepted = FALSE,
+		stopIfSelfParent = FALSE){
 	# find missing parents by access API
 	#
 	# drop Eukarya, as it won't return if status = senior under 1.1
@@ -119,13 +120,16 @@ queryMissingParents <- function(taxaID,
 	# if convertAccepted is TRUE, then the taxon name and taxon no will be replaced
 		# with the accepted name and no for that taxon
 		# this is NOT disirable for trying to trace parents in a set of taxa
-	floatData <- translatePBDBtaxa(floatData, convertAccepted = convertAccepted)
+	floatData <- translatePBDBtaxa(floatData, 
+		convertAccepted = convertAccepted)
 	#parse down to just taxon_name, taxon_no, parent_no
-	floatData <- parseParentPBDBData(floatData)
+	floatData <- parseParentPBDBData(floatData, 
+		stopIfSelfParent = stopIfSelfParent)
+	#
 	return(floatData)
 	}
 
-parseParentPBDBData <- function(parentData){
+parseParentPBDBData <- function(parentData, stopIfSelfParent = FALSE){
 	#parse down to just taxon_name, taxon_no, parent_no
 	if(any(colnames(parentData)=="accepted_name")){
 		taxon_name = parentData$accepted_name
@@ -140,15 +144,9 @@ parseParentPBDBData <- function(parentData){
 		)
 	rownames(result) <- NULL
 	# 
-	# check that no taxa are their own parent
-	checkSelfParent <- (result$parent_no == result$taxon_no)
-	if(any(checkSelfParent)){
-		parMatch <- paste0(result$taxon_name, 
-			" (", result$taxon_no,")")
-		parMatch <- paste0(parMatch[checkSelfParent],
-			collapse = ", ")
-		stop(paste0("The following taxa (with taxon_no) are their own parents:\n",
-			parMatch))
+	if(stopIfSelfParent){
+		result <- fixSelfParents(dataParents = result,
+			approach = "stop")
 		}
 	#
 	return(result)
@@ -158,12 +156,32 @@ findNoParentMatch<-function(parData){
 	res <- is.na(match(parData$parent_no, parData$taxon_no))
 	return(res)
 	}
-
+	
+fixSelfParents <- function(dataParents, approach = "clean"){
+		# check that no taxa are their own parent
+		selfParents <- (dataParents$parent_no == dataParents$taxon_no)
+		if(any(selfParents)){
+			if(approach == "clean"){
+				dataParents <- dataParents[!selfParents,]
+				}
+			if(approach == "stop"){
+				parMatch <- paste0(dataParents$taxon_name, 
+					" (", dataParents$taxon_no,")")
+				parMatch <- paste0(parMatch[selfParents],
+					collapse = ", ")
+				stop(paste0("The following taxa (with taxon_no) are their own parents:\n",
+					parMatch))
+				}
+			}
+		return(dataParents)
+		}
+		
 getAllParents<-function(
 		inputData, 
 		status, 
 		annotatedDuplicateNames = TRUE,
-		convertAccepted = TRUE){
+		convertAccepted = TRUE,
+		stopIfSelfParent = FALSE){
 	###############################################
 	parData<-parseParentPBDBData(inputData)
 	noParentMatch<-findNoParentMatch(parData)
@@ -192,7 +210,6 @@ getAllParents<-function(
 					"\nCheck the following URL:\n",dataUrlRef
 					))				
 				}
-
 		}else{
 			floatingParentNumOld <- floatingParentNum
 			}
@@ -202,12 +219,20 @@ getAllParents<-function(
 				# with the accepted name and no for that taxon
 				# this is (probably?) NOT disirable for trying to trace parents in a set of taxa
 		dataNew <- queryMissingParents(floatingParentNum,
-			status = status, convertAccepted = convertAccepted)
+			status = status, 
+			convertAccepted = convertAccepted,
+			stopIfSelfParent = stopIfSelfParent)
 		# add new parents to the top of the matrix 
 			# so if duplicated names are annotated, its the originals that get annotated
 		parData <- rbind(dataNew,parData)
 		noParentMatch <- findNoParentMatch(parData)
 		}
+	# remove duplicate taxa
+	parData <- unique(parData)
+	# remove self parents
+	parData <- fixSelfParents(dataParents = parData,
+		approach = "clean")
+	#
 	# TESTS
 	if(sum(noParentMatch)!=1){
 		stop("Cannot find a single common ancestor by tracing parents")
@@ -255,6 +280,8 @@ constructParentChildMatrixPBDB <- function(initPCmat, parData){
 	# find floating parents in current newPCmat
 	#identify IDs of parents floating without ancestors of their own
 	floaters <- getFloatAncPBDB(pcDat = newPCmat)
+	# make sure floaters are only unique values
+	floaters <- unique(floaters)
 	# use a while loop to complete the parent-child matrix
 	while(length(floaters)>1){	#so only ONE root can float
 		# get new relations: will 'anchor' the floaters
@@ -295,17 +322,46 @@ constructParentChildMatrixPBDB <- function(initPCmat, parData){
 	}	
 	
 subsetParDataPBDB <- function(subsetNum,parData){
+	# check that subsetNum is all unique values
+	if(length(subsetNum) != length(unique(subsetNum))){
+		stop("Some values of subsetNum are non-unique")
+		}
 	# pull parent-child relationships for a set of taxon numbers from parData
 	subsetRows <- match(subsetNum, parData$taxon_no)
 	# remove the non matching subset (usually the root)
 	subsetRows <- subsetRows[!is.na(subsetRows)]
+	# are there any duplicated subsetRows?
+	if(length(subsetRows) != length(unique(subsetRows))){
+		print("Total subsetRows:")
+		print(subsetRows)
+		print("Duplicates:")
+		dupSSR <- subsetRows[subsetRows == subsetRows[duplicated(subsetRows)]]
+		print(dupSSR)
+		print("Rows in Questions:")
+		print(parData[unique(dupSSR),])
+		stop("Stop - the subset selected by subsetParDataPBDB using match() has repeated rows??")
+		}
 	# pull the subset of parent-child relationships from parData
 	#subsetMat <- parData[subsetRows, c("parent_no", "taxon_no")]
 	subsetMat <- data.frame(
 		parent_no = parData$parent_no[subsetRows],
 		child_no = parData$taxon_no[subsetRows]
 		)
-	rownames(subsetMat)<-as.character(parData$taxon_no[subsetRows])
+	numSubset <- parData$taxon_no[subsetRows]
+	# test if any duplicated taxon numbers
+	if(length(numSubset) != length(unique(numSubset))){
+		duplicatedValues <- numSubset[duplicated(numSubset)]
+		duplicatedRows <- sapply(parData$taxon_no, function(x)
+			any(x == duplicatedValues))
+		print("All Taxon Numbers:")
+		print(parData$taxon_no)
+		print("The Subset Taxon Numbers:")
+		print(numSubset)
+		print("The Rows of parData Containing Duplicates:")
+		print(parData[duplicatedRows ,])
+		stop("getAllParents added duplicate taxa numbers, see print-out above")
+		}	
+	rownames(subsetMat)<-as.character(numSubset)
 	return(subsetMat)
 	}
 

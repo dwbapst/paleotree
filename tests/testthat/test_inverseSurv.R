@@ -1,5 +1,7 @@
 test_that("inverseSurv works at high parameters", {
 
+#library(paleotree)
+
 # let's simulate some taxon ranges from an imperfectly sampled fossil record
 set.seed(444)
 record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
@@ -22,6 +24,6 @@ constrFun <- constrainParPaleo(likFun, match.all~match.all)
     # this will take forever to converge	
 optim(parInit(likFun),likFun,
       lower = parLower(likFun), upper = parUpper(likFun),
-      method = "L-BFGS-B", control = list(maxit = 1000))
+      method = "L-BFGS-B", control = list(maxit = 3))
 
 })

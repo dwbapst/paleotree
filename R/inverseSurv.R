@@ -1,5 +1,5 @@
 #' Inverse Survivorship Models in the Fossil Record
-#'
+#' 
 #' This function replicates the model-fitting procedure for forward and
 #' reverse survivorship curve data, described by Michael Foote in a series
 #' of papers (2001, 2003a, 2003b, 2005). These methods are discrete interval
@@ -50,12 +50,12 @@
 #' similar optimizing functions, which attempt to minimize support values). See the
 #' functions listed at \code{\link{modelMethods}} for manipulating and examining
 #' such functions and \code{\link{constrainParPaleo}} for constraining parameters.
-#'
+#' 
 #' The function output will take the largest number of parameters possible with
 #' respect to groupings and time-intervals, which means the number of parameters
 #' may number in the hundreds. Constraining the function for optimization
 #' is recommended except when datasets are very large.
-#'
+#' 
 #' Parameters in the output functions are named 'p', 'q' and 'r', which are
 #' respectively the origination, extinction and sampling parameters. If the
 #' respective arguments 'p_cont' and 'q_cont' are TRUE, then 'p' and 'q' will
@@ -71,7 +71,7 @@
 #' rate by the duration of an interval (or divide, to do the reverse; see Foote,
 #' 2003 and 2005). 'r' is always the instantaneous per-capita sampling rate, in
 #' units per lineage-time units. 
-#'
+#' 
 #' If PA_n or PB_1 were given as NULL in the arguments, two additional parameters
 #' will be added, named respectively 'PA_n' and 'PB_1', and listed separately for every
 #' additional grouping. These are the probability of a taxon occurring before the first
@@ -79,21 +79,21 @@
 #' the last interval in a dataset (PA_n). Theses will be listed as 'PA_n.0' and 'PB_1.0'
 #' to indicate that they are not related to any particular time-interval included
 #' in the analysis, unlike the p, q, and r parameters (see below).
-#'
+#' 
 #' Groupings follow the parameter names, separated by periods; by default, the
 #' parameters will be placed in groups corresponding to the discrete intervals
 #' in the input timeList, such that \code{make_inverseSurv} will create a function with
 #' parameters 'p.1', 'q.1' and 'r.1' for interval 1; 'p.2', 'q.2' and 'r.2' for
 #' interval 2 and so on. Additional groupings given by the user are listed after 
 #' this first set (e.g. 'p.1.2.2').
-#'
+#' 
 #' \subsection{Calculating The Results of an Inverse Survivorship Model}{
 #' Because of the complicated grouping and time interval scheme, combined with
 #' the probable preference of users to use constrained models rather that the
 #' full models, it may be difficult to infer what the rates for particular
 #' intervals and groups actually are in the final model, given the parameters
 #' that were found in the final optimization.
-#'
+#' 
 #' To account for this, the function output by \code{inverseSurv} also contains
 #' an alternative mode which takes input rates and returns the final values along with
 #' a rudimentary plotting function. This allows users to output per-interval and per-group
@@ -101,21 +101,21 @@
 #' be TRUE. This function will invisibly return the rate values for each
 #' group and interval as a list of matrices, with each matrix composed of the
 #' p, q and r rates for each interval, for a specific grouping.
-#'
+#' 
 #' This plotting is extremely primitive, and most users will probably find the
 #' invisibly returned rates to be of more interest. The function \code{layout} is
 #' used to play plots for different groupings in sequence, and this may lead to
 #' plots which are either hard to read or even cause errors (because of too many
 #' groupings, producing impossible plots). To repress this, the argument \code{plotPar}
 #' can be set to FALSE.
-#'
+#' 
 #' This capability means the function has more arguments that just the
 #' usual \code{par} argument that accepts the vector of parameters for running an
 #' optimization. The first of these additional arguments, \code{altMode} enables
 #' this alternative mode, instead of trying to estimate the negative log-likelihood
 #' from the given parameters. The other arguments augment the calculation and plotting
 #' of rates.
-#'
+#' 
 #' To summarize, a function output by \code{inverseSurv} has the following arguments:
 #' 
 #' \describe{
@@ -174,12 +174,12 @@
 
 #' @seealso
 #' This function extensively relies on \code{\link{footeValues}}.
-#'
+#' 
 #' A similar format for likelihood models can be seen in \code{\link{durationFreq}}.
-#'
+#' 
 #' Also see \code{\link{freqRat}}, \code{\link{sRate2sProb}},
 #' \code{\link{qsRate2Comp}} \code{\link{sProb2sRate}} and \code{\link{qsProb2Comp}}.
-#'
+#' 
 #' For translating between sampling probabilities and sampling rates, see
 #' \code{\link{SamplingConv}}.
 
@@ -189,13 +189,13 @@
 #' @references
 #' Foote, M. 2001. Inferring temporal patterns of preservation, origination, and 
 #' extinction from taxonomic survivorship analysis. \emph{Paleobiology} 27(4):602-630.
-#'
+#' 
 #' Foote, M. 2003a. Origination and Extinction through the Phanerozoic: A New
 #' Approach. \emph{The Journal of Geology} 111(2):125-148.
-#'
+#' 
 #' Foote, M. 2003b. Erratum: Origination and Extinction through the Phanerozoic:
 #' a New Approach. \emph{The Journal of Geology} 111(6):752-753.
-#'
+#' 
 #' Foote, M. 2005. Pulsed origination and extinction in the marine realm.
 #' \emph{Paleobiology} 31(1):6-20.
 
@@ -208,34 +208,45 @@
 #' 	nTotalTaxa = c(30,40), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' rangesCont <- sampleRanges(taxa,r = 0.5)
+#' 
 #' #bin the ranges into discrete time intervals
 #' rangesDisc <- binTimeData(rangesCont,int.length = 5)
 #' 
 #' #apply make_inverseSurv
 #' likFun <- make_inverseSurv(rangesDisc)
-#' #use constrainParPaleo to make the model time-homogenous
-#'   	#match.all~match.all will match parameters so only 2 pars: p = q and r
-#' constrFun <- constrainParPaleo(likFun,match.all~match.all)
+#' 
+#' #use constrainParPaleo to make the model time-homogeneous
+#'   	#match.all ~ match.all will match parameters so only 2 pars: p = q and r
+#' 
+#' constrFun <- constrainParPaleo(likFun, match.all~match.all)
+#' 
 #' results <- optim(parInit(constrFun), constrFun,
 #'       lower = parLower(constrFun), upper = parUpper(constrFun),
 #'       method = "L-BFGS-B", control = list(maxit = 1000000))
 #' results
-#'
+#' 
 #' #plot the results
 #' constrFun(results$par, altMode = TRUE)
-#'
-#' #unconstrained function with ALL of 225 parameters!!!
-#'     # this will take forever to converge, so it isn't run
-#' optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
-#'       method = "L-BFGS-B",control = list(maxit = 1000000))
+#' 
+#' }
+#' \dontrun{
+#' 
+#' #unconstrained function with ALL of the 225 possible parameters!!!
+#'     # this will take forever to converge	
+#' optim(parInit(likFun),likFun,
+#'       lower = parLower(likFun), upper = parUpper(likFun),
+#'       method = "L-BFGS-B", control = list(maxit = 1000000))
+#' 
 #' }
 
 #' @name inverseSurv
 #' @rdname inverseSurv
 #' @export
-make_inverseSurv <- function(timeList,groups = NULL,p_cont = TRUE,q_cont = TRUE,
-	PA_n = "fixed",PB_1 = 0,Nb = 1,drop.extant = TRUE){
-		#
+make_inverseSurv <- function(timeList, groups = NULL,
+	p_cont = TRUE, q_cont = TRUE,
+	PA_n = "fixed", PB_1 = 0, 
+	Nb = 1, drop.extant = TRUE){
+		#########
 	#infer a seperate p, q, r for every interval
 		#PAn can be free or constrained: if last interval is modern, 1, if last interval pre-modern, 0
 		#PB1 can be free or constrained, in which case it is assumed to be 0 (no sampling before the

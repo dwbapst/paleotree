@@ -1,11 +1,11 @@
 #' Dated Trees and Trait Data for Ammonites, Ceratopsians and Cervids from Raia et al. 2015
-#'
+#' 
 #' Dated phylogenetic trees for fossil ammonite genera, fossil ceratopsian species and (both extinct and extant) cervid
 #' species, as well as trait data (shell diameter and fractal complexity of the first suture) for the ammonite dataset,
 #' taken from the recent publication by Raia et al. (2015) in The American Naturalist. The goal of this paper was to
 #' examine the relationship between ornamental complexity and body size in three very different groups, but
 #' the datasets are very relatively large and useful for demonstrating application of comparative methods to fossil trees.
-#'
+#' 
 
 #' @name RaiaCopesRule
 
@@ -34,7 +34,7 @@
 #' Raia P, Passaro F, Carotenuto F, Maiorino L, Piras P, Teresi L, Meiri S, Itescu Y, Novosolov
 #' M, Baiano MA, Martinez R, Fortelius M (2015) Data from: Cope's rule and the universal
 #' scaling law of ornament complexity. \emph{Dryad Digital Repository}. (https://doi.org/10.5061/dryad.50dr8)
-#'
+#' 
 
 #' @seealso
 #' \code{\link{retiolitinae}}, \code{\link{macroperforateForam}}
@@ -217,6 +217,7 @@
 #'  "osaurus_houi:9,(Psittacosaurus_mongoliensis:33.5, (Psittacosaurus_meileyingensis:20,(Psitt",
 #'  "acosaurus_major:7.5,(Psittacosaurus_gobiensis:21,(Psittacosaurus_sinensis:24, Psittacosaur",
 #'  "us_neimongoliensis:18):1):1.5):0.5):0.5):0.5):1):23,Yinlong_downsi:6):3;")
+#' 
 #' ceratopsianTreeRaia <- read.tree(text = ceratopsianTreeRaia)
 #' 
 #' # Raia et al. placed origin of ceratopsians at ~163 Ma, base of Oxfordian
@@ -259,6 +260,9 @@
 #' 	node.depth.edgelength(cervidTreeRaia)[which(cervidTreeRaia$tip.label == "Dama_dama")])
 #' 
 #' plot(cervidTreeRaia);axisPhylo()
+#' 
+#' }
+#' \dontrun{
 #' 
 #' save.image("RaiaCopesRule.rdata")
 #' 

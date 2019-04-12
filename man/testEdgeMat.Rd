@@ -19,10 +19,12 @@ For \code{testEdgeMat}, if all the checks in the function pass correctly, the lo
 For \code{cleanNewPhylo}, an object of class \code{phylo} is returned.
 }
 \description{
-\code{testEdgeMat} is a small simple function which tests the \code{$edge} matrix of \code{phylo} objects for
+\code{testEdgeMat} is a small simple function which tests
+the \code{$edge} matrix of \code{phylo} objects for
 inconsistencies that can cause downstream analytical problems.
 The associated function, \code{cleanNewPhylo} puts an input
-\code{phylo} object, presumably freshly created or reconstituted by some function, through a series
+\code{phylo} object, presumably freshly created or
+reconstituted by some function, through a series
 of post-processing, This includes having singles collapsed,
 nodes reordered and being written out as a Newick string and read back in,
 to ensure functionality with ape functions

@@ -216,7 +216,7 @@
 #' 
 #' Matzke, N. J., and A. Wright. 2016. Inferring node dates from tip dates
 #' in fossil Canidae: the importance of tree priors. \emph{Biology Letters} 12(8).
-#'
+#' 
 #' The rationale behind the two alternative morphological models are described in more detail here:
 #' 
 #' Bapst, D. W., H. A. Schreiber, and S. J. Carlson. In press. Combined analysis of extant Rhynchonellida
@@ -226,7 +226,7 @@
 
 
 #' @examples
-#'
+#' 
 #' # let's do some examples
 #' 
 #' # load retiolitid dataset

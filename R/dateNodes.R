@@ -49,7 +49,7 @@
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' #get the true time-sclaed tree
 #' tree1 <- taxa2phylo(taxa)
-#'
+#' 
 #' #now let's try dateNodes
 #' dateNodes(tree1)
 #' 

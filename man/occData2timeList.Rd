@@ -33,7 +33,7 @@ datasets sorted by \code{\link{taxonSortPBDBocc}} or any data object where occur
 (i.e. age bounds for each occurrence) for different taxa is separated into different elements
 of a named list. 
 
-\subsection{The argument intervalType}{
+\subsection{The Usage of the Argument \code{intervalType}}{
 
 The argument \code{intervalType} controls the algorithm used for obtain first and last interval bounds for
 each taxon, of which there are several to select from:intervalType
@@ -134,8 +134,11 @@ sum(abs(dateChange))
 layout(1)
 }
 \seealso{
-\code{\link{taxonSortPBDBocc}}, \code{\link{plotOccData}} and the
-example graptolite dataset at \code{\link{graptPBDB}}
+Occurrence data as commonly used with \code{paleotree} functions can
+be obtained with \code{link{getPBDBocc}}, and sorted into taxa by 
+\code{\link{taxonSortPBDBocc}}, and further explored with this function and
+\code{\link{plotOccData}}. Also, see the example graptolite dataset
+at \code{\link{graptPBDB}}
 }
 \author{
 David W. Bapst, with the 'dateRange' algorithm suggested by Jon Marcot.

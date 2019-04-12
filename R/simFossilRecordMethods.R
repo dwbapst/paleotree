@@ -1,5 +1,5 @@
 #' Methods for Editing or Converting Output from simFossilRecord
-#'
+#' 
 #' These are a set of functions available for manipulating, translating
 #' and editing the objects of class \code{fossilRecordSimulation} output
 #' from function \code{simFossilRecord}.
@@ -11,12 +11,12 @@
 #' output from \code{simFossilRecord}, particularly so that they can be interfaced
 #' with functions in library \code{paleotree} in the same way that output from the
 #' deprecated 'legacy' simulation function \code{simFossilTaxa} was used.
-#'
+#' 
 #' \code{timeSliceFossilRecord} takes a given \code{fossilRecordSimulation} object
 #' and 'slices' the data to remove any events that occur after the given
 #' \code{sliceTime} and make it so any taxa still alive as of \code{sliceTime}
 #' are now listed as extant.
-#'
+#' 
 #' \code{fossilRecord2fossilTaxa} converts a \code{fossilRecordSimulation} object
 #' to the flat table format of taxon data as was originally output by deprecated function 
 #' \code{simFossilTaxa}, and can be taken as input by a number of \code{paleotree} functions such as
@@ -26,12 +26,12 @@
 #' table into a \code{fossilRecordSimulation} list object,
 #' but returns a \code{fossilRecordSimulation} object that considers each species as un-sampled (as sampling
 #' information is not contained within a \code{simFossilTaxa} table).
-#'
+#' 
 #' \code{fossilRecord2fossilRanges} converts a \code{fossilRecordSimulation} object
 #' to the flat table format of observed taxon ranges, as is typically output by processing
 #' \code{simFossilRecord} simulation output with \code{paleotree} function
 #' \code{sampleRanges}.
-#'
+#' 
 
 #' @param fossilRecord A list object output by \code{simFossilRecord}, often composed
 #' of multiple elements, each of which is data for 'one taxon', with the first

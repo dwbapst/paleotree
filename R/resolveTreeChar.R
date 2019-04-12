@@ -1,5 +1,5 @@
 #' Resolve Polytomies Using Parsimony-Based Reconstruction of a Discrete Character
-#'
+#' 
 #' This function resolves a set of given topology with less than fully-binary phylogenetic resolution so that
 #' lineages are shifted and internal nodes added that minimize the number of independent character transitions needed to explain
 #' an observed distribution of discrete character states for the taxa on such a tree, under various maximum-parsimony algorithms of 
@@ -18,7 +18,7 @@
 #' anecdotal use of this function with various simulation datasets suggests that the results are quite
 #' variable, and so the best option needs to be assessed based on the prior assumptions regarding the
 #' data and the performance of the dataset with the various arguments of this function.
-#'
+#' 
 
 #' @inheritParams minCharChange
 
@@ -46,7 +46,7 @@
 #' assignments to either be the most primitive (i.e. the minimum) or the most derived (i.e. the maximum) among the
 #' maximum-weight states. In particular, \code{stateBias = 'primitive'} should favor gains and bias any analysis of
 #' character transitions against finding reversals.
-#'
+#' 
 #' @param iterative A logical argument which, if TRUE (the default), causes the function to repeat the polytomy-resolving
 #' functionality across the entire tree until the number of nodes stabilizes. If FALSE, polytomies are only passed a single
 #' time.
@@ -70,9 +70,9 @@
 #' 
 #' Narushima, H., and M. Hanazawa. 1997. A more efficient algorithm for MPR problems in phylogeny.
 #' Discrete Applied Mathematics 80(2-3):231-238.
-#'
+#' 
 #' Schliep, K. P. 2011. phangorn: phylogenetic analysis in R. \emph{Bioinformatics} 27(4):592-593.
-#'
+#' 
 #' Swofford, D. L., and W. P. Maddison. 1987. Reconstructing ancestral character states under
 #' Wagner parsimony. Mathematical Biosciences 87(2):199-229.
 
@@ -154,7 +154,7 @@
 #' layout(1)
 #' 
 #' }
-#'
+#' 
 
 #' @name resolveTreeChar
 #' @rdname resolveTreeChar
@@ -189,7 +189,7 @@ resolveTreeChar <- function(tree, trait, orderedChar = FALSE, stateBias = NULL, 
 		continueRes <- TRUE
 		while(continueRes){
 			tree1 <- resolveTreeCharMechanism(tree2, trait, orderedChar = orderedChar, stateBias = stateBias, type = "MPR", cost = cost)
-			if(is.binary.tree(tree1) & is.rooted(tree1)){continueRes <- FALSE}
+			if(ape::is.binary.phylo(tree1) & is.rooted(tree1)){continueRes <- FALSE}
 			if(Nnode(tree1) == Nnode(tree2)){continueRes <- FALSE}
 			tree2 <- tree1
 			}

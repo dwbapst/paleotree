@@ -44,7 +44,7 @@
 #' @author David W. Bapst
 
 #' @examples
-#'
+#' 
 #' set.seed(444)
 #' tree <- rtree(10)
 #' tipAges <- cbind(c("t1","t2"), c(15,10))

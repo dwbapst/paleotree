@@ -1,5 +1,5 @@
 #' Constrain Parameters for a Model Function from paleotree
-#'
+#' 
 #' This function constrains a model to make submodels with fewer parameters,
 #' using a structure and syntax taken from the function \code{constrain}
 #' in Rich Fitzjohn's package \code{diversitree}.
@@ -8,7 +8,7 @@
 #' This function is based on (but does not depend on) the function \code{constrain}
 #' from the package \code{diversitree}. Users should refer to this parent function for
 #' more detailed discussion of model constraint usage and detailed examples.
-#'
+#' 
 #' The parent function was forked to add functionality necessary for dealing with the
 #' high parameter count models typical to some paleontological analyses, particularly
 #' the inverse survivorship method. This necessitated that the new function be entirely
@@ -16,25 +16,25 @@
 #' have been altered to avoid overlap in the package namespaces. Going forward,
 #' the paleotree package maintainer (Bapst) will try to be vigilant with
 #' respect to changes in \code{constrain} in the original package, \code{diversitree}.
-#'
+#' 
 #' Useful information from the diversitree manual (11/01/13):
-#'
+#' 
 #' "If \code{f} is a function that takes a vector \code{x} as its first
 #' argument, this function returns a new function that takes a
 #' shorter vector \code{x} with some elements constrained in some way;
 #' parameters can be fixed to particular values, constrained to be the
 #' same as other parameters, or arbitrary expressions of free
 #' parameters."
-#'
+#' 
 #' In general, formulae should be of the structure:
 #' 
 #' \emph{LHS ~ RHS}
-#'
+#' 
 #' ...where the LHS is the 'Parameter We Want to Constrain' and the
 #' RHS is whatever we are constraining the LHS to, usually another
 #' parameter. LHS and RHS are the 'left-hand side' and
 #' 'right-hand side' respectively (which I personally find obscure).
-#'
+#' 
 #' Like the original \code{constrain} function this function is based on,
 #' this function cannot remove constraints previously placed on a model
 #' object and there may be cases in which the constrained function may not 
@@ -42,13 +42,13 @@
 #' issue nonsensical functions with an incorrect number/names of parameters
 #' if the parameters to be constrained are given in the wrong order in
 #' formulae.
-#'
+#' 
 #' \subsection{Differences from diversitree's constrain Function}{
-#'
+#' 
 #' This forked paleotree version of constrain has two additional features,
 #' both introduced to aid in constraining models with a high number of 
 #' repetitive parameters. (I did not invent these models, so don't shoot the messenger.)
-#'
+#' 
 #' First, it allows nuanced control over the constraining of many
 #' parameters simultaneously, using the 'all' and 'match' descriptors. This
 #' system depends on parameters being named as such: name.group1.group2.group3
@@ -64,7 +64,7 @@
 #' for the second group system (perhaps this taxonomic data point has a morphological
 #' feature not seen in some other taxa) and group 1 of the third group system (maybe
 #' biogeographic region 1? the possibilities are endless depending on user choices). 
-#'
+#' 
 #' The 'all' option work like so: if 'x.all~x.1' is given as a formulae, then all x
 #' parameters will be constrained to equal x.1. For example, if there is x.1, x.2,
 #' x.3 and x.4 parameters for a model, 'x.all~x.1' would be equivalent to
@@ -76,7 +76,7 @@
 #' Furthermore, the LHS and RHS don't need to be same parameter group, and both can
 #' contain 'all' statements, even \emph{multiple} 'all' statements. Consider these
 #' examples, all of which are legal: 
-#'
+#' 
 #' \describe{ 
 #'  \item{x.all ~ y.1}{Constrains all values of the parameter x for every group to be
 #' equal to the single value for the parameter y for group 1 (note that there's only
@@ -91,7 +91,7 @@
 
 #'  \item{x.all ~ y.all}{Constrains all values of x for every group and y for every
 #' group to be equal to a \emph{single} value, which by default will be reported as y.1}}
-#'
+#' 
 #' The 'match' term is similar, allowing parameter values from the same group
 #' to be quickly matched and made equivalent. These 'match' terms must have a
 #' matching (cue laughter) term both in the corresponding LHS and RHS of the formula.
@@ -101,7 +101,7 @@
 #' we often treat as equal. For example, in paleontology, we sometimes make a
 #' simplifying assumption that birth and death rates are equal in multiple
 #' time intervals. Some additional legal examples are:
-#'
+#' 
 #' \describe{ 
 #' \item{x.match.1 ~ y.match.1}{This will constrain only parameters of x and y to
 #' to equal each other if they both belong to the same group for the first group
@@ -111,9 +111,9 @@
 #' group to equal each other; for example, if there are parameters x.1, y.1, z.1,
 #' x.2, y.2 and z.2, this will constrain them such that y.1~x.1, z.1~x.1, y.2~x.2
 #' and z.2~x.2, leaving x.1 and x.2 as the only parameters effectively.}}
-#'
+#' 
 #' There are two less fortunate qualities to the introduction of the above terminology.
-#'
+#' 
 #' Unfortunately, this package author apologizes that his programming skills are
 #' not good enough to allow more complex sets of constraints, as would be typical
 #' with the parent function, when 'all' or 'match' terms are included. For example,
@@ -126,7 +126,7 @@
 #' could constrain with the formula 'y.1 ~ x.1 / 2' which would then constrain
 #' y.1 (and all the y values constrained to equal it) to be equal to the desired
 #' fraction.
-#'
+#' 
 #' Furthermore, this function expects that parameter names don't already have
 #' period-separated terms that are identical to 'all' or 'match'. No function 
 #' in paleotree should produce such natively. If such were to occur, perhaps
@@ -147,7 +147,7 @@
 #' bounds as equal. Finally, once parameters with the same bounds are constrained, the
 #' output has updated bounds that reflect the new set of parameters
 #' for the new constrained function.}
-#'
+#' 
   
 #' @param f A function to constrain. This function must be of S3 class
 #' 'paleotreeFunc' and have all necessary attributes expected of that
@@ -196,9 +196,9 @@
 #' return the initial values for those same constrained set of parameters.
 #' All arguments in addition to \code{x} will be passed through to the
 #' original function \code{f}.
-#'
+#' 
 #' Additional useful information from the diversitree manual (11/01/13):
-#'
+#' 
 #' For help in designing constrained models, the returned function has
 #' an additional argument \code{pars.only}, when this is \code{TRUE} the
 #' function will return a named vector of arguments rather than evaluate

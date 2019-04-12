@@ -7,7 +7,7 @@
 #' @details
 #' You might be able to apply this to datasets that aren't community ecology datasets
 #' of proportional abundance, but I can't guarantee or even predict what will happen.
-#'
+#' 
 
 #' @param xDist The pair-wise distance matrix for the cluster diagram drawn along the
 #' horizontal axis of the graphic. Should be a distance matrix, or a matrix that can

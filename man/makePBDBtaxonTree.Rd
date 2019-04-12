@@ -5,9 +5,9 @@
 \alias{plotTaxaTreePBDB}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
-makePBDBtaxonTree(taxaDataPBDB, rank, method = "parentChild",
-  tipSet = "nonParents", cleanTree = TRUE,
-  annotatedDuplicateNames = TRUE, APIversion = "1.2")
+makePBDBtaxonTree(taxaDataPBDB, rankTaxon, method = "parentChild",
+  tipSet = NULL, cleanTree = TRUE, annotatedDuplicateNames = TRUE,
+  APIversion = "1.2")
 
 plotTaxaTreePBDB(taxaTree, edgeLength = 1)
 }
@@ -20,7 +20,7 @@ as \code{accepted_name} is not available in API v1.1, the resulting
 tree will have a taxon's *original* name and not
 any formally updated name.}
 
-\item{rank}{The selected taxon rank; must be one of 'species',
+\item{rankTaxon}{The selected taxon rank; must be one of 'species',
 'genus', 'family', 'order', 'class' or 'phylum'.}
 
 \item{method}{Controls which algorithm is used for calculating
@@ -57,13 +57,15 @@ structure in a limited dataset. This latter option will be fully
 offline, as it does nto do any additional API calls
 of the Paleobiology Database, unlike other options.}
 
-\item{tipSet}{This argument only impacts analyses where the argument
-\code{method  = "parentChild"} is also used. This \code{tipSet} controls
-which taxa are selected as tip taxa for the
-output tree. The default \code{tipSet  = "nonParents"} selects all child taxa which
-are not listed as parents in \code{parentChild}. Alternatively, \code{tipSet = "all"}
-will add a tip to every internal node with the parent-taxon name encapsulated in
-parentheses.}
+\item{tipSet}{This argument only impacts analyses where 
+\code{method  = "parentChild"} is used. This \code{tipSet} argument controls
+which taxa are selected as tip taxa for the output tree. 
+\code{tipSet  = "nonParents"} selects all child taxa which
+are not listed as parents in \code{parentChild}.
+Alternatively, \code{tipSet = "all"} will add a tip to every
+internal node with the parent-taxon name encapsulated in parentheses.
+The default is \code{NULL} - if \code{NULL} and \code{method  = "parentChild"},
+then \code{tipSet }  is set to {= "nonParents"}.}
 
 \item{cleanTree}{When \code{TRUE} (the default), the tree is run through a series of
 post-processing, including having singles collapsed,
@@ -96,7 +98,7 @@ with (\code{plotTaxaTreePBDB} plots phylogenies as non-ultrametric,
 not as a cladogram with aligned tips).}
 }
 \value{
-A phylogeny of class \code{phylo}, where each tip is a taxon of the given 'rank'. See additional details
+A phylogeny of class \code{phylo}, where each tip is a taxon of the given \code{rankTaxon}. See additional details
 regarding branch lengths can be found in the sub-algorithms used to create the taxon-tree by this function:
 \code{\link{parentChild2taxonTree}} and \code{\link{taxonTable2taxonTree}}.
 
@@ -138,113 +140,87 @@ macroevolutionary studies as reconstructed phylogenies
 (Soul and Friedman, 2015.).
 }
 \examples{
-\dontrun{
-
-
-#graptolites
-graptData <- easyGetPBDBtaxa("Graptolithina")
-graptTree <- makePBDBtaxonTree(graptData,"genus",
-	   method = "parentChild")
-#try Linnean
-graptTree <- makePBDBtaxonTree(graptData,"genus",
-	   method = "Linnean")
-
-# plot it!
-plot(graptTree,show.tip.label = FALSE,
-    no.margin = TRUE,edge.width = 0.35)
-nodelabels(graptTree$node.label,adj = c(0,1/2))
-
-#################
-#conodonts
-conoData <- easyGetPBDBtaxa("Conodonta")
-conoTree <- makePBDBtaxonTree(conoData,"genus",
-	   method = "parentChild")
-
-# plot it!
-plot(conoTree,show.tip.label = FALSE,
-   no.margin = TRUE,edge.width = 0.35)
-nodelabels(conoTree$node.label,adj = c(0,1/2))
-
-############################
-#asaphid trilobites
-asaData <- easyGetPBDBtaxa("Asaphida")
-asaTree <- makePBDBtaxonTree(asaData,"genus",
-	   method = "parentChild")
-
-# plot it!
-plot(asaTree,show.tip.label = FALSE,
-   no.margin = TRUE,edge.width = 0.35)
-nodelabels(asaTree$node.label,adj = c(0,1/2))
-
-#Ornithischia
-ornithData <- easyGetPBDBtaxa("Ornithischia")
-ornithTree <- makePBDBtaxonTree(ornithData,"genus",
-	  method = "parentChild")
-#try Linnean
-#need to drop repeated taxon first: Hylaeosaurus
-ornithData <- ornithData[
-   -(which(ornithData[,"taxon_name"] == "Hylaeosaurus")[1]),]
-ornithTree <- makePBDBtaxonTree(ornithData,"genus",
-	  method = "Linnean")
-plot(ornithTree,show.tip.label = FALSE,
-   no.margin = TRUE,edge.width = 0.35)
-nodelabels(ornithTree$node.label,adj = c(0,1/2))
-
-#Rhynchonellida
-rynchData <- easyGetPBDBtaxa("Rhynchonellida")
-rynchTree <- makePBDBtaxonTree(rynchData,"genus",
-	  method = "parentChild")
-plot(rynchTree, show.tip.label = FALSE, 
-   no.margin = TRUE, edge.width = 0.35)
-nodelabels(rynchTree$node.label,adj = c(0,1/2))
-
-#some of these look pretty messy!
-
-}
-
-###################################
 \donttest{
-
-#let's try time-scaling the graptolite tree
 
 #get some example occurrence and taxonomic data
 data(graptPBDB)
 
 #get the taxon tree: Linnean method
-graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
-    "genus", method = "Linnean")
-plot(graptTree, cex = 0.4)
-nodelabels(graptTree$node.label, cex = 0.5)
+graptTreeLinnean <- makePBDBtaxonTree(
+    taxaDataPBDB = graptTaxaPBDB,
+    rankTaxon = "genus",
+    method = "Linnean")
 
 #get the taxon tree: parentChild method
-graptTree <- makePBDBtaxonTree(graptTaxaPBDB,
-    "genus", method = "parentChild")
-plot(graptTree,cex = 0.4)
-nodelabels(graptTree$node.label,cex = 0.5)
+graptTreeParentChild <- makePBDBtaxonTree(
+    taxaDataPBDB = graptTaxaPBDB,
+    rankTaxon = "genus",
+    method = "parentChild")
 
-#get time data from occurrences
-graptOccGenus <- taxonSortPBDBocc(graptOccPBDB,
-    rank = "genus", onlyFormal = FALSE)
-graptTimeGenus <- occData2timeList(occList = graptOccGenus)
+# let's plot these and compare them! 
+plotTaxaTreePBDB(graptTreeParentChild)
 
-#let's time-scale the parentChild tree with paleotree
-		# use minimum branch length for visualization
-		# and nonstoch.bin so we plot maximal ranges
-timeTree <- bin_timePaleoPhy(graptTree,
-    timeList = graptTimeGenus,
-    nonstoch.bin = TRUE,
-    type = "mbl", vartime = 3)
+plotTaxaTreePBDB(graptTreeLinnean)
 
-#drops a lot of taxa; some of this is due to mispellings, etc
 
-}
-\dontrun{
+####################################################
+# let's try some other groups
 
-#make pretty plot with library strap
-library(strap)
-geoscalePhylo(timeTree,
-    ages = timeTree$ranges.used)
-nodelabels(timeTree$node.label,cex = 0.5)
+#conodonts
+conoData <- getCladeTaxaPBDB("Conodonta")
+conoTree <- makePBDBtaxonTree(
+    taxaDataPBDB = conoData,
+    rankTaxon = "genus",
+    method = "parentChild")
+# plot it!
+plotTaxaTreePBDB(conoTree)
+
+#asaphid trilobites
+asaData <- getCladeTaxaPBDB("Asaphida")
+asaTree <- makePBDBtaxonTree(
+    taxaDataPBDB = asaData,
+    rankTaxon = "genus",
+    method = "parentChild")
+# plot it!
+plotTaxaTreePBDB(asaTree)
+
+#Ornithischia
+ornithData <- getCladeTaxaPBDB("Ornithischia")
+ornithTree <- makePBDBtaxonTree(
+    taxaDataPBDB = ornithData,
+    rankTaxon = "genus",
+    method = "parentChild")
+plotTaxaTreePBDB(ornithTree)
+
+#try Linnean!
+
+#but first... need to drop repeated taxon first: Hylaeosaurus
+findHylaeo <- ornithData$taxon_name == "Hylaeosaurus"
+# there's actually only one accepted ID number
+HylaeoIDnum <- unique(ornithData[findHylaeo,"taxon_no"])
+HylaeoIDnum 
+
+# so, take which one has occurrences listed
+dropThis <- which((ornithData$n_occs < 1) & findHylaeo)
+ornithDataCleaned <- ornithData[-dropThis,]
+
+ornithTree <- makePBDBtaxonTree(
+    ornithDataCleaned,
+    rankTaxon = "genus",
+    method = "Linnean")
+plotTaxaTreePBDB(ornithTree)
+
+
+########################
+#Rhynchonellida
+rynchData <- getCladeTaxaPBDB("Rhynchonellida")
+rynchTree <- makePBDBtaxonTree(
+    taxaDataPBDB = rynchData,
+    rankTaxon = "genus",
+    method = "parentChild")
+plotTaxaTreePBDB(rynchTree)
+
+#some of these look pretty messy!
 
 }
 

@@ -1,5 +1,5 @@
 #' Estimating the Minimum Number of Character Transitions Using Maximum Parsimony
-#'
+#' 
 #' \code{minCharChange} is a function which takes a cladogram and a discrete trait and finds the
 #' solutions of inferred character states for ancestral nodes that minimizes the number of
 #' character state transitions (either gains or losses/reversals) for a given topology and a set of
@@ -151,12 +151,12 @@
 #' \code{ancPropStateMat} will instead return the final
 #' contrast table used by \code{phyDat} for
 #' interpreting character state strings.
-#'
+#' 
 #' \code{minCharChange} invisibly returns a list containing
 #' the following elements, several of which are printed
 #' by default to the console, as controlled by
 #' argument \code{printMinResult}:
-#'
+#' 
 #' \describe{
 
 #'  \item{\code{message}}{Describes the performance of
@@ -224,10 +224,10 @@
 #' Narushima, H., and M. Hanazawa. 1997. A more efficient
 #' algorithm for MPR problems in phylogeny.
 #' Discrete Applied Mathematics 80(2-3):231-238.
-#'
+#' 
 #' Schliep, K. P. 2011. phangorn: phylogenetic analysis
 #' in R. \emph{Bioinformatics} 27(4):592-593.
-#'
+#' 
 #' Swofford, D. L., and W. P. Maddison. 1987.
 #' Reconstructing ancestral character states under
 #' Wagner parsimony. \emph{Mathematical Biosciences} 87(2):199-229.
@@ -253,7 +253,7 @@
 #'         cex = cex,
 #'         piecol = ancCol)	
 #'     }
-#'
+#' 
 #' # example with retiolitid graptolite data
 #' 
 #' data(retiolitinae)
@@ -308,7 +308,7 @@
 #' 
 #'  # MPR has much more uncertainty in node estimates
 #' 	 # but that doesn't mean ACCTRAN is preferable
-#'
+#' 
 #' #let's compare unordered versus ordered under MPR
 #' layout(1:2)
 #' quickAncPlotter(tree,
@@ -324,7 +324,7 @@
 #' 
 #' \dontrun{
 #' # what ancPropStateMat automates (with lots of checks):
-#'
+#' 
 #' require(phangorn)
 #' char1 <- matrix(char,,1)
 #' rownames(char1) <- names(char)
@@ -343,12 +343,12 @@
 #' minCharChange(tree,
 #'         trait = char,
 #'         type = "MPR")
-#'
+#' 
 #'  # and now with ACCTRAN
 #'  minCharChange(tree,
 #'         trait = char,
 #'         type = "ACCTRAN")
-#'
+#' 
 #' #POLYMORPHISM IN CHARACTER DATA
 #' 
 #' 
@@ -401,7 +401,7 @@
 #' ancPolyAuto <- ancPropStateMat(tree,
 #'         trait = charPoly, 
 #'         polySymbol = "&")
-#'
+#' 
 #' # but does this match what the table we constructed?
 #' ancPropStateMat(tree, 
 #'         trait = charPoly,

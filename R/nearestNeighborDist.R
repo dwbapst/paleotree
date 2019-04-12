@@ -1,5 +1,5 @@
 #' Nearest Neighbor Distances for Morphological Disparity Studies
-#'
+#' 
 #' This is a simple function for obtaining nearest neighbor distance
 #' from a symmetric pair-wises distance matrix, assumed here to be 
 #' dissimilarities between pairs of taxa. Per-species NND is returned
@@ -9,7 +9,7 @@
 #' This function is mainly included here for pedagogical (teaching) purposes.
 #' NND is so simple to calculate, users are urged to write their own functions
 #' for primary research purposes.
-#'
+#' 
 #' Typically, the \emph{mean} NND for a group is reported and used to compare different
 #' groupings of taxa (such as different time intervals, or different clades). Bootstrapping
 #' should be used to generate confidence intervals.
@@ -35,7 +35,7 @@
 #' and C. E. Mitchell. 2012. Graptoloid diversity and disparity 
 #' became decoupled during the Ordovician mass extinction. \emph{Proceedings 
 #' of the National Academy of Sciences} 109(9):3428-3433.
-#'
+#' 
 #' Ciampaglio, C. N., M. Kemp, and D. W. McShea. 2001. Detecting 
 #' changes in morphospace occupation patterns in the fossil record: 
 #' characterization and analysis of measures of disparity. \emph{Paleobiology}

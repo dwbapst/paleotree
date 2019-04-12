@@ -1,5 +1,5 @@
 #' Joint Probability of A Clade Surviving Infinitely or Being Sampled Once
-#'
+#' 
 #' Given the rates of branching, extinction and sampling, calculates the joint
 #' probability of a random clade (of unknown size, from 1 to infinite) either
 #' (a) never going extinct on an infinite time-scale or (b) being sampled at
@@ -19,7 +19,7 @@
 #' use the generic term 'lineage' to refer to monophyletic groups of one to
 #' infinity members, but others reserve this term for a set of morphospecies
 #' that reflect an unbroken anagenetic chain.
-#'
+#' 
 #' Obviously the equation used makes assumptions about prior knowledge of the
 #' time-scales associated with clades being extant or not: if we're talking
 #' about clades that originated a short time before the recent, the clades that
@@ -29,13 +29,13 @@
 #' in a homogenous birth-death scenario are those that get very large immediately
 #' (similarly, most clades that go extinct also go extinct very shortly after
 #' originating... yes, life is tough).
-#'
+#' 
 #' Both an exact and inexact (iterative) solution is offered; the exact solution
 #' was derived in an entirely different fashion but seems to faithfully reproduce
 #' the results of the inexact solution and is much faster. Thus, the exact
 #' solution is the default. As it would be very simple for any user to look this up
 #' in the code anyway, here's the unpublished equation for the exact solution:
-#'
+#' 
 #' \eqn{Ps = 1-(((p+q+r)-(sqrt(((p+q+r)^2)-(4*p*q))))/(2*p))}
 
 #' @inheritParams SamplingConv
@@ -68,7 +68,7 @@
 #' Bapst, D. W. 2013. A stochastic rate-calibrated method for time-scaling
 #' phylogenies of fossil taxa. \emph{Methods in Ecology and Evolution}.
 #' 4(8):724-733.
-#'
+#' 
 
 #' @examples
 #' #with exact solution

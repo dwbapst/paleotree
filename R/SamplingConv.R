@@ -23,7 +23,7 @@
 #' references below) and the instantaneous rate of sampling per lineage/time
 #' unit ("sRate" or r). If you have estimates of the speciation and extinction
 #' rate, use pqsRate2sProb instead for a more accurate estimate of R.
-#'
+#' 
 #' qsProb2Comp and qsRate2Comp are different calculations for "Pp" or the
 #' probability/proportion of taxa sampled in a clade. Theoretically, one could
 #' use it to extrapolate out the 'true' diversity, assuming the sampling rate
@@ -86,11 +86,11 @@
 #' sRate2sProb(r = 0.5)
 #' sProb2sRate(R = 0.1)
 #' pqsRate2sProb(r = 0.5,p = 0.1,q = 0.1)
-#'
+#' 
 #' # different modes can be tried
 #' qsProb2Comp(R = 0.1,q = 0.1,mode = "budding")
 #' qsProb2Comp(R = 0.1,q = 0.1,mode = "bifurcating")
-#'
+#' 
 #' qsRate2Comp(r = 0.1,q = 0.1)
 
 

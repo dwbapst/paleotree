@@ -1,5 +1,5 @@
 #' Example Species Abundances Tables
-#'
+#' 
 #' A totally fictional example of species abundance data, for testing functions
 #' that require a site-by-taxon table of community ecology data.
 
@@ -11,12 +11,12 @@
 #' A classic dataset of ecological data collected by Satoshi and Okido, consisting of
 #' individual counts for 54 terrestrial faunal and floral species,
 #' fron 23 sites across the mainland Kanto region.
-#'
+#' 
 #' Different ontogenetic stages were compounded and recorded by the common name for the
 #' first ontogenetic stage, with some inconsistency for species whose earliest stage have
 #' only been recently recognized. When separate names are commonly applied to sexual
 #' dimorphic forms, these were also combined and a single common name was used.
-#'
+#' 
 #' \emph{Note: This data is a totally made-up, satirical homage to
 #' a well-known video game series (thus constituting fair-use).}
 
@@ -34,9 +34,9 @@
 #' @docType data
 
 #' @examples
-#'
+#' 
 #' data(kanto)
-#'
+#' 
 #' #visualize site abundances as barplots
 #' barplotAbund <- function(x){
 #' 	x <- x[,colSums(x)>0]
@@ -86,11 +86,11 @@
 #' 
 #' # basically all the analyses & visualizations
 #' 		#for ecology in R that I think are awesome
-#'
+#' 
 #' 
 #' ###########################
 #' #Ordination (PCO, DCA)
-#'
+#' 
 #' #get bray-curtis distances
 #' library(vegan)
 #' bcDist <- vegdist(kanto,method = "bray")
@@ -136,12 +136,12 @@
 #' 
 #' #arrows point at the nearest neighbor of each sample
 #' 	    # based on maximum Spearman rho correlation
-#'
+#' 
 #' ##################################
 #' # Two Way Cluster With Heatmap
-#'
+#' 
 #' # This example based on code provided by Max Christie
-#'
+#' 
 #' # load pheatmap library for this example
 #' library(pheatmap) 
 #' 
@@ -234,12 +234,12 @@
 #' anova(ft)
 #' #also highly significant!
 #' 
-#'
+#' 
 #' }
 #' 
 
 
 
 
-#'
+#' 
 NULL

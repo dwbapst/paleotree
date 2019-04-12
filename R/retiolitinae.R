@@ -9,7 +9,7 @@
 #' @details Interval dates were taken from Sadler et al. (2009). These zones were not a
 #' 1-1 match to those in Bates et al., so it took some merging and splitting by
 #' the package author, so buyer beware.
-#'
+#' 
 #' Character data are from an in prep manuscript containing character data for certain
 #' major morphological innovations of graptoloids, coded for a large number of genera based
 #' on an extensive survey of the published descriptions. The character data presented here
@@ -24,7 +24,7 @@
 #' @docType data
 
 #' @format This dataset is composed of three objects:
-#'
+#' 
 #' \describe{
 
 #'  \item{\code{retioTree}}{An \code{ape} 'phylo' object containing the consensus cladogram.} 
@@ -43,17 +43,17 @@
 
 #' @source 
 #' Source for cladogram and zonal ranges for genera: 
-#'
+#' 
 #' Bates, D. E. B., A. Kozlowska, and A. C. Lenz. 2005. Silurian retiolitid graptolites:
 #' Morphology and evolution. \emph{Acta Palaeontologica Polonica} 50(4):705-720.
 #' 
 #' Source for interval dates for graptolite zones: 
-#'
+#' 
 #' Sadler, P. M., R. A. Cooper, and M. Melchin. 2009. High-resolution, early Paleozoic (Ordovician-Silurian)
 #' time scales. \emph{Geological Society of America Bulletin} 121(5-6):887-906.
-#'
+#' 
 #' Source for morphological character data:
-#'
+#' 
 #' Collected for Bapst and Mitchell, in prep. 
 
 #' @seealso For more example graptolite datasets, see \code{\link{graptDisparity}}

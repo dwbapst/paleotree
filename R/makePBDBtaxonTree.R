@@ -205,15 +205,24 @@
 #'     method = "parentChild")
 #' plotTaxaTreePBDB(ornithTree)
 #' 
-#' #try Linnean
-#' #need to drop repeated taxon first: Hylaeosaurus
-#' findHylaeo <- which(ornithData[,"taxon_name"] == "Hylaeosaurus")
-#' # remove the first Hylaeosaurus
-#' ornithData <- ornithData[-(findHylaeo[1]),]
-#' ornithTree <- makePBDBtaxonTree(ornithData,
+#' #try Linnean!
+#' 
+#' #but first... need to drop repeated taxon first: Hylaeosaurus
+#' findHylaeo <- ornithData$taxon_name == "Hylaeosaurus"
+#' # there's actually only one accepted ID number
+#' HylaeoIDnum <- unique(ornithData[findHylaeo,"taxon_no"])
+#' HylaeoIDnum 
+#' 
+#' # so, take which one has occurrences listed
+#' dropThis <- which((ornithData$n_occs < 1) & findHylaeo)
+#' ornithDataCleaned <- ornithData[-dropThis,]
+#' 
+#' ornithTree <- makePBDBtaxonTree(
+#'     ornithDataCleaned,
 #'     rankTaxon = "genus",
 #'     method = "Linnean")
 #' plotTaxaTreePBDB(ornithTree)
+#' 
 #' 
 #' ########################
 #' #Rhynchonellida

@@ -4,7 +4,7 @@
 \alias{taxonTable2taxonTree}
 \title{Create a Taxonomy-Based Phylogeny ('Taxon Tree') from a Hierarchical Table of Taxonomy Memberships}
 \usage{
-taxonTable2taxonTree(taxonTable, cleanTree = TRUE)
+taxonTable2taxonTree(taxonTable, cleanTree = TRUE, rootLabel = "root")
 }
 \arguments{
 \item{taxonTable}{A matrix of type character and multiple rows and columns, containing the
@@ -20,6 +20,9 @@ back in, to ensure functionality with ape functions
 and ape-derived functions. If \code{FALSE}, none of this post-processing
 is done and users should beware, as such trees can
 lead to hard-crashes of R.}
+
+\item{rootLabel}{If the lowest constant/shared level in the taxonomic hierarchy
+isn't labeled, what label should be given to this level? The default is "root".}
 }
 \value{
 A phylogeny of class 'phylo', where each tip is a taxon listed in the last column of the

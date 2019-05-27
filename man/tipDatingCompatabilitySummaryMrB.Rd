@@ -8,18 +8,23 @@ tipDatingCompatabilitySummaryMrB(runFile, nRuns = 2, burnin = 0.5,
   compatibilityThreshold = 0.5, labelPostProb = TRUE)
 }
 \arguments{
-\item{runFile}{A filename in the current directory, or a path to a file that is either a .p 
-or .t file from a MrBayes analysis. This filename and path will be used for finding additional 
-.t and .p files, via the \code{nRuns} settings and assuming that files are in the
+\item{runFile}{A filename in the current directory,
+or a path to a file that is either a \emph{.p} 
+or \emph{.t} file from a MrBayes analysis. This filename
+and path will be used for finding additional 
+\emph{.t} and \emph{.p} files, via the \code{nRuns}
+settings and assuming that files are in the
 same directory \emph{and} these files are named under
-typical MrBayes file naming conventions. (In other words, if you have renamed your .p or .t files,
+typical MrBayes file naming conventions. (In other words,
+if you have renamed your \emph{.p} or \emph{.t} files,
 this function probably won't be able to find them.)}
 
 \item{nRuns}{The number of runs in your analysis. This variable is used for figuring out what 
 filenames will be searched for: if you specify that you have less runs than you
 actually ran in reality, then some runs won't be examined in thi function. Conversely,
 specify too many, and this function will throw an error when it cannot find files it expects
-but do not exist. The default for this argument (\emph{two} runs) is based on the default number of runs in MrBayes.}
+but do not exist. The default for this argument
+(\emph{two} runs) is based on the default number of runs in MrBayes.}
 
 \item{burnin}{The fraction of trees sampled in the posterior discarded  and not returned
 by this function directly, nor included in calculation of summary trees. Must be a numeric

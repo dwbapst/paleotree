@@ -25,7 +25,7 @@ r_packages:
   - covr
 
 after_success:
-  - Rscript -e 'library(covr); codecov()'
+  -  travis_wait 45 Rscript -e 'covr::codecov()'
 
 ###########
 #OLD: brought back due to r-travis not failing bad builds

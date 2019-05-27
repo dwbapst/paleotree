@@ -20,7 +20,7 @@
 #' analyses in MrBayes, particularly when tip-dating
 #' a tree with fossil taxa, as the half-compatibility
 #' and all-compatibility summary trees offered by the
-#' 'sumt}' command in MrBayes can have issues properly
+#' '\code{sumt}' command in MrBayes can have issues properly
 #' portraying summary trees from such datasets.
 
 #' @param runFile A filename in the current directory,

@@ -167,6 +167,14 @@ These resulting trees are now scaled to units of time, but
 not be placed correctly on an absolute time-scale
 if all tips are extinct. See details of output below.
 }
+\details{
+This function is most useful for dealing with dating
+analyses in MrBayes, particularly when tip-dating
+a tree with fossil taxa, as the half-compatibility
+and all-compatibility summary trees offered by the
+'\code{sumt}' command in MrBayes can have issues properly
+portraying summary trees from such datasets.
+}
 \examples{
 \dontrun{
 

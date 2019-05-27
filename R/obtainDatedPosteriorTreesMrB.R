@@ -96,20 +96,38 @@
 #' The MCCT tree is returned if the argument \code{outputTrees = "MCCT"} is used.
 #' The MAP is the single tree from the post-burnin posterior with the highest
 #' posterior probabilty associated with it. Unfortunately, versions of
-#' \code{paleotree} prior to 
-
-which
-#' contains the set of bifurcations (clades) with the highest product of posterior
-#' probabilities (i.e. are found on the most trees in the post-burnin posterior).
-
-
-
- \code{"MCCT"} and \code{"MAP"}, which 
-#' and  respectively. The MAP is the single tree from the post-burnin
-#' posterior with the highest marginal likelihood. 
-
- Thus, the MAP is the best overall tree, while the MCCT may be the best
-#' tree for summarizing topological support.
+#' \code{paleotree} prior to version 3.2.1 did not use the posterior probability
+#' to select the supposed 'MAP' tree. MrBayes provides two values
+#' for each sampled tree and corresponding parameters: 
+#' \code{LnPr}, the log prior probability of the current parameter 
+#' proposals under the specified prior distributions, 
+#' and \code{LnL}, the log likelihood of the cold chain, i.e. the log-likelihood
+#' of the sampled parameter values, given the observed data and specified models.
+#' Neither of these are the posterior probability. 
+#' The true posterior probability (as given by Bayes Theorem) is 
+#' the prooduct of the likelihood and the prior probability, divided by
+#' the likelihood of the model, the latter of which is very rarely known.
+#' More commonly, the calculatable portion of the posterior probability is
+#' the product of the likelihood and the prior probability; or, here, easily
+#' calculated as the log posterior probability, as the sum of the
+#' log likelihood and log prior probability. Given confusion over application of 'MAP'
+#' trees in previous version of paleotree, three options are available:
+#' \code{"MAPosteriori"} for the Maximum A Posteriori tree (the MAP tree,
+#' or the single tree in the posterior with the highest
+#' posterior probability, as given by \code{LnPr + LnL}),
+#' \code{"MAPriori"} for the Maximum A Priori tree (the tree in the
+#' posterior sample with the highest prior probability, indep of
+#' the data), and \code{"MaxLikelihood"}, the
+#' tree with the highest model likelihood given the data, ignoring the prior probability.
+#' The former option of \code{outputTrees = "MAP"} is deprecated,
+#' as its previous implementation only examine \code{LnPr} and thus
+#' returned the tree now referred to here as the \code{"MAPriori"} tree.
+#' Overall, the Maximum A Posteriori tree is the "best" tree based
+#' on the metric most directly considered by Bayesian analysis for
+#' proposal acceptance, but the MCCT may be
+#' the best tree for summarizing topological support.
+#' In either case, point estimates of topology are often
+#' problematic summaries for phylogenetic analyses.
 
 #' @param file Filename (possibly with path) as a character string
 #' leading to a file which will be overwritten with the output trees (or summary tree),
@@ -181,7 +199,7 @@ which
 #' MAP <- obtainDatedPosteriorTreesMrB(
 #'  	runFile = "C:\\myTipDatingAnalysis\\MrB_run_fossil_05-10-17.nex.run1.t",
 #'  	nRuns = 2, burnin = 0.5, getFixedTimes = TRUE,
-#' 		outputTrees = "MAP", file = NULL)
+#' 		outputTrees = "MAPosteriori", file = NULL)
 #' 
 #' # get a root age from the fixed ages for tips
 #' setRootAge(tree = MAP)
@@ -217,7 +235,11 @@ obtainDatedPosteriorTreesMrB <- function(
 	if(length(outputTrees) != 1){
 		stop("outputTrees must be of length 1")
 		}
-	if(all(outputTrees != c("all","MCCT","MAP")) & !is.numeric(outputTrees)){
+	if(all(
+			outputTrees != c("all","MCCT","MAPosteriori","MAPriori","MaxLikelihood")
+			)
+		& !is.numeric(outputTrees)){
+		########
 		stop("outputTrees must be one of 'all', 'MCCT', or a numeric value indicating the number of trees to randomly sample from the posterior")
 		}
 	if(is.numeric(outputTrees)){	
@@ -348,17 +370,48 @@ obtainDatedPosteriorTreesMrB <- function(
 			outTree <- lapply(outTree,getPosteriorProbabiities,postBurninTrees = lumpTrees)
 			}
 		}
+
 	#
-	if(outputTrees == "MAP"){
-		# get MAP
+	if(outputTrees == "MAPriori"){
+		# get Maximum A Priori tree
 		LnPr <- sapply(lumpTrees,function(x) x$LnPr)
-		whichMAP <- which(LnPr == max(LnPr))
-		outTree <- lumpTrees[[whichMAP]]
+		whichMaxPrior <- which(LnPr == max(LnPr))
+		outTree <- lumpTrees[[whichMaxPrior]]
 		if(labelPostProb){
 			# assign posterior probabilities as node labels
 			outTree <- getPosteriorProbabiities(tree = outTree,postBurninTrees = lumpTrees)
 			}
 		}
+	#
+	if(outputTrees == "MaxLikelihood"){
+		# get Maximum Model Likelihood tree
+		LnL <- sapply(lumpTrees,function(x) x$LnL)
+		whichMaxLikelihood <- which(LnL == max(LnL))
+		outTree <- lumpTrees[[whichMaxLikelihood]]
+		if(labelPostProb){
+			# assign posterior probabilities as node labels
+			outTree <- getPosteriorProbabiities(tree = outTree,postBurninTrees = lumpTrees)
+			}
+		}		
+	#
+	if(outputTrees == "MAPosteriori"){
+		# get Maximum A Posteriori tree
+		#
+		# get posterior probability
+		LnL <- sapply(lumpTrees,function(x) x$LnL)
+		LnPr <- sapply(lumpTrees,function(x) x$LnPr)
+		# Posterior Prob = Prior Prob * Likelihood(data) / likelihood (model)
+			# likelihood (model) is unknown (but is constant!)
+		# the log posterior probability would be the sum of LnL and LnPr
+		LnPost <- LnPr + LnL
+		#
+		whichMaxPosterior <- which(LnPost == max(LnPost))
+		outTree <- lumpTrees[[whichMaxPosterior]]
+		if(labelPostProb){
+			# assign posterior probabilities as node labels
+			outTree <- getPosteriorProbabiities(tree = outTree,postBurninTrees = lumpTrees)
+			}
+		}		
 	#
 	if(outputTrees == "MCCT"){
 		# turns out the MCCT isn't the tree with the highest likelihood

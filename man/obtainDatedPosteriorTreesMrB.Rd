@@ -180,13 +180,18 @@ portraying summary trees from such datasets.
 
 MCCT <- obtainDatedPosteriorTreesMrB(
  	runFile = "C:\\\\myTipDatingAnalysis\\\\MrB_run_fossil_05-10-17.nex.run1.t",
- 	nRuns = 2, burnin = 0.5,
-		outputTrees = "MCCT", file = NULL)
+ 	nRuns = 2, 
+ 	burnin = 0.5,
+ 	outputTrees = "MCCT", 
+ 	file = NULL)
 
 MAP <- obtainDatedPosteriorTreesMrB(
  	runFile = "C:\\\\myTipDatingAnalysis\\\\MrB_run_fossil_05-10-17.nex.run1.t",
- 	nRuns = 2, burnin = 0.5, getFixedTimes = TRUE,
-		outputTrees = "MAPosteriori", file = NULL)
+ 	nRuns = 2, 
+ 	burnin = 0.5, 
+ 	getFixedTimes = TRUE,
+ 	outputTrees = "MAPosteriori", 
+ 	file = NULL)
 
 # get a root age from the fixed ages for tips
 setRootAge(tree = MAP)
@@ -194,9 +199,12 @@ setRootAge(tree = MAP)
 #pull a hundred trees randomly from the posterior
 hundredRandomlySelectedTrees <- obtainDatedPosteriorTreesMrB(
  	runFile = "C:\\\\myTipDatingAnalysis\\\\MrB_run_fossil_05-10-17.nex.run1.t",
- 	nRuns = 2, burnin = 0.5, getFixedTimes = TRUE,
+ 	nRuns = 2, 
+ 	burnin = 0.5, 
+ 	getFixedTimes = TRUE,
  	getRootAges = TRUE,
-		outputTrees = 100, file = NULL)
+ 	outputTrees = 100, 
+ 	file = NULL)
 
 
 }

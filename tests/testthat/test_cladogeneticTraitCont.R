@@ -1,4 +1,6 @@
-library(paleotree)
+test_that("cladogeneticTraitCont functions fine", {
+
+#library(paleotree)
 set.seed(444)
 
 record <- simFossilRecord(
@@ -21,3 +23,5 @@ taxa <- fossilRecord2fossilTaxa(record)
 trait <- cladogeneticTraitCont(taxa)
 tree <- taxa2phylo(taxa)
 plotTraitgram(trait,tree,conf.int = FALSE)
+
+})

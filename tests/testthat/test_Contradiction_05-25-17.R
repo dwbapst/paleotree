@@ -1,6 +1,8 @@
+test_that("contradiction distance tests work as expected", {
+
 # test for hidden function testContradiction
 
-library(paleotree)
+#library(paleotree)
 
 test<-c(
   paleotree:::testContradiction(c("A","B"),c("A","B")), #should be FALSE (no contradiction)
@@ -53,3 +55,5 @@ test<-c(
 	identical(treeContradiction(treeA,treeA),0)  # should be zero distanceH
 )
 if(!all(test)){stop("test of treeContradiction failed!")}
+
+})

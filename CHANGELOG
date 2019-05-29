@@ -3,6 +3,7 @@ Version - 3.2.0 -
 -Updated all PBDB-dependent functions to use the current 2019 specifications of the v1.2 API for the PBDB
 -Phylopic plotting functions refined, with more user control of the resulting plot
 -Numerous fixes to how making taxon trees are created
+-Noted that functions for processing MrBayes trees was not checking if names for NEXUS files included .nex or not - added a test for this, so that .nex would be added if it wasn't present
 -
 
 Version - 3.1.9 - 02-15-19 (Not Released to CRAN)

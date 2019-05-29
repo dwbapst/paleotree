@@ -306,9 +306,15 @@ obtainDatedPosteriorTreesMrB <- function(
 	#
 	if(getFixedTimes){
 		if(is.null(originalNexusFile)){
-			# file name, if presuming shares run name with 
-			#originalNexusFile <- paste0(runPath,".nex")
-			originalNexusFile <- runPath
+			# does runPath end with .nex already?
+			endNex <- grepl("\\.nex$", runPath , ignore.case=TRUE)
+			#
+			# if the nexus file does not end with .nex, add it
+			if(endNex){
+				originalNexusFile <- runPath
+			}else{
+				originalNexusFile <- paste0(runPath,".nex")
+				}			
 			}
 		fixedTable <- getMrBFixedAgesFromNexus(originalNexusFile)
 		if(nrow(fixedTable)==0 & getRootAges){

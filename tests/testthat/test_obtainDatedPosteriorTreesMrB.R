@@ -5,15 +5,15 @@ test_that("obtainDatedPosteriorTreesMrB works", {
 fileTest <- "data//retio_dating.run1.t"
 
 MCCT <- obtainDatedPosteriorTreesMrB(
- 	runFile = fileTest,
- 	nRuns = 2, 
+	runFile = fileTest,
+	nRuns = 2, 
 	burnin = 0.5,
 	outputTrees = "MCCT", 
 	file = NULL)
 
 MAP <- obtainDatedPosteriorTreesMrB(
- 	runFile = fileTest,
- 	nRuns = 2, 
+	runFile = fileTest,
+	nRuns = 2, 
 	burnin = 0.5, 
 	getFixedTimes = TRUE,
 	outputTrees = "MAPosteriori", 

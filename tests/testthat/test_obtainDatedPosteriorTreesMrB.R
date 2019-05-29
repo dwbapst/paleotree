@@ -2,7 +2,7 @@ test_that("obtainDatedPosteriorTreesMrB works", {
 
 #library(paleotree)
 
-fileTest <- "data//balnibarbinae_mrB_tip-dating_08-13-18.nex.run1.t"
+fileTest <- "data//retio_dating.run1.t"
 
 MCCT <- obtainDatedPosteriorTreesMrB(
  	runFile = fileTest,

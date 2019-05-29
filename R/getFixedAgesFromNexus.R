@@ -34,10 +34,10 @@ getMrBFixedAgesFromNexus <- function(origNexusFile, shouldEndWithNex = TRUE){
 	if(shouldEndWithNex){
 		# does it end with .nex already?
 		endNex <- grepl("\\.nex$", 
-			originalNexusFile , ignore.case=TRUE)
+			origNexusFile , ignore.case=TRUE)
 		# if the nexus file does not end with .nex, add it
 		if(!endNex){
-			originalNexusFile <- paste0(originalNexusFile,".nex")
+			origNexusFile <- paste0(origNexusFile,".nex")
 			}
 		}
 	#############################

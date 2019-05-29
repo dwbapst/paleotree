@@ -316,7 +316,7 @@ obtainDatedPosteriorTreesMrB <- function(
 				originalNexusFile <- paste0(runPath,".nex")
 				}			
 			}
-		fixedTable <- getMrBFixedAgesFromNexus(originalNexusFile)
+		fixedTable <- getMrBFixedAgesFromNexus(origNexusFile = originalNexusFile)
 		if(nrow(fixedTable)==0 & getRootAges){
 			stop("No fixed ages found for obtaining $root.time, cannot use argument getRootAges = TRUE")
 			}

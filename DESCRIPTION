@@ -1,8 +1,8 @@
 Package: paleotree
 Type: Package
-Version: 3.2.2
+Version: 3.2.3
 Title: Paleontological and Phylogenetic Analyses of Evolution
-Date: 2019-05-15
+Date: 2019-05-29
 Author: David W. Bapst, Peter J. Wagner
 Depends:
 	R (>= 3.0.0),

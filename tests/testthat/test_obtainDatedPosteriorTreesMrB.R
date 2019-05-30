@@ -1,6 +1,7 @@
 test_that("obtainDatedPosteriorTreesMrB works", {
 
 #library(paleotree)
+#setwd("d://dave//workspace//paleotree//tests//testthat")
 
 fileTest <- "data//retio_dating.run1.t"
 

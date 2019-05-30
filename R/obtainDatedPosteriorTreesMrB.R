@@ -367,6 +367,7 @@ obtainDatedPosteriorTreesMrB <- function(
 	for(i in 1:nRuns){
 		for(j in 1:length(rescaledTrees[[i]])){
 			rescaledTrees[[i]][[j]]$LnPr <- parFilesBurn[[i]][j,]$LnPr
+			rescaledTrees[[i]][[j]]$LnL <- parFilesBurn[[i]][j,]$LnL
 			}
 		}
 	# concatanate trees from each run
@@ -415,6 +416,8 @@ obtainDatedPosteriorTreesMrB <- function(
 		# Posterior Prob = Prior Prob * Likelihood(data) / likelihood (model)
 			# likelihood (model) is unknown (but is constant!)
 		# the log posterior probability would be the sum of LnL and LnPr
+		#print(LnPr)
+		#print(LnL)
 		LnPost <- LnPr + LnL
 		#
 		whichMaxPosterior <- which(LnPost == max(LnPost))

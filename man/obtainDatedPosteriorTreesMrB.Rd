@@ -73,6 +73,11 @@ tree with the highest model likelihood given the data, ignoring the prior probab
 The former option of \code{outputTrees = "MAP"} is deprecated,
 as its previous implementation only examine \code{LnPr} and thus
 returned the tree now referred to here as the \code{"MAPriori"} tree.
+Interestingly, this bug had no effect when tip-dating methods is applied to 
+datasets with no character matrix is provided (an empty matrix of '?' missing values is used)
+in order to find dated phylogenies that maximize the fit to the dated tree prior, 
+as the log likelihood for a tree with an empty matrix is \emph{always} zero, and thus the posterior
+probability is always exactly identical to the prior probability. 
 Overall, the Maximum A Posteriori tree is the "best" tree based
 on the metric most directly considered by Bayesian analysis for
 proposal acceptance, but the MCCT may be

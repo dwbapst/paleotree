@@ -9,11 +9,11 @@ MCCT <- obtainDatedPosteriorTreesMrB(
 	runFile = fileTest,
 	nRuns = 2, 
 	burnin = 0.5,
+	getFixedTimes = TRUE,
 	outputTrees = "MCCT", 
 	file = NULL)
 
 expect_message(
-expect_warning(
 MAP <- obtainDatedPosteriorTreesMrB(
 	runFile = fileTest,
 	nRuns = 2, 
@@ -21,7 +21,7 @@ MAP <- obtainDatedPosteriorTreesMrB(
 	getFixedTimes = TRUE,
 	outputTrees = "MAPosteriori", 
 	file = NULL)
-))
+)
 		
 MAPr <- obtainDatedPosteriorTreesMrB(
  	runFile = fileTest,

@@ -9,7 +9,7 @@ MCCT <- obtainDatedPosteriorTreesMrB(
 	runFile = fileTest,
 	nRuns = 2, 
 	burnin = 0.5,
-	getFixedTimes = TRUE,
+	getFixedTimes = FALSE,
 	outputTrees = "MCCT", 
 	file = NULL)
 
@@ -43,10 +43,10 @@ MaxLike <- obtainDatedPosteriorTreesMrB(
 ))
 
 # get a root age from the fixed ages for tips
+	# but root age already exists so this should return an error
+expect_error(
 setRootAge(tree = MCCT)
-setRootAge(tree = MAP)
-setRootAge(tree = MAPr)
-setRootAge(tree = MaxLike)
+)
 
 #pull a hundred trees randomly from the posterior
 hundredRandomlySelectedTrees <- obtainDatedPosteriorTreesMrB(

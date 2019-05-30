@@ -1,10 +1,12 @@
-Version - 3.2.0 - 
+Version - 3.2.4 - 
+- Noted that functions for processing MrBayes trees was not checking if names for NEXUS files included .nex or not - added a test for this, so that .nex would be added if it wasn't present
+- Anat Shafir reported that paleotree's obtainDatedPosteriorTreesMrB was inappropriately using the prior probability, not the posterior probability, for finding the Maximum A Posterior tree (and thus was presumably returning the Maximum A Priori tree). This was fixed and the help was greatly clarified. For many paleotree users tip-dating with an empty matrix, however, the log-likelihood of the character data is always zero, and thus the posterior probability in those cases was always identical to the prior probability. Regardless, point estimates of topologies are always to be less preferred than looking at samples of trees from the posterior.
+
+Version - 3.2.0 - 04-14-19 (Not Released to CRAN)
 -Replaced all instances of is.binary.tree with ape::is.binary.phylo
 -Updated all PBDB-dependent functions to use the current 2019 specifications of the v1.2 API for the PBDB
 -Phylopic plotting functions refined, with more user control of the resulting plot
 -Numerous fixes to how making taxon trees are created
--Noted that functions for processing MrBayes trees was not checking if names for NEXUS files included .nex or not - added a test for this, so that .nex would be added if it wasn't present
--
 
 Version - 3.1.9 - 02-15-19 (Not Released to CRAN)
 -Updates to timePaleoPhy and cal3 documentation for dateTreatment argument, thanks to Armin Eisler for pointing out some inaccuracies in the text.

@@ -122,6 +122,11 @@
 #' The former option of \code{outputTrees = "MAP"} is deprecated,
 #' as its previous implementation only examine \code{LnPr} and thus
 #' returned the tree now referred to here as the \code{"MAPriori"} tree.
+#' Interestingly, this bug had no effect when tip-dating methods is applied to 
+#' datasets with no character matrix is provided (an empty matrix of '?' missing values is used)
+#' in order to find dated phylogenies that maximize the fit to the dated tree prior, 
+#' as the log likelihood for a tree with an empty matrix is \emph{always} zero, and thus the posterior
+#' probability is always exactly identical to the prior probability. 
 #' Overall, the Maximum A Posteriori tree is the "best" tree based
 #' on the metric most directly considered by Bayesian analysis for
 #' proposal acceptance, but the MCCT may be
@@ -389,6 +394,13 @@ obtainDatedPosteriorTreesMrB <- function(
 		# get Maximum A Priori tree
 		LnPr <- sapply(lumpTrees,function(x) x$LnPr)
 		whichMaxPrior <- which(LnPr == max(LnPr))
+		if(length(whichMaxPrior)>1){
+			warning(paste0(
+				"Multiple trees found with identical maximum prior probability.\n",
+				"May suggest overly flat priors. Returning the first found."
+				))
+			whichMaxPrior <- whichMaxPrior[1]
+			}
 		outTree <- lumpTrees[[whichMaxPrior]]
 		if(labelPostProb){
 			# assign posterior probabilities as node labels
@@ -399,7 +411,21 @@ obtainDatedPosteriorTreesMrB <- function(
 	if(outputTrees == "MaxLikelihood"){
 		# get Maximum Model Likelihood tree
 		LnL <- sapply(lumpTrees,function(x) x$LnL)
+		#print(LnL)
+		#print(max(LnL))
 		whichMaxLikelihood <- which(LnL == max(LnL))
+		if(length(whichMaxLikelihood)>1){
+			warning(paste0(
+				"Multiple trees found with identical maximum likelihood values.\n",
+				"May suggest overly flat likelihood surfaces. Returning the first found."
+				))
+			whichMaxLikelihood <- whichMaxLikelihood[1]
+			}
+		if(all(LnL == 0)){
+			message(paste0(
+				"All log likelihood values are 0, suggesting an empty character matrix was used.\n",
+				"Posterior probability is thus exactly identical to prior probability."))
+			}
 		outTree <- lumpTrees[[whichMaxLikelihood]]
 		if(labelPostProb){
 			# assign posterior probabilities as node labels
@@ -421,6 +447,18 @@ obtainDatedPosteriorTreesMrB <- function(
 		LnPost <- LnPr + LnL
 		#
 		whichMaxPosterior <- which(LnPost == max(LnPost))
+		if(length(whichMaxPosterior)>1){
+			warning(paste0(
+				"Multiple trees found with identical maximum posterior probability.\n",
+				"May suggest overly flat priors or flat likelihood surfaces. Returning the first found."
+				))
+			whichMaxPosterior <- whichMaxPosterior[1]
+			}
+		if(all(LnL == 0)){
+			message(paste0(
+				"All log likelihood values are 0, suggesting an empty character matrix was used.\n",
+				"Posterior probability is thus exactly identical to prior probability."))
+			}
 		outTree <- lumpTrees[[whichMaxPosterior]]
 		if(labelPostProb){
 			# assign posterior probabilities as node labels

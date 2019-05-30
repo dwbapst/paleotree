@@ -12,6 +12,8 @@ MCCT <- obtainDatedPosteriorTreesMrB(
 	outputTrees = "MCCT", 
 	file = NULL)
 
+expect_message(
+expect_warning(
 MAP <- obtainDatedPosteriorTreesMrB(
 	runFile = fileTest,
 	nRuns = 2, 
@@ -19,6 +21,7 @@ MAP <- obtainDatedPosteriorTreesMrB(
 	getFixedTimes = TRUE,
 	outputTrees = "MAPosteriori", 
 	file = NULL)
+))
 		
 MAPr <- obtainDatedPosteriorTreesMrB(
  	runFile = fileTest,
@@ -27,7 +30,9 @@ MAPr <- obtainDatedPosteriorTreesMrB(
 	getFixedTimes = TRUE,
 	outputTrees = "MAPriori", 
 	file = NULL)
-		
+
+expect_message(
+expect_warning(		
 MaxLike <- obtainDatedPosteriorTreesMrB(
  	runFile = fileTest,
  	nRuns = 2, 
@@ -35,6 +40,7 @@ MaxLike <- obtainDatedPosteriorTreesMrB(
 	getFixedTimes = TRUE,
 	outputTrees = "MaxLikelihood", 
 	file = NULL)
+))
 
 # get a root age from the fixed ages for tips
 setRootAge(tree = MCCT)

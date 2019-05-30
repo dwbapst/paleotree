@@ -1,5 +1,5 @@
 #' Cladistic Data for Dicranograptid Graptolites from Song and Zhang (2014)
-#'
+#' 
 #' Character matrix and two cladograms for 13 dicranograptid
 #' (and outgroup) graptoloids, taken from Song and Zhang (2014). Included
 #' here for use with functions related to character change.
@@ -12,7 +12,7 @@
 #' This example dataset is composed of a small cladistic character data for 13 taxa and 24 characters,
 #' taken from Song and Zhang (2014). Note that character 22 is a biostratigraphic character, which was
 #' not included in all analyses by Song and Zhang.
-#'
+#' 
 #' The first included cladogram \code{cladogramDicranoX12} is the
 #' majority-rule consensus of a maximum-parsimony analysis on 12
 #' taxa (excluding on taxa with incompletely known anatomy) with
@@ -24,7 +24,7 @@
 #' The second cladogram \code{cladogramDicranoX13} is a maximum-parsimony tree found by a maximum-parsimony
 #' analysis of 13 taxa with 24 characters, including a biostratigraphic character. This tree is much more resolved
 #' than the alternative majority-rule cladogram for 12 taxa.
-#'
+#' 
 #' The matrix and both trees were entered by hand from their flat graphic depiction in Song and Zhang's
 #' manuscript.
 
@@ -47,7 +47,7 @@
 #' @docType data
 
 #' @examples
-#'
+#' 
 #' data(SongZhangDicrano)
 #' 
 #' # Examining morphospace with a distance matrix
@@ -91,7 +91,7 @@
 #'    ylab = paste("PCO Axis 2, Rel. Corr. Eigenvalue  = ",round(rel_corr_eig[2],3)))
 #' 
 #' #######
-#'
+#' 
 #' # plot 12 taxon majority rule tree from Song and Zhang
 #' plot(cladogramDicranoX12,
 #' 	main = "MajRule_24charX12Taxa_wBiostratChar")
@@ -99,9 +99,9 @@
 #' # plot 13 taxon MPT
 #' plot(cladogramDicranoX13,
 #' 	main = "MPT_24charX13Taxa_wBiostratChar")
-#'
+#' 
 #' ##############
-#'
+#' 
 #' \dontrun{
 #' # Data was generated with following script:
 #' require(ape)

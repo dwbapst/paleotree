@@ -1,5 +1,5 @@
 #' Plotting Occurrence Data Across Taxa
-#'
+#' 
 #' \code{plotOccData} takes occurrence data which has been sorted into a by-taxon list,
 #' such as that output by \code{taxonSortPBDBocc} or may be output by simulations using
 #' \code{sampleRanges} and produces a plot showing the age uncertainty associated with
@@ -8,7 +8,7 @@
 #' @details
 #' This function was originally conceived of in the following blog post: 
 #' \href{http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html}{Link}
-#'
+#' 
 
 #' @param occList A list where every element is a table of occurrence data for a different taxon,
 #' such as that returned by \code{\link{taxonSortPBDBocc}}. The occurrence data can be either a 
@@ -37,7 +37,12 @@
 #' two-column matrix of age bounds for occurrences.
 
 #' @seealso
-#' \code{\link{taxonSortPBDBocc}}, \code{\link{occData2timeList}} 
+#' Occurrence data as commonly used with \code{paleotree} functions can
+#' be obtained with \code{link{getPBDBocc}}, and sorted into taxa by 
+#' \code{\link{taxonSortPBDBocc}}, and further explored with this function and
+#' \code{\link{occData2timeList}}. Also, see the example graptolite dataset
+#' at \code{\link{graptPBDB}}
+
 #' and the example graptolite dataset at \code{\link{graptPBDB}}
 
 #' @author David W. Bapst
@@ -54,7 +59,7 @@
 #' 
 #' #this isn't too many occurrences, because there are so few
 #'     #formal grapt species in the PBDB
-#'
+#' 
 #' #genera is messier...
 #' 
 #' #get formal genera

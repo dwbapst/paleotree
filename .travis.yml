@@ -1,12 +1,15 @@
 # as of 04-17-15 can be just
 
+
 addons:
   apt:
     packages:
-      - libgsl2
+      - libgslcblas0
       - gsl-bin
       - libgsl-dev
       - libmagick++-dev
+      
+# replaced libgsl2 with libgslcblas0
 
 language: r
 sudo: required
@@ -25,7 +28,7 @@ r_packages:
   - covr
 
 after_success:
-  - Rscript -e 'library(covr); codecov()'
+  -  travis_wait 45 Rscript -e 'covr::codecov()'
 
 ###########
 #OLD: brought back due to r-travis not failing bad builds

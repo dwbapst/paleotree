@@ -210,6 +210,7 @@ ceratopsianTreeRaia <- paste0("((((((((((((Centrosaurus_apertus:5.1,Styracosauru
  "osaurus_houi:9,(Psittacosaurus_mongoliensis:33.5, (Psittacosaurus_meileyingensis:20,(Psitt",
  "acosaurus_major:7.5,(Psittacosaurus_gobiensis:21,(Psittacosaurus_sinensis:24, Psittacosaur",
  "us_neimongoliensis:18):1):1.5):0.5):0.5):0.5):1):23,Yinlong_downsi:6):3;")
+
 ceratopsianTreeRaia <- read.tree(text = ceratopsianTreeRaia)
 
 # Raia et al. placed origin of ceratopsians at ~163 Ma, base of Oxfordian
@@ -252,6 +253,9 @@ cervidTreeRaia$tip.label[
 	node.depth.edgelength(cervidTreeRaia)[which(cervidTreeRaia$tip.label == "Dama_dama")])
 
 plot(cervidTreeRaia);axisPhylo()
+
+}
+\dontrun{
 
 save.image("RaiaCopesRule.rdata")
 

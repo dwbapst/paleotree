@@ -1,5 +1,5 @@
 #' Create a Taxonomy-Based Phylogeny ('Taxon Tree') from a Hierarchical Table of Taxonomy Memberships
-#'
+#' 
 #' This function takes a matrix of taxon names,
 #' indicating a set of hierarchical taxonomic relationships
 #' conveyed as nested placements for a set of tip-taxa (listed in
@@ -19,6 +19,9 @@
 #' tip taxa are in) are allowed, but all but the most 'shallow' of such invariant taxa are
 #' dropped prior to transformation to a taxon-tree phylogeny object.
 
+#' @param rootLabel If the lowest constant/shared level in the taxonomic hierarchy
+#' isn't labeled, what label should be given to this level? The default is "root".
+
 #' @return
 #' A phylogeny of class 'phylo', where each tip is a taxon listed in the last column of the
 #' input taxonTable. Edges are scaled so that
@@ -27,7 +30,7 @@
 #' two genera emanating from a node representing a class but with a very short (length = 1) branch
 #' and a long branch (length = 3) means one genus is simply placed in the class, with no family or order listed
 #' while the one on the long branch is within an order and family that is otherwise monogeneric.
-#'
+#' 
 #' The names of higher taxa than the tips should be appended as the element $node.label for the internal nodes.
 
 #' @seealso \code{\link{makePBDBtaxonTree}}, \code{\link{parentChild2taxonTree}}
@@ -35,7 +38,7 @@
 #' @author David W. Bapst
 
 #' @examples
-#'
+#' 
 #' #let's create a small, really cheesy example
 #' pokeTable <- rbind(cbind("Pokezooa","Shelloidea","Squirtadae",
 #' 		c("Squirtle","Blastoise","Wartortle")),
@@ -47,40 +50,61 @@
 #' 
 #' pokeTree <- taxonTable2taxonTree(pokeTable)
 #' plot(pokeTree);nodelabels(pokeTree$node.label)
-#'
+#' 
 
 #' @name taxonTable2taxonTree
 #' @rdname taxonTable2taxonTree
 #' @export
-taxonTable2taxonTree <- function(taxonTable,cleanTree = TRUE){
+taxonTable2taxonTree <- function(taxonTable, cleanTree = TRUE, rootLabel = "root"){
 	# taxonTable <- taxonData
 	#CHECKS
 	if(length(dim(taxonTable)) != 2 | !is.character(taxonTable)){
 		stop("taxonTable must be a matrix of class character with multiple columns and rows")
 		}
-	if(all(dim(taxonTable)<2)){stop("taxonTable must have multiple rows and columns")}
+	if(all(dim(taxonTable)<2)){
+		stop("taxonTable must have multiple rows and columns")
+		}
 	#
 	#turn NAs to blanks
 	taxonTable[is.na(taxonTable)] <- ""
 	#
-	#remove constant columns, as they are meaningless
+	# check for constant columns, as they don't mean anything for taxonomic hierarchy
 	constantCol <- apply(taxonTable,2,function(x) all(x == x[1]))
-	# except for the last (which will be the root)
-	constantCol[rev(which(constantCol))[1]] <- FALSE
-	taxonTable <- taxonTable[,!constantCol,drop = FALSE]
+	# exception : the last constant column will always be the root
+		# keep this column, and if all values are "", replace with "root"
+	rootColumn <- rev(which(constantCol))[1]
+	constantCol[rootColumn] <- FALSE
+	if(all(taxonTable[,rootColumn] == "")){
+		taxonTable[,rootColumn] <- rep(rootLabel, nrow(taxonTable))
+		}
 	#check that enough columns remain
-	if(ncol(taxonTable)<2){stop("Must have at least one varying taxonomy columns in taxonTable")}
+	if(ncol(taxonTable)<2){
+		stop("Must have at least one varying taxonomy columns in taxonTable")
+		}
 	#
-	#turn blanks to NAs
+	#turn blanks BACK to NAs
 	taxonTable[taxonTable == ""] <- NA
+	#print(taxonTable)
+	#
 	#are there any missing names
 	if(any(is.na(taxonTable[,ncol(taxonTable)]))){
-		stop("Missing tip taxon names in taxonTable?")}
+		stop("Missing tip taxon names in taxonTable?")
+		}
+	#
 	#tip taxon labels
 	labels <- taxonTable[,ncol(taxonTable)]
-	edge <- matrix(NA,,2)
+	# 
+	# any repeating labels?
+	if(length(labels) != length(unique(labels))){
+		stop(paste0(
+			"Duplicated labels found for taxa at indicated tip level within input taxonTable:\n",
+			labels[duplicated(labels)]))
+		}
+	#
 	#need to define columns BACKWARDS..
 	levels <- rev(1:ncol(taxonTable))[-1]
+	#
+	edge <- matrix(NA,,2)
 	for(level in levels){
 		newNodes <- unique(taxonTable[,level])[!is.na(unique(taxonTable[,level]))]
 		for(node in newNodes){
@@ -95,6 +119,7 @@ taxonTable2taxonTree <- function(taxonTable,cleanTree = TRUE){
 			descID <- sapply(descTax,function(x) which(x == labels))
 			names(descID) <- NULL
 			newEdge <- cbind(nodeID,descID)
+			#print(newEdge)
 			edge <- rbind(edge,newEdge)
 			}
 		}
@@ -104,6 +129,10 @@ taxonTable2taxonTree <- function(taxonTable,cleanTree = TRUE){
 	tip.label <- taxonTable[,ncol(taxonTable)]
 	node.label <- labels[-(1:length(tip.label))]
 	Ntip <- length(tip.label)
+	#
+	#print(edge)
+	#print(unique(edge))
+	#
 	#need to flip node numbers
 	nodes <- sort(unique(edge[,1]))
 	nodes <- cbind(c(1:Ntip,nodes),c(1:Ntip,rev(nodes)))
@@ -112,7 +141,12 @@ taxonTable2taxonTree <- function(taxonTable,cleanTree = TRUE){
 	#check root
 	nodes <- sort(unique(edge[,1]))
 	root <- nodes[sapply(nodes,function(x) all(x != edge[,2]))]
-	if(root != (Ntip+1)){stop("Root isn't renumbering correctly")}
+	if(length(root) > 1){
+		stop(paste0("Multiple (",length(root),") roots found in data??"))
+		}
+	if(root != (Ntip+1)){
+		stop("Root isn't renumbering correctly")
+		}
 	#reorder edge
 	edge <- edge[order(edge[,1],edge[,2]),]
 	#make the tree
@@ -120,6 +154,7 @@ taxonTable2taxonTree <- function(taxonTable,cleanTree = TRUE){
 		Nnode = Nnode,node.label = rev(node.label))	
 	class(tree) <- "phylo"
 	if(cleanTree){ #make it a good tree
+		#print(tree$edge)
 		tree <- cleanNewPhylo(tree)
 		}
 	if(Ntip(tree) != nrow(taxonTable)){stop("Taxa number changed while cleaning tree")}

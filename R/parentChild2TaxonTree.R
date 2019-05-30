@@ -1,5 +1,5 @@
 #' Create a Taxonomy-Based Phylogeny ('Taxon Tree') from a Table of Parent-Child Taxon Relationships
-#'
+#' 
 #' This function takes a two-column matrix of taxon names,
 #' indicating a set of binary parent-taxon:child-taxon 
 #' paired relationships with a common root, and returns
@@ -32,7 +32,7 @@
 #' @return
 #' A phylogeny of class 'phylo', with tip taxa as controlled by argument \code{tipSet}.
 #' The output tree is returned with no edge lengths.
-#'
+#' 
 #' The names of higher taxa than the tips should be appended as the element $node.label for the internal nodes.
 
 #' @seealso \code{\link{makePBDBtaxonTree}}, \code{\link{taxonTable2taxonTree}}
@@ -52,11 +52,11 @@
 #' #Default: tipSet = 'nonParents'
 #' pokeTree <- parentChild2taxonTree(pokexample, tipSet = "nonParents")
 #' plot(pokeTree);nodelabels(pokeTree$node.label)
-#'
+#' 
 #' #Get ALL taxa as tips with tipSet = 'all'
 #' pokeTree <- parentChild2taxonTree(pokexample, tipSet = "all")
 #' plot(pokeTree);nodelabels(pokeTree$node.label)
-#'
+#' 
 #' 
 #' \dontrun{
 #' 
@@ -82,10 +82,10 @@
 #' 	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
 #' 	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"),
 #' 	c("Umbrarcheota","Gengar"))
-#'
+#' 
 #' #this should return an error, as Shelloidea is its own parent
 #' pokeTree <- parentChild2taxonTree(pokexample_bad2)
-#'
+#' 
 #' }
 #' 
 #' 
@@ -100,15 +100,16 @@
 #' parentChild2taxonTree(taxa[,2:1])
 #' # now note that it issues a warning that the input wasn't type character
 #'    # and it will be coerced to be such
-#'
+#' 
 
 
 #' @name parentChild2taxonTree
 #' @rdname parentChild2taxonTree
 #' @export
-parentChild2taxonTree <- function(parentChild,tipSet = "nonParents",cleanTree = TRUE){
+parentChild2taxonTree <- function(parentChild, tipSet = "nonParents", cleanTree = TRUE){
 	#,reorderTree = TRUE
 	#
+	
 	#takes a two column matrix of character class taxon names
 		#each row is a relationship: parent, then child
 	#CHECKS
@@ -172,8 +173,10 @@ parentChild2taxonTree <- function(parentChild,tipSet = "nonParents",cleanTree = 
 	edgeMat <- matrix(,nrow(parentChild),ncol(parentChild))
 	taxonNames <- c(tipNames,nodeNames)
 	#test that none have been lost
-	if(length(taxonNames) != length(unique(c(parentChild[,1],parentChild[,2])))){
-		stop("Number of tip and node names doesn't sum to total number of unique names in parentChild")}
+	nUniquePC <- length(unique(c(parentChild[,1],parentChild[,2])))
+	if(length(taxonNames) != nUniquePC){
+		stop("Number of tip and node names doesn't sum to total number of unique names in parentChild")
+		}
 	#convert internal nodes to Ntip+nodeNames ID
 	edgeMat[,1] <- sapply(parentChild[,1],function(x)
 		which(sapply(taxonNames,identical,x)))
@@ -183,7 +186,8 @@ parentChild2taxonTree <- function(parentChild,tipSet = "nonParents",cleanTree = 
 	edge <- edgeMat[order(edgeMat[,1],edgeMat[,2]),]
 	#check edge
 	if(!testParentChild(parentChild = edge)){
-		stop("created edge relationships are inconsistent")}	
+		stop("created edge relationships are inconsistent")
+		}	
 	#make the tree
 	tree <- list(edge = edge,tip.label = tipNames,edge.length = NULL, #edge.length = rep(1,nrow(edge))
 		Nnode = length(nodeNames),node.label = nodeNames)
@@ -223,7 +227,8 @@ charEdge2numeric <- function(parentChild){
 	parentChild2[,2] <- sapply(parentChild[,2],function(x) 
 		which(sapply(unqIDs,identical,x))-1)	
 	if(!is.numeric(parentChild2)){
-		stop("parentChild not coercing correctly to numeric for charEdge2numeric")}
+		stop("parentChild not coercing correctly to numeric for charEdge2numeric")
+		}
 	return(parentChild2)
 	}
 
@@ -268,8 +273,10 @@ testParentChild <- function(parentChild){
 	#
 	#test for nodes listed as descendant twice
 	if(any(table(parentChild[,2])>1)){
-		stop(paste("Some IDs are listed as a descendant twice in the edge/parentChild matrix",
-		paste0(parentChild[duplicated(parentChild[,2]),2],collapse = ", ")))}
+		stop(paste(
+			"Some IDs are listed as a descendant twice in the edge/parentChild matrix",
+			paste0(parentChild[duplicated(parentChild[,2]),2],collapse = ", "))
+			)}
 	#test that all but one node has an ancestor
 	parentMatch <- match(unique(parentChild[,1]),parentChild[,2])
 	if(sum(is.na(parentMatch))>1){

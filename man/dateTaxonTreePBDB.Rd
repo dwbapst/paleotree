@@ -6,7 +6,7 @@
 \usage{
 dateTaxonTreePBDB(taxaTree, taxaDataPBDB = taxaTree$taxaDataPBDB,
   minBranchLen = 0, tipTaxonDateUsed = "shallowestAge",
-  plotTree = FALSE)
+  dropZeroOccurrenceTaxa = TRUE, plotTree = FALSE)
 }
 \arguments{
 \item{taxaTree}{A tree with tip taxon names matching the taxon names
@@ -38,6 +38,11 @@ related taxa often first occur in the same short interval of geologic time, due 
 diversification bursts and/or the heterogeneity of fossil preservation, this may
 result in confusing polytomies of many terminal taxa with no terminal branch lengths.}
 
+\item{dropZeroOccurrenceTaxa}{If \code{TRUE}, the default, then extinct taxa
+or extinct clades found to have zero occurrences in the Paleobiology Database
+are removed. If this option isn't used, the function will likely fail as nodes
+or tips with \code{NA} ages listed cannot be processed by \code{parentChild2TaxonTree}.}
+
 \item{plotTree}{If \code{TRUE}, the resulting dated tree is plotted.
 This is \code{FALSE} by default.}
 }
@@ -47,23 +52,76 @@ Returns a dated phylogeny of class \code{phylo}, with an additional element
 called by other functions.
 }
 \description{
-The function \code{dateTaxonTreePBDB} takes a topology of  
-The required input is a topology with tip and internal node labels corresponding to taxa in the Paleobiology Database, and a table of data (containing those same tip and node taxa) obtained from the taxa-list functionality of the Paleobiology Database's API, with appearance times output.
+The function \code{dateTaxonTreePBDB} takes a input consisting of
+a topology, with tip and internal node labels corresponding to
+taxa in the Paleobiology Database, and a table of data (containing those same tip and
+node taxa) obtained from the taxa-list functionality of the Paleobiology Database's API,
+with appearance times. This function will then output a tree with nodes reflecting the
+ages of the respective higher taxa, based on their earliest times of appearance
+from the Paleobiology Database.
 }
 \details{
-The dating by
+The dating by this function is very simplistic, representing a rather
+straight interpretation of what the PBDB reports. The dated trees
+produced should not be taken overly seriously.
 }
 \examples{
 
-#an example here
+\donttest{
+
+taxaAnimals<-c("Archaeopteryx", "Eldredgeops",
+	"Corvus", "Acropora", "Velociraptor", "Gorilla", 
+	"Olenellus", "Lingula", "Dunkleosteus",
+	"Tyrannosaurus", "Triceratops", "Giraffa",
+	"Megatheriidae", "Aedes", "Histiodella",
+	"Rhynchotrema", "Pecten", "Homo", "Dimetrodon",
+	"Nemagraptus", "Panthera", "Anomalocaris")
+
+data <-getSpecificTaxaPBDB(taxaAnimals)
+tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
+
+#get the ranges 
+timeTree <- dateTaxonTreePBDB(tree)
+
+plotPhyloPicTree(tree = timeTree,
+     depthAxisPhylo = TRUE)
+
+}
+
+\dontrun{
+
+# example using strap
+
+rangesFourDate<-timeTree$tipTaxonFourDateRanges
+colnames(rangesMinMax )<-c("FAD","LAD")
+
+library(strap)
+#now plot it
+strap::geoscalePhylo(
+	tree=timeTree,
+	direction = "upwards",
+	ages=rangesMinMax,
+	cex.tip=0.7,
+	cex.ts=0.55,
+	cex.age=0.5,
+	width=3,
+	tick.scale = 50,
+	quat.rm=TRUE,
+	boxes = "Period",
+	arotate = 90,
+	units=c("Eon","Period","Era"),
+	x.lim=c(650,-20))
+
+}
+
 }
 \references{
 Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
 application programming interface. \emph{Paleobiology} 42(1):1-7.
 }
 \seealso{
-See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
-and \code{\link{plotPhylopicTreePBDB}}.
+See \code{\link{getDataPBDB}}, \code{\link{makePBDBtaxonTree}},
+and \code{\link{plotPhyloPicTree}}.
 }
 \author{
 David W. Bapst

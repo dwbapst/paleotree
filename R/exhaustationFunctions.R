@@ -18,7 +18,7 @@
 #' \code{charExhaustPlot} is a wrapper for \code{accioBestAcquisitionModel} that
 #' produces a plot of the observed character change data against the
 #' expectation under the best-fit model.
-#'
+#' 
 
 #' @details
 #' The functions \code{accioBestAcquisitionModel} 
@@ -155,7 +155,7 @@
 #'    phyloTree = dicranoTree,
 #'    charData = charMat, charTypes = "unordered",
 #'    outgroup = "Exigraptus_uniformis")
-#'
+#' 
 #' # fits models to exhaustion for total accumulation
 #' accioBestAcquisitionModel(
 #'    exhaustion_info = exhaustionResults,

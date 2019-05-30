@@ -23,27 +23,25 @@
 #' If the input tree has a \code{$root.time} element, as expected for most paleo-tree
 #' objects handled by this library, that \code{$root.time} is adjusted if the relative
 #' time of the root divergence changes when terminal branches are dropped.
-#' Adjusted root.times are only given if the input tree has root.times.
+#' This is typically performed via the function \code{\link{fixRootTime}}.
+#' Adjusted \code{$root.time} elements are only given if
+#' the input tree has a \code{$root.time} element.
 #' 
 #' \code{addTermBranchLength} adds an amount equal to the argument \code{addtime} to the
 #' terminal branch lengths of the tree. If there is a \code{$root.time} element, this
 #' is increased by an amount equal to \code{addtime}. A negative amount can be input
 #' to reduce the length of terminal branches. However, if negative branch
-#' lengths are produced, the function fails and a warning is produced. This function
-#' does \emph{not} call \code{fixRootTime}, so the root.time elements in the result tree may
+#' lengths are produced, the function fails and a warning is produced.
+#' The function \code{addTermBranchLength} does \emph{not} call \code{fixRootTime},
+#' so the root.time elements in the result tree may
 #' be nonsensical, particularly if negative amounts are input.
 #' 
-#' When a tree is modified, such as having tips dropped or branches extended,
-#' \code{fixRootTime} can be used to find the new \code{$root.time}. It is mainly used as a
-#' utility function called by a majority of the other functions discussed
-#' in this help file.
-#'
 #' \code{dropPaleoTip} is a wrapper for ape's \code{\link{drop.tip}} which also modifies the
 #' \code{$root.time} element if necessary, using \code{fixRootTime}. Similarly,
 #' bindPaleoTip is a wrapper for phytool's \code{bind.tip} which allows tip age
 #' as input and modifies the \code{$root.time} element if necessary (i.e. if a tip
 #' is added to edge leading up to the root).
-#'
+#' 
 #' Note that for \code{bindPaleoTip}, tips added below the root are subtracted from
 #' any existing \code{$root.edge} element,
 #' as per behavior of \code{link{bind.tip}} and \code{\link{bind.tree}}.
@@ -54,7 +52,7 @@
 #' resulting tree is output.
 #' 
 
-#' @aliases dropZLB dropExtinct dropExtant addTermBranchLength fixRootTime
+#' @aliases dropZLB dropExtinct dropExtant addTermBranchLength 
 
 #' @param tree A phylogeny as a phylo object. \code{dropPaleoTip} requires this
 #' input object to also have a \code{tree$root.time} element. If not provided for
@@ -71,25 +69,6 @@
 #' if the operation alters the \code{tree$root.time}.
 
 #' @param addtime Extra amount of time to add to all terminal branch lengths.
-
-#' @param treeOrig A \code{phylo} object of a time-scaled phylogeny with a \code{$root.time}
-#' element.
-
-#' @param treeNew A \code{phylo} object containing a modified form of \code{treeOrig} (with
-#' no extra tip taxa added, but possibly with some tip taxa removed).
-
-#' @param consistentDepth A logical, either \code{TRUE} or \code{FALSE}. If \code{TRUE} (the default)
-#' the tree's root-to-furthest-tip depth is tested to make sure this depth is
-#' not greater than the new \code{$root.time} appended to the output tree.
-
-#' @param nodeAgeTransfer A logical. If \code{TRUE}, the \code{$root.time} of the new tree is determined by
-#' comparing the clades of taxa between the two input trees. The new root age assigned is the age of
-#' (\emph{1}) the \code{treeOrig} clade that contains \emph{all} taxa present in \code{treeNew} and, if the set of (1)
-#' contains multiple clades, (\emph{2}) the clade in the first set that contains the fewest taxa not in
-#' \code{treeNew}. If \code{FALSE}, the \code{root.time} assigned to \code{treeNew} is the \code{$root.time} of \code{treeOrig}, adjusted
-#' based on the change in total tree depth between \code{treeOrig} and \code{treeNew}, as measured between the root and
-#' the first matching taxon in both trees. The later is how \code{fixRootTime} functioned by default
-#' prior to paleotree v2.3.
 
 #' @param ... additional arguments passed to dropPaleoTip are passed to \code{\link{drop.tip}}.
 
@@ -113,7 +92,7 @@
 #' @param noNegativeEdgeLength Return an error if a negative terminal edge length is calculated
 #' for the new tip.
 
-#' @return Gives back a modified phylogeny as a phylo object, generally with a
+#' @return Gives back a modified phylogeny as a \code{phylo} object, generally with a
 #' modified \code{$root.time} element.
 
 #' @author David W. Bapst. The functions \code{dropTipPaleo} and \code{bindTipPaleo} are modified imports of
@@ -151,7 +130,7 @@
 #' phyloDiv(tree1)
 #' tree2 <- dropExtant(tree)
 #' phyloDiv(tree2)
-#'
+#' 
 #' #graphics.off()
 #' 
 #' #example using addTermBranchLength
@@ -163,13 +142,13 @@
 #' #########################
 #' #test dropPaleoTip
 #' 	#(and fixRootTime by extension...)
-#'
+#' 
 #' #simple example
 #' tree <- read.tree(text = "(A:3,(B:2,(C:5,D:3):2):3);")
 #' tree$root.time <- 10
 #' plot(tree,no.margin = FALSE)
 #' axisPhylo()
-#'
+#' 
 #' # now a series of tests, dropping various tips
 #' (test <- dropPaleoTip(tree,"A")$root.time) #  = 7
 #' (test[2] <- dropPaleoTip(tree,"B")$root.time) #  = 10
@@ -182,7 +161,7 @@
 #' 
 #' # is it all good? if not, fail so paleotree fails...
 #' if(!identical(test,c(7,10,10,10,5,10,7,7))){stop("fixRootTime fails!")}
-#'
+#' 
 #' 
 #' ##############
 #' #testing bindPaleoTip
@@ -196,7 +175,7 @@
 #' \dontrun{
 #' 
 #' require(phytools)
-#'
+#' 
 #' #bindPaleoTip effectively wraps bind.tip from phytools
 #' # using a conversion like below
 #' 
@@ -204,16 +183,16 @@
 #' node <- 6
 #' 
 #' #new length = the root time - tipAge - nodeheight(tree,node)
-#'
+#' 
 #' newLength <- tree$root.time-tipAge-nodeheight(tree,node)
 #' tree1 <- bind.tip(tree,"tip.label",where = node,edge.length = newLength)
 #' 
 #' layout(1:2)
 #' plot(tree);axisPhylo()
 #' plot(tree1);axisPhylo()
-#'
+#' 
 #' }
-#'
+#' 
 #' # now with bindPaleoTip
 #' 
 #' 
@@ -283,9 +262,13 @@ dropZLB <- function(tree){
 	drop_t <- (tree$edge[,2])[drop_e]
 	if((Ntip(tree)-length(drop_t))>1){
 		tree1 <- drop.tip(tree,drop_t)
-		if(!is.null(tree$root.time)){tree1 <- fixRootTime(tree,tree1)}
+		if(!is.null(tree$root.time)){
+			tree1 <- fixRootTime(treeOrig = tree, treeNew = tree1)
+			}
 		res <- tree1
-	}else{res <- NA}
+	}else{
+		res <- NA
+		}
 	return(res)
 	}
 	
@@ -313,7 +296,7 @@ dropExtinct <- function(tree,tol = 0.01,ignore.root.time = FALSE){
 		#now need to add $root.time given the droppers
 		#should be root.time MINUS distance from furthest tip in tree PLUS distance from latest tip to root of stree
 		#stree$root.time <- tree$root.time-max(dnode)+max(dist.nodes(stree)[1:Ntip(stree),Ntip(stree)+1])
-		stree <- fixRootTime(tree,stree)
+		stree <- fixRootTime(treeOrig = tree, treeNew = stree)
 		}
 	return(stree)
 	}
@@ -340,7 +323,7 @@ dropExtant <- function(tree,tol = 0.01){
 		#now need to add $root.time given the droppers
 		#should be root.time MINUS distance from earliest tip in tree PLUS distance from earliest tip to root of stree
 		#stree$root.time <- tree$root.time-min(dnode)+min(dist.nodes(stree)[1:Ntip(stree),Ntip(stree)+1])
-		stree <- fixRootTime(tree,stree)
+		stree <- fixRootTime(treeOrig = tree, treeNew = stree)
 		}
 	return(stree)
 	}
@@ -353,80 +336,26 @@ addTermBranchLength <- function(tree,addtime = 0.001){
 	if(!inherits(tree,"phylo")){
 		stop("tree must be of class 'phylo'")
 		}
-
-	tree$edge.length[tree$edge[,2]<(Ntip(tree)+1)] <- tree$edge.length[tree$edge[,2]<(Ntip(tree)+1)]+addtime
-	if(any(tree$edge.length<0)){stop("tree has negative branch lengths!")}
-	if(!is.null(tree$root.time)){tree$root.time <- tree$root.time+addtime}
+	#
+	branchSel <- tree$edge[,2]<(Ntip(tree)+1)
+	newBrLen <- tree$edge.length[branchSel]+addtime
+	tree$edge.length[newBrLen] <- newBrLen
+	if(any(tree$edge.length<0)){
+		stop("tree has negative branch lengths!")
+		}
+	if(!is.null(tree$root.time)){
+		tree$root.time <- tree$root.time + addtime
+		}
 	return(tree)
 	}
-	
-#' @rdname modifyTerminalBranches
-#' @export
-fixRootTime <- function(treeOrig,treeNew,consistentDepth = TRUE,nodeAgeTransfer = TRUE){
-	# UNUSED FUNCTION?
-	#treeDepth <- function(tree){
-	#	#require(ape)
-	#	max(dist.nodes(tree)[,Ntip(tree)+1])
-	#	}
-	#
-	#require(ape)
-	if(!inherits(treeOrig, "phylo")){
-		stop("treeOrig is not of class phylo")}
-	if(!inherits(treeNew, "phylo")){
-		stop("treeNew is not of class phylo")}
-	if(is.null(treeOrig$root.time)){
-		stop("ERROR: treeOrig passed to fixRootTime with no $root.time??")}
-	#also need a warning message if taxa present in treeNew that aren't in treeOrig
-	taxaNewNM <- treeNew$tip.label[sapply(treeNew$tip.label,function(x) !any(x == treeOrig$tip.label))]
-	if(length(taxaNewNM)>0){
-		stop(paste("taxa:",taxaNewNM,"are present in treeNew but not treeOrig"))}
-	#two different ways to fix the root time
-	if(nodeAgeTransfer){
-		##NEW WAY 11-28-14
-			#If TRUE, the root.time of the new tree is determined by
-			#comparing the clades of taxa between the two input trees. The new root age assigned is the age of
-			#(\emph{1}) the treeOrig clade that contains *all* taxa present in treeNew and, if the set of (1)
-			#contains multiple clades, (\emph{2}) the clade in the (1) set that contains the fewest taxa not in
-			#treeNew.
-		dates <- dateNodes(treeOrig,labelDates = FALSE,tolerance = 0.001)
-		treeDesc <- lapply(Descendants(treeOrig),function(x) sort(treeOrig$tip.label[x]))
-		#treeRootNew <- sort(treeNew$tip.label[Descendants(treeNew)[[Ntip(treeNew)+1]]]) #no
-		#the descendants of treeNew's root are ALL the taxa in treeNEW
-		#So which treeOrig clades contain ALL taxa in treeNew?
-		allNewTaxa <- sapply(treeDesc,function(x) all(sapply(treeNew$tip.label,function(y) any(y == x)))) #logical vector
-		#now, if more than one contains all-new-taxa, which of these treeOrig clades minimizes not-shared taxa?
-		if(sum(allNewTaxa)>1){
-			nUnshared <- sapply(treeDesc,function(x) sum(sapply(x,function(y) all(y != treeNew$tip.label)))) #numeric
-			matchRootNew <- which(allNewTaxa & nUnshared == min(nUnshared[allNewTaxa]))
-		}else{
-			matchRootNew <- which(allNewTaxa)
-			}
-		if(length(matchRootNew)>1){stop("More than one node contains these taxa")} #maybe sort by age
-		if(length(matchRootNew)<1){stop("No nodes match the new tree's root, a root age can not be obtained")}
-		treeNew$root.time <- unname(dates[matchRootNew])
-	}else{
-		##OLD WAY
-			#If FALSE, the root.time assigned to treeNew is the root.time of treeOrig, adjusted
-			# based on the change in total tree depth between treeOrig and treeNew, as measured between the root and
-			# the first matching taxon in both trees. The later is how fixRootTime functioned by default
-			# prior to paleotree v2.3.
-		orig_dist <- node.depth.edgelength(treeOrig)[which(treeNew$tip.label[1] == treeOrig$tip.label)]
-		new_dist <- node.depth.edgelength(treeNew)[1]
-		treeNew$root.time <- treeOrig$root.time-(orig_dist-new_dist)
-		}
-	if(consistentDepth){
-		if(round(max(node.depth.edgelength(treeNew)) - treeNew$root.time)>0){
-			stop("fixRootTime isn't fixing correctly, root.time less than max tip-to-root length!")}
-		}
-	return(treeNew)
-	}
+
 	
 #' @rdname modifyTerminalBranches
 #' @export
 dropPaleoTip <- function(tree, ...){
 	tree1 <- drop.tip(phy = tree, ...)
-	tree2 <- fixRootTime(tree,tree1)
-	return(tree2)
+	tree1 <- fixRootTime(treeOrig = tree, treeNew = tree1)
+	return(tree1)
 	}
 	
 #' @rdname modifyTerminalBranches
@@ -457,16 +386,22 @@ bindPaleoTip <- function(tree, tipLabel, nodeAttach = NULL, tipAge = NULL,
 			}
 	}else{
 		if(positionBelow>tree$edge.length[tree$edge[,2] == nodeAttach]){
-			stop("positionBelow cannot be greater than the $edge.length of the edge below nodeAttach")
+			stop(
+				"positionBelow cannot be greater than the $edge.length of the edge below nodeAttach"
+				)
 			}
 		}
 	# check root.time
 	if(is.null(tree$root.time)){
-		message("Warning: no tree$root.time! Setting root.time such that latest tip is at present (time = 0)")
+		warning(
+			"No tree$root.time given; Setting root.time such that latest tip is at present (time = 0)"
+			)
 		tree$root.time <- max(node.depth.edgelength(tree))
 		}
 	#
-	if(is.null(tree$edge.length)){stop("bindTipPaleo is for trees with edge lengths")}
+	if(is.null(tree$edge.length)){
+		stop("bindTipPaleo is for trees with edge lengths")
+		}
 	#
 	if(is.null(edgeLength)){
 		if(!is.null(tipAge)){
@@ -495,12 +430,16 @@ bindPaleoTip <- function(tree, tipLabel, nodeAttach = NULL, tipAge = NULL,
 			stop("Negative edgeLength given ?!")
 			}
 		}
-	tree1 <- bind.tip(tree, tip.label = tipLabel, where = nodeAttach,
-		position = positionBelow, edge.length = newLength)
+	tree1 <- bind.tip(tree, 
+		tip.label = tipLabel, 
+		where = nodeAttach,
+		position = positionBelow, 
+		edge.length = newLength
+		)
 	# fix root.time if nodeAttach = root ID of tree and positionBelow>0
 	if(nodeAttach == (Ntip(tree)+1) & positionBelow>0){
 		#adjust root.time by the positionBelow
-		tree1$root.time <- tree1$root.time+positionBelow
+		tree1$root.time <- tree1$root.time + positionBelow
 		}
 	if(!is.null(tree1$root.edge)){
 		if(tree1$root.edge == 0){tree1$root.edge <- NULL}

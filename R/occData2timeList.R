@@ -1,5 +1,5 @@
 #' Converting Occurrences Data to a \code{timeList} Data Object
-#'
+#' 
 #' This function converts occurrence data, given as a list where each element
 #' is a different taxon's occurrence table (containing minimum and maximum ages
 #' for each occurrence), to the 'timeList' format, consisting of a list composed
@@ -11,10 +11,10 @@
 #' datasets sorted by \code{\link{taxonSortPBDBocc}} or any data object where occurrence data
 #' (i.e. age bounds for each occurrence) for different taxa is separated into different elements
 #' of a named list. 
-#'
-#' \subsection{The argument intervalType}{
+#' 
+#' \subsection{The Usage of the Argument \code{intervalType}}{
 
-#'
+#' 
 #' The argument \code{intervalType} controls the algorithm used for obtain first and last interval bounds for
 #' each taxon, of which there are several to select from:intervalType
 #' \describe{
@@ -43,7 +43,7 @@
 #' with the age range of the latest-most occurrence and (1) obtains their earliest boundary ages and returns
 #' the latest-most earliest age boundary among these overlapping occurrences and (2) obtains their latest
 #' boundary ages and returns the earliest-most latest age boundary among these overlapping occurrences. 
-#'
+#' 
 #' On theoretical grounds, one could probably describe the zone-of-overlap algorithm as minimizing
 #' taxonomic age ranges by assuming that all overlapping occurrences at the start and end of a taxon's
 #' range probably describe a very similar first and last appearance (FADs and LADs), and thus picks the
@@ -53,7 +53,7 @@
 #' range of a taxon might be well outside the bounds obtained using the zone-of-overlap algorithm. A more
 #' conservative approach is the \code{"dateRange"} algorithm which finds the smallest possible bounds on the
 #' endpoints of a taxon's range without ignoring uncertainty from any particular set of occurrences.} }
-#'
+#' 
 #' }
 #' 
 
@@ -71,8 +71,11 @@
 #' \code{\link{bin_timePaleoPhy}}, \code{\link{bin_cal3TimePaleoPhy}} and \code{\link{taxicDivDisc}}
 
 #' @seealso
-#' \code{\link{taxonSortPBDBocc}}, \code{\link{plotOccData}} and the
-#' example graptolite dataset at \code{\link{graptPBDB}}
+#' Occurrence data as commonly used with \code{paleotree} functions can
+#' be obtained with \code{link{getPBDBocc}}, and sorted into taxa by 
+#' \code{\link{taxonSortPBDBocc}}, and further explored with this function and
+#' \code{\link{plotOccData}}. Also, see the example graptolite dataset
+#' at \code{\link{graptPBDB}}
 
 #' @author 
 #' David W. Bapst, with the 'dateRange' algorithm suggested by Jon Marcot.
@@ -111,7 +114,7 @@
 #' #yep, identical
 #' 
 #' #so how much uncertainty was gained by using dateRange?
-#'
+#' 
 #' # write a simple function for getting uncertainty in first and last
 #' 		# appearance dates from a timeList object
 #' sumAgeUncert <- function(timeList){
@@ -119,7 +122,7 @@
 #' 	perOcc <- (fourDate[,1]-fourDate[,2])+(fourDate[,3]-fourDate[,4])
 #' 	sum(perOcc)
 #' 	}
-#'
+#' 
 #' #total amount of uncertainty in occRange dataset
 #' sumAgeUncert(graptOccRange)
 #' #total amount of uncertainty in dateRange dataset
@@ -140,11 +143,11 @@
 #' @name occData2timeList
 #' @rdname occData2timeList
 #' @export
-occData2timeList <- function(occList,intervalType = "dateRange"){
+occData2timeList <- function(occList, intervalType = "dateRange"){
 		#intervalType = "dateRange"
 	#the following is all original, though inspired by paleobioDB code
 	#check intervalType
-	if(!any(intervalType == c("occRange","dateRange","zoneOverlap"))){
+	if(!any(intervalType == c("occRange", "dateRange", "zoneOverlap"))){
 		stop("intervalType must be one of 'dateRange' or 'occRange' or 'zoneOverlap'")}
 	#get just occurrence data with pullOccListData
 	taxaInt <- pullOccListData(occList)
@@ -205,17 +208,21 @@ pullOccListData <- function(occList){
 		stop("Not all occList entries have same number of columns?")}
 	#will assume all data given in this manner either has columns named "" and ""
 		#or has only two columns
+	ageSelector <- NULL
 	if(any(colnames(exOcc) == "early_age") & any(colnames(exOcc) == "late_age")){
 		ageSelector <- c("early_age","late_age")
- 	}else{
-		if(any(colnames(exOcc) == "eag") & any(colnames(exOcc) == "lag")){
-			if(ncol(exOcc) != 2){
-				ageSelector <- 1:2
-			}else{
-				stop("Data is not a list of two-column matrics *and* lacks named age columns (from the PBDB)")
-				}
+		}
+	if(any(colnames(exOcc) == "eag") & any(colnames(exOcc) == "lag")){
+		ageSelector <- c("eag","lag")
+		}
+	if(any(colnames(exOcc) == "max_ma") & any(colnames(exOcc) == "min_ma")){
+		ageSelector <- c("max_ma","min_ma")
+		}		
+	if(is.null(ageSelector)){
+		if(ncol(exOcc) != 2){
+			ageSelector <- 1:2
 		}else{
-			ageSelector <- c("early_age","late_age")
+			stop("Data is not a two-column matrix of ages *and* data does not appear to be a data frame with named age columns (from the PBDB)")
 			}
 		}
 	#get intervals in which taxa appear

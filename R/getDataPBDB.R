@@ -1,11 +1,17 @@
-#' Obtaining Data for Sets of Taxa From Paleobiology Database API
+#' Obtaining Data for Taxa or Occurrences From Paleobiology Database API
 #' 
-#' The Paleobiology Database API (\href{http://paleobiodb.org/data1.2}{link}) is very easy to use, and generally any data one wishes to collect
+#' The Paleobiology Database API (\href{http://paleobiodb.org/data1.2}{link})
+#' is very easy to use, and generally any data one wishes to collect can be obtained
+#' in R through a variety of ways - the simplest being to wrap a data retrieval request
+#' to the API, specified for CSV output, with R function \code{read.csv}. The functions
+#' listed here, however, are some simple helper functions for doing tasks common to
+#' users of this package - downloading occurrence data, or taxonomic information,
+#' for particular clades, or for a list of specific taxa.
 
 #' @details
-#' The
-
-
+#' In many cases, it might be easier to write your own query - these
+#' functions are only made to make getting data for some very specific
+#' applications in \code{paleotree} easier.
 
 #' @param taxon A single name of a of a higher taxon which you wish to catch
 #' all taxonomic 'children' (included members - i.e. subtaxa) of, from 
@@ -19,8 +25,8 @@
 #' (ex. \code{c("Homo", "Pongo", "Gorilla")}),
 #' which will then formatted for use in the API call.
 	
-#' @param show Which variables should be requested from the Paleobiology
-#' Database? The default is to include classification (\code{"class"}),
+#' @param showTaxa Which variables for taxonomic data should be requested
+#' from the Paleobiology Database? The default is to include classification (\code{"class"}),
 #' parent-child taxon information (\code{"parent"}), information on each
 #' taxon's first and last appearance (\code{"app"}), information on the
 #' PhyloPic silhouette images assigned to that taxon (\code{"img"}), and
@@ -33,6 +39,17 @@
 #' you might want to include, such as information on ecospace or taphonomy,
 #' can be included: please refer to the full list at
 #' the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.
+
+#' @param showOccs Which variables for occurrence data should be requested
+#' from the Paleobiology Database? The default is to include classification (\code{"class"}),
+#' classification identifiers (\code{"classext"}), genus and subgenus
+#' identifiers (\code{"subgenus"}), and species-level identifiers (\code{"ident"}).
+#' Multiple variable blocks can be given as a single character string, with desired
+#' variable selections separated by a comma with no whitespace (ex.
+#' \code{"class,subgenus,ident"}) or  as a vector of character strings
+#' (ex. \code{c("class", "subgenus", "ident")}), which will then formatted for
+#' use in the API call. For full list of other options that you might want to include, please refer
+#' to \href{https://paleobiodb.org/data1.2/occs/list_doc.html}{documentation for the API}.
 
 	
 #' @param status What taxonomic status should the pull taxa have? 
@@ -65,14 +82,15 @@
 #' variables pulled for the requested taxon selection.
 #' This behavior can be modified by argument \code{urlOnly}.
 
-#' @name getTaxaDataPBDB
+#' @name getDataPBDB
 
 #' @aliases getCladeTaxaPBDB getSpecificTaxaPBDB
 
 #' @seealso 
-#' See \code{\link{getTaxaDataPBDB}}, \code{\link{makePBDBtaxonTree}},
-#' and \code{\link{plotPhylopicTreePBDB}}.
-
+#' See \code{\link{makePBDBtaxonTree}}, \code{\link{makePBDBtaxonTree}},
+#' and \code{\link{plotPhyloPicTree}} for functions that use taxonomic data.
+#' Occurrence data is sorted by taxon via \code{\link{taxonSortPBDBocc}},
+#' and further utilized \code{\link{occData2timeList}} and  \code{\link{plotOccData}}.
 
 #' @author David W. Bapst
 
@@ -82,16 +100,60 @@
 
 
 #' @examples
+#' \donttest{
 #' 
-#' #an example here
+#' #graptolites
+#' graptData <- getCladeTaxaPBDB("Graptolithina")
+#' dim(graptData)
+#' sum(graptData$taxon_rank=="genus")
+#' 
+#' # so we can see that our call for graptolithina returned 
+#' 	# a large number of taxa, a large portion of which are
+#' 	# individual genera
+#' # (554 and 318 respectively, as of 03-18-19)
+#' 
+#' tetrapodList<-c("Archaeopteryx", "Columba", "Ectopistes",
+#'	"Corvus", "Velociraptor", "Baryonyx", "Bufo",
+#'	"Rhamphorhynchus", "Quetzalcoatlus", "Natator",
+#'	"Tyrannosaurus", "Triceratops", "Gavialis",
+#'	"Brachiosaurus", "Pteranodon", "Crocodylus",
+#'	"Alligator", "Giraffa", "Felis", "Ambystoma",
+#' 	"Homo", "Dimetrodon", "Coleonyx", "Equus",
+#'	"Sphenodon", "Amblyrhynchus")
+#' 
+#' tetrapodData <-getSpecificTaxaPBDB(tetrapodList)
+#' dim(tetrapodData)
+#' sum(tetrapodData$taxon_rank=="genus")
+#' # should be 26, with all 26 as genera
+#' 
+#' #############################################
+#' # Now let's try getting occurrence data
+#' 
+#' # getting occurrence data for a genus, sorting it
+#' # Dicellograptus
+#' dicelloData <- getPBDBocc("Dicellograptus")
+#' dicelloOcc2 <- taxonSortPBDBocc(dicelloData, 
+#' 	rank = "species", onlyFormal = FALSE)
+#' names(dicelloOcc2)
+#' 
+#' }
+#' 
+
+
+# getPBDBocc 
+	# occs documentation
+	# https://paleobiodb.org/data1.2/occs/list_doc.html
+	#
+	# simple function for getting occurrence data from API v1.2 
+			 #cleans PBDB occurrence downloads of warnings
 
 
 
 
-#' @rdname getTaxaDataPBDB 
+#' @rdname getDataPBDB 
 #' @export 
 getCladeTaxaPBDB <- function(taxon,
-		show = c("class", "parent", "app", "img", "entname"),
+		showTaxa = c("class", "parent", "app", "img", "entname"),
 		status = "accepted", urlOnly = FALSE, stopIfMissing=FALSE){
 	##########################################
 	# check that only a single taxon is given
@@ -103,7 +165,7 @@ getCladeTaxaPBDB <- function(taxon,
 	#let's get some taxonomic data
 	requestURLPBDB <- paste0("http://paleobiodb.org/",
 			"data1.2/taxa/list.txt?base_name=", taxon,
-			"&show=",paste0(show,collapse = ","),
+			"&show=",paste0(showTaxa,collapse = ","),
 			# status -> all, accepted, valid
 				# accepted -> only senior synonyms
 				# valid -> snior synonyms + valid subjective synonyms
@@ -119,10 +181,10 @@ getCladeTaxaPBDB <- function(taxon,
 	return(res)
 	}
 
-#' @rdname getTaxaDataPBDB 
+#' @rdname getDataPBDB 
 #' @export 
 getSpecificTaxaPBDB <- function(taxa,
-		show = c("class", "parent", "app", "img", "entname"),
+		showTaxa = c("class", "parent", "app", "img", "entname"),
 		status = "accepted",
 		urlOnly = FALSE, stopIfMissing=FALSE){
 	#####################################
@@ -133,7 +195,7 @@ getSpecificTaxaPBDB <- function(taxa,
 		}
 	requestURLPBDB <- paste0(
 		"http://paleobiodb.org/data1.2/taxa/list.txt?name=",taxa,
-		"&show=",paste0(show,collapse = ","),
+		"&show=",paste0(showTaxa,collapse = ","),
 		# status -> all, accepted, valid
 			# accepted -> only senior synonyms
 			# valid -> snior synonyms + valid subjective synonyms
@@ -179,3 +241,43 @@ getPBDBtaxaCSV <- function(requestURL, stopIfMissing=FALSE){
 	return(res)
 	}	
 
+
+#' @rdname getDataPBDB 
+#' @export 
+getPBDBocc <- function(taxa, 
+		showOccs = c("class", "classext", "subgenus", "ident", "entname")
+		){
+	#############
+	# occs documentation
+	# https://paleobiodb.org/data1.2/occs/list_doc.html
+	#
+	# simple function for getting occurrence data from API v1.2 
+			 #cleans PBDB occurrence downloads of warnings
+	taxa <- paste(taxa,collapse = ",")
+	taxa <- paste(unlist(strsplit(taxa,"_")),collapse = "%20")
+	showOccs <- paste(showOccs,collapse = ",")
+	command <- paste0(
+		"http://paleobiodb.org/data1.2/occs/list.txt?base_name=",
+		taxa,"&show=",showOccs,        
+		# "&limit=all", # not a command in 1.2
+		collapse = "")
+	command <- paste(unlist(strsplit(command,split = " ")),
+		collapse = "%20")
+	downData <- readLines(command)
+	if(length(grep("Warning",downData)) != 0){
+		start <- grep("Records",downData)
+		warn <- downData[1:(start-1)]
+		warn <- sapply(warn, function(x) 
+			paste0(unlist(strsplit(unlist(strsplit(x,'"')),",")),
+		 		collapse = ""))
+		warn <- paste0(warn,collapse = "\n")
+		names(warn) <- NULL
+		mat <- downData[-(1:start)]
+		mat <- read.csv(textConnection(mat))
+		message(warn)
+	}else{
+		mat <- downData
+		mat <- read.csv(textConnection(mat))
+		}
+	return(mat)
+	}

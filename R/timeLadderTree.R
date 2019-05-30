@@ -21,7 +21,7 @@
 #' included in the output tree.
 #' 
 #' See this blog post for more information:
-#'
+#' 
 #' http://nemagraptus.blogspot.com/2012/07/resolving-polytomies-according-to.html
 #' 
 
@@ -56,7 +56,7 @@
 #' plot(ladderize(tree),show.tip.label = FALSE)
 #' plot(ladderize(tree2),show.tip.label = FALSE)
 #' axisPhylo() 
-#'
+#' 
 #' layout(1)
 #' }
 

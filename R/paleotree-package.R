@@ -33,19 +33,19 @@
 #' 
 #' Bapst, D. W. 2013. When Can Clades Be Potentially Resolved with Morphology?
 #' \emph{PLoS ONE}. 8(4):e62312.
-#'
+#' 
 #' Bapst, D. W. 2014. Assessing the effect of time-scaling methods on
 #' phylogeny-based analyses in the fossil record. \bold{Paleobiology}
 #' \bold{40}(3):331-351.
-#'
+#' 
 #' @examples
 #' 
 #' # get the package version of paleotree
 #' packageVersion("paleotree")
-#'
+#' 
 #' # get the citation for paleotree
 #' citation("paleotree")
-#'
+#' 
 #' ##Simulate some fossil ranges with simFossilRecord
 #' set.seed(444);
 #' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
@@ -67,7 +67,7 @@
 #' #compare to the continuous time diversity curve
 #' 
 #' layout(1)
-#'
+#' 
 #' #taxa2phylo assumes we know speciation events perfectly... what if we don't?
 #' #first, let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
 #' cladogram <- taxa2cladogram(taxa,plot = TRUE)
@@ -90,12 +90,14 @@
 
 #' @importFrom phangorn Descendants Ancestors phyDat ancestral.pars maxCladeCred
 #' @importFrom phytools bind.tip
-#' @importFrom graphics par layout plot hist lines legend polygon title axis points axTicks mtext rasterImage image
-#' @importFrom grDevices rainbow dev.new dev.size
+#' @importFrom graphics par layout plot hist lines legend polygon title
+#' @importFrom graphics axis points axTicks mtext rasterImage image rect
+#' @importFrom grDevices rainbow dev.new dev.size rgb col2rgb
 #' @importFrom methods is
 #' @importFrom utils read.csv type.convert read.table
 #' @importFrom png readPNG 
 #' @importFrom RCurl getURLContent 
+#' @importFrom jsonlite fromJSON
 
 
 NULL

@@ -1,5 +1,5 @@
 #' Ancestor-Descendant Relationships for Macroperforate Foraminifera, from Aze et al. (2011)
-#'
+#' 
 #' An example dataset of ancestor-descendant relationships and first and last appearance dates for
 #' a set of macroperforate Foraminifera, taken from the supplemental materials of Aze et al. (2011).
 #' This dataset is included here primarily for testing functions \code{parentChild2taxonTree}
@@ -38,15 +38,15 @@
 #' @source 
 #' This dataset is obtained from the supplementary materials of, specifically
 #' 'Appendix S5':
-#'
+#' 
 #' Aze, T., T. H. G. Ezard, A. Purvis, H. K. Coxall, D. R. M. Stewart,
 #'  B. S. Wade, and P. N. Pearson. 2011. A phylogeny of Cenozoic macroperforate
 #' planktonic foraminifera from fossil data. \emph{Biological Reviews} 86(4):900-927.
 
 #' @references
-#'
+#' 
 #' This dataset has been used or referenced in a number of works, including:
-#'
+#' 
 #' Aze, T., T. H. G. Ezard, A. Purvis, H. K. Coxall, D. R. M. Stewart, B. S. Wade, and P. N. Pearson. 2013.
 #' Identifying anagenesis and cladogenesis in the fossil record.
 #' \emph{Proceedings of the National Academy of Sciences} 110(32):E2946-E2946.
@@ -373,6 +373,6 @@
 #' }
 #' 
 #' 
-#'
+#' 
 NULL
 

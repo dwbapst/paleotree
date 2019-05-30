@@ -6,7 +6,6 @@
 \alias{dropExtinct}
 \alias{dropExtant}
 \alias{addTermBranchLength}
-\alias{fixRootTime}
 \alias{dropPaleoTip}
 \alias{bindPaleoTip}
 \title{Modify, Drop or Bind Terminal Branches of Various Types (Mainly for Paleontological Phylogenies)}
@@ -18,9 +17,6 @@ dropExtinct(tree, tol = 0.01, ignore.root.time = FALSE)
 dropExtant(tree, tol = 0.01)
 
 addTermBranchLength(tree, addtime = 0.001)
-
-fixRootTime(treeOrig, treeNew, consistentDepth = TRUE,
-  nodeAgeTransfer = TRUE)
 
 dropPaleoTip(tree, ...)
 
@@ -43,25 +39,6 @@ extinct? \code{tree$root.time} will still be adjusted,
 if the operation alters the \code{tree$root.time}.}
 
 \item{addtime}{Extra amount of time to add to all terminal branch lengths.}
-
-\item{treeOrig}{A \code{phylo} object of a time-scaled phylogeny with a \code{$root.time}
-element.}
-
-\item{treeNew}{A \code{phylo} object containing a modified form of \code{treeOrig} (with
-no extra tip taxa added, but possibly with some tip taxa removed).}
-
-\item{consistentDepth}{A logical, either \code{TRUE} or \code{FALSE}. If \code{TRUE} (the default)
-the tree's root-to-furthest-tip depth is tested to make sure this depth is
-not greater than the new \code{$root.time} appended to the output tree.}
-
-\item{nodeAgeTransfer}{A logical. If \code{TRUE}, the \code{$root.time} of the new tree is determined by
-comparing the clades of taxa between the two input trees. The new root age assigned is the age of
-(\emph{1}) the \code{treeOrig} clade that contains \emph{all} taxa present in \code{treeNew} and, if the set of (1)
-contains multiple clades, (\emph{2}) the clade in the first set that contains the fewest taxa not in
-\code{treeNew}. If \code{FALSE}, the \code{root.time} assigned to \code{treeNew} is the \code{$root.time} of \code{treeOrig}, adjusted
-based on the change in total tree depth between \code{treeOrig} and \code{treeNew}, as measured between the root and
-the first matching taxon in both trees. The later is how \code{fixRootTime} functioned by default
-prior to paleotree v2.3.}
 
 \item{...}{additional arguments passed to dropPaleoTip are passed to \code{\link{drop.tip}}.}
 
@@ -86,7 +63,7 @@ edge below \code{nodeAttach}.}
 for the new tip.}
 }
 \value{
-Gives back a modified phylogeny as a phylo object, generally with a
+Gives back a modified phylogeny as a \code{phylo} object, generally with a
 modified \code{$root.time} element.
 }
 \description{
@@ -113,20 +90,18 @@ terminates.
 If the input tree has a \code{$root.time} element, as expected for most paleo-tree
 objects handled by this library, that \code{$root.time} is adjusted if the relative
 time of the root divergence changes when terminal branches are dropped.
-Adjusted root.times are only given if the input tree has root.times.
+This is typically performed via the function \code{\link{fixRootTime}}.
+Adjusted \code{$root.time} elements are only given if
+the input tree has a \code{$root.time} element.
 
 \code{addTermBranchLength} adds an amount equal to the argument \code{addtime} to the
 terminal branch lengths of the tree. If there is a \code{$root.time} element, this
 is increased by an amount equal to \code{addtime}. A negative amount can be input
 to reduce the length of terminal branches. However, if negative branch
-lengths are produced, the function fails and a warning is produced. This function
-does \emph{not} call \code{fixRootTime}, so the root.time elements in the result tree may
+lengths are produced, the function fails and a warning is produced.
+The function \code{addTermBranchLength} does \emph{not} call \code{fixRootTime},
+so the root.time elements in the result tree may
 be nonsensical, particularly if negative amounts are input.
-
-When a tree is modified, such as having tips dropped or branches extended,
-\code{fixRootTime} can be used to find the new \code{$root.time}. It is mainly used as a
-utility function called by a majority of the other functions discussed
-in this help file.
 
 \code{dropPaleoTip} is a wrapper for ape's \code{\link{drop.tip}} which also modifies the
 \code{$root.time} element if necessary, using \code{fixRootTime}. Similarly,

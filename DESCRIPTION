@@ -1,8 +1,8 @@
 Package: paleotree
 Type: Package
-Version: 3.1.9
+Version: 3.2.4
 Title: Paleontological and Phylogenetic Analyses of Evolution
-Date: 2018-10-01
+Date: 2019-05-29
 Author: David W. Bapst, Peter J. Wagner
 Depends:
 	R (>= 3.0.0),
@@ -11,6 +11,7 @@ Imports:
 	phangorn (>= 2.0.0),
 	stats,
 	phytools (>= 0.6-00),
+	jsonlite,
 	graphics,
 	grDevices,
 	methods,
@@ -19,6 +20,7 @@ Imports:
 	utils
 Suggests: testthat
 ByteCompile: TRUE
+Encoding: UTF-8
 Maintainer: David W. Bapst <dwbapst@gmail.com>
 BugReports: https://github.com/dwbapst/paleotree/issues
 Description: Provides tools for transforming, a posteriori time-scaling, and

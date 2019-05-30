@@ -1,0 +1,158 @@
+#NEXUS
+BEGIN DATA;
+DIMENSIONS  NTAX = 22 NCHAR = 1;
+FORMAT DATATYPE = STANDARD GAP = - MISSING = ?;
+MATRIX
+Rotaretiolites   ?
+Pseudoplegmatograptus   ?
+Pseudoretiolites   ?
+Dabashanograptus   ?
+Retiolites   ?
+Stomatograptus   ?
+Paraplectograptus   ?
+Pseudoplectograptus   ?
+Sokolovograptus   ?
+Eisenackograptus   ?
+Sagenograptus   ?
+Cometograptus   ?
+Plectograptus   ?
+Plectodinemagraptus   ?
+Semiplectograptus   ?
+Baculograptus   ?
+Doliograptus   ?
+Gothograptus   ?
+Papiliograptus   ?
+Spinograptus   ?
+Holoretiolites   ?
+Neogothograptus   ?
+
+;
+END;
+
+begin mrbayes;
+
+[This block is a combination of best practices taken from NEXUS files from April Wright,
+     William Gearty, Graham Slater, Davey Wright, and guided by the 
+	 recommendations of Matzke and Wright, 2016, Biol. Lett.]
+
+[autoclose, I like it to ask (the default), but you might want it - if so, set to 'yes']
+[set autoclose = yes;]
+
+log start filename = "retio_dating.out" replace;
+
+[DATA]
+
+[edits to taxon or character selection go here]
+			
+[CONSTRAIN MONOPHYLY OF INGROUP]
+
+	[constrain all members of the ingroup to be monophyletic]
+
+constraint ingroup = Pseudoplegmatograptus Pseudoretiolites Dabashanograptus Retiolites Stomatograptus Paraplectograptus Pseudoplectograptus Sokolovograptus Eisenackograptus Sagenograptus Cometograptus Plectograptus Plectodinemagraptus Semiplectograptus Baculograptus Doliograptus Gothograptus Papiliograptus Spinograptus Holoretiolites Neogothograptus;
+prset topologypr = constraints(ingroup);
+	
+[TOPOLOGICAL CONSTRAINTS FOR ADDITIONAL NODES]
+
+	[[EXAMPLE]
+    constraint node1 = t1 t2 t3;
+    constraint node2 = t4 t5;
+	prset topologypr = constraints(ingroup,node1,node2); [need to include ingroup]]
+
+ 
+
+
+
+[CHARACTER MODELS]
+	
+[morphology model settings]
+	[make the number of beta categories for stationary frequencies 4 (the default)]
+	[default: use pars-informative coding]
+	
+	[set coding and rates - default below maximizes information content]
+		lset  nbetacat = 5 rates = equal Coding = informative; [equal rate variation]
+		[lset  nbetacat = 5 rates = gamma Coding = informative;   [gamma distributed rate variation]]
+			[gamma distributed rates may cause divide by zero problems with non-fixed symdiri]
+	[symdirhyperpr prior, fixed vs. variable]	
+		prset symdirihyperpr = fixed(infinity);		
+		[prset symdirihyperpr = uniform(1,10);      [this range seems to avoid divide by zero error]]
+
+
+
+[TIP AND TREE AGE CALIBRATIONS] 
+	
+		[[EXAMPLE WITH BOUNDS: min age, max age]	
+		calibrate t1 = uniform(105, 113);
+		calibrate t2 = uniform(97, 115);
+		[EXAMPLE WITH FIXED AGE]
+		calibrate t3 = fixed (100);]
+	
+	[prior on tree age]
+	[with offset exponential in MrB, first par is min age, second is expected mean age]
+		[mean date must be greater than min date - duh]
+		
+		[EXAMPLE]
+		[prset treeagepr = offsetexp(115,120); ]
+			
+
+calibrate Rotaretiolites = fixed (430.44);
+calibrate Pseudoplegmatograptus = uniform (432.5, 434.9);
+calibrate Pseudoretiolites = uniform (437.46, 439.37);
+calibrate Dabashanograptus = uniform (429.43, 430.44);
+calibrate Retiolites = uniform (429.43, 430.44);
+calibrate Stomatograptus = uniform (429.43, 430.44);
+calibrate Paraplectograptus = uniform (429.43, 430.44);
+calibrate Pseudoplectograptus = uniform (424.92, 426.06);
+calibrate Sokolovograptus = uniform (429.43, 430.44);
+calibrate Eisenackograptus = uniform (424.92, 426.06);
+calibrate Sagenograptus = uniform (424.02, 424.92);
+calibrate Cometograptus = uniform (424.02, 424.92);
+calibrate Plectograptus = uniform (422.65, 422.81);
+calibrate Plectodinemagraptus = uniform (420.44, 421.27);
+calibrate Semiplectograptus = uniform (421.27, 422.35);
+calibrate Baculograptus = uniform (424.02, 424.92);
+calibrate Doliograptus = uniform (423.09, 424.02);
+calibrate Gothograptus = uniform (424.02, 424.92);
+calibrate Papiliograptus = uniform (422.81, 423.09);
+calibrate Spinograptus = uniform (422.81, 423.09);
+calibrate Holoretiolites = uniform (422.35, 422.65);
+calibrate Neogothograptus = uniform (422.35, 422.65);
+[These taxa had fixed tip ages: Rotaretiolites ]
+
+prset treeagepr = offsetexp(439.37, 449.37);
+	
+[FOSSILIZED BIRTH DEATH MODEL & ASSOCIATED PARAMETERS]
+
+    prset brlenspr = clock:fossilization;
+	prset fossilizationpr = beta(1,1); [flat, sampling is psi/(mu+psi), 0-1 ]
+
+    prset speciationpr = uniform(0,10);
+	prset extinctionpr = beta(1,1); [flat, extinction is relative to speciation between 0-1]
+
+	prset samplestrat = random; [default: bdss prior ]
+	[prset samplestrat = fossiltip; [this would mean no sampled ancestors]]
+	
+	prset sampleprob = 1; [rho, sampling in the present, default fixed to 1]
+	[Unclear what to set this to if all taxa are extinct...]
+	
+[CLOCK PRIORS]
+	
+	[clock rate: truncated normal, mean = 0.08, but very flat; see Supp Table 2 of Matzke & Wright 2016]
+    prset clockratepr = normal(0.0025,0.1);     
+	prset clockvarpr = igr;
+    prset igrvarpr = uniform(0.0001, 200); [vague prior that is actually vague; Matzke & Wright 2016]
+
+	prset nodeagepr = calibrated; [set node age priors]
+	
+[SETTINGS FOR PARTITIONED ANALYSES]
+
+	[Necessary if a combined analysis, I guess]
+
+[RUN SETTINGS]
+
+[FYI burnin settings for one command sets burnin settings for all]
+	mcmcp ngen = 100000 Filename = "retio_dating" relburnin = yes burninfrac = 0.5 printfreq = 1000 samplefreq = 1000 nchains = 4 nruns = 2 savebrlens = yes;    
+	set seed = 4;
+
+ 
+ 
+end;

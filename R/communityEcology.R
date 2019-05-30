@@ -1,5 +1,5 @@
 #' Miscellaneous Functions for Community Ecology
-#'
+#' 
 #' This is just a small collection of miscellaneous functions
 #' that may be useful, primarily for community ecology analyses,
 #' particularly for paleoecological data. They are here mainly for
@@ -56,7 +56,7 @@
 #' This behavior can be modified via the arguments for including the diagonal 
 #' and upper triangle of the matrix. Otherwise, a full matrix is returned (by default)
 #' if the \code{asDistance} argument is not enabled. 
-#'
+#' 
 #' \code{HurlbertPIE} provides the 'Probability of Interspecific Encounter' metric for
 #' relative community abundance data, a commonly used metric for evenness of community
 #' abundance data based on derivations in Hurlbert (1971). An optional argument allows
@@ -66,14 +66,14 @@
 #' \code{pairwiseSpearmanRho} will return either a full matrix (the default) or (if
 #' \code{asDistance} is true, a distance matrix, with only the lower triangle
 #' shown (by default). See details.
-#'
+#' 
 #' \code{HurlbertPIE} returns a named vector of PIE values for the input data.
 
 #' @aliases communityEcology pairwiseSpearmanRho HurlbertPIE PIE ProbabilityInterspecificEncounter
 
 #' @seealso
 #' \code{\link{twoWayEcologyCluster}}; example dataset: \code{\link{kanto}}
-#'
+#' 
 
 #' @name communityEcology
 
@@ -84,7 +84,7 @@
 #' a critique and alternative parameters. \emph{Ecology} 52(4):577-586.
 
 #' @examples
-#'
+#' 
 #' # let's load some example data:
 #' # a classic dataset collected by Satoshi & Okido from the Kanto region
 #' 
@@ -157,7 +157,7 @@
 #' 
 #' #let's look at evenness of 5 most abundant taxa
 #' kantoPIE_5 <- HurlbertPIE(kanto,nAnalyze = 5)
-#'
+#' 
 #' #barplot
 #' parX <- par(mar = c(7,5,3,3))
 #' barplot(kantoPIE_5,las = 3,cex.names = 0.7,

@@ -69,7 +69,7 @@
 #'     # with values for ancestral nodes as input
 #' trait <- rTraitCont(tree, ancestor = TRUE)
 #' plotTraitgram(tree = tree,trait = trait)
-#'
+#' 
 
 
 #' @export plotTraitgram

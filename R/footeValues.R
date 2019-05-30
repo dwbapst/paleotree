@@ -1,5 +1,5 @@
 #' Calculates Values for Foote's Inverse Survivorship Analyses
-#'
+#' 
 #' This function calculates the intermediary values needed for
 #' fitting Foote's inverse survivorship analyses, as listed in the
 #' table of equations in Foote (2003), with the analyses themselves
@@ -59,13 +59,13 @@
 #' @references
 #' Foote, M. 2001. Inferring temporal patterns of preservation, origination, and 
 #' extinction from taxonomic survivorship analysis. \emph{Paleobiology} 27(4):602-630.
-#'
+#' 
 #' Foote, M. 2003a. Origination and Extinction through the Phanerozoic: A New
 #' Approach. \emph{The Journal of Geology} 111(2):125-148.
-#'
+#' 
 #' Foote, M. 2003b. Erratum: Origination and Extinction through the Phanerozoic:
 #' a New Approach. \emph{The Journal of Geology} 111(6):752-753.
-#'
+#' 
 #' Foote, M. 2005. Pulsed origination and extinction in the marine realm.
 #' \emph{Paleobiology} 31(1):6-20.
 

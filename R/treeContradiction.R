@@ -6,7 +6,7 @@
 #' as unrooted). By default, this 'contradiction difference' value is then scaled to between 0 and 1, by dividing by the total number
 #' of splits that could have been contradicted across both trees ( 2 * (Number of shared tips - 2) ). On this scaled, 0 represents
 #' no conflicting relationships and 1 reflects two entirely conflicting topologies, similar to the rescaling in Colless's consensus fork index.
-#'
+#' 
 
 #' @details
 #' Algorithmically, conflicting splits are identified by counting the number of splits
@@ -59,7 +59,7 @@
 
 #' @references
 #' This contradiction difference measure was introduced in:
-#'
+#' 
 #' Bapst, D. W., H. A. Schreiber, and S. J. Carlson. 2018. Combined Analysis of Extant Rhynchonellida
 #' (Brachiopoda) using Morphological and Molecular Data. \emph{Systematic Biology} 67(1):32-48. doi: 10.1093/sysbio/syx049
 
@@ -118,7 +118,7 @@
 #' # an example
 #' treeAA <- read.tree(text = "(A,(B,(C,(D,(E,F)))));")
 #' treeBB <- read.tree(text = "(E,(B,(C,(D,(A,F)))));")
-#'
+#' 
 #' \dontrun{
 #' plot(cophylo(treeAA,treeBB))
 #' }
@@ -129,7 +129,7 @@
 #' # Note however also a property of RF distance too:
 #' treedist(treeAA,treeBB)
 #' }
-#'
+#' 
 
 
 #' @name treeContradiction

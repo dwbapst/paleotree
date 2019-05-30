@@ -27,14 +27,29 @@
 
 
 
-getMrBFixedAgesFromNexus <- function(origNexusFile){
+getMrBFixedAgesFromNexus <- function(origNexusFile, shouldEndWithNex = TRUE){
 	#		
 	#
+	##############################
+	if(shouldEndWithNex){
+		# does it end with .nex already?
+		endNex <- grepl("\\.nex$", 
+			origNexusFile , ignore.case=TRUE)
+		# if the nexus file does not end with .nex, add it
+		if(!endNex){
+			origNexusFile <- paste0(origNexusFile,".nex")
+			}
+		}
+	#############################
 	# get the nexus file
-	origNexus <- scan(file = origNexusFile,what = character(), #sep = "\n",
-		quiet = TRUE, comment.char = "[", strip.white = TRUE)
+	origNexus <- scan(file = origNexusFile,
+		what = character(), #sep = "\n",
+		quiet = TRUE, 
+		comment.char = "[", 
+		strip.white = TRUE)
 	#
-	origNexus <- readChar(origNexusFile, file.info(origNexusFile)$size)
+	origNexus <- readChar(origNexusFile, 
+		file.info(origNexusFile)$size)
 	# remove white space
 	origNexus <- gsub(origNexus,pattern = " ",replacement = "")
 	origNexus <- gsub(origNexus,pattern = "\t",replacement = "")

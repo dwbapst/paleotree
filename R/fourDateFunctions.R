@@ -1,5 +1,5 @@
 #' Converting Datasets of Taxon Ranges in Intervals Between timeList format and fourDate format
-#'
+#' 
 #' Functions for manipulating data where the first and last appearances of taxa
 #' are known from bounded intervals of time. The two main functions listed here
 #' are for converting between (1)
@@ -42,20 +42,20 @@
 #' @examples
 #' #timeList object from the retiolinae dataset
 #' data(retiolitinae)
-#'
+#' 
 #' str(retioRanges)
-#'
+#' 
 #' taxicDivDisc(retioRanges)
 #' 
 #' fourDateRet <- timeList2fourDate(retioRanges)
 #' 
 #' # total uncertainty in retio first and last appearances?
 #' sum((fourDateRet[,1]-fourDateRet[,2])+(fourDateRet[,3]-fourDateRet[,4]))
-#'
+#' 
 #' #convert back
 #' newTimeList <- fourDate2timeList(fourDateRet)
 #' taxicDivDisc(retioRanges)
-#'
+#' 
 
 #' @name timeList2fourDate
 #' @rdname timeList2fourDate

@@ -760,14 +760,16 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 			add.term = FALSE, 
 			inc.term.adj = FALSE)
 		#
-		#identify which nodes are min-locked; make sure to update when resolving polytomies
-		if(length(node.mins)>0){
-			locked_nodesOrig <- which(!is.na(node.mins))+Ntip(tree)
-		}else{
-			locked_nodesOrig <- NA
-			}
+		ttree1 <- collapse.singles(ttree1)
 		}
-	ttree1 <- collapse.singles(ttree1)
+	#
+	#identify which nodes are min-locked; make sure to update when resolving polytomies
+	if(length(node.mins)>0){
+		locked_nodesOrig <- which(!is.na(node.mins))+Ntip(tree)
+	}else{
+		locked_nodesOrig <- NA
+		}
+	#
 	ttrees <- rmtree(ntrees,3)
 	sampledLogLike <- numeric()
 	for(ntr in 1:ntrees){
@@ -797,6 +799,10 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 					function(x) runif(1,x[2],x[1])
 					)
 				#
+				# calculate difference between t.obs and LAD
+					# which should be 0 here
+				timeData1 <- cbind(datesUniffy,datesUniffy,0)
+				#
 				# need to regenerate basic time tree
 					# will need to repeat for every iteration
 				ttree1 <- timePaleoPhy(
@@ -807,16 +813,8 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 					node.mins = node.mins, 
 					add.term = FALSE, 
 					inc.term.adj = FALSE)	
-				if(length(node.mins)>0){
-					locked_nodesOrig <- which(!is.na(node.mins))+Ntip(tree)
-				}else{
-					locked_nodesOrig <- NA
-					}
-				ttree1 <- collapse.singles(ttree1)						
 				#
-				# calculate difference between t.obs and LAD
-					# which should be 0 here
-				timeData1 <- cbind(datesUniffy,datesUniffy,0)
+				ttree1 <- collapse.singles(ttree1)						
 				}
 			# DEFAULT
 			# calculate difference between t.obs and LAD

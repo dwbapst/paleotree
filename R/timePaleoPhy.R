@@ -1,4 +1,4 @@
-#' Typical 'a posteriori' Time-Scaling Approaches For Paleontological Phylogenies
+#' Typical \emph{a posteriori} Time-Scaling Approaches For Paleontological Phylogenies
 #' 
 #' Time-scales an unscaled cladogram of fossil taxa using information on their
 #' temporal ranges, using various methods. Also can resolve polytomies randomly
@@ -13,11 +13,11 @@
 #' \emph{Time-Scaling Methods}
 #' 
 #' These functions are an attempt to unify and collect previously used and
-#' discussed 'a posteriori' methods for time-scaling phylogenies of fossil taxa.
+#' discussed \emph{a posteriori} methods for time-scaling phylogenies of fossil taxa.
 #' Unfortunately, it can be difficult to attribute some time-scaling methods to
 #' specific references in the literature.
 #' 
-#' There are five main a posteriori approaches that can be used by \code{timePaleoPhy}. Four of these
+#' There are five main \emph{a posteriori} approaches that can be used by \code{timePaleoPhy}. Four of these
 #' main types use some value of absolute time, chosen a priori, to time-scale the tree.
 #' This is handled by the argument \code{vartime}, which is NULL by default and unused
 #' for type "basic".

@@ -1,17 +1,17 @@
-#' Three Rate Calibrated 'a posteriori' Time-Scaling of Paleo-Phylogenies
+#' Three Rate Calibrated \emph{a posteriori} Time-Scaling of Paleo-Phylogenies
 #' 
 #' Time-scales an unscaled cladogram of fossil taxa, using information on their
 #' ranges and estimates of the instantaneous rates of branching, extinction and
-#' sampling. The output is a sample of a posteriori time-scaled trees, as resulting from a
+#' sampling. The output is a sample of \emph{a posteriori} time-scaled trees, as resulting from a
 #' stochastic algorithm which samples observed gaps in the fossil record with
 #' weights calculated based on the input rate estimates. This function also
 #' uses the three-rate calibrated time-scaling algorithm to stochastically
 #' resolve polytomies and infer potential ancestor-descendant relationships,
 #' simultaneous with the time-scaling treatment.
 #' 
-#' @details The three-rate calibrated ("cal3") algorithm time-scales trees a posteriori by
-#' stochastically picking node divergence times relative to a probability
-#' distribution of expected waiting times between speciation and first
+#' @details The three-rate calibrated ("cal3") algorithm time-scales trees
+#' \emph{a posteriori} by stochastically picking node divergence times
+#' relative to a probability distribution of expected waiting times between speciation and first
 #' appearance in the fossil record. This algorithm is extended to apply to
 #' resolving polytomies and designating possible ancestor-descendant
 #' relationships. The full details of this method are provided in Bapst (2013, MEE).
@@ -733,40 +733,82 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 			stop("Ancestral Weights Not Given For All Taxa on Tree!")}}
 	Ps <- sapply(tree$tip.label,function(x) pqr2Ps(brRate[x],extRate[x],sampRate[x]))
 	names(Ps) <- tree$tip.label
-	#timescale with timePaleoPhy to get "basic" timetree
-	ttree1 <- timePaleoPhy(tree = tree, timeData = timeData,
-		type = "basic", dateTreatment = "firstLast",
-		node.mins = node.mins, 
-		add.term = FALSE, inc.term.adj = FALSE)
-	#identify which nodes are min-locked; make sure to update when resolving polytomies
-	if(length(node.mins)>0){
-		locked_nodesOrig <- which(!is.na(node.mins))+Ntip(tree)
-	}else{
-		locked_nodesOrig <- NA
+	#
+	#########################################################
+	if(dateTreatment != "minMax"){
+		#timescale with timePaleoPhy to get "basic" timetree
+		ttree1 <- timePaleoPhy(
+			tree = tree, 
+			timeData = timeData,
+			type = "basic", 
+			dateTreatment = "firstLast",
+			node.mins = node.mins, 
+			add.term = FALSE, 
+			inc.term.adj = FALSE)
+		#
+		#identify which nodes are min-locked; make sure to update when resolving polytomies
+		if(length(node.mins)>0){
+			locked_nodesOrig <- which(!is.na(node.mins))+Ntip(tree)
+		}else{
+			locked_nodesOrig <- NA
+			}
 		}
 	ttree1 <- collapse.singles(ttree1)
 	ttrees <- rmtree(ntrees,3)
 	sampledLogLike <- numeric()
 	for(ntr in 1:ntrees){
-		#10/30/12: get FAD, new LAD (time of observation), and then calculate difference between t.obs and LAD
+		#10/30/12: get FAD and LAD (default time of observation)
+				# also calculate difference between t.obs and LAD
 		if(dateTreatment == "randObs" | FAD.only){
 			if(FAD.only){
-				timeData1 <- cbind(timeData[,1],timeData[,1],timeData[,1]-timeData[,2])
+				# repeat FAD
+				timeData1 <- cbind(timeData[,1],timeData[,1],
+					# calculate difference between t.obs and LAD
+					timeData[,1]-timeData[,2])
 				}
 			if(dateTreatment == "randObs"){
-				timeData1 <- cbind(timeData[,1],apply(timeData,1,function(x) runif(1,x[2],x[1])))
+				timeData1 <- cbind(timeData[,1],
+					apply(timeData,1,
+						function(x) runif(1,x[2],x[1])
+						)
+					)
+				#
+				# calculate difference between t.obs and LAD
 				timeData1 <- cbind(timeData1,timeData1[,2]-timeData[,2])
 				}
 		}else{
 			if(dateTreatment == "minMax"){
 				datesUniffy <- apply(
-					timeData,1,function(x)
-					runif(1,x[2],x[1])
+					timeData,1,
+					function(x) runif(1,x[2],x[1])
 					)
+				#
+				# need to regenerate basic time tree
+					# will need to repeat for every iteration
+				ttree1 <- timePaleoPhy(
+					tree = tree, 
+					timeData = timeData1,
+					type = "basic", 
+					dateTreatment = "firstLast",
+					node.mins = node.mins, 
+					add.term = FALSE, 
+					inc.term.adj = FALSE)	
+				if(length(node.mins)>0){
+					locked_nodesOrig <- which(!is.na(node.mins))+Ntip(tree)
+				}else{
+					locked_nodesOrig <- NA
+					}
+				ttree1 <- collapse.singles(ttree1)						
+				#
+				# calculate difference between t.obs and LAD
+					# which should be 0 here
 				timeData1 <- cbind(datesUniffy,datesUniffy,0)
 				}
+			# DEFAULT
+			# calculate difference between t.obs and LAD
+				# which should be 0 as its the default situation
 			timeData1 <- cbind(timeData,0)
-			}
+			}		
 		# now randomly resolve if randres
 		if(randres & (!ape::is.binary.phylo(ttree1) | !is.rooted(ttree1))){
 			ktree <- multi2di(ttree1)

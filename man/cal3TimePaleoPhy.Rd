@@ -77,13 +77,22 @@ divergences will be allowed to occur after this minimum age.}
 \item{dateTreatment}{This argument controls the interpretation of \code{timeData}.
 The default setting \code{dateTreatment = "firstLast"} treats the dates
 in \code{timeData} as a column of precise first and last appearances.
+
 A second option is \code{dateTreatment = "minMax"}, which
 treats these dates as minimum and maximum bounds on single point dates. Under this option,
 all taxa in the analysis will be treated as being point dates, such that the first appearance
 is also the last. These dates will be pulled under a uniform distribution.
-If \code{dateTreatment = "minMax"} is used,
-\code{FAD.only} and  becomes meaningless, and the use of it will return an error message. 
-A third option is \code{dateTreatment = "randObs"}. This assumes
+Note that use of \code{dateTreatment = "minMax"} was bugged in versions paleotree <3.2.5,
+as the generating time-tree used for cal3 inference was generated using the  
+input \code{timeData} as fixed first and last dates, such that the effect of 
+\code{dateTreatment = "minMax"} was nearly identical to using \code{dateTreatment = "firstLast"}
+regardless of the arguments chosen by a user, with tips always being placed at the
+upper date constraint as if the time of observation was a fixed LAD.
+This is now fixed as v3.2.6, such that a new basic-time-scaled tree is
+generated from a randomly selected set of point occurrence times on each
+iteration, so that the resulting tip dates are always different.
+
+A third option is \code{dateTreatment = "randObs"}, which assumes
 that the dates in the matrix are first and last appearance times,
 but that the desired time of observation is unknown.
 Thus, this is much like \code{dateTreatment = "firstLast"} except
@@ -97,12 +106,17 @@ for clarity. This temporal uncertainty in times of observation might be useful i
 a user is interested in applying phylogeny-based approaches to studying trait evolution, but have
 per-taxon measurements of traits that come from museum
 specimens with uncertain temporal placement.
+
 With both arguments \code{dateTreatment = "minMax"} and
-\code{dateTreatment = "randObs"}, the sampling of dates from random distributions should
+\code{dateTreatment = "randObs"}, the time of observation of taxa is a point-occurrence
+with a free-floating random variable as the precise age. Thus, the option
+\code{FAD.only = TRUE} is incoherent with these other options for \code{dateTreatment},
+and thus their use together will return an error message.
+Furthermore, the sampling of dates from random distributions in these approaches should
 compel users to produce many time-scaled trees for any given analytical purpose.
+
 Note that  \code{dateTreatment = "minMax"} returns an error
-in 'bin' time-scaling functions; please use
-\code{points.occur} instead.}
+in 'bin' time-scaling functions; please use \code{points.occur} instead.}
 
 \item{FAD.only}{Should the tips represent observation times at the start of
 the taxon ranges? \code{FAD.only = TRUE}, the resulting output

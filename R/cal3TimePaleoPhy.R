@@ -721,31 +721,59 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 			stop("node.mins must be same length as number of nodes in the input tree!")}
 		}
 	timeData <- timeData[!is.na(timeData[,1]),]
-	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(any(timeData[,1]<timeData[,2])){stop("timeData is not in time relative to modern (decreasing to present)")}
-	if(length(unique(rownames(timeData))) != length(rownames(timeData))){stop("Duplicate taxa in timeList[[2]]")}
-	if(length(unique(tree$tip.label)) != length(tree$tip.label)){stop("Duplicate tip taxon names in tree$tip.label")}
+	if(any(is.na(timeData))){
+		stop("Weird NAs in Data??")
+		}
+	if(any(timeData[,1]<timeData[,2])){
+		stop("timeData is not in time relative to modern (decreasing to present)")
+		}
+	if(length(unique(rownames(timeData))) != length(rownames(timeData))){
+		stop("Duplicate taxa in timeList[[2]]")
+		}
+	if(length(unique(tree$tip.label)) != length(tree$tip.label)){
+		stop("Duplicate tip taxon names in tree$tip.label")
+		}
 	if(length(rownames(timeData)) != length(tree$tip.label)){
-		stop("Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
+		stop("Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")
+		}
 	#make sure all taxa have a sampRate, brRate and exRate
-	if(length(sampRate) == 1){sampRate <- rep(sampRate,Ntip(tree));names(sampRate) <- tree$tip.label
+	if(length(sampRate) == 1){
+		sampRate <- rep(sampRate,Ntip(tree));names(sampRate) <- tree$tip.label
 		#if it is a species-named vector, all the species better be there1
-		}else{if(any(is.na(match(tree$tip.label,names(sampRate))))){
-			stop("Sampling Rates Not Given For All Taxa on Tree!")}}
-	if(length(brRate) == 1){brRate <- rep(brRate,Ntip(tree));names(brRate) <- tree$tip.label
+	}else{
+		if(any(is.na(match(tree$tip.label,names(sampRate))))){
+			stop("Sampling Rates Not Given For All Taxa on Tree!")
+			}
+		}
+	if(length(brRate) == 1){
+		brRate <- rep(brRate,Ntip(tree))
+		names(brRate) <- tree$tip.label
+		#if it is a species-named vector, all the species better be there!
+	}else{
+		if(any(is.na(match(tree$tip.label,names(brRate))))){
+			stop("Branching Rates Not Given For All Taxa on Tree!")
+			}
+		}
+	if(length(extRate) == 1){
+		extRate <- rep(extRate,Ntip(tree));names(extRate) <- tree$tip.label
 		#if it is a species-named vector, all the species better be there1
-		}else{if(any(is.na(match(tree$tip.label,names(brRate))))){
-			stop("Branching Rates Not Given For All Taxa on Tree!")}}
-	if(length(extRate) == 1){extRate <- rep(extRate,Ntip(tree));names(extRate) <- tree$tip.label
-		#if it is a species-named vector, all the species better be there1
-		}else{if(any(is.na(match(tree$tip.label,names(extRate))))){
-			stop("Extinction Rates Not Given For All Taxa on Tree!")}}
+	}else{
+		if(any(is.na(match(tree$tip.label,names(extRate))))){
+			stop("Extinction Rates Not Given For All Taxa on Tree!")
+			}
+		}
 	#allow per-taxon anc.wt values
-	if(length(anc.wt) == 1){anc.wt <- rep(anc.wt,Ntip(tree));names(anc.wt) <- tree$tip.label
+	if(length(anc.wt) == 1){
+		anc.wt <- rep(anc.wt,Ntip(tree));names(anc.wt) <- tree$tip.label
 		#if it is a species-named vector, all the species better be there1
-		}else{if(any(is.na(match(tree$tip.label,names(anc.wt))))){
-			stop("Ancestral Weights Not Given For All Taxa on Tree!")}}
-	Ps <- sapply(tree$tip.label,function(x) pqr2Ps(brRate[x],extRate[x],sampRate[x]))
+	}else{
+		if(any(is.na(match(tree$tip.label,names(anc.wt))))){
+			stop("Ancestral Weights Not Given For All Taxa on Tree!")
+			}
+		}
+	Ps <- sapply(tree$tip.label,function(x) 
+		pqr2Ps(brRate[x],extRate[x],sampRate[x])
+		)
 	names(Ps) <- tree$tip.label
 	#
 	#########################################################
@@ -781,6 +809,7 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 				timeData1 <- cbind(timeData[,1],timeData[,1],
 					# calculate difference between t.obs and LAD
 					timeData[,1]-timeData[,2])
+				rownames(timeData1) <- rownames(timeData)
 				}
 			if(dateTreatment == "randObs"){
 				timeData1 <- cbind(timeData[,1],
@@ -788,9 +817,11 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 						function(x) runif(1,x[2],x[1])
 						)
 					)
+				rownames(timeData1) <- rownames(timeData)
 				#
 				# calculate difference between t.obs and LAD
 				timeData1 <- cbind(timeData1,timeData1[,2]-timeData[,2])
+				rownames(timeData1) <- rownames(timeData)
 				}
 		}else{
 			if(dateTreatment == "minMax"){
@@ -802,6 +833,7 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 				# calculate difference between t.obs and LAD
 					# which should be 0 here
 				timeData1 <- cbind(datesUniffy,datesUniffy,0)
+				rownames(timeData1) <- rownames(timeData)
 				#
 				# need to regenerate basic time tree
 					# will need to repeat for every iteration
@@ -820,6 +852,7 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 			# calculate difference between t.obs and LAD
 				# which should be 0 as its the default situation
 			timeData1 <- cbind(timeData,0)
+			rownames(timeData1) <- rownames(timeData)
 			}		
 		# now randomly resolve if randres
 		if(randres & (!ape::is.binary.phylo(ttree1) | !is.rooted(ttree1))){
@@ -1335,10 +1368,15 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 					diff(sort(node.depth.edgelength(ktree)[1:Ntip(ktree)])),
 					diff(sort(-timeData1[,2]))
 						- diff(sort(node.depth.edgelength(ktree)[1:Ntip(ktree)]))
-					)	
+					)
+		tipdiffs <- 
 		test1 <- all(tipdiffs[,3]<tolerance)
-		test2 <- identical(names(sort(-timeData1[,2])),
-				ktree$tip.label[order(node.depth.edgelength(ktree)[1:Ntip(ktree)])])
+		test2 <- identical(
+			names(sort(-timeData1[,2])),
+			ktree$tip.label[order(
+				node.depth.edgelength(ktree)[1:Ntip(ktree)])
+				]
+			)
 		#test 2 does not work if any LADS are same
 		if(length(unique(timeData1[,2]))<Ntip(tree)){
 			test2 <- TRUE
@@ -1347,9 +1385,19 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 		if(all(c(test1,test2))){
 			ktree$test <- "passed"
 		}else{
+			ktree_test_messsage <- paste0("Tip age tests failed: \n",
+				ifelse(test1,"",
+					"Tip dates returned are different from expected, beyond specified tolerance.\n"
+					),
+				ifelse(test2,"",
+					"Order of tip dates disagrees with expected order."
+					)
+				)
+			ktree$test <- ktree_test_messsage
 			warning(paste0(
 				"Warning: Terminal tips improperly aligned,",
-				 " cause unknown. Use output with care."
+				" cause unknown. Use output with care.\n",
+				ktree_test_messsage
 				))
 			}
 		##############

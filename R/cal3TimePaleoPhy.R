@@ -1369,7 +1369,6 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 					diff(sort(-timeData1[,2]))
 						- diff(sort(node.depth.edgelength(ktree)[1:Ntip(ktree)]))
 					)
-		tipdiffs <- 
 		test1 <- all(tipdiffs[,3]<tolerance)
 		test2 <- identical(
 			names(sort(-timeData1[,2])),
@@ -1385,6 +1384,8 @@ cal3TimePaleoPhy <- function(tree, timeData, brRate, extRate, sampRate,
 		if(all(c(test1,test2))){
 			ktree$test <- "passed"
 		}else{
+			print(tipdiffs)
+			#
 			ktree_test_messsage <- paste0("Tip age tests failed: \n",
 				ifelse(test1,"",
 					"Tip dates returned are different from expected, beyond specified tolerance.\n"
@@ -1455,7 +1456,8 @@ bin_cal3TimePaleoPhy <- function(tree,timeList,
 			}
 		}
 	if(dateTreatment == "minMax"){
-		stop(paste0("Instead of dateTreatment = 'minMax', please use",
+		stop(paste0(
+			"Instead of dateTreatment = 'minMax'\n Please use",
 			" argument point.occur instead in bin_ functions or use sites argument"))
 		}
 	if(!any(dateTreatment == c("firstLast","randObs"))){

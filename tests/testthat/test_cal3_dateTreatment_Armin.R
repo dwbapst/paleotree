@@ -176,8 +176,7 @@ test_identical_tip_ages(trees = ttrees_3b)
 )
 
 # RESULT
-# Tip ages do not differ. Problematic.
-
+# Tip ages DO differ among the trees, as expected. Huzzah!
 
 ################################################################################
 # 4a) When `FAD.only = TRUE`, what is the difference in behavior

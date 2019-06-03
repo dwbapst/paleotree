@@ -1,5 +1,5 @@
 Version - 3.2.8 - 06-02-19 (Not Released to CRAN)
-- Fixed bug communicated by user Armin Eisler in October 2018 in cal3TimePaleoPhy where if `dateTreatment = 'minMax'` was used, the output trees would have tips at the same absolute time, as the generating time-tree used for cal3 inference was generated using the input fixed first and last dates as if they were FAD and LAD, with the upper age constraint treated as fixed LAD and time of observation for each tip. This has the effect of making 'minMax' treatment with cal3 nearly identical to using 'firstLast'. This is now fixed by creating a new new basic-time-scaled tree using the randomly generated set of point occurrence times within each iteration under 'minMax', such that the resulting tip dates are always different.
+- Fixed bug communicated by user Armin Elsler in October 2018 in cal3TimePaleoPhy where if `dateTreatment = 'minMax'` was used, the output trees would have tips at the same absolute time, as the generating time-tree used for cal3 inference was generated using the input fixed first and last dates as if they were FAD and LAD, with the upper age constraint treated as fixed LAD and time of observation for each tip. This has the effect of making 'minMax' treatment with cal3 nearly identical to using 'firstLast'. This is now fixed by creating a new new basic-time-scaled tree using the randomly generated set of point occurrence times within each iteration under 'minMax', such that the resulting tip dates are always different.
 - Also fixed tests for variance in cal3 tree calculations that were not properly sorting time data before comparing it against the time-scaled tree.
 
 Version - 3.2.4 - 05-30-19 (Not Released to CRAN)
@@ -13,7 +13,7 @@ Version - 3.2.0 - 04-14-19 (Not Released to CRAN)
 -Numerous fixes to how making taxon trees are created.
 
 Version - 3.1.9 - 02-15-19 (Not Released to CRAN)
--Updates to timePaleoPhy and cal3 documentation for dateTreatment argument, thanks to Armin Eisler for pointing out some inaccuracies in the text.
+-Updates to timePaleoPhy and cal3 documentation for dateTreatment argument, thanks to Armin Elsler for pointing out some inaccuracies in the text.
 -Updated some (but not all) functions related to use of PBDB data to use the proper 1.2 API, and made sure usage was properly accounted for.
 -Added functions for getting taxonomic data for clades, or for a specific list of taxa from the PBDB, which previously had existed in proto form in examples.
 -Added a function for plotting a tree with phylopics from the PBDB - this function currently does not allow for a lot of flexibility and is a work in progress.

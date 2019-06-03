@@ -1,7 +1,8 @@
-Version - 3.2.5 - 
-- 
+Version - 3.2.8 - 06-02-19 (Not Released to CRAN)
+- Fixed bug communicated by user Armin Eisler in October 2018 in cal3TimePaleoPhy where if `dateTreatment = 'minMax'` was used, the output trees would have tips at the same absolute time, as the generating time-tree used for cal3 inference was generated using the input fixed first and last dates as if they were FAD and LAD, with the upper age constraint treated as fixed LAD and time of observation for each tip. This has the effect of making 'minMax' treatment with cal3 nearly identical to using 'firstLast'. This is now fixed by creating a new new basic-time-scaled tree using the randomly generated set of point occurrence times within each iteration under 'minMax', such that the resulting tip dates are always different.
+- Also fixed tests for variance in cal3 tree calculations that were not properly sorting time data before comparing it against the time-scaled tree.
 
-Version - 3.2.4 - 2019-05-30
+Version - 3.2.4 - 05-30-19 (Not Released to CRAN)
 - Noted that functions for processing MrBayes trees was not checking if names for NEXUS files included .nex or not - added a test for this, so that .nex would be added if it wasn't present
 - Anat Shafir reported that paleotree's obtainDatedPosteriorTreesMrB was inappropriately using the prior probability, not the posterior probability, for finding the Maximum A Posterior tree (and thus was presumably returning the Maximum A Priori tree). This was fixed and the help was greatly clarified. For many paleotree users tip-dating with an empty matrix, however, the log-likelihood of the character data is always zero, and thus the posterior probability in those cases was always identical to the prior probability. Regardless, point estimates of topologies are always to be less preferred than looking at samples of trees from the posterior.
 

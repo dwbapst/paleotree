@@ -476,7 +476,7 @@
 #' 
 #' #################################################
 #' # that tree didn't look very resolved, does it? 
-#'    (See Wagner and Erwin 1995 to see why)
+#'    # (See Wagner and Erwin 1995 to see why)
 #' # can randomly resolve trees using the argument randres
 #' # each resulting tree will have polytomies
 #'    # randomly resolved stochastically using ape::multi2di

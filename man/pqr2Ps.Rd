@@ -62,26 +62,50 @@ solution is the default. As it would be very simple for any user to look this up
 in the code anyway, here's the unpublished equation for the exact solution:
 
 \eqn{Ps = 1-(((p+q+r)-(sqrt(((p+q+r)^2)-(4*p*q))))/(2*p))}
+
+The above exact solution was independent derived and published by Dider et al. (2017).
+Also see Wagner (2019) for additional discussion of this value and its importance for
+understanding the timing of branching events in an imperfect fossil record.
 }
 \examples{
 #with exact solution
-pqr2Ps(p = 0.1,q = 0.1,r = 0.1,useExact = TRUE)
+pqr2Ps(
+    p = 0.1,
+    q = 0.1,
+    r = 0.1,
+    useExact = TRUE
+    )
+
 #with inexact solution
-pqr2Ps(p = 0.1,q = 0.1,r = 0.1,useExact = TRUE)
+pqr2Ps(
+    p = 0.1,
+    q = 0.1,
+    r = 0.1,
+    useExact = TRUE
+    )
+
 }
 \references{
-Bapst, D. W., E. A. King and M. W. Pennell. In prep. Probability models
+Bapst, D. W., E. A. King and M. W. Pennell. Unpublished. Probability models
 for branch lengths of paleontological phylogenies.
 
 Bapst, D. W. 2013. A stochastic rate-calibrated method for time-scaling
 phylogenies of fossil taxa. \emph{Methods in Ecology and Evolution}.
 4(8):724-733.
+
+Didier, G., M. Fau, and M. Laurin. 2017. Likelihood of Tree Topologies
+with Fossils and Diversification Rate Estimation. \emph{Systematic Biology}
+66(6):964-987.
+
+Wagner, P. J. 2019. On the probabilities of branch durations and
+stratigraphic gaps in phylogenies of fossil taxa when rates of
+diversification and sampling vary over time. \emph{Paleobiology} 45(1):30-55.
 }
 \seealso{
 \code{\link{SamplingConv}}
 }
 \author{
-This function is entirely the product of a joint effort between the package author
+This function is entirely the product of a joint unpublished effort between the package author
 (David W. Bapst), Emily A. King and Matthew W. Pennell. In particular, Emily King
 solved a nasty bit of calculus to get the inexact solution and later re-derived
 the function with a quadratic methodology to get the exact solution. Some elements

@@ -56,13 +56,13 @@
 #' @param inapplicableValue The string value indicating an
 #' inapplicable character coding value, by default \code{"-"}.
 
-# @param changes A vector counting character change;
-#' the extraction of this is automated if you use .
+#' @param phyloTree A phylogenetic tree of class \code{phylo}
+#' as used by package \code{ape}.
 
-#' @param phyloTree A phylogenetic tree of class \code{phylo} as used by package \code{ape}.
-
-#' @param models A vector of type \code{character} naming models to be fit.
-#' Default is \code{c("exponential", "gamma", "lognormal", "zipf")}.
+#' @param models A vector of type \code{character}
+#' naming various models to be fit.
+#' The default fits the models \code{"exponential"}, \code{"gamma"},
+#' \code{"lognormal"}, and  \code{"zipf"}.
 
 #' @param exhaustion_info The list of results output
 #' from function \code{accioExhaustionCurve}.
@@ -173,6 +173,8 @@
 #' }	
 
 
+# @param changes A vector counting character change;
+# the extraction of this is automated if you use . (?)
 
 # examples trash
 

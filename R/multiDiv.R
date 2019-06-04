@@ -88,50 +88,96 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#' 	nTotalTaxa = c(30,40), nExtant = 0)
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, 
+#'     nruns = 1,
+#'     nTotalTaxa = c(30,40), 
+#'     nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' rangesCont <- sampleRanges(taxa, r = 0.5)
 #' rangesDisc <- binTimeData(rangesCont, int.length = 1)
 #' cladogram <- taxa2cladogram(taxa, plot = TRUE)
 #' #using multiDiv with very different data types
-#' ttree <- timePaleoPhy(cladogram, rangesCont, type = "basic", add.term = TRUE, plot = FALSE)
+#' ttree <- timePaleoPhy(
+#'     cladogram, 
+#'     rangesCont, 
+#'     type = "basic", 
+#'     add.term = TRUE, 
+#'     plot = FALSE
+#'     )
+#'     
 #' input <- list(rangesCont, rangesDisc, ttree)
 #' multiDiv(input, plot = TRUE)
 #' 
 #' #using fixed interval times
-#' multiDiv(input, int.times = rangesDisc[[1]], plot = TRUE)
+#' multiDiv(input, 
+#'     int.times = rangesDisc[[1]], 
+#'     plot = TRUE)
 #' 
 #' #using multiDiv with samples of trees
-#' ttrees <- timePaleoPhy(cladogram, rangesCont, type = "basic",
-#'     randres = TRUE, ntrees = 10, add.term = TRUE)
+#' ttrees <- timePaleoPhy(
+#'     cladogram, 
+#'     rangesCont, 
+#'     type = "basic",
+#'     randres = TRUE, 
+#'     ntrees = 10, 
+#'     add.term = TRUE
+#'     )
+#'     
 #' multiDiv(ttrees)
-#' #uncertainty in diversity history is solely due to 
-#'    #the random resolution of polytomies
+#'     
+#' # uncertainty in diversity history is solely due to 
+#'    # the random resolution of polytomies
 #' 
-#' #multiDiv can also take output from simFossilRecord, via fossilRecord2fossilTaxa
-#' #what do many simulations run under some set of conditions 'look' like on average?
+#' ################
+#' # multiDiv can also take output from simFossilRecord
+#'     # via fossilRecord2fossilTaxa
+#' 
+#' # what do many simulations run under some set of
+#'     # conditions 'look' like on average?
 #' set.seed(444)
-#' records <- simFossilRecord(p = 0.1, q = 0.1, nruns = 10,
-#'  totalTime = 30, plot = TRUE)
-#' taxa <- sapply(records,fossilRecord2fossilTaxa)
+#' records <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     nruns = 10,
+#'     totalTime = 30, 
+#'     plot = TRUE
+#'     )
+#' 
+#' taxa <- sapply(records, fossilRecord2fossilTaxa)
+#' 
 #' multiDiv(taxa)
 #' #increasing cone of diversity! 
-#' #Even better on a log scale:
+#' 
+#' #Its even better on a log scale:
 #' multiDiv(taxa, plotLogRich = TRUE)
 #' 
+#' #######################################
 #' #pure-birth example with simFossilRecord
 #' #note that conditioning is tricky
+#' 
 #' set.seed(444)
-#' recordsPB <- simFossilRecord(p = 0.1, q = 0, nruns = 10,
-#'  totalTime = 30,plot = TRUE)
-#' taxaPB <- sapply(recordsPB,fossilRecord2fossilTaxa)
-#' multiDiv(taxaPB,plotLogRich = TRUE)
+#' recordsPB <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0, 
+#'     nruns = 10,
+#'     totalTime = 30,
+#'     plot = TRUE
+#'     )
+#'     
+#' taxaPB <- sapply(recordsPB, fossilRecord2fossilTaxa)
+#' multiDiv(taxaPB, plotLogRich = TRUE)
 #' 
 #' #compare many discrete diversity curves
-#' discreteRanges <- lapply(taxa,function(x)
-#' 	binTimeData(sampleRanges(x, r = 0.5,
-#'     		min.taxa = 1), int.length = 7))
+#' discreteRanges <- lapply(taxa, function(x)
+#'     binTimeData(
+#'         sampleRanges(x, 
+#'             r = 0.5,
+#'             min.taxa = 1
+#'             ),
+#'         int.length = 7)
+#'     )
+#' 
 #' multiDiv(discreteRanges)
 #' 
 #' layout(1)
@@ -139,9 +185,25 @@
 
 #' @rdname multiDiv
 #' @export
-multiDiv <- function(data,int.length = 1,plot = TRUE,split.int = TRUE,drop.ZLB = TRUE,drop.cryptic = FALSE,
-	extant.adjust = 0.01,plotLogRich = FALSE,yAxisLims = NULL,timelims = NULL,int.times = NULL,
-	plotMultCurves = FALSE,multRainbow = TRUE,divPalette = NULL,divLineType = 1,main = NULL){
+multiDiv <- function(
+		data,
+		int.length = 1,
+		plot = TRUE,
+		split.int = TRUE,
+		drop.ZLB = TRUE,
+		drop.cryptic = FALSE,
+		extant.adjust = 0.01,
+		plotLogRich = FALSE,
+		yAxisLims = NULL,
+		timelims = NULL,
+		int.times = NULL,
+		plotMultCurves = FALSE,
+		multRainbow = TRUE,
+		divPalette = NULL,
+		divLineType = 1,
+		main = NULL
+		){
+	###############################################
 	#lines up a bunch of taxic or phylo objects and calculates diversity curves simulataneously
 		#across all their objects; intuits the type of object without being told
 		#it also calculates a "average" median curve and 95% quantile intervals
@@ -202,13 +264,23 @@ multiDiv <- function(data,int.length = 1,plot = TRUE,split.int = TRUE,drop.ZLB =
 		if(split.int & any(dclass1 == 2)){
 			#for every single discrete time dataset, bins must be split at their boundaries
 			splinters <- sapply(data[dclasss = 2],function(x) x[[1]][,1])
-			mustSplit <- apply(int.times,1,function(x) any(sapply(splinters,function(y) x[1]>y & x[2]<y)))
+			mustSplit <- apply(int.times, 1,
+				function(x) any(sapply(splinters,function(y) x[1]>y & x[2]<y))
+				)
 			if(any(mustSplit)){
 				for(i in which(mustSplit)){
-						splitter <- splinters[sapply(splinters[,1],function(y) int.times[i,1]>y & int.times[i,2]<y),1]
+						splitter <- splinters[sapply(splinters[,1],
+							function(y) int.times[i,1]>y & int.times[i,2]<y
+							),1]
 						#if(length(splitter)>1){stop("Splitter returning more than one value?!")}
 						splitter <- c(int.times[i,1],splitter,int.times[i,2])
-						int.times <- rbind(int.times,cbind(splitter[1:(length(splitter)-1)],splitter[2:length(splitter)]))
+						int.times <- rbind(
+							int.times,
+							cbind(
+								splitter[1:(length(splitter)-1)],
+								splitter[2:length(splitter)]
+								)
+							)
 					}
 				int.times <- int.times[-which(mustSplit),]
 				int.times <- int.times[order(-int.times[,1]),]
@@ -219,15 +291,33 @@ multiDiv <- function(data,int.length = 1,plot = TRUE,split.int = TRUE,drop.ZLB =
 	div <- matrix(,nrow(int.times),1)
 	for(i in 1:length(data)){
 		if((dclass1[i] == 1)){
-			divs1 <- taxicDivCont(timeData = data[[i]],int.times = int.times,plot = FALSE,drop.cryptic = drop.cryptic)[,3]
+			divs1 <- taxicDivCont(
+				timeData = data[[i]],
+				int.times = int.times,
+				plot = FALSE,
+				drop.cryptic = drop.cryptic
+				)
+			divs1 <- divs1[,3]
 			div <- cbind(div,divs1)
 			}
 		if((dclass1[i] == 2)){
-			divs2 <- taxicDivDisc(timeList = data[[i]],int.times = int.times,split.int = FALSE,plot = FALSE)[,3]
+			divs2 <- taxicDivDisc(
+				timeList = data[[i]],
+				int.times = int.times,
+				split.int = FALSE,
+				plot = FALSE
+				)
+			divs2 <- divs2[,3]
 			div <- cbind(div,divs2)
 			}
 		if((dclass1[i] == 3)){
-			divs3 <- phyloDiv(tree = data[[i]],int.times = int.times,plot = FALSE,drop.ZLB = drop.ZLB)[,3]
+			divs3 <- phyloDiv(
+				tree = data[[i]],
+				int.times = int.times,
+				plot = FALSE,
+				drop.ZLB = drop.ZLB
+				)
+			divs3 <- divs3[,3]
 			div <- cbind(div,divs3)
 			}
 		}
@@ -235,16 +325,35 @@ multiDiv <- function(data,int.length = 1,plot = TRUE,split.int = TRUE,drop.ZLB =
 	colnames(div) <- paste("dataset",1:ncol(div),sep = "") 
 	#get median curve
 	median <- apply(div,1,median)
-	q1 <- apply(div,1,quantile,probs = 0.025)	#the low quantile
-	q2 <- apply(div,1,quantile,probs = 0.975)	#the high quantile
-	median.curve <- cbind(median = median,low.95.quantile = q1,high.95.quantile = q2)
-	res <- list(int.times = int.times,div.counts = div,median.curve = median.curve)
+	#the low quantile
+	q1 <- apply(div,1,quantile,probs = 0.025)	
+	#the high quantile
+	q2 <- apply(div,1,quantile,probs = 0.975)	
+	median.curve <- cbind(
+		median = median,
+		low.95.quantile = q1,
+		high.95.quantile = q2
+		)
+	#
+	res <- list(
+		int.times = int.times,
+		div.counts = div,
+		median.curve = median.curve
+		)
+	#
 	if(plot){
 		plotMultiDiv(
-		res,plotLogRich = plotLogRich,timelims = timelims,yAxisLims = yAxisLims,
-		plotMultCurves = plotMultCurves,multRainbow = multRainbow,
-		divPalette = divPalette,divLineType = divLineType,main = main
+			res,
+			plotLogRich = plotLogRich,
+			timelims = timelims, 
+			yAxisLims = yAxisLims,
+			plotMultCurves = plotMultCurves,
+			multRainbow = multRainbow,
+			divPalette = divPalette,
+			divLineType = divLineType,
+			main = main
 		)}
+	#
 	return(invisible(res))
 	}
 
@@ -253,8 +362,11 @@ multiDiv <- function(data,int.length = 1,plot = TRUE,split.int = TRUE,drop.ZLB =
 plotMultiDiv <- function(results,plotLogRich = FALSE,timelims = NULL,
 		yAxisLims = NULL,plotMultCurves = FALSE,
 		multRainbow = TRUE,divPalette = NULL,divLineType = 1,main = NULL){
-	if(!is.null(timelims)){if(length(timelims) != 2){
-		stop("if given, timelims should be a vector of length 2")}}
+	if(!is.null(timelims)){
+		if(length(timelims) != 2){
+			stop("if given, timelims should be a vector of length 2")
+			}
+		}
 	if(!is.null(yAxisLims)){
 		if(length(yAxisLims) != 2){
 			stop("if given, yAxisLims should be a vector of length 2")
@@ -283,9 +395,14 @@ plotMultiDiv <- function(results,plotLogRich = FALSE,timelims = NULL,
 				}
 			plot(times1[divs1[,1]>0],divs1[divs1[,1]>0,1],type = "n",
 				ylim = y_lim,log = "y",
-				xlim = if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlim = if(is.null(timelims)){
+						c(max(times1),max(0,min(times1)))
+					}else{
+						timelims
+						},
 				xaxs = if(is.null(timelims)){"r"}else{"i"},
-				xlab = "Time (Before Present)",ylab = "Log Lineage/Taxic Richness",
+				xlab = "Time (Before Present)",
+				ylab = "Log Lineage/Taxic Richness",
 				main = )
 		}else{
 			if(is.null(yAxisLims)){
@@ -295,20 +412,33 @@ plotMultiDiv <- function(results,plotLogRich = FALSE,timelims = NULL,
 				}
 			plot(times1,divs1[,1],type = "n",
 				ylim = y_lim,
-				xlim = if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlim = if(is.null(timelims)){
+						c(max(times1),max(0,min(times1)))
+					}else{
+						timelims
+						},
 				xaxs = if(is.null(timelims)){"r"}else{"i"},
-				xlab = "Time (Before Present)",ylab = "Lineage/Taxic Richness",
+				xlab = "Time (Before Present)",
+				ylab = "Lineage/Taxic Richness",
 				main = main)
 			}
 		if(is.null(divPalette)){
-			if(multRainbow){divPalette <- sample(rainbow(ncol(divs1)))
-				}else{divPalette <- rep(1,ncol(divs1))}
+			if(multRainbow){
+				divPalette <- sample(rainbow(ncol(divs1)))
+			}else{
+				divPalette <- rep(1,ncol(divs1))
+				}
 			}
 		if(length(divLineType) != ncol(divs1)){
 			divLineType <- rep(divLineType,ncol(divs1))
 			}
 		for(i in 1:ncol(divs1)){	#plot each line
-			lines(times1,divs1[,i],lwd = 3,col = divPalette[i],lty = divLineType[i])
+			lines(times1,
+				divs1[,i],
+				lwd = 3,
+				col = divPalette[i],
+				lty = divLineType[i]
+				)
 			}
 	}else{
 		if(is.null(main)){
@@ -321,15 +451,20 @@ plotMultiDiv <- function(results,plotLogRich = FALSE,timelims = NULL,
 			mdiv1[mdiv1[,2]<1,2] <- 1
 			mdiv1[mdiv1[,3]<1,3] <- 1
 			if(is.null(yAxisLims)){
-				y_lim <- c(min(mdiv1[mdiv1 >= 1]),max(mdiv1[mdiv1 >= 1]))
+				y_lim <- c(min(mdiv1[mdiv1 >= 1]), max(mdiv1[mdiv1 >= 1]))
 			}else{
 				y_lim <- yAxisLims
 				}
 			plot(times1[mdiv1[,3]>0],mdiv1[mdiv1[,3]>0,3],type = "n",
 				ylim = y_lim,log = "y",
-				xlim = if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlim = if(is.null(timelims)){
+						c(max(times1),max(0,min(times1)))
+					}else{
+						timelims
+						},
 				xaxs = if(is.null(timelims)){"r"}else{"i"},
-				xlab = "Time (Before Present)",ylab = "Log Lineage/Taxic Richness",
+				xlab = "Time (Before Present)",
+				ylab = "Log Lineage/Taxic Richness",
 				main = main)
 		}else{
 			if(is.null(yAxisLims)){
@@ -339,12 +474,24 @@ plotMultiDiv <- function(results,plotLogRich = FALSE,timelims = NULL,
 				}
 			plot(times1,mdiv1[,3],type = "n",
 				ylim = y_lim,
-				xlim = if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
+				xlim = if(is.null(timelims)){
+						c(max(times1),max(0,min(times1)))
+					}else{
+						timelims
+						},
 				xaxs = if(is.null(timelims)){"r"}else{"i"},
-				xlab = "Time (Before Present)",ylab = "Lineage/Taxic Richness",
+				xlab = "Time (Before Present)",
+				ylab = "Lineage/Taxic Richness",
 				main = main)
 			}
-		polygon(c(times1,rev(times1)),c(mdiv1[,3],rev(mdiv1[,2])),col = "gray",border = NA)
+		polygon(
+			c(times1,rev(times1)),
+			c(mdiv1[,3],rev(mdiv1[,2])),
+			col = "gray",
+			border = NA
+			)
+		#
 		lines(times1,mdiv1[,1],lwd = 3)
+		#
 		}
 	}

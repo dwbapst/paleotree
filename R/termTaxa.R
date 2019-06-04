@@ -150,74 +150,107 @@
 #' @examples
 #' 
 #' set.seed(444)
-#' #example for 20 taxa
+#' # example for 20 taxa
 #' termTaxaRes <- simTermTaxa(20)
 #' 
-#' #let look at the taxa...
+#' # let look at the taxa...
 #' taxa <- termTaxaRes$taxonRanges
 #' taxicDivCont(taxa)
-#' #because ancestors don't even exist as taxa
-#' 	#the true diversity curve can go to zero
-#' 	#kinda bizarre!
+#' # because ancestors don't even exist as taxa
+#' 	# the true diversity curve can go to zero
+#' 	# kinda bizarre!
 #' 
-#' #the tree should give a better idea
+#' # the tree should give a better idea
 #' tree <- termTaxaRes$tree
 #' phyloDiv(tree)
-#' #well, okay, its a tree. 
+#' # well, okay, its a tree. 
 #' 
-#' #get the 'ideal cladogram' ala taxa2cladogram
-#'     #much easier with terminal-taxa simulations as no paraphyletic taxa
+#' # get the 'ideal cladogram' ala taxa2cladogram
+#'     # much easier with terminal-taxa simulations
+#'     # as no paraphyletic taxa
 #' cladogram <- tree
 #' cladogram$edge.length <- NULL
 #' plot(cladogram)
 #' 
-#' #trying out trueTermTaxaTree
-#' #random times of observation: uniform distribution
-#' time.obs <- apply(taxa,1,function(x) runif(1,x[2],x[1]))
-#' tree1 <- trueTermTaxaTree(termTaxaRes,time.obs)
+#' # trying out trueTermTaxaTree
+#' # random times of observation: uniform distribution
+#' time.obs <- apply(taxa,1,
+#'     function(x) runif(1,x[2],x[1])
+#'     )
+#' tree1 <- trueTermTaxaTree(
+#'     termTaxaRes,
+#'     time.obs
+#'     )
 #' layout(1:2)
 #' plot(tree)
 #' plot(tree1)
-#' 
 #' layout(1)
-#' 
+#'
+#' ########################################### 
 #' #let's look at the change in the terminal branches
-#' plot(tree$edge.length,tree1$edge.length)
+#' plot(tree$edge.length,
+#'     tree1$edge.length)
 #' #can see some edges are shorter on the new tree, cool
 #' 
 #' #let's now simulate sampling and use FADs
 #' layout(1:2)
-#' plot(tree);axisPhylo()
-#' FADs <- sampleRanges(termTaxaRes$taxonRanges,r = 0.1)[,1]
-#' tree1 <- trueTermTaxaTree(termTaxaRes,FADs)
-#' plot(tree1);axisPhylo()
+#' plot(tree)
+#' axisPhylo()
+#' FADs <- sampleRanges(
+#'     termTaxaRes$taxonRanges,
+#'     r = 0.1)[,1]
+#' tree1 <- trueTermTaxaTree(termTaxaRes, FADs)
+#' plot(tree1)
+#' axisPhylo()
 #' 
+#' ################################################
 #' #can condition on sampling some average number of taxa
 #' #analogous to deprecated function simFossilTaxa_SRcond
 #' r <- 0.1
 #' avgtaxa <- 50
 #' sumRate <- 0.2
 #' #avg number necc for an avg number sampled
-#' ntaxa_orig <- avgtaxa/(r/(r+sumRate))	
-#' termTaxaRes <- simTermTaxa(ntaxa = ntaxa_orig,sumRate = sumRate)
+#' ntaxa_orig <- avgtaxa / (r / (r + sumRate))	
+#' termTaxaRes <- simTermTaxa(
+#'     ntaxa = ntaxa_orig,
+#'     sumRate = sumRate)
+#' 
 #' #note that conditioning must be conducted using full sumRate
 #' #this is because durations are functions of both rates
 #' #just like in bifurcation
 #' 
+#' 
+#' #################################
 #' #use advanced version of simTermTaxa: simTermTaxaAdvanced
 #'     #allows for extant taxa in a term-taxa simulation
 #' 
 #' #with min.cond
-#' termTaxaRes <- simTermTaxaAdvanced(p = 0.1,q = 0.1,mintaxa = 50,
-#'     maxtaxa = 100,maxtime = 100,minExtant = 10,maxExtant = 20,min.cond = TRUE)
+#' termTaxaRes <- simTermTaxaAdvanced(
+#'     p = 0.1,
+#'     q = 0.1,
+#'     mintaxa = 50,
+#'     maxtaxa = 100,
+#'     maxtime = 100,
+#'     minExtant = 10,
+#'     maxExtant = 20,
+#'     min.cond = TRUE
+#'     )
 #' #notice that arguments are similar to simFossilRecord
-#' 	# and somewhat more similar to deprecated function simFossilTaxa ;P
+#' 	# and even more similar to deprecated function simFossilTaxa
 #' plot(termTaxaRes$tree)
 #' Ntip(termTaxaRes$tree)
 #' 
 #' #without min.cond
-#' termTaxaRes <- simTermTaxaAdvanced(p = 0.1,q = 0.1,mintaxa = 50,
-#'     maxtaxa = 100,maxtime = 100,minExtant = 10,maxExtant = 20,min.cond = FALSE)
+#' termTaxaRes <- simTermTaxaAdvanced(
+#'     p = 0.1,
+#'     q = 0.1,
+#'     mintaxa = 50,
+#'     maxtaxa = 100,
+#'     maxtime = 100,
+#'     minExtant = 10,
+#'     maxExtant = 20,
+#'     min.cond = FALSE
+#'     )
 #' plot(termTaxaRes$tree)
 #' Ntip(termTaxaRes$tree)
 #' 
@@ -226,16 +259,18 @@
 #' @name termTaxa
 #' @rdname termTaxa
 #' @export
-simTermTaxa <- function(ntaxa,sumRate = 0.2){
+simTermTaxa <- function(ntaxa, sumRate = 0.2){
 		#previously known as "candle"
 	#This function will make ideal cladist datasets
 	#all taxa will be descendants
 		#all evolution prior to branching or differentiation is unsampled
 		#taxa do not differentiatiate over those times
 	#require(ape)
-	tree <- deadTree(ntaxa = ntaxa,sumRate = sumRate)
+	tree <- deadTree(ntaxa = ntaxa, sumRate = sumRate)
 	#taxonNames <- tree$tip.label
-	termEdge <- sapply(tree$edge[,2],function(x) any(x == (1:ntaxa)))
+	termEdge <- sapply(tree$edge[,2],function(x)
+		any(x == (1:ntaxa))
+		)
 	#termAnc <- tree$edge[termEdge,1]
 	taxonDurations <- tree$edge.length[termEdge]
 	nodeDist <- node.depth.edgelength(tree)
@@ -249,9 +284,17 @@ simTermTaxa <- function(ntaxa,sumRate = 0.2){
 
 #' @rdname termTaxa
 #' @export
-simTermTaxaAdvanced <- function(p = 0.1,q = 0.1,mintaxa = 1,maxtaxa = 1000,mintime = 1,maxtime = 1000,
-		minExtant = 0,maxExtant = NULL,min.cond = TRUE){
-		#previously known as "candle"
+simTermTaxaAdvanced <- function(
+		p = 0.1,
+		q = 0.1,
+		mintaxa = 1, maxtaxa = 1000,
+		mintime = 1,maxtime = 1000,
+		minExtant = 0,maxExtant = NULL,
+		min.cond = TRUE
+		){
+	###################################################
+	#previously known as "candle"
+	####################################################
 	#This function will make ideal cladist datasets
 	#all taxa will be monophyletic descendants
 		#all evolution prior to branching or differentiation is unsampled
@@ -259,21 +302,39 @@ simTermTaxaAdvanced <- function(p = 0.1,q = 0.1,mintaxa = 1,maxtaxa = 1000,minti
 	#extant example
 		#p = 0.1;q = 0.1;mintaxa = 50;maxtaxa = 100;mintime = 1;maxtime = 1000;minExtant = 10;maxExtant = 20;min.cond = FALSE
 	#require(ape)
-	#taxa <- simFossilTaxa(p = p,q = q,mintaxa = mintaxa,maxtaxa = maxtaxa,mintime = mintime,maxtime = maxtime,
-	#	minExtant = minExtant,maxExtant = maxExtant,min.cond = min.cond,nruns = 1,
-	#	anag.rate = 0,prop.bifurc = 0,prop.cryptic = 0,count.cryptic = FALSE,print.runs = FALSE,plot = FALSE)
-	record <- simFossilRecord(p = p, q = q, r = 0, nruns = 1,
-		nTotalTaxa = c(mintaxa,maxtaxa),totalTime = c(mintime,maxtime),nExtant = c(minExtant,maxExtant),
-		anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0, modern.samp.prob = 1, startTaxa = 1, 
-		nSamp = c(0, 1000), tolerance = 10^-4, maxStepTime = 0.01,
-		shiftRoot4TimeSlice = "withExtantOnly", count.cryptic = FALSE,
-		negRatesAsZero = TRUE, print.runs = FALSE, sortNames = FALSE,
-		plot = FALSE)
+	#taxa <- simFossilTaxa(p = p,q = q,mintaxa = mintaxa,
+	#   maxtaxa = maxtaxa,mintime = mintime,maxtime = maxtime,
+	#	minExtant = minExtant,maxExtant = maxExtant,
+	#   min.cond = min.cond,nruns = 1,
+	#	anag.rate = 0,prop.bifurc = 0,prop.cryptic = 0,
+	#   count.cryptic = FALSE,print.runs = FALSE,plot = FALSE)
+	record <- simFossilRecord(
+		p = p, q = q, r = 0, nruns = 1,
+		nTotalTaxa = c(mintaxa,maxtaxa),
+		totalTime = c(mintime,maxtime),
+		nExtant = c(minExtant,maxExtant),
+		anag.rate = 0, prop.bifurc = 0, 
+		prop.cryptic = 0, 
+		modern.samp.prob = 1, 
+		startTaxa = 1, 
+		nSamp = c(0, 1000), 
+		tolerance = 10^-4, 
+		maxStepTime = 0.01,
+		shiftRoot4TimeSlice = "withExtantOnly", 
+		count.cryptic = FALSE,
+		negRatesAsZero = TRUE, 
+		print.runs = FALSE, 
+		sortNames = FALSE,
+		plot = FALSE
+		)
+	#############
 	taxa <- fossilRecord2fossilTaxa(record)
 	tree <- dropZLB(taxa2phylo(taxa))
 	ntaxa <- Ntip(tree)
 	#taxonNames <- tree$tip.label
-	termEdge <- sapply(tree$edge[,2],function(x) any(x == (1:ntaxa)))
+	termEdge <- sapply(tree$edge[,2],
+		function(x) any(x == (1:ntaxa))
+		)
 	termNodes <- tree$edge[termEdge,2]
 	#termAnc <- tree$edge[termEdge,1]
 	taxonDurations <- tree$edge.length[termEdge]
@@ -296,15 +357,18 @@ trueTermTaxaTree <- function(TermTaxaRes,time.obs){
 	#first, check if the times of observations are outside of original taxon ranges
 	taxR <- TermTaxaRes$taxonRanges
 	nameMatch <- match(names(time.obs),rownames(taxR))
-	if(any(is.na(nameMatch))){stop("ERROR: names on time.obs and in TermTaxaRes don't match")}
-	if(any(sapply(1:length(time.obs),function(x)
+	if(any(is.na(nameMatch))){
+		stop("ERROR: names on time.obs and in TermTaxaRes don't match")
+		}
+	timeObsOutsideRanges <- sapply(1:length(time.obs),function(x)
 			if(is.na(time.obs[x])){
 				FALSE
 			}else{
 				(time.obs[x]>taxR[nameMatch[x],1])|(time.obs[x]<taxR[nameMatch[x],2])
-				}))
-		){
-			stop("ERROR: Given time.obs are outside of the original taxon ranges")}
+				})
+	if(any(timeObsOutsideRanges)){
+			stop("ERROR: Given time.obs are outside of the original taxon ranges")
+			}
 	#now onwards with the actual function
 	tree1 <- TermTaxaRes$tree
 	#termEdge <- sapply(tree1$edge[,2],function(x)
@@ -327,12 +391,18 @@ trueTermTaxaTree <- function(TermTaxaRes,time.obs){
 			dropTaxa <- c(dropTaxa,tree1$tip.label[i])
 			}
 		}
-	treeNoDrop <- tree1		#the root.time can't change cause the term branches got shifted
+	#
+	#the root.time can't change cause the term branches got shifted
+	treeNoDrop <- tree1		
 	if(length(dropTaxa)>0){
 		tree1 <- drop.tip(tree1,dropTaxa)
 		}
+	#
 	#need to correct root.time if basal outgroups were removed
-	tree1 <- fixRootTime(treeNoDrop,tree1)	#use the tree after adjusting the term branch lengths
+	#
+	#use the tree after adjusting the term branch lengths
+	tree1 <- fixRootTime(treeNoDrop,tree1)	
+	#
 	return(tree1)
 	}
 
@@ -348,7 +418,7 @@ deadTree <- function(ntaxa,sumRate = 0.2){
 			#anything else should be indep in a b-d process
 	#lets make the phylogeny 
 	#require(ape)
-	tree <- rtree(ntaxa)
+	tree <- ape::rtree(ntaxa)
 	tree$edge.length <- rexp(ntaxa+ntaxa-2,sumRate)
 	tree$root.time <- max(node.depth.edgelength(tree))+200
 	return(tree)

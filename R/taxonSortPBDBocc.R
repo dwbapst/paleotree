@@ -125,20 +125,27 @@
 #' # getting occurrence data for a genus, sorting it
 #' # Dicellograptus
 #' dicelloData <- getPBDBocc("Dicellograptus")
-#' dicelloOcc2 <- taxonSortPBDBocc(dicelloData, 
-#' 	rank = "species", onlyFormal = FALSE)
+#' dicelloOcc2 <- taxonSortPBDBocc(
+#'    data = dicelloData, 
+#'    rank = "species",
+#'    onlyFormal = FALSE
+#'    )
 #' names(dicelloOcc2)
 #' 
 #' # try a PBDB API download with lots of synonymization
 #' 	#this should have only 1 species
-#' # old way, using v1.1 of PBDB API:
+#' # *old* way, using v1.1 of PBDB API:
 #' # acoData <- read.csv(paste0(
 #' #	"http://paleobiodb.org/data1.1/occs/list.txt?",
 #' #	"base_name = Acosarina%20minuta&show=ident,phylo"))
-#' # new way - with getPBDBocc, using v1.2 of PBDB API:
+#' #
+#' # *new* method - with getPBDBocc, using v1.2 of PBDB API:
 #' acoData <- getPBDBocc("Acosarina minuta")
-#' acoOcc <- taxonSortPBDBocc(acoData, 
-#' 	rank = "species", onlyFormal = FALSE)
+#' acoOcc <- taxonSortPBDBocc(
+#'    data = acoData, 
+#'    rank = "species", 
+#'    onlyFormal = FALSE
+#'    )
 #' names(acoOcc)
 #' 
 #' }
@@ -147,22 +154,27 @@
 #' data(graptPBDB)
 #' 
 #' #get formal genera
-#' occGenus <- taxonSortPBDBocc(graptOccPBDB,
-#' 		rank = "genus")
+#' occGenus <- taxonSortPBDBocc(
+#'    data = graptOccPBDB,
+#'    rank = "genus"
+#'    )
 #' length(occGenus)
 #' 
 #' #get formal species
-#' occSpeciesFormal <- taxonSortPBDBocc(graptOccPBDB,
-#' 		rank = "species")
+#' occSpeciesFormal <- taxonSortPBDBocc(
+#'    data = graptOccPBDB,
+#'    rank = "species")
 #' length(occSpeciesFormal)
 #' 
-#' #yes, there are fewer 'formal' graptolite species in the PBDB then genera
+#' #yes, there are fewer 'formal'
+#'    # graptolite species in the PBDB then genera
 #' 
 #' #get formal and informal species
 #' occSpeciesInformal <- taxonSortPBDBocc(
-#'      graptOccPBDB, 
-#' 		rank = "species",
-#' 	 onlyFormal = FALSE)
+#'    data = graptOccPBDB, 
+#'    rank = "species",
+#'    onlyFormal = FALSE
+#'    )
 #' length(occSpeciesInformal)
 #' 
 #' #way more graptolite species are 'informal' in the PBDB
@@ -170,9 +182,11 @@
 #' #get formal and informal species 
 #' 	#including from occurrences with uncertain taxonomy
 #' 	#basically everything and the kitchen sink
-#' occSpeciesEverything <- taxonSortPBDBocc(graptOccPBDB, 
-#' 		rank = "species",
-#' 		onlyFormal = FALSE, cleanUncertain = FALSE)
+#' occSpeciesEverything <- taxonSortPBDBocc(
+#'    data = graptOccPBDB, 
+#'    rank = "species",
+#'    onlyFormal = FALSE, 
+#'    cleanUncertain = FALSE)
 #' length(occSpeciesEverything)
 #' 
 #' 

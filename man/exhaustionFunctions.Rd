@@ -61,7 +61,7 @@ ideal for modeling the size and
 distribution of \emph{character} space).}
 
 \item{models}{A vector of type \code{character} naming models to be fit.
-Default is \code{c("exponential","gamma","lognormal","zipf")}.}
+Default is \code{c("exponential", "gamma", "lognormal", "zipf")}.}
 
 \item{xlab}{Label for the X axis;
 \code{"Total Characters"} by default.}

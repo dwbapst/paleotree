@@ -27,10 +27,12 @@ is done and users should beware, as such trees can
 lead to hard-crashes of R.}
 }
 \value{
-A phylogeny of class 'phylo', with tip taxa as controlled by argument \code{tipSet}.
+A phylogeny of class 'phylo', with tip taxa as
+controlled by argument \code{tipSet}.
 The output tree is returned with no edge lengths.
 
-The names of higher taxa than the tips should be appended as the element $node.label for the internal nodes.
+The names of higher taxa than the tips should be appended
+as the element $node.label for the internal nodes.
 }
 \description{
 This function takes a two-column matrix of taxon names,
@@ -49,64 +51,84 @@ is printed.
 \examples{
 
 #let's create a small, really cheesy example
-pokexample <- rbind(cbind("Squirtadae",c("Squirtle","Blastoise","Wartortle")),
-	c("Shelloidea","Lapras"),c("Shelloidea","Squirtadae"),
-	c("Pokezooa","Shelloidea"),c("Pokezooa","Parasect"),
-	c("Rodentapokemorpha","Linoone"),c("Rodentapokemorpha","Sandshrew"),
-	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
-	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"))
+pokexample <- rbind(
+    cbind("Squirtadae", c("Squirtle","Blastoise","Wartortle")),
+    c("Shelloidea","Lapras"), c("Shelloidea","Squirtadae"),
+    c("Pokezooa","Shelloidea"), c("Pokezooa","Parasect"),
+    c("Rodentapokemorpha","Linoone"), c("Rodentapokemorpha","Sandshrew"),
+    c("Rodentapokemorpha","Pikachu"), c("Hirsutamona","Ursaring"),
+    c("Hirsutamona","Rodentapokemorpha"), c("Pokezooa","Hirsutamona")
+    )
 
 #Default: tipSet = 'nonParents'
-pokeTree <- parentChild2taxonTree(pokexample, tipSet = "nonParents")
-plot(pokeTree);nodelabels(pokeTree$node.label)
+pokeTree <- parentChild2taxonTree(
+    parentChild = pokexample,
+    tipSet = "nonParents")
+plot(pokeTree)
+nodelabels(pokeTree$node.label)
 
 #Get ALL taxa as tips with tipSet = 'all'
-pokeTree <- parentChild2taxonTree(pokexample, tipSet = "all")
-plot(pokeTree);nodelabels(pokeTree$node.label)
+pokeTree <- parentChild2taxonTree(
+    parentChild = pokexample,
+    tipSet = "all")
+plot(pokeTree)
+nodelabels(pokeTree$node.label)
 
 
 \dontrun{
 
-# let's try a dataset where not all the taxon relationships lead to a common root
+# let's try a dataset where not all the
+    # taxon relationships lead to a common root
 
-pokexample_bad <- rbind(cbind("Squirtadae",c("Squirtle","Blastoise","Wartortle")),
-	c("Shelloidea","Lapras"),c("Shelloidea","Squirtadae"),
-	c("Pokezooa","Shelloidea"),c("Pokezooa","Parasect"),
-	c("Rodentapokemorpha","Linoone"),c("Rodentapokemorpha","Sandshrew"),
-	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
-	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"),
-	c("Umbrarcheota","Gengar"))
+pokexample_bad <- rbind(
+    cbind("Squirtadae", c("Squirtle","Blastoise","Wartortle")),
+    c("Shelloidea","Lapras"), c("Shelloidea","Squirtadae"),
+    c("Pokezooa","Shelloidea"), c("Pokezooa","Parasect"),
+    c("Rodentapokemorpha","Linoone"), c("Rodentapokemorpha","Sandshrew"),
+    c("Rodentapokemorpha","Pikachu"), c("Hirsutamona","Ursaring"),
+    c("Hirsutamona","Rodentapokemorpha"), c("Pokezooa","Hirsutamona"),
+    c("Umbrarcheota","Gengar")
+    )
 
-#this should return an error, as Gengar doesn't share common root
-pokeTree <- parentChild2taxonTree(pokexample_bad)
+# this should return an error
+    # as Gengar doesn't share common root
+pokeTree <- parentChild2taxonTree(parentChild = pokexample_bad)
 
 
 # another example, where a taxon is listed as both parent and child
-pokexample_bad2 <- rbind(cbind("Squirtadae",c("Squirtle","Blastoise","Wartortle")),
-	c("Shelloidea",c("Lapras","Squirtadae","Shelloidea")),
-	c("Pokezooa","Shelloidea"),c("Pokezooa","Parasect"),
-	c("Rodentapokemorpha","Linoone"),c("Rodentapokemorpha","Sandshrew"),
-	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
-	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"),
-	c("Umbrarcheota","Gengar"))
+pokexample_bad2 <- rbind(
+    cbind("Squirtadae", c("Squirtle","Blastoise","Wartortle")),
+    c("Shelloidea", c("Lapras","Squirtadae","Shelloidea")),
+    c("Pokezooa","Shelloidea"), c("Pokezooa","Parasect"),
+    c("Rodentapokemorpha","Linoone"), c("Rodentapokemorpha","Sandshrew"),
+    c("Rodentapokemorpha","Pikachu"), c("Hirsutamona","Ursaring"),
+    c("Hirsutamona","Rodentapokemorpha"), c("Pokezooa","Hirsutamona"),
+    c("Umbrarcheota","Gengar")
+    )
 
 #this should return an error, as Shelloidea is its own parent
-pokeTree <- parentChild2taxonTree(pokexample_bad2)
+pokeTree <- parentChild2taxonTree(parentChild = pokexample_bad2)
 
 }
 
 
 
-# note that we should even be able to do this with ancestor-descendent pairs from
-	 # simulated datasets from simFossilRecord, like so:
+# note that we should even be able to do this
+    # with ancestor-descendent pairs from
+    # simulated datasets from simFossilRecord, like so:
 set.seed(444)
-record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-	nTotalTaxa = c(30,40), nExtant = 0)
+record <- simFossilRecord(
+    p = 0.1, q = 0.1, nruns = 1,
+    nTotalTaxa = c(30, 40), 
+    nExtant = 0
+    )
 taxa <- fossilRecord2fossilTaxa(record)
-# need to reorder the columns so parents (ancestors) first, then children 
-parentChild2taxonTree(taxa[,2:1])
-# now note that it issues a warning that the input wasn't type character
-   # and it will be coerced to be such
+# need to reorder the columns so parents
+    # (ancestors) first, then children 
+parentChild2taxonTree(parentChild = taxa[,2:1])
+# now note that it issues a warning that
+    # the input wasn't type character
+    # and it will be coerced to be such
 
 }
 \seealso{

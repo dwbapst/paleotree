@@ -33,26 +33,27 @@
 #' intervals giving in the output increases with time, as these are numbered
 #' relative to each other, from first to last.
 #' 
-#' As of version 1.7 of paleotree, taxa which are extant as indicated in timeData as being
-#' in a time interval bounded (0,0), unless time-bins are preset using
-#' argument int.times (prior to version 1.5 they were erroneously listed as
+#' As of version 1.7 of paleotree, taxa which are
+#' extant as indicated in timeData as being
+#' in a time interval bounded \code{(0, 0)}, unless time-bins are preset using
+#' argument \code{int.times} (prior to version 1.5 they were erroneously listed as
 #' NA).
 #' 
 #' @param timeData Two-column matrix of simulated first and last occurrences in
-#' absolute continuous time
+#' absolute continuous time.
 
-#' @param int.length Time interval length, default is 1 time unit
+#' @param int.length Time interval length, default is 1 time-unit.
 
 #' @param start Starting time for calculating the intervals.
 
 #' @param int.times A two column matrix with the start and end times of the
 #' intervals to be used.
 
-#' @return A list containing: \item{int.times}{A 2 column matrix with the start
+#' @return A list containing: \item{\code{int.times}}{A 2-column matrix with the start
 #' and end times of the intervals used; time decreases relative to the
-#' present.} \item{taxon.times}{A 2 column matrix with the first and last
-#' occurrences of taxa in the intervals listed in int.times, with numbers
-#' referring to the row of int.times.}
+#' present.} \item{\code{taxon.times}}{A 2-column matrix with the first and last
+#' occurrences of taxa in the intervals listed in \code{int.times}, with numbers
+#' referring to the row of \code{int.times}.}
 
 #' @seealso \code{\link{simFossilRecord}}, \code{\link{sampleRanges}},
 #' \code{\link{taxicDivCont}}
@@ -63,10 +64,11 @@
 #' 
 #' #Simulate some fossil ranges with simFossilRecord
 #' set.seed(444)
-#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#' 	nTotalTaxa = c(30,40), nExtant = 0)
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, nruns = 1,
+#'     nTotalTaxa = c(30,40), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' #simulate a fossil record with imperfect sampling with sampleRanges()
+#' #simulate a fossil record with imperfect sampling via sampleRanges
 #' rangesCont <- sampleRanges(taxa,r = 0.5)
 #' #Now let's use binTimeData() to bin in intervals of 1 time unit
 #' rangesDisc <- binTimeData(rangesCont,int.length = 1)
@@ -74,27 +76,48 @@
 #' equalDiscInt <- taxicDivDisc(rangesDisc)
 #' 
 #' #example with pre-set intervals input (including overlapping)
-#' presetIntervals <- cbind(c(1000,990,970,940),c(980,970,950,930))
-#' rangesDisc1 <- binTimeData(rangesCont,int.times = presetIntervals)
-#' taxicDivDisc(rangesDisc1)
-#' #now let's plot diversity with (different) equal length intervals used above
-#' taxicDivDisc(rangesDisc1,int.times = equalDiscInt[,1:2])
+#' presetIntervals <- cbind(
+#'     c(1000, 990, 970, 940),
+#'     c(980, 970, 950, 930)
+#'     )
+#' rangesDisc1 <- binTimeData(rangesCont,
+#'     int.times = presetIntervals)
 #' 
+#' # plot the diversity curve with these uneven bins
+#' taxicDivDisc(rangesDisc1)
+#'
+#' # now let's plot the diversity from these unequal-length bins
+#'    # with the original equal length intervals from above
+#' taxicDivDisc(rangesDisc1, int.times = equalDiscInt[,1:2])
+#' 
+#' 
+#' ####################################
 #' #example with extant taxa
 #' set.seed(444)
-#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#' 	nTotalTaxa = c(30,40))
+#' record <- simFossilRecord(
+#'    p = 0.1, q = 0.1, nruns = 1,
+#'    nTotalTaxa = c(30,40))
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' #simulate a fossil record with imperfect sampling with sampleRanges()
-#' rangesCont <- sampleRanges(taxa,r = 0.5,,modern.samp.prob = 1)
-#' #Now let's use binTimeData() to bin in intervals of 1 time unit
-#' rangesDisc <- binTimeData(rangesCont,int.length = 1)
+#' #simulate a fossil record with imperfect sampling via sampleRanges
+#' rangesCont <- sampleRanges(
+#'     taxa, r = 0.5,
+#'     modern.samp.prob = 1)
+#' #Now let's use binTimeDat to bin into intervals of 1 time-unit
+#' rangesDisc <- binTimeData(rangesCont,
+#'     int.length = 1)
 #' #plot with taxicDivDisc()
 #' taxicDivDisc(rangesDisc)
 #' 
-#' #example with pre-set intervals input (including overlapping)
-#' presetIntervals <- cbind(c(40,30,20,10),c(30,20,10,0))
-#' rangesDisc1 <- binTimeData(rangesCont,int.times = presetIntervals)
+#' 
+#' #################################################
+#' #example with pre-set intervals input
+#'     # (including overlapping)
+#' presetIntervals <- cbind(
+#'     c(40, 30, 20, 10),
+#'     c(30, 20, 10, 0)
+#'     )
+#' rangesDisc1 <- binTimeData(rangesCont,
+#'     int.times = presetIntervals)
 #' taxicDivDisc(rangesDisc1)
 #' 
 #' @export binTimeData
@@ -108,14 +131,27 @@ binTimeData <- function(timeData,int.length = 1,start = NA,int.times = NULL){
 			#the last bin is cut off at zero (present day)
 	#x <- c(0,runif(99));timeData <- cbind(x+rexp(100),x);int.length = 1;start = NA;int.times = NULL
 	timeData <- timeData[!is.na(timeData[,1]),]
-	if(any(is.na(timeData))){stop("Weird NAs in Data?")}
-	if(any(timeData[,1]<timeData[,2])){stop("timeData is not in time relative to modern (decreasing to present)")}
-	if(any(timeData[,2]<0)){stop("Some dates in timeData <0 ?")}
+	if(any(is.na(timeData))){
+		stop("Weird NAs in Data?")
+			}
+	if(any(timeData[,1]<timeData[,2])){
+		stop("timeData is not in time relative to modern (decreasing to present)")
+		}
+	if(any(timeData[,2]<0)){
+		stop("Some dates in timeData <0 ?")
+		}
 	if(is.null(int.times)){
-		if(is.na(start)){start <- max(timeData)+int.length}else{if(start<max(timeData)){stop("Error:Start<max(timeData)?")}}
+		if(is.na(start)){
+			start <- max(timeData)+int.length
+		}else{
+			if(start<max(timeData)){
+				stop("Error:Start<max(timeData)?")
+				}
+			}
 		end <- start-(ceiling((start-min(timeData))/int.length)+1)*int.length
 		bins <- seq(start,end,by = -int.length)
-		bins <- unique(ifelse(bins<0,0,bins))	#get rid of any extra zeroes or negative numbers
+		#get rid of any extra zeroes or negative numbers
+		bins <- unique(ifelse(bins<0,0,bins))	
 		fads <- sapply(timeData[,1],function(x) which(bins<x)[1]-1)
 		lads <- sapply(timeData[,2],function(x) which(bins<x)[1]-1)
 		if(any(timeData[,1] == 0) | any(timeData[,2] == 0)){
@@ -123,26 +159,41 @@ binTimeData <- function(timeData,int.length = 1,start = NA,int.times = NULL){
 			fads[timeData[,1] == 0] <- length(bins)-1
 			lads[timeData[,2] == 0] <- length(bins)-1
 			}
-		res <- list(int.times = cbind(int.start = bins[1:(length(bins)-1)],int.end = bins[2:length(bins)]),
-			taxon.times = cbind(first.int = fads,last.int = lads))
+		res <- list(
+			int.times = cbind(int.start = bins[1:(length(bins)-1)],
+			int.end = bins[2:length(bins)]),
+			taxon.times = cbind(first.int = fads,last.int = lads)
+			)
 	}else{
 		int.durs <- int.times[,1]-int.times[,2]
-		if(any(int.durs <= 0)){stop("Some input time intervals have zero or negative durations?")}
+		if(any(int.durs <= 0)){
+			stop("Some input time intervals have zero or negative durations?")
+			}
 		int.times <- int.times[order(int.durs),]
-		Fint <- sapply(timeData[,1],function(x) which(apply(int.times,1,function(y) y[1] >= x & y[2]<x))[1])
-		Lint <- sapply(timeData[,2],function(x) which(apply(int.times,1,function(y) y[1] >= x & y[2]<x))[1])
+		Fint <- sapply(timeData[,1],function(x)
+			which(apply(int.times,1,function(y) y[1] >= x & y[2]<x))[1]
+			)
+		Lint <- sapply(timeData[,2],function(x)
+			which(apply(int.times,1,function(y) y[1] >= x & y[2]<x))[1]
+			)
 		if(any(int.times[,2] == 0)){
 			Fint[timeData[,1] == 0] <- which(int.times[,2] == 0)[1]
 			Lint[timeData[,2] == 0] <- which(int.times[,2] == 0)[1]
 			}
 		taxon.times <- cbind(first.int = Fint,last.int = Lint)
 		rownames(taxon.times) <- rownames(timeData)
-		taxon.times <- taxon.times[!apply(taxon.times,1,function(x) any(is.na(x))),]
+		taxon.times <- taxon.times[
+			!apply(taxon.times,1, function(x) any(is.na(x))),
+			]
 		new.order <- rank(-int.times[,1])	
 		taxon.times[,1] <- new.order[taxon.times[,1]]
 		taxon.times[,2] <- new.order[taxon.times[,2]]
 		int.times <- int.times[order(-int.times[,1]),]
-		res <- list(int.times = int.times,taxon.times = taxon.times)
+		res <- list(
+			int.times = int.times,
+			taxon.times = taxon.times
+			)
 		}
+	#
 	return(res)
 	}

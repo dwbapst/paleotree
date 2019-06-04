@@ -62,7 +62,7 @@
 #' @param phyloTree A phylogenetic tree of class \code{phylo} as used by package \code{ape}.
 
 #' @param models A vector of type \code{character} naming models to be fit.
-#' Default is \code{c("exponential","gamma","lognormal","zipf")}.
+#' Default is \code{c("exponential", "gamma", "lognormal", "zipf")}.
 
 #' @param exhaustion_info The list of results output
 #' from function \code{accioExhaustionCurve}.

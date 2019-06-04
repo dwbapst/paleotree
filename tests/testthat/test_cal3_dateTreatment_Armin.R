@@ -1,5 +1,5 @@
 # testing consistency issues with date treatment under cal3 (05-31-19)
-	# making sure date treatment issues as reported by Armin Essler in October 2018
+	# making sure date treatment issues as reported by Armin Elsler in October 2018
 	# are avoided in current code base 
 
 test_that("cal3 datetreatment is consistent with arguments", {

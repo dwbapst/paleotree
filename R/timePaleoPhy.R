@@ -7,7 +7,8 @@
 #' (Bapst, 2014, Paleobiology), this function is largely retained for legacy purposes
 #' and plotting applications. The time-scaling methods implemented
 #' by the functions listed here do \bold{not} return realistic estimates of 
-#' divergence dates, users should investigate other time-scaling methods such as \code{\link{cal3TimePaleoPhy}}.
+#' divergence dates, users should investigate other time-scaling
+#' methods such as \code{\link{cal3TimePaleoPhy}}.
 #' 
 #' @details 
 #' \emph{Time-Scaling Methods}
@@ -17,10 +18,11 @@
 #' Unfortunately, it can be difficult to attribute some time-scaling methods to
 #' specific references in the literature.
 #' 
-#' There are five main \emph{a posteriori} approaches that can be used by \code{timePaleoPhy}. Four of these
-#' main types use some value of absolute time, chosen a priori, to time-scale the tree.
-#' This is handled by the argument \code{vartime}, which is NULL by default and unused
-#' for type "basic".
+#' There are five main \emph{a posteriori} approaches that
+#' can be used by \code{timePaleoPhy}. Four of these
+#' main types use some value of absolute time, chosen \emph{a priori}, to time-scale the tree.
+#' This is handled by the argument \code{vartime}, which is \code{NULL} by default and unused
+#' for type \code{"basic"}.
 #' 
 #' \describe{
 
@@ -111,7 +113,7 @@
 #' is known from. Presumably, the first and last appearances of that taxon in
 #' the fossil record is at unknown dates within these bounds. 
 #' 
-#' As of paleotree version 2.0. the treatment of taxon ages in
+#' As of paleotree v2.0. the treatment of taxon ages in
 #' \code{timePaleoPhy} is handled by the argument \code{dateTreatment}.
 #' \emph{By default,} this argument is set to 'firstLast' which means the matrix of ages are treated
 #' as precise first and last appearance dates (i.e. FADs and LADs). The earlier FADs will be used
@@ -142,7 +144,8 @@
 #' where specimens come from the same fossil site.
 #' 
 #' The input \code{timeList} object for \code{bin_timePaleoPhy} can have overlapping
-#' (i.e. non-sequential) intervals, and intervals of uneven size. Taxa alive in the modern should be listed as last 
+#' (i.e. non-sequential) intervals, and intervals of
+#' uneven size. Taxa alive in the modern should be listed as last 
 #' occurring in a time interval that begins at time 0 and ends at time 0. If taxa 
 #' occur only in single collections (i.e. their first and last appearance in the 
 #' fossil record is synchronous, the argument point.occur will force all taxa
@@ -180,15 +183,17 @@
 #' when taxa appear in the fossil record, it is preferable to use the 'bin'
 #' time-scaling functions; however, see the argument \code{dateTreatment}.
 
-#' @param type Type of time-scaling method used. Can be "basic", "equal", "equal_paleotree_legacy", "equal_date.phylo_legacy"
-#' "aba", "zbla" or "mbl". Type = "basic" by default. See details below.
+#' @param type Type of time-scaling method used. Can be \code{"basic"},
+#' \code{"equal"}, \code{"equal_paleotree_legacy"}, \code{"equal_date.phylo_legacy"}
+#' \code{"aba"}, \code{"zbla"} or \code{"mbl"}.
+#' \code{Type = "basic"} by default. See details below.
 
-#' @param vartime Time variable; usage depends on the method 'type' argument.
-#' Ignored if type = "basic".
+#' @param vartime Time variable; usage depends on the \code{type} argument.
+#' Ignored if \code{type = "basic"}.
 
 #' @param ntrees Number of time-scaled trees to output. If ntrees is greater
 #' than one and both randres is false and dateTreatment is neither
-#' 'minMax' or 'randObs', the function will fail and
+#' \code{'minMax'} or \code{'randObs'}, the function will fail and
 #' a warning is issued, as these arguments would simply produce multiple
 #' identical time-scaled trees.
 
@@ -209,16 +214,16 @@
 #' resolving of polytomies generally does not differ across multiple uses,
 #' unlike use of \code{multi2di}.
 
-#' @param add.term If true, adds terminal ranges. By default, this function will
+#' @param add.term If \code{TRUE}, adds terminal ranges. By default, this function will
 #' not add the ranges of taxa when time-scaling a tree, so that the tips
 #' correspond temporally to the first appearance datums of the given taxa. If
-#' \code{add.term = T}, then the 'terminal ranges' of the taxa are added to the tips
+#' \code{add.term = TRUE}, then the 'terminal ranges' of the taxa are added to the tips
 #' after tree is time-scaled, such that the tips now correspond to the last
 #' appearance datums.
 
 #' @param inc.term.adj If true, includes terminal ranges in branch length
 #' estimates for the various adjustment of branch lengths under all methods
-#' except 'basic' (i.e. a terminal length branch will not be treated as zero
+#' except \code{type = 'basic'} (i.e. a terminal length branch will not be treated as zero
 #' length is this argument is \code{TRUE} if the taxon at this tip has a non-zero
 #' duration). By default, this argument is \code{FALSE} and this function will not
 #' include the ranges of taxa when adjusting branch lengths, so that
@@ -229,14 +234,18 @@
 
 #' @param dateTreatment This argument controls the interpretation of \code{timeData}. 
 #' The default setting \code{dateTreatment = "firstLast"} treats the dates 
-#' in \code{timeData} as a column of precise first and last appearances. 
+#' in \code{timeData} as a column of precise first and last appearances.
+#' 
 #' A second option is \code{dateTreatment = "minMax"}, which 
 #' treats these dates as minimum and maximum bounds on single point dates. Under this option,
 #' all taxa in the analysis will be treated as being point dates, such that the first appearance
-#' is also the last. These dates will be pulled under a uniform distribution. If \code{dateTreatment = "minMax"} is used,
-#' \code{add.term} becomes meaningless, and the use of it will return an error message. A third option
-#' is \code{dateTreatment = "randObs"}. This assumes that the dates in the matrix are first and last appearance times,
-#' but that the desired time of observation is unknown. Thus, this is much like \code{dateTreatment = "firstLast"} except
+#' is also the last. These dates will be pulled under a uniform distribution.
+#' If \code{dateTreatment = "minMax"} is used,
+#' \code{add.term} becomes meaningless, and the use of it will return an error message.
+#'  
+#' A third option is \code{dateTreatment = "randObs"}. This assumes that the dates in the
+#' matrix are first and last appearance times, but that the desired time of observation is unknown.
+#' Thus, this is much like \code{dateTreatment = "firstLast"} except
 #' the effective time of observation (the taxon's LAD under
 #' \code{dateTreatment = "firstLast"}) is treated as an uncertain date, and
 #' is randomly sampled between the first and last appearance times. The FAD still is treated as a fixed number, used
@@ -245,6 +254,7 @@
 #' for clarity. This temporal uncertainty in times of observation might be useful if
 #' a user is interested in applying phylogeny-based approaches to studying trait evolution, but have
 #' per-taxon measurements of traits that come from museum specimens with uncertain temporal placement.
+#' 
 #' With both arguments \code{dateTreatment = "minMax"} and
 #' \code{dateTreatment = "randObs"}, the sampling of dates from random distributions should
 #' compel users to produce many time-scaled trees for any given analytical purpose.
@@ -341,10 +351,10 @@
 #' @seealso \code{\link{cal3TimePaleoPhy}}, \code{\link{binTimeData}},
 #' \code{\link{multi2di}}
 #' 
-#' For an alternative time-scaling function, which includes the 'ruta' method
+#' For an alternative time-scaling function, which includes the \code{'ruta'} method
 #' that weights the time-scaling of branches by estimates of character change
-#' along with implementations of the 'basic' and 'equal' methods described here,
-#' please see function \code{DatePhylo} in package \code{strap}.
+#' along with implementations of the \code{'basic'} and \code{'equal'}
+#' methods described here, please see function \code{DatePhylo} in package \code{strap}.
 
 #' @references 
 #' Bapst, D. W. 2013. A stochastic rate-calibrated method for time-scaling
@@ -388,16 +398,33 @@
 #' taxicDivDisc(retioRanges)
 #' 
 #' #Use basic time-scaling (terminal branches only go to FADs)
-#' ttree <- bin_timePaleoPhy(tree = retioTree,timeList = retioRanges,type = "basic",
-#' 	ntrees = 1, plot = TRUE)
+#' ttree <- bin_timePaleoPhy(
+#'     tree = retioTree,
+#'     timeList = retioRanges,
+#'     type = "basic",
+#'     ntrees = 1,
+#'     plot = TRUE
+#'     )
 #' 
 #' #Use basic time-scaling (terminal branches go to LADs)
-#' ttree <- bin_timePaleoPhy(tree = retioTree,timeList = retioRanges,type = "basic",
-#' 	add.term = TRUE, ntrees = 1, plot = TRUE)
+#' ttree <- bin_timePaleoPhy(
+#'     tree = retioTree,
+#'     timeList = retioRanges,
+#'     type = "basic",
+#'     add.term = TRUE,
+#'     ntrees = 1, 
+#'     plot = TRUE
+#'     )
 #' 
 #' #mininum branch length time-scaling (terminal branches only go to FADs)
-#' ttree <- bin_timePaleoPhy(tree = retioTree,timeList = retioRanges,type = "mbl",
-#' 	vartime = 1, ntrees = 1, plot = TRUE)
+#' ttree <- bin_timePaleoPhy(
+#'     tree = retioTree,
+#'     timeList = retioRanges,
+#'     type = "mbl",
+#'     vartime = 1, 
+#'     ntrees = 1, 
+#'     plot = TRUE
+#'     )
 #' 
 #' ###################
 #' 
@@ -405,121 +432,334 @@
 #' 
 #' #Simulate some fossil ranges with simFossilRecord
 #' set.seed(444)
-#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#' 	nTotalTaxa = c(30,40), nExtant = 0)
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, 
+#'     nruns = 1,
+#'     nTotalTaxa = c(30,40), 
+#'     nExtant = 0
+#'     )
 #' taxa <- fossilRecord2fossilTaxa(record)
+#'     
 #' #simulate a fossil record with imperfect sampling with sampleRanges
-#' rangesCont <- sampleRanges(taxa,r = 0.5)
+#' rangesCont <- sampleRanges(taxa, r = 0.5)
 #' #let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
-#' cladogram <- taxa2cladogram(taxa,plot = TRUE)
+#' cladogram <- taxa2cladogram(taxa, 
+#'     plot = TRUE)
+#'     
 #' #Now let's try timePaleoPhy using the continuous range data
-#' ttree <- timePaleoPhy(cladogram,rangesCont,type = "basic",plot = TRUE)
+#' ttree <- timePaleoPhy(
+#'     cladogram,
+#'     rangesCont, 
+#'     type = "basic",
+#'     plot = TRUE
+#'     )
+#'     
 #' #plot diversity curve 
 #' phyloDiv(ttree)
 #' 
-#' #that tree lacked the terminal parts of ranges (tips stops at the taxon FADs)
-#' #let's add those terminal ranges back on with add.term
-#' ttree <- timePaleoPhy(cladogram,rangesCont,type = "basic",add.term = TRUE,plot = TRUE)
+#' 
+#' ################################################
+#' # that tree lacked the terminal parts of ranges 
+#'     # (tips stops at the taxon FADs)
+#' # let's add those terminal ranges back on with add.term
+#' ttree <- timePaleoPhy(
+#'     cladogram,
+#'     rangesCont,
+#'     type = "basic",
+#'     add.term = TRUE,
+#'     plot = TRUE
+#'     )
+#'     
 #' #plot diversity curve 
 #' phyloDiv(ttree)
 #' 
-#' #that tree didn't look very resolved, does it? (See Wagner and Erwin 1995 to see why)
-#' #can randomly resolve trees using the argument randres
-#' #each resulting tree will have polytomies randomly resolved in different ways using multi2di
-#' ttree <- timePaleoPhy(cladogram,rangesCont,type = "basic",ntrees = 1,randres = TRUE,
-#'     add.term = TRUE,plot = TRUE)
-#' #notice well the warning it prints!
-#' #we would need to set ntrees to a large number to get a fair sample of trees
 #' 
-#' #if we set ntrees>1, timePaleoPhy will make multiple time-trees
-#' ttrees <- timePaleoPhy(cladogram,rangesCont,type = "basic",ntrees = 9,randres = TRUE,
-#'     add.term = TRUE,plot = TRUE)
+#' #################################################
+#' # that tree didn't look very resolved, does it? 
+#'    # (See Wagner and Erwin 1995 to see why)
+#' # can randomly resolve trees using the argument randres
+#' # each resulting tree will have polytomies
+#'    # randomly resolved stochastically using ape::multi2di
+#' ttree <- timePaleoPhy(
+#'     cladogram,
+#'     rangesCont,
+#'     type = "basic",
+#'     ntrees = 1,
+#'     randres = TRUE,
+#'     add.term = TRUE,
+#'     plot = TRUE
+#'     )
+#'     
+#' # Notice the warning it prints! PAY ATTENTION!
+#' # We would need to set ntrees to a large number
+#'     # to get a fair sample of trees
+#' 
+#' # if we set ntrees > 1, timePaleoPhy will make multiple time-trees
+#' ttrees <- timePaleoPhy(
+#'     cladogram,
+#'     rangesCont,
+#'     type = "basic",
+#'     ntrees = 9,
+#'     randres = TRUE,
+#'     add.term = TRUE,
+#'     plot = TRUE)
 #' #let's compare nine of them at once in a plot
-#' layout(matrix(1:9,3,3))
+#' layout(matrix(1:9, 3, 3))
 #' parOrig <- par(no.readonly = TRUE)
-#' par(mar = c(1,1,1,1))
-#' for(i in 1:9){plot(ladderize(ttrees[[i]]),show.tip.label = FALSE,no.margin = TRUE)}
+#' par(mar = c(1, 1, 1, 1))
+#' for(i in 1:9){
+#'     plot(
+#'         ladderize(ttrees[[i]]),
+#'         show.tip.label = FALSE,
+#'         no.margin = TRUE
+#'         )
+#'     }
 #' #they are all a bit different!
-#' 
-#' #we can also resolve the polytomies in the tree according to time of first appearance
-#' 	#via the function timeLadderTree, by setting the argument 'timeres' to TRUE
-#' ttree <- timePaleoPhy(cladogram,rangesCont,type = "basic",ntrees = 1,timeres = TRUE,
-#'     add.term = TRUE,plot = TRUE)
+#'
+#'
+#' ############################################## 
+#' # we can also resolve the polytomies in the tree
+#'     # according to time of first appearance via the function timeLadderTree
+#'     # by setting the argument 'timeres = TRUE'
+#' ttree <- timePaleoPhy(
+#'     cladogram,
+#'     rangesCont,
+#'     type = "basic",
+#'     ntrees = 1,
+#'     timeres = TRUE,
+#'     add.term = TRUE,
+#'     plot = TRUE
+#'     )
 #' 
 #' #can plot the median diversity curve with multiDiv
-#' layout(1);par(parOrig)
+#' layout(1)
+#' par(parOrig)
 #' multiDiv(ttrees)
 #' 
 #' #compare different methods of timePaleoPhy
-#' layout(matrix(1:6,3,2))
+#' layout(matrix(1:6, 3, 2))
 #' parOrig <- par(no.readonly = TRUE)
-#' par(mar = c(3,2,1,2))
-#' plot(ladderize(timePaleoPhy(cladogram,rangesCont,type = "basic",vartime = NULL,add.term = TRUE)))
-#'     axisPhylo();text(x = 50,y = 23,"type = basic",adj = c(0,0.5),cex = 1.2)
-#' plot(ladderize(timePaleoPhy(cladogram,rangesCont,type = "equal",vartime = 10,add.term = TRUE)))
-#'     axisPhylo();text(x = 55,y = 23,"type = equal",adj = c(0,0.5),cex = 1.2)
-#' plot(ladderize(timePaleoPhy(cladogram,rangesCont,type = "aba",vartime = 1,add.term = TRUE)))
-#'     axisPhylo();text(x = 55,y = 23,"type = aba",adj = c(0,0.5),cex = 1.2)
-#' plot(ladderize(timePaleoPhy(cladogram,rangesCont,type = "zlba",vartime = 1,add.term = TRUE)))
-#'     axisPhylo();text(x = 55,y = 23,"type = zlba",adj = c(0,0.5),cex = 1.2)
-#' plot(ladderize(timePaleoPhy(cladogram,rangesCont,type = "mbl",vartime = 1,add.term = TRUE)))
-#'     axisPhylo();text(x = 55,y = 23,"type = mbl",adj = c(0,0.5),cex = 1.2)
-#' layout(1);par(parOrig)
+#' par(mar = c(3, 2, 1, 2))
+#' plot(ladderize(timePaleoPhy(
+#'     cladogram,
+#'     rangesCont,
+#'     type = "basic",
+#'     vartime = NULL,
+#'     add.term = TRUE
+#'     )))
+#' axisPhylo()
+#' text(x = 50,y = 23,"type = basic",adj = c(0,0.5),cex = 1.2)
+#' #
+#' plot(ladderize(timePaleoPhy(
+#'     cladogram,
+#'     rangesCont,
+#'     type = "equal",
+#'     vartime = 10,
+#'     add.term = TRUE
+#'     )))
+#' axisPhylo()
+#' text(x = 55,y = 23,"type = equal",adj = c(0,0.5),cex = 1.2)
+#' #
+#' plot(ladderize(timePaleoPhy(
+#'     cladogram,
+#'     rangesCont,
+#'     type = "aba",
+#'     vartime = 1,
+#'     add.term = TRUE
+#'     )))
+#' axisPhylo()
+#' text(x = 55,y = 23,"type = aba",adj = c(0,0.5),cex = 1.2)
+#' #
+#' plot(ladderize(timePaleoPhy(
+#'     cladogram,
+#'     rangesCont,
+#'     type = "zlba",
+#'     vartime = 1,
+#'     add.term = TRUE
+#'     )))
+#' axisPhylo()
+#' text(x = 55, y = 23, "type = zlba",
+#'      adj = c(0,0.5), cex = 1.2)
+#' #
+#' plot(ladderize(timePaleoPhy(
+#'     cladogram,
+#'     rangesCont,
+#'     type = "mbl",
+#'     vartime = 1,
+#'     add.term = TRUE
+#'     )))
+#' axisPhylo()
+#' text(x = 55,y = 23,"type = mbl",adj = c(0,0.5),cex = 1.2)
+#' layout(1)
+#' par(parOrig)
 #' 
+#' 
+#' ##############################################
 #' #using node.mins
-#' #let's say we have (molecular??) evidence that node #5 is at least 1200 time-units ago
+#' #let's say we have (molecular??) evidence that
+#'     # node #5 is at least 1200 time-units ago
 #' #to use node.mins, first need to drop any unshared taxa
+#' 
 #' droppers <- cladogram$tip.label[is.na(
-#'       match(cladogram$tip.label,names(which(!is.na(rangesCont[,1])))))]
+#'     match(cladogram$tip.label,
+#'          names(which(!is.na(rangesCont[,1])))
+#'          )
+#'     )]
 #' cladoDrop <- drop.tip(cladogram, droppers)
+#' 
 #' # now make vector same length as number of nodes
 #' nodeDates <- rep(NA, Nnode(cladoDrop))
 #' nodeDates[5] <- 1200
-#' ttree1 <- timePaleoPhy(cladoDrop,rangesCont,type = "basic",
-#'   	randres = FALSE,node.mins = nodeDates,plot = TRUE)
-#' ttree2 <- timePaleoPhy(cladoDrop,rangesCont,type = "basic",
-#'    	randres = TRUE,node.mins = nodeDates,plot = TRUE)
+#' ttree1 <- timePaleoPhy(
+#'     cladoDrop,rangesCont,
+#'     type = "basic",
+#'     randres = FALSE,
+#'     node.mins = nodeDates,
+#'     plot = TRUE)
+#' ttree2 <- timePaleoPhy(
+#'     cladoDrop,
+#'     rangesCont,
+#'     type = "basic",
+#'     randres = TRUE,
+#'     node.mins = nodeDates,
+#'     plot = TRUE)
 #' 
+#'
+#' ####################################################
+#' ###################################################
+#' ####################################################
 #' #Using bin_timePaleoPhy to time-scale with discrete interval data
+#' 
 #' #first let's use binTimeData() to bin in intervals of 1 time unit
 #' rangesDisc <- binTimeData(rangesCont,int.length = 1)
-#' ttreeB1 <- bin_timePaleoPhy(cladogram,rangesDisc,type = "basic",ntrees = 1,randres = TRUE,
-#'     add.term = TRUE,plot = FALSE)
+#' 
+#' ttreeB1 <- bin_timePaleoPhy(
+#'     cladogram,
+#'     rangesDisc,
+#'     type = "basic",
+#'     ntrees = 1,
+#'     randres = TRUE,
+#'     add.term = TRUE,
+#'     plot = FALSE
+#'     )
+#' 
 #' #notice the warning it prints!
 #' phyloDiv(ttreeB1)
-#' #with time-order resolving via timeLadderTree
-#' ttreeB2 <- bin_timePaleoPhy(cladogram,rangesDisc,type = "basic",ntrees = 1,timeres = TRUE,
-#'     add.term = TRUE,plot = FALSE)
-#' phyloDiv(ttreeB2)
-#' #can also force the appearance timings not to be chosen stochastically
-#' ttreeB3 <- bin_timePaleoPhy(cladogram,rangesDisc,type = "basic",ntrees = 1,
-#'     nonstoch.bin = TRUE,randres = TRUE,add.term = TRUE,plot = FALSE)
-#' phyloDiv(ttreeB3)
 #' 
+#' #with time-order resolving via timeLadderTree
+#' ttreeB2 <- bin_timePaleoPhy(
+#'     cladogram,
+#'     rangesDisc,
+#'     type = "basic",
+#'     ntrees = 1,
+#'     timeres = TRUE,
+#'     add.term = TRUE,
+#'     plot = FALSE
+#'     )
+#' 
+#' phyloDiv(ttreeB2)
+#' 
+#' 
+#' #can also force the appearance timings not to be chosen stochastically
+#' ttreeB3 <- bin_timePaleoPhy(
+#'     cladogram,rangesDisc,
+#'     type = "basic",
+#'     ntrees = 1,
+#'     nonstoch.bin = TRUE,
+#'     randres = TRUE,
+#'     add.term = TRUE,
+#'     plot = FALSE
+#'     )
+#'
+#' phyloDiv(ttreeB3)
+#'
+#'  
 #' # testing node.mins in bin_timePaleoPhy
-#' ttree <- bin_timePaleoPhy(cladoDrop,rangesDisc,type = "basic",ntrees = 1,
-#'     add.term = TRUE,randres = FALSE,node.mins = nodeDates,plot = TRUE)
+#' ttree <- bin_timePaleoPhy(
+#'     cladoDrop,
+#'     rangesDisc,
+#'     type = "basic",
+#'     ntrees = 1,
+#'     add.term = TRUE,
+#'     randres = FALSE,
+#'     node.mins = nodeDates,
+#'     plot = TRUE
+#'     )
+#'     
 #' # with randres = TRUE
-#' ttree <- bin_timePaleoPhy(cladoDrop,rangesDisc,type = "basic",ntrees = 1,
-#'     add.term = TRUE,randres = TRUE,node.mins = nodeDates,plot = TRUE)
+#' ttree <- bin_timePaleoPhy(
+#'     cladoDrop,
+#'     rangesDisc,
+#'     type = "basic",ntrees = 1,
+#'     add.term = TRUE,
+#'     randres = TRUE,
+#'     node.mins = nodeDates,
+#'     plot = TRUE
+#'     )
 #' 
 #' \donttest{
 #' #simple three taxon example for testing inc.term.adj
-#' ranges1 <- cbind(c(3,4,5),c(2,3,1));rownames(ranges1) <- paste("t",1:3,sep = "")
-#' clado1 <- read.tree(file = NA,text = "(t1,(t2,t3));")
-#' ttree1 <- timePaleoPhy(clado1,ranges1,type = "mbl",vartime = 1)
-#' ttree2 <- timePaleoPhy(clado1,ranges1,type = "mbl",vartime = 1,add.term = TRUE)
-#' ttree3 <- timePaleoPhy(clado1,ranges1,type = "mbl",vartime = 1,add.term = TRUE,inc.term.adj = TRUE)
-#' layout(1:3)
-#' ttree1$root.time;plot(ttree1);axisPhylo()
-#' ttree2$root.time;plot(ttree2);axisPhylo()
-#' ttree3$root.time;plot(ttree3);axisPhylo()
+#' ranges1 <- cbind(c(3,4,5), c(2,3,1))
+#' rownames(ranges1) <- paste("t", 1:3, sep = "")
+#' clado1 <- read.tree(file = NA,
+#'     text = "(t1,(t2,t3));")
+#' ttree1 <- timePaleoPhy(
+#'     clado1,
+#'     ranges1,
+#'     type = "mbl",
+#'     vartime = 1
+#'     )
+#' ttree2 <- timePaleoPhy(
+#'     clado1,
+#'     ranges1,
+#'     type = "mbl",
+#'     vartime = 1,
+#'     add.term = TRUE
+#'     )
+#' ttree3 <- timePaleoPhy(
+#'     clado1,
+#'     ranges1,
+#'     type = "mbl",
+#'     vartime = 1,
+#'     add.term = TRUE,
+#'     inc.term.adj = TRUE
+#'     )
+#' 
+#' # see differences in root times
+#' ttree1$root.time
+#' ttree2$root.time
+#' ttree3$root.time
 #' -apply(ranges1,1,diff)
+#' 
+#' layout(1:3)
+#' plot(ttree1)
+#' axisPhylo()
+#' plot(ttree2)
+#' axisPhylo()
+#' plot(ttree3)
+#' axisPhylo()
+#' 
 #' }
 #' 
+
+
 #' @export
-timePaleoPhy <- function(tree,timeData,type = "basic",vartime = NULL,ntrees = 1,randres = FALSE,timeres = FALSE,add.term = FALSE,
-	inc.term.adj = FALSE,dateTreatment = "firstLast",node.mins = NULL,noisyDrop = TRUE,plot = FALSE){
+timePaleoPhy <- function(
+		tree,
+		timeData,
+		type = "basic",
+		vartime = NULL,
+		ntrees = 1,
+		randres = FALSE,
+		timeres = FALSE,
+		add.term = FALSE,
+		inc.term.adj = FALSE,
+		dateTreatment = "firstLast",
+		node.mins = NULL,
+		noisyDrop = TRUE,
+		plot = FALSE
+		){
+	###########################################################
 	#fast time calibration for phylogenies of fossil taxa; basic methods
 		#this code inspired by similar code from G. Lloyd and G. Hunt
 	#INITIAL: 
@@ -533,22 +773,37 @@ timePaleoPhy <- function(tree,timeData,type = "basic",vartime = NULL,ntrees = 1,
 		#will make multiple randomly resolved trees if ntrees>1 and randres = T; polytomies resolved with multi2di() from ape
 			#not any reason to do this unless you have polytomies
 			#do !not! !ever! trust a single tree like that!! ever!!
-	#TYPES
-		#if (type = "basic") just gives initial raw time-scaled tree (vartime is ignored), many zero-length branches
-		#if (type = "aba") then adds vartime to all branches (All Branch Additive)
-		#if (type = "zlba") then adds vartime to zero length branches (Zero Length Branch Additive) 
-		#if (type = "mbl") scales up all branches greater than vartime and subtracts from lower (Min Branch Length)
-		#if (type = "equal") "equal" method of G. Lloyd, recreated here; vartime is used as time added to root
-	#ADDING TERMINAL BRANCHES TO PHYLOGENY 
-		#if addterm != FALSE, then observed taxon ranges (LAD-FAD) are added to the tree, with LADs as the location of the tips
-		#to allow for tips to be at range midpoints (recc. for trait evol analyses), replace LADs in timeData with mid-range dates
-	#root.time
-		#ALL TREES ARE OUTPUT WITH ELEMENTs "$root.time"
-		#this is the time of the root on the tree, which is important for comparing across trees
-		#this must be calculated prior to adding anything to terminal branches
-	#tree <- rtree(10);tree$edge.length <- NULL;type = "basic";vartime = NULL;add.term = FALSE;node.mins = NULL
-	#timeData <- runif(10,30,200);timeData <- cbind(timeData,timeData-runif(10,1,20));rownames(timeData) <- tree$tip.label
+	# TYPES
+		# if (type = "basic") 
+			# just gives initial raw time-scaled tree (vartime is ignored), many zero-length branches
+		# if (type = "aba") 
+			# then adds vartime to all branches (All Branch Additive)
+		# if (type = "zlba") 
+			# then adds vartime to zero length branches (Zero Length Branch Additive) 
+		# if (type = "mbl") 
+			# scales up all branches greater than vartime and subtracts from lower (Min Branch Length)
+		# if (type = "equal")
+			# "equal" method of G. Lloyd, recreated here; vartime is used as time added to root
+	# ADDING TERMINAL BRANCHES TO PHYLOGENY 
+		# if addterm != FALSE, 
+			# then observed taxon ranges (LAD-FAD) are added to the tree
+			# with LADs as the location of the tips
+		# to allow for tips to be at range midpoints (recc. for trait evol analyses)
+			# replace LADs in timeData with mid-range dates
+	# root.time
+		# ALL TREES ARE OUTPUT WITH ELEMENTs "$root.time"
+		# this is the time of the root on the tree, which is important for comparing across trees
+		# this must be calculated prior to adding anything to terminal branches
+	#
+	#####################################################
+	# tree <- rtree(10);tree$edge.length <- NULL;type = "basic"
+		# vartime = NULL;add.term = FALSE;node.mins = NULL
+	# timeData <- runif(10,30,200)
+		# timeData <- cbind(timeData,timeData-runif(10,1,20))
+		# rownames(timeData) <- tree$tip.label
 	#node.mins <- runif(9,50,300)
+	#
+	###################################
 	#require(ape)	
 	if(!inherits(tree, "phylo")){
 		stop("tree is not of class phylo")}
@@ -562,156 +817,295 @@ timePaleoPhy <- function(tree,timeData,type = "basic",vartime = NULL,ntrees = 1,
 	if(!is.character(tree$tip.label)){
 		stop("tree tip labels are not a character vector")
 		}
-	if(ntrees<1){stop("ntrees<1")}
+	if(ntrees<1){
+		stop("ntrees<1")
+		}
 	if(!any(dateTreatment == c("firstLast","minMax","randObs"))){
-		stop("dateTreatment must be one of 'firstLast', 'minMax' or 'randObs'!")}
-	if(!any(type == c("basic","mbl","equal","equal_paleotree_legacy","equal_date.phylo_legacy","aba","zlba"))){
-		stop("type must be one of the types listed in the help file for timePaleoPhy")}
-	if(!add.term & dateTreatment == "randObs"){stop(
-		"Inconsistent arguments: randomized observation times are treated as LAST appearance times, so add.term must be true for dateTreatment selection to have any effect on output!"
-		)}
-	if(add.term & dateTreatment == "minMax"){stop(
-		"Inconsistent arguments: randomized dates (dateTreatment = minMax) are treated as point occurrences, so there are effectively no terminal ranges for add.term to add!"
-		)}
-	if(ntrees>1 & !randres & dateTreatment == "firstLast"){stop("Time-scale more trees without randomly resolving or random dates?!")}
-	if(ntrees == 1 & randres){message("Warning: Do not interpret a single randomly-resolved tree")}
-	if(ntrees == 1 & dateTreatment == "randObs"){message("Warning: Do not interpret a single tree with randomly-placed observation times")}
-	if(ntrees == 1 & dateTreatment == "minMax"){message("Warning: Do not interpret a single tree with randomly-placed taxon dates")}
-	if(randres & timeres){stop(
-		"Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!")}
-	if(!add.term & inc.term.adj){stop(
-		"Inconsistent arguments: Terminal ranges cannot be used in adjustment of branch lengths if not added to tree!")}
-	if(type == "basic" & inc.term.adj){stop(
-		"Inconsistent arguments: Terminal range adjustment of branch lengths does not affect basic time-scaling method!")}
+		stop("dateTreatment must be one of 'firstLast', 'minMax' or 'randObs'!")
+		}
+	allowedTypesTPP <- c(
+		"basic","mbl",
+		"equal","equal_paleotree_legacy","equal_date.phylo_legacy",
+		"aba","zlba"
+		)
+	if(!any(type == allowedTypesTPP)){
+		stop("type must be one of the types listed in the help file for timePaleoPhy")
+		}
+	if(!add.term & dateTreatment == "randObs"){
+		stop(paste0(
+			"Inconsistent arguments: randomized observation times are treated as LAST appearance times,\n",
+			" so add.term must be true for dateTreatment selection to have any effect on output!"
+			))
+		}
+	if(add.term & dateTreatment == "minMax"){
+		stop(paste0(
+			"Inconsistent arguments: randomized dates (dateTreatment = minMax) are treated as point occurrences,\n",
+			" so there are effectively no terminal ranges for add.term to add!"
+			))
+		}
+	if(ntrees>1 & !randres & dateTreatment == "firstLast"){
+		stop("Time-scale more trees without randomly resolving or random dates?!")
+		}
+	if(ntrees == 1 & randres){
+		message("Warning: Do not interpret a single randomly-resolved tree")
+		}
+	if(ntrees == 1 & dateTreatment == "randObs"){
+		message("Warning: Do not interpret a single tree with randomly-placed observation times")
+		}
+	if(ntrees == 1 & dateTreatment == "minMax"){
+		message("Warning: Do not interpret a single tree with randomly-placed taxon dates")
+		}
+	if(randres & timeres){
+		stop(paste0(
+			"Inconsistent arguments:\n",
+			" You cannot randomly resolve polytomies and resolve with respect to time simultaneously!"
+			))
+		}
+	if(!add.term & inc.term.adj){		
+		stop(paste0(
+			"Inconsistent arguments:\n",
+			" Terminal ranges cannot be used in adjustment of branch lengths if not added to tree!"
+			))
+		}
+	if(type == "basic" & inc.term.adj){
+		stop(paste0(
+			"Inconsistent arguments:\n", 
+			"Terminal range adjustment of branch lengths does not affect basic time-scaling method!"))
+		}
 	originalInputTree <- tree
 	#remove taxa that are NA or missing in timeData
-	droppers <- tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeData[,1])))))]
+	droppers <- tree$tip.label[
+		is.na(
+			match(tree$tip.label,
+				names(which(!is.na(timeData[,1])))
+				)
+			)
+		]
 	if(length(droppers)>0){
-		if(length(droppers) == Ntip(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
-		if(noisyDrop){message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse = ", ")))}
+		if(length(droppers) == Ntip(tree)){
+			stop("Absolutely NO valid taxa shared between the tree and temporal data!"
+			)}
+		if(noisyDrop){
+			message(paste(
+				"Warning: Following taxa dropped from tree:",
+					paste0(droppers,collapse = ", ")
+				))}
 		tree <- drop.tip(tree,droppers)
-		if(is.null(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
-		timeData[which(!sapply(rownames(timeData),function(x) any(x == tree$tip.label))),1] <- NA
+		if(is.null(tree)){
+			stop("Absolutely NO valid taxa shared between the tree and temporal data!"
+			)}
+		timeData[which(!sapply(rownames(timeData),
+			function(x) any(x == tree$tip.label))),1] <- NA
 		}
 	timeData <- timeData[!is.na(timeData[,1]),]
-	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(any(timeData[,1]<timeData[,2])){stop("timeData is not in time relative to modern (decreasing to present)")}
-	if(length(unique(rownames(timeData))) != length(rownames(timeData))){stop("Duplicate taxa in timeList[[2]]")}
-	if(length(unique(tree$tip.label)) != length(tree$tip.label)){stop("Duplicate tip taxon names in tree$tip.label")}
+	if(any(is.na(timeData))){
+		stop("Weird NAs in Data??")
+		}
+	if(any(timeData[,1]<timeData[,2])){
+		stop("timeData is not in time relative to modern (decreasing to present)")
+		}
+	if(length(unique(rownames(timeData))) != length(rownames(timeData))){
+		stop("Duplicate taxa in timeList[[2]]")
+		}
+	if(length(unique(tree$tip.label)) != length(tree$tip.label)){
+		stop("Duplicate tip taxon names in tree$tip.label")
+		}
 	if(length(rownames(timeData)) != length(tree$tip.label)){
-		stop("Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
+		stop("Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")
+		}
 	ttrees <- rmtree(ntrees,2)
-	savetree <- tree			#save tree now so can replace with each loop for multi2di()
+	#save tree now so can replace with each loop for multi2di()
+	savetree <- tree			
 	saveTD <- timeData
 	for(ntr in 1:ntrees){
 		#resolve nodes, if tree is not binary
 		tree <- savetree
 		if(!ape::is.binary.phylo(savetree)  | !is.rooted(savetree)){
-			if(randres){tree <- multi2di(savetree)}
-			if(timeres){tree <- timeLadderTree(savetree,timeData)}
+			if(randres){
+				tree <- multi2di(savetree)
+				}
+			if(timeres){
+				tree <- timeLadderTree(savetree,timeData)
+				}
 			}
-		if(dateTreatment == "minMax"){timeData[,1:2] <- apply(saveTD,1,function(x) runif(1,x[2],x[1]))}
-		if(dateTreatment == "randObs"){timeData[,2] <- apply(saveTD,1,function(x) runif(1,x[2],x[1]))}
+		#
+		if(dateTreatment == "minMax"){
+			timeData[,1:2] <- apply(saveTD,1,function(x) runif(1,x[2],x[1]))
+			}
+		if(dateTreatment == "randObs"){
+			timeData[,2] <- apply(saveTD,1,function(x) runif(1,x[2],x[1]))
+			}
+		#
+		#first, get node times
 		ntime <- sapply(1:Nnode(tree),function(x) 
-			max(timeData[tree$tip.label[unlist(prop.part(tree)[x])],1]))	#first, get node times
+			max(timeData[tree$tip.label[unlist(prop.part(tree)[x])],1]
+			))	
+		#
 		ntime <- c(timeData[tree$tip.label,1],ntime)
+		#
 		if(!is.null(node.mins)){	#if there are node.mins, alter ntime as necessary
 			#needs to be same length as nodes in originalInputTree
 			if(Nnode(savetree) != length(node.mins)){
-				stop("node.mins must be same length as number of nodes in the input tree!")}
+				stop("node.mins must be same length as number of nodes in the input tree!")
+				}
 			#of course, node.mins is referring to nodes in unresolved originalInputTree
 			#need to figure out which nodes are which now if randres; remake node.mins
 			if(length(droppers)>0){
-				stop("node.mins not compatible with datasets where some taxa are dropped; drop before analysis instead")}
+				stop(paste0(
+					"node.mins not compatible with datasets where some taxa are dropped\n",
+					"Drop unshared taxa and recalculate location of constrained nodes before analysis instead"
+					))
+				}
 			if((!ape::is.binary.phylo(originalInputTree) | !is.rooted(tree)) & randres){
-				origDesc <- lapply(prop.part(originalInputTree),function(x) sort(originalInputTree$tip.label[x]))
-				treeDesc <- lapply(prop.part(tree),function(x) sort(tree$tip.label[x]))
-				node_changes <- match(origDesc,treeDesc)
+				origDesc <- lapply(prop.part(originalInputTree),
+					function(x) sort(originalInputTree$tip.label[x])
+					)
+				treeDesc <- lapply(prop.part(tree),
+					function(x) sort(tree$tip.label[x])
+					)
+				node_changes <- match(origDesc, treeDesc)
 				node.mins1 <- rep(NA,Nnode(tree))
 				node.mins1[node_changes] <- node.mins
 			}else{
 				node.mins1 <- node.mins
 				}
+			#
 			#require(phangorn)
-			for(i in (Ntip(tree)+1):length(ntime)){	#all internal nodes
+			#
+			#all internal nodes
+			for(i in (Ntip(tree)+1):length(ntime)){	
 				desc_all <- unlist(Descendants(tree,i,type = "all"))
 				desc_nodes <- c(desc_all[desc_all>Ntip(tree)],i)-Ntip(tree)	#INCLUDING ITSELF			
 				node_times <- node.mins1[desc_nodes]
 				ntime[i] <- max(ntime[i],node_times[!is.na(node_times)])
 				}
 			}
-		if((type == "equal"|type == "equal_paleotree_legacy") & !is.null(vartime)){				#add to root, if method = "equal"
+		#
+		#add to root, if method = "equal"
+		if((type == "equal"|type == "equal_paleotree_legacy") & !is.null(vartime)){				
 			ntime[Ntip(tree)+1] <- vartime+ntime[Ntip(tree)+1]
 			#anchor_adjust <- vartime+anchor_adjust
 			}	
 		ttree <- tree
 		ttree$edge.length <- sapply(1:Nedge(ttree),function(x) 
-			ntime[ttree$edge[x,1]]-ntime[ttree$edge[x,2]])	#finds each edge length easy peasy, based on G. Lloyd's code
+			#finds each edge length easy peasy, based on G. Lloyd's code
+			ntime[ttree$edge[x,1]]-ntime[ttree$edge[x,2]]
+			)	 
 		#okay, now time to do add terminal branch lengths if inc.term.adj
 		if(add.term & inc.term.adj){
 			obs_ranges <- timeData[,1]-timeData[,2]
 			term_id <- ttree$tip.label[ttree$edge[ttree$edge[,2] <= Ntip(ttree),2]]
 			term_add <- sapply(term_id,function(x) obs_ranges[x])
-			ttree$edge.length[ttree$edge[,2] <= Ntip(ttree)] <- ttree$edge.length[ttree$edge[,2] <= Ntip(ttree)]+term_add
+			new_edge_length_with_term <- ttree$edge.length[
+				ttree$edge[,2] <= Ntip(ttree)]+term_add
+			ttree$edge.length[ttree$edge[,2] <= Ntip(ttree)] <- new_edge_length_with_term
 			}
 		#ttree_basic <- ttree
 		##if type = basic, I don't have to do anything but set root.time
-		if(type == "aba"){	#if (type = "aba") then adds vartime to all branches (All Branch Additive) 
-			if(is.na(vartime)){stop("No All Branch Additive Value Given!")}
+		if(type == "aba"){	
+			#if (type = "aba") then adds vartime to all branches (All Branch Additive) 
+			if(is.na(vartime)){
+				stop("No All Branch Additive Value Given!")
+				}
 			ttree$edge.length <- ttree$edge.length+vartime
 			}
 		if(type == "zlba"){	#if (type = "zlba") then adds vartime to zero length branches (Zero Length Branch Additive) 
-			if(is.na(vartime)){stop("No Branch Additive Value Given!")}
-			ttree$edge.length[ttree$edge.length<0.0001] <- ttree$edge.length[ttree$edge.length<0.0001]+vartime
+			if(is.na(vartime)){
+				stop("No Branch Additive Value Given!")
+				}
+			new_edge_lengths <- ttree$edge.length[ttree$edge.length<0.0001]+vartime
+			ttree$edge.length[ttree$edge.length<0.0001] <- new_edge_lengths
 			}
 		if(type == "mbl"){
 			#if (type = "mbl") scales up all branches greater than vartime and subtracts from lower
 				#as long as there are branches smaller than vartime
-			if(is.na(vartime)){stop("No Minimum Branch Length Value Given!")}
+			if(is.na(vartime)){
+				stop("No Minimum Branch Length Value Given!")
+				}
 			ttree <- minBranchLength(tree = ttree, mbl = vartime)
 			}
-		if(type == "equal"|type == "equal_paleotree_legacy"|type == "equal_date.phylo_legacy"){	#G. Lloyd's "equal" method(s)
+		if(type == "equal" | type == "equal_paleotree_legacy" | type == "equal_date.phylo_legacy"){	
+			#G. Lloyd's "equal" method(s)
 			if(type == "equal"){
 				#Newest of the NEW 08-19-14 - the most logical choice
-                #get a vector of zero-length branches ordered by the number of nodes separating the edge from the root
-				zbr <- cbind(1:Nedge(ttree),-node.depth.edgelength(unitLengthTree(ttree))[ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = # of nodes from root
+                #get a vector of zero-length branches ordered by 
+					# the number of nodes separating the edge from the root
+				#
+				#Get branch list; 1st col = end-node, 2nd = # of nodes from root
+				zbr <- cbind(1:Nedge(ttree),
+					-node.depth.edgelength(unitLengthTree(ttree))[ttree$edge[,2]]) 	
+				
 				}
 			if(type == "equal_paleotree_legacy"){
 				#OLD
 				#get a depth-ordered vector that identifies zero-length branches
-				zbr <- cbind(1:Nedge(ttree),node.depth(ttree)[ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = depth
+				#
+				#Get branch list; 1st col = end-node, 2nd = depth
+				zbr <- cbind(1:Nedge(ttree),node.depth(ttree)[ttree$edge[,2]]) 	
 				}
 			if(type == "equal_date.phylo_legacy"){
 				#NEW 02-03-04 
-				#get a TIME-TO-ROOT-ordered vector that identifies zero-length branches, as Graeme's DatePhylo originally worked prior to August 2014
-				zbr <- cbind(1:Nedge(ttree),node.depth.edgelength(ttree)[ttree$edge[,2]]) 	#Get branch list; 1st col = end-node, 2nd = abs distance (time) from root
+				#get a TIME-TO-ROOT-ordered vector that identifies zero-length branches
+					# as Graeme's DatePhylo originally worked prior to August 2014
+				#
+				#Get branch list; 1st col = end-node, 2nd = abs distance (time) from root
+				zbr <- cbind(1:Nedge(ttree),node.depth.edgelength(ttree)[ttree$edge[,2]]) 	
 				}
-			zbr <- zbr[ttree$edge.length == 0,]						#Parses zbr to just zero-length branches
-			zbr <- zbr[order(zbr[,2]),1]							#order zbr by depth
+			#
+			#Parses zbr to just zero-length branches
+			zbr <- zbr[ttree$edge.length == 0,]						
+			#order zbr by depth
+			zbr <- zbr[order(zbr[,2]),1]							
 			#if the edge lengths leading away from the root are somehow ZERO issue a warning
 			if(is.null(vartime) & any(ttree$edge.length[ttree$edge[,1] == (Ntip(ttree)+1)] == 0)){
-				stop("The equal method requires the edges leading away from the root to have non-zero length to begin with, perhaps increase vartime?")}
-			for(i in zbr){if (ttree$edge.length[i]  ==  0) {			#starting with most shallow zlb, is this branch a zlb?
-				#if zlb, make a vector of mom-zlbs, going down the tree
-				brs <- ttree$edge[i,2] 						#branches to rescale, starting with picked branch
-				mom <- which(ttree$edge[i,1] == ttree$edge[,2])
-				while(ttree$edge[mom,1] != (Ntip(ttree)+1) & ttree$edge.length[mom] == 0){ #keep going while preceding edge is zero len and isn't the root
-					brs[length(brs)+1] <- ttree$edge[mom,2]  		#keep adding these branches to brs
-					mom <- which(ttree$edge[mom,1] == ttree$edge[,2])	#reset mom
+				stop(paste0(
+					"The equal method requires edges leading away from root to initially have non-zero length\n",
+					" This expectation is current not met. Perhaps increase vartime?"
+					))
+				}
+			#
+			
+			for(i in zbr){
+				#starting with most shallow zlb, is this branch a zlb?
+				if (ttree$edge.length[i]  ==  0) {			
+					#if zlb, make a vector of mom-zlbs, going down the tree
+					#
+					#branches to rescale, starting with picked branch
+					brs <- ttree$edge[i,2] 						
+					mom <- which(ttree$edge[i,1] == ttree$edge[,2])
+					while(ttree$edge[mom,1] != (Ntip(ttree)+1) & ttree$edge.length[mom] == 0){ 
+						#keep going while preceding edge is zero len and isn't the root
+						#
+						#keep adding these branches to brs
+						brs[length(brs)+1] <- ttree$edge[mom,2]  		
+						#reset mom
+						mom <- which(ttree$edge[mom,1] == ttree$edge[,2])	
+						}
+					#Add final branch (which isn't zlb)
+					brs[length(brs)+1] <- ttree$edge[mom,2] 				
+					#Amount of time to be shared
+					totbl <- sum(ttree$edge.length[match(brs,ttree$edge[,2])]) 	
+					ntime[brs[-1]] <- ntime[brs[-1]] +cumsum(
+						rep(totbl / length(brs), length(brs) - 1)
+						)
+					#update branch lengths using ntime
+					ttree$edge.length <- sapply(
+						1:Nedge(ttree),function(x) 
+						ntime[ttree$edge[x,1]] - ntime[ttree$edge[x,2]]
+						)	
 					}
-				brs[length(brs)+1] <- ttree$edge[mom,2] 				#Add final branch (which isn't zlb)
-				totbl <- sum(ttree$edge.length[match(brs,ttree$edge[,2])]) 	#Amount of time to be shared
-				ntime[brs[-1]] <- ntime[brs[-1]]+cumsum(rep(totbl/length(brs),length(brs)-1))
-				ttree$edge.length <- sapply(1:Nedge(ttree),function(x) 
-					ntime[ttree$edge[x,1]]-ntime[ttree$edge[x,2]])	#update branch lengths using ntime
-				}}
+				}
 			}
-		#if add.term != FALSE, then taxon observed ranges are added to the tree, with the LADs becoming the location of the tips
+		#
+		#if add.term != FALSE
+			# then taxon observed ranges are added to the tree
+			# with the LADs becoming the location of the tips
 		if(add.term & !inc.term.adj){
 			obs_ranges <- timeData[,1]-timeData[,2]
 			term_id <- ttree$tip.label[ttree$edge[ttree$edge[,2] <= Ntip(ttree),2]]
 			term_add <- sapply(term_id,function(x) obs_ranges[x])
-			ttree$edge.length[ttree$edge[,2] <= Ntip(ttree)] <- ttree$edge.length[ttree$edge[,2] <= Ntip(ttree)]+term_add
+			new_term_edge_lengths <- ttree$edge.length[ttree$edge[,2] <= Ntip(ttree)]+term_add
+			ttree$edge.length[ttree$edge[,2] <= Ntip(ttree)] <- new_term_edge_lengths
 			}
 		#now add root.time: 
 		if(add.term){
@@ -743,21 +1137,31 @@ bin_timePaleoPhy <- function(tree,timeList,type = "basic",vartime = NULL,ntrees 
 	nonstoch.bin = FALSE,randres = FALSE,timeres = FALSE,
 	sites = NULL,point.occur = FALSE,add.term = FALSE,inc.term.adj = FALSE,
 	dateTreatment = "firstLast",node.mins = NULL,noisyDrop = TRUE,plot = FALSE){
-	#wrapper for applying non-SRC time-scaling to timeData where FADs and LADs are given as bins 
-		#see timePaleoPhy function for more details
+	# wrapper for applying non-SRC time-scaling to timeData
+		# where FADs and LADs are given as bins 
+		# see timePaleoPhy function for more details
 	#input is a list with (1) interval times matrix and (2) species FOs and LOs
-	#sites is a matrix, used to indicate if binned FADs or LADs of multiple species were obtained from the locality / time point
-			#i.e. the first appearance of species A, B and last appearance of C are all from the same lagerstatten
-			#this will fix these to always have the same date relative to each other across many trees
-			#this will assume that species listed for a site all are listed as being from the same interval...
-				#this function also assumes that the sites matrix is ordered exactly as the timeList data is
-	#if rand.obs = TRUE, the the function assumes that the LADs in timeList aren't where you actually want the tips (OLD)
+	#
+	#sites is a matrix, used to indicate if binned FADs or LADs of
+		# multiple species were obtained from the locality / time point
+	#i.e. the first appearance of species A, B and last appearance of C are all from the same lagerstatten
+		#this will fix these to always have the same date relative to each other across many trees
+		#this will assume that species listed for a site all are listed as being from the same interval...
+	#this function also assumes that the sites matrix is ordered exactly as the timeList data is
+	#
+	################
+	# (OLD)
+	#if rand.obs = TRUE, the the function assumes that the LADs in timeList aren't
+		# where you actually want the tips 
 		#instead, tips will be randomly placed anywhere in that taxon's range with uniform probability
 		#thus, tip locations will differ slightly for each tree in the sample
 		#this is useful when you have a specimen or measurement but you don't know its placement in the species' range
+	#
+	######################
 	#default options
 	#type = "basic";vartime = NULL;ntrees = 1;nonstoch.bin = FALSE;randres = FALSE;timeres = FALSE
-	#sites = NULL;point.occur = FALSE;add.term = FALSE;inc.term.adj = FALSE;rand.obs = FALSE;node.mins = NULL;plot = FALSE
+	# sites = NULL;point.occur = FALSE;add.term = FALSE;inc.term.adj = FALSE
+		# rand.obs = FALSE;node.mins = NULL;plot = FALSE
 	#require(ape)
 	if(!inherits(tree, "phylo")){
 		stop("tree is not of class phylo")
@@ -777,105 +1181,187 @@ bin_timePaleoPhy <- function(tree,timeList,type = "basic",vartime = NULL,ntrees 
 			}
 		}
 	if(ntrees == 1 & !nonstoch.bin){
-		message("Warning: Do not interpret a single tree; dates are stochastically pulled from uniform distributions")}
-	if(ntrees<1){stop("ntrees<1")}
-	if(!is.null(sites) & point.occur){stop("Inconsistent arguments, point.occur = TRUE would replace input 'sites' matrix\n Why not just make site assignments for first and last appearance the same in your input site matrix?")}
+		message(
+			"Warning: Do not interpret a single tree; dates are stochastically pulled from uniform distributions"
+			)
+		}
+	if(ntrees<1){
+		stop("ntrees<1")
+		}
+	if(!is.null(sites) & point.occur){
+		stop(
+			"Inconsistent arguments, point.occur = TRUE would replace input 'sites' matrix\n Why not just make site assignments for first and last appearance the same in your input site matrix?"
+			)
+		}
 	if(!any(dateTreatment == c("firstLast","randObs"))){
-		stop("dateTreatment must be one of 'firstLast' or 'randObs'!")}
+		stop("dateTreatment must be one of 'firstLast' or 'randObs'!")
+		}
 	#clean out all taxa which are NA or missing for timeData
-	if(ntrees == 1 & randres){message("Warning: Do not interpret a single randomly-resolved tree")}
-	if(randres & timeres){stop(
-		"Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!")}
-	if(!is.null(sites) & point.occur){stop("Inconsistent arguments, point.occur = TRUE will replace input 'sites' matrix")}
+	if(ntrees == 1 & randres){
+		message("Warning: Do not interpret a single randomly-resolved tree")
+		}
+	if(randres & timeres){
+		stop(
+			"Inconsistent arguments: You cannot randomly resolve polytomies and resolve with respect to time simultaneously!"
+			)
+		}
+	if(!is.null(sites) & point.occur){
+		stop("Inconsistent arguments, point.occur = TRUE will replace input 'sites' matrix")
+		}
 	droppers <- tree$tip.label[is.na(match(tree$tip.label,names(which(!is.na(timeList[[2]][,1])))))]
 	if(length(droppers)>0){
-		if(length(droppers) == Ntip(tree)){stop("Absolutely NO valid taxa shared between the tree and temporal data!")}
+		if(length(droppers) == Ntip(tree)){
+			stop("Absolutely NO valid taxa shared between the tree and temporal data!")
+			}
 		if(noisyDrop){
-			message(paste("Warning: Following taxa dropped from tree:",paste0(droppers,collapse = ", ")))}
+			message(paste(
+				"Warning: Following taxa dropped from tree:",paste0(droppers,collapse = ", ")
+				))
+			}
 		tree <- drop.tip(tree,droppers)
-		if(Ntip(tree)<2){stop("Less than two valid taxa shared between the tree and temporal data!")}
+		if(Ntip(tree)<2){
+			stop("Less than two valid taxa shared between the tree and temporal data!")
+			}
 		timeList[[2]][which(!sapply(rownames(timeList[[2]]),function(x) any(x == tree$tip.label))),1] <- NA
 		}
 	if(!is.null(node.mins)){
 		if(length(droppers)>0){	#then... the tree has changed unpredictably, node.mins unusable
-			stop("node.mins not compatible with datasets where some taxa are drop; drop before analysis instead")}
+			stop(
+				"node.mins not compatible with datasets where some taxa are drop; drop before analysis instead"
+				)
+			}
 		if(Nnode(tree) != length(node.mins)){
-			stop("node.mins must be same length as number of nodes in the input tree!")}
+			stop(
+				"node.mins must be same length as number of nodes in the input tree!"
+				)
+			}
 		}
 	#best to drop taxa from timeList that aren't represented on the tree
 	notTree <- rownames(timeList[[2]])[is.na(match(rownames(timeList[[2]]),tree$tip.label))]
 	if(length(notTree)>0){
 		if(is.null(sites)){
 			if(noisyDrop){
-				message(paste("Warning: Following taxa dropped from timeList:",paste0(notTree,collapse = ", ")))}
+				message(paste(
+					"Warning: Following taxa dropped from timeList:",paste0(notTree,collapse = ", ")
+					))
+				}
 			timeList[[2]] <- timeList[[2]][!is.na(match(rownames(timeList[[2]]),tree$tip.label)),]
 		}else{
-			stop("Some taxa in timeList not included on tree: no automatic taxon drop if 'sites' are given. Please remove from both sites and timeList and try again.")
+			stop(
+				"Some taxa in timeList not included on tree: no automatic taxon drop if 'sites' are given. Please remove from both sites and timeList and try again."
+				)
 			}
 		}	
 	timeList[[2]] <- timeList[[2]][!is.na(timeList[[2]][,1]),]
 	#
 	if(ncol(timeList[[1]]) != 2 | ncol(timeList[[2]]) != 2){
-		stop("Both timeList[[1]] and timeList[[2]] should have only two columns")}
+		stop("Both timeList[[1]] and timeList[[2]] should have only two columns")
+		}
 	if(any(is.na(timeList[[1]])) | any(is.na(timeList[[2]]))){
-		stop("Unexpected NAs in timeList")}
+		stop("Unexpected NAs in timeList")
+		}
 	if(any(is.character(timeList[[1]])) | any(is.character(timeList[[2]]))){
-		stop("Unexpected character-type data in timeList")}
+		stop("Unexpected character-type data in timeList")
+		}
 	#
-	if(any(apply(timeList[[1]],1,diff)>0)){stop("timeList[[1]] not in intervals in time relative to modern")}
-	if(any(timeList[[1]][,2]<0)){stop("Some dates in timeList[[1]] <0 ?")}
-	if(any(apply(timeList[[2]],1,diff)<0)){stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
-	if(any(timeList[[2]][,2]<0)){stop("Some dates in timeList[[2]] <0 ?")}
-	if(length(unique(rownames(timeList[[2]]))) != length(rownames(timeList[[2]]))){stop("Duplicate taxa in timeList[[2]]")}
-	if(length(unique(tree$tip.label)) != length(tree$tip.label)){stop("Duplicate tip taxon names in tree$tip.label")}
+	if(any(apply(timeList[[1]],1,diff)>0)){
+		stop("timeList[[1]] not in intervals in time relative to modern")
+		}
+	if(any(timeList[[1]][,2]<0)){
+		stop("Some dates in timeList[[1]] <0 ?")
+		}
+	if(any(apply(timeList[[2]],1,diff)<0)){
+		stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")
+		}
+	if(any(timeList[[2]][,2]<0)){
+		stop("Some dates in timeList[[2]] <0 ?")
+		}
+	if(length(unique(rownames(timeList[[2]]))) != length(rownames(timeList[[2]]))){
+		stop("Duplicate taxa in timeList[[2]]")
+		}
+	if(length(unique(tree$tip.label)) != length(tree$tip.label)){
+		stop("Duplicate tip taxon names in tree$tip.label")
+		}
 	if(length(rownames(timeList[[2]])) != length(tree$tip.label)){
-		stop("Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")}
+		stop("Odd irreconcilable mismatch between timeList[[2]] and tree$tip.labels")
+		}
 	if(is.null(sites)){
 		if(point.occur){
 			if(any(timeList[[2]][,1] != timeList[[2]][,2])){
-				stop("point.occur = TRUE but some taxa have FADs and LADs listed in different intervals?!")}
+				stop(
+					"point.occur = TRUE but some taxa have FADs and LADs listed in different intervals?!"
+					)
+				}
 			sites <- matrix(c(1:Ntip(tree),1:Ntip(tree)),Ntip(tree),2)
 		}else{
 			sites <- matrix(1:(Ntip(tree)*2),,2)
 			}
 	}else{	#make sites a bunch of nicely behaved sorted integers
-		sites[,1] <- sapply(sites[,1],function(x) which(x == sort(unique(as.vector(sites)))))
-		sites[,2] <- sapply(sites[,2],function(x) which(x == sort(unique(as.vector(sites)))))
+		sites[,1] <- sapply(sites[,1],function(x)
+			which(x == sort(unique(as.vector(sites))))
+			)
+		sites[,2] <- sapply(sites[,2],function(x)
+			which(x == sort(unique(as.vector(sites))))
+			)
 		}
 	ttrees <- rmtree(ntrees,3)
 	#get time ranges for sites
 	siteTime <- matrix(,max(sites),2)
-	for (i in unique(as.vector(sites))){		#build two-col matrix of site's FADs and LADs
-		go <- timeList[[2]][which(sites == i)[1]]	#find an interval for this site
+	#
+	for (i in unique(as.vector(sites))){	
+		#build two-col matrix of site's FADs and LADs
+			#find an interval for this site
+		go <- timeList[[2]][which(sites == i)[1]]	
 		siteTime[i,] <- timeList[[1]][go,]
 		}
+	#
 	#now let's stochastically draw new dates from the site times
 	for(ntrb in 1:ntrees){
 		if(!nonstoch.bin){
 			bad_sites <- unique(as.vector(sites))
 			siteDates <- apply(siteTime,1,function(x) runif(1,x[2],x[1]))
 			while(length(bad_sites)>0){
-				siteDates[bad_sites] <- apply(siteTime[bad_sites,],1,function(x) runif(1,x[2],x[1]))
-				bad_sites <- unique(as.vector(sites[(siteDates[sites[,1]]-siteDates[sites[,2]])<0,]))
+				siteDates[bad_sites] <- apply(siteTime[bad_sites,],1,
+					function(x) runif(1,x[2],x[1])
+					)
+				bad_sites <- unique(
+					as.vector(sites[(siteDates[sites[,1]]-siteDates[sites[,2]])<0,])
+					)
 				#print(length(bad_sites))
 				}
-			timeData <- cbind(siteDates[sites[,1]],siteDates[sites[,2]])
+			timeData <- cbind(siteDates[sites[,1]],
+				siteDates[sites[,2]])
 		}else{
-			timeData <- cbind(siteTime[sites[,1],1],siteTime[sites[,2],2])
+			timeData <- cbind(siteTime[sites[,1],1],
+				siteTime[sites[,2],2])
 			}
 		rownames(timeData) <- rownames(timeList[[2]])
 		# okay now send to timePaleoPhy
-		tree1 <- suppressMessages(timePaleoPhy(tree = tree,timeData = timeData,
-			type = type,vartime = vartime,ntrees = 1,
-			randres = randres,timeres = timeres,
-			add.term = add.term,inc.term.adj = inc.term.adj,
-			dateTreatment = dateTreatment,
-			node.mins = node.mins,plot = plot))
+		tree1 <- suppressMessages(
+			timePaleoPhy(
+				tree = tree,
+				timeData = timeData,
+				type = type,
+				vartime = vartime,
+				ntrees = 1,
+				randres = randres,
+				timeres = timeres,
+				add.term = add.term,
+				inc.term.adj = inc.term.adj,
+				dateTreatment = dateTreatment,
+				node.mins = node.mins,
+				plot = plot
+				)
+			)
 		colnames(timeData) <- c("FAD","LAD")
 		tree1$ranges.used <- timeData
 		names(tree1$edge.length) <- NULL
 		ttrees[[ntrb]] <- tree1
 		}
-	if(ntrees == 1){ttrees <- ttrees[[1]]}
+	#
+	if(ntrees == 1){
+		ttrees <- ttrees[[1]]
+		}
+	#
 	return(ttrees)
 	}

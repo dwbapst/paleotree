@@ -23,17 +23,22 @@
 #' will add a tip to every internal node with the parent-taxon name encapsulated in
 #' parentheses.
 
-# @param reorderTree A logical indicating whether a step of \code{reorder.phylo()} will be applied,
-# if \code{cleanTree = TRUE}; has no effect if \code{cleanTree = FALSE}.
-# Reordering may cause more problems than it is worth in older versions of \code{ape}.
+# @param reorderTree A logical indicating whether a
+# step of \code{reorder.phylo()} will be applied,
+# if \code{cleanTree = TRUE}; has no effect
+# if \code{cleanTree = FALSE}.
+# Reordering may cause more problems than it is
+# worth in older versions of \code{ape}.
 
 #' @inheritParams makePBDBtaxonTree
 
 #' @return
-#' A phylogeny of class 'phylo', with tip taxa as controlled by argument \code{tipSet}.
+#' A phylogeny of class 'phylo', with tip taxa as
+#' controlled by argument \code{tipSet}.
 #' The output tree is returned with no edge lengths.
 #' 
-#' The names of higher taxa than the tips should be appended as the element $node.label for the internal nodes.
+#' The names of higher taxa than the tips should be appended
+#' as the element $node.label for the internal nodes.
 
 #' @seealso \code{\link{makePBDBtaxonTree}}, \code{\link{taxonTable2taxonTree}}
 
@@ -42,81 +47,108 @@
 #' @examples
 #' 
 #' #let's create a small, really cheesy example
-#' pokexample <- rbind(cbind("Squirtadae",c("Squirtle","Blastoise","Wartortle")),
-#' 	c("Shelloidea","Lapras"),c("Shelloidea","Squirtadae"),
-#' 	c("Pokezooa","Shelloidea"),c("Pokezooa","Parasect"),
-#' 	c("Rodentapokemorpha","Linoone"),c("Rodentapokemorpha","Sandshrew"),
-#' 	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
-#' 	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"))
+#' pokexample <- rbind(
+#'     cbind("Squirtadae", c("Squirtle","Blastoise","Wartortle")),
+#'     c("Shelloidea","Lapras"), c("Shelloidea","Squirtadae"),
+#'     c("Pokezooa","Shelloidea"), c("Pokezooa","Parasect"),
+#'     c("Rodentapokemorpha","Linoone"), c("Rodentapokemorpha","Sandshrew"),
+#'     c("Rodentapokemorpha","Pikachu"), c("Hirsutamona","Ursaring"),
+#'     c("Hirsutamona","Rodentapokemorpha"), c("Pokezooa","Hirsutamona")
+#'     )
 #' 
 #' #Default: tipSet = 'nonParents'
-#' pokeTree <- parentChild2taxonTree(pokexample, tipSet = "nonParents")
-#' plot(pokeTree);nodelabels(pokeTree$node.label)
+#' pokeTree <- parentChild2taxonTree(
+#'     parentChild = pokexample,
+#'     tipSet = "nonParents")
+#' plot(pokeTree)
+#' nodelabels(pokeTree$node.label)
 #' 
 #' #Get ALL taxa as tips with tipSet = 'all'
-#' pokeTree <- parentChild2taxonTree(pokexample, tipSet = "all")
-#' plot(pokeTree);nodelabels(pokeTree$node.label)
+#' pokeTree <- parentChild2taxonTree(
+#'     parentChild = pokexample,
+#'     tipSet = "all")
+#' plot(pokeTree)
+#' nodelabels(pokeTree$node.label)
 #' 
 #' 
 #' \dontrun{
 #' 
-#' # let's try a dataset where not all the taxon relationships lead to a common root
+#' # let's try a dataset where not all the
+#'     # taxon relationships lead to a common root
 #' 
-#' pokexample_bad <- rbind(cbind("Squirtadae",c("Squirtle","Blastoise","Wartortle")),
-#' 	c("Shelloidea","Lapras"),c("Shelloidea","Squirtadae"),
-#' 	c("Pokezooa","Shelloidea"),c("Pokezooa","Parasect"),
-#' 	c("Rodentapokemorpha","Linoone"),c("Rodentapokemorpha","Sandshrew"),
-#' 	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
-#' 	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"),
-#' 	c("Umbrarcheota","Gengar"))
+#' pokexample_bad <- rbind(
+#'     cbind("Squirtadae", c("Squirtle","Blastoise","Wartortle")),
+#'     c("Shelloidea","Lapras"), c("Shelloidea","Squirtadae"),
+#'     c("Pokezooa","Shelloidea"), c("Pokezooa","Parasect"),
+#'     c("Rodentapokemorpha","Linoone"), c("Rodentapokemorpha","Sandshrew"),
+#'     c("Rodentapokemorpha","Pikachu"), c("Hirsutamona","Ursaring"),
+#'     c("Hirsutamona","Rodentapokemorpha"), c("Pokezooa","Hirsutamona"),
+#'     c("Umbrarcheota","Gengar")
+#'     )
 #' 
-#' #this should return an error, as Gengar doesn't share common root
-#' pokeTree <- parentChild2taxonTree(pokexample_bad)
+#' # this should return an error
+#'     # as Gengar doesn't share common root
+#' pokeTree <- parentChild2taxonTree(parentChild = pokexample_bad)
 #' 
 #' 
 #' # another example, where a taxon is listed as both parent and child
-#' pokexample_bad2 <- rbind(cbind("Squirtadae",c("Squirtle","Blastoise","Wartortle")),
-#' 	c("Shelloidea",c("Lapras","Squirtadae","Shelloidea")),
-#' 	c("Pokezooa","Shelloidea"),c("Pokezooa","Parasect"),
-#' 	c("Rodentapokemorpha","Linoone"),c("Rodentapokemorpha","Sandshrew"),
-#' 	c("Rodentapokemorpha","Pikachu"),c("Hirsutamona","Ursaring"),
-#' 	c("Hirsutamona","Rodentapokemorpha"),c("Pokezooa","Hirsutamona"),
-#' 	c("Umbrarcheota","Gengar"))
+#' pokexample_bad2 <- rbind(
+#'     cbind("Squirtadae", c("Squirtle","Blastoise","Wartortle")),
+#'     c("Shelloidea", c("Lapras","Squirtadae","Shelloidea")),
+#'     c("Pokezooa","Shelloidea"), c("Pokezooa","Parasect"),
+#'     c("Rodentapokemorpha","Linoone"), c("Rodentapokemorpha","Sandshrew"),
+#'     c("Rodentapokemorpha","Pikachu"), c("Hirsutamona","Ursaring"),
+#'     c("Hirsutamona","Rodentapokemorpha"), c("Pokezooa","Hirsutamona"),
+#'     c("Umbrarcheota","Gengar")
+#'     )
 #' 
 #' #this should return an error, as Shelloidea is its own parent
-#' pokeTree <- parentChild2taxonTree(pokexample_bad2)
+#' pokeTree <- parentChild2taxonTree(parentChild = pokexample_bad2)
 #' 
 #' }
 #' 
 #' 
 #' 
-#' # note that we should even be able to do this with ancestor-descendent pairs from
-#' 	 # simulated datasets from simFossilRecord, like so:
+#' # note that we should even be able to do this
+#'     # with ancestor-descendent pairs from
+#'     # simulated datasets from simFossilRecord, like so:
 #' set.seed(444)
-#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#' 	nTotalTaxa = c(30,40), nExtant = 0)
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, nruns = 1,
+#'     nTotalTaxa = c(30, 40), 
+#'     nExtant = 0
+#'     )
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' # need to reorder the columns so parents (ancestors) first, then children 
-#' parentChild2taxonTree(taxa[,2:1])
-#' # now note that it issues a warning that the input wasn't type character
-#'    # and it will be coerced to be such
+#' # need to reorder the columns so parents
+#'     # (ancestors) first, then children 
+#' parentChild2taxonTree(parentChild = taxa[,2:1])
+#' # now note that it issues a warning that
+#'     # the input wasn't type character
+#'     # and it will be coerced to be such
 #' 
 
 
 #' @name parentChild2taxonTree
 #' @rdname parentChild2taxonTree
 #' @export
-parentChild2taxonTree <- function(parentChild, tipSet = "nonParents", cleanTree = TRUE){
-	#,reorderTree = TRUE
-	#
-	
+parentChild2taxonTree <- function(
+		parentChild, 
+		tipSet = "nonParents", 
+		cleanTree = TRUE
+		#,reorderTree = TRUE
+		#
+		){
+	###################################	
 	#takes a two column matrix of character class taxon names
 		#each row is a relationship: parent, then child
 	#CHECKS
-	if(length(tipSet) != 1 | !is.character(tipSet)){stop("tipSet must be a single character element")}
+	if(length(tipSet) != 1 | !is.character(tipSet)){
+		stop("tipSet must be a single character element")
+		}
 	if(!is.character(parentChild)){
 		message("parentChild isn't of class character, attempting to coerce")
-		parentChild <- apply(parentChild,2,as.character)}
+		parentChild <- apply(parentChild,2,as.character)
+		}
 	if(length(dim(parentChild)) != 2){
 		stop("parentChild must be a matrix of class character with two columns and multiple rows")
 	}else{
@@ -125,24 +157,30 @@ parentChild2taxonTree <- function(parentChild, tipSet = "nonParents", cleanTree 
 			}
 		}
 	#
-	if(!testParentChild(parentChild = parentChild)){stop("parentChild relationships are inconsistent")}
+	if(!testParentChild(parentChild = parentChild)){
+		stop("parentChild relationships are inconsistent")
+		}
 	#
 	#remove singular root edges
 	#trace tips to ultimate ancestor (should be same for all, as this has already been checked)
 	continue <- TRUE
 	while(continue){
 		unqIDs <- unique(c(parentChild[,1],parentChild[,2]))
-		ultimateAnc <- sapply(unqIDs,getUltimateAnc,parentChild = parentChild)
+		ultimateAnc <- sapply(unqIDs,
+			getUltimateAnc, parentChild = parentChild)
 		if(length(unique(ultimateAnc)) == 1){
 			ultAnc1 <- ultimateAnc[1]
 		}else{
-			stop("parentChild constructed improperly")}
+			stop("parentChild constructed improperly")
+			}
 		descEdge <- which(parentChild[,1] == ultAnc1)
 		if(length(descEdge) == 1){
 			message(paste("Removing singular node leading to root:",ultAnc1))
 			#remove from parentChild
 			parentChild <- parentChild[-descEdge,,drop = FALSE]
-			if(nrow(parentChild)<1){stop("No branching nodes found?!")}
+			if(nrow(parentChild)<1){
+				stop("No branching nodes found?!")
+				}
 		}else{
 			continue = FALSE
 			}
@@ -154,28 +192,37 @@ parentChild2taxonTree <- function(parentChild, tipSet = "nonParents", cleanTree 
 		!any(sapply(parentChild[,2],identical,unname(x)))))
 	#check that there isn't more than one root
 	if(length(whichRoot)>1){
-		stop(paste("Not all taxable are traceable to a single common root \n",
+		stop(paste(
+			"Not all taxable are traceable to a single common root \n",
 			length(whichRoot),"possible roots found:",
-			paste0(nodeNames[whichRoot],collapse = ", ")))}
+			paste0(nodeNames[whichRoot],collapse = ", ")
+			))
+		}
 	#now resort nodeNames
 	nodeNames <- c(nodeNames[whichRoot],nodeNames[-whichRoot])
 	if(tipSet != "nonParents"){
 		if(tipSet == "all"){
-			parentChild <- rbind(parentChild,cbind(nodeNames,paste0("(",nodeNames,")")))
+			parentChild <- rbind(parentChild, 
+				cbind(nodeNames,paste0("(",nodeNames,")"))
+				)
 		}else{
-			stop("tipSet must be one of either 'nonParents' or 'all'")}
+			stop("tipSet must be one of either 'nonParents' or 'all'"
+				)
 			}
+		}
 	#identify tip taxa, this will be all taxa who are not-parents
-	notParents <- sapply(parentChild[,2],function(x) 
-		!any(sapply(parentChild[,1],identical,unname(x))))
-	tipNames <- parentChild[notParents,2]
+	notParents <- sapply(parentChild[ , 2], function(x) 
+		!any(sapply(parentChild[,1], identical,unname(x))))
+	tipNames <- parentChild[notParents, 2]
 	#now convert parentChild matrix to edge matrix
-	edgeMat <- matrix(,nrow(parentChild),ncol(parentChild))
+	edgeMat <- matrix(,nrow(parentChild), ncol(parentChild))
 	taxonNames <- c(tipNames,nodeNames)
 	#test that none have been lost
-	nUniquePC <- length(unique(c(parentChild[,1],parentChild[,2])))
+	nUniquePC <- length(unique(c(parentChild[,1], parentChild[,2])))
 	if(length(taxonNames) != nUniquePC){
-		stop("Number of tip and node names doesn't sum to total number of unique names in parentChild")
+		stop(
+			"Number of tip and node names doesn't sum to total number of unique names in parentChild"
+			)
 		}
 	#convert internal nodes to Ntip+nodeNames ID
 	edgeMat[,1] <- sapply(parentChild[,1],function(x)
@@ -189,14 +236,22 @@ parentChild2taxonTree <- function(parentChild, tipSet = "nonParents", cleanTree 
 		stop("created edge relationships are inconsistent")
 		}	
 	#make the tree
-	tree <- list(edge = edge,tip.label = tipNames,edge.length = NULL, #edge.length = rep(1,nrow(edge))
-		Nnode = length(nodeNames),node.label = nodeNames)
+	tree <- list(
+		edge = edge,
+		tip.label = tipNames,
+		edge.length = NULL, 
+		#edge.length = rep(1,nrow(edge)),
+		Nnode = length(nodeNames),
+		node.label = nodeNames
+		)
 	class(tree) <- "phylo"
 	if(cleanTree){ #make it a good tree
 		#reordering seems to cause errors?? 06-11-15
 		tree <- cleanNewPhylo(tree)
 		}
-	if(Ntip(tree) != length(tipNames)){stop("Taxa number changed while cleaning tree")}
+	if(Ntip(tree) != length(tipNames)){
+		stop("Taxa number changed while cleaning tree")
+		}
 	#plot(tree);nodelabels(tree$node.label)
 	return(tree)
 	}
@@ -207,7 +262,8 @@ getUltimateAnc <- function(taxa,parentChild){
 		count <- count+1
 		taxa <- parentChild[match(taxa,parentChild[,2]),1]
 		if(length(taxa)>1){
-			stop("Some parents are listed as children twice in parentChild")}
+			stop("Some parents are listed as children twice in parentChild")
+			}
 		if(count>(length(parentChild)*2)){
 			stop("Breaking while() loop: cannot find ultimate ancestor")
 			}
@@ -217,7 +273,8 @@ getUltimateAnc <- function(taxa,parentChild){
 
 charEdge2numeric <- function(parentChild){
 	if(!is.character(parentChild)){
-		stop("parentChild has to be character for charEdge2numeric")}
+		stop("parentChild has to be character for charEdge2numeric")
+		}
 	#get unique IDs
 	unqIDs <- c(NA,sort(unique(c(parentChild[,1],parentChild[,2]))))
 	parentChild2 <- matrix(,nrow(parentChild),2)
@@ -235,9 +292,11 @@ charEdge2numeric <- function(parentChild){
 testParentChild <- function(parentChild){
 	#check that its a matrix with two columns
 	if(!is.matrix(parentChild)){
-		stop("edge/parentChild matrix must be of type matrix")}
+		stop("edge/parentChild matrix must be of type matrix")
+		}
 	if(ncol(parentChild) != 2){
-		stop("edge/parentChild matrix must have two columns")}
+		stop("edge/parentChild matrix must have two columns")
+		}
 	#convert to numeric
 	if(!is.numeric(parentChild)){
 		if(is.character(parentChild)){
@@ -253,8 +312,11 @@ testParentChild <- function(parentChild){
 		#test that all but one node has an ancestor
 	parentMatch <- match(unique(parentChild[,1]),parentChild[,2])
 	if(sum(is.na(parentMatch))>1){
-		stop(paste("More than one apparent root; \n",
-			"more than one parent without their own parent listed"))}
+		stop(paste(
+			"More than one apparent root; \n",
+			"more than one parent without their own parent listed"
+			))
+		}
 	#
 	#check that any ancestor is listed as its own descendant
 	parentANDchild <- apply(parentChild,1,function(x){
@@ -269,7 +331,8 @@ testParentChild <- function(parentChild){
 	unqIDs <- unique(c(parentChild[,1],parentChild[,2]))
 	ultimateAnc <- sapply(unqIDs,getUltimateAnc,parentChild = parentChild)
 	if(length(unique(ultimateAnc)) != 1){
-		stop("IDs trace back to more than one unique common ancestor")}
+		stop("IDs trace back to more than one unique common ancestor")
+		}
 	#
 	#test for nodes listed as descendant twice
 	if(any(table(parentChild[,2])>1)){
@@ -280,7 +343,10 @@ testParentChild <- function(parentChild){
 	#test that all but one node has an ancestor
 	parentMatch <- match(unique(parentChild[,1]),parentChild[,2])
 	if(sum(is.na(parentMatch))>1){
-		stop(paste("More than one apparent root; \n",
-			"more than ancestor without an ancestor listed"))}	
+		stop(paste(
+			"More than one apparent root; \n",
+			"more than ancestor without an ancestor listed"
+			))
+		}	
 	return(TRUE)
 	}

@@ -9,22 +9,29 @@
 #' The resulting full NEXUS script is output as a set of character strings either
 #' printed to the R console, or output to file which is then overwritten.
 #' 
+
+
+#' @details
 #' Users must supply a data set of tip ages (in various formats),
 #' which are used to construct age calibrations commands on the tip taxa 
 #' (via paleotree function \code{\link{createMrBayesTipCalibrations}}). 
 #' The user must also supply some topological constraint: 
-#' either a set of taxa designated as the outgroup, which is then converted into a command constraining
-#' the monophyly on the ingroup taxa, which is presumed to be all taxa \emph{not} listed in the outgroup. 
-#' Alternatively, a user may supply a tree which is then converted into a series of hard topological
-#' constraints (via function \code{\link{createMrBayesConstraints}}. Both types of topological constraints
-#' cannot be applied. Many of the options available with \code{\link{createMrBayesTipCalibrations}} are available with this function,
-#' allowing users to choose between fixed calibrations or uniform priors that approximate stratigraphic uncertainty.
-#' In addition, the user may also supply a path to a text file
-#' presumed to be a NEXUS file containing character data formatted for use with \emph{MrBayes}.
+#' either a set of taxa designated as the outgroup, which
+#' is then converted into a command constraining
+#' the monophyly on the ingroup taxa, which is presumed to be
+#' all taxa \emph{not} listed in the outgroup. 
+#' Alternatively, a user may supply a tree which is then
+#' converted into a series of hard topological constraints 
+#' (via function \code{\link{createMrBayesConstraints}}.
+#' Both types of topological constraints cannot be applied. 
 #' 
-
-
-#' @details
+#' Many of the options available with \code{\link{createMrBayesTipCalibrations}}
+#' are available with this function, allowing users to choose between fixed
+#' calibrations or uniform priors that approximate stratigraphic uncertainty.
+#' In addition, the user may also supply a path to a text file
+#' presumed to be a NEXUS file containing character
+#' data formatted for use with \emph{MrBayes}.
+#' 
 #' The taxa listed in \code{tipTimes} must match the taxa in 
 #' \code{treeConstraints}, if such is supplied. If supplied, the taxa in \code{outgroupTaxa}
 #' must be contained within this same set of taxa. These all must have matches
@@ -43,7 +50,8 @@
 #'  All taxa not listed in the outgroup will be constrained to be a monophyletic ingroup, for sake of rooting
 #' the resulting dated tree.
 #' Either \code{treeConstraints} or \code{outgroupTaxa} must be defined, but \emph{not both}. 
-#' If the outgroup-ingroup split is not present on the supplied \code{treeConstraints}, add that split to \code{treeConstraints} manually.
+#' If the outgroup-ingroup split is not present on the supplied
+#' \code{treeConstraints}, add that split to \code{treeConstraints} manually.
 
 
 #' @param whichAppearance Which appearance date of the taxa should be used:
@@ -65,9 +73,9 @@
 #' first occurrence in temporal order (but the assignment, in that case, was entirely
 #' arbitrary). When \code{whichAppearance = "rangeThrough"}, each taxon will be
 #' duplicated into as many OTUs as each
-#' interval that a taxon ranges through (in a timeList format, see other
-#' paleotree functions), with the corresponding age uncertainties for those intervals.
-#' If the input tipTimes is not a list of length = 2, however, the function will 
+#' interval that a taxon ranges through (in a \code{timeList} format, see other
+#' \code{paleotree} functions), with the corresponding age uncertainties for those intervals.
+#' If the input \code{tipTimes} is not a list of \code{length = 2}, however, the function will 
 #' return an error under this option. 
 
 #' @param orderedChars Should be a vector of numbers, indicating which characters should have their
@@ -132,7 +140,7 @@
 
 #' @param morphModel This argument can be used to switch between two end-member models of 
 #' morphological evolution in MrBayes, here named 'strong' and 'relaxed', for the 'strong assumptions'
-#' and 'relaxed assumptions' models described by Bapst, Schreiber and Carlson (Systematic Biology).
+#' and 'relaxed assumptions' models described by Bapst et al. (2018, Syst. Biol.).
 #' The default is a model which makes very 'strong' assumptions about the process of morphological evolution,
 #' while the 'relaxed' alternative allows for considerably more heterogeneity in the rate
 #' of morphological evolution across characters, and in the forward and reverse transition
@@ -219,15 +227,15 @@
 #' 
 #' The rationale behind the two alternative morphological models are described in more detail here:
 #' 
-#' Bapst, D. W., H. A. Schreiber, and S. J. Carlson. In press. Combined analysis of extant Rhynchonellida
-#' (Brachiopoda) using morphological and molecular data. \emph{Systematic Biology} doi: 10.1093/sysbio/syx049
-#' 
+#' Bapst, D. W., H. A. Schreiber, and S. J. Carlson. 2018.
+#' Combined Analysis of Extant Rhynchonellida (Brachiopoda) using Morphological
+#' and Molecular Data. \emph{Systematic Biology} 67(1):32-48. doi: 10.1093/sysbio/syx049
+#
+
 
 
 
 #' @examples
-#' 
-#' # let's do some examples
 #' 
 #' # load retiolitid dataset
 #' data(retiolitinae)
@@ -317,6 +325,7 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 							doNotRun = FALSE, autoCloseMrB = FALSE,
 							cleanNames = TRUE, printExecute = TRUE){
 	################################################################################################
+	#
 	#         # a wooper of a function ... here's some ASCII from artist 'Psyduck'
 	#
 	#                        = @@@@@@                         
@@ -492,7 +501,10 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 		stop("morphModel must be one 'relaxed' or 'strong'")
 		}
 	if(morphModel == "relaxed" & is.null(origNexusFile)){
-		warning("Why are you relaxing the morphological model without supplying an original matrix with origNexusFile? I hope you know what you are doing.")
+		warning(paste0(
+			"Why are you relaxing the morphological model without supplying an original matrix with origNexusFile?",
+			"\n   I hope you know what you are doing...\n"
+			))
 		}
 	#
 	if(!is.character(ngen)){
@@ -563,7 +575,8 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 				stop("tipTimes must be a timeList object if 'whichAppearance  = rangeThrough'")
 				}
 			# for each taxon in tipTimes, figure out intervals they range through
-				# and then multiply this taxon in the tip data, the tree/root constraints and NEXUS data block
+				# and then multiply this taxon in the tip data,
+				# the tree/root constraints and NEXUS data block
 			#
 			newOTU <- matrix(,1,4)
 			for(i in 1:nrow(tipTimes[[2]])){
@@ -584,7 +597,10 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 			newOTU <- matrix(,1,4)
 			if(!is.list(tipTimes)){
 				if(ncol(tipTimes)!=4){
-					stop("tipTimes if not a timeList object must have four columns, indicating uncertainty bounds on FADs and LADS separately")
+					stop(paste0(
+						"tipTimes if not a timeList object must have four columns,\n",
+						"  indicating uncertainty bounds on FADs and LADS separately"
+						))
 					}
 				for(i in 1:nrow(tipTimes)){
 					# count number of range-through intervals, get dates and new names
@@ -654,7 +670,10 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 	########################################
 	# check that morphNexus has been replaced
 	if(is.null(morphNexus)){
-		stop("a morphological nexus was neither provided nor created - please contact dwbapst@gmail.com about this bug")
+		stop(paste0(
+		"A morphological nexus was neither provided nor created.\n",
+		"   Please contact dwbapst@gmail.com about this bug."
+		))
 		}
 	#}else{
 	#	morphNexus <- nexusFileText
@@ -714,7 +733,7 @@ createMrBayesTipDatingNexus <- function(tipTimes,outgroupTaxa = NULL,treeConstra
 		if(printExecute){
 			# have function print command for pasting into MrBayes to execute: 
 				# e.g. ' Execute "C://fossil data/myNexus.nex" '
-			message("Now go to MrBayes and paste in this line:")
+			message("Now go to MrBayes and paste in this line:  ")
 			message(paste0('Execute "',normalizePath(newFile),'";'))
 			}
 	}else{
@@ -822,9 +841,9 @@ makeMrBayesBlock <- function(logBlock, ingroupBlock,
 block1 <- "
 begin mrbayes;
 
-[This block is a combination of best practices taken from NEXUS files from April Wright,
-     William Gearty, Graham Slater, Davey Wright, and guided by the 
-	 recommendations of Matzke and Wright, 2016, Biol. Lett.]
+[This block is a combination of best practices taken from NEXUS files from
+     April Wright, William Gearty, Graham Slater, Davey Wright,
+	 and guided by the recommendations of Matzke and Wright, 2016, Biol. Lett.]
 
 [autoclose, I like it to ask (the default), but you might want it - if so, set to 'yes']"
 

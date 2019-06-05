@@ -130,67 +130,103 @@
 #' \code{totalTime}, and any extant taxa will stop at some time greater than zero.
 #' 
 
-#' @param p,q,r,anag.rate These parameters control the instantaneous ('per-capita') rates of branching, extinction,
-#' sampling and anagenesis, respectively. These can be given as a number equal to or greater than zero, or as a 
-#' character string which will be interpreted as an algebraic equation. These equations can make use of three
-#' quantities which will/may change throughout the simulation: the standing richness is \code{N}, the
-#' current time passed since the start of the simulation is \code{T}, the present duration of a given still-living
+#' @param p,q,r,anag.rate These parameters control the instantaneous
+#' ('per-capita') rates of branching, extinction,
+#' sampling and anagenesis, respectively. These can be given as a number 
+#' equal to or greater than zero, or as a 
+#' character string which will be interpreted as an algebraic equation. 
+#' These equations can make use of three
+#' quantities which will/may change throughout the simulation: the 
+#' standing richness is \code{N}, the current time passed since the start
+#' of the simulation is \code{T}, the present duration of a given still-living
 #' lineage since its origination time is code{D}, and the current branching rate is \code{P}
 #' (corresponding to the argument name \code{p}).
 #' Note that \code{P} cannot be used in equations for the branching rate itself; it is for making other rates
 #' relative to the branching rate.
-#' By default, the rates \code{r} and \code{anag.rate} are set to zero, so that the default simulator is a birth-death
-#' simulator.
-#' Rates set to \code{ =  Inf} are treated as if 0. When a rate is set to 0, this event type will not occur in the simulation.
-#' Setting certain processes to zero, like sampling, may increase simulation efficiency, if the goal is a birth-death or
+#' 
+#' By default, the rates \code{r} and \code{anag.rate} are set to zero,
+#' so that the default simulator is a birth-death simulator.
+#' Rates set to \code{ =  Inf} are treated as if 0. When a rate is set
+#' to 0, this event type will not occur in the simulation.
+#' Setting certain processes to zero, like sampling, may increase 
+#' simulation efficiency, if the goal is a birth-death or
 #' pure-birth model.
-#' See documentation for argument \code{negRatesAsZero} about the treatment of rates that decrease below zero.
+#' See documentation for argument \code{negRatesAsZero} about the 
+#' treatment of rates that decrease below zero.
 #' Notation of branching, extinction and sampling rates as \code{p, q, r} 
-#' follows what is typical for the paleobiology literature (e.g. Foote, 1997), not the  Greek letters \code{lambda, mu, phi}
-#' found more typically in the biological literature (e.g. Stadler, 2009; Heath et al., 2014; Gavryushkina et al., 2014).
+#' follows what is typical for the paleobiology literature
+#' (e.g. Foote, 1997), not the  Greek letters \code{lambda, mu, phi}
+#' found more typically in the biological literature (e.g. Stadler, 2009;
+#' Heath et al., 2014; Gavryushkina et al., 2014).
 
-#' @param totalTime,nTotalTaxa,nExtant,nSamp These arguments represent stopping and
-#' acceptance conditions for simulation runs. They are respectively \code{totalTime}, the
-#' total length of the simulation in time-units, \code{nTotalTaxa}, the total number of taxa
-#' over the past evolutionary history of the clade, \code{nExtant}, the total number of extant taxa at
-#' the end of the simulation and \code{nSamp} the total number of sampled taxa (not counting extant
-#' taxa sampled at the modern day). These are used to determine when to end simulation runs, and whether to accept
-#' or reject them as output. They can be input as a vector of two numbers, representing minimum
-#' and maximum values of a range for accepted simulation runs (i.e. the simulation length can be between 0 and
-#' 1000 time-steps, by default), or as a single number, representing a point condition (i.e. if
-#' \code{nSamp = 100} then the only simulation runs with exactly 100 taxa sampled will be output).
-#' Note that it is easy to set combinations of parameters and run conditions that are impossible
-#' to produce satisfactory input under, in which case \code{simFossilRecord} would run in a nonstop loop.
-#' How cryptic taxa are counted for the sake of these conditions is controlled by argument \code{count.cryptic}.
+#' @param totalTime,nTotalTaxa,nExtant,nSamp These arguments represent
+#' stopping and acceptance conditions for simulation runs. They are
+#' respectively \code{totalTime}, the total length of the simulation
+#' in time-units, \code{nTotalTaxa}, the total number of taxa over the
+#' past evolutionary history of the clade, \code{nExtant}, the total
+#' number of extant taxa at the end of the simulation and \code{nSamp}
+#' the total number of sampled taxa (not counting extant taxa sampled
+#' at the modern day). These are used to determine when to end simulation
+#' runs, and whether to accept or reject them as output. They can be input
+#' as a vector of two numbers, representing minimum and maximum values of
+#' a range for accepted simulation runs (i.e. the simulation length can be
+#' between 0 and 1000 time-steps, by default), or as a single number,
+#' representing a point condition (i.e. if \code{nSamp = 100} then the only
+#' simulation runs with exactly 100 taxa sampled will be output). Note that it
+#' is easy to set combinations of parameters and run conditions that are
+#' impossible to produce satisfactory input under, in which case
+#' \code{simFossilRecord} would run in a nonstop loop.
+#' How cryptic taxa are counted for the sake of these
+#' conditions is controlled by argument \code{count.cryptic}.
 
-#' @param negRatesAsZero A logical. Should rates calculated as a negative number cause the simulation to fail
-#' with an error message (\code{ = FALSE}) or should these be treated as zero (\code{" =  TRUE"}, the default). This
-#' is equivalent to saying that the \code{rate.as.used  = } \code{max(0, rate.as.given)}.
+#' @param negRatesAsZero A logical. Should rates calculated as a
+#' negative number cause the simulation to fail
+#' with an error message (\code{ = FALSE}) or should these be
+#' treated as zero (\code{" =  TRUE"}, the default). This
+#' is equivalent to saying that
+#' the \code{rate.as.used  = } \code{max(0, rate.as.given)}.
 
-#' @param prop.cryptic,prop.bifurc These parameters control (respectively) the proportion of branching events that have
-#' morphological differentiation, versus those that are cryptic (\code{prop.cryptic}) and the proportion of morphological
-#' branching events that are bifurcating, as opposed to budding. Both of these proportions must be a number between 0 and 1.
-#' By default, both are set to zero, meaning all branching events are events of budding cladogenesis. See description of
+#' @param prop.cryptic,prop.bifurc These parameters control
+#' (respectively) the proportion of branching events that have
+#' morphological differentiation, versus those that are cryptic
+#' (\code{prop.cryptic}) and the proportion of morphological
+#' branching events that are bifurcating, as opposed to budding.
+#' Both of these proportions must be a number between 0 and 1.
+#' By default, both are set to zero, meaning all branching events
+#' are events of budding cladogenesis. See description of
 #' the available models of morphological differentiation in the \emph{Description} section.
 
-#' @param tolerance A small number which defines a tiny interval for the sake of placing run-sampling dates before events and
+#' @param tolerance A small number which defines a tiny interval for
+#' the sake of placing run-sampling dates before events and
 #' for use in determining whether a taxon is extant in simFossilRecordMethods.
 
-#' @param maxStepTime When rates are time-dependent (i.e. when parameters 'D' or 'T' are used in equations input for one of
-#' the four rate arguments), then protocol used by \code{simFossilRecord} of drawing waiting times to the next event could
-#' produce a serious mismatch of resulting process to the defined model, because the possibility of new events is only
-#' considered at the end of these waiting times. Instead, any time a waiting time greater than \code{maxStepTime} is
-#' selected, then instead \emph{no} event occurs and a time-step equal to \code{maxStepTime} occurs instead, thus effectively
-#' discretizing the progression of time in the simulations run by \code{simFossilRecord}. Decreasing this value will increase
-#' accuracy (as the time-scale is effectively more discretized) but increase computation time, as the computer will need
-#' to stop and check rates to see if an event happened more often. Users should toggle this value relative to the time-dependent
-#' rate equations they input, relative to the rate of change in rates expected in time-dependent rates.
+#' @param maxStepTime When rates are time-dependent (i.e. when
+#' parameters 'D' or 'T' are used in equations input for one of
+#' the four rate arguments), then protocol used by
+#' \code{simFossilRecord} of drawing waiting times to the next event could
+#' produce a serious mismatch of resulting process to the defined model,
+#' because the possibility of new events is only
+#' considered at the end of these waiting times. Instead, any
+#' time a waiting time greater than \code{maxStepTime} is
+#' selected, then instead \emph{no} event occurs and a
+#' time-step equal to \code{maxStepTime} occurs instead, thus effectively
+#' discretizing the progression of time in the simulations
+#' run by \code{simFossilRecord}. Decreasing this value will increase
+#' accuracy (as the time-scale is effectively more discretized)
+#' but increase computation time, as the computer will need
+#' to stop and check rates to see if an event happened more often.
+#' Users should toggle this value relative to the time-dependent
+#' rate equations they input, relative to the rate of change in
+#' rates expected in time-dependent rates.
 
-#' @param nruns Number of simulation datasets to accept, save and output. If \code{nruns = 1}, output will be a single
-#' object of class \code{fossilRecordSimulation}, and if \code{nruns} is greater than 1, a list will be output composed of
+#' @param nruns Number of simulation datasets to accept, save and output.
+#' If \code{nruns = 1}, output will be a single
+#' object of class \code{fossilRecordSimulation}, and
+#' if \code{nruns} is greater than 1, a list will be output composed of
 #' \code{nruns} objects of class \code{fossilRecordSimulation}. 
 
-#' @param startTaxa Number of initial taxa to begin a simulation with. All will have the simulation start date
+#' @param startTaxa Number of initial taxa to begin a simulation with.
+#' All will have the simulation start date
 #' listed as their time of origination.
 
 #' @param sortNames If TRUE, output taxonomic lists are sorted by the taxon
@@ -261,9 +297,11 @@
 #' means a point in time which is 50 time-units before the present-day, if the
 #' present-day is zero (the default, but see argument \code{shiftRoot4TimeSlice}).
 #' 
-#' Each individual element of a \code{fossilRecordSimulation} list object is named, generally of
-#' the form "t1" and "t2", where the number is the \code{taxon.id}. Cryptic taxa are instead
-#' named in the form of "t1.2" and "t5.3", where the first number is the taxon which they are a
+#' Each individual element of a \code{fossilRecordSimulation} list object
+#' is named, generally of the form "t1" and "t2", 
+#' where the number is the \code{taxon.id}. 
+#' Cryptic taxa are instead named in the form of "t1.2" and "t5.3",
+#' where the first number is the taxon which they are a
 #' cryptic descendant of (\code{looks.like}) and the second number, after the period, is
 #' the order of appearance of lineage units in that cryptic complex. For example, for
 #' "t5.3",  the first number is the \code{taxon.id} and the second number communicates
@@ -334,69 +372,129 @@
 #' 
 #' set.seed(2)
 #' 
-#' # quick birth-death-sampling run with 1 run, 50 taxa
+#' # quick birth-death-sampling run
+#'     # with 1 run, 50 taxa
 #' 
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1,
-#' 	nTotalTaxa = 50, plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1, 
+#'     nruns = 1,
+#'     nTotalTaxa = 50, 
+#'     plot = TRUE
+#'     )
 #' 
 #' \donttest{ 
 #' # examining multiple runs of simulations
 #' 
-#' #example of repeated pure birth simulations over 50 time-units
-#' records <- simFossilRecord(p = 0.1, q = 0, nruns = 10,
-#' 	totalTime = 50, plot = TRUE)
-#' #plot multiple diversity curves on a log scale
-#' records <- lapply(records,fossilRecord2fossilTaxa)
-#' multiDiv(records,plotMultCurves = TRUE,plotLogRich = TRUE)
-#' #histogram of total number of taxa
-#' hist(sapply(records,nrow))
+#' # example of repeated pure birth simulations over 50 time-units
+#' records <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0, 
+#'     nruns = 10,
+#'     totalTime = 50, 
+#'     plot = TRUE
+#'     )
 #' 
-#' #example of repeated birth-death-sampling simulations over 50 time-units
-#' records <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 10,
-#' 	totalTime = 50, plot = TRUE)
-#' records <- lapply(records,fossilRecord2fossilTaxa)
-#' multiDiv(records,plotMultCurves = TRUE)
+#' # plot multiple diversity curves on a log scale
+#' records <- lapply(records, 
+#'     fossilRecord2fossilTaxa)
+#' multiDiv(records,
+#'     plotMultCurves = TRUE,
+#'     plotLogRich = TRUE
+#'     )
 #' 
-#' #like above, but conditioned instead on having 10 extant taxa
-#' 	# between 1 and 100 time-units
+#' # histogram of total number of taxa
+#' hist(sapply(records, nrow))
+#' 
+#' 
+#' ##############################################
+#' # example of repeated birth-death-sampling
+#'     # simulations over 50 time-units
+#' records <- simFossilRecord(
+#'     p = 0.1, q = 0.1, r = 0.1, 
+#'     nruns = 10,
+#'     totalTime = 50, 
+#'     plot = TRUE)
+#'     
+#' records <- lapply(records,
+#'     fossilRecord2fossilTaxa)
+#'     
+#' multiDiv(records,
+#'     plotMultCurves = TRUE)
+#' 
+#' # like above...
+#'     # but conditioned instead on having 10 extant taxa
+#'     # between 1 and 100 time-units
+#'     
 #' set.seed(4)
-#' records <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 10,
-#' 	totalTime = c(1,300), nExtant = 10, plot = TRUE)
-#' records <- lapply(records,fossilRecord2fossilTaxa)
-#' multiDiv(records,plotMultCurves = TRUE)
+#'     
+#' records <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1, 
+#'     nruns = 10,
+#'     totalTime = c(1,300), 
+#'     nExtant = 10, 
+#'     plot = TRUE
+#'     )
+#'     
+#' records <- lapply(records, 
+#'     fossilRecord2fossilTaxa)
+#'     
+#' multiDiv(records,
+#'     plotMultCurves = TRUE
+#'     )
 #' 
 #' ################################################
 #' 
 #' # How probable were the runs I accepted?
-#' 	# The effect of conditions
+#'     # The effect of conditions
 #' 
 #' set.seed(1)
 #' 
 #' # Let's look at an example of a birth-death process
-#' 	# with high extinction relative to branching
+#'     # with high extinction relative to branching
 #' # use default run conditions (barely any conditioning)
 #' # use print.runs to look at acceptance probability
-#' records <- simFossilRecord(p = 0.1, q = 0.8, nruns = 10,
-#' 	print.runs = TRUE, plot = TRUE)
+#'     
+#' records <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.8, 
+#'     nruns = 10,
+#'     print.runs = TRUE, 
+#'     plot = TRUE
+#'     )
+#'     
 #' # 10 runs accepted from a total of 10 !
 #' 
 #' # now let's give much more stringent run conditions
-#' 	# require 3 extant taxa at minimum, 5 taxa total minimum
-#' records <- simFossilRecord(p = 0.1, q = 0.8, nruns = 10,
-#' 	nExtant = c(3,100), nTotalTaxa = c(5,100),
-#' 	print.runs = TRUE, plot = TRUE)
+#'     # require 3 extant taxa at minimum, 5 taxa total minimum
+#'     
+#' records <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.8, 
+#'     nruns = 10,
+#'     nExtant = c(3,100), 
+#'     nTotalTaxa = c(5,100),
+#'     print.runs = TRUE, 
+#'     plot = TRUE
+#'     )
+#'     
 #' # thousands of simulations to just obtail 10 accepable runs!
-#' 	# most ended in extinction before minimums were hit
+#'     # most ended in extinction before minimums were hit
 #' 
 #' # beware analysis of simulated where acceptance conditions 
-#' 	# are too stringent: your data will be a 'special case'
-#' 	# of the simulation parameters
+#'     # are too stringent: your data will be a 'special case'
+#'     # of the simulation parameters
 #' # it will also take you a long time to generate reasonable
-#' 	# numbers of replicates for whatever analysis you are doing
+#'     # numbers of replicates for whatever analysis you are doing
 #' 
 #' # TLDR: You should look at print.runs = TRUE
 #' 
 #' ######################
+#' ##############################
+#' ######################################
 #' 
 #' # Using the rate equation-input for complex diversification models
 #' 
@@ -405,75 +503,97 @@
 #' 
 #' # first, let's write the rate equation
 #' # We'll use the diversity dependent rate equation model
-#' 	# from Ettienne et al. 2012 as an example here
-#' 	# Under this equation, p = q at carrying capacity K
+#'     # from Ettienne et al. 2012 as an example here
+#'     # Under this equation, p = q at carrying capacity K
 #' # Many others are possible!
 #' # Note that we don't need to use max(0,rate) as negative rates
-#' 	# are converted to zero by default, as controlled by
-#' 	# the argument negRatesAsZero
+#'     # are converted to zero by default, as controlled by
+#'     # the argument negRatesAsZero
 #' 
 #' # From Ettiene et al.
-#' #	lambda = lambda0 - (lambda0 - mu)*(n/K)
+#'     #   lambda = lambda0 - (lambda0 - mu)*(n/K)
 #' # lambda and mu are branching rate and extinction rate
-#' 	# lambda and mu  ==  p and q in paleotree (i.e. Foote convention)
+#'     # lambda and mu  ==  p and q in paleotree (i.e. Foote convention)
 #' # lambda0 is the branching rate at richness = 0
 #' # K is the carrying capacity
 #' # n is the richness
 #' 
 #' # 'N' is the algebra symbol for standing taxonomic richness 
-#' 	# for simFossilRecord's simulation capabilities
+#'     # for simFossilRecord's simulation capabilities
 #' # also branching rate cannot reference extinction rate
 #' # we'll have to set lambda0, mu and K in the rate equation directly
 #' 
-#' lambda0 <- 0.3	# branching rate at 0 richness in Ltu
-#' K <- 40		# carrying capacity 
-#' mu <- 0.1		# extinction rate will 0.1 Ltu ( =  1/3 of lambda0)
+#' lambda0 <- 0.3  # branching rate at 0 richness in Ltu
+#' K <- 40         # carrying capacity 
+#' mu <- 0.1       # extinction rate will 0.1 Ltu ( =  1/3 of lambda0 )
 #' 
 #' # technically, mu here represents the lambda at richness = K
-#' 	# i.e. lambdaK
+#'     # i.e. lambdaK
 #' # Ettienne et al. are just implicitly saying that the carrying capacity
-#' 	# is the richness at which lambda == mu
+#'     # is the richness at which lambda == mu
 #' 
 #' # construct the equation programmatically using paste0
-#' branchingRateEq <- paste0(lambda0,"-(",lambda0,"-",mu,")*(N/",K,")")
+#' branchingRateEq <- paste0(lambda0, "-(", lambda0, "-", mu, ")*(N/", K, ")")
 #' # and take a look at it...
 #' branchingRateEq
-#' # its a thing of beauty, folks
+#' # its a thing of beauty, folks!
 #' 
 #' # now let's try it
-#' records <- simFossilRecord(p = branchingRateEq, q = mu, nruns = 3,
-#' 	totalTime = 100, plot = TRUE, print.runs = TRUE)
-#' records <- lapply(records,fossilRecord2fossilTaxa)
-#' multiDiv(records,plotMultCurves = TRUE)
+#' records <- simFossilRecord(
+#'     p = branchingRateEq, 
+#'     q = mu, 
+#'     nruns = 3,
+#'     totalTime = 100, 
+#'     plot = TRUE, 
+#'     print.runs = TRUE
+#'     )
+#'     
+#' records <- lapply(records,
+#'     fossilRecord2fossilTaxa)
+#'     
+#' multiDiv(records,
+#'     plotMultCurves = TRUE)
+#'     
 #' # those are some happy little diversity plateaus!
 #' 
 #' 
 #' # now let's do diversity-dependent extinction
 #' 
 #' # let's slightly modify the model from Ettiene et al.
-#' #	mu = mu0 + (mu0 - muK)*(n/K)
+#'     #   mu = mu0 + (mu0 - muK)*(n/K)
 #' 
-#' mu0 <- 0.001		# mu at n = 0
-#' muK <- 0.1		# mu at n = K (should be equal to lambda at K)
-#' K <- 40
-#' lambda <- muK		# equal to muK
+#' mu0 <- 0.001     # mu at n = 0
+#' muK <- 0.1       # mu at n = K (should be equal to lambda at K)
+#' K <- 40          # carrying capacity (like above)
+#' lambda <- muK    # equal to muK
 #' 
 #' # construct the equation programmatically using paste0
-#' extRateEq <- paste0(mu0,"-(",mu0,"-",muK,")*(N/",K,")")
+#' extRateEq <- paste0(mu0, "-(", mu0, "-", muK, ")*(N/" ,K, ")")
 #' extRateEq
 #' 
 #' # now let's try it
-#' records <- simFossilRecord(p = lambda, q = extRateEq, nruns = 3,
-#' 	totalTime = 100, plot = TRUE, print.runs = TRUE)
-#' records <- lapply(records,fossilRecord2fossilTaxa)
-#' multiDiv(records,plotMultCurves = TRUE)
+#' records <- simFossilRecord(
+#'     p = lambda, 
+#'     q = extRateEq, 
+#'     nruns = 3,
+#'     totalTime = 100, 
+#'     plot = TRUE, 
+#'     print.runs = TRUE)
+#'     
+#' records <- lapply(records,
+#'     fossilRecord2fossilTaxa)
+#'     
+#' multiDiv(records,
+#'     plotMultCurves = TRUE)
 #' 
 #' # these plateaus looks a little more spiky 
-#' 	#( maybe there is more turnover at K? )
+#'     #( maybe there is more turnover at K? )
 #' # also, it took a longer for the rapid rise to occur
 #' 
+#' #######################################################
+#' ###############################
 #' # Now let's try an example with time-dependent origination
-#' 	# and extinction constrained to equal origination
+#'     # and extinction constrained to equal origination
 #' 
 #' # Note! Use of time-dependent parameters "D" and "T" may
 #' # result in slower than normal simulation run times
@@ -481,31 +601,53 @@
 #' # info for argument maxTimeStep above
 #' 
 #' # First, let's define a time-dependent rate equation
-#' 	# "T" is the symbol for time passed
+#'     # "T" is the symbol for time passed
 #' timeEquation <- "0.4-(0.007*T)"
 #' 
 #' #in this equation, 0.4 is the rate at time = 0
-#' 	# and it will decrease by 0.007 with every time-unit
-#' 	# at time = 50, the final rate will be 0.05
+#'     # and it will decrease by 0.007 with every time-unit
+#'     # at time = 50, the final rate will be 0.05
 #' # We can easily make it so extinction is always equal to branching rate
 #' # "P" is the algebraic equivalent for "branching rate" in simFossilRecord
 #' 
 #' # now let's try it
-#' records <- simFossilRecord(p = timeEquation, q = "P", nruns = 3,
-#' 	totalTime = 50, plot = TRUE, print.runs = TRUE)
-#' records <- lapply(records,fossilRecord2fossilTaxa)
-#' multiDiv(records,plotMultCurves = TRUE)
+#' records <- simFossilRecord(
+#'     p = timeEquation, 
+#'     q = "P", 
+#'     nruns = 3,
+#'     totalTime = 50, 
+#'     plot = TRUE, 
+#'     print.runs = TRUE
+#'     )
+#'     
+#' records <- lapply(records,
+#'     fossilRecord2fossilTaxa)
+#'     
+#' multiDiv(records,
+#'     plotMultCurves = TRUE)
+#'     
 #' # high variability that seems to then smooth out as turnover decreases
 #' 
 #' # And duration what about duration-dependent processes?
-#' 		# let's do a duration-dep extinction equation:
+#'     # let's do a duration-dep extinction equation:
 #' durDepExt <- "0.01+(0.01*D)"
 #' 
 #' # okay, let's take it for a spin
-#' records <- simFossilRecord(p = 0.1, q = durDepExt, nruns = 3,
-#' 	totalTime = 50, plot = TRUE, print.runs = TRUE)
-#' records <- lapply(records,fossilRecord2fossilTaxa)
-#' multiDiv(records,plotMultCurves = TRUE)
+#' records <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = durDepExt, 
+#'     nruns = 3,
+#'     totalTime = 50,
+#'     plot = TRUE, 
+#'     print.runs = TRUE
+#'     )
+#'     
+#' records <- lapply(records,
+#'     fossilRecord2fossilTaxa)
+#'     
+#' multiDiv(records,
+#'     plotMultCurves = TRUE)
+#'     
 #' # creates runs full of short lived taxa
 #' 
 #' # Some more stuff to do with rate formulae!
@@ -522,28 +664,30 @@
 #' 	 nTotalTaxa = 50, plot = TRUE)
 #' 
 #' # Setting up specific time-variable rates can be laborious though
-#' 	# e.g. one rate during this 10 unit interval, 
-#' 		# another during this interval, etc
+#'     # e.g. one rate during this 10 unit interval, 
+#'     # another during this interval, etc
 #' 	# The problem is setting this up within a fixed function
 #' 
+#' 
+#' #############################################################
 #' # Worked Example
 #' # What if we want to draw a new rate from a
-#' 	# lognormal distribution every 10 time units?
+#'     # lognormal distribution every 10 time units?
 #' 
 #' # Need to randomly draw these rates *before* running simFossilTaxa
 #' # This means also that we will need to individually do each simFossilTaxa run
-#' 	# since the rates are drawn outside of simFossilTaxa
+#'     # since the rates are drawn outside of simFossilTaxa
 #' 
 #' # Get some reasonable log normal rates:
 #' rates <- 0.1+rlnorm(100,meanlog = 1,sdlog = 1)/100
 #' 
 #' # Now paste it into a formulae that describes a function that
-#' 	# will change the rate output every 10 time units
+#'     # will change the rate output every 10 time units
 #' rateEquation <- paste0("c(",paste0(rates,collapse = ","),")[1+(T%/%10)]")
 #' 
 #' # and let's run it
 #' record <- simFossilRecord(p = rateEquation, q = 0.1, r = 0.1, nruns = 1,
-#' 	totalTime = c(30,40), plot = TRUE)
+#'     totalTime = c(30,40), plot = TRUE)
 #' 
 #'  
 #' ##########################################################
@@ -552,78 +696,120 @@
 #' # Some examples of varying the 'speciation modes' in simFossilRecord
 #' 
 #' # The default is pure budding cladogenesis
-#' 	# anag.rate = prop.bifurc = prop.cryptic = 0
+#'     # anag.rate = prop.bifurc = prop.cryptic = 0
 #' # let's just set those for the moment anyway
 #' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0,
-#' 	nruns = 1, nTotalTaxa = c(20,30) ,nExtant = 0, plot = TRUE)
+#'     anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0,
+#'     nruns = 1, nTotalTaxa = c(20,30) ,nExtant = 0, plot = TRUE)
 #' 
 #' #convert and plot phylogeny
-#' 	# note this will not reflect the 'budding' pattern
-#' 	# branching events will just appear like bifurcation
-#' 	# its a typical convention for phylogeny plotting
+#'     # note this will not reflect the 'budding' pattern
+#'     # branching events will just appear like bifurcation
+#'     # its a typical convention for phylogeny plotting
 #' converted <- fossilRecord2fossilTaxa(record)
 #' tree <- taxa2phylo(converted,plot = TRUE)
 #' 
 #' #now, an example of pure bifurcation
 #' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0, prop.bifurc = 1, prop.cryptic = 0,
-#' 	nruns = 1, nTotalTaxa = c(20,30) ,nExtant = 0)
+#'     anag.rate = 0, prop.bifurc = 1, prop.cryptic = 0,
+#'     nruns = 1, nTotalTaxa = c(20,30) ,nExtant = 0)
 #' tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
 #' 
 #' # all the short branches are due to ancestors that terminate
-#' 	# via pseudoextinction at bifurcation events
+#'     # via pseudoextinction at bifurcation events
 #' 
 #' # an example with anagenesis = branching
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0.1, prop.bifurc = 0, prop.cryptic = 0,
-#' 	nruns = 1, nTotalTaxa = c(20,30) ,nExtant = 0)
-#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, r = 0.1,
+#'     anag.rate = 0.1, 
+#'     prop.bifurc = 0, 
+#'     prop.cryptic = 0,
+#'     nruns = 1, 
+#'     nTotalTaxa = c(20,30),
+#'     nExtant = 0
+#'     )
+#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record),
+#'     plot = TRUE)
 #' # lots of pseudoextinction
 #' 
 #' # an example with anagenesis, pure bifurcation
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0.1, prop.bifurc = 1, prop.cryptic = 0,
-#' 	nruns = 1, nTotalTaxa = c(20,30) ,nExtant = 0)
-#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, r = 0.1,
+#'     anag.rate = 0.1, 
+#'     prop.bifurc = 1, 
+#'     prop.cryptic = 0,
+#'     nruns = 1, 
+#'     nTotalTaxa = c(20,30) ,
+#'     nExtant = 0
+#'     )
+#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record),
+#'     plot = TRUE)
 #' # lots and lots of pseudoextinction
 #' 
 #' # an example with half cryptic speciation
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0.5,
-#' 	nruns = 1, nTotalTaxa = c(20,30), nExtant = 0)
-#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, r = 0.1,
+#'     anag.rate = 0, 
+#'     prop.bifurc = 0, 
+#'     prop.cryptic = 0.5,
+#'     nruns = 1, 
+#'     nTotalTaxa = c(20,30), 
+#'     nExtant = 0
+#'     )
+#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record),
+#'     plot = TRUE)
 #' 
 #' # notice that the tree has many more than the maximum of 30 tips:
-#' 	# that's because the cryptic taxa are not counted as
-#' 	# separate taxa by default, as controlled by count.cryptic
+#'     # that's because the cryptic taxa are not counted as
+#'     # separate taxa by default, as controlled by count.cryptic
 #' 
 #' # an example with anagenesis, bifurcation, cryptic speciation
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0.1, prop.bifurc = 0.5, prop.cryptic = 0.5,
-#' 	nruns = 1, nTotalTaxa = c(20,30), nExtant = 0)
-#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, r = 0.1,
+#'     anag.rate = 0.1, 
+#'     prop.bifurc = 0.5, 
+#'     prop.cryptic = 0.5,
+#'     nruns = 1, 
+#'     nTotalTaxa = c(20,30), 
+#'     nExtant = 0
+#'     )
+#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record),
+#'     plot = TRUE)
 #' # note in this case, 50% of branching is cryptic
-#' 	# 25% is bifurcation, 25% is budding
+#'     # 25% is bifurcation, 25% is budding
 #' 
 #' # an example with anagenesis, pure cryptic speciation
-#' 	# morphotaxon identity will thus be entirely indep of branching!
-#' 	# I wonder if this is what is really going on, sometimes...
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0.1, prop.bifurc = 0, prop.cryptic = 1,
-#' 	nruns = 1, nTotalTaxa = c(20,30), nExtant = 0)
-#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record),plot = TRUE)
+#'     # morphotaxon identity will thus be entirely indep of branching!
+#'     # I wonder if this is what is really going on, sometimes...
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, r = 0.1,
+#'     anag.rate = 0.1, 
+#'     prop.bifurc = 0, 
+#'     prop.cryptic = 1,
+#'     nruns = 1, 
+#'     nTotalTaxa = c(20,30), 
+#'     nExtant = 0
+#'     )
+#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record),
+#'     plot = TRUE)
 #' 
 #' # merging cryptic taxa when all speciation is cryptic
 #' set.seed(1)
-#' record <- simFossilRecord(p = 0.1,
-#' 	q = 0.1, r = 0.1,
-#' 	prop.crypt = 1,
-#' 	totalTime = 50, plot = TRUE)
-#' # there looks like there is only a single taxon, but...
-#' length(record)	#actual number of cryptic lineages
+#' record <- simFossilRecord(
+#'     p = 0.1,
+#'     q = 0.1, 
+#'     r = 0.1,
+#'     prop.crypt = 1,
+#'     totalTime = 50, 
+#'     plot = TRUE
+#'     )
 #' 
-#' #############
+#' # there looks like there is only a single taxon, but...
+#' length(record)	
+#' #the above is the *actual* number of cryptic lineages
+#' 
+#' ######################################
+#' ###############################
 #' 
 #' # playing with count.cryptic with simulations of pure cryptic speciation
 #' 
@@ -631,100 +817,198 @@
 #'     #or total taxa including cryptic taxa with count.cryptic = FALSE
 #' 
 #' # an example with pure cryptic speciation with count.cryptic = TRUE
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 1,
-#' 	nruns = 1, totalTime = 50, nTotalTaxa = c(10,100), count.cryptic = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, r = 0.1,
+#'     anag.rate = 0, 
+#'     prop.bifurc = 0, 
+#'     prop.cryptic = 1,
+#'     nruns = 1, 
+#'     totalTime = 50, 
+#'     nTotalTaxa = c(10,100), 
+#'     count.cryptic = TRUE
+#'     )
 #' tree <- taxa2phylo(fossilRecord2fossilTaxa(record))
-#' plot(tree);axisPhylo()
-#' # notice how the tip labels indicate all are the same morphotaxon
 #' 
-#' # we'll replace the # of taxa constraints with a time constraint
-#' 	# or else the count.cryptic = FALSE simulation will never end!
+#' # plot the tree
+#' plot(tree)
+#' axisPhylo()
+#' # notice how the tip labels indicate all are the same morphotaxon?
 #' 
+#' #################
 #' # an example with pure cryptic speciation with count.cryptic = FALSE
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 1,
-#' 	nruns = 1, totalTime = 50, count.cryptic = FALSE)
-#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record))
-#' plot(tree);axisPhylo()
+#'     # Need to be careful with this!
+#' # We'll have to replace the # of taxa constraints with a time constraint
+#'     # or else the count.cryptic = FALSE simulation will never end!
 #' 
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, r = 0.1,
+#'     anag.rate = 0, 
+#'     prop.bifurc = 0, 
+#'     prop.cryptic = 1,
+#'     nruns = 1, 
+#'     totalTime = 50, 
+#'     count.cryptic = FALSE
+#'     )
+#' tree <- taxa2phylo(fossilRecord2fossilTaxa(record))
+#' 
+#' # plot it
+#' plot(tree)
+#' axisPhylo()
+#' 
+#' ###########################################
 #' #let's look at numbers of taxa returned when varying count.cryptic
-#' 	# with prop.cryptic = 0.5
+#'     # with prop.cryptic = 0.5
 #' 
 #' #simple simulation going for 50 total taxa	
 #' 
 #' #first, count.cryptic = FALSE (default)
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0.5,
-#' 	nruns = 1, nTotalTaxa = 50, count.cryptic = FALSE)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1,
+#'     anag.rate = 0, 
+#'     prop.bifurc = 0, 
+#'     prop.cryptic = 0.5,
+#'     nruns = 1, 
+#'     nTotalTaxa = 50, 
+#'     count.cryptic = FALSE
+#'     )
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' nrow(taxa)               #number of lineages (inc. cryptic)
-#' length(unique(taxa[,6]))     #number of morph-distinguishable taxa
 #' 
-#' # and count.cryptic = TRUE
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0.5,
-#' 	nruns = 1, nTotalTaxa = 50, count.cryptic = TRUE)
+#' #### Count the taxa/lineages !
+#' # number of lineages (inc. cryptic)
+#' nrow(taxa)               
+#' # number of morph-distinguishable taxa
+#' length(unique(taxa[,6]))     
+#' 
+#' ###################
+#' # Now let' try with count.cryptic = TRUE
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1,
+#'     anag.rate = 0, 
+#'     prop.bifurc = 0, 
+#'     prop.cryptic = 0.5,
+#'     nruns = 1, 
+#'     nTotalTaxa = 50, 
+#'     count.cryptic = TRUE
+#'     )
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' nrow(taxa)                #number of lineages (inc. cryptic)
-#' length(unique(taxa[,6]))     #number of morph-distinguishable taxa
+#' 
+#' ### Count the taxa/lineages !
+#' # number of lineages (inc. cryptic)
+#' nrow(taxa)               
+#' # number of morph-distinguishable taxa
+#' length(unique(taxa[,6]))     
 #' 
 #' # okay...
-#' # now let's try with 50 extant taxa
 #' 
-#' #first, count.cryptic = FALSE (default)
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0.5,
-#' 	nruns = 1, nExtant = 10, totalTime = c(1,100), count.cryptic = FALSE)
+#' ########################
+#' #######################
+#' # now let's try cryptic speciation *with* 50 extant taxa!
+#' 
+#' # first, count.cryptic = FALSE (default)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1,
+#'     anag.rate = 0, 
+#'     prop.bifurc = 0, 
+#'     prop.cryptic = 0.5,
+#'     nruns = 1, 
+#'     nExtant = 10, 
+#'     totalTime = c(1,100), 
+#'     count.cryptic = FALSE
+#'     )
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' sum(taxa[,5])            #number of still-living lineages (inc. cryptic)
-#' length(unique(taxa[taxa[,5] == 1,6]))	#number of still-living morph-dist. taxa
 #' 
+#' ### Count the taxa/lineages !
+#' # number of still-living lineages (inc. cryptic)
+#' sum(taxa[,5])          
+#' # number of still-living morph-dist. taxa
+#' length(unique(taxa[taxa[,5] == 1,6]))	
+#' 
+#' ##############
 #' # and count.cryptic = TRUE
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#' 	anag.rate = 0, prop.bifurc = 0, prop.cryptic = 0.5,
-#' 	nruns = 1, nExtant = 10, totalTime = c(1,100), count.cryptic = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1,
+#'     anag.rate = 0, 
+#'     prop.bifurc = 0, 
+#'     prop.cryptic = 0.5,
+#'     nruns = 1, 
+#'     nExtant = 10, 
+#'     totalTime = c(1,100), 
+#'     count.cryptic = TRUE
+#'     )
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' sum(taxa[,5])           #number of still-living lineages (inc. cryptic)
-#' length(unique(taxa[taxa[,5] == 1,6]))	#number of still-living morph-dist. taxa
+#' 
+#' ### Count the taxa/lineages !
+#' # number of still-living lineages (inc. cryptic)
+#' sum(taxa[,5])          
+#' # number of still-living morph-dist. taxa
+#' length(unique(taxa[taxa[,5] == 1,6]))	
 #' 
 #' #################################################
 #' 
 #' # an example using startTaxa to have more initial taxa
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1,
-#' 	nTotalTaxa = 100, startTaxa = 20, plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1, 
+#'     nruns = 1,
+#'     nTotalTaxa = 100, 
+#'     startTaxa = 20, 
+#'     plot = TRUE
+#'     )
 #' 
 #' ######################################################
 #' 
 #' # Using run conditions
 #' 
 #' # Users can generate datasets that meet multiple conditions:
-#' 	# such as time, number of total taxa, extant taxa, sampled taxa
+#'     # such as time, number of total taxa, extant taxa, sampled taxa
 #' # These can be set as point conditions or ranges
 #' 
 #' # let's set time = 10-100 units, total taxa = 30-40, extant = 10
-#' 	#and look at acceptance rates with print.run
+#'     #and look at acceptance rates with print.run
 #' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
-#' 	totalTime = c(10,100), nTotalTaxa = c(30,40), nExtant = 10,
-#' 	print.runs = TRUE, plot = TRUE)
+#'     totalTime = c(10,100), nTotalTaxa = c(30,40), nExtant = 10,
+#'     print.runs = TRUE, plot = TRUE)
 #' 
 #' # let's make the constraints on totaltaxa a little tighter
 #' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
-#' 	totalTime = c(50,100), nTotalTaxa = 30, nExtant = 10,
-#' 	print.runs = TRUE, plot = TRUE)
+#'     totalTime = c(50,100), nTotalTaxa = 30, nExtant = 10,
+#'     print.runs = TRUE, plot = TRUE)
 #' # still okay acceptance rates
 #' 
 #' # alright, now let's add a constraint on sampled taxa
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
-#' 	totalTime = c(50,100), nTotalTaxa = 30, nExtant = 10,
-#' 	nSamp = 15, print.runs = TRUE, plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1, 
+#'     nruns = 1, 
+#'     totalTime = c(50,100), 
+#'     nTotalTaxa = 30, 
+#'     nExtant = 10,
+#'     nSamp = 15, 
+#'     print.runs = TRUE, 
+#'     plot = TRUE
+#'     )
 #' # still okay acceptance rates
 #' 
 #' # we can be really odd and condition on having a single taxon
 #' set.seed(1)
-#' record <- simFossilRecord(p = 0.1,
-#' 	q = 0.1, r = 0.1, nTotalTaxa = 1,
-#' 	totalTime = c(10,20), plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1,
+#'     q = 0.1, 
+#'     r = 0.1, 
+#'     nTotalTaxa = 1,
+#'     totalTime = c(10,20), 
+#'     plot = TRUE
+#'     )
 #' 
 #' ########################################################
 #' 
@@ -732,32 +1016,64 @@
 #' 
 #' #Typically, a user may want to condition on a precise
 #' 	# number of sampled taxa in an all-extinct simulation
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
-#' 	nTotalTaxa = c(1,100), nExtant = 0, nSamp = 20,
-#' 	print.runs = TRUE, plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1, 
+#'     nruns = 1, 
+#'     nTotalTaxa = c(1,100), 
+#'     nExtant = 0, 
+#'     nSamp = 20,
+#'     print.runs = TRUE, 
+#'     plot = TRUE
+#'     )
 #' 
 #' # Note that when simulations don't include
 #' # sampling or extant taxa, the plot 
 #' # functionality changes
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0, nruns = 1, 
-#' 	nExtant = 0, print.runs = TRUE, plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0, 
+#'     nruns = 1, 
+#'     nExtant = 0, 
+#'     print.runs = TRUE, 
+#'     plot = TRUE
+#'     )
+#' 
 #' # something similar happens when there is no sampling
 #' # and there are extant taxa but they aren't sampled
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0, nruns = 1, 
-#' 	nExtant = 10, nTotalTaxa = 100, modern.samp.prob = 0,
-#' 	print.runs = TRUE, plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0, 
+#'     nruns = 1, 
+#'     nExtant = 10, 
+#'     nTotalTaxa = 100, 
+#'     modern.samp.prob = 0,
+#'     print.runs = TRUE, 
+#'     plot = TRUE
+#'     )
 #' 
-#' 	
+#' #########################################
 #' # We can set up a test to make sure that no extant taxa somehow get
 #' # returned in many simulations with extinct-only conditioning:
-#' res <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1,
-#'    nTotalTaxa = 10,nExtant = 0,nruns = 1000,plot = TRUE)
+#' res <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1,
+#'     nTotalTaxa = 10,
+#'     nExtant = 0,
+#'     nruns = 1000,
+#'     plot = TRUE
+#'     )
 #' anyLive <- any(sapply(res,function(z) 
-#'    any(sapply(z,function(x) x[[1]][5] == 1))))
+#'     any(sapply(z,function(x) x[[1]][5] == 1)))
+#'     )
 #' # test if any are still alive
 #' if(anyLive){
-#' 	stop("Runs have extant taxa under conditioning for none?")
-#' 	}
+#'     stop("Runs have extant taxa under conditioning for none?")
+#'     }
 #' 
 #' }
 #' 

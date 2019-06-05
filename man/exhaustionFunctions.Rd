@@ -18,7 +18,8 @@ charExhaustPlot(exhaustion_info, changesType, xlab = "Total Characters",
   ylab = NULL, main = NULL, xsize = 3)
 }
 \arguments{
-\item{phyloTree}{A phylogenetic tree of class \code{phylo} as used by package \code{ape}.}
+\item{phyloTree}{A phylogenetic tree of class \code{phylo}
+as used by package \code{ape}.}
 
 \item{charData}{A \code{data.frame} of morphological character
 codings (a morphological 'matrix'), with taxon units
@@ -42,8 +43,7 @@ same number of taxa (rows) as in
 character coding value, by default \code{"?"}.}
 
 \item{inapplicableValue}{The string value indicating an
-inapplicable character coding value, by default \code{"-"}.
-the extraction of this is automated if you use .}
+inapplicable character coding value, by default \code{"-"}.}
 
 \item{exhaustion_info}{The list of results output
 from function \code{accioExhaustionCurve}.}
@@ -60,8 +60,10 @@ modeling the size and distribution of
 ideal for modeling the size and
 distribution of \emph{character} space).}
 
-\item{models}{A vector of type \code{character} naming models to be fit.
-Default is \code{c("exponential","gamma","lognormal","zipf")}.}
+\item{models}{A vector of type \code{character}
+naming various models to be fit.
+The default fits the models \code{"exponential"}, \code{"gamma"},
+\code{"lognormal"}, and  \code{"zipf"}.}
 
 \item{xlab}{Label for the X axis;
 \code{"Total Characters"} by default.}

@@ -29,9 +29,9 @@
 #' appended to the output tree.
 
 #' @param fixingMethod must be an character value, with a length of 1.
-#' If \code{fixingMethod = "matchCladeTransferNodeAge"}, 
-#' the default option, the
-#' \code{$root.time} of the new tree is determined by
+#' 
+#' The default option \code{fixingMethod = "matchCladeTransferNodeAge"}, 
+#' will determine the \code{$root.time} of the new tree by
 #' comparing the clades of taxa between the two input
 #' trees. The new root age assigned is the age of
 #' (\emph{1}) the \code{treeOrig} clade that contains \emph{all}
@@ -39,6 +39,7 @@
 #' contains multiple clades, (\emph{2}) the clade in the
 #' first set that contains the fewest taxa not in
 #' \code{treeNew}. 
+#' 
 #' If \code{fixingMethod = "rescaleUsingTipToRootDist"}, 
 #' the \code{root.time} assigned to \code{treeNew} is the
 #' \code{$root.time} of \code{treeOrig}, adjusted

@@ -33,7 +33,8 @@ the first and last appearances has uncertainty bounds of zero.}
  All taxa not listed in the outgroup will be constrained to be a monophyletic ingroup, for sake of rooting
 the resulting dated tree.
 Either \code{treeConstraints} or \code{outgroupTaxa} must be defined, but \emph{not both}. 
-If the outgroup-ingroup split is not present on the supplied \code{treeConstraints}, add that split to \code{treeConstraints} manually.}
+If the outgroup-ingroup split is not present on the supplied
+\code{treeConstraints}, add that split to \code{treeConstraints} manually.}
 
 \item{treeConstraints}{An object of class \code{phylo}, 
 from which (if \code{treeConstraints} is supplied) the set topological constraints are derived, as
@@ -71,9 +72,9 @@ the resulting posterior trees may place the OTU assigned to the last occurrence 
 first occurrence in temporal order (but the assignment, in that case, was entirely
 arbitrary). When \code{whichAppearance = "rangeThrough"}, each taxon will be
 duplicated into as many OTUs as each
-interval that a taxon ranges through (in a timeList format, see other
-paleotree functions), with the corresponding age uncertainties for those intervals.
-If the input tipTimes is not a list of length = 2, however, the function will 
+interval that a taxon ranges through (in a \code{timeList} format, see other
+\code{paleotree} functions), with the corresponding age uncertainties for those intervals.
+If the input \code{tipTimes} is not a list of \code{length = 2}, however, the function will 
 return an error under this option.}
 
 \item{treeAgeOffset}{A parameter given by the user controlling the offset 
@@ -148,7 +149,7 @@ is defined, then an error will be returned.}
 
 \item{morphModel}{This argument can be used to switch between two end-member models of 
 morphological evolution in MrBayes, here named 'strong' and 'relaxed', for the 'strong assumptions'
-and 'relaxed assumptions' models described by Bapst, Schreiber and Carlson (Systematic Biology).
+and 'relaxed assumptions' models described by Bapst et al. (2018, Syst. Biol.).
 The default is a model which makes very 'strong' assumptions about the process of morphological evolution,
 while the 'relaxed' alternative allows for considerably more heterogeneity in the rate
 of morphological evolution across characters, and in the forward and reverse transition
@@ -212,15 +213,21 @@ Users must supply a data set of tip ages (in various formats),
 which are used to construct age calibrations commands on the tip taxa 
 (via paleotree function \code{\link{createMrBayesTipCalibrations}}). 
 The user must also supply some topological constraint: 
-either a set of taxa designated as the outgroup, which is then converted into a command constraining
-the monophyly on the ingroup taxa, which is presumed to be all taxa \emph{not} listed in the outgroup. 
-Alternatively, a user may supply a tree which is then converted into a series of hard topological
-constraints (via function \code{\link{createMrBayesConstraints}}. Both types of topological constraints
-cannot be applied. Many of the options available with \code{\link{createMrBayesTipCalibrations}} are available with this function,
-allowing users to choose between fixed calibrations or uniform priors that approximate stratigraphic uncertainty.
-In addition, the user may also supply a path to a text file
-presumed to be a NEXUS file containing character data formatted for use with \emph{MrBayes}.
+either a set of taxa designated as the outgroup, which
+is then converted into a command constraining
+the monophyly on the ingroup taxa, which is presumed to be
+all taxa \emph{not} listed in the outgroup. 
+Alternatively, a user may supply a tree which is then
+converted into a series of hard topological constraints 
+(via function \code{\link{createMrBayesConstraints}}.
+Both types of topological constraints cannot be applied. 
 
+Many of the options available with \code{\link{createMrBayesTipCalibrations}}
+are available with this function, allowing users to choose between fixed
+calibrations or uniform priors that approximate stratigraphic uncertainty.
+In addition, the user may also supply a path to a text file
+presumed to be a NEXUS file containing character
+data formatted for use with \emph{MrBayes}.
 
 The taxa listed in \code{tipTimes} must match the taxa in 
 \code{treeConstraints}, if such is supplied. If supplied, the taxa in \code{outgroupTaxa}
@@ -248,8 +255,6 @@ first and last occurrences. This means it may be more straightforward to assess 
 patterns of ancestor-descendant relationships in \emph{cal3}, than in tip-dating.
 }
 \examples{
-
-# let's do some examples
 
 # load retiolitid dataset
 data(retiolitinae)
@@ -339,8 +344,9 @@ in fossil Canidae: the importance of tree priors. \emph{Biology Letters} 12(8).
 
 The rationale behind the two alternative morphological models are described in more detail here:
 
-Bapst, D. W., H. A. Schreiber, and S. J. Carlson. In press. Combined analysis of extant Rhynchonellida
-(Brachiopoda) using morphological and molecular data. \emph{Systematic Biology} doi: 10.1093/sysbio/syx049
+Bapst, D. W., H. A. Schreiber, and S. J. Carlson. 2018.
+Combined Analysis of Extant Rhynchonellida (Brachiopoda) using Morphological
+and Molecular Data. \emph{Systematic Biology} 67(1):32-48. doi: 10.1093/sysbio/syx049
 }
 \seealso{
 This function wraps various aspects of the functions \code{\link{createMrBayesConstraints}}

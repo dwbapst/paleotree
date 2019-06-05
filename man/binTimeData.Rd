@@ -8,9 +8,9 @@ binTimeData(timeData, int.length = 1, start = NA, int.times = NULL)
 }
 \arguments{
 \item{timeData}{Two-column matrix of simulated first and last occurrences in
-absolute continuous time}
+absolute continuous time.}
 
-\item{int.length}{Time interval length, default is 1 time unit}
+\item{int.length}{Time interval length, default is 1 time-unit.}
 
 \item{start}{Starting time for calculating the intervals.}
 
@@ -18,11 +18,11 @@ absolute continuous time}
 intervals to be used.}
 }
 \value{
-A list containing: \item{int.times}{A 2 column matrix with the start
+A list containing: \item{\code{int.times}}{A 2-column matrix with the start
 and end times of the intervals used; time decreases relative to the
-present.} \item{taxon.times}{A 2 column matrix with the first and last
-occurrences of taxa in the intervals listed in int.times, with numbers
-referring to the row of int.times.}
+present.} \item{\code{taxon.times}}{A 2-column matrix with the first and last
+occurrences of taxa in the intervals listed in \code{int.times}, with numbers
+referring to the row of \code{int.times}.}
 }
 \description{
 Converts a matrix of simulated continuous-time first occurrences and last
@@ -59,19 +59,21 @@ decreasing, i.e. the present day is zero. However, the numbering of
 intervals giving in the output increases with time, as these are numbered
 relative to each other, from first to last.
 
-As of version 1.7 of paleotree, taxa which are extant as indicated in timeData as being
-in a time interval bounded (0,0), unless time-bins are preset using
-argument int.times (prior to version 1.5 they were erroneously listed as
+As of version 1.7 of paleotree, taxa which are
+extant as indicated in timeData as being
+in a time interval bounded \code{(0, 0)}, unless time-bins are preset using
+argument \code{int.times} (prior to version 1.5 they were erroneously listed as
 NA).
 }
 \examples{
 
 #Simulate some fossil ranges with simFossilRecord
 set.seed(444)
-record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-	nTotalTaxa = c(30,40), nExtant = 0)
+record <- simFossilRecord(
+    p = 0.1, q = 0.1, nruns = 1,
+    nTotalTaxa = c(30,40), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
-#simulate a fossil record with imperfect sampling with sampleRanges()
+#simulate a fossil record with imperfect sampling via sampleRanges
 rangesCont <- sampleRanges(taxa,r = 0.5)
 #Now let's use binTimeData() to bin in intervals of 1 time unit
 rangesDisc <- binTimeData(rangesCont,int.length = 1)
@@ -79,27 +81,48 @@ rangesDisc <- binTimeData(rangesCont,int.length = 1)
 equalDiscInt <- taxicDivDisc(rangesDisc)
 
 #example with pre-set intervals input (including overlapping)
-presetIntervals <- cbind(c(1000,990,970,940),c(980,970,950,930))
-rangesDisc1 <- binTimeData(rangesCont,int.times = presetIntervals)
-taxicDivDisc(rangesDisc1)
-#now let's plot diversity with (different) equal length intervals used above
-taxicDivDisc(rangesDisc1,int.times = equalDiscInt[,1:2])
+presetIntervals <- cbind(
+    c(1000, 990, 970, 940),
+    c(980, 970, 950, 930)
+    )
+rangesDisc1 <- binTimeData(rangesCont,
+    int.times = presetIntervals)
 
+# plot the diversity curve with these uneven bins
+taxicDivDisc(rangesDisc1)
+
+# now let's plot the diversity from these unequal-length bins
+   # with the original equal length intervals from above
+taxicDivDisc(rangesDisc1, int.times = equalDiscInt[,1:2])
+
+
+####################################
 #example with extant taxa
 set.seed(444)
-record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-	nTotalTaxa = c(30,40))
+record <- simFossilRecord(
+   p = 0.1, q = 0.1, nruns = 1,
+   nTotalTaxa = c(30,40))
 taxa <- fossilRecord2fossilTaxa(record)
-#simulate a fossil record with imperfect sampling with sampleRanges()
-rangesCont <- sampleRanges(taxa,r = 0.5,,modern.samp.prob = 1)
-#Now let's use binTimeData() to bin in intervals of 1 time unit
-rangesDisc <- binTimeData(rangesCont,int.length = 1)
+#simulate a fossil record with imperfect sampling via sampleRanges
+rangesCont <- sampleRanges(
+    taxa, r = 0.5,
+    modern.samp.prob = 1)
+#Now let's use binTimeDat to bin into intervals of 1 time-unit
+rangesDisc <- binTimeData(rangesCont,
+    int.length = 1)
 #plot with taxicDivDisc()
 taxicDivDisc(rangesDisc)
 
-#example with pre-set intervals input (including overlapping)
-presetIntervals <- cbind(c(40,30,20,10),c(30,20,10,0))
-rangesDisc1 <- binTimeData(rangesCont,int.times = presetIntervals)
+
+#################################################
+#example with pre-set intervals input
+    # (including overlapping)
+presetIntervals <- cbind(
+    c(40, 30, 20, 10),
+    c(30, 20, 10, 0)
+    )
+rangesDisc1 <- binTimeData(rangesCont,
+    int.times = presetIntervals)
 taxicDivDisc(rangesDisc1)
 
 }

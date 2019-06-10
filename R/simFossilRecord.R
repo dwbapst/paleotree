@@ -29,19 +29,28 @@
 #' differentiation is assumed to be an instantaneous process for the purposes of this model,
 #' such that no intermediate could be uncovered.
 #' 
-#' Specifically, \code{simFossilRecord} allows for three types of binary branching events
-#' (here grouped under the term 'cladogenesis': 'budding cladogenesis', 'bifurcating
-#' cladogenesis' and 'cryptic cladogenesis', as well as for a fourth event-type, 'anagenesis'
-#' (see Wagner and Erwin, 1995; Foote, 1996, and Bapst, 2013, for further details). Budding,
-#' bifurcation and cryptic cladogenetic events all share in common that a single geneological
-#' lineage splits into two descendant lineages, but differ in the morphological differentiation
-#' of these child lineages relative to their parent. Under budding cladogenesis, only one of the
-#' child lineages becomes morphologically distinguishable from the parent, and thus the ancestral
-#' morphotaxon persists through the branching event as the child lineage that does \emph{not}
-#' differentiate. Under
-#' bifurcating cladogenesis, both child lineages become immediately distinct from the ancestor,
-#' and thus two new morphotaxa appear while the ancestor terminates in an event known as
-#' 'pseudoextinction'. Cryptic cladogenesis has no morphological differentiation: both child lineages
+#' Specifically, \code{simFossilRecord} allows for
+#' three types of binary branching events
+#' (here grouped under the term 'cladogenesis':
+#' 'budding cladogenesis', 'bifurcating cladogenesis' and
+#' 'cryptic cladogenesis', as well as for a fourth event-type, 'anagenesis'
+#' (see Wagner and Erwin, 1995; Foote, 1996, and Bapst, 2013, for further details).
+#' Budding, bifurcation and cryptic cladogenetic events all
+#' share in common that a single geneological
+#' lineage splits into two descendant lineages, but
+#' differ in the morphological differentiation
+#' of these child lineages relative to their parent.
+#' Under budding cladogenesis, only one of the
+#' child lineages becomes morphologically distinguishable
+#' from the parent, and thus the ancestral
+#' morphotaxon persists through the branching event
+#' as the child lineage that does \emph{not}
+#' differentiate. Under bifurcating cladogenesis, both child lineages
+#' become immediately distinct from the ancestor,
+#' and thus two new morphotaxa appear while the
+#' ancestor terminates in an event known as
+#' 'pseudoextinction'. Cryptic cladogenesis has no
+#' morphological differentiation: both child lineages
 #' are presumed to be indistinct from the ancestor and from each other, which means a hypothetical
 #" paleontologist would not observe that branching had occurred at all. Anagenesis is morphological
 #' differentiation independent of any branching, such that a morphotaxon instanteously transitions
@@ -50,9 +59,12 @@
 #' in time at all, as modeled here (contra to the models described by Ezard et al., 2012). For ease
 #' of following these cryptic lineages, cryptic cladogenetic events are treated in terms of data
 #' structure similarly to budding cladogenetic events, with one child lineage treated as a
-#' persistence of the ancestral lineage, and the other as a new morphologically indistinguishable lineage.
-#' This model of cryptic cladogenesis is ultimately based on the hierarchical birth-death model used
-#' by many authors for modeling patterns across paraphyletic higher taxa and the lower taxon units within
+#' persistence of the ancestral lineage, and the other
+#' as a new morphologically indistinguishable lineage.
+#' This model of cryptic cladogenesis is ultimately
+#' based on the hierarchical birth-death model used
+#' by many authors for modeling patterns across paraphyletic
+#' higher taxa and the lower taxon units within
 #' them (e.g. Patzkowsky, 1995; Foote, 2012).
 #' 
 #' The occurrence of the various models is controlled by multiple arguments of \code{simFossilRecord}.
@@ -72,10 +84,14 @@
 #'  \code{Prob(budding cladogenesis at a branching event) = (1 - prop.cryptic) * (1 - prop.bifurc)}
 #' 
 #' By default,
-#' \code{prop.cryptic = 0} and \code{prop.bifurc = 0}, so all branching events by default will be
-#' instances of budding cladogenesis. Anagenesis is completely independent of these, controlled as its
-#' own Poisson process with an instantaneous rated defined by the argument \code{anag.rate}. By default,
-#' this rate is set to zero and thus there is no anagenetic events without user intervention.
+#' \code{prop.cryptic = 0} and \code{prop.bifurc = 0},
+#' so all branching events by default will be
+#' instances of budding cladogenesis. Anagenesis is
+#' completely independent of these, controlled as its
+#' own Poisson process with an instantaneous rated defined 
+#' by the argument \code{anag.rate}. By default,
+#' this rate is set to zero and thus there is no
+#' anagenetic events without user intervention.
 #' 
 #' \emph{Stopping Conditions and Acceptance Criteria for Simulations}
 #' 
@@ -91,7 +107,8 @@
 #' 
 #' Hartmann et al. (2011) recently discovered a potential statistical artifact
 #' when branching simulations are conditioned on some number of taxa.
-#' Previously within \code{paleotree}, this was accounted for in the deprecated function \code{simFossilTaxa} by
+#' Previously within \code{paleotree},
+#' this was accounted for in the deprecated function \code{simFossilTaxa} by
 #' a complex arrangement of minimum and maximum constraints, and an (incorrect)
 #' presumption that allowing simulations to continue for a short distance after
 #' constraints were reached. This strategy is not applied here. Instead,
@@ -120,12 +137,14 @@
 #' uses of time (as time before present) and as for most function in package
 #' \code{paleotree}. The endpoints of the time-scale are decided by details of the
 #' simulation and can be modified by several arguments. By default (with
-#' \code{shiftRoot4TimeSlice  = } \code{"withExtantOnly"}), any simulation run that is accepted
-#' with extant taxa will have zero as the \emph{end-time} (i.e. when those taxa are
-#' extant), as zero is the typical time assigned to the modern day in empirical studies.
+#' \code{shiftRoot4TimeSlice  = } \code{"withExtantOnly"}), 
+#' any simulation run that is accepted with extant taxa will have zero as the
+#' \emph{end-time} (i.e. when those taxa are extant),
+#' as zero is the typical time assigned to the modern day in empirical studies.
 #' If a simulation ends with all taxa extinct, however, then instead the \emph{start-time}
 #' of a run (i.e. when the run initiates with starting taxa) will be maximum value
-#' assigned to the conditioning argument \code{totalTime}. If \code{shiftRoot4TimeSlice  = } \code{FALSE}
+#' assigned to the conditioning argument \code{totalTime}. 
+#' If \code{shiftRoot4TimeSlice  = } \code{FALSE}
 #' then the \emph{start-time} of the run will always be this maximum value for
 #' \code{totalTime}, and any extant taxa will stop at some time greater than zero.
 #' 
@@ -136,13 +155,15 @@
 #' equal to or greater than zero, or as a 
 #' character string which will be interpreted as an algebraic equation. 
 #' These equations can make use of three
-#' quantities which will/may change throughout the simulation: the 
-#' standing richness is \code{N}, the current time passed since the start
-#' of the simulation is \code{T}, the present duration of a given still-living
-#' lineage since its origination time is code{D}, and the current branching rate is \code{P}
+#' quantities which will/may change throughout the simulation: 
+#'the standing richness is \code{N},
+#' the current time passed since the start of the simulation is \code{T}, 
+#' the present duration of a given still-living lineage
+#' since its origination time is code{D},
+#' and the current branching rate is \code{P}
 #' (corresponding to the argument name \code{p}).
-#' Note that \code{P} cannot be used in equations for the branching rate itself; it is for making other rates
-#' relative to the branching rate.
+#' Note that \code{P} cannot be used in equations for the branching rate itself;
+#' it is for making other rates relative to the branching rate.
 #' 
 #' By default, the rates \code{r} and \code{anag.rate} are set to zero,
 #' so that the default simulator is a birth-death simulator.
@@ -182,7 +203,7 @@
 #' @param negRatesAsZero A logical. Should rates calculated as a
 #' negative number cause the simulation to fail
 #' with an error message (\code{ = FALSE}) or should these be
-#' treated as zero (\code{" =  TRUE"}, the default). This
+#' treated as zero (\code{ =  TRUE}, the default). This
 #' is equivalent to saying that
 #' the \code{rate.as.used  = } \code{max(0, rate.as.given)}.
 
@@ -229,23 +250,23 @@
 #' All will have the simulation start date
 #' listed as their time of origination.
 
-#' @param sortNames If TRUE, output taxonomic lists are sorted by the taxon
+#' @param sortNames If \code{TRUE}, output taxonomic lists are sorted by the taxon
 #' names (thus sorting cryptic taxa together) rather than by taxon ID number
 #' (i.e. the order they were simulated in).
 
-#' @param print.runs If TRUE, prints the proportion of simulations accepted for
+#' @param print.runs If \code{TRUE}, prints the proportion of simulations accepted for
 #' output to the terminal.
 
 #' @param maxAttempts Number of simulation attempts allowed before the simulation process
 #' is halted with an error message. Default is \code{Inf}.
 
-#' @param plot If TRUE, plots the diversity curves of accepted simulations,
+#' @param plot If \code{TRUE}, plots the diversity curves of accepted simulations,
 #' including both the diversity curve of the true number of taxa and the
 #' diversity curve for the 'observed' (sampled) number of taxa.
 
-#' @param count.cryptic If TRUE, cryptic taxa are counted as separate taxa for
+#' @param count.cryptic If \code{TRUE}, cryptic taxa are counted as separate taxa for
 #' conditioning limits that count a number of taxon units, such as \code{nTotalTaxa},
-#' \code{nExtant} and \code{nSamp}. If FALSE (the default), then each cryptic
+#' \code{nExtant} and \code{nSamp}. If \code{FALSE} (the default), then each cryptic
 #' complex (i.e. each distinguishable morphotaxon) is treated as a single taxon.
 #' See examples.
 

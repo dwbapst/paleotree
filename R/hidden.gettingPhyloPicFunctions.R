@@ -66,7 +66,8 @@ getPhyloPicUIDsTableFromPBDB <- function(picIDs){
 	URLwithNums <- paste0(imgNumAPIurl,picIDs)	
 	names(URLwithNums) <- names(picIDs)
 	res <- do.call(rbind,
-          lapply(URLwithNums, read.csv, stringsAsFactors=FALSE))
+          lapply(URLwithNums, read.csv, stringsAsFactors=FALSE)
+		  )
 	return(res)
 	}
 	

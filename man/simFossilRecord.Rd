@@ -60,8 +60,7 @@ slice). Must be a number between 0 and 1. If 1, all taxa that survive to the mod
 day (to the \code{sliceTime}) are sampled, if 0, none are.}
 
 \item{startTaxa}{Number of initial taxa to begin a simulation with.
-All will have the simulation start date
-listed as their time of origination.}
+All will have the simulation start date listed as their time of origination.}
 
 \item{nruns}{Number of simulation datasets to accept, save and output.
 If \code{nruns = 1}, output will be a single
@@ -205,16 +204,18 @@ can interpret complex character strings given as rate values for use in modeling
 complex processes of diversification and sampling.
 }
 \details{
-\code{simFossilRecord} simulates a birth-death-sampling branching process (ala Foote, 1997,
- 2000; Stadler, 2009) in which lineages of organisms may branch, go extinct or be sampled
-thought a continuous time-interval, with the occurrence of these events
-modeled as Poisson process controlled by some set of instantaneous rates.
+\code{simFossilRecord} simulates a birth-death-sampling branching process
+(ala Foote, 1997,  2000; Stadler, 2009) in which lineages of organisms may branch,
+go extinct or be sampled at discrete points within a continuous time-interval.
+The occurrence of these discrete events are modeled as stochastic
+Poisson process, described by some set of instantaneous rates.
 This model is ultimately based on the birth-death model (Kendall, 1948; Nee, 2006),
 which is widely implemented in many R packages. Unlike other such typical branching
 simulators, this function enmeshes the lineage units within explicit models of how
-lineages are morphologically differentiated (Bapst, 2013). This is key to allow comparison
-to datasets from the fossil record, as morphotaxa are the basic
-units of paleontological diversity estimates and phylogenetic analyses. 
+lineages are morphologically differentiated (Bapst, 2013). 
+This is key to allow comparison to datasets from the fossil record,
+as morphotaxa are the basic units of paleontological diversity estimates
+and phylogenetic analyses. 
 
 \emph{Models of Morphological Differentiation and Branching (Cladogenesis and Anagenesis)}
 
@@ -227,11 +228,11 @@ or they are distinct, and thus have separate morphotaxon identities. Morphologic
 differentiation is assumed to be an instantaneous process for the purposes of this model,
 such that no intermediate could be uncovered.
 
-Specifically, \code{simFossilRecord} allows for
-three types of binary branching events
-(here grouped under the term 'cladogenesis':
-'budding cladogenesis', 'bifurcating cladogenesis' and
-'cryptic cladogenesis', as well as for a fourth event-type, 'anagenesis'
+Specifically, \code{simFossilRecord} allows for three types of
+binary branching events, referred to here as under the umbrella
+term of 'cladogenesis': 'budding cladogenesis',
+'bifurcating cladogenesis', and 'cryptic cladogenesis',
+as well as for a fourth non-branching event-type, 'anagenesis'
 (see Wagner and Erwin, 1995; Foote, 1996, and Bapst, 2013, for further details).
 Budding, bifurcation and cryptic cladogenetic events all
 share in common that a single geneological

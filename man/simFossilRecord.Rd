@@ -19,13 +19,15 @@ sampling and anagenesis, respectively. These can be given as a number
 equal to or greater than zero, or as a 
 character string which will be interpreted as an algebraic equation. 
 These equations can make use of three
-quantities which will/may change throughout the simulation: the 
-standing richness is \code{N}, the current time passed since the start
-of the simulation is \code{T}, the present duration of a given still-living
-lineage since its origination time is code{D}, and the current branching rate is \code{P}
+quantities which will/may change throughout the simulation: 
+the standing richness is \code{N},
+the current time passed since the start of the simulation is \code{T}, 
+the present duration of a given still-living lineage
+since its origination time is code{D},
+and the current branching rate is \code{P}
 (corresponding to the argument name \code{p}).
-Note that \code{P} cannot be used in equations for the branching rate itself; it is for making other rates
-relative to the branching rate.
+Note that \code{P} cannot be used in equations for the branching rate itself;
+it is for making other rates relative to the branching rate.
 
 By default, the rates \code{r} and \code{anag.rate} are set to zero,
 so that the default simulator is a birth-death simulator.
@@ -82,9 +84,9 @@ runs, and whether to accept or reject them as output. They can be input
 as a vector of two numbers, representing minimum and maximum values of
 a range for accepted simulation runs (i.e. the simulation length can be
 between 0 and 1000 time-steps, by default), or as a single number,
-representing a point condition (i.e. if \code{nSamp = 100} then the only
-simulation runs with exactly 100 taxa sampled will be output). Note that it
-is easy to set combinations of parameters and run conditions that are
+representing a point condition (i.e. if \code{nSamp = 100} then only those
+simulation states that contain exactly 100 taxa sampled will be output).
+Note that it is easy to set combinations of parameters and run conditions that are
 impossible to produce satisfactory input under, in which case
 \code{simFossilRecord} would run in a nonstop loop.
 How cryptic taxa are counted for the sake of these
@@ -94,19 +96,20 @@ conditions is controlled by argument \code{count.cryptic}.}
 the sake of placing run-sampling dates before events and
 for use in determining whether a taxon is extant in simFossilRecordMethods.}
 
-\item{maxStepTime}{When rates are time-dependent (i.e. when
-parameters 'D' or 'T' are used in equations input for one of
-the four rate arguments), then protocol used by
-\code{simFossilRecord} of drawing waiting times to the next event could
-produce a serious mismatch of resulting process to the defined model,
-because the possibility of new events is only
-considered at the end of these waiting times. Instead, any
-time a waiting time greater than \code{maxStepTime} is
+\item{maxStepTime}{When rates are time-dependent (i.e. when 
+parameters 'D' or 'T' are used in equations input for
+one of the four rate arguments), then protocol used by
+\code{simFossilRecord} of drawing waiting times to the next
+event could produce a serious mismatch of resulting process
+to the defined model, because the possibility of new events
+is only considered at the end of these waiting times.
+Instead, any time a waiting time greater than \code{maxStepTime} is
 selected, then instead \emph{no} event occurs and a
-time-step equal to \code{maxStepTime} occurs instead, thus effectively
-discretizing the progression of time in the simulations
-run by \code{simFossilRecord}. Decreasing this value will increase
-accuracy (as the time-scale is effectively more discretized)
+time-step equal to \code{maxStepTime} occurs instead,
+thus effectively discretizing the progression of
+time in the simulations run by \code{simFossilRecord}.
+Decreasing this value will increase accuracy
+(as the time-scale is effectively more discretized)
 but increase computation time, as the computer will need
 to stop and check rates to see if an event happened more often.
 Users should toggle this value relative to the time-dependent
@@ -120,27 +123,27 @@ logical TRUE or FALSE, but also accepts the string \code{"withExtantOnly"},
 which will only 'shift' the time-scale if living taxa are present, as
 determined by having ranges that overlap within \code{tolerance} of \code{sliceTime}.}
 
-\item{count.cryptic}{If TRUE, cryptic taxa are counted as separate taxa for
+\item{count.cryptic}{If \code{TRUE}, cryptic taxa are counted as separate taxa for
 conditioning limits that count a number of taxon units, such as \code{nTotalTaxa},
-\code{nExtant} and \code{nSamp}. If FALSE (the default), then each cryptic
+\code{nExtant} and \code{nSamp}. If \code{FALSE} (the default), then each cryptic
 complex (i.e. each distinguishable morphotaxon) is treated as a single taxon.
 See examples.}
 
 \item{negRatesAsZero}{A logical. Should rates calculated as a
 negative number cause the simulation to fail
 with an error message (\code{ = FALSE}) or should these be
-treated as zero (\code{" =  TRUE"}, the default). This
+treated as zero (\code{ =  TRUE}, the default). This
 is equivalent to saying that
 the \code{rate.as.used  = } \code{max(0, rate.as.given)}.}
 
-\item{print.runs}{If TRUE, prints the proportion of simulations accepted for
-output to the terminal.}
+\item{print.runs}{If \code{TRUE}, prints the proportion of simulations
+accepted for output to the terminal.}
 
-\item{sortNames}{If TRUE, output taxonomic lists are sorted by the taxon
+\item{sortNames}{If \code{TRUE}, output taxonomic lists are sorted by the taxon
 names (thus sorting cryptic taxa together) rather than by taxon ID number
 (i.e. the order they were simulated in).}
 
-\item{plot}{If TRUE, plots the diversity curves of accepted simulations,
+\item{plot}{If \code{TRUE}, plots the diversity curves of accepted simulations,
 including both the diversity curve of the true number of taxa and the
 diversity curve for the 'observed' (sampled) number of taxa.}
 }
@@ -224,52 +227,80 @@ or they are distinct, and thus have separate morphotaxon identities. Morphologic
 differentiation is assumed to be an instantaneous process for the purposes of this model,
 such that no intermediate could be uncovered.
 
-Specifically, \code{simFossilRecord} allows for three types of binary branching events
-(here grouped under the term 'cladogenesis': 'budding cladogenesis', 'bifurcating
-cladogenesis' and 'cryptic cladogenesis', as well as for a fourth event-type, 'anagenesis'
-(see Wagner and Erwin, 1995; Foote, 1996, and Bapst, 2013, for further details). Budding,
-bifurcation and cryptic cladogenetic events all share in common that a single geneological
-lineage splits into two descendant lineages, but differ in the morphological differentiation
-of these child lineages relative to their parent. Under budding cladogenesis, only one of the
-child lineages becomes morphologically distinguishable from the parent, and thus the ancestral
-morphotaxon persists through the branching event as the child lineage that does \emph{not}
-differentiate. Under
-bifurcating cladogenesis, both child lineages become immediately distinct from the ancestor,
-and thus two new morphotaxa appear while the ancestor terminates in an event known as
-'pseudoextinction'. Cryptic cladogenesis has no morphological differentiation: both child lineages
-are presumed to be indistinct from the ancestor and from each other, which means a hypothetical
-differentiation independent of any branching, such that a morphotaxon instanteously transitions
-to a new morphotaxon identity, resulting in the pseudoextinction of the ancestral morphotaxon
-and the immediate 'pseudospeciation' of the child morphotaxon. The two morphotaxa do not overlap
-in time at all, as modeled here (contra to the models described by Ezard et al., 2012). For ease
-of following these cryptic lineages, cryptic cladogenetic events are treated in terms of data
-structure similarly to budding cladogenetic events, with one child lineage treated as a
-persistence of the ancestral lineage, and the other as a new morphologically indistinguishable lineage.
-This model of cryptic cladogenesis is ultimately based on the hierarchical birth-death model used
-by many authors for modeling patterns across paraphyletic higher taxa and the lower taxon units within
-them (e.g. Patzkowsky, 1995; Foote, 2012).
+Specifically, \code{simFossilRecord} allows for
+three types of binary branching events
+(here grouped under the term 'cladogenesis':
+'budding cladogenesis', 'bifurcating cladogenesis' and
+'cryptic cladogenesis', as well as for a fourth event-type, 'anagenesis'
+(see Wagner and Erwin, 1995; Foote, 1996, and Bapst, 2013, for further details).
+Budding, bifurcation and cryptic cladogenetic events all
+share in common that a single geneological
+lineage splits into two descendant lineages, but
+differ in the morphological differentiation
+of these child lineages relative to their parent.
+Under budding cladogenesis, only one of the
+child lineages becomes morphologically distinguishable
+from the parent, and thus the ancestral
+morphotaxon persists through the branching event
+as the child lineage that does \emph{not}
+differentiate. Under bifurcating cladogenesis, both child lineages
+become immediately distinct from the ancestor,
+and thus two new morphotaxa appear while the
+ancestor terminates in an event known as 'pseudoextinction'.
+Cryptic cladogenesis has no morphological differentiation:
+both child lineages are presumed to be indistinct from
+the ancestor and from each other, which means a hypothetical paleontologist
+would not observe that branching had occurred at all.
+Anagenesis is morphological differentiation independent of
+any branching, such that a morphotaxon instanteously transitions to a
+new morphotaxon identity, resulting in the pseudoextinction of
+the ancestral morphotaxon and the immediate 'pseudospeciation'
+of the child morphotaxon.
+In anagenesis, the ancestral morphotaxon and descendant morphotaxon
+do not overlap in time at all, as modeled here
+(contra to the models described by Ezard et al., 2012). 
+For ease of following these cryptic lineages, cryptic cladogenetic
+events are treated in terms of data structure similarly to
+budding cladogenetic events, with one child lineage treated
+as a persistence of the ancestral lineage, and the other
+as a new morphologically indistinguishable lineage.
+This model of cryptic cladogenesis is ultimately
+based on the hierarchical birth-death model used by
+many authors for modeling patterns across paraphyletic
+higher taxa and the lower taxon units within them
+(e.g. Patzkowsky, 1995; Foote, 2012).
 
-The occurrence of the various models is controlled by multiple arguments of \code{simFossilRecord}.
-The overall instantaneous rate of branching (cladogenesis) is controlled by argument \code{p}, and
-the proportion of each type of cladogenesis controlled by arguments \code{prop.bifurc} and
-\code{prop.cryptic}. \code{prop.cryptic} controls the overall probability that any branching event
-will be cryptic versus involving any morphological differentiation (budding or bifurcating). If
-\code{prop.cryptic = 1}, all branching events will be cryptic cladogenesis, and if
-\code{prop.cryptic = 0}, all branching events will involve morphological differentiation and none
-will be cryptic. \code{prop.bifurc} controls how many branching events that involve morphological
-differentiation (i.e. the inverse of \code{prop.cryptic}) are bifurcating, as opposed to budding
-cladogenesis.  If \code{prop.bifurc = 1}, all morphologically-differentiating branching events will
-be bifurcating cladogenesis, and if \code{prop.bifurc = 0}, all morphologically-differentiating
-branching events will be budding cladogenesis. Thus, for example, the probability of a given
-cladogenesis event being budding is given by:
+The occurrence of the various models is controlled by
+multiple arguments of \code{simFossilRecord}.
+The overall instantaneous rate of branching (cladogenesis) is
+controlled by argument \code{p}, and the proportion of
+each type of cladogenesis controlled by arguments
+\code{prop.bifurc} and \code{prop.cryptic}.
+\code{prop.cryptic} controls the overall probability that
+any branching event will be cryptic versus
+involving any morphological differentiation (budding or bifurcating).
+If \code{prop.cryptic = 1}, all branching events will be cryptic cladogenesis,
+and if \code{prop.cryptic = 0}, all branching events will
+involve morphological differentiation and none will be cryptic.
+\code{prop.bifurc} controls how many branching events that
+involve morphological differentiation (i.e. the inverse of \code{prop.cryptic})
+are bifurcating, as opposed to budding cladogenesis. 
+If \code{prop.bifurc = 1}, all morphologically-differentiating branching events will
+be bifurcating cladogenesis, and if \code{prop.bifurc = 0},
+all morphologically-differentiating branching events will be budding cladogenesis.
+Thus, for example, the probability of a given cladogenesis event
+being budding is given by:
 
  \code{Prob(budding cladogenesis at a branching event) = (1 - prop.cryptic) * (1 - prop.bifurc)}
 
-By default,
-\code{prop.cryptic = 0} and \code{prop.bifurc = 0}, so all branching events by default will be
-instances of budding cladogenesis. Anagenesis is completely independent of these, controlled as its
-own Poisson process with an instantaneous rated defined by the argument \code{anag.rate}. By default,
-this rate is set to zero and thus there is no anagenetic events without user intervention.
+By default, \code{prop.cryptic = 0} and \code{prop.bifurc = 0},
+so all branching events will be instances of budding cladogenesis
+in analyses that use default setting.
+Anagenesis is completely independent of these, controlled as its
+own Poisson process with an instantaneous rated
+defined by the argument \code{anag.rate}.
+By default, this rate is set to zero and thus there is no
+anagenetic events without user intervention.
 
 \emph{Stopping Conditions and Acceptance Criteria for Simulations}
 
@@ -285,11 +316,13 @@ related to statistical sampling issues.
 
 Hartmann et al. (2011) recently discovered a potential statistical artifact
 when branching simulations are conditioned on some number of taxa.
-Previously within \code{paleotree}, this was accounted for in the deprecated function \code{simFossilTaxa} by
-a complex arrangement of minimum and maximum constraints, and an (incorrect)
-presumption that allowing simulations to continue for a short distance after
-constraints were reached. This strategy is not applied here. Instead,
-\code{simFossilRecord} applies the General Sampling Algorithm presented
+Previously within \code{paleotree}, this was accounted for in
+the deprecated function \code{simFossilTaxa} by a
+complex arrangement of minimum and maximum constraints,
+and an (incorrect) presumption that allowing simulations to
+continue for a short distance after constraints were reached
+would solve this statistical artifact. This strategy is not applied here.
+Instead, \code{simFossilRecord} applies the General Sampling Algorithm presented
 by Hartmann et al. (or at least, a close variant). A simulation continues until
 extinction or some maximum time-constraint is reached, evaluated for intervals
 that match the set run conditions (e.g. \code{nExtant}, \code{nTotalTime}) and, if some
@@ -313,14 +346,16 @@ Dates given in the output are on an reversed absolute time-scale; i.e. time
 decreases going from the past to the future, as is typical in paleontological
 uses of time (as time before present) and as for most function in package
 \code{paleotree}. The endpoints of the time-scale are decided by details of the
-simulation and can be modified by several arguments. By default (with
-\code{shiftRoot4TimeSlice  = } \code{"withExtantOnly"}), any simulation run that is accepted
-with extant taxa will have zero as the \emph{end-time} (i.e. when those taxa are
-extant), as zero is the typical time assigned to the modern day in empirical studies.
+simulation and can be modified by several arguments.
+By default (with \code{shiftRoot4TimeSlice  = } \code{"withExtantOnly"}), 
+any simulation run that is accepted with extant taxa will have zero as the
+\emph{end-time} (i.e. when those taxa are extant),
+as zero is the typical time assigned to the modern day in empirical studies.
 If a simulation ends with all taxa extinct, however, then instead the \emph{start-time}
 of a run (i.e. when the run initiates with starting taxa) will be maximum value
-assigned to the conditioning argument \code{totalTime}. If \code{shiftRoot4TimeSlice  = } \code{FALSE}
-then the \emph{start-time} of the run will always be this maximum value for
+assigned to the conditioning argument \code{totalTime}. 
+If \code{shiftRoot4TimeSlice  = } \code{FALSE}, then the
+\emph{start-time} of the run will always be this maximum value for
 \code{totalTime}, and any extant taxa will stop at some time greater than zero.
 }
 \examples{

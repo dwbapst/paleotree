@@ -7,16 +7,18 @@
 #' complex processes of diversification and sampling.
 
 #' @details
-#' \code{simFossilRecord} simulates a birth-death-sampling branching process (ala Foote, 1997,
-#'  2000; Stadler, 2009) in which lineages of organisms may branch, go extinct or be sampled
-#' thought a continuous time-interval, with the occurrence of these events
-#' modeled as Poisson process controlled by some set of instantaneous rates.
+#' \code{simFossilRecord} simulates a birth-death-sampling branching process
+#' (ala Foote, 1997,  2000; Stadler, 2009) in which lineages of organisms may branch,
+#' go extinct or be sampled at discrete points within a continuous time-interval.
+#' The occurrence of these discrete events are modeled as stochastic
+#' Poisson process, described by some set of instantaneous rates.
 #' This model is ultimately based on the birth-death model (Kendall, 1948; Nee, 2006),
 #' which is widely implemented in many R packages. Unlike other such typical branching
 #' simulators, this function enmeshes the lineage units within explicit models of how
-#' lineages are morphologically differentiated (Bapst, 2013). This is key to allow comparison
-#' to datasets from the fossil record, as morphotaxa are the basic
-#' units of paleontological diversity estimates and phylogenetic analyses. 
+#' lineages are morphologically differentiated (Bapst, 2013). 
+#' This is key to allow comparison to datasets from the fossil record,
+#' as morphotaxa are the basic units of paleontological diversity estimates
+#' and phylogenetic analyses. 
 #' 
 #' \emph{Models of Morphological Differentiation and Branching (Cladogenesis and Anagenesis)}
 #' 
@@ -29,11 +31,11 @@
 #' differentiation is assumed to be an instantaneous process for the purposes of this model,
 #' such that no intermediate could be uncovered.
 #' 
-#' Specifically, \code{simFossilRecord} allows for
-#' three types of binary branching events
-#' (here grouped under the term 'cladogenesis':
-#' 'budding cladogenesis', 'bifurcating cladogenesis' and
-#' 'cryptic cladogenesis', as well as for a fourth event-type, 'anagenesis'
+#' Specifically, \code{simFossilRecord} allows for three types of
+#' binary branching events, referred to here as under the umbrella
+#' term of 'cladogenesis': 'budding cladogenesis',
+#' 'bifurcating cladogenesis', and 'cryptic cladogenesis',
+#' as well as for a fourth non-branching event-type, 'anagenesis'
 #' (see Wagner and Erwin, 1995; Foote, 1996, and Bapst, 2013, for further details).
 #' Budding, bifurcation and cryptic cladogenetic events all
 #' share in common that a single geneological
@@ -233,19 +235,20 @@
 #' the sake of placing run-sampling dates before events and
 #' for use in determining whether a taxon is extant in simFossilRecordMethods.
 
-#' @param maxStepTime When rates are time-dependent (i.e. when
-#' parameters 'D' or 'T' are used in equations input for one of
-#' the four rate arguments), then protocol used by
-#' \code{simFossilRecord} of drawing waiting times to the next event could
-#' produce a serious mismatch of resulting process to the defined model,
-#' because the possibility of new events is only
-#' considered at the end of these waiting times. Instead, any
-#' time a waiting time greater than \code{maxStepTime} is
+#' @param maxStepTime When rates are time-dependent (i.e. when 
+#' parameters 'D' or 'T' are used in equations input for
+#' one of the four rate arguments), then protocol used by
+#' \code{simFossilRecord} of drawing waiting times to the next
+#' event could produce a serious mismatch of resulting process
+#' to the defined model, because the possibility of new events
+#' is only considered at the end of these waiting times.
+#' Instead, any time a waiting time greater than \code{maxStepTime} is
 #' selected, then instead \emph{no} event occurs and a
-#' time-step equal to \code{maxStepTime} occurs instead, thus effectively
-#' discretizing the progression of time in the simulations
-#' run by \code{simFossilRecord}. Decreasing this value will increase
-#' accuracy (as the time-scale is effectively more discretized)
+#' time-step equal to \code{maxStepTime} occurs instead,
+#' thus effectively discretizing the progression of
+#' time in the simulations run by \code{simFossilRecord}.
+#' Decreasing this value will increase accuracy
+#' (as the time-scale is effectively more discretized)
 #' but increase computation time, as the computer will need
 #' to stop and check rates to see if an event happened more often.
 #' Users should toggle this value relative to the time-dependent
@@ -259,15 +262,14 @@
 #' \code{nruns} objects of class \code{fossilRecordSimulation}. 
 
 #' @param startTaxa Number of initial taxa to begin a simulation with.
-#' All will have the simulation start date
-#' listed as their time of origination.
+#' All will have the simulation start date listed as their time of origination.
 
 #' @param sortNames If \code{TRUE}, output taxonomic lists are sorted by the taxon
 #' names (thus sorting cryptic taxa together) rather than by taxon ID number
 #' (i.e. the order they were simulated in).
 
-#' @param print.runs If \code{TRUE}, prints the proportion of simulations accepted for
-#' output to the terminal.
+#' @param print.runs If \code{TRUE}, prints the proportion of simulations
+#' accepted for output to the terminal.
 
 #' @param maxAttempts Number of simulation attempts allowed before the simulation process
 #' is halted with an error message. Default is \code{Inf}.

@@ -576,9 +576,9 @@ checkRecordForNoDatePastZero <- function(fossilRecord){
 		message(
 			"fossilRecord object has taxon entries with NEGATIVE origination times:\n"
 			)
-		badTaxa <- t(sapply(record[hasNegFirstDate], function(x) 
-				x[[1]]
-				))
+		badTaxa <- t(sapply(
+			fossilRecord[hasNegFirstDate], function(x) x[[1]]
+			))
 		print(badTaxa)
 		stop("Something has gone very wrong.")
 		}
@@ -588,10 +588,8 @@ checkRecordForNoDatePastZero <- function(fossilRecord){
 			"fossilRecord object has taxon entries with NEGATIVE extinction times:\n"
 			)
 		badTaxa <- t(sapply(
-			fossilRecord[hasNegLastDate], function(x) 
-				x[[1]]
-				)
-			)
+			fossilRecord[hasNegLastDate], function(x) x[[1]]
+			))
 		print(badTaxa)
 		stop("Something has gone very wrong.")
 		}
@@ -600,8 +598,9 @@ checkRecordForNoDatePastZero <- function(fossilRecord){
 		message(
 			"fossilRecord object has taxon entries with NEGATIVE sampling times:\n"
 			)
+			
 		for(i in which(hasNegSampleDate)){
-			print(badTaxa[[i]])
+			print(fossilRecord[[i]])
 			}
 		stop("Something has gone very wrong.")
 		}	

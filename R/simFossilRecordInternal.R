@@ -534,7 +534,7 @@ testFinal <- function(taxa,timePassed,runConditions,count.cryptic){
 	return(finalVitals)
 	}		
 	
-checkRecordForNoDatePastZero <- function(record){	
+checkRecordForNoDatePastZero <- function(fossilRecord){	
 	#
 	hasNegFirstDate <- sapply(fossilRecord,
 		function(x) x[[1]]["orig.time"] < 0

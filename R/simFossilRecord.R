@@ -1491,7 +1491,7 @@ simFossilRecord <- function(
 		#
 		# check that all taxa have orig/ext/sampling times that are less than or
 			# equal to zero
-		checkNegDates <- checkRecordForNoDatePastZero(record = taxa)
+		checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = taxa)
 		#
 		################################################################################
 		#

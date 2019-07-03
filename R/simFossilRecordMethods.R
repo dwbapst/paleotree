@@ -171,7 +171,7 @@ timeSliceFossilRecord <- function(fossilRecord, sliceTime, shiftRoot4TimeSlice =
 	#
 	# CHECKS
 	checkResult <- checkFossilRecord(fossilRecord)
-	checkNegDates <- checkRecordForNoDatePastZero(record = fossilRecord)
+	checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
 	#
 	#check shiftRoot4TimeSlice
 	shiftPar <- c(TRUE,FALSE,"withExtantOnly")
@@ -254,7 +254,7 @@ timeSliceFossilRecord <- function(fossilRecord, sliceTime, shiftRoot4TimeSlice =
 fossilRecord2fossilTaxa <- function(fossilRecord){
 	# CHECKS
 	checkResult <- checkFossilRecord(fossilRecord)
-	checkNegDates <- checkRecordForNoDatePastZero(record = fossilRecord)
+	checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
 	#
 	# a function that transforms a simfossilrecord to a taxa object
 	taxaConvert <- t(sapply(fossilRecord,function(x) x[[1]]))	
@@ -276,8 +276,10 @@ fossilTaxa2fossilRecord<-function(fossilTaxa){
 	names(fossilRecord) <- rownames(fossilTaxa)
 	class(fossilRecord) <- 'fossilRecordSimulation'
 	#
+	# CHECKS
 	checkResult <- checkFossilRecord(fossilRecord)
-	checkNegDates <- checkRecordForNoDatePastZero(record = fossilRecord)
+	checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
+	#
 	return(fossilRecord)
 	}
 	
@@ -291,7 +293,7 @@ fossilRecord2fossilRanges <- function(fossilRecord, merge.cryptic = TRUE, ranges
 	# CHECKS
 	# browser()
 	checkResult <- checkFossilRecord(fossilRecord)
-	checkNegDates <- checkRecordForNoDatePastZero(record = fossilRecord)
+	checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
 	#
 	sampData <- lapply(fossilRecord,function(x) x[[2]]) 
 	#get sampOcc : separate out the sampling events

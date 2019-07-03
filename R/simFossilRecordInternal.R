@@ -587,9 +587,11 @@ checkRecordForNoDatePastZero <- function(fossilRecord){
 		message(
 			"fossilRecord object has taxon entries with NEGATIVE extinction times:\n",
 			)
-		badTaxa <- t(sapply(record[hasNegLastDate], function(x) 
+		badTaxa <- t(sapply(
+			fossilRecord[hasNegLastDate], function(x) 
 				x[[1]]
-				))
+				)
+			)
 		print(badTaxa)
 		stop("Something has gone very wrong.")
 		}

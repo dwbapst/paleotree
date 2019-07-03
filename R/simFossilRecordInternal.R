@@ -536,11 +536,17 @@ testFinal <- function(taxa,timePassed,runConditions,count.cryptic){
 	
 checkRecordForNoDatePastZero <- function(fossilRecord){	
 	#
+	# ARE ANY DATES NEGATIVE
 	hasNegFirstDate <- sapply(fossilRecord,
 		function(x) x[[1]]["orig.time"] < 0
 		)
 	hasNegLastDate <- sapply(fossilRecord,
-		function(x) x[[1]]["ext.time"] < 0
+		function(x) 
+			if(is.na(x[[1]]["ext.time"])){
+				FALSE
+			}else{
+				x[[1]]["ext.time"] < 0
+				}		
 		)
 	hasNegSampleDate <- sapply(fossilRecord,
 		function(x) 
@@ -550,7 +556,21 @@ checkRecordForNoDatePastZero <- function(fossilRecord){
 				any(x[[2]] < 0)
 			}
 		)
-	
+	#	
+	# NOW CHECK 
+	if(any(is.na(hasNegFirstDate))){
+		stop("Weird NAs in origination times in fossilRecord")
+		}
+	#
+	if(any(is.na(hasNegLastDate))){
+		stop("Weird NAs returned when testing extinction times in fossilRecord")
+		}
+	#
+	if(any(is.na(hasNegSampleDate))){
+		stop("Weird NAs returned when testing sampling times in fossilRecord")
+		}
+	#
+	#
 	# taxa with orig times beyond 0
 	if(any(hasNegFirstDate)){
 		message(

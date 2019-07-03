@@ -19,8 +19,9 @@
 #' 
 #' \code{fossilRecord2fossilTaxa} converts a \code{fossilRecordSimulation} object
 #' to the flat table format of taxon data as was originally output by deprecated function 
-#' \code{simFossilTaxa}, and can be taken as input by a number of \code{paleotree} functions such as
-#' \code{sampleRanges},\code{taxa2phylo} and \code{taxa2cladogram}. 
+#' \code{simFossilTaxa}, and can be taken as input
+#' by a number of \code{paleotree} functions such as
+#' \code{sampleRanges}, \code{taxa2phylo} and \code{taxa2cladogram}. 
 #' 
 #' \code{fossilTaxa2fossilRecord} does the reverse, converting a \code{simFossilTaxa}
 #' table into a \code{fossilRecordSimulation} list object,
@@ -67,8 +68,9 @@
  
 #' @param ranges.only If \code{TRUE} (the default), \code{fossilRecord2fossilRanges}
 #' will return the dates of the first and last sampled occurrences of each taxon-unit
-#' (i.e. the stratigraphic range of each taxon). If \code{FALSE}, instead a list will be
-#' output, with each element being a vector of dates for all sampling events of each taxon-unit.
+#' (i.e. the stratigraphic range of each taxon).
+#' If \code{FALSE}, instead a list will be output,
+#' with each element being a vector of dates for all sampling events of each taxon-unit.
 
 #' @return
 #' Depends on the function and the arguments given. See Details.
@@ -169,6 +171,8 @@ timeSliceFossilRecord <- function(fossilRecord, sliceTime, shiftRoot4TimeSlice =
 	#
 	# CHECKS
 	checkResult <- checkFossilRecord(fossilRecord)
+	checkNegDates <- checkRecordForNoDatePastZero(record = fossilRecord)
+	#
 	#check shiftRoot4TimeSlice
 	shiftPar <- c(TRUE,FALSE,"withExtantOnly")
 	shiftRoot4TimeSlice <- shiftPar[pmatch(shiftRoot4TimeSlice,shiftPar)]
@@ -250,6 +254,8 @@ timeSliceFossilRecord <- function(fossilRecord, sliceTime, shiftRoot4TimeSlice =
 fossilRecord2fossilTaxa <- function(fossilRecord){
 	# CHECKS
 	checkResult <- checkFossilRecord(fossilRecord)
+	checkNegDates <- checkRecordForNoDatePastZero(record = fossilRecord)
+	#
 	# a function that transforms a simfossilrecord to a taxa object
 	taxaConvert <- t(sapply(fossilRecord,function(x) x[[1]]))	
 	rownames(taxaConvert) <- names(fossilRecord)
@@ -261,11 +267,17 @@ fossilRecord2fossilTaxa <- function(fossilRecord){
 fossilTaxa2fossilRecord<-function(fossilTaxa){
 	# convert a fossilTaxa object to a fossilRecord object
 	fossilRecord <- apply(fossilTaxa,1,function(x)
-		list(taxa.data=x,
-		sampling.times=numeric(0)))
+		list(
+			taxa.data=x,
+			sampling.times=numeric(0)
+			)
+		)
+	#
 	names(fossilRecord) <- rownames(fossilTaxa)
 	class(fossilRecord) <- 'fossilRecordSimulation'
+	#
 	checkResult <- checkFossilRecord(fossilRecord)
+	checkNegDates <- checkRecordForNoDatePastZero(record = fossilRecord)
 	return(fossilRecord)
 	}
 	
@@ -279,6 +291,7 @@ fossilRecord2fossilRanges <- function(fossilRecord, merge.cryptic = TRUE, ranges
 	# CHECKS
 	# browser()
 	checkResult <- checkFossilRecord(fossilRecord)
+	checkNegDates <- checkRecordForNoDatePastZero(record = fossilRecord)
 	#
 	sampData <- lapply(fossilRecord,function(x) x[[2]]) 
 	#get sampOcc : separate out the sampling events
@@ -296,14 +309,17 @@ fossilRecord2fossilRanges <- function(fossilRecord, merge.cryptic = TRUE, ranges
 				sampOcc[[i]] <- unlist(c(sampOcc[taxonIDs[i] == cryptIDs]))
 				#check that its a vector
 				if(is.list(sampOcc[[i]])){
-					stop("sampling data for taxa is not coercing correctly to a vector")}
+					stop(
+						"sampling data for taxa is not coercing correctly to a vector"
+						)}
 			}else{
 				#if its a cryptic taxon that didn't found the complex, erase its data
 				sampOcc[[i]] <- NA
 				}
 			}
 		}
-	sampOcc[sapply(sampOcc,length) == 0] <- NA
+	sampOcc[sapply(sampOcc, length) == 0] <- NA
+	#
 	#convert sampling events to FADs and LADs
 	if(ranges.only){
 		ranges <- cbind(sapply(sampOcc,max),sapply(sampOcc,min))
@@ -320,11 +336,19 @@ fossilRecord2fossilRanges <- function(fossilRecord, merge.cryptic = TRUE, ranges
 # don't export
 checkFossilRecord <- function(fossilRecord){
 	if(!inherits(fossilRecord,"fossilRecordSimulation")){
-		stop("fossilRecord object is not of class 'fossilRecordSimulation'")}
+		stop(
+			"fossilRecord object is not of class 'fossilRecordSimulation'"
+			)}
 	if(any(sapply(fossilRecord,length) != 2)){
-		stop("fossilRecord object has taxon entries with more or less than two elements")}
+		stop(
+			"fossilRecord object has taxon entries with more or less than two elements"
+			)}
 	if(any(sapply(fossilRecord,function(x) length(x[[1]])) != 6)){
-		stop("fossilRecord object has taxon entries with more or less than six elements in first element")}		
+		stop(
+			"fossilRecord object has taxon entries with more or less than six elements in first element"
+			)}		
+	#
 	return(TRUE)
 	}
-
+	
+	

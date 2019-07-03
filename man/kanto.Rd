@@ -73,13 +73,16 @@ plot(kantoPIE,dominance)
 
 
 \dontrun{
-#######################
+#########################################
+#################################################
+#########################################################
 # Some Cool Ecology Stuff With Other Packages
 
 # basically all the analyses & visualizations
 		#for ecology in R that I think are awesome
 
 
+##########################################
 ###########################
 #Ordination (PCO, DCA)
 
@@ -129,7 +132,8 @@ plot(NNlist)
 #arrows point at the nearest neighbor of each sample
 	    # based on maximum Spearman rho correlation
 
-##################################
+#########################################
+#######################################################
 # Two Way Cluster With Heatmap
 
 # This example based on code provided by Max Christie
@@ -190,19 +194,39 @@ rainColors <- c("white", rainColors)
 	#siteDist and taxaDist made above by vegdist (bray-curtis)
 # scale is the relative abundance, let's label it as such
 
-
 dev.new(width = 10)
+
 #for some reason, mtext() doesn't recognize pheatmap as plot.new
 plot.new(width = 7) 
-pheatmap(siteStand, color = rainColors, breaks = colorBreaks, 
-	clustering_method = "ward.D", 
-	clustering_distance_rows = siteDist, 
-	clustering_distance_cols = taxaDist)
-mtext("Relative Abundance",side = 4,line = -1.4,adj = 0.95)
+
+pheatmap(
+   siteStand, 
+	  clustering_method = "ward.D", 
+	  clustering_distance_rows = siteDist, 
+	  clustering_distance_cols = taxaDist,
+   color = rainColors, 
+   breaks = colorBreaks
+   )
+mtext("Relative Abundance",
+   side = 4, line = -1.4, adj = 0.95)
 
 # pretty cool looking!
 
-##############################
+########################
+# even better: 
+   # twoWayEcologyCluster in paleotree
+
+dev.new(width=10)	
+
+twoWayEcologyCluster(
+    xDist = siteDist,
+    yDist = taxaDist,
+    propAbund = siteStandKanto,
+    cex.axisLabels = 0.8
+    )
+
+#########################################
+#########################################################
 ## Testing for differences between groups of sites
 
 #is there a difference between routes and non-routes

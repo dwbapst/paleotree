@@ -40,9 +40,13 @@
 #' See examples for the full R code used to obtain the data from the API.
 #' You can find the Paleobiology Database at \url{http://paleobiodb.org}
 #' 
-#' The occurrence data was entered by (in order of relative portion) P. Novack-Gottshall, M. Krause, M. Foote,
-#' A. Hendy, T. Hanson, M. Sommers and others. This same data was authorized mainly by A. Miller,
-#' W. Kiessling, M. Foote, A. Hendy, S. Holland, J. Sepkoski and others.
+#' The occurrence data was entered by many, including
+#' (six most prominent enterers, in order of relative portion):
+#' P. Novack-Gottshall, M. Krause, M. Foote,
+#' A. Hendy, T. Hanson, and M. Sommers.
+#' This entered data was authorized mainly by A. Miller,
+#' W. Kiessling, M. Foote, A. Hendy,
+#' S. Holland, J. Sepkoski (as well as others).
 
 #' @keywords datasets
 

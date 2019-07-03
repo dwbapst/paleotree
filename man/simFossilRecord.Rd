@@ -331,7 +331,7 @@ interval or set of intervals matches the run conditions, a date is randomly samp
 from within this interval/intervals. The simulation is then cut at this date using
 the \code{timeSliceFossilRecord} function, and saved as an accepted run.
 The simulation data is otherwise discarded and then a new simulation initiated
-(thus, at most, only one simulated dataset is accepted from one simulation run).
+(therefore, at most, only one simulated dataset is accepted from one simulation run).
 
 Thus, accepted simulations runs should reflect unbiased samples of evolutionary
 histories that precisely match the input constraints, which can be very precise,

@@ -204,7 +204,16 @@
 #' #looks 'spiky'!
 #' 
 #' @export
-taxicDivCont <- function(timeData,int.length = 1,int.times = NULL,plot = TRUE,plotLogRich = FALSE,timelims = NULL,drop.cryptic = FALSE){
+taxicDivCont <- function(
+		timeData,
+		int.length = 1,
+		int.times = NULL,
+		plot = TRUE,
+		plotLogRich = FALSE,
+		timelims = NULL,
+		drop.cryptic = FALSE
+		){
+	###########################
 	#This function estimates diversity for bins from continuous-time range data
 	#input is a per-species matrix of backwards-time FADs and LADs in 2 columns (FADs first)
 		#assumes time is in millions of years
@@ -216,8 +225,12 @@ taxicDivCont <- function(timeData,int.length = 1,int.times = NULL,plot = TRUE,pl
 		if(!drop.cryptic){
 			timeData <- timeData[,3:4,drop = FALSE]
 		}else{
-			timeDataF <- sapply(unique(timeData[,6]),function(x) max(timeData[x == timeData[,6],3]))
-			timeDataL <- sapply(unique(timeData[,6]),function(x) min(timeData[x == timeData[,6],4]))
+			timeDataF <- sapply(unique(timeData[,6]),function(x)
+				max(timeData[x == timeData[,6],3])
+				)
+			timeDataL <- sapply(unique(timeData[,6]),function(x)
+				min(timeData[x == timeData[,6],4])
+				)
 			timeData <- cbind(timeDataF,timeDataL)
 			}
 		}	
@@ -229,9 +242,15 @@ taxicDivCont <- function(timeData,int.length = 1,int.times = NULL,plot = TRUE,pl
 			}
 		}
 	timeData <- timeData[!is.na(timeData[,1]),,drop = FALSE]
-	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(any(timeData[,1]<timeData[,2])){stop("timeData is not in time relative to modern (decreasing to present)")}
-	if(any(timeData[,2]<0)){stop("Some dates in timeData <0 ?")}
+	if(any(is.na(timeData))){
+		stop("Weird NAs in Data??")
+		}
+	if(any(timeData[,1]<timeData[,2])){
+		stop("timeData is not in time relative to modern (decreasing to present)")
+		}
+	if(any(timeData[,2]<0)){
+		stop("Some dates in timeData <0 ?")
+		}
 	FAD <- as.numeric(timeData[,1]);LAD <- as.numeric(timeData[,2])
 	if(is.null(int.times)){
 		midtimes <- seq(max(FAD)+2*tblen,min(LAD)-2*tblen,by = -tblen)
@@ -242,21 +261,42 @@ taxicDivCont <- function(timeData,int.length = 1,int.times = NULL,plot = TRUE,pl
 		int.start <- int.times[,1];int.end <- int.times[,2]
 		midtimes <- (int.start+int.end)/2
 		}
-	div <- sapply(1:length(midtimes),function(x) sum(FAD >= int.end[x])-sum(LAD>int.start[x]))
+	div <- sapply(1:length(midtimes),function(x)
+		sum(FAD >= int.end[x])-sum(LAD>int.start[x])
+		)
+	#
 	if(plot){
 		times1 <- c(int.start,(int.end+((int.start-int.end)/10000)))
 		div1 <- c(div,div)[order(times1)]
 		times1 <- sort(times1)
 		if(plotLogRich){
 			plot(times1[div1>0],div1[div1>0],type = "l",log = "y",
-				xlim = if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
-				xaxs = if(is.null(timelims)){"r"}else{"i"},
-				xlab = "Time (Before Present)",ylab = "taxic Richness (Log Scale)")		
+				xlim = if(is.null(timelims)){
+						c(max(times1),max(0,min(times1)))
+					}else{
+						timelims
+						},
+				xaxs = if(is.null(timelims)){
+						"r"
+					}else{
+						"i"
+						},
+				xlab = "Time (Before Present)",
+				ylab = "taxic Richness (Log Scale)")		
 		}else{
 			plot(times1,div1,type = "l",
-				xlim = if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
-				xaxs = if(is.null(timelims)){"r"}else{"i"},
-				xlab = "Time (Before Present)",ylab = "Taxic Richness")
+				xlim = if(is.null(timelims)){
+						c(max(times1),max(0,min(times1)))
+					}else{
+						timelims
+						},
+				xaxs = if(is.null(timelims)){
+						"r"
+					}else{
+						"i"
+						},
+				xlab = "Time (Before Present)",
+				ylab = "Taxic Richness")
 			}
 		}
 	res <- cbind(int.start,int.end,int.div = div)
@@ -265,9 +305,19 @@ taxicDivCont <- function(timeData,int.length = 1,int.times = NULL,plot = TRUE,pl
 
 #' @rdname DiversityCurves
 #' @export
-taxicDivDisc <- function(timeList,int.times = NULL,drop.singletons = FALSE,plot = TRUE,plotLogRich = FALSE,timelims = NULL,
-		extant.adjust = 0.001,split.int = TRUE){
-	#this function estimates diversity for binned intervals from discrete interval range data
+taxicDivDisc <- function(
+		timeList,
+		int.times = NULL,
+		drop.singletons = FALSE,
+		plot = TRUE,
+		plotLogRich = FALSE,
+		timelims = NULL,
+		extant.adjust = 0.001,
+		split.int = TRUE
+		){
+	############################################################
+	#this function estimates diversity for binned intervals
+		# from discrete interval range data
 	#input is a list with (1) interval times matrix and (2) species FOs and LOs
 	#time interval starts and ends can be pre-input as a 2 column matrix
 		#HOWEVER this could be pretty misleading!
@@ -294,29 +344,53 @@ taxicDivDisc <- function(timeList,int.times = NULL,drop.singletons = FALSE,plot 
 	intMat[intMat[,1] == 0,1] <- extant.adjust
 	timeData <- timeData[!is.na(timeData[,1]),,drop = FALSE]
 	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(any(!sapply(intMat,is.numeric))){stop("Some values in the interval times aren't numeric??")}
-	if(any(apply(intMat,1,diff)>0)){stop("timeList[[1]] not in intervals in time relative to modern")}
+	if(any(!sapply(intMat,is.numeric))){
+		stop("Some values in the interval times aren't numeric??"
+		)}
+	if(any(apply(intMat,1,diff)>0)){
+		stop("timeList[[1]] not in intervals in time relative to modern"
+		)}
 	if(any(intMat[,2]<0)){stop("Some dates in timeList[[1]] <0 ?")}
-	if(any(apply(timeData,1,diff)<0)){stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
+	if(any(apply(timeData,1,diff)<0)){
+		stop(
+			"timeList[[2]] not in intervals numbered from first to last (1 to infinity)"
+			)
+		}
 	if(any(timeData[,2]<0)){stop("Some dates in timeList[[2]] <0 ?")}
 	Fint <- as.numeric(timeData[,1]);Lint <- as.numeric(timeData[,2])
 	FAD <- intMat[Fint,1];LAD <- intMat[Lint,2]
 	if(is.null(int.times)){
 		avg_dur <- abs(mean(apply(timeList[[1]],1,diff)))
-		int.bounds <- unique(c(intMat,max(intMat)+avg_dur,min(intMat)-avg_dur))		#add a little space at start and end
+		#add a little space at start and end
+		int.bounds <- unique(c(intMat,max(intMat)+avg_dur,min(intMat)-avg_dur))		
 		int.bounds <- int.bounds[order(-int.bounds)]
+		#
 		intMat <- cbind(int.bounds[-length(int.bounds)],int.bounds[-1])
 		int.start <- intMat[,1];int.end <- intMat[,2]
 		midtimes <- apply(intMat,1,mean)
 	}else{
-		if(split.int){	#if split.int, then any interval times given are split at discrete time intervals
+		if(split.int){	
+			#if split.int, then any interval times given are
+				# split at discrete time intervals
 			splinters <- sort(unique(c(intMat)))
-			mustSplit <- apply(int.times,1,function(x) any(sapply(splinters,function(y) x[1]>y & x[2]<y)))
+			mustSplit <- apply(int.times,1,function(x)
+				any(sapply(splinters,function(y) x[1]>y & x[2]<y))
+				)
+			#
 			if(any(mustSplit)){
 				for(i in which(mustSplit)){
-					splitter <- splinters[sapply(splinters,function(y) int.times[i,1]>y & int.times[i,2]<y)]
-					for(j in splitter){		#in case there is more than one splitter
-						int.times <- rbind(int.times,c(int.times[i,1],j),c(j,int.times[i,2]))
+					splitter <- splinters[
+						sapply(splinters,function(y)
+							int.times[i,1]>y & int.times[i,2]<y
+							)
+						]
+					for(j in splitter){		
+						#in case there is more than one splitter
+						int.times <- rbind(
+							int.times,
+							c(int.times[i,1],j),
+							c(j,int.times[i,2])
+							)
 						}
 					}
 				int.times <- int.times[-which(mustSplit),]
@@ -326,22 +400,45 @@ taxicDivDisc <- function(timeList,int.times = NULL,drop.singletons = FALSE,plot 
 		int.start <- int.times[,1];int.end <- int.times[,2]
 		midtimes <- (int.start+int.end)/2
 		}
-	div <- sapply(1:length(midtimes),function(x) sum(FAD>int.end[x])-sum(LAD >= int.start[x]))
+	div <- sapply(1:length(midtimes),function(x)
+		sum(FAD>int.end[x])-sum(LAD >= int.start[x])
+		)
 	#div <- sapply(min(timeData):max(timeData),function(x) 	sum(FAD <= x & LAD >= x))
 	if(plot){
 		times1 <- c(int.start,(int.end+((int.start-int.end)/10000)))
 		div1 <- c(div,div)[order(times1)]
 		times1 <- sort(times1)
 		if(plotLogRich){
-			plot(times1[div1>0],div1[div1>0],type = "l",log = "y",
-				xlim = if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
-				xaxs = if(is.null(timelims)){"r"}else{"i"},
-				xlab = "Time (Before Present)",ylab = "Taxic Richness (Log Scale)")		
+			plot(times1[div1>0],div1[div1>0],
+				type = "l",
+				log = "y",
+				xlim = if(is.null(timelims)){
+						c(max(times1),max(0,min(times1)))
+					}else{
+						timelims
+						},
+				xaxs = if(is.null(timelims)){
+						"r"
+					}else{
+						"i"
+						},
+				xlab = "Time (Before Present)",
+				ylab = "Taxic Richness (Log Scale)")		
 		}else{
-			plot(times1,div1,type = "l",
-				xlim = if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
-				xaxs = if(is.null(timelims)){"r"}else{"i"},
-				xlab = "Time (Before Present)",ylab = "Taxic Richness")
+			plot(times1,div1,
+				type = "l",
+				xlim = if(is.null(timelims)){
+						c(max(times1),max(0,min(times1)))
+					}else{
+						timelims
+						},
+				xaxs = if(is.null(timelims)){
+						"r"
+					}else{
+					"i"
+						},
+				xlab = "Time (Before Present)",
+				ylab = "Taxic Richness")
 			}
 		}
 	res <- cbind(int.start,int.end,int.div = div)
@@ -350,8 +447,16 @@ taxicDivDisc <- function(timeList,int.times = NULL,drop.singletons = FALSE,plot 
 
 #' @rdname DiversityCurves
 #' @export
-phyloDiv <- function(tree,int.length = 0.1,int.times = NULL,plot = TRUE,plotLogRich = FALSE,
-		drop.ZLB = TRUE,timelims = NULL){
+phyloDiv <- function(
+		tree,
+		int.length = 0.1,
+		int.times = NULL,
+		plot = TRUE,
+		plotLogRich = FALSE,
+		drop.ZLB = TRUE,
+		timelims = NULL
+		){
+	##################################
 	#function that computes a diversity curve from a tree file
 		#aka lineage-through-time plot
 	#root.time
@@ -381,7 +486,9 @@ phyloDiv <- function(tree,int.length = 0.1,int.times = NULL,plot = TRUE,plotLogR
 		ntime <- node.depth.edgelength(ttree)
 		ntime <- ttree$root.time-ntime
 		ntime <- round(ntime,6)
-		if(min(ntime)<0){stop("tree$root.time is less than total depth of tree!")}
+		if(min(ntime)<0){
+			stop("tree$root.time is less than total depth of tree!")
+			}
 		}
 	if(is.null(int.times)){
 		midtimes <- seq(max(ntime)+3*tblen,min(ntime)-2*tblen,by = -tblen)
@@ -394,32 +501,57 @@ phyloDiv <- function(tree,int.length = 0.1,int.times = NULL,plot = TRUE,plotLogR
 		}
 	LAD <- ntime[1:Ntip(ttree)]				#death
 	FAD <- ntime[(Ntip(ttree)+1):length(ntime)]		#birth
-	div <- sapply(1:length(midtimes),function(x) 1+sum(FAD >= int.end[x])-sum(LAD>int.start[x]))
+	div <- sapply(1:length(midtimes),function(x) 
+		1+sum(FAD >= int.end[x])-sum(LAD>int.start[x])
+		)
 	if(plot){
 		times1 <- c(int.start,(int.end+((int.start-int.end)/10000)))
 		div1 <- c(div,div)[order(times1)]
 		times1 <- sort(times1)
 		layout(matrix(1:2,2,1))
 		parOrig <- par(no.readonly = TRUE)
+		#
 		par(mar = c(1,4,1,1))
 		plot(ladderize(savetree),show.tip.label = FALSE)
-		axisPhylo()    #anticipating that ape will recognize root.time soon
+		#anticipating that ape will recognize root.time
+		axisPhylo()   
+		#
 		par(mar = c(5,4,2,2))
 		if(plotLogRich){
 			plot(times1[div1>0],div1[div1>0],type = "l",log = "y",
-				xlim = if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
-				xaxs = if(is.null(timelims)){"r"}else{"i"},
-				xlab = "Time (Before Present)",ylab = "Lineage Richness (Log Scale)")		
+				xlim = if(is.null(timelims)){
+						c(max(times1),max(0,min(times1)))
+					}else{
+						timelims
+						},
+				xaxs = if(is.null(timelims)){
+						"r"
+					}else{
+						"i"
+						},
+				xlab = "Time (Before Present)",
+				ylab = "Lineage Richness (Log Scale)")		
 		}else{
 			plot(times1,div1,type = "l",
-				xlim = if(is.null(timelims)){c(max(times1),max(0,min(times1)))}else{timelims},
-				xaxs = if(is.null(timelims)){"r"}else{"i"},
+				xlim = if(is.null(timelims)){
+						c(max(times1),max(0,min(times1)))
+					}else{
+						timelims
+						},
+				xaxs = if(is.null(timelims)){
+						"r"
+					}else{
+						"i"
+						},
 				ylim = c(0,max(div1)+1),
-				xlab = "Time (Before Present)",ylab = "Lineage Richness")
+				xlab = "Time (Before Present)",
+				ylab = "Lineage Richness")
 			}
 		par(parOrig)
 		layout(1)
 		}
+	#
 	res <- cbind(int.start,int.end,int.div = div)
+	#
 	return(invisible(res))
 	}

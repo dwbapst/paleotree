@@ -152,9 +152,12 @@
 
 #' @rdname getDataPBDB 
 #' @export 
-getCladeTaxaPBDB <- function(taxon,
+getCladeTaxaPBDB <- function(
+		taxon,
 		showTaxa = c("class", "parent", "app", "img", "entname"),
-		status = "accepted", urlOnly = FALSE, stopIfMissing=FALSE){
+		status = "accepted", 
+		urlOnly = FALSE, 
+		stopIfMissing=FALSE){
 	##########################################
 	# check that only a single taxon is given
 	if(length(taxon) != 1){
@@ -175,7 +178,10 @@ getCladeTaxaPBDB <- function(taxon,
 	if(urlOnly){
 		res <- requestURLPBDB
 	}else{
-		res <- getPBDBtaxaCSV(requestURLPBDB, stopIfMissing=stopIfMissing)
+		res <- getPBDBtaxaCSV(
+			requestURL = requestURLPBDB, 
+			stopIfMissing = stopIfMissing
+			)
 		}
 	#######################################
 	return(res)
@@ -183,10 +189,13 @@ getCladeTaxaPBDB <- function(taxon,
 
 #' @rdname getDataPBDB 
 #' @export 
-getSpecificTaxaPBDB <- function(taxa,
+getSpecificTaxaPBDB <- function(
+		taxa,
 		showTaxa = c("class", "parent", "app", "img", "entname"),
 		status = "accepted",
-		urlOnly = FALSE, stopIfMissing=FALSE){
+		urlOnly = FALSE, 
+		stopIfMissing=FALSE
+		){
 	#####################################
 	if(length(taxa)>1){
 		# collapse taxa to a vector
@@ -206,14 +215,21 @@ getSpecificTaxaPBDB <- function(taxa,
 		res <- requestURLPBDB
 		# browseURL(apiAddressTaxa)
 	}else{
-		res <- getPBDBtaxaCSV(requestURLPBDB, stopIfMissing=stopIfMissing)
+		res <- getPBDBtaxaCSV(
+			requestURL = requestURLPBDB, 
+			stopIfMissing = stopIfMissing
+			)
 		}
 	##################################
 	# return
 	return(res)
 	}	
 
-getPBDBtaxaCSV <- function(requestURL, stopIfMissing=FALSE){
+getPBDBtaxaCSV <- function(
+		requestURL, 
+		stopIfMissing=FALSE
+		){
+	##########################################
 	linesOut <- readLines(requestURL)
 	if(any(linesOut == "\"Records:\"")){
 		# then there must be errors, report them
@@ -244,7 +260,8 @@ getPBDBtaxaCSV <- function(requestURL, stopIfMissing=FALSE){
 
 #' @rdname getDataPBDB 
 #' @export 
-getPBDBocc <- function(taxa, 
+getPBDBocc <- function(
+		taxa, 
 		showOccs = c("class", "classext", "subgenus", "ident", "entname")
 		){
 	#############

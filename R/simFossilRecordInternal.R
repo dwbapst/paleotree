@@ -514,7 +514,8 @@ testFinal <- function(taxa,timePassed,runConditions,count.cryptic){
 	finalVitals <- getRunVitals(taxa = taxa,count.cryptic = count.cryptic)
 	finalVitals <- c(timePassed = timePassed,finalVitals)
 		#time
-		#okayTime <- (timePassed >= runConditions[[1]][1] & timePassed <= runConditions[[1]][2])
+		# okayTime <- (timePassed >= runConditions[[1]][1] 
+			# & timePassed <= runConditions[[1]][2])
 	#other vitals
 	okayVitals <- sapply(1:4,function(i){
 		var <- finalVitals[i]
@@ -525,10 +526,64 @@ testFinal <- function(taxa,timePassed,runConditions,count.cryptic){
 	if(any(!okayVitals)){
 		print(finalVitals)
 		#browser()
-		stop(paste0("Accepted run as outside of bounds set for conditions:",
+		stop(paste0(
+			"Accepted run as outside of bounds set for conditions:",
 			names(runConditions)[!okayVitals],collapse = ", "))
 		}
 	finalCheck <- all(okayVitals)
 	return(finalVitals)
 	}		
 	
+checkRecordForNoDatePastZero <- function(record){	
+	#
+	hasNegFirstDate <- sapply(fossilRecord,
+		function(x) x[[1]]["orig.time"] < 0
+		)
+	hasNegLastDate <- sapply(fossilRecord,
+		function(x) x[[1]]["ext.time"] < 0
+		)
+	hasNegSampleDate <- sapply(fossilRecord,
+		function(x) 
+			if(any(is.na(x[[2]]))){
+				FALSE
+			}else{
+				any(x[[2]] < 0)
+			}
+		)
+	
+	# taxa with orig times beyond 0
+	if(any(hasNegFirstDate)){
+		message(
+			"fossilRecord object has taxon entries with NEGATIVE origination times:\n",
+			)
+		badTaxa <- t(sapply(record[hasNegFirstDate], function(x) 
+				x[[1]]
+				))
+		print(badTaxa)
+		stop("Something has gone very wrong.")
+		}
+	# taxa with ext times beyond 0
+	if(any(hasNegLastDate)){
+		message(
+			"fossilRecord object has taxon entries with NEGATIVE extinction times:\n",
+			)
+		badTaxa <- t(sapply(record[hasNegLastDate], function(x) 
+				x[[1]]
+				))
+		print(badTaxa)
+		stop("Something has gone very wrong.")
+		}
+	# taxa with sampling times beyond 0
+	if(any(hasNegSampleDate)){
+		message(
+			"fossilRecord object has taxon entries with NEGATIVE sampling times:\n",
+			)
+		for(i in which(hasNegSampleDate)){
+			print(badTaxa[[i]])
+			}
+		stop("Something has gone very wrong.")
+		}	
+	#
+	return(TRUE)
+	}
+

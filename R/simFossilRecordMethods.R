@@ -208,6 +208,8 @@ timeSliceFossilRecord <- function(
 			(sliceTime-x[[1]][4]) > tolerance
 		}})
 	#browser()
+	print(shiftRoot4TimeSlice)
+	#
 	if(shiftRoot4TimeSlice == "withExtantOnly"){
 		if(any(isAlive)){
 			shiftRoot4TimeSlice <- TRUE

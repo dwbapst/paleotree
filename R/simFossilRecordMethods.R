@@ -205,7 +205,7 @@ timeSliceFossilRecord <- function(
 		if(is.na(x[[1]][4])){
 			TRUE
 		}else{
-			(sliceTime-x[[1]][4])>tolerance
+			(sliceTime-x[[1]][4]) > tolerance
 		}})
 	#browser()
 	if(shiftRoot4TimeSlice == "withExtantOnly"){
@@ -214,6 +214,7 @@ timeSliceFossilRecord <- function(
 		}else{
 			shiftRoot4TimeSlice <- FALSE
 			}
+		print(shiftRoot4TimeSlice)
 		}
 	#
 	# if shiftRoot4TimeSlice, then the whole thing shifts so time = 0 is slice time

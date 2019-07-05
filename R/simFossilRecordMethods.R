@@ -165,8 +165,14 @@
 #' 
 #' @rdname simFossilRecordMethods
 #' @export
-timeSliceFossilRecord <- function(fossilRecord, sliceTime, shiftRoot4TimeSlice = FALSE,
-		modern.samp.prob = 1, tolerance = 10^-4){
+timeSliceFossilRecord <- function(
+		fossilRecord, 
+		sliceTime, 
+		shiftRoot4TimeSlice = FALSE,
+		modern.samp.prob = 1, 
+		tolerance = 10^-4
+		){
+	########################################################
 	#take a fossilRecord data object and cut it at some specific date
 	#
 	# CHECKS
@@ -177,7 +183,10 @@ timeSliceFossilRecord <- function(fossilRecord, sliceTime, shiftRoot4TimeSlice =
 	shiftPar <- c(TRUE,FALSE,"withExtantOnly")
 	shiftRoot4TimeSlice <- shiftPar[pmatch(shiftRoot4TimeSlice,shiftPar)]
 	if(is.na(shiftRoot4TimeSlice)){
-		stop("shiftRoot4TimeSlice must be a logical or the string 'withExtantOnly'")}
+		stop(
+			"shiftRoot4TimeSlice must be a logical or the string 'withExtantOnly'"
+			)
+		}
 	#
 	#drop all taxa that originate after the sliceTime
 	droppers <- sapply(fossilRecord,function(x) x[[1]][3]<sliceTime)
@@ -186,7 +195,9 @@ timeSliceFossilRecord <- function(fossilRecord, sliceTime, shiftRoot4TimeSlice =
 	#remove all sampling events after sliceTime
 		for(i in 1:length(fossilRecord)){
 			#remove all sampling events after sliceTime
-			fossilRecord[[i]][[2]] <- fossilRecord[[i]][[2]][fossilRecord[[i]][[2]] >= sliceTime]
+			fossilRecord[[i]][[2]] <- fossilRecord[[i]][[2]][
+				fossilRecord[[i]][[2]] >= sliceTime
+				]
 		}
 	# adjusting time, making taxa extant
 		# need to first test if there are extant taxa or not
@@ -216,9 +227,23 @@ timeSliceFossilRecord <- function(fossilRecord, sliceTime, shiftRoot4TimeSlice =
 				fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3]-sliceTime
 				fossilRecord[[i]][[1]][4:5] <- c(0,1)
 			}else{
-				fossilRecord[[i]][[1]][3:4] <- fossilRecord[[i]][[1]][3:4]-sliceTime
+				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4]-sliceTime
+				# test dates
+				if(any(newStartEndTime_extinct<0)){
+					stop(
+						"Extinct taxon dates being shifted wrong to rescale modern time to zero, creating negative dates"
+						)
+					}
+				fossilRecord[[i]][[1]][3:4] <- newStartEndTime_extinct
 				}
-			fossilRecord[[i]][[2]] <- fossilRecord[[i]][[2]]-sliceTime
+			newSamplingTimes_all <- fossilRecord[[i]][[2]]-sliceTime
+			# test dates
+			if(any(newSamplingTimes_all<0)){
+				stop(
+					"Sampling times for taxa are being shifted wrong to rescale modern time to zero, creating negative dates"
+					)
+				}			
+			fossilRecord[[i]][[2]] <- newSamplingTimes_all
 			}
 		modernTime <- 0
 	# if shiftRoot4TimeSlice = FALSE, then simply replace all extant taxa with

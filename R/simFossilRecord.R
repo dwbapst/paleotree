@@ -1,6 +1,7 @@
 #' Full-Scale Simulations of the Fossil Record with Birth, Death and Sampling of Morphotaxa
 #' 
-#' A complete birth-death-sampling branching simulator that captures morphological-taxon identity
+#' A complete birth-death-sampling branching simulator
+#' that captures morphological-taxon identity
 #' of lineages, as is typically discussed in models of paleontological data. This function
 #' allows for the use of precise point constraints to condition simulation run acceptance and
 #' can interpret complex character strings given as rate values for use in modeling
@@ -170,7 +171,7 @@
 #' character string which will be interpreted as an algebraic equation. 
 #' These equations can make use of three
 #' quantities which will/may change throughout the simulation: 
-#'the standing richness is \code{N},
+#' the standing richness is \code{N},
 #' the current time passed since the start of the simulation is \code{T}, 
 #' the present duration of a given still-living lineage
 #' since its origination time is code{D},
@@ -290,13 +291,18 @@
 #' \code{simFossilRecord} returns either a single object of class \code{fossilRecordSimulation}
 #' or a list of multiple such objects, depending on whether \code{nruns} was 1 or more.
 #' 
-#' An object of class \code{fossilRecordSimulation} consists of a list object composed of multiple
-#' elements, each of which is data for 'one taxon'. Each data element for each taxon is itself
-#' a list, composed of two elements: the first describes vital information about the taxon unit, 
+#' An object of class \code{fossilRecordSimulation} consists
+#' of a list object composed of multiple
+#' elements, each of which is data for 'one taxon'.
+#' Each data element for each taxon is itself
+#' a list, composed of two elements: the first describes
+#' vital information about the taxon unit, 
 #' and the second describes the sampling times of each taxon. 
 #' 
-#' The first element of the list (named \code{$taxa.data}) is a distinctive six-element
-#' vector composed of numbers (some are nominally integers, but not all, so all are stored
+#' The first element of the list (named \code{$taxa.data})
+#' is a distinctive six-element
+#' vector composed of numbers (some are nominally integers,
+#' but not all, so all are stored
 #' as double-precision integers) with the following field names:
 #' 
 #' \describe{
@@ -338,9 +344,10 @@
 #' Cryptic taxa are instead named in the form of "t1.2" and "t5.3",
 #' where the first number is the taxon which they are a
 #' cryptic descendant of (\code{looks.like}) and the second number, after the period, is
-#' the order of appearance of lineage units in that cryptic complex. For example, for
-#' "t5.3",  the first number is the \code{taxon.id} and the second number communicates
-#' that this is the third lineage to appear in this cryptic complex.
+#' the order of appearance of lineage units in that cryptic complex.
+#' For example, for "t5.3",  the first number is the \code{taxon.id}
+#' and the second number communicates that this is the third lineage
+#' to appear in this cryptic complex.
 
 
 #' @seealso
@@ -381,8 +388,8 @@
 #' Models. \emph{Systematic Biology} \bold{59}(4):465--476.
 #' 
 #' Heath, T. A., J. P. Huelsenbeck, and T. Stadler. 2014. The fossilized birth-death process
-#' for coherent calibration of divergence-time estimates. \emph{Proceedings of the National Academy
-#' of Sciences} 111(29):E2957-E2966.
+#' for coherent calibration of divergence-time estimates.
+#' \emph{Proceedings of the National Academy of Sciences} 111(29):E2957-E2966.
 #' 
 #' Kendall, D. G. 1948 On the Generalized "Birth-and-Death" Process. \emph{The
 #' Annals of Mathematical Statistics} \bold{19}(1):1--15.
@@ -447,7 +454,9 @@
 #' # example of repeated birth-death-sampling
 #'     # simulations over 50 time-units
 #' records <- simFossilRecord(
-#'     p = 0.1, q = 0.1, r = 0.1, 
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1, 
 #'     nruns = 10,
 #'     totalTime = 50, 
 #'     plot = TRUE)

@@ -220,7 +220,7 @@ timeSliceFossilRecord <- function(
 		}else{
 			shiftRoot4TimeSlice <- FALSE
 			}
-		print(shiftRoot4TimeSlice)
+		#print(shiftRoot4TimeSlice)
 		}
 	#
 	# if shiftRoot4TimeSlice, then the whole thing shifts so time = 0 is slice time
@@ -237,18 +237,23 @@ timeSliceFossilRecord <- function(
 				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4]-sliceTime
 				# test dates
 				if(any(newStartEndTime_extinct<0)){
-					stop(
-						"Extinct taxon dates being shifted wrong to rescale modern time to zero, creating negative dates"
-						)
+					message(paste0("Old FAD & LAD are: ",fossilRecord[[i]][[1]][3:4]))
+					message(paste0("sliceTime is: ",sliceTime))
+					stop(paste0(
+						"Extinct taxon dates being shifted incorrectly to\n",
+						"   rescale modern time to zero, creating negative dates.\n",
+						"   See details about ages messaged to console."
+						))
 					}
 				fossilRecord[[i]][[1]][3:4] <- newStartEndTime_extinct
 				}
 			newSamplingTimes_all <- fossilRecord[[i]][[2]]-sliceTime
 			# test dates
 			if(any(newSamplingTimes_all<0)){
-				stop(
-					"Sampling times for taxa are being shifted wrong to rescale modern time to zero, creating negative dates"
-					)
+				stop(paste0(
+					"Sampling times for taxa are being shifted incorrectly to\n",
+					"    rescale modern time to zero, creating negative dates"
+					))
 				}			
 			fossilRecord[[i]][[2]] <- newSamplingTimes_all
 			}

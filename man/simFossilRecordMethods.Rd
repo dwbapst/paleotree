@@ -10,7 +10,7 @@
 \usage{
 timeSliceFossilRecord(fossilRecord, sliceTime,
   shiftRoot4TimeSlice = FALSE, modern.samp.prob = 1,
-  tolerance = 10^-4)
+  tolerance = 10^-6)
 
 fossilRecord2fossilTaxa(fossilRecord)
 

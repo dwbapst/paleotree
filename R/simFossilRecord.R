@@ -234,7 +234,7 @@
 
 #' @param tolerance A small number which defines a tiny interval for
 #' the sake of placing run-sampling dates before events and
-#' for use in determining whether a taxon is extant in simFossilRecordMethods.
+#' for use in determining whether a taxon is extant in \code{simFossilRecordMethods}.
 
 #' @param maxStepTime When rates are time-dependent (i.e. when 
 #' parameters 'D' or 'T' are used in equations input for
@@ -1153,7 +1153,7 @@ simFossilRecord <- function(
 
 		#control parameters
 		#
-		tolerance = 10^-4, 
+		tolerance = 10^-6, 
 		maxStepTime = 0.01, 
 		shiftRoot4TimeSlice = "withExtantOnly",
 		count.cryptic = FALSE, 

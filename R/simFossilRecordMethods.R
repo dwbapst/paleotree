@@ -170,7 +170,7 @@ timeSliceFossilRecord <- function(
 		sliceTime, 
 		shiftRoot4TimeSlice = FALSE,
 		modern.samp.prob = 1, 
-		tolerance = 10^-4
+		tolerance = 10^-6
 		){
 	########################################################
 	#take a fossilRecord data object and cut it at some specific date
@@ -237,12 +237,12 @@ timeSliceFossilRecord <- function(
 				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4]-sliceTime
 				# test dates
 				if(any(newStartEndTime_extinct<0)){
-					message(paste0("Old FAD & LAD are: ",fossilRecord[[i]][[1]][3:4]))
-					message(paste0("sliceTime is: ",sliceTime))
 					stop(paste0(
 						"Extinct taxon dates being shifted incorrectly to\n",
-						"   rescale modern time to zero, creating negative dates.\n",
-						"   See details about ages messaged to console."
+						"  rescale modern time to zero, creating negative dates.\n",
+						paste0("Old FAD & LAD are: ", fossilRecord[[i]][[1]][3:4]),
+						paste0("sliceTime is: ", sliceTime),
+						paste0("Newly assigned FAD & LAD are: ", newStartEndTime_extinct)
 						))
 					}
 				fossilRecord[[i]][[1]][3:4] <- newStartEndTime_extinct
@@ -270,9 +270,14 @@ timeSliceFossilRecord <- function(
 		}
 	#
 	# sample at modern based on modern.samp.prob
-	whichExtant <- which(sapply(fossilRecord,function(x) x[[1]][5] == 1))
+	whichExtant <- which(sapply(fossilRecord,function(x) 
+		x[[1]][5] == 1))
 	nLive <- length(whichExtant)
-	liveSampled <- as.logical(rbinom(n = nLive, size = 1, prob = modern.samp.prob))
+	liveSampled <- as.logical(rbinom(
+		n = nLive, 
+		size = 1, 
+		prob = modern.samp.prob
+		))
 	whichSampled <- whichExtant[liveSampled]
 	#
 	#add sampling event at modern

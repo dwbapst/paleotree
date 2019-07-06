@@ -7,7 +7,7 @@
 simFossilRecord(p, q, r = 0, anag.rate = 0, prop.bifurc = 0,
   prop.cryptic = 0, modern.samp.prob = 1, startTaxa = 1, nruns = 1,
   maxAttempts = Inf, totalTime = c(0, 1000), nTotalTaxa = c(1, 1000),
-  nExtant = c(0, 1000), nSamp = c(0, 1000), tolerance = 10^-4,
+  nExtant = c(0, 1000), nSamp = c(0, 1000), tolerance = 10^-6,
   maxStepTime = 0.01, shiftRoot4TimeSlice = "withExtantOnly",
   count.cryptic = FALSE, negRatesAsZero = TRUE, print.runs = FALSE,
   sortNames = FALSE, plot = FALSE)
@@ -93,7 +93,7 @@ conditions is controlled by argument \code{count.cryptic}.}
 
 \item{tolerance}{A small number which defines a tiny interval for
 the sake of placing run-sampling dates before events and
-for use in determining whether a taxon is extant in simFossilRecordMethods.}
+for use in determining whether a taxon is extant in \code{simFossilRecordMethods}.}
 
 \item{maxStepTime}{When rates are time-dependent (i.e. when 
 parameters 'D' or 'T' are used in equations input for

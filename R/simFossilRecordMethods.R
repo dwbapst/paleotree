@@ -240,9 +240,12 @@ timeSliceFossilRecord <- function(
 					stop(paste0(
 						"Extinct taxon dates being shifted incorrectly to\n",
 						"  rescale modern time to zero, creating negative dates.\n",
-						paste0("Old FAD & LAD are: ", fossilRecord[[i]][[1]][3:4]),
-						paste0("sliceTime is: ", sliceTime),
-						paste0("Newly assigned FAD & LAD are: ", newStartEndTime_extinct)
+						" - Old FAD & LAD are: ", 
+							paste(fossilRecord[[i]][[1]][3:4],collapse=" "),
+							"\n",
+						" - sliceTime is: ", sliceTime,"\n",
+						" - Newly assigned FAD & LAD are: ", 
+							paste(newStartEndTime_extinct, collapse=" ")
 						))
 					}
 				fossilRecord[[i]][[1]][3:4] <- newStartEndTime_extinct

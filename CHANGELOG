@@ -1,5 +1,8 @@
-Version - 3.3.1 -
- - 
+Version - 3.3.7 -
+-
+
+Version - 3.3.5 - 07-07-19 (Not Releaseed to CRAN)
+- Added in some extra checks to simFossilRecord (and related methods), and a new test, to catch a rare and yet-unexplained occurrence of negative taxon dates being returned by simFossilTaxa. Unfortunately, this error is very hard to reproduce.
 
 Version - 3.3.0 - 06-03-19 
 - Lots of style edits to doc and examples in many places.

@@ -205,7 +205,7 @@ timeSliceFossilRecord <- function(
 		if(is.na(x[[1]][4])){
 			TRUE
 		}else{
-			(sliceTime-x[[1]][4]) > tolerance
+			sliceTime > x[[1]][4]
 			}
 		})
 	#
@@ -255,7 +255,13 @@ timeSliceFossilRecord <- function(
 			if(any(newSamplingTimes_all<0)){
 				stop(paste0(
 					"Sampling times for taxa are being shifted incorrectly to\n",
-					"    rescale modern time to zero, creating negative dates"
+					"    rescale modern time to zero, creating negative dates",
+					" - Old sampling dates are: ", 
+						paste(fossilRecord[[i]][[2]], collapse=" "),
+						"\n",
+					" - sliceTime is: ", sliceTime,"\n",
+					" - Newly assigned sampling dates are: ", 
+						paste(newSamplingTimes_all, collapse=" ")					
 					))
 				}			
 			fossilRecord[[i]][[2]] <- newSamplingTimes_all

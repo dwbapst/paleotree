@@ -1521,11 +1521,15 @@ simFossilRecord <- function(
 			}
 		}
 	if(print.runs){
+		runNumMessage <- ifelse(nruns==1,
+			paste0("1 run"),
+			paste0(nruns" runs")
+			)
 		message(paste0(
-			nruns,
-			"runs accepted from",
+			runNumMessage,
+			" accepted from ",
 			ntries,
-			"total runs (",signif(nruns/ntries,2),"Acceptance Probability)",
+			" total runs (",signif(nruns/ntries,2)," Acceptance Probability)",
 			sep = ""
 			))
 		}

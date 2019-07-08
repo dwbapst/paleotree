@@ -251,7 +251,11 @@ eventOccurs <- function(taxa,target,type,time){
 
 whichLive <- function(taxa){
 	res <- which(sapply(taxa,function(x) x[[1]][5] == 1))
-	res2 <- which(sapply(taxa,function(x) is.na(x[[1]][4]) | identical(unname(x[[1]][4]),0)))
+	res2 <- which(
+		sapply(taxa,function(x) 
+			is.na(x[[1]][4]) | identical(unname(x[[1]][4]),0L)
+			)
+		)
 	if(!identical(unname(res),unname(res2))){
 		#browser()
 		stop("Disagreement on which taxa are extant")}
@@ -527,7 +531,7 @@ testFinal <- function(taxa,timePassed,runConditions,count.cryptic){
 		print(finalVitals)
 		#browser()
 		stop(paste0(
-			"Accepted run as outside of bounds set for conditions:",
+			"Accepted run is outside of bounds set for conditions: ",
 			names(runConditions)[!okayVitals],collapse = ", "))
 		}
 	finalCheck <- all(okayVitals)

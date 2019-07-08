@@ -232,11 +232,11 @@ timeSliceFossilRecord <- function(
 			if(isAlive[i]){
 				#turn all taxa that went extinct after sliceTime so they are still alive
 				fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3]-sliceTime
-				fossilRecord[[i]][[1]][4:5] <- c(0,1)
+				fossilRecord[[i]][[1]][4:5] <- c(0L,1)
 			}else{
 				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4]-sliceTime
 				# test dates
-				if(any(newStartEndTime_extinct<0)){
+				if(any(newStartEndTime_extinct < 0)){
 					stop(paste0(
 						"Extinct taxon dates being shifted incorrectly to\n",
 						"  rescale modern time to zero, creating negative dates.\n",
@@ -252,7 +252,7 @@ timeSliceFossilRecord <- function(
 				}
 			newSamplingTimes_all <- fossilRecord[[i]][[2]]-sliceTime
 			# test dates
-			if(any(newSamplingTimes_all<0)){
+			if(any(newSamplingTimes_all < 0)){
 				stop(paste0(
 					"Sampling times for taxa are being shifted incorrectly to\n",
 					"    rescale modern time to zero, creating negative dates",

@@ -253,18 +253,18 @@ whichLive <- function(taxa){
 	res <- which(sapply(taxa,function(x) x[[1]][5] == 1))
 	res2 <- which(
 		sapply(taxa,function(x) 
-			is.na(x[[1]][4]) | identical(unname(x[[1]][4]),0L)
+			is.na(x[[1]][4]) | identical(unname(x[[1]][4]),0)
 			)
 		)
 	if(!identical(unname(res),unname(res2))){
 		#browser()
 		stop(paste0(
 			"Disagreement on which taxa are extant:\n",
-			length(res),"taxa were coded as is.extant (",
-				paste0(names(res),collapse=", "),
+			length(res)," taxa were coded as is.extant (",
+				paste0(unname(res),collapse=", "),
 				")\n",
-			length(res2),"taxa had NA or 0L extinction times (",
-				paste0(names(res2),collapse=", "),
+			length(res2)," taxa had NA or 0L extinction times (",
+				paste0(unname(res2),collapse=", "),
 				")\n"
 			))
 		}

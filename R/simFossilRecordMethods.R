@@ -228,11 +228,12 @@ timeSliceFossilRecord <- function(
 		#adjust all dates so cutdate becomes 0
 		for(i in 1:length(fossilRecord)){
 			#adjust all dates so cutdate becomes 0
-				#if stillAlive, replace 4:5 with 0,1
+				#if stillAlive, replace 4:5 with NA,1
+					# why would I replace it with 0 ??
 			if(isAlive[i]){
 				#turn all taxa that went extinct after sliceTime so they are still alive
 				fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3]-sliceTime
-				fossilRecord[[i]][[1]][4:5] <- c(0L,1)
+				fossilRecord[[i]][[1]][4:5] <- c(NA,1)
 			}else{
 				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4]-sliceTime
 				# test dates

@@ -258,7 +258,16 @@ whichLive <- function(taxa){
 		)
 	if(!identical(unname(res),unname(res2))){
 		#browser()
-		stop("Disagreement on which taxa are extant")}
+		stop(paste0(
+			"Disagreement on which taxa are extant:\n",
+			length(res),"taxa were coded as is.extant (",
+				paste0(names(res),collapse=", "),
+				")\n",
+			length(res2),"taxa had NA or 0L extinction times (",
+				paste0(names(res2),collapse=", "),
+				")\n"
+			))
+		}
 	return(res)
 	}
 

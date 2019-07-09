@@ -272,7 +272,10 @@ whichLive <- function(taxa){
 	}
 
 whichSampled <- function(taxa){
-	res <- which(sapply(taxa,function(x) length(x[[2]])>0))
+	res <- sapply(taxa,function(x) 
+		length(x[[2]])>0
+		)
+	res <- which(res)
 	return(res)
 	}
 

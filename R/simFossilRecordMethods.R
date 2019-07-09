@@ -227,13 +227,17 @@ timeSliceFossilRecord <- function(
 	if(shiftRoot4TimeSlice){	
 		#adjust all dates so cutdate becomes 0
 		for(i in 1:length(fossilRecord)){
-			#adjust all dates so cutdate becomes 0
-				#if stillAlive, replace 4:5 with NA,1
-					# why would I replace it with 0 ??
+			# adjust all dates so cutdate becomes 0
+			# so if stillAlive, replace 4:5 with 0,1
+			#
+			# 07-09-19
+			# why would I replace it with 0 and not something standard like NA ??
+			# oh because extantTime might NOT be zero... shoot
+			#
 			if(isAlive[i]){
 				#turn all taxa that went extinct after sliceTime so they are still alive
 				fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3]-sliceTime
-				fossilRecord[[i]][[1]][4:5] <- c(NA,1)
+				fossilRecord[[i]][[1]][4:5] <- c(0,1)
 			}else{
 				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4]-sliceTime
 				# test dates
@@ -252,8 +256,12 @@ timeSliceFossilRecord <- function(
 				fossilRecord[[i]][[1]][3:4] <- newStartEndTime_extinct
 				}
 			newSamplingTimes_all <- fossilRecord[[i]][[2]]-sliceTime
+			#
+			# honestly we should remove all sampling times at or after extant time
+			# newSamplingTimes_all <- newSamplingTimes_all[newSamplingTimes_all > 0]
+			#
 			# test dates
-			if(any(newSamplingTimes_all < 0)){
+			if(any(newSamplingTimes_all <= 0)){
 				stop(paste0(
 					"Sampling times for taxa are being shifted incorrectly to\n",
 					"    rescale modern time to zero, creating negative dates",

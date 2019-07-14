@@ -181,7 +181,7 @@ timeSliceFossilRecord <- function(
 	#
 	#check shiftRoot4TimeSlice
 	shiftPar <- c(TRUE,FALSE,"withExtantOnly")
-	shiftRoot4TimeSlice <- shiftPar[pmatch(shiftRoot4TimeSlice,shiftPar)]
+	shiftRoot4TimeSlice <- shiftPar[pmatch(shiftRoot4TimeSlice, shiftPar)]
 	if(is.na(shiftRoot4TimeSlice)){
 		stop(
 			"shiftRoot4TimeSlice must be a logical or the string 'withExtantOnly'"
@@ -232,30 +232,30 @@ timeSliceFossilRecord <- function(
 			#
 			# 07-09-19
 			# why would I replace it with 0 and not something standard like NA ??
-			# oh because extantTime might NOT be zero... shoot
+			# oh because extantTime might NOT be zero... well, shoot!
 			#
 			if(isAlive[i]){
 				#turn all taxa that went extinct after sliceTime so they are still alive
-				fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3]-sliceTime
-				fossilRecord[[i]][[1]][4:5] <- c(0,1)
+				fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3] - sliceTime
+				fossilRecord[[i]][[1]][4:5] <- c(0, 1)
 			}else{
-				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4]-sliceTime
+				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4] - sliceTime
 				# test dates
 				if(any(newStartEndTime_extinct < 0)){
 					stop(paste0(
 						"Extinct taxon dates being shifted incorrectly to\n",
 						"  rescale modern time to zero, creating negative dates.\n",
 						" - Old FAD & LAD are: ", 
-							paste(fossilRecord[[i]][[1]][3:4],collapse=" "),
+							paste(fossilRecord[[i]][[1]][3:4], collapse=" "),
 							"\n",
-						" - sliceTime is: ", sliceTime,"\n",
+						" - sliceTime is: ", sliceTime, "\n",
 						" - Newly assigned FAD & LAD are: ", 
 							paste(newStartEndTime_extinct, collapse=" ")
 						))
 					}
 				fossilRecord[[i]][[1]][3:4] <- newStartEndTime_extinct
 				}
-			newSamplingTimes_all <- fossilRecord[[i]][[2]]-sliceTime
+			newSamplingTimes_all <- fossilRecord[[i]][[2]] - sliceTime
 			#
 			# honestly we should remove all sampling times at or after extant time
 			# newSamplingTimes_all <- newSamplingTimes_all[newSamplingTimes_all > 0]
@@ -264,7 +264,7 @@ timeSliceFossilRecord <- function(
 			if(any(newSamplingTimes_all <= 0)){
 				stop(paste0(
 					"Sampling times for taxa are being shifted incorrectly to\n",
-					"    rescale modern time to zero, creating negative dates",
+					"    rescale modern time to zero, creating negative dates.\n",
 					" - Old sampling dates are: ", 
 						paste(fossilRecord[[i]][[2]], collapse=" "),
 						"\n",

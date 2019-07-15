@@ -1178,22 +1178,35 @@ simFossilRecord <- function(
 	#
 	# number of starting taxa and runs must be at least 1
 	if(nruns<1 | maxAttempts<1){
-		stop("nruns and maxAttempts must be at least 1")}
+		stop(
+			"nruns and maxAttempts must be at least 1"
+			)
+		}
 	if(startTaxa<1){
-		stop("startTaxa must be at least 1")}
+		stop(
+			"startTaxa must be at least 1"
+			)
+		}
 	#nruns, starting taxa must be integer values
 	if(!all(sapply(c(nruns,startTaxa),function(x) x == round(x)))){
-			stop("nruns and startTaxa must coercible to whole number integers")}
+			stop(
+				"nruns and startTaxa must coercible to whole number integers"
+				)
+			}
 	# check that prop.bifurc, prop.cryptic, modern.samp.prob are greater than 0 and less than 1
 	if(any(c(prop.bifurc, prop.cryptic, modern.samp.prob)<0) |
 			any(c(prop.bifurc, prop.cryptic, modern.samp.prob)>1)){
-		stop(
-			"bad parameters input: prop.bifurc, prop.cryptic and modern.samp.prob must be between 0 and 1"
-			)
+		stop(paste0(
+			"bad parameters input:\n",
+			"  prop.bifurc, prop.cryptic and modern.samp.prob must be between 0 and 1"
+			))
 		}	
 	# is prop.bifurc and prop.cryptic consistent?
 	if(prop.bifurc>0 & prop.cryptic == 1){
-		stop("Prop.bifurc greater than 0 when probability of branching being cryptic is 1")}
+		stop(
+			"Prop.bifurc greater than 0 when probability of branching being cryptic is 1"
+			)
+		}
  	#check that min nSamp isn't higher that 0, if r = 0 or Inf
 	if((r == 0 | is.infinite(r)) & nSamp[1]>0){
 		stop(
@@ -1202,7 +1215,11 @@ simFossilRecord <- function(
 	# check count.cryptic
 	if(!count.cryptic){ #if false
 		#check that min nTotalTaxa, nExtant, nSamp isn't higher that 1, if prop.cryptic = 1
-		if((prop.cryptic == 1 & anag.rate == 0) & ( nTotalTaxa[1]>1 | nExtant[1]>1 | nSamp[1]>1 )){
+		unreachableConstraints <- (
+			(prop.cryptic == 1 & anag.rate == 0) & 
+			( nTotalTaxa[1]>1 | nExtant[1]>1 | nSamp[1]>1 )
+			)
+		if(unreachableConstraints){
 			stop(paste0(
 				"Minimum number of required  nTotalTaxa, nExtant and/or nSamp is >1\n",
 				"   but these constraints cannot be reached as \n",
@@ -1226,7 +1243,12 @@ simFossilRecord <- function(
 			)
 		}		
 	#
-	runConditions <- list(totalTime = totalTime,nTotalTaxa = nTotalTaxa,nExtant = nExtant,nSamp = nSamp)
+	runConditions <- list(
+		totalTime = totalTime,
+		nTotalTaxa = nTotalTaxa,
+		nExtant = nExtant,
+		nSamp = nSamp
+		)
 	#check that all are numeric
 	if(any(!sapply(runConditions,is.numeric))){
 		stop("Run condition arguments must be all of type numeric")
@@ -1247,7 +1269,9 @@ simFossilRecord <- function(
 		)
 	#all values are over or equal to zero
 	if(any(!sapply(runConditions,function(x) all(x >= 0)))){
-		stop("Run Condition values must be equal to or greater than 0")
+		stop(
+			"Run Condition values must be equal to or greater than 0"
+			)
 		}	
 	#with minimums less than maximums
 	if(any(!sapply(runConditions,function(x) x[1] <= x[2]))){
@@ -1258,15 +1282,20 @@ simFossilRecord <- function(
 		}	
 	###########################
 	#get the basic rate functions
-	getBranchRate <- makeParFunct(p,isBranchRate = TRUE)
-	getExtRate <- makeParFunct(q,isBranchRate = FALSE)
-	getSampRate <- makeParFunct(r,isBranchRate = FALSE)
-	getAnagRate <- makeParFunct(anag.rate,isBranchRate = FALSE)
+	getBranchRate <- makeParFunct(p, isBranchRate = TRUE)
+	getExtRate <- makeParFunct(q, isBranchRate = FALSE)
+	getSampRate <- makeParFunct(r, isBranchRate = FALSE)
+	getAnagRate <- makeParFunct(anag.rate, isBranchRate = FALSE)
 	#
 	# check if time-dependent simulation
-	isTimeDep <- any(sapply(
-		list(getBranchRate,getExtRate,getSampRate,getAnagRate)
-		,attr,which = "timeDep"))
+	isTimeDep <- any(
+		sapply(
+			list(getBranchRate,getExtRate,
+				getSampRate,getAnagRate
+				)
+			,attr, 
+			which = "timeDep")
+		)
 	#
 	##############################################
 	#now iterate for nruns
@@ -1279,8 +1308,10 @@ simFossilRecord <- function(
 			#test that haven't exceeded maximum number of attempts
 			if(ntries>maxAttempts){
 				stop(paste0(
-					"Maximum number of attempts (",maxAttempts,
-					") has been exceeded with only ",i-1,
+					"Maximum number of attempts (",
+					maxAttempts,
+					") has been exceeded with only ",
+					i-1,
 					" run(s) successful."))
 				}
 			#
@@ -1288,17 +1319,25 @@ simFossilRecord <- function(
 			timePassed <- 0
 			#currentTime is the max time from runConditions
 			currentTime <- runConditions$totalTime[2]
-			taxa <- initiateTaxa(startTaxa = startTaxa,time = currentTime)
+			taxa <- initiateTaxa(startTaxa = startTaxa,
+				time = currentTime)
 			#
 			#get vitals
-			startVitals <- getRunVitals(taxa = taxa,count.cryptic = count.cryptic)
+			startVitals <- getRunVitals(taxa = taxa,
+				count.cryptic = count.cryptic)
 			#start vitals table		
-			vitalsRecord <- cbind(timePassed = timePassed,t(as.matrix(startVitals)))
+			vitalsRecord <- cbind(timePassed = timePassed,
+				t(as.matrix(startVitals)))
 			#test to make sure run conditions aren't impossible
-			continue <- testContinue(vitals = startVitals,timePassed = timePassed,
-				runConditions = runConditions)
+			continue <- testContinue(
+				vitals = startVitals,
+				timePassed = timePassed,
+				runConditions = runConditions
+				)
 			if(!continue){
-				stop("Initial starting point already matches given run conditions")
+				stop(
+					"Initial starting point already matches or exceeds given run conditions"
+					)
 				}
 			while(continue){
 				#only as long as continue = TRUE
@@ -1309,15 +1348,21 @@ simFossilRecord <- function(
 				# get rates, sample new event, have it occur
 				#
 				# first get durations
-				taxaDurations <- getTaxonDurations(taxa,currentTime)
+				taxaDurations <- getTaxonDurations(taxa, currentTime)
 				#
 				#get event probability vector
-				rateMatrix <- getRateMatrix(taxa = taxa, timePassed = timePassed,
+				rateMatrix <- getRateMatrix(
+					taxa = taxa, 
+					timePassed = timePassed,
 					taxaDurations = taxaDurations,
-					getBranchRate = getBranchRate, getExtRate = getExtRate,
-					getSampRate = getSampRate, getAnagRate = getAnagRate,
-					prop.cryptic = prop.cryptic, prop.bifurc = prop.bifurc,
-					negRatesAsZero = negRatesAsZero)
+					getBranchRate = getBranchRate, 
+					getExtRate = getExtRate,
+					getSampRate = getSampRate, 
+					getAnagRate = getAnagRate,
+					prop.cryptic = prop.cryptic, 
+					prop.bifurc = prop.bifurc,
+					negRatesAsZero = negRatesAsZero
+					)
 				#
 				#get the probabilty for each event in rateMatrix
 				eventProbMatrix <- rateMatrix/sum(rateMatrix)
@@ -1330,9 +1375,10 @@ simFossilRecord <- function(
 				# simplified: arrayInd(sample(length(m),1,prob = m),dim(m)) 
 				#
 				#get event type and which taxon it occurs to
-				sampledCell <- sample(length(rateMatrix),1,prob = eventProbMatrix)
+				sampledCell <- sample(length(rateMatrix), 
+					1, prob = eventProbMatrix)
 				#will return as a 1 row matrix, of row # and col #
-				sampledCell <- arrayInd(sampledCell,dim(rateMatrix))
+				sampledCell <- arrayInd(sampledCell, dim(rateMatrix))
 				#
 				#draw waiting time to an event (from Peter Smits)
 					# exponential with rate = sum of all rates, across all taxa
@@ -1352,11 +1398,11 @@ simFossilRecord <- function(
 					# what is the event type
 					event <- colnames(rateMatrix)[sampledCell[1,2]]
 					# who did it happen to (what lineage)
-					target <- attr(rateMatrix,"whichExtant")[sampledCell[1,1]]
+					target <- attr(rateMatrix, "whichExtant")[sampledCell[1,1]]
 					#
 					# measure time passed
 					newTime <-  currentTime - changeTime
-					newTimePassed <- timePassed+changeTime
+					newTimePassed <- timePassed + changeTime
 					#
 					# make the new event so!
 					taxa <- eventOccurs(
@@ -1376,16 +1422,25 @@ simFossilRecord <- function(
 					###### none of these can REVERSE ########
 				#
 				#get vitals
-				currentVitals <- getRunVitals(taxa = taxa,count.cryptic = count.cryptic)
+				currentVitals <- getRunVitals(
+					taxa = taxa,
+					count.cryptic = count.cryptic
+					)
 				# continue ??
-				continue <- testContinue(vitals = currentVitals,timePassed = newTimePassed,
-					runConditions = runConditions)
+				continue <- testContinue(
+					vitals = currentVitals,
+					timePassed = newTimePassed,
+					runConditions = runConditions
+					)
 				#
 				# Updated vitals table
 					#for (2), keep a table that records changes in 
 						# nTotalTaxa, nExtant, nSamp with timePassed
 				#then can quickly evaluate (2)
-				currentVitals <- c(timePassed = newTimePassed,t(as.matrix(currentVitals)))
+				currentVitals <- c(
+					timePassed = newTimePassed,
+					t(as.matrix(currentVitals))
+					)
 				vitalsRecord <- rbind(vitalsRecord,currentVitals)
 				# set new current time
 				currentTime <- newTime	
@@ -1408,8 +1463,9 @@ simFossilRecord <- function(
 			# NEED TO AVOID HARTMANN ET AL. EFFECT ---- simFossilTaxa did it wrong!!
 				# sample simulation from intervals where it 'matched' run conditions
 			#
-			#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
-				# none of these can REVERSE
+			#(1) continue = TRUE until max totalTime, max nTotalTaxa, 
+					# nSamp or total extinction
+				# none of these can REVERSE in a FORARD TIME simulation
 			#(2) then go back, find all interval for which run conditions were met
 				# if no acceptable intervals, reject run
 			#(3) randomly sample within intervals for a single date
@@ -1421,16 +1477,23 @@ simFossilRecord <- function(
 			#		
 			#is it even worth checking? (were mins reached)
 			worthyVitals <- worthCheckingVitalsRecord(
-				vitalsRecord = vitalsRecord
-				,runConditions = runConditions
+				vitalsRecord = vitalsRecord,
+				runConditions = runConditions
 				)
+			#
+			# if its worth checking, check it!
 			if(worthyVitals){
+				#
 				#test with testVitalsRecord to get seqVitals
 				seqVitals <- testVitalsRecord(
-					vitalsRecord = vitalsRecord
-					,runConditions = runConditions
-					,tolerance = tolerance
+					vitalsRecord = vitalsRecord,
+					runConditions = runConditions,
+					tolerance = tolerance
 					)
+				#
+				# if there aren't any NAs, then there are
+					# acceptable dates to consider!
+				#
 				if(all(!is.na(seqVitals))){
 					#hey, if its an acceptable simulation!!!!!!
 					accept <- TRUE
@@ -1440,7 +1503,7 @@ simFossilRecord <- function(
 		#sample the sequences for a date
 		passedDate <- sampleSeqVitals(seqVitals = seqVitals)
 		#this date is in timePassed units: convert to backwards currentTime
-		currentDate <- runConditions$totalTime[2]-passedDate
+		currentDate <- runConditions$totalTime[2] - passedDate
 		#
 		class(taxa) <- 'fossilRecordSimulation'
 		#
@@ -1453,6 +1516,8 @@ simFossilRecord <- function(
 			shiftRoot4TimeSlice = shiftRoot4TimeSlice, 
 			modern.samp.prob = modern.samp.prob
 			)
+		#
+		browser()
 		#
 		##############################################################################
 		# FINAL CHECKS
@@ -1472,7 +1537,7 @@ simFossilRecord <- function(
 				)
 			if(any(namesIdenticalTest)){
 				stop(
-					"non-cryptic taxa created in a simulation with pure cryptic speciation?!"
+					"Non-cryptic taxa created in a simulation with pure cryptic speciation?!"
 					)
 				}
 			}
@@ -1495,7 +1560,12 @@ simFossilRecord <- function(
 		if(plot){
 			divCurveFossilRecordSim(fossilRecord = taxa)
 			if(nruns>1){
-				title(paste0("Run Number ",i," of ",nruns))
+				title(paste0(
+					"Run Number ",
+					i,
+					" of ",
+					nruns
+					))
 				}
 			}
 		}
@@ -1508,7 +1578,9 @@ simFossilRecord <- function(
 			runNumMessage,
 			" accepted from ",
 			ntries,
-			" total runs (",signif(nruns/ntries,2)," Acceptance Probability)"
+			" total runs (",
+			signif(nruns/ntries,2),
+			" Acceptance Probability)"
 			))
 		}
 	if(nruns == 1){

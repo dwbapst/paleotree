@@ -235,9 +235,20 @@ timeSliceFossilRecord <- function(
 			# oh because extantTime might NOT be zero... well, shoot!
 			#
 			if(isAlive[i]){
+				#
+				print("live taxon found")
+				print("Original taxon")
+				print(fossilRecord[[i]])
+				print("Slice Time")
+				print(sliceTime)
+				#
 				#turn all taxa that went extinct after sliceTime so they are still alive
 				fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3] - sliceTime
 				fossilRecord[[i]][[1]][4:5] <- c(0, 1)
+				#
+				print("New Taxon")
+				print(fossilRecord[[i]])
+				#
 			}else{
 				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4] - sliceTime
 				# test dates

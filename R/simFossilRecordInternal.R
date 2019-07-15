@@ -260,10 +260,12 @@ whichLive <- function(taxa){
 		#browser()
 		stop(paste0(
 			"Disagreement on which taxa are extant:\n",
-			length(res)," taxa were coded as is.extant (",
+			length(res),
+			" taxa were coded as is.extant (",
 				paste0(unname(res),collapse=", "),
 				")\n",
-			length(res2)," taxa had NA or 0L extinction times (",
+			length(res2),
+			" taxa had NA or 0L extinction times (",
 				paste0(unname(res2),collapse=", "),
 				")\n"
 			))
@@ -288,9 +290,11 @@ getTaxonDurations <- function(taxa,currentTime){
 	return(durations)
 	}
 	
-getRunVitals <- function(taxa,count.cryptic){
+getRunVitals <- function(taxa, count.cryptic){
 	#NOTE need to change vital measurement dependent on count.cryptic or not
-	if(!is.list(taxa)){stop("handed getRunVitals a taxa object that isn't a list??")}
+	if(!is.list(taxa)){
+		stop("handed getRunVitals a taxa object that isn't a list??")
+		}
 	whichExtant <- whichLive(taxa)
 	whichSamp <- whichSampled(taxa)
 	if(count.cryptic){
@@ -310,7 +314,7 @@ getRunVitals <- function(taxa,count.cryptic){
 	return(vitals)
 	}
 
-testContinue <- function(vitals,timePassed,runConditions){
+testContinue <- function(vitals, timePassed, runConditions){
 	#(1) continue = TRUE until max totalTime, max nTotalTaxa, nSamp or total extinction
 		# none of these can ever REVERSE
 	#
@@ -329,9 +333,11 @@ testContinue <- function(vitals,timePassed,runConditions){
 
 contiguousIntegerSeq <- function(vector){
 	if(!is.vector(vector)){
-		stop("contiguousIntegerSeq handed a non-vector?")}
+		stop("contiguousIntegerSeq handed a non-vector?")
+		}
 	if(length(vector)<2){
-		stop("contiguousIntegerSeq handed length 1 vector?")}
+		stop("contiguousIntegerSeq handed length 1 vector?")
+		}
 	#		
 	vector <- as.integer(vector)
 	#because unbelievably base R has no simple function for
@@ -350,8 +356,12 @@ contiguousIntegerSeq <- function(vector){
 	seqMat <- cbind(starts,ends)
 	#
 	# checks
-	if(!is.matrix(seqMat)){stop("seqMat isn't a matrix")}
-	if(ncol(seqMat) != 2){stop("seqMat doesn't have 2 columns")}
+	if(!is.matrix(seqMat)){
+		stop("seqMat isn't a matrix")
+		}
+	if(ncol(seqMat) != 2){
+		stop("seqMat doesn't have 2 columns")
+		}
 	return(seqMat)
 	}
 
@@ -379,7 +389,12 @@ worthCheckingVitalsRecord <- function(vitalsRecord,runConditions){
 	return(worthChecking)
 	}
 
-testVitalsRecord <- function(vitalsRecord,runConditions,tolerance){
+testVitalsRecord <- function(
+		vitalsRecord,
+		runConditions,
+		tolerance
+		){
+	#############################################
 	#
 	# check that labels for vitalsRecord and runConditions match
 	labMatch <- colnames(vitalsRecord)[2:4] == names(runConditions)[2:4]
@@ -387,62 +402,84 @@ testVitalsRecord <- function(vitalsRecord,runConditions,tolerance){
 		stop("runConditions and vitalsRecord objects are mislabeled/misordered")
 		}
 	#
+	#################################################
 	#first INSERT FAKE EVENTS INTO VITALS MAT
 		# FOR MIN TIME AND MAX TIME
 	#
-	# for min time
-	if(vitalsRecord[1,1]<runConditions$totalTime[1] 
+	isMinTime <- (
+		vitalsRecord[1,1]<runConditions$totalTime[1] 
 		& vitalsRecord[nrow(vitalsRecord),1]>runConditions$totalTime[1]
-		& all(vitalsRecord[,1] != runConditions$totalTime[1])){
+		& all(vitalsRecord[,1] != runConditions$totalTime[1])
+		)
+	# for min time
+	if(isMinTime){
 		#
-		#what row to insert at
+		# what row to insert at
 		whereInsert <- which(vitalsRecord[,1]>runConditions$totalTime[1])[1]
-		newRow <- c(runConditions$totalTime[1],vitalsRecord[whereInsert-1,-1])
-		#vitalsRecord <- insertRow(table = vitalsRecord,row = newRow,rownum = whereInsert-1)
+		# make the new row
+		newRow <- c(
+			runConditions$totalTime[1],
+			vitalsRecord[whereInsert-1,-1]
+			)
+		# vitalsRecord <- insertRow(table = vitalsRecord,
+			# row = newRow,rownum = whereInsert-1)
 		vitalsRecord <- rbind(vitalsRecord,newRow)
 		}
 	vitalsRecord <- vitalsRecord[order(vitalsRecord[,1]),]
 	#
+	isMaxTime <- (
+		vitalsRecord[1,1] < runConditions$totalTime[2] 
+		& vitalsRecord[nrow(vitalsRecord),1] > runConditions$totalTime[2]
+		& all(vitalsRecord[,1] != runConditions$totalTime[2])
+		)
 	# for max time
-	if(vitalsRecord[1,1]<runConditions$totalTime[2] 
-		& vitalsRecord[nrow(vitalsRecord),1]>runConditions$totalTime[2]
-		& all(vitalsRecord[,1] != runConditions$totalTime[2])){
+	if(isMaxTime){
 		#
 		#what row to insert at
-		whereInsert <- rev(which(vitalsRecord[,1]<runConditions$totalTime[2]))[1]
-		newRow <- c(runConditions$totalTime[2],vitalsRecord[whereInsert,-1])
-		#vitalsRecord <- insertRow(table = vitalsRecord,row = newRow,rownum = whereInsert+1)
-		vitalsRecord <- rbind(vitalsRecord,newRow)
+		whereInsert <- rev(which(vitalsRecord[,1] < runConditions$totalTime[2]))[1]
+		# make the new row
+		newRow <- c(runConditions$totalTime[2], 
+			vitalsRecord[whereInsert,-1])
+		# vitalsRecord <- insertRow(table = vitalsRecord,
+			# row = newRow,rownum = whereInsert+1)
+		vitalsRecord <- rbind(vitalsRecord, newRow)
 		}
 	vitalsRecord <- vitalsRecord[order(vitalsRecord[,1]),]
 	#
 	################################################################
 	#
-	# NOW need to essentially duplicate EVERY ROW with time-stamp of row immediately after it
-	newVitalsRecord <- cbind(vitalsRecord[2:nrow(vitalsRecord),1,drop = FALSE],
-		vitalsRecord[1:(nrow(vitalsRecord)-1),2:4,drop = FALSE])
+	# NOW need to essentially duplicate EVERY ROW 
+		# with time-stamp of row immediately after it
+	#
+	newVitalsRecord <- cbind(
+		vitalsRecord[2:nrow(vitalsRecord), 
+			1, drop = FALSE],
+		vitalsRecord[1:(nrow(vitalsRecord)-1), 
+			2:4, drop = FALSE]
+			)
 	pastIncrement <- diff(vitalsRecord[,1])
 	if(any(pastIncrement>0)){
 		pastIncrement <- min(pastIncrement[pastIncrement>0])/1000
-		pastIncrement <- min(c(tolerance,pastIncrement))
+		pastIncrement <- min(c(tolerance, pastIncrement))
 	}else{
 		pastIncrement <- tolerance
 		}
 	newTimes <- newVitalsRecord[,1]-pastIncrement
-	newTimes <- ifelse(newTimes>0,newTimes,0)
+	newTimes <- ifelse(newTimes>0, newTimes, 0)
 	newVitalsRecord[,1] <- newTimes
-	vitalsRecord <- rbind(vitalsRecord,newVitalsRecord)
+	vitalsRecord <- rbind(vitalsRecord, newVitalsRecord)
 	vitalsRecord <- vitalsRecord[order(vitalsRecord[,1]),]
 	#
 	###########################################################################
 	# identify all rows where timePassed, nTaxa, nExtant and nSamp are good
 	#
-	okayVitalsMat <- sapply(1:4,function(i){
-		var <- vitalsRecord[,i]
-		varRange <- runConditions[[i]]
+	okayVitalsMat <- sapply(1:4, function(i){
+			var <- vitalsRecord[,i]
+			varRange <- runConditions[[i]]
 			var >= varRange[1] & var <= varRange[2]
-			})
-	okayVitals <- apply(okayVitalsMat,1,all)				
+			}
+		)
+	okayVitals <- apply(okayVitalsMat, 1, all)				
 	#
 	#########################################################
 	# Now test if there are any, if so, sequence
@@ -456,37 +493,50 @@ testVitalsRecord <- function(vitalsRecord,runConditions,tolerance){
 			seqVitals <- matrix(whichOkay,1,2)
 			}
 		#replaced with the passedTime dates
-		seqVitals <- apply(seqVitals,2,function(x) vitalsRecord[x,1])
+		seqVitals <- apply(
+			seqVitals,2,function(x) 
+				vitalsRecord[x,1]
+			)
 		if(is.vector(seqVitals)){
 			seqVitals <- matrix(seqVitals,,2)
 			}
 		#
 		# checks
-		if(!is.matrix(seqVitals)){stop("seqVitals isn't a matrix")}
-		if(ncol(seqVitals) != 2){stop("seqVitals doesn't have 2 columns")}
+		if(!is.matrix(seqVitals)){
+			stop("seqVitals isn't a matrix")
+			}
+		if(ncol(seqVitals) != 2){
+			stop("seqVitals doesn't have 2 columns")
+			}
+		#
+		#
 	}else{
 		seqVitals <- NA
 		}
 	#
 	#check to make sure it makes sense
-	if(length(seqVitals) == 0){stop("seqVitals constructed incorrectly")}
+	if(length(seqVitals) == 0){
+		stop("seqVitals constructed incorrectly")
+		}
 	#
 	return(seqVitals)
 	}
 
 sampleSeqVitals <- function(seqVitals){
-	cumSumSeq <- cumsum(apply(seqVitals,1,diff))
+	#
+	cumSumSeq <- cumsum(apply(seqVitals, 1, diff))
 	totalSum <- rev(cumSumSeq)[1]
+	#
 	if(totalSum>0){
 		placedDate <- runif(1)*totalSum
 		findRow <- which(cumSumSeq >= placedDate)[1]
-		earlierRowCumSum <- ifelse(findRow == 1,0,cumSumSeq[findRow-1])
-		date <- seqVitals[findRow,1]+placedDate-earlierRowCumSum
+		earlierRowCumSum <- ifelse(findRow == 1, 0, cumSumSeq[findRow-1])
+		date <- seqVitals[findRow,1] + placedDate - earlierRowCumSum
 	}else{
 		# no probability density to sample
 		# randomly pick a row
 		if(length(seqVitals[,1])>1){
-			date <- sample(seqVitals[,1],1)
+			date <- sample(seqVitals[,1], 1)
 		}else{
 			date <- seqVitals[,1]
 			}

@@ -123,52 +123,13 @@ not a true probabilisitic confidence interval, as it has no relationship to
 the standard error.
 }
 \examples{
+# let's look at this function
+    # with some birth-death simulations
+
 
 set.seed(444)
-record <- simFossilRecord(
-    p = 0.1, q = 0.1, 
-    nruns = 1,
-    nTotalTaxa = c(30,40), 
-    nExtant = 0)
-taxa <- fossilRecord2fossilTaxa(record)
-rangesCont <- sampleRanges(taxa, r = 0.5)
-rangesDisc <- binTimeData(rangesCont,
-    int.length = 1)
-cladogram <- taxa2cladogram(taxa, plot = TRUE)
-#using multiDiv with very different data types
-ttree <- timePaleoPhy(
-    cladogram, 
-    rangesCont, 
-    type = "basic", 
-    add.term = TRUE, 
-    plot = FALSE
-    )
-    
-input <- list(rangesCont, rangesDisc, ttree)
-multiDiv(input, plot = TRUE)
 
-#using fixed interval times
-multiDiv(input, 
-    int.times = rangesDisc[[1]], 
-    plot = TRUE)
-
-#using multiDiv with samples of trees
-ttrees <- timePaleoPhy(
-    cladogram, 
-    rangesCont, 
-    type = "basic",
-    randres = TRUE, 
-    ntrees = 10, 
-    add.term = TRUE
-    )
-    
-multiDiv(ttrees)
-    
-# uncertainty in diversity history is solely due to 
-    # the random resolution of polytomies
-
-################
-# multiDiv can also take output from simFossilRecord
+# multiDiv can take output from simFossilRecord
     # via fossilRecord2fossilTaxa
 
 # what do many simulations run under some set of
@@ -182,12 +143,12 @@ records <- simFossilRecord(
     plot = TRUE
     )
 
-taxa <- sapply(records, fossilRecord2fossilTaxa)
+taxa <- lapply(records, fossilRecord2fossilTaxa)
 
 multiDiv(taxa)
-#increasing cone of diversity! 
+# increasing cone of diversity! 
 
-#Its even better on a log scale:
+# Its even better on a log scale:
 multiDiv(taxa, plotLogRich = TRUE)
 
 #######################################
@@ -217,6 +178,62 @@ discreteRanges <- lapply(taxaPB, function(x)
     )
 
 multiDiv(discreteRanges)
+
+#########################################
+# plotting a multi-diversity curve for
+   # a sample of stochastic dated trees
+
+record <- simFossilRecord(
+    p = 0.1, q = 0.1, 
+    nruns = 1,
+    nTotalTaxa = c(30,40), 
+    nExtant = 0)
+    
+taxa <- fossilRecord2fossilTaxa(record)
+rangesCont <- sampleRanges(taxa, r = 0.5)
+rangesDisc <- binTimeData(rangesCont,
+    int.length = 1)
+# get the cladogram
+cladogram <- taxa2cladogram(taxa, plot = TRUE)
+
+#using multiDiv with samples of trees
+ttrees <- timePaleoPhy(
+    cladogram, 
+    rangesCont, 
+    type = "basic",
+    randres = TRUE, 
+    ntrees = 10, 
+    add.term = TRUE
+    )
+    
+multiDiv(ttrees)
+
+# uncertainty in diversity history is solely due to 
+    # the random resolution of polytomies
+
+######################################################### 
+
+#using multiDiv to compare very different data types:
+   # continuous ranges, discrete ranges, dated tree
+
+# get a single dated tree
+ttree <- timePaleoPhy(
+    cladogram, 
+    rangesCont, 
+    type = "basic", 
+    add.term = TRUE, 
+    plot = FALSE
+    )
+    
+# put them altogether in a list
+input <- list(rangesCont, rangesDisc, ttree)
+
+multiDiv(input, plot = TRUE)
+
+# what happens if we use fixed interval times?
+multiDiv(input, 
+    int.times = rangesDisc[[1]], 
+    plot = TRUE)
 
 layout(1)
 

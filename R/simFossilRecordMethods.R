@@ -205,7 +205,19 @@ timeSliceFossilRecord <- function(
 		if(is.na(x[[1]][4])){
 			TRUE
 		}else{
-			sliceTime >= x[[1]][4]
+			# the old code:
+			#
+			# (sliceTime-x[[1]][4]) > tolerance
+			#
+			# new (07-15-19)
+			if(x[[1]][4] <= sliceTime){	
+				# is the absolute difference in dates
+					# greater than the tolerance
+				# (otherwise the events are equivalent - should be extinct!)
+				abs(sliceTime - x[[1]][4]) > tolerance
+			}else{
+				FALSE
+				}
 			}
 		})
 	#
@@ -236,18 +248,18 @@ timeSliceFossilRecord <- function(
 			#
 			if(isAlive[i]){
 				#
-				print("live taxon found")
-				print("Original taxon")
-				print(fossilRecord[[i]])
-				print("Slice Time")
-				print(sliceTime)
+				#print("live taxon found")
+				#print("Original taxon")
+				#print(fossilRecord[[i]])
+				#print("Slice Time")
+				#print(sliceTime)
 				#
 				#turn all taxa that went extinct after sliceTime so they are still alive
 				fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3] - sliceTime
 				fossilRecord[[i]][[1]][4:5] <- c(0, 1)
 				#
-				print("New Taxon")
-				print(fossilRecord[[i]])
+				#print("New Taxon")
+				#print(fossilRecord[[i]])
 				#
 			}else{
 				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4] - sliceTime

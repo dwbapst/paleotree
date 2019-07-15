@@ -100,9 +100,10 @@ functions included in paleotree. multiDiv will intuitively decide whether
 input datasets are continuous-time taxic ranges, discrete-time (binned
 interval) taxic ranges or phylogenetic trees, as long as they are formatted
 as required by the respective diversity curve functions. A list that
-contains a mix of data types is entirely acceptable. A list of matrices
-output from \code{fossilRecord2fossilTaxa}, via simulation with \code{simFossilRecord}
-is allowable, and treated as input for \code{taxicDivCont}.
+contains a mix of data types is entirely acceptable.
+A list of matrices output from \code{fossilRecord2fossilTaxa},
+via simulation with \code{simFossilRecord} is allowable,
+and treated as input for \code{taxicDivCont}.
 Data of an unknown type gives back an error.
 
 The argument split.int splits intervals, if and only if discrete interval
@@ -131,7 +132,8 @@ record <- simFossilRecord(
     nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 rangesCont <- sampleRanges(taxa, r = 0.5)
-rangesDisc <- binTimeData(rangesCont, int.length = 1)
+rangesDisc <- binTimeData(rangesCont,
+    int.length = 1)
 cladogram <- taxa2cladogram(taxa, plot = TRUE)
 #using multiDiv with very different data types
 ttree <- timePaleoPhy(
@@ -163,7 +165,7 @@ ttrees <- timePaleoPhy(
 multiDiv(ttrees)
     
 # uncertainty in diversity history is solely due to 
-   # the random resolution of polytomies
+    # the random resolution of polytomies
 
 ################
 # multiDiv can also take output from simFossilRecord
@@ -201,11 +203,11 @@ recordsPB <- simFossilRecord(
     plot = TRUE
     )
     
-taxaPB <- sapply(recordsPB, fossilRecord2fossilTaxa)
+taxaPB <- lapply(recordsPB, fossilRecord2fossilTaxa)
 multiDiv(taxaPB, plotLogRich = TRUE)
 
 #compare many discrete diversity curves
-discreteRanges <- lapply(taxa, function(x)
+discreteRanges <- lapply(taxaPB, function(x)
     binTimeData(
         sampleRanges(x, 
             r = 0.5,

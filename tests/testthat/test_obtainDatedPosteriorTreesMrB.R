@@ -57,5 +57,7 @@ hundredRandomlySelectedTrees <- obtainDatedPosteriorTreesMrB(
  	getRootAges = TRUE,
 	outputTrees = 100, 
 	file = NULL)
+	
+expect_equal_to_reference(hundredRandomlySelectedTrees) 
 
 })

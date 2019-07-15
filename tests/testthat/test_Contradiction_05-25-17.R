@@ -13,7 +13,12 @@ test<-c(
   paleotree:::testContradiction(c("A","B"),c("B","D"))  #should be TRUE
 )
 expected<-c(FALSE,FALSE,TRUE,TRUE,TRUE,TRUE)
-if(!identical(test,expected)){stop("testContradiction failed")}
+
+#if(!identical(test,expected)){
+#	stop("testContradiction failed")
+#	}
+
+expect_identical(test,expected)
 
 # test with three labels
 test<-c(
@@ -27,9 +32,11 @@ test<-c(
 
 expected<-c(FALSE,TRUE,FALSE,FALSE,TRUE,TRUE)
 
-if(!identical(test,expected)){
-	stop("testContradiction failed")
-	}
+#if(!identical(test,expected)){
+#	stop("testContradiction failed")
+#	}
+
+expect_identical(test, expected)
 
 set.seed(1)
 treeA<-ape::rtree(30,br=NULL)
@@ -45,8 +52,10 @@ test<-c(
 	identical(treeContradiction(treeA,treeA),0)  # should be zero distanceH
 	)
 	
-if(!all(test)){
-	stop("test of treeContradiction failed!")
-	}
+#if(!all(test)){
+#	stop("test of treeContradiction failed!")
+#	}
+
+expect_true(!all(test))
 
 })

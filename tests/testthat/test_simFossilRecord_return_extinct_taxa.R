@@ -25,5 +25,7 @@ anyDead <- any(sapply(res,function(z)
 if(anyDead){
     stop("Runs have extinct taxa under conditioning for extant only?")
     }
+	
+expect_false(anyDead)
 
 })

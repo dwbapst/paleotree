@@ -21,10 +21,11 @@ anyLive <- any(sapply(res,function(z)
     any(sapply(z,function(x) x[[1]][5] == 1)))
     )
 	
-	
 # test if any are still alive
 if(anyLive){
     stop("Runs have extant taxa under conditioning for none?")
     }
+
+expect_false(anyLive)
 
 })

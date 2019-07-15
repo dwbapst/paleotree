@@ -141,5 +141,7 @@ res <- simFossilRecord(
 	nruns = 1,
 	plot = TRUE
 	)
+
+expect_equal_to_reference(res)
 	
 })

@@ -13,15 +13,21 @@ trait <- cladogeneticTraitCont(taxa)
 tree <- taxa2phylo(taxa)
 plotTraitgram(trait,tree,conf.int = FALSE)
 
+expect_equal_to_reference(trait)
+expect_equal_to_reference(tree)
+
 #with cryptic speciation
-record <- simFossilRecord(
+record2 <- simFossilRecord(
 	p = 0.1, q = 0.1, prop.cryptic = 0.5, 
 	nruns = 1, 
 	nTotalTaxa = c(10,50), 
 	plot = TRUE)
-taxa <- fossilRecord2fossilTaxa(record)
-trait <- cladogeneticTraitCont(taxa)
-tree <- taxa2phylo(taxa)
-plotTraitgram(trait,tree,conf.int = FALSE)
+taxa2 <- fossilRecord2fossilTaxa(record2)
+trait2 <- cladogeneticTraitCont(taxa2)
+tree2 <- taxa2phylo(taxa2)
+plotTraitgram(trait2,tree2,conf.int = FALSE)
+
+expect_equal_to_reference(trait2)
+expect_equal_to_reference(tree2)
 
 })

@@ -214,6 +214,11 @@ timeSliceFossilRecord <- function(
 				# is the absolute difference in dates
 					# greater than the tolerance
 				# (otherwise the events are equivalent - should be extinct!)
+				#
+				# the allowability of finding extinct taxa needs to be higher
+					# or else difficult to identify extinct taxa, due to rounding issues
+				# so need to be as relaxed as possible identifying extinct taxa
+				#
 				abs(sliceTime - x[[1]][4]) > tolerance
 			}else{
 				FALSE

@@ -1343,7 +1343,7 @@ simFossilRecord <- function(
 				#only as long as continue = TRUE
 				#
 				#timePassed from the initiation of the simulation
-				timePassed <- runConditions$totalTime[2]-currentTime
+				timePassed <- runConditions$totalTime[2] - currentTime
 				#
 				# get rates, sample new event, have it occur
 				#
@@ -1364,37 +1364,45 @@ simFossilRecord <- function(
 					negRatesAsZero = negRatesAsZero
 					)
 				#
-				#get the probabilty for each event in rateMatrix
-				eventProbMatrix <- rateMatrix/sum(rateMatrix)
-				#
-				# taken from 
-				#   stackoverflow.com/questions/30232740/
-				#   randomly-sample-entries-of-a-matrix-and-return
-				#   -the-row-column-indexes-in-r
-				#
-				# simplified: arrayInd(sample(length(m),1,prob = m),dim(m)) 
-				#
-				#get event type and which taxon it occurs to
-				sampledCell <- sample(length(rateMatrix), 
-					1, prob = eventProbMatrix)
-				#will return as a 1 row matrix, of row # and col #
-				sampledCell <- arrayInd(sampledCell, dim(rateMatrix))
-				#
+
 				#draw waiting time to an event (from Peter Smits)
 					# exponential with rate = sum of all rates, across all taxa
 				changeTime <- rexp(1, rate = sum(rateMatrix))
 				#
-				# if time dep rates, test if changeTime is greater than 
-				if(isTimeDep & changeTime>maxStepTime){
+				# if time dep rates, test 
+					# if changeTime is greater than maxStepTime
+				#
+				if(isTimeDep & (changeTime > maxStepTime)){
+					# No event has occurred, just tick time forward
+					#
 					# redefine changeTime as maxStepTime
 					changeTime <- maxStepTime
 					#
 					# measure time passed
 					newTime <-  currentTime - changeTime
-					newTimePassed <- timePassed+changeTime
+					newTimePassed <- timePassed + changeTime
 					#
 					# obviously no event needs to occur...
+					#
 				}else{
+					# an event has occurred!
+					#
+					# get the probabilty for each event in rateMatrix
+					eventProbMatrix <- rateMatrix/sum(rateMatrix)
+					#
+					# taken from 
+					#   stackoverflow.com/questions/30232740/
+					#   randomly-sample-entries-of-a-matrix-and-return
+					#   -the-row-column-indexes-in-r
+					#
+					# simplified: arrayInd(sample(length(m),1,prob = m),dim(m)) 
+					#
+					#get event type and which taxon it occurs to
+					sampledCell <- sample(length(rateMatrix), 
+						1, prob = eventProbMatrix)
+					#will return as a 1 row matrix, of row # and col #
+					sampledCell <- arrayInd(sampledCell, dim(rateMatrix))
+					#					
 					# what is the event type
 					event <- colnames(rateMatrix)[sampledCell[1,2]]
 					# who did it happen to (what lineage)
@@ -1421,12 +1429,12 @@ simFossilRecord <- function(
 					# max totalTime, max nTotalTaxa, nSamp or total extinction
 					###### none of these can REVERSE ########
 				#
-				#get vitals
+				# get vitals
 				currentVitals <- getRunVitals(
 					taxa = taxa,
 					count.cryptic = count.cryptic
 					)
-				# continue ??
+				# should we continue ??
 				continue <- testContinue(
 					vitals = currentVitals,
 					timePassed = newTimePassed,
@@ -1436,12 +1444,15 @@ simFossilRecord <- function(
 				# Updated vitals table
 					#for (2), keep a table that records changes in 
 						# nTotalTaxa, nExtant, nSamp with timePassed
-				#then can quickly evaluate (2)
+				# then can quickly evaluate (2)
 				currentVitals <- c(
 					timePassed = newTimePassed,
 					t(as.matrix(currentVitals))
 					)
+				#
+				# combine old vitals with new vitals
 				vitalsRecord <- rbind(vitalsRecord,currentVitals)
+				#
 				# set new current time
 				currentTime <- newTime	
 				#
@@ -1500,10 +1511,11 @@ simFossilRecord <- function(
 					}
 				}
 			}
-		#sample the sequences for a date
+		#sample the sequences for a slicing date
 		passedDate <- sampleSeqVitals(seqVitals = seqVitals)
-		#this date is in timePassed units: convert to backwards currentTime
-		currentDate <- runConditions$totalTime[2] - passedDate
+		#this slicing date is in timePassed units
+			# need to convert to backwards currentTime
+		slicingDate <- runConditions$totalTime[2] - passedDate
 		#
 		class(taxa) <- 'fossilRecordSimulation'
 		#
@@ -1512,12 +1524,12 @@ simFossilRecord <- function(
 			# 0< modern.samp.prob <1 need to randomly sample
 		taxa <- timeSliceFossilRecord(
 			fossilRecord = taxa, 
-			sliceTime = currentDate,
+			sliceTime = slicingDate,
 			shiftRoot4TimeSlice = shiftRoot4TimeSlice, 
 			modern.samp.prob = modern.samp.prob
 			)
 		#
-		browser()
+		#browser()
 		#
 		##############################################################################
 		# FINAL CHECKS

@@ -205,7 +205,7 @@ timeSliceFossilRecord <- function(
 		if(is.na(x[[1]][4])){
 			TRUE
 		}else{
-			sliceTime > x[[1]][4]
+			sliceTime >= x[[1]][4]
 			}
 		})
 	#

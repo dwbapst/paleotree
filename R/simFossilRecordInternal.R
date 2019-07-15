@@ -527,11 +527,21 @@ testFinal <- function(taxa,timePassed,runConditions,count.cryptic){
 			}
 		}
 	# test that the produced taxa object actually passed the runConditions
-	finalVitals <- getRunVitals(taxa = taxa,count.cryptic = count.cryptic)
-	finalVitals <- c(timePassed = timePassed,finalVitals)
+	finalVitals <- getRunVitals(
+		taxa = taxa, 
+		count.cryptic = count.cryptic
+		)
+	# attach time
+	finalVitals <- c(timePassed = timePassed, finalVitals)
+	#
+	############################3
 		#time
-		# okayTime <- (timePassed >= runConditions[[1]][1] 
-			# & timePassed <= runConditions[[1]][2])
+		# okayTime <- (
+			# timePassed >= runConditions[[1]][1] 
+			# & timePassed <= runConditions[[1]][2]
+			# )
+	################
+	#
 	#other vitals
 	okayVitals <- sapply(1:4,function(i){
 		var <- finalVitals[i]
@@ -540,11 +550,15 @@ testFinal <- function(taxa,timePassed,runConditions,count.cryptic){
 		})
 	#finalCheck <- all(finalVitals)
 	if(any(!okayVitals)){
+		print(taxa)
 		print(finalVitals)
 		#browser()
+		#
 		stop(paste0(
 			"Accepted run is outside of bounds set for conditions: ",
-			names(runConditions)[!okayVitals],collapse = ", "))
+			names(runConditions)[!okayVitals],
+			collapse = ", "
+			))
 		}
 	finalCheck <- all(okayVitals)
 	return(finalVitals)

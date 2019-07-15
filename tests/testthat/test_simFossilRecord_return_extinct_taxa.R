@@ -22,7 +22,7 @@ anyDead <- any(sapply(res,function(z)
     )
 	
 # test if any are still alive
-if(anyLive){
+if(anyDead){
     stop("Runs have extinct taxa under conditioning for extant only?")
     }
 

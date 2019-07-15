@@ -147,7 +147,7 @@ record <- simFossilRecord(
 	plot = TRUE
 	)
 
-testRes <- checkRecordForNoDatePastZero(fossilRecord = record)
+testRes <- paleotree:::checkRecordForNoDatePastZero(fossilRecord = record)
 
 if(!testRes){
 	stop("checkRecordForNoDatePastZero returned FALSE")
@@ -307,7 +307,7 @@ record <- simFossilRecord(
 	plot = TRUE
 	)
 
-testRes <- checkRecordForNoDatePastZero(fossilRecord = record)
+testRes <- paleotree:::checkRecordForNoDatePastZero(fossilRecord = record)
 
 if(!testRes){
 	stop("checkRecordForNoDatePastZero returned FALSE")

@@ -92,25 +92,25 @@
 #' 
 #' # example using strap
 #' 
-#' rangesFourDate<-timeTree$tipTaxonFourDateRanges
-#' colnames(rangesMinMax )<-c("FAD","LAD")
-#' 
 #' library(strap)
 #' #now plot it
 #' strap::geoscalePhylo(
-#' 	tree=timeTree,
-#' 	direction = "upwards",
-#' 	ages=rangesMinMax,
-#' 	cex.tip=0.7,
-#' 	cex.ts=0.55,
-#' 	cex.age=0.5,
-#' 	width=3,
-#' 	tick.scale = 50,
-#' 	quat.rm=TRUE,
-#' 	boxes = "Period",
-#' 	arotate = 90,
-#' 	units=c("Eon","Period","Era"),
-#' 	x.lim=c(650,-20))
+#'     tree=timeTree,
+#'     direction = "upwards",
+#'     ages=rangesMinMax,
+#'     cex.tip=0.7,
+#'     cex.ts=0.55,
+#'     cex.age=0.5,
+#'     width=3,
+#'     tick.scale = 50,
+#'     quat.rm=TRUE,
+#'     boxes = "Period",
+#'     arotate = 90,
+#'     units=c("Eon","Period","Era"),
+#'     x.lim=c(650,-20)
+#'     )
+#' 
+#' #############
 #' 
 #' }
 #' 
@@ -213,11 +213,7 @@ dateTaxonTreePBDB <- function(
 			)
 		}
 	# now, hopefully, none of the remaining tips/nodes
-		# do not have NA appearance times...
-		
-		
-		
-		
+		# do not have NA appearance times...	
 	###########################
 	# get node max ages
 	if(is.null(taxaTree$node.label)){

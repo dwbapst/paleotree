@@ -1,5 +1,9 @@
 test_that("simFossilRecord doesn't return extant taxa in extinct-only simulations", {
 
+
+testthat::skip_on_cran()
+testthat::skip_on_travis()
+
 library(paleotree)
 
 # We can set up a test to make sure that no extant taxa somehow get

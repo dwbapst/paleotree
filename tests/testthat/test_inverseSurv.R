@@ -26,6 +26,6 @@ res <- optim(parInit(likFun),likFun,
       lower = parLower(likFun), upper = parUpper(likFun),
       method = "L-BFGS-B", control = list(maxit = 3))
 	  
-expect_false(is.na(res))
+expect_false(any(is.na(res)))
 
 })

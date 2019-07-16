@@ -56,6 +56,6 @@ test<-c(
 #	stop("test of treeContradiction failed!")
 #	}
 
-expect_true(!all(test))
+expect_true(all(test))
 
 })

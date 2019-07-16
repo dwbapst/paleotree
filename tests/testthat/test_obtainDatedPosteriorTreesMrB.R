@@ -60,6 +60,7 @@ hundredRandomlySelectedTrees <- obtainDatedPosteriorTreesMrB(
 
 testthat::skip_on_cran()
 testthat::skip_on_travis()	
-expect_equal_to_reference(hundredRandomlySelectedTrees) 
+expect_equal_to_reference(hundredRandomlySelectedTrees, update=TRUE,
+	file = ".//references//datedPosteriorTreesMrB//hundredRandom") 
 
 })

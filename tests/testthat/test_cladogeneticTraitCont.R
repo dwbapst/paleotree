@@ -27,10 +27,14 @@ plotTraitgram(trait2,tree2,conf.int = FALSE)
 testthat::skip_on_cran()
 testthat::skip_on_travis()
 
-expect_equal_to_reference(trait)
-expect_equal_to_reference(tree)
+expect_equal_to_reference(trait, update=TRUE, 
+	file = ".//references//cladogeneticTrait//trait")
+expect_equal_to_reference(tree, update=TRUE, 
+	file = ".//references//cladogeneticTrait//tree")
 
-expect_equal_to_reference(trait2)
-expect_equal_to_reference(tree2)
+expect_equal_to_reference(trait2, update=TRUE, 
+	file = ".//references//cladogeneticTrait//trait2")
+expect_equal_to_reference(tree2, update=TRUE, 
+	file = ".//references//cladogeneticTrait//tree2")
 
 })

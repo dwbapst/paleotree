@@ -28,9 +28,10 @@ for(i in 1:100){
 		type="mbl", vartime = 1)
 	}
 # compare first tree with all others
-#testEqual<-all(sapply(timetreesMBL,all.equal,timetreesMBL[[1]]))
+testEqual<-all(sapply(timetreesMBL,all.equal,timetreesMBL[[1]]))
+
 #if(!testEqual){stop("Not all MBL trees are identical")}
 
-expect_equal(timetreesMBL[[1]], timetreesMBL)
+expect_true(testEqual)
 
 })

@@ -214,11 +214,31 @@ dateTaxonTreePBDB <- function(
 		}
 	# now, hopefully, none of the remaining tips/nodes
 		# do not have NA appearance times...
+		
+		
+		
+		
 	###########################
 	# get node max ages
-	nodeMaxAges <- appData$firstapp_max_ma[
-		match(taxaTree$node.label, appData$taxon_name)
-		]
+	if(is.null(taxaTree$node.label)){
+		# no node labels...
+		# so find the max age using the children on tree
+		#
+		nodeChildren <- lapply(prop.part(taxaTree), function(x)
+			taxaTree$tip.label[x]
+			)
+		nodeMaxAges <- numeric()
+		#
+		for(i in 1:Nnode(taxaTree)){
+			matchedChildren <- match(nodeChildren[[i]], appData$taxon_name)
+			maxChildAges <- appData$firstapp_max_ma[matchedChildren]
+			nodeMaxAges[i] <- max(maxChildAges)
+			}		
+	}else{
+		nodeMaxAges <- appData$firstapp_max_ma[
+			match(taxaTree$node.label, appData$taxon_name)
+			]
+		}
 	# 
 	####################################################
 	# get four date taxon ranges for all tip taxa
@@ -269,6 +289,7 @@ dateTaxonTreePBDB <- function(
 		datedTree <- minBranchLength(
 			tree = datedTree,
 			mbl = minBranchLen)
+		#
 		datedTree <- ladderize(datedTree)
 		#
 		plotName <- paste0(

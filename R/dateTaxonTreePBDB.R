@@ -64,6 +64,10 @@
 #' @references
 #' Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
 #' application programming interface. \emph{Paleobiology} 42(1):1-7.
+#' 
+#' The equuid tree used in the examples is from:
+#' MacFadden, B. J. 1992. Fossil horses: systematics, paleobiology, and
+#' evolution of the family Equidae. \emph{Cambridge University Press}.
 
 #' @examples
 #' 
@@ -88,9 +92,11 @@
 #' 
 #' }
 #' 
+#' ####################################
+#' 
 #' \dontrun{
 #' 
-#' # example using strap
+#' # can also plot dated tree with strap
 #' 
 #' library(strap)
 #' #now plot it
@@ -109,8 +115,78 @@
 #'     units=c("Eon","Period","Era"),
 #'     x.lim=c(650,-20)
 #'     )
+#' }
 #' 
-#' #############
+#' ##############################################################
+#' 
+#' \donttest{
+#' 
+#' # we can also use this for pre-existing trees
+#'     # for example, this tree of equuids (horses)
+#'     # borrowed from UCMP materials on horse evolution
+#'     # https://evolution.berkeley.edu/evolibrary/images/HorseTree.pdf
+#'     # (apparently from MacFadden, 1992? Citation above)
+#' 
+#' # read the tree in as Newick string
+#' horseTree <- ape::read.tree(file=NULL, 
+#'     text = paste0(
+#'          "(Eohippus,(Xenicohippus,(Haplohippus,(Epihippus,",
+#'          "(Miohippus,(((Hypohippus,Megahippus),(Anchitherium,",
+#'          "Kalobatippus)),(Archaeohippus,(Desmatippus,(Parahippus,",
+#'          "(Merychippus,(((Hipparion_Merychippus,(Nannippus,",
+#'          " Cormohipparion)),(Pseudhipparion,(Neohipparion,",
+#'          " Hipparion))),(Equine_Merychippus,((Protohippus,Calippus),",
+#'          "(Pliohippus,(Astrohippus,(Dinohippus,Equus))))))))))))))));"
+#'          )
+#'     )
+#' 
+#' # note there is a message that the tree lacks node names
+#'     # this is unexpected / atypical for taxon trees
+#' 
+#' plot(horseTree)
+#' 
+#' # now let's get data on the tip from the PBDB
+#'     # using getSpecificTaxaPBDB
+#' horseData <- getSpecificTaxaPBDB(horseTree$tip.label)
+#' 
+#' # now we can date the tree with dateTaxonTreePBDB
+#' 
+#' datedHorseTree <- dateTaxonTreePBDB(
+#'     taxaTree = horseTree,
+#'     taxaDataPBDB = horseData,
+#'     minBranchLen = 1
+#'     )
+#' 
+#' # and let's try plotting it!	
+#' plotPhyloPicTree(
+#'     tree = datedHorseTree,
+#'     depthAxisPhylo = TRUE
+#'     )		
+#' 	
+#' # a fairly boring phylopic diagram
+#'     # not many horse phylopics as of 07-16-19?
+#' }
+#' 
+#' \dontrun{
+#' 
+#' # Let's look at this horse tree with strap
+#'
+#' library(strap)
+#' 
+#' geoscalePhylo(
+#'     tree = datedHorseTree,
+#'     ages = datedHorseTree$ranges.used,
+#'     cex.tip = 0.7,
+#'     cex.ts = 0.7,
+#'     cex.age = 0.7,
+#'     width = 4,
+#'     tick.scale = 15,
+#'     boxes = "Epoch",
+#'     erotate = 90,
+#'     quat.rm = TRUE,
+#'     units = c("Period","Epoch"),
+#'     x.lim = c(65,-10)
+#'     )
 #' 
 #' }
 #' 

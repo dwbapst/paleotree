@@ -138,43 +138,65 @@ dateTaxonTreePBDB <- function(
 	lastAppTimes <- c("lastapp_min_ma","lastapp_max_ma")
 	firstAppTimes <- c("firstapp_min_ma","firstapp_max_ma")
 	#
+	# save orig taxa data
+	taxaDataPBDB_orig <- taxaDataPBDB
+	#
 	############################################################
 	# 03-24-19
 	# why don't I get all tip and node data simultaneously?
 	#
-	# get node ages
-	nodeNames <- taxaTree$node.label
-	# remove any ".1" in the taxon names
-		# hopefully there aren't any "." in the real taxon names... sigh...
-	nodeNames <- sapply(strsplit(nodeNames,split=".",fixed=TRUE),function(x) x[[1]])
-	# remove nodeNames not in taxaDataPBDB
-	nodeNamesNoMatch <- sapply(nodeNames,function(x) all(x != taxaDataPBDB$taxon_name))
-	if(any(nodeNamesNoMatch)){
-		nodeNames <- nodeNames[nodeNamesNoMatch]
-			# get API URL
-		nodeNames <- paste0(nodeNames, collapse=",")
-		apiAddressNodes <- paste0(
-			"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
-			nodeNames,"&show=app,parent"
-			)
-		# browseURL(apiAddressNodes)
-		nodeData <- read.csv(apiAddressNodes,
-			stringsAsFactors = FALSE)
-		# combine with taxon data
-			# reducing scope to same columns as nodeData
-				#print(colnames(nodeData))
-				#print(colnames(taxaDataPBDB))
-		sharedColNames <- intersect(colnames(nodeData), colnames(taxaDataPBDB))
-		taxaDataReduced <-  taxaDataPBDB[,sharedColNames]
-		nodeDataReduced <- nodeData[,sharedColNames]
-		combData <- rbind(taxaDataReduced, nodeDataReduced)
+	# skip if there aren't any node labels
+	if(is.null(taxaTree$node.label)){
 		#
-		appData <- processTaxonAppData(dataPBDB = combData, 
-			dropZeroOccurrenceTaxa = dropZeroOccurrenceTaxa)
+		message("No node labels found - is this a taxon tree from the PBDB?")
+		# just take original taxon data as the 'combined data'	
+		combData <- taxaDataPBDB
+		#
 	}else{
-		appData <- processTaxonAppData(dataPBDB = taxaDataPBDB, 
-			dropZeroOccurrenceTaxa = dropZeroOccurrenceTaxa)
+		#
+		# get node ages
+		nodeNames <- taxaTree$node.label
+		# remove any ".1" in the taxon names
+			# hopefully there aren't any "." in the real taxon names... sigh...
+		nodeNames <- sapply(
+			strsplit(
+				nodeNames, 
+				split=".", 
+				fixed=TRUE
+				),
+			function(x) x[[1]]
+			)
+		# remove nodeNames not in taxaDataPBDB
+		nodeNamesNoMatch <- sapply(
+			nodeNames, 
+			function(x) 
+				all(x != taxaDataPBDB$taxon_name)
+				)
+		if(any(nodeNamesNoMatch)){
+			nodeNames <- nodeNames[nodeNamesNoMatch]
+				# get API URL
+			nodeNames <- paste0(nodeNames, collapse=",")
+			apiAddressNodes <- paste0(
+				"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
+				nodeNames,"&show=app,parent"
+				)
+			# browseURL(apiAddressNodes)
+			nodeData <- read.csv(apiAddressNodes,
+				stringsAsFactors = FALSE)
+			# combine with taxon data
+				# reducing scope to same columns as nodeData
+					#print(colnames(nodeData))
+					#print(colnames(taxaDataPBDB))
+			sharedColNames <- intersect(colnames(nodeData), colnames(taxaDataPBDB))
+			taxaDataReduced <-  taxaDataPBDB[,sharedColNames]
+			nodeDataReduced <- nodeData[,sharedColNames]
+			combData <- rbind(taxaDataReduced, nodeDataReduced)
+			}
 		}
+	#		
+	appData <- processTaxonAppData(dataPBDB = combData, 
+		dropZeroOccurrenceTaxa = dropZeroOccurrenceTaxa)
+	#
 	#################
 	# drop tips not in appData
 	dropTips <- sapply(taxaTree$tip.label,
@@ -285,8 +307,8 @@ dateTaxonTreePBDB <- function(
 	#
 	#print("b")
 	#
-	# output the original taxaDataPBDB
-	datedTree$taxaDataPBDB <- taxaDataPBDB
+	# output the original taxaDataPBDB_orig
+	datedTree$taxaDataPBDB <- taxaDataPBDB_orig
 	# return
 	return(datedTree)
 	}

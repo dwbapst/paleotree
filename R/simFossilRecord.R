@@ -1597,8 +1597,11 @@ simFossilRecord <- function(
 			# 
 			# give it a class...
 			class(taxa) <- 'fossilRecordSimulation'	
-			# slice at maxTime
-			slicingDate <- runConditions$totalTime[2]
+			# slice at current time
+			# slicing date needs to be in timePassed units
+				# need to convert to backwards currentTime
+			# which means subtracting currentTime from maxTime
+			slicingDate <- runConditions$totalTime[2] - currentTime
 			# and slice
 			taxa <- timeSliceFossilRecord(
 				fossilRecord = taxa, 
@@ -1634,8 +1637,7 @@ simFossilRecord <- function(
 			#
 			#browser()
 			#
-			##############################################################################
-			# FINAL CHECKS
+			# FINAL CONDITION CHECK
 			# test that the produced taxa object actually passed the runConditions
 			finalTest <- testFinal(
 				taxa = taxa,
@@ -1643,9 +1645,12 @@ simFossilRecord <- function(
 				runConditions = runConditions,
 				count.cryptic = count.cryptic
 				)
-				
-				
 			}
+		#
+		#
+		##############################################################################
+		# FINAL CHECKS FOR ALL RUNS (Accepted and Rejected)
+		#
 		#are there any non-identical taxa in a simulation with pure cryptic speciation?
 		if(anag.rate == 0 & prop.cryptic == 1 & startTaxa == 1){
 			taxaIDsTest <- sapply(taxa,function(x) x[[1]][6])

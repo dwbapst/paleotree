@@ -21,7 +21,7 @@ res <- simFossilRecord(
     plot = TRUE
     )
 	
-anyLive <- any(sapply(res,function(z) 
+anyLive <- any(sapply(res, function(z) 
     any(sapply(z,function(x) x[[1]][5] == 1)))
     )
 	

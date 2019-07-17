@@ -1668,7 +1668,8 @@ simFossilRecord <- function(
 			# if returnAllRuns & isRejectedRun,
 				# save as is in rejected simulation list
 			# 
-			rejectedSimulations[[(length(rejectedSimulations) + 1]] <- taxa
+			nextRejected <- length(rejectedSimulations) + 1
+			rejectedSimulations[[nextRejected]] <- taxa
 			# 
 			# reset the nruns ticker
 			i <- (i - 1)

@@ -7,10 +7,11 @@
 simFossilRecord(p, q, r = 0, anag.rate = 0, prop.bifurc = 0,
   prop.cryptic = 0, modern.samp.prob = 1, startTaxa = 1, nruns = 1,
   maxAttempts = Inf, totalTime = c(0, 1000), nTotalTaxa = c(1, 1000),
-  nExtant = c(0, 1000), nSamp = c(0, 1000), tolerance = 10^-6,
-  maxStepTime = 0.01, shiftRoot4TimeSlice = "withExtantOnly",
-  count.cryptic = FALSE, negRatesAsZero = TRUE, print.runs = FALSE,
-  sortNames = FALSE, plot = FALSE)
+  nExtant = c(0, 1000), nSamp = c(0, 1000), returnAllRuns = FALSE,
+  tolerance = 10^-6, maxStepTime = 0.01,
+  shiftRoot4TimeSlice = "withExtantOnly", count.cryptic = FALSE,
+  negRatesAsZero = TRUE, print.runs = FALSE, sortNames = FALSE,
+  plot = FALSE)
 }
 \arguments{
 \item{p, q, r, anag.rate}{These parameters control the instantaneous
@@ -89,7 +90,21 @@ Note that it is easy to set combinations of parameters and run conditions that a
 impossible to produce satisfactory input under, in which case
 \code{simFossilRecord} would run in a nonstop loop.
 How cryptic taxa are counted for the sake of these
-conditions is controlled by argument \code{count.cryptic}.}
+conditions is controlled by argument \code{count.cryptic}.
+Note that behavior of these constraints can be modified
+by the argument \code{returnAllRuns}.}
+
+\item{returnAllRuns}{If \code{TRUE}, all simulation runs will be returned,
+with the output given as a list composed of two sublists - the first sublist containing
+all accepted simulations (i.e. everything that would be returned under the
+default condition of \code{returnAllRuns} \code{= FALSE}), and the second 
+sublist containing the full history of each failed simulation.
+These failed simulations are only stopped when they one of four,
+irreversible 'out-of-bounds' constraints. These four conditions are
+(a) reaching the maximum total simulation duration (\code{totalTime}),
+(b) exceeding the maximum number of total taxa (\code{nTotalTaxa}),
+(c) exceeding the maximum number of sampled taxa (\code{nSamp}), or 
+(d) total extinction of all lineages in the simulation.}
 
 \item{tolerance}{A small number which defines a tiny interval for
 the sake of placing run-sampling dates before events and
@@ -149,6 +164,15 @@ diversity curve for the 'observed' (sampled) number of taxa.}
 \value{
 \code{simFossilRecord} returns either a single object of class \code{fossilRecordSimulation}
 or a list of multiple such objects, depending on whether \code{nruns} was 1 or more.
+If argument \code{returnAllRuns} \code{= TRUE}, a list composed of two sublists,
+each of which contains 0 or more \code{fossilRecordSimulation} objects. The
+first sublist containing all the accepted simulations (i.e. all the simulations that
+would have been returned if \code{returnAllRuns} was \code{FALSE}), and the second
+sublist containing the final iteration of all rejected runs before they hit an
+irreversible out-of-bounds condition (to wit, reaching the maximum \code{totalTime},
+exceeding the maximum number of total taxa (\code{nTotalTaxa}),
+exceeding the maximum number of sampled taxa (\code{nSamp}),
+or total extinction of all lineages in the simulation).
 
 An object of class \code{fossilRecordSimulation} consists
 of a list object composed of multiple
@@ -239,8 +263,8 @@ Specifically, \code{simFossilRecord} allows for three types of
 binary branching events, referred to here as under the umbrella
 term of 'cladogenesis': 'budding cladogenesis',
 'bifurcating cladogenesis', and 'cryptic cladogenesis',
-as well as for a fourth non-branching event-type, 'anagenesis'
-(see Wagner and Erwin, 1995; Foote, 1996, and Bapst, 2013, for further details).
+as well as for a fourth non-branching event-type, 'anagenesis'.
+See Wagner and Erwin, 1995; Foote, 1996; and Bapst, 2013, for further details.
 Budding, bifurcation and cryptic cladogenetic events all
 share in common that a single geneological
 lineage splits into two descendant lineages, but
@@ -974,14 +998,30 @@ record <- simFossilRecord(
 
 # let's set time = 10-100 units, total taxa = 30-40, extant = 10
     #and look at acceptance rates with print.run
-record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
-    totalTime = c(10,100), nTotalTaxa = c(30,40), nExtant = 10,
-    print.runs = TRUE, plot = TRUE)
+record <- simFossilRecord(
+    p = 0.1, 
+    q = 0.1, 
+    r = 0.1, 
+    nruns = 1, 
+    totalTime = c(10,100), 
+    nTotalTaxa = c(30,40), 
+    nExtant = 10,
+    print.runs = TRUE, 
+    plot = TRUE
+    )
 
 # let's make the constraints on totaltaxa a little tighter
-record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
-    totalTime = c(50,100), nTotalTaxa = 30, nExtant = 10,
-    print.runs = TRUE, plot = TRUE)
+record <- simFossilRecord(
+    p = 0.1, 
+    q = 0.1, 
+    r = 0.1, 
+    nruns = 1, 
+    totalTime = c(50,100), 
+    nTotalTaxa = 30, 
+    nExtant = 10,
+    print.runs = TRUE, 
+    plot = TRUE
+    )
 # still okay acceptance rates
 
 # alright, now let's add a constraint on sampled taxa
@@ -997,6 +1037,7 @@ record <- simFossilRecord(
     print.runs = TRUE, 
     plot = TRUE
     )
+
 # still okay acceptance rates
 
 # we can be really odd and condition on having a single taxon

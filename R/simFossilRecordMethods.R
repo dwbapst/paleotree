@@ -430,11 +430,18 @@ checkFossilRecord <- function(fossilRecord){
 			"fossilRecord object is not of class 'fossilRecordSimulation'"
 			)
 		}
+	#
+	if(length(fossilRecord)<1){
+		stop(
+			"fossilRecord object is empty?!")
+		}
+	#
 	if(any(sapply(fossilRecord,length) != 2)){
 		stop(
 			"fossilRecord object has taxon entries with more or less than two elements"
 			)
 		}
+	#
 	if(any(sapply(fossilRecord,function(x) length(x[[1]])) != 6)){
 		stop(
 			"fossilRecord object has taxon entries with more or less than six elements in first element"

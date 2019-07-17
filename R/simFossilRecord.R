@@ -1040,14 +1040,30 @@
 #' 
 #' # let's set time = 10-100 units, total taxa = 30-40, extant = 10
 #'     #and look at acceptance rates with print.run
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
-#'     totalTime = c(10,100), nTotalTaxa = c(30,40), nExtant = 10,
-#'     print.runs = TRUE, plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1, 
+#'     nruns = 1, 
+#'     totalTime = c(10,100), 
+#'     nTotalTaxa = c(30,40), 
+#'     nExtant = 10,
+#'     print.runs = TRUE, 
+#'     plot = TRUE
+#'     )
 #' 
 #' # let's make the constraints on totaltaxa a little tighter
-#' record <- simFossilRecord(p = 0.1, q = 0.1, r = 0.1, nruns = 1, 
-#'     totalTime = c(50,100), nTotalTaxa = 30, nExtant = 10,
-#'     print.runs = TRUE, plot = TRUE)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     r = 0.1, 
+#'     nruns = 1, 
+#'     totalTime = c(50,100), 
+#'     nTotalTaxa = 30, 
+#'     nExtant = 10,
+#'     print.runs = TRUE, 
+#'     plot = TRUE
+#'     )
 #' # still okay acceptance rates
 #' 
 #' # alright, now let's add a constraint on sampled taxa
@@ -1063,6 +1079,7 @@
 #'     print.runs = TRUE, 
 #'     plot = TRUE
 #'     )
+#' 
 #' # still okay acceptance rates
 #' 
 #' # we can be really odd and condition on having a single taxon
@@ -1332,10 +1349,15 @@ simFossilRecord <- function(
 		}
 	#
 	ntries <- 0
-	for(i in 1:nruns){
+	#
+	#for(i in 1:nruns){
+	#
+	i <- 0
+	while(i >= nruns){
 		#
 		accept <- FALSE
 		isRejectedRun <- FALSE
+		i <- i + 1
 		#
 		while(!accept){
 			ntries <- ntries+1
@@ -1573,15 +1595,10 @@ simFossilRecord <- function(
 			# if returnAllRuns & isRejectedRun,
 				# do not slice simulation
 				# save as is in rejected simulation list
-
-			taxa <- timeSliceFossilRecord(
-				fossilRecord = taxa, 
-				sliceTime = slicingDate,
-				shiftRoot4TimeSlice = shiftRoot4TimeSlice, 
-				modern.samp.prob = modern.samp.prob
-				)	
-
-		
+			# 
+			# I think all I need to do is just give it a class...
+			class(taxa) <- 'fossilRecordSimulation'	
+			#	
 		}else{
 			# otherwise
 				# randomly sample for an acceptable slice time
@@ -1607,14 +1624,6 @@ simFossilRecord <- function(
 				modern.samp.prob = modern.samp.prob
 				)		
 			}
-		
-		
-			if(returnAllRuns & !accept){
-				# "accept it" but label as a failed run
-				accept <- TRUE
-				isRejectedRun <- TRUE		
-		
-		
 		#
 		#browser()
 		#
@@ -1655,19 +1664,33 @@ simFossilRecord <- function(
 			taxa <- taxa[order(names(taxa))]
 			}
 		#
-		acceptedSimulations[[i]] <- taxa
-		if(plot){
-			divCurveFossilRecordSim(fossilRecord = taxa)
-			if(nruns>1){
-				title(paste0(
-					"Run Number ",
-					i,
-					" of ",
-					nruns
-					))
+		if(returnAllRuns & isRejectedRun){
+			# if returnAllRuns & isRejectedRun,
+				# save as is in rejected simulation list
+			# 
+			rejectedSimulations[[(length(rejectedSimulations) + 1]] <- taxa
+			# 
+			# reset the nruns ticker
+			i <- (i - 1)
+			#	
+		}else{
+			# otherwise
+				# save in the accepted simulation list		
+			acceptedSimulations[[i]] <- taxa
+			#
+			if(plot){
+				divCurveFossilRecordSim(fossilRecord = taxa)
+				if(nruns>1){
+					title(paste0(
+						"Run Number ",
+						i,
+						" of ",
+						nruns
+						))
+					}
 				}
 			}
-		}
+		}	
 	if(print.runs){
 		runNumMessage <- ifelse(nruns==1,
 			paste0("1 run"),

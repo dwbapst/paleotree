@@ -36,8 +36,8 @@
 #' binary branching events, referred to here as under the umbrella
 #' term of 'cladogenesis': 'budding cladogenesis',
 #' 'bifurcating cladogenesis', and 'cryptic cladogenesis',
-#' as well as for a fourth non-branching event-type, 'anagenesis'
-#' (see Wagner and Erwin, 1995; Foote, 1996, and Bapst, 2013, for further details).
+#' as well as for a fourth non-branching event-type, 'anagenesis'.
+#' See Wagner and Erwin, 1995; Foote, 1996; and Bapst, 2013, for further details.
 #' Budding, bifurcation and cryptic cladogenetic events all
 #' share in common that a single geneological
 #' lineage splits into two descendant lineages, but
@@ -162,7 +162,6 @@
 #' If \code{shiftRoot4TimeSlice  = } \code{FALSE}, then the
 #' \emph{start-time} of the run will always be this maximum value for
 #' \code{totalTime}, and any extant taxa will stop at some time greater than zero.
-#' 
 
 #' @param p,q,r,anag.rate These parameters control the instantaneous
 #' ('per-capita') rates of branching, extinction,
@@ -214,6 +213,20 @@
 #' \code{simFossilRecord} would run in a nonstop loop.
 #' How cryptic taxa are counted for the sake of these
 #' conditions is controlled by argument \code{count.cryptic}.
+#' Note that behavior of these constraints can be modified
+#' by the argument \code{returnAllRuns}.
+
+#' @param returnAllRuns If \code{TRUE}, all simulation runs will be returned,
+#' with the output given as a list composed of two sublists - the first sublist containing
+#' all accepted simulations (i.e. everything that would be returned under the
+#' default condition of \code{returnAllRuns} \code{= FALSE}), and the second 
+#' sublist containing the full history of each failed simulation.
+#' These failed simulations are only stopped when they one of four,
+#' irreversible 'out-of-bounds' constraints. These four conditions are
+#' (a) reaching the maximum total simulation duration (\code{totalTime}),
+#' (b) exceeding the maximum number of total taxa (\code{nTotalTaxa}),
+#' (c) exceeding the maximum number of sampled taxa (\code{nSamp}), or 
+#' (d) total extinction of all lineages in the simulation.
 
 #' @param negRatesAsZero A logical. Should rates calculated as a
 #' negative number cause the simulation to fail
@@ -290,6 +303,15 @@
 #' @return
 #' \code{simFossilRecord} returns either a single object of class \code{fossilRecordSimulation}
 #' or a list of multiple such objects, depending on whether \code{nruns} was 1 or more.
+#' If argument \code{returnAllRuns} \code{= TRUE}, a list composed of two sublists,
+#' each of which contains 0 or more \code{fossilRecordSimulation} objects. The
+#' first sublist containing all the accepted simulations (i.e. all the simulations that
+#' would have been returned if \code{returnAllRuns} was \code{FALSE}), and the second
+#' sublist containing the final iteration of all rejected runs before they hit an
+#' irreversible out-of-bounds condition (to wit, reaching the maximum \code{totalTime},
+#' exceeding the maximum number of total taxa (\code{nTotalTaxa}),
+#' exceeding the maximum number of sampled taxa (\code{nSamp}),
+#' or total extinction of all lineages in the simulation).
 #' 
 #' An object of class \code{fossilRecordSimulation} consists
 #' of a list object composed of multiple
@@ -1129,7 +1151,9 @@ simFossilRecord <- function(
 		nTotalTaxa = c(1, 1000),
 		nExtant = c(0, 1000), 
 		nSamp = c(0, 1000),
-
+		#
+		returnAllRuns = FALSE,
+		
 		#control parameters
 		#
 		tolerance = 10^-6, 
@@ -1231,7 +1255,8 @@ simFossilRecord <- function(
 	if(!all(sapply(c(count.cryptic,negRatesAsZero,print.runs,sortNames,plot),is.logical))){
 		stop(
 			"count.cryptic, negRatesAsZero, print.runs, sortNames, and plot arguments must be logicals"
-			)}
+			)
+		}
 	#
 	##################################
 	# CHECK RUN CONDITIONS
@@ -1277,9 +1302,10 @@ simFossilRecord <- function(
 	if(any(!sapply(runConditions,function(x) x[1] <= x[2]))){
 		stop(paste0(
 			"Run condition misordered:\n", 
-			"values given as a range must have the minimum before the maximum"
+			"  Values given as a range must have the minimum before the maximum"
 			))
-		}	
+		}
+	#
 	###########################
 	#get the basic rate functions
 	getBranchRate <- makeParFunct(p, isBranchRate = TRUE)
@@ -1299,10 +1325,18 @@ simFossilRecord <- function(
 	#
 	##############################################
 	#now iterate for nruns
-	results <- list()
+	acceptedSimulations <- list()
+	#
+	if(returnAllRuns){
+		rejectedSimulations	<- list()
+		}
+	#
 	ntries <- 0
 	for(i in 1:nruns){
+		#
 		accept <- FALSE
+		isRejectedRun <- FALSE
+		#
 		while(!accept){
 			ntries <- ntries+1
 			#test that haven't exceeded maximum number of attempts
@@ -1477,8 +1511,10 @@ simFossilRecord <- function(
 			#(1) continue = TRUE until max totalTime, max nTotalTaxa, 
 					# nSamp or total extinction
 				# none of these can REVERSE in a FORARD TIME simulation
+			#
 			#(2) then go back, find all interval for which run conditions were met
 				# if no acceptable intervals, reject run
+			#
 			#(3) randomly sample within intervals for a single date
 				# apply timeSliceFossilRecord
 			#
@@ -1510,24 +1546,75 @@ simFossilRecord <- function(
 					accept <- TRUE
 					}
 				}
+			#
+			# if returnAllRuns and a failed run
+				# ie if accept is FALSE
+			if(returnAllRuns & !accept){
+				# "accept it" but label as a failed run
+				accept <- TRUE
+				isRejectedRun <- TRUE
+				}
+			#
 			}
-		#sample the sequences for a slicing date
-		passedDate <- sampleSeqVitals(seqVitals = seqVitals)
-		#this slicing date is in timePassed units
-			# need to convert to backwards currentTime
-		slicingDate <- runConditions$totalTime[2] - passedDate
+		# 
+		# now two tracks
 		#
-		class(taxa) <- 'fossilRecordSimulation'
+		# if returnAllRuns & isRejectedRun,
+			# do not slice simulation
+			# save as is in rejected simulation list
 		#
-		# now time slice
-			# if stop and there are extant, evaluate if sampled at modern
-			# 0< modern.samp.prob <1 need to randomly sample
-		taxa <- timeSliceFossilRecord(
-			fossilRecord = taxa, 
-			sliceTime = slicingDate,
-			shiftRoot4TimeSlice = shiftRoot4TimeSlice, 
-			modern.samp.prob = modern.samp.prob
-			)
+		# otherwise
+			# randomly sample for an acceptable slice time
+			# slice the simulation
+			# save in the accepted simulation list
+		#
+		#
+		if(returnAllRuns & isRejectedRun){
+			# if returnAllRuns & isRejectedRun,
+				# do not slice simulation
+				# save as is in rejected simulation list
+
+			taxa <- timeSliceFossilRecord(
+				fossilRecord = taxa, 
+				sliceTime = slicingDate,
+				shiftRoot4TimeSlice = shiftRoot4TimeSlice, 
+				modern.samp.prob = modern.samp.prob
+				)	
+
+		
+		}else{
+			# otherwise
+				# randomly sample for an acceptable slice time
+				# slice the simulation
+				# save in the accepted simulation list
+			#############
+			#sample the sequences for a slicing date
+				# everything that 'passes' past this date will be clipped away
+			passedDate <- sampleSeqVitals(seqVitals = seqVitals)
+			#this slicing date is in timePassed units
+				# need to convert to backwards currentTime
+			slicingDate <- runConditions$totalTime[2] - passedDate
+			#
+			class(taxa) <- 'fossilRecordSimulation'
+			#
+			# now time slice
+				# if stop and there are extant, evaluate if sampled at modern
+				# 0< modern.samp.prob <1 need to randomly sample
+			taxa <- timeSliceFossilRecord(
+				fossilRecord = taxa, 
+				sliceTime = slicingDate,
+				shiftRoot4TimeSlice = shiftRoot4TimeSlice, 
+				modern.samp.prob = modern.samp.prob
+				)		
+			}
+		
+		
+			if(returnAllRuns & !accept){
+				# "accept it" but label as a failed run
+				accept <- TRUE
+				isRejectedRun <- TRUE		
+		
+		
 		#
 		#browser()
 		#
@@ -1568,7 +1655,7 @@ simFossilRecord <- function(
 			taxa <- taxa[order(names(taxa))]
 			}
 		#
-		results[[i]] <- taxa
+		acceptedSimulations[[i]] <- taxa
 		if(plot){
 			divCurveFossilRecordSim(fossilRecord = taxa)
 			if(nruns>1){
@@ -1595,9 +1682,25 @@ simFossilRecord <- function(
 			" Acceptance Probability)"
 			))
 		}
+	#
+	# Prepare output
+	#
 	if(nruns == 1){
-		results <- results[[1]]
+		if(length(acceptedSimulations)>1){
+			stop("More than one run accepted despite nruns = 1 ?!")
+			}
+		acceptedSimulations <- acceptedSimulations[[1]]
 		}
+	#
+	if(returnAllRuns){
+		results <- list(
+			accepted = acceptedSimulations, 
+			rejected = rejectedSimulations
+			)
+	}else{
+		results <- acceptedSimulations
+		}
+	#
 	return(results)	
 	}	
 

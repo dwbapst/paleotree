@@ -1350,10 +1350,10 @@ simFossilRecord <- function(
 	#
 	ntries <- 0
 	#
-	#for(i in 1:nruns){
+	#for(nAccepted in 1:nruns){
 	#
-	i <- 0
-	while(i >= nruns){
+	nAccepted <- 0
+	while(nruns > nAccepted){
 		#
 		accept <- FALSE
 		isRejectedRun <- FALSE
@@ -1366,7 +1366,7 @@ simFossilRecord <- function(
 					"Maximum number of attempts (",
 					maxAttempts,
 					") has been exceeded with only ",
-					i-1,
+					nAccepted-1,
 					" run(s) successful."))
 				}
 			#
@@ -1592,11 +1592,20 @@ simFossilRecord <- function(
 		#
 		if(returnAllRuns & isRejectedRun){
 			# if returnAllRuns & isRejectedRun,
-				# do not slice simulation
+				# fake slice simulation at maxtime
 				# save as is in rejected simulation list
 			# 
-			# I think all I need to do is just give it a class...
+			# give it a class...
 			class(taxa) <- 'fossilRecordSimulation'	
+			# slice at maxTime
+			slicingDate <- runConditions$totalTime[2]
+			# and slice
+			taxa <- timeSliceFossilRecord(
+				fossilRecord = taxa, 
+				sliceTime = slicingDate,
+				shiftRoot4TimeSlice = shiftRoot4TimeSlice, 
+				modern.samp.prob = modern.samp.prob
+				)			
 			#	
 		}else{
 			# otherwise
@@ -1671,17 +1680,17 @@ simFossilRecord <- function(
 			#	
 		}else{
 			# increment the nruns counter
-			i <- (i + 1)
+			nAccepted <- (nAccepted + 1)
 			#
 			# save in the accepted simulation list		
-			acceptedSimulations[[i]] <- taxa			
+			acceptedSimulations[[nAccepted]] <- taxa			
 			#
 			if(plot){
 				divCurveFossilRecordSim(fossilRecord = taxa)
 				if(nruns>1){
 					title(paste0(
 						"Run Number ",
-						i,
+						nAccepted,
 						" of ",
 						nruns
 						))
@@ -1691,7 +1700,7 @@ simFossilRecord <- function(
 		}
 	#
 	# check to make sure that the right number of accepted simulations is returned
-	if(length(acceptedSimulations) != i){
+	if(length(acceptedSimulations) != nAccepted){
 		stop(
 			"The number of accepted simulations returned doesn't match the internal counter."
 			)

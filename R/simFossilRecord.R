@@ -1357,7 +1357,6 @@ simFossilRecord <- function(
 		#
 		accept <- FALSE
 		isRejectedRun <- FALSE
-		i <- i + 1
 		#
 		while(!accept){
 			ntries <- ntries+1
@@ -1623,20 +1622,21 @@ simFossilRecord <- function(
 				shiftRoot4TimeSlice = shiftRoot4TimeSlice, 
 				modern.samp.prob = modern.samp.prob
 				)		
+			#
+			#browser()
+			#
+			##############################################################################
+			# FINAL CHECKS
+			# test that the produced taxa object actually passed the runConditions
+			finalTest <- testFinal(
+				taxa = taxa,
+				timePassed = passedDate,
+				runConditions = runConditions,
+				count.cryptic = count.cryptic
+				)
+				
+				
 			}
-		#
-		#browser()
-		#
-		##############################################################################
-		# FINAL CHECKS
-		# test that the produced taxa object actually passed the runConditions
-		finalTest <- testFinal(
-			taxa = taxa,
-			timePassed = passedDate,
-			runConditions = runConditions,
-			count.cryptic = count.cryptic
-			)
-		#
 		#are there any non-identical taxa in a simulation with pure cryptic speciation?
 		if(anag.rate == 0 & prop.cryptic == 1 & startTaxa == 1){
 			taxaIDsTest <- sapply(taxa,function(x) x[[1]][6])
@@ -1665,19 +1665,16 @@ simFossilRecord <- function(
 			}
 		#
 		if(returnAllRuns & isRejectedRun){
-			# if returnAllRuns & isRejectedRun,
-				# save as is in rejected simulation list
-			# 
+			# save as is in rejected simulation list
 			nextRejected <- length(rejectedSimulations) + 1
 			rejectedSimulations[[nextRejected]] <- taxa
-			# 
-			# reset the nruns ticker
-			i <- (i - 1)
 			#	
 		}else{
-			# otherwise
-				# save in the accepted simulation list		
-			acceptedSimulations[[i]] <- taxa
+			# increment the nruns counter
+			i <- (i + 1)
+			#
+			# save in the accepted simulation list		
+			acceptedSimulations[[i]] <- taxa			
 			#
 			if(plot){
 				divCurveFossilRecordSim(fossilRecord = taxa)
@@ -1691,7 +1688,16 @@ simFossilRecord <- function(
 					}
 				}
 			}
-		}	
+		}
+	#
+	# check to make sure that the right number of accepted simulations is returned
+	if(length(acceptedSimulations) != i){
+		stop(
+			"The number of accepted simulations returned doesn't match the internal counter."
+			)
+		}
+	#
+	#
 	if(print.runs){
 		runNumMessage <- ifelse(nruns==1,
 			paste0("1 run"),

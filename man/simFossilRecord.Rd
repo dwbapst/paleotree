@@ -976,8 +976,9 @@ sum(taxa[,5])
 length(unique(taxa[taxa[,5] == 1,6]))	
 
 #################################################
+# Specifying Number of Initial Taxa
+    # Example using startTaxa to have more initial taxa
 
-# an example using startTaxa to have more initial taxa
 record <- simFossilRecord(
     p = 0.1, 
     q = 0.1, 
@@ -989,8 +990,7 @@ record <- simFossilRecord(
     )
 
 ######################################################
-
-# Using run conditions
+# Specifying Combinations of Simulation Conditions
 
 # Users can generate datasets that meet multiple conditions:
     # such as time, number of total taxa, extant taxa, sampled taxa
@@ -1052,7 +1052,6 @@ record <- simFossilRecord(
     )
 
 ########################################################
-
 # Simulations of Entirely Extinct Taxa
 
 # Typically, a user may want to condition on a precise
@@ -1097,9 +1096,9 @@ record <- simFossilRecord(
     print.runs = TRUE, 
     plot = TRUE
     )
+}
 
 ########################################################
-
 # Retaining Rejected Simulations
 
 # sometimes we might want to look at all the simulations
@@ -1139,7 +1138,7 @@ length(record$accepted)
 length(record$rejected) 
 
 # probably many more than 10! 
-    # (I got 1780!)
+    # (I got 1770!)
 
 # how many taxa are in each rejected simulation run?
 totalTaxa_rej <- sapply(record$rejected, length)
@@ -1183,7 +1182,7 @@ hist(durations_rej)
       # satisfying the other specified constraints
       # (probably they didn't have the min of 10 taxa total)
 
-}
+
 }
 \references{
 Bapst, D. W. 2013. When Can Clades Be Potentially Resolved with

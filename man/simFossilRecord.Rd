@@ -1053,10 +1053,11 @@ record <- simFossilRecord(
 
 ########################################################
 
-# Simulations of entirely extinct taxa
+# Simulations of Entirely Extinct Taxa
 
-#Typically, a user may want to condition on a precise
-	# number of sampled taxa in an all-extinct simulation
+# Typically, a user may want to condition on a precise
+    # number of sampled taxa in an all-extinct simulation
+
 record <- simFossilRecord(
     p = 0.1, 
     q = 0.1, 
@@ -1070,8 +1071,8 @@ record <- simFossilRecord(
     )
 
 # Note that when simulations don't include
-# sampling or extant taxa, the plot 
-# functionality changes
+    # sampling or extant taxa, the plot 
+    # functionality changes
 record <- simFossilRecord(
     p = 0.1, 
     q = 0.1, 
@@ -1082,8 +1083,9 @@ record <- simFossilRecord(
     plot = TRUE
     )
 
-# something similar happens when there is no sampling
-# and there are extant taxa but they aren't sampled
+# Something similar happens when there is no sampling
+    # and there are extant taxa but they aren't sampled
+
 record <- simFossilRecord(
     p = 0.1, 
     q = 0.1, 
@@ -1095,8 +1097,93 @@ record <- simFossilRecord(
     print.runs = TRUE, 
     plot = TRUE
     )
-}
 
+########################################################
+
+# Retaining Rejected Simulations
+
+# sometimes we might want to look at all the simulations
+    # that don't meet acceptability criteria
+
+# In particular, look at simulated clades that go extinct
+    # rather than surviving long enough to satisfy 
+    # conditioning on temporal duration.
+
+# Let's look for 10 simulations with following conditioning:
+    # that are exactly 10 time-units in duration
+    # that have between 10 and 30 total taxa
+    # and have 1 to 30 extant taxa after 10 time-units
+
+set.seed(4)
+
+record <- simFossilRecord(
+    p = 0.1, 
+    q = 0.1, 
+    r = 0.1, 
+    nruns = 10, 
+    totalTime = 10, 
+    nTotalTaxa = c(10,30), 
+    nExtant = c(1,30),
+    returnAllRuns = TRUE,
+    print.runs = TRUE, 
+    plot = TRUE
+    )
+
+# when returnAllRuns = TRUE, the length of record is 2
+    # named 'accepted' and 'rejected'
+
+# all the accepted runs (all 10) are in 'accepted'
+length(record$accepted) 
+
+# all the rejected runs are in 'rejected'
+length(record$rejected) 
+
+# probably many more than 10! 
+    # (I got 1780!)
+
+# how many taxa are in each rejected simulation run?
+totalTaxa_rej <- sapply(record$rejected, length)
+# plot as a histogram
+hist(totalTaxa_rej)
+
+# a very nice exponential distribution...
+
+# plot the rejected simulation with the most taxa
+divCurveFossilRecordSim(
+     fossilRecord = record$rejected[[
+           which(max(totalTaxa_rej) == totalTaxa_rej)[1]
+           ]]
+     )
+
+# we can plot all of these too...
+result <- sapply(record$rejected, 
+     divCurveFossilRecordSim)
+
+# let's look at the temporal duration of rejected clades
+
+# need to write a function
+getDuration <- function(record){
+     taxa <- fossilRecord2fossilTaxa(record)
+     maxAge <- max(taxa[,"orig.time"], na.rm = TRUE)
+     minAge <- min(taxa[,"ext.time"], na.rm = TRUE)
+     cladeDuration <- maxAge - minAge
+     return(cladeDuration)
+     }
+
+# all the accepted simulations should have
+       # identical durations (10 time-units)
+sapply(record$accepted, getDuration)
+
+# now the rejected set
+durations_rej <- sapply(record$rejected, getDuration)
+# plot as a histogram
+hist(durations_rej)
+
+# Most simulations hit the max time without
+      # satisfying the other specified constraints
+      # (probably they didn't have the min of 10 taxa total)
+
+}
 }
 \references{
 Bapst, D. W. 2013. When Can Clades Be Potentially Resolved with

@@ -1597,11 +1597,16 @@ simFossilRecord <- function(
 			# 
 			# give it a class...
 			class(taxa) <- 'fossilRecordSimulation'	
-			# slice at current time
+			# slice at current time (or 0, whichever is greater)
+			slicingDate <- max(c(0, currentTime))
+			#
+			print(currentTime)
+			#
 			# slicing date needs to be in timePassed units
 				# need to convert to backwards currentTime
-			# which means subtracting currentTime from maxTime
-			slicingDate <- runConditions$totalTime[2] - currentTime
+			# which means subtracting from maxTime
+			#slicingDate <- runConditions$totalTime[2] - slicingDate
+			#
 			# and slice
 			taxa <- timeSliceFossilRecord(
 				fossilRecord = taxa, 

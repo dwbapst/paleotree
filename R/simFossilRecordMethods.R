@@ -177,10 +177,24 @@ timeSliceFossilRecord <- function(
 	#
 	# CHECKS
 	checkResult <- checkFossilRecord(fossilRecord)
+	#
+	# check sliceTime
+	if(!(is.numeric(sliceTime) & (length(sliceTime) == 1))){
+		stop(
+			"sliceTime must be a single numeric value"
+			)
+		}
+	#
+	if(sliceTime < 0){
+		stop(
+			"sliceTime cannot be a negative value"
+			)
+		}
+	#
 	#checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
 	#
 	#check shiftRoot4TimeSlice
-	shiftPar <- c(TRUE,FALSE,"withExtantOnly")
+	shiftPar <- c(TRUE, FALSE, "withExtantOnly")
 	shiftRoot4TimeSlice <- shiftPar[pmatch(shiftRoot4TimeSlice, shiftPar)]
 	if(is.na(shiftRoot4TimeSlice)){
 		stop(
@@ -190,14 +204,19 @@ timeSliceFossilRecord <- function(
 	#
 	#drop all taxa that originate after the sliceTime
 	droppers <- sapply(fossilRecord,function(x) x[[1]][3]<sliceTime)
+	#
+	if(sum(droppers) == length(fossilRecord)){
+		stop("All taxa appear to originate *after* the slicing time?!")
+		}
+	#
 	fossilRecord <- fossilRecord[!droppers]
 	#
 	#remove all sampling events after sliceTime
-		for(i in 1:length(fossilRecord)){
-			#remove all sampling events after sliceTime
-			fossilRecord[[i]][[2]] <- fossilRecord[[i]][[2]][
-				fossilRecord[[i]][[2]] >= sliceTime
-				]
+	for(i in 1:length(fossilRecord)){
+		#remove all sampling events after (sliceTime + tolerance)
+		fossilRecord[[i]][[2]] <- fossilRecord[[i]][[2]][
+			fossilRecord[[i]][[2]] > (sliceTime + tolerance)
+			]
 		}
 	# adjusting time, making taxa extant
 		# need to first test if there are extant taxa or not
@@ -270,16 +289,30 @@ timeSliceFossilRecord <- function(
 				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4] - sliceTime
 				# test dates
 				if(any(newStartEndTime_extinct < 0)){
-					stop(paste0(
-						"Extinct taxon dates being shifted incorrectly to\n",
-						"  rescale modern time to zero, creating negative dates.\n",
-						" - Old FAD & LAD are: ", 
-							paste(fossilRecord[[i]][[1]][3:4], collapse=" "),
-							"\n",
-						" - sliceTime is: ", sliceTime, "\n",
-						" - Newly assigned FAD & LAD are: ", 
-							paste(newStartEndTime_extinct, collapse=" ")
-						))
+					#
+					# any dates within tolerance are put precisely at 0
+						# maybe also try? (0 - tolerance) ?
+					#
+					withinTolerance <- (
+						(newStartEndTime_extinct < 0) & 
+							(newStartEndTime_extinct > -tolerance)
+						)
+					newStartEndTime_extinct[withinTolerance] <- 0 
+					# 
+					# do we still have problems?
+					#
+					if(any(newStartEndTime_extinct < 0)){
+						stop(paste0(
+							"Extinct taxon dates being shifted incorrectly to\n",
+							"  rescale modern time to zero, creating negative dates.\n",
+							" - Old FAD & LAD are: ", 
+								paste(fossilRecord[[i]][[1]][3:4], collapse=" "),
+								"\n",
+							" - sliceTime is: ", sliceTime, "\n",
+							" - Newly assigned FAD & LAD are: ", 
+								paste(newStartEndTime_extinct, collapse=" ")
+							))
+						}
 					}
 				fossilRecord[[i]][[1]][3:4] <- newStartEndTime_extinct
 				}
@@ -289,18 +322,21 @@ timeSliceFossilRecord <- function(
 			# newSamplingTimes_all <- newSamplingTimes_all[newSamplingTimes_all > 0]
 			#
 			# test dates
-			if(any(newSamplingTimes_all <= 0)){
-				stop(paste0(
-					"Sampling times for taxa are being shifted incorrectly to\n",
-					"    rescale modern time to zero, creating negative dates.\n",
-					" - Old sampling dates are: ", 
-						paste(fossilRecord[[i]][[2]], collapse=" "),
-						"\n",
-					" - sliceTime is: ", sliceTime,"\n",
-					" - Newly assigned sampling dates are: ", 
-						paste(newSamplingTimes_all, collapse=" ")					
-					))
-				}			
+			if(any(newSamplingTimes_all <= 0)){			
+				#
+				if(any(newSamplingTimes_all <= 0)){
+					stop(paste0(
+						"Sampling times for taxa are being shifted incorrectly to\n",
+						"    rescale modern time to zero, creating negative dates.\n",
+						" - Old sampling dates are: ", 
+							paste(fossilRecord[[i]][[2]], collapse=" "),
+							"\n",
+						" - sliceTime is: ", sliceTime,"\n",
+						" - Newly assigned sampling dates are: ", 
+							paste(newSamplingTimes_all, collapse=" ")					
+						))
+					}
+				}
 			fossilRecord[[i]][[2]] <- newSamplingTimes_all
 			}
 		modernTime <- 0
@@ -319,11 +355,13 @@ timeSliceFossilRecord <- function(
 	whichExtant <- which(sapply(fossilRecord,function(x) 
 		x[[1]][5] == 1))
 	nLive <- length(whichExtant)
-	liveSampled <- as.logical(rbinom(
-		n = nLive, 
-		size = 1, 
-		prob = modern.samp.prob
-		))
+	liveSampled <- as.logical(
+		rbinom(
+			n = nLive, 
+			size = 1, 
+			prob = modern.samp.prob
+			)
+		)
 	whichSampled <- whichExtant[liveSampled]
 	#
 	#add sampling event at modern

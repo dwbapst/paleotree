@@ -671,6 +671,9 @@ checkRecordForNoDatePastZero <- function(fossilRecord){
 			fossilRecord[hasNegLastDate], function(x) x[[1]]
 			))
 		print(badTaxa)
+		#
+		#browser()
+		#
 		stop("Something has gone very wrong.")
 		}
 	# taxa with sampling times beyond 0

@@ -24,6 +24,9 @@ expect_equal(length(record), 3)
 
 
 test_that("simFossilRecord is returning right output for returnAllRuns", {
+
+testthat::skip_on_cran()
+testthat::skip_on_travis()
 	
 # with returnAllRuns
 
@@ -42,6 +45,8 @@ record <- simFossilRecord(
     print.runs = TRUE, 
     plot = TRUE
     )
+
+x <- sapply(record$rejected, divCurveFossilRecordSim)
 
 expect_equal(length(record), 2)
 expect_identical(names(record), c("accepted", "rejected"))

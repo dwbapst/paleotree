@@ -1018,8 +1018,9 @@
 #' length(unique(taxa[taxa[,5] == 1,6]))	
 #' 
 #' #################################################
+#' # Specifying Number of Initial Taxa
+#'     # Example using startTaxa to have more initial taxa
 #' 
-#' # an example using startTaxa to have more initial taxa
 #' record <- simFossilRecord(
 #'     p = 0.1, 
 #'     q = 0.1, 
@@ -1031,8 +1032,7 @@
 #'     )
 #' 
 #' ######################################################
-#' 
-#' # Using run conditions
+#' # Specifying Combinations of Simulation Conditions
 #' 
 #' # Users can generate datasets that meet multiple conditions:
 #'     # such as time, number of total taxa, extant taxa, sampled taxa
@@ -1094,7 +1094,6 @@
 #'     )
 #' 
 #' ########################################################
-#' 
 #' # Simulations of Entirely Extinct Taxa
 #' 
 #' # Typically, a user may want to condition on a precise
@@ -1140,9 +1139,9 @@
 #'     print.runs = TRUE, 
 #'     plot = TRUE
 #'     )
+#' }
 #' 
 #' ########################################################
-#' 
 #' # Retaining Rejected Simulations
 #' 
 #' # sometimes we might want to look at all the simulations
@@ -1182,7 +1181,7 @@
 #' length(record$rejected) 
 #' 
 #' # probably many more than 10! 
-#'     # (I got 1780!)
+#'     # (I got 1770!)
 #' 
 #' # how many taxa are in each rejected simulation run?
 #' totalTaxa_rej <- sapply(record$rejected, length)
@@ -1226,7 +1225,7 @@
 #'       # satisfying the other specified constraints
 #'       # (probably they didn't have the min of 10 taxa total)
 #' 
-#' }
+#' 
 
 
 
@@ -1280,20 +1279,19 @@ simFossilRecord <- function(
 	#################################################################################
 	
 	#example parameter sets
-	#
+	
 	# DEFAULTS (without rates set)
 		# r = 0.1;anag.rate = 0;prop.bifurc = 0;prop.cryptic = 0;startTaxa = 1;nruns = 1;
 		# nTotalTaxa = c(1,1000);totalTime = c(1,1000);nSamp = c(0,1000);nExtant = c(0,1000);
 		# tolerance = 10^-4; maxStepTime = 0.01; shiftRoot4TimeSlice = "withExtantOnly";
 		# count.cryptic = FALSE; negRatesAsZero = TRUE; print.runs = FALSE; sortNames = FALSE; plot = FALSE
-	#
+	
 	# BASIC RUN	with diversity-dep extinction
 	# p = 0.1;q = '0.01*N'
 		# r = 0.1;anag.rate = 0;prop.bifurc = 0;prop.cryptic = 0;startTaxa = 1;nruns = 1;
 		# nTotalTaxa = c(10,200);totalTime = c(1,1000);nSamp = c(0,1000);nExtant = c(0,0);plot = TRUE;
 		# tolerance = 10^-4; maxStepTime = 0.01; shiftRoot4TimeSlice = "withExtantOnly";
 		# count.cryptic = FALSE; negRatesAsZero = TRUE; print.runs = FALSE; sortNames = FALSE; plot = FALSE
-	#
 	
 	##################################################################################
 	#

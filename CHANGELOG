@@ -1,6 +1,10 @@
-Version - 3.3.21 -
+Version - 3.3.22 - 
+- 
 
-Version - 3.3.20 - 07-20-19 (Not Released to CRAN)
+Version - 3.3.21 - 07-18-19 (Not Released to CRAN)
+- Following up on example code from Brian O'Meara, I added some more warnings and checks to getTaxa functions for PBDB API to catch duplicated and missing taxa (e.g. taxa with 'empty records').
+
+Version - 3.3.20 - 07-17-19 (Not Released to CRAN)
 - Fixed negative ages issue, and added even more checks to simFossilRecord and timeSliceFossilRecord.
 - Refined current testthat test suite and specified expectations, added skips for CRAN and travis.
 - Slightly modified dateTaxonTreePBDB so that it would accept trees without node labels, and added an example of using it to date a tree of equuids not originally taken from PBDB taxonomy.

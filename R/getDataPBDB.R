@@ -161,7 +161,10 @@ getCladeTaxaPBDB <- function(
 	##########################################
 	# check that only a single taxon is given
 	if(length(taxon) != 1){
-		stop("taxon should only be a single name of a higher taxon which you wish to catch all children of")
+		stop(paste0(
+			"Input 'taxon' should only be a character string of length one:\n",
+			"   A single name of a higher taxon which you wish to catch all children of"
+			))
 		}
 	###################################
 	# 12-30-18: modified for API version 1.2
@@ -197,19 +200,32 @@ getSpecificTaxaPBDB <- function(
 		stopIfMissing=FALSE
 		){
 	#####################################
+	# test for duplicates, remove and report them
+	if(length(taxa) > length(unique(taxa))){
+		duplicates <- taxa[duplicated(taxa)]
+		duplicates <- paste0(duplicates, collapse = ", ")
+		warning("Duplicated taxa found in input:\n   ", duplicates)
+		taxa <- unique(taxa)
+		}
+	#
 	if(length(taxa)>1){
 		# collapse taxa to a vector
-		taxa <- paste0(taxa,
+		taxaMerged <- paste0(taxa,
 			collapse=",")		
+	}else{
+		taxaMerged <- taxa
 		}
+	#
 	requestURLPBDB <- paste0(
-		"http://paleobiodb.org/data1.2/taxa/list.txt?name=",taxa,
-		"&show=",paste0(showTaxa,collapse = ","),
+		"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
+			taxaMerged,
+		"&show=",
+			paste0(showTaxa,collapse = ","),
 		# status -> all, accepted, valid
 			# accepted -> only senior synonyms
 			# valid -> snior synonyms + valid subjective synonyms
 			# all -> valid taxa + repressed invalid taxa
-		"&taxon_status=",status
+		"&taxon_status=", status
 		)
 	if(urlOnly){
 		res <- requestURLPBDB
@@ -220,10 +236,28 @@ getSpecificTaxaPBDB <- function(
 			stopIfMissing = stopIfMissing
 			)
 		}
+	################
+	# report taxa not found in records 
+	if(nrow(res) < length(taxa)){
+		warning(paste0(
+			"Fewer taxon records returned (",
+				nrow(res),
+				") than the number of unique taxon names from input (",
+				length(taxa),
+				").\n",
+			"  This may reflect missing taxa, or empty records."
+			))
+		if(stopIfMissing){
+			stop(
+				"Terminated as stopIfMissing = TRUE, and number of unique input taxa differs from the number of taxon records output."
+				)
+			}
+		}
 	##################################
 	# return
 	return(res)
 	}	
+	
 
 getPBDBtaxaCSV <- function(
 		requestURL, 
@@ -231,6 +265,17 @@ getPBDBtaxaCSV <- function(
 		){
 	##########################################
 	linesOut <- readLines(requestURL)
+	###############
+	# stop if contains no records returned
+	if(any(linesOut == "\"THIS REQUEST RETURNED NO RECORDS\"")){
+		stop(paste0(
+			"For this query, the PBDB API returned:\n    ",
+			"\"THIS REQUEST RETURNED NO RECORDS\"",
+			"\n Presumably this means a taxon is missing/orphaned?"
+			))
+		}
+	#
+	# catch any warnings from the PBDB
 	if(any(linesOut == "\"Records:\"")){
 		# then there must be errors, report them
 		isWarning <- startsWith(linesOut, 

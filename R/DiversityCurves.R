@@ -279,7 +279,7 @@ taxicDivCont <- function(
 	# output (if TRUE) is matrix of bin-start, bit-end, div
 	#
 	tblen <- int.length
-	if(ncol(timeData) == 6){	#also allow it to accept taxad objects
+	if(ncol(timeData) == 6){	#also allow it to accept taxaData objects
 		if(!drop.cryptic){
 			timeData <- timeData[,3:4,drop = FALSE]
 		}else{

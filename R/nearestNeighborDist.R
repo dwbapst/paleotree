@@ -96,7 +96,7 @@ nearestNeighborDist <- function(distMat){
          stop("Not a matrix, not a 'dist' object, what is it?")
          }
    }else{
-      distMat <- is.matrix(distMat)
+      distMat <- as.matrix(distMat)
       }
    NND <- sapply(1:nrow(distMat),function(x) min(distMat[x,-x]))
    names(NND) <- labels(distMat)[[1]]

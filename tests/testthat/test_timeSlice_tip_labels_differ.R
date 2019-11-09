@@ -1,5 +1,6 @@
 test_that("timeSliceTree tip label options work",{
 
+library(paleotree)
 
 set.seed(444)
 record <- simFossilRecord(

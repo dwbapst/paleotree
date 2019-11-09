@@ -4,79 +4,128 @@
 \alias{timeSliceTree}
 \title{Time-Slicing a Phylogeny}
 \usage{
-timeSliceTree(ttree, sliceTime, drop.extinct = FALSE, plot = TRUE)
+timeSliceTree(ttree, sliceTime, drop.extinct = FALSE,
+  tiplabels = "earliestDesc", plot = TRUE)
 }
 \arguments{
-\item{ttree}{A time-scaled phylogeny of class phylo}
+\item{ttree}{A time-scaled phylogeny of class \code{phylo}.}
 
-\item{sliceTime}{Time to 'slice' the tree at. See details below.}
+\item{sliceTime}{Time to 'slice' the tree at. See details.}
 
-\item{drop.extinct}{If true, drops tips that go extinct before timeSlice.}
+\item{drop.extinct}{If \code{TRUE}, drops tips that go extinct before
+the input \code{timeSlice} using function \code{dropExtinct}.
+Note that \code{dropExtinct} will also automatically adjust the \code{$root.time}
+if the removal of extinct branches causes the room to shift to a younger age.}
 
-\item{plot}{If true, plots input and output trees for comparison.}
+\item{plot}{If \code{TRUE}, plots input and output trees for comparison.}
+
+\item{tipLabels}{What sort of tip labels should be placed on cropped branches
+which had multiple descendants? The default option, \code{"earliestDesc"} labels
+a clipped branch with the earliest appearing tip descendant of that branch. 
+Alternatively, if \code{tipLabels = "allDesc"},
+these tips can instead be labeled with a compound label consisting of
+all descendants that were on the cropped branch, seperated by semi-colons.}
 }
 \value{
-Returns the modified phylogeny as an object of class phylo.
-
-Tip labels for cut branches which held multiple descendant tips will be the
-label for the earliest appearing tip descendant of that branch. This is
-somewhat arbitrary; the actual morphotaxon present at that time might have
-been a different taxon. For simulated datasets, use taxa2phylo.
+Returns the modified phylogeny as an object of class \code{phylo}. 
+See argument \code{tipLabels} for how the labeling of the tips for 
+cut branches is controlled.
 }
 \description{
 Removes the portion of a tree after a set point in time, as if the tree
 after that moment had been sliced away.
 }
 \details{
-The function assumes that ttree will generally have an element called
-$root.time, which is the time before present that the root divergence
-occurred. If $root.time is not present as an element of ttree, then it is
-assumed the tip furthest from the root is at time 0 (present-day) and a new
-$root.time is calculated (a warning will be issued in this case).
+The function assumes that the input \code{ttree} will generally have an element called
+\code{$root.time}, which is the time before present that the root divergence
+occurred. If \code{$root.time} is not present as an element of \code{ttree}, then it is
+assumed the tip furthest from the root is at time zero (present-day) and a new
+\code{$root.time} is calculated (a warning will be issued in this case).
 
-The sliceTime is always calculated as on the same scale as ttree$root.time.
-In other words, if root.time = 100, then timeSlice = 80 will slice the tree 20
+The \code{sliceTime} is always calculated as on the same scale as \code{ttree$root.time}.
+In other words, if \code{root.time = 100}, then \code{timeSlice = 80} will slice the tree 20
 time units after the root.
 
-If drop.extinct = T, then extinct tips are dropped and (if present) the
-$root.time of ttree is adjusted. This is done using the function
-dropExtinct.
+If \code{drop.extinct = TRUE}, then extinct tips are dropped and (if present) the
+$root.time of ttree is adjusted. This is done using the \code{paleotree} function
+\code{dropExtinct}.
+}
+\note{
+Note that the default behavior of \code{tiplabels = "earliestDesc"} labels
+cut branches with the tip label for the earliest tip descendant.
+This is somewhat arbitrary; the actual morphotaxon present at that time might have
+been a different taxon that the earliest appearing tip. For simulated datasets where
+morphotaxon identity is known throughout and not limited to tip observations,
+slice the taxon data in that more detailed form, and then transform that morphotaxon
+data to a tree, perhaps with \code{taxa2phylo}.
 }
 \examples{
 
-#a neat example of using phyloDiv with timeSliceTree 
-   #to simulate doing extant-only phylogeny studies 
-   #of diversification...in the past!
+# a neat example of using phyloDiv with timeSliceTree 
+    # to simulate doing extant-only phylogeny studies 
+    # of diversification...in the past!
 set.seed(444)
-record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-	nTotalTaxa = c(30,40), nExtant = 0)
+record <- simFossilRecord(
+    p = 0.1, q = 0.1, nruns = 1,
+    nTotalTaxa = c(30,40), 
+    nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 taxicDivCont(taxa)
-#that's the whole diversity curve
 
-#with timeSliceTree we could look at the lineage accumulation curve 
-   #we'd get of species sampled at a point in time
+# that's the whole diversity curve
+   # now let's do it for a particular time-slide
 tree <- taxa2phylo(taxa)
-#use timeSliceTree to make tree of relationships up until time = 950 
-tree950 <- timeSliceTree(tree,sliceTime = 950,plot = TRUE,drop.extinct = FALSE)
+# use timeSliceTree to make tree of relationships
+    # up until time = 950 
+tree950 <- timeSliceTree(
+    tree,
+    sliceTime = 950,
+    plot = TRUE,
+    drop.extinct = FALSE
+    )
 
-#use drop.extinct = T to only get the tree of lineages extant at time = 950
-tree950 <- timeSliceTree(tree,sliceTime = 950,plot = FALSE,drop.extinct = TRUE)
-#now its an ultrametric tree with many fewer tips...
-#lets plot the lineage accumulation plot on a log scale
-phyloDiv(tree950,plotLogRich = TRUE)
+# compare tip labels when we use tipLabels = "allDesc"
+tree950_AD <- timeSliceTree(
+    tree,
+    sliceTime = 950,
+    plot = TRUE,
+    tipLabel = "allDesc",
+    drop.extinct = FALSE
+    )
+    
+# look for the differences!     
+cbind(tree950$tip.label, tree950_AD$tip.label)
+
+# with timeSliceTree we could
+    # look at the lineage accumulation curve 
+    # we would recover from the species extant
+    # at that point in time
+
+# use drop.extinct = T to only get the
+    # tree of lineages extant at time = 950
+tree950 <- timeSliceTree(
+    tree,
+    sliceTime = 950,
+    plot = FALSE,
+    drop.extinct = TRUE
+    )
+# now its an ultrametric tree with many fewer tips...
+    # lets plot the lineage accumulation plot on a log scale
+phyloDiv(tree950,
+    plotLogRich = TRUE
+    )
 
 }
 \seealso{
 \code{\link{phyloDiv}}, \code{\link{dropExtinct}},
 \code{\link{dropExtant}}
 
-Also see the function treeSlice in the library phytools, which will slice a
+Also see the function \code{treeSlice} in the library \code{phytools}, which will slice a
 tree at some point in and return all the subtrees which remain after the
-slicing time. (Effectively the reverse of timeSliceTree.)
+slicing time. (Effectively the reversed \emph{opposite} of \code{timeSliceTree}.)
 }
 \author{
 David W. Bapst, with modification of code by Klaus Schliep to avoid use of
-function \code{dist.nodes} which has difficulty with large trees and greatly
-benefiting function runtime.
+function \code{dist.nodes}, which has difficulty with large trees, and greatly
+benefiting the run time of this function.
 }

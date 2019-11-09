@@ -17,13 +17,15 @@
 #' If \code{drop.extinct = TRUE}, then extinct tips are dropped and (if present) the
 #' $root.time of ttree is adjusted. This is done using the \code{paleotree} function
 #' \code{dropExtinct}.
-#' 
 
 #' @param ttree A time-scaled phylogeny of class \code{phylo}.
 
 #' @param sliceTime Time to 'slice' the tree at. See details.
 
-#' @param drop.extinct If \code{TRUE}, drops tips that go extinct before timeSlice.
+#' @param drop.extinct If \code{TRUE}, drops tips that go extinct before
+#' the input \code{timeSlice} using function \code{dropExtinct}.
+#' Note that \code{dropExtinct} will also automatically adjust the \code{$root.time}
+#' if the removal of extinct branches causes the room to shift to a younger age.
 
 #' @param tipLabels What sort of tip labels should be placed on cropped branches
 #' which had multiple descendants? The default option, \code{"earliestDesc"} labels
@@ -92,6 +94,7 @@
 #'     drop.extinct = FALSE
 #'     )
 #'     
+#' # look for the differences!     
 #' cbind(tree950$tip.label, tree950_AD$tip.label)
 #' 
 #' # with timeSliceTree we could
@@ -179,7 +182,9 @@ timeSliceTree <- function(ttree,
 	# root.time shouldn't (can't?) change!
 	stree$root.time <- ttree$root.time		
 	if(drop.extinct){
-		stree1 <- dropExtinct(stree,ignore.root.time = TRUE)
+		stree1 <- dropExtinct(stree,
+		                      ignore.root.time = TRUE
+		                      )
 	}else{
 		stree1 <- stree
 		}

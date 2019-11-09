@@ -25,13 +25,12 @@
 
 #' @param drop.extinct If \code{TRUE}, drops tips that go extinct before timeSlice.
 
-#' @param tipLabels What sort of tip labels should be placed on clipped branches
+#' @param tipLabels What sort of tip labels should be placed on cropped branches
 #' which had multiple descendants? The default option, \code{"earliestDesc"} labels
 #' a clipped branch with the earliest appearing tip descendant of that branch. 
-#' 
- 
-
-
+#' Alternatively, if \code{tipLabels = "allDesc"},
+#' these tips can instead be labeled with a compound label consisting of
+#' all descendants that were on the cropped branch, seperated by semi-colons.
 
 #' @param plot If \code{TRUE}, plots input and output trees for comparison.
 
@@ -73,11 +72,7 @@
 #' taxicDivCont(taxa)
 #' 
 #' # that's the whole diversity curve
-#' 
-#' # with timeSliceTree we could
-#'     # look at the lineage accumulation curve 
-#'     # we would recover from the species extant
-#'     # at that point in time
+#'    # now let's do it for a particular time-slide
 #' tree <- taxa2phylo(taxa)
 #' # use timeSliceTree to make tree of relationships
 #'     # up until time = 950 
@@ -87,6 +82,22 @@
 #'     plot = TRUE,
 #'     drop.extinct = FALSE
 #'     )
+#'
+#' # compare tip labels when we use tipLabels = "allDesc"
+#' tree950_AD <- timeSliceTree(
+#'     tree,
+#'     sliceTime = 950,
+#'     plot = TRUE,
+#'     tipLabel = "allDesc",
+#'     drop.extinct = FALSE
+#'     )
+#'     
+#' cbind(tree950$tip.label, tree950_AD$tip.label)
+#' 
+#' # with timeSliceTree we could
+#'     # look at the lineage accumulation curve 
+#'     # we would recover from the species extant
+#'     # at that point in time
 #' 
 #' # use drop.extinct = T to only get the
 #'     # tree of lineages extant at time = 950
@@ -107,6 +118,7 @@
 timeSliceTree <- function(ttree,
                           sliceTime,
                           drop.extinct = FALSE,
+                          tiplabels = "earliestDesc",
                           plot = TRUE
                           ){
 	#take a phylogeny and produce a phylogenetic 'slice' at time X (w/respect to root.time)
@@ -144,18 +156,27 @@ timeSliceTree <- function(ttree,
 	for(i in 1:length(cedge)){
 		desc <- ttree$edge[cedge[i],2]
 		if(desc>Ntip(ttree)){	
-		  #if an internal edge that goes past the tslice
-		  #drop all but one tip
+		  # if an internal edge that goes past the tslice
+		  # drop all but one tip
 			desctip <- propPartTree[[desc-Ntip(ttree)]]	
 			droppers <- c(droppers,desctip[-1])
+			#if(tiplabels == "earliestDesc"){
+      #  # I don't think anything needs to be done!
+			#  }
+			if(tiplabels == "allDesc"){
+			  ttree$tip.label[desctip[1]] <- paste0(
+			    ttree$tip.label[desctip],
+			    collapse = ";"
+			    )
+			  }
 		}}
 	stree <- drop.tip(ttree,droppers)
-	#which edges cross over tslice?
+	# which edges cross over tslice?
 	dnode <- node.depth.edgelength(stree)
 	cedge <- (dnode[stree$edge[, 2] ]   >=  tslice)
 	cnode_depth <- dnode[stree$edge[cedge,1]]
 	stree$edge.length[cedge] <- tslice-cnode_depth
-	#root.time shouldn't (can't?) change!
+	# root.time shouldn't (can't?) change!
 	stree$root.time <- ttree$root.time		
 	if(drop.extinct){
 		stree1 <- dropExtinct(stree,ignore.root.time = TRUE)

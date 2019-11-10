@@ -15,8 +15,10 @@
 #' should be used to generate confidence intervals.
 
 #' @param distMat A symmetric, square pair-wise distance matrix, assumed to be a dissimilarity
-#' matrix with a zero diagonal. Can be a 'dist' object rather than a numerical matrix.
-#' Taxon labels can be applied to the rows and columns (or as labels if a 'dist' object)
+#' matrix with a diagonal that is either zero values, \code{NA} values, or a mixture of both.
+#' Can be a 'dist' object rather than a numerical matrix.
+#' Taxon labels can be applied to the rows and columns
+#' (or as labels if a 'dist' object)
 #' and will be used to name the resulting output.
 
 #' @return
@@ -83,18 +85,21 @@ nearestNeighborDist <- function(distMat){
    #this function is included in paleotree mainly for pedagogical use
    if(!inherits(distMat,"dist")){
       if(is.matrix(distMat)){
-         if(all(diag(distMat) != 0)){
-            stop("Diagonal is nonzero, may be a similarity matrix, not a distance matrix")}
-         if(!isSymmetric(distMat)){stop("Not a Symmetric Distance Matrix?")}
-         distM <- distMat
+         if(any(sapply(diag(distMat),function(x) !is.na(x) & x!=0))){
+            stop("Diagonal is nonzero and not NA, may be a similarity matrix, not a distance matrix")
+            }
+         if(!isSymmetric(distMat)){
+            stop("Not a Symmetric Distance Matrix?")
+            }
+         distMat <- distMat
       }else{
          stop("Not a matrix, not a 'dist' object, what is it?")
-      }
+         }
    }else{
-      distM <- is.matrix(distMat)
+      distMat <- as.matrix(distMat)
       }
    NND <- sapply(1:nrow(distMat),function(x) min(distMat[x,-x]))
-   names(NND) <- labels(distM)[[1]]
+   names(NND) <- labels(distMat)[[1]]
    return(NND) #return as a per-taxon 
    }
    

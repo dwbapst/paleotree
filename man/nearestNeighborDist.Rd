@@ -8,8 +8,10 @@ nearestNeighborDist(distMat)
 }
 \arguments{
 \item{distMat}{A symmetric, square pair-wise distance matrix, assumed to be a dissimilarity
-matrix with a zero diagonal. Can be a 'dist' object rather than a numerical matrix.
-Taxon labels can be applied to the rows and columns (or as labels if a 'dist' object)
+matrix with a diagonal that is either zero values, \code{NA} values, or a mixture of both.
+Can be a 'dist' object rather than a numerical matrix.
+Taxon labels can be applied to the rows and columns
+(or as labels if a 'dist' object)
 and will be used to name the resulting output.}
 }
 \value{

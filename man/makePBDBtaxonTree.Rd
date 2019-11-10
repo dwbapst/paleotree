@@ -140,6 +140,7 @@ macroevolutionary studies as reconstructed phylogenies
 (Soul and Friedman, 2015.).
 }
 \examples{
+set.seed(1)
 \donttest{
 
 #get some example occurrence and taxonomic data
@@ -162,10 +163,13 @@ plotTaxaTreePBDB(graptTreeParentChild)
 
 plotTaxaTreePBDB(graptTreeLinnean)
 
+# pause 3 seconds so we don't spam the API
+Sys.sleep(3)
 
 ####################################################
 # let's try some other groups
 
+###################################
 #conodonts
 conoData <- getCladeTaxaPBDB("Conodonta")
 conoTree <- makePBDBtaxonTree(
@@ -175,6 +179,10 @@ conoTree <- makePBDBtaxonTree(
 # plot it!
 plotTaxaTreePBDB(conoTree)
 
+# pause 3 seconds so we don't spam the API
+Sys.sleep(3)
+
+#############################
 #asaphid trilobites
 asaData <- getCladeTaxaPBDB("Asaphida")
 asaTree <- makePBDBtaxonTree(
@@ -184,6 +192,10 @@ asaTree <- makePBDBtaxonTree(
 # plot it!
 plotTaxaTreePBDB(asaTree)
 
+# pause 3 seconds so we don't spam the API
+Sys.sleep(3)
+
+###############################
 #Ornithischia
 ornithData <- getCladeTaxaPBDB("Ornithischia")
 ornithTree <- makePBDBtaxonTree(
@@ -192,27 +204,33 @@ ornithTree <- makePBDBtaxonTree(
     method = "parentChild")
 plotTaxaTreePBDB(ornithTree)
 
+# pause 3 seconds so we don't spam the API
+Sys.sleep(3)
+
 #try Linnean!
 
 #but first... need to drop repeated taxon first: Hylaeosaurus
-findHylaeo <- ornithData$taxon_name == "Hylaeosaurus"
+    # actually this taxon seems to have been repaired 
+    # as of September 2019 !
+# findHylaeo <- ornithData$taxon_name == "Hylaeosaurus"
 # there's actually only one accepted ID number
-HylaeoIDnum <- unique(ornithData[findHylaeo,"taxon_no"])
-HylaeoIDnum 
-
+# HylaeoIDnum <- unique(ornithData[findHylaeo,"taxon_no"])
+# HylaeoIDnum 
 # so, take which one has occurrences listed
-dropThis <- which((ornithData$n_occs < 1) & findHylaeo)
-ornithDataCleaned <- ornithData[-dropThis,]
+# dropThis <- which((ornithData$n_occs < 1) & findHylaeo)
+# ornithDataCleaned <- ornithData[-dropThis,]
 
 ornithTree <- makePBDBtaxonTree(
-    ornithDataCleaned,
+    ornithData,
     rankTaxon = "genus",
     method = "Linnean")
 plotTaxaTreePBDB(ornithTree)
 
+	# pause 3 seconds so we don't spam the API
+	Sys.sleep(3)
 
-########################
-#Rhynchonellida
+#########################
+# Rhynchonellida
 rynchData <- getCladeTaxaPBDB("Rhynchonellida")
 rynchTree <- makePBDBtaxonTree(
     taxaDataPBDB = rynchData,

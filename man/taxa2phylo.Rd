@@ -4,17 +4,19 @@
 \alias{taxa2phylo}
 \title{Convert Simulated Taxon Data into a Phylogeny}
 \usage{
-taxa2phylo(taxad, obs_time = NULL, plot = FALSE)
+taxa2phylo(taxaData, obs_time = NULL, plot = FALSE)
 }
 \arguments{
-\item{taxad}{A five-column matrix of taxonomic data, as output by
-\code{fossilRecord2fossilTaxa} via simulations produced using \code{simFossilRecord}}
+\item{taxaData}{A five-column matrix of taxonomic data,
+as output by \code{fossilRecord2fossilTaxa} via simulations
+produced using \code{simFossilRecord}. Previously, this was the
+default output of the deprecated function \code{simFossilTaxa}.}
 
 \item{obs_time}{A vector of per-taxon times of observation which must be in
-the same order of taxa as in the object taxad; if NULL, the LADs (column 4)
-in taxad2 are used}
+the same order of taxa as in the object \code{taxaData}. 
+If \code{obs_time = NULL}, the LADs (column 4) in \code{taxaData} are used}
 
-\item{plot}{Plot the resulting phylogeny?}
+\item{plot}{If \code{TRUE} result the output with \code{ape::plot.phylo}.}
 }
 \value{
 The resulting phylogeny with branch lengths is output as an object
@@ -36,7 +38,7 @@ instantaneous points of time in the range of some taxa and describe the
 time-scaled relationships of the populations present at those dates. This is
 the tactic used by taxa2phylo.
 
-By default, the dates selected ('obs-time' argument) are the last occurences
+By default, the dates selected (the \code{obs_time} argument) are the last occurences
 of the taxon, so a simple use of this function will produce a time-scaled
 tree which describes the relationships of the populations present at the
 last occurence of each taxon in the sampled data. Alternatively, obs_time
@@ -52,7 +54,7 @@ The purpose of taxa2phylo is to obtain the 'true' pattern of evolution for
 the observation times, independent of what we might actually be able to
 recover, for the purpose of comparing in simulation analyses.
 
-As with many functions in the paleotree library, absolute time is always
+As with many functions in the \code{paleotree} library, absolute time is always
 decreasing, i.e. the present day is zero.
 }
 \note{
@@ -75,14 +77,20 @@ such taxa, however. See \link{simFossilRecord}.
 \examples{
 
 set.seed(444)
-record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
- 	nTotalTaxa = c(30,40), nExtant = 0)
+record <- simFossilRecord(
+   p = 0.1, 
+   q = 0.1, 
+   nruns = 1,
+   nTotalTaxa = c(30,40), 
+   nExtant = 0
+   )
 taxa <- fossilRecord2fossilTaxa(record)
-#let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
+# let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
 tree <- taxa2phylo(taxa)
 phyloDiv(tree)
 
-#now a phylogeny with tips placed at the apparent time of extinction for each taxon
+# now a phylogeny with tips placed at
+   # the apparent time of extinction for each taxon
 rangesCont <- sampleRanges(taxa,r = 0.5)
 tree <- taxa2phylo(taxa,obs_time = rangesCont[,2])
 phyloDiv(tree,drop.ZLB = FALSE)
@@ -90,8 +98,15 @@ phyloDiv(tree,drop.ZLB = FALSE)
 
 #testing with cryptic speciation
 set.seed(444)
-record <- simFossilRecord(p = 0.1, q = 0.1, prop.cryptic = 0.5, nruns = 1,
- 	nTotalTaxa = c(30,40), nExtant = 0, count.cryptic = TRUE)
+record <- simFossilRecord(
+   p = 0.1, 
+   q = 0.1, 
+   prop.cryptic = 0.5, 
+   nruns = 1,
+   nTotalTaxa = c(30,40), 
+   nExtant = 0, 
+   count.cryptic = TRUE
+   )
 taxaCrypt <- fossilRecord2fossilTaxa(record)
 treeCrypt <- taxa2phylo(taxaCrypt)
 layout(1)
@@ -100,7 +115,8 @@ axisPhylo()
 
 }
 \seealso{
-\code{\link{simFossilRecord}}, \code{\link{taxa2cladogram}}, \link{fossilRecord2fossilTaxa}
+\code{\link{simFossilRecord}},
+\code{\link{taxa2cladogram}}, \link{fossilRecord2fossilTaxa}
 }
 \author{
 David W. Bapst

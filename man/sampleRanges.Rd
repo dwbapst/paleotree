@@ -4,13 +4,13 @@
 \alias{sampleRanges}
 \title{Sampling Taxon Ranges}
 \usage{
-sampleRanges(taxad, r, alpha = 1, beta = 1, rTimeRatio = 1,
+sampleRanges(taxaData, r, alpha = 1, beta = 1, rTimeRatio = 1,
   modern.samp.prob = 1, min.taxa = 2, ranges.only = TRUE,
   minInt = 0.01, merge.cryptic = TRUE, randLiveHat = TRUE,
   alt.method = FALSE, plot = FALSE)
 }
 \arguments{
-\item{taxad}{A two-column matrix of per-taxon ranges. The five-column matrix
+\item{taxaData}{A two-column matrix of per-taxon ranges. The five-column matrix
 output of \code{simFossilRecord}, post transformation with \code{fossilRecord2fossilTaxa}
 can also be supplied, which will be common in simulation usages.}
 

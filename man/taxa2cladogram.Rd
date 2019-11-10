@@ -4,16 +4,18 @@
 \alias{taxa2cladogram}
 \title{Convert Simulated Taxon Data into a Cladogram}
 \usage{
-taxa2cladogram(taxad, drop.cryptic = FALSE, plot = FALSE)
+taxa2cladogram(taxaData, drop.cryptic = FALSE, plot = FALSE)
 }
 \arguments{
-\item{taxad}{A five-column matrix of taxonomic data, as output by
-\code{simFossilRecord}, after transformation with function \code{fossilRecord2fossilTaxa}.}
+\item{taxaData}{A five-column matrix of taxonomic data,
+as output by \code{fossilRecord2fossilTaxa} via simulations
+produced using \code{simFossilRecord}. Previously, this was the
+default output of the deprecated function \code{simFossilTaxa}.}
 
 \item{drop.cryptic}{Should cryptic species be dropped (except for the
 first)? Not dropped by default.}
 
-\item{plot}{Should the result be plotted?}
+\item{plot}{If \code{TRUE} result the output with \code{ape::plot.phylo}.}
 }
 \value{
 The resulting phylogeny without branch lengths is output as an

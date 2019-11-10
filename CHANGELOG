@@ -1,5 +1,10 @@
-Version - 3.3.0 - 06-03-19 
+Version - 3.3.1 - 11-10-19
+- Added option 'tipLabels' to timeSliceTree to allow users to replace the tip labels put on cropped branches (branches with multiple descendants, cropped to a single branch at the sliceTime) with concatanated lists of descendant taxa rather than arbitrarily returning the label of the earliest descendant taxon (the latter is still the default though!).
+- added tests for timeSliceTree
+- added system wait statements to makePBDBtaxonTree to avoid API calls from timing out
 
+Version - 3.3.0 - 06-03-19 
+- CRAN release.
 
 Version - 3.2.8 - 06-02-19 (Not Released to CRAN)
 - Fixed bug communicated by user Armin Elsler in October 2018 in cal3TimePaleoPhy where if `dateTreatment = 'minMax'` was used, the output trees would have tips at the same absolute time, as the generating time-tree used for cal3 inference was generated using the input fixed first and last dates as if they were FAD and LAD, with the upper age constraint treated as fixed LAD and time of observation for each tip. This has the effect of making 'minMax' treatment with cal3 nearly identical to using 'firstLast'. This is now fixed by creating a new new basic-time-scaled tree using the randomly generated set of point occurrence times within each iteration under 'minMax', such that the resulting tip dates are always different.

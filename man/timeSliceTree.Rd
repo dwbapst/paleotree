@@ -5,7 +5,7 @@
 \title{Time-Slicing a Phylogeny}
 \usage{
 timeSliceTree(ttree, sliceTime, drop.extinct = FALSE,
-  tiplabels = "earliestDesc", plot = TRUE)
+  tipLabels = "earliestDesc", plot = TRUE)
 }
 \arguments{
 \item{ttree}{A time-scaled phylogeny of class \code{phylo}.}
@@ -17,14 +17,14 @@ the input \code{timeSlice} using function \code{dropExtinct}.
 Note that \code{dropExtinct} will also automatically adjust the \code{$root.time}
 if the removal of extinct branches causes the room to shift to a younger age.}
 
-\item{plot}{If \code{TRUE}, plots input and output trees for comparison.}
-
 \item{tipLabels}{What sort of tip labels should be placed on cropped branches
 which had multiple descendants? The default option, \code{"earliestDesc"} labels
 a clipped branch with the earliest appearing tip descendant of that branch. 
 Alternatively, if \code{tipLabels = "allDesc"},
 these tips can instead be labeled with a compound label consisting of
 all descendants that were on the cropped branch, seperated by semi-colons.}
+
+\item{plot}{If \code{TRUE}, plots input and output trees for comparison.}
 }
 \value{
 Returns the modified phylogeny as an object of class \code{phylo}. 

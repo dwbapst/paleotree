@@ -140,6 +140,7 @@ macroevolutionary studies as reconstructed phylogenies
 (Soul and Friedman, 2015.).
 }
 \examples{
+set.seed(1)
 \donttest{
 
 #get some example occurrence and taxonomic data
@@ -162,6 +163,8 @@ plotTaxaTreePBDB(graptTreeParentChild)
 
 plotTaxaTreePBDB(graptTreeLinnean)
 
+# pause 3 seconds so we don't spam the API
+Sys.sleep(3)
 
 ####################################################
 # let's try some other groups
@@ -175,6 +178,9 @@ conoTree <- makePBDBtaxonTree(
 # plot it!
 plotTaxaTreePBDB(conoTree)
 
+# pause 3 seconds so we don't spam the API
+Sys.sleep(3)
+
 #asaphid trilobites
 asaData <- getCladeTaxaPBDB("Asaphida")
 asaTree <- makePBDBtaxonTree(
@@ -184,6 +190,9 @@ asaTree <- makePBDBtaxonTree(
 # plot it!
 plotTaxaTreePBDB(asaTree)
 
+# pause 3 seconds so we don't spam the API
+Sys.sleep(3)
+
 #Ornithischia
 ornithData <- getCladeTaxaPBDB("Ornithischia")
 ornithTree <- makePBDBtaxonTree(
@@ -191,6 +200,9 @@ ornithTree <- makePBDBtaxonTree(
     rankTaxon = "genus",
     method = "parentChild")
 plotTaxaTreePBDB(ornithTree)
+
+# pause 3 seconds so we don't spam the API
+Sys.sleep(3)
 
 #try Linnean!
 
@@ -210,9 +222,11 @@ ornithTree <- makePBDBtaxonTree(
     method = "Linnean")
 plotTaxaTreePBDB(ornithTree)
 
+	# pause 3 seconds so we don't spam the API
+	Sys.sleep(3)
 
-########################
-#Rhynchonellida
+
+# Rhynchonellida
 rynchData <- getCladeTaxaPBDB("Rhynchonellida")
 rynchTree <- makePBDBtaxonTree(
     taxaDataPBDB = rynchData,

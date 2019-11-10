@@ -121,7 +121,7 @@
 timeSliceTree <- function(ttree,
                           sliceTime,
                           drop.extinct = FALSE,
-                          tiplabels = "earliestDesc",
+                          tipLabels = "earliestDesc",
                           plot = TRUE
                           ){
 	#take a phylogeny and produce a phylogenetic 'slice' at time X (w/respect to root.time)
@@ -166,7 +166,7 @@ timeSliceTree <- function(ttree,
 			#if(tiplabels == "earliestDesc"){
       #  # I don't think anything needs to be done!
 			#  }
-			if(tiplabels == "allDesc"){
+			if(tipLabels == "allDesc"){
 			  ttree$tip.label[desctip[1]] <- paste0(
 			    ttree$tip.label[desctip],
 			    collapse = ";"

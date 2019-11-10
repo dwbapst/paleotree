@@ -64,6 +64,10 @@
 #' @references
 #' Peters, S. E., and M. McClennen. 2015. The Paleobiology Database
 #' application programming interface. \emph{Paleobiology} 42(1):1-7.
+#' 
+#' The equuid tree used in the examples is from:
+#' MacFadden, B. J. 1992. Fossil horses: systematics, paleobiology, and
+#' evolution of the family Equidae. \emph{Cambridge University Press}.
 
 #' @examples
 #' 
@@ -88,29 +92,101 @@
 #' 
 #' }
 #' 
+#' ####################################
+#' 
 #' \dontrun{
 #' 
-#' # example using strap
-#' 
-#' rangesFourDate<-timeTree$tipTaxonFourDateRanges
-#' colnames(rangesMinMax )<-c("FAD","LAD")
+#' # can also plot dated tree with strap
 #' 
 #' library(strap)
 #' #now plot it
 #' strap::geoscalePhylo(
-#' 	tree=timeTree,
-#' 	direction = "upwards",
-#' 	ages=rangesMinMax,
-#' 	cex.tip=0.7,
-#' 	cex.ts=0.55,
-#' 	cex.age=0.5,
-#' 	width=3,
-#' 	tick.scale = 50,
-#' 	quat.rm=TRUE,
-#' 	boxes = "Period",
-#' 	arotate = 90,
-#' 	units=c("Eon","Period","Era"),
-#' 	x.lim=c(650,-20))
+#'     tree=timeTree,
+#'     direction = "upwards",
+#'     ages=rangesMinMax,
+#'     cex.tip=0.7,
+#'     cex.ts=0.55,
+#'     cex.age=0.5,
+#'     width=3,
+#'     tick.scale = 50,
+#'     quat.rm=TRUE,
+#'     boxes = "Period",
+#'     arotate = 90,
+#'     units=c("Eon","Period","Era"),
+#'     x.lim=c(650,-20)
+#'     )
+#' }
+#' 
+#' ##############################################################
+#' 
+#' \donttest{
+#' 
+#' # we can also use this for pre-existing trees
+#'     # for example, this tree of equuids (horses)
+#'     # borrowed from UCMP materials on horse evolution
+#'     # https://evolution.berkeley.edu/evolibrary/images/HorseTree.pdf
+#'     # (apparently from MacFadden, 1992? Citation above)
+#' 
+#' # read the tree in as Newick string
+#' horseTree <- ape::read.tree(file=NULL, 
+#'     text = paste0(
+#'          "(Eohippus,(Xenicohippus,(Haplohippus,(Epihippus,",
+#'          "(Miohippus,(((Hypohippus,Megahippus),(Anchitherium,",
+#'          "Kalobatippus)),(Archaeohippus,(Desmatippus,(Parahippus,",
+#'          "(Merychippus,(((Hipparion_Merychippus,(Nannippus,",
+#'          " Cormohipparion)),(Pseudhipparion,(Neohipparion,",
+#'          " Hipparion))),(Equine_Merychippus,((Protohippus,Calippus),",
+#'          "(Pliohippus,(Astrohippus,(Dinohippus,Equus))))))))))))))));"
+#'          )
+#'     )
+#' 
+#' # note there is a message that the tree lacks node names
+#'     # this is unexpected / atypical for taxon trees
+#' 
+#' plot(horseTree)
+#' 
+#' # now let's get data on the tip from the PBDB
+#'     # using getSpecificTaxaPBDB
+#' horseData <- getSpecificTaxaPBDB(horseTree$tip.label)
+#' 
+#' # now we can date the tree with dateTaxonTreePBDB
+#' 
+#' datedHorseTree <- dateTaxonTreePBDB(
+#'     taxaTree = horseTree,
+#'     taxaDataPBDB = horseData,
+#'     minBranchLen = 1
+#'     )
+#' 
+#' # and let's try plotting it!	
+#' plotPhyloPicTree(
+#'     tree = datedHorseTree,
+#'     depthAxisPhylo = TRUE
+#'     )		
+#' 	
+#' # a fairly boring phylopic diagram
+#'     # not many horse phylopics as of 07-16-19?
+#' }
+#' 
+#' \dontrun{
+#' 
+#' # Let's look at this horse tree with strap
+#'
+#' library(strap)
+#' 
+#' geoscalePhylo(
+#'     tree = datedHorseTree,
+#'     ages = datedHorseTree$ranges.used,
+#'     cex.tip = 0.7,
+#'     cex.ts = 0.7,
+#'     cex.age = 0.7,
+#'     width = 4,
+#'     tick.scale = 15,
+#'     boxes = "Epoch",
+#'     erotate = 90,
+#'     quat.rm = TRUE,
+#'     units = c("Period","Epoch"),
+#'     x.lim = c(65,-10)
+#'     )
 #' 
 #' }
 #' 
@@ -138,43 +214,65 @@ dateTaxonTreePBDB <- function(
 	lastAppTimes <- c("lastapp_min_ma","lastapp_max_ma")
 	firstAppTimes <- c("firstapp_min_ma","firstapp_max_ma")
 	#
+	# save orig taxa data
+	taxaDataPBDB_orig <- taxaDataPBDB
+	#
 	############################################################
 	# 03-24-19
 	# why don't I get all tip and node data simultaneously?
 	#
-	# get node ages
-	nodeNames <- taxaTree$node.label
-	# remove any ".1" in the taxon names
-		# hopefully there aren't any "." in the real taxon names... sigh...
-	nodeNames <- sapply(strsplit(nodeNames,split=".",fixed=TRUE),function(x) x[[1]])
-	# remove nodeNames not in taxaDataPBDB
-	nodeNamesNoMatch <- sapply(nodeNames,function(x) all(x != taxaDataPBDB$taxon_name))
-	if(any(nodeNamesNoMatch)){
-		nodeNames <- nodeNames[nodeNamesNoMatch]
-			# get API URL
-		nodeNames <- paste0(nodeNames, collapse=",")
-		apiAddressNodes <- paste0(
-			"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
-			nodeNames,"&show=app,parent"
-			)
-		# browseURL(apiAddressNodes)
-		nodeData <- read.csv(apiAddressNodes,
-			stringsAsFactors = FALSE)
-		# combine with taxon data
-			# reducing scope to same columns as nodeData
-				#print(colnames(nodeData))
-				#print(colnames(taxaDataPBDB))
-		sharedColNames <- intersect(colnames(nodeData), colnames(taxaDataPBDB))
-		taxaDataReduced <-  taxaDataPBDB[,sharedColNames]
-		nodeDataReduced <- nodeData[,sharedColNames]
-		combData <- rbind(taxaDataReduced, nodeDataReduced)
+	# skip if there aren't any node labels
+	if(is.null(taxaTree$node.label)){
 		#
-		appData <- processTaxonAppData(dataPBDB = combData, 
-			dropZeroOccurrenceTaxa = dropZeroOccurrenceTaxa)
+		message("No node labels found - is this a taxon tree from the PBDB?")
+		# just take original taxon data as the 'combined data'	
+		combData <- taxaDataPBDB
+		#
 	}else{
-		appData <- processTaxonAppData(dataPBDB = taxaDataPBDB, 
-			dropZeroOccurrenceTaxa = dropZeroOccurrenceTaxa)
+		#
+		# get node ages
+		nodeNames <- taxaTree$node.label
+		# remove any ".1" in the taxon names
+			# hopefully there aren't any "." in the real taxon names... sigh...
+		nodeNames <- sapply(
+			strsplit(
+				nodeNames, 
+				split=".", 
+				fixed=TRUE
+				),
+			function(x) x[[1]]
+			)
+		# remove nodeNames not in taxaDataPBDB
+		nodeNamesNoMatch <- sapply(
+			nodeNames, 
+			function(x) 
+				all(x != taxaDataPBDB$taxon_name)
+				)
+		if(any(nodeNamesNoMatch)){
+			nodeNames <- nodeNames[nodeNamesNoMatch]
+				# get API URL
+			nodeNames <- paste0(nodeNames, collapse=",")
+			apiAddressNodes <- paste0(
+				"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
+				nodeNames,"&show=app,parent"
+				)
+			# browseURL(apiAddressNodes)
+			nodeData <- read.csv(apiAddressNodes,
+				stringsAsFactors = FALSE)
+			# combine with taxon data
+				# reducing scope to same columns as nodeData
+					#print(colnames(nodeData))
+					#print(colnames(taxaDataPBDB))
+			sharedColNames <- intersect(colnames(nodeData), colnames(taxaDataPBDB))
+			taxaDataReduced <-  taxaDataPBDB[,sharedColNames]
+			nodeDataReduced <- nodeData[,sharedColNames]
+			combData <- rbind(taxaDataReduced, nodeDataReduced)
+			}
 		}
+	#		
+	appData <- processTaxonAppData(dataPBDB = combData, 
+		dropZeroOccurrenceTaxa = dropZeroOccurrenceTaxa)
+	#
 	#################
 	# drop tips not in appData
 	dropTips <- sapply(taxaTree$tip.label,
@@ -191,12 +289,28 @@ dateTaxonTreePBDB <- function(
 			)
 		}
 	# now, hopefully, none of the remaining tips/nodes
-		# do not have NA appearance times...
+		# do not have NA appearance times...	
 	###########################
 	# get node max ages
-	nodeMaxAges <- appData$firstapp_max_ma[
-		match(taxaTree$node.label, appData$taxon_name)
-		]
+	if(is.null(taxaTree$node.label)){
+		# no node labels...
+		# so find the max age using the children on tree
+		#
+		nodeChildren <- lapply(prop.part(taxaTree), function(x)
+			taxaTree$tip.label[x]
+			)
+		nodeMaxAges <- numeric()
+		#
+		for(i in 1:Nnode(taxaTree)){
+			matchedChildren <- match(nodeChildren[[i]], appData$taxon_name)
+			maxChildAges <- appData$firstapp_max_ma[matchedChildren]
+			nodeMaxAges[i] <- max(maxChildAges)
+			}		
+	}else{
+		nodeMaxAges <- appData$firstapp_max_ma[
+			match(taxaTree$node.label, appData$taxon_name)
+			]
+		}
 	# 
 	####################################################
 	# get four date taxon ranges for all tip taxa
@@ -247,6 +361,7 @@ dateTaxonTreePBDB <- function(
 		datedTree <- minBranchLength(
 			tree = datedTree,
 			mbl = minBranchLen)
+		#
 		datedTree <- ladderize(datedTree)
 		#
 		plotName <- paste0(
@@ -285,8 +400,8 @@ dateTaxonTreePBDB <- function(
 	#
 	#print("b")
 	#
-	# output the original taxaDataPBDB
-	datedTree$taxaDataPBDB <- taxaDataPBDB
+	# output the original taxaDataPBDB_orig
+	datedTree$taxaDataPBDB <- taxaDataPBDB_orig
 	# return
 	return(datedTree)
 	}

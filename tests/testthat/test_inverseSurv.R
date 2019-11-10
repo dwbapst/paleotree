@@ -22,8 +22,10 @@ constrFun <- constrainParPaleo(likFun, match.all~match.all)
 
 #unconstrained function with ALL of the 225 possible parameters!!!
     # this will take forever to converge	
-optim(parInit(likFun),likFun,
+res <- optim(parInit(likFun),likFun,
       lower = parLower(likFun), upper = parUpper(likFun),
       method = "L-BFGS-B", control = list(maxit = 3))
+	  
+expect_false(any(is.na(res)))
 
 })

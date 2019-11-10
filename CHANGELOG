@@ -1,10 +1,23 @@
-Version - 3.3.1 - 11-10-19
+Version - 3.3.23 - 11-10-19 (Not Released to CRAN)
 - Added option 'tipLabels' to timeSliceTree to allow users to replace the tip labels put on cropped branches (branches with multiple descendants, cropped to a single branch at the sliceTime) with concatanated lists of descendant taxa rather than arbitrarily returning the label of the earliest descendant taxon (the latter is still the default though!).
 - added tests for timeSliceTree
 - added system wait statements to makePBDBtaxonTree to avoid API calls from timing out
 
+Version - 3.3.21 - 07-18-19 (Not Released to CRAN)
+- Following up on example code from Brian O'Meara, I added some more warnings and checks to getTaxa functions for PBDB API to catch duplicated and missing taxa (e.g. taxa with 'empty records').
+
+Version - 3.3.20 - 07-17-19 (Not Released to CRAN)
+- Fixed negative ages issue, and added even more checks to simFossilRecord and timeSliceFossilRecord.
+- Refined current testthat test suite and specified expectations, added skips for CRAN and travis.
+- Slightly modified dateTaxonTreePBDB so that it would accept trees without node labels, and added an example of using it to date a tree of equuids not originally taken from PBDB taxonomy.
+- At the suggestion of Tiago Quental, added a method to simFossilRecord that returns both the accepted simulation runs (those that satisfy the specified constraints), and the simulation runs that terminate without ever satisfying the specified constraints. This mode can be enabled with argument returnAllRuns = TRUE with simFossilRecord.
+
+Version - 3.3.5 - 07-07-19 (Not Released to CRAN)
+- Added in some extra checks to simFossilRecord (and related methods), and a new test, to catch a rare and yet-unexplained occurrence of negative taxon dates being returned by simFossilTaxa. Unfortunately, this error is very hard to reproduce.
+
 Version - 3.3.0 - 06-03-19 
-- CRAN release.
+- Lots of style edits to doc and examples in many places.
+- Released to CRAN!
 
 Version - 3.2.8 - 06-02-19 (Not Released to CRAN)
 - Fixed bug communicated by user Armin Elsler in October 2018 in cal3TimePaleoPhy where if `dateTreatment = 'minMax'` was used, the output trees would have tips at the same absolute time, as the generating time-tree used for cal3 inference was generated using the input fixed first and last dates as if they were FAD and LAD, with the upper age constraint treated as fixed LAD and time of observation for each tip. This has the effect of making 'minMax' treatment with cal3 nearly identical to using 'firstLast'. This is now fixed by creating a new new basic-time-scaled tree using the randomly generated set of point occurrence times within each iteration under 'minMax', such that the resulting tip dates are always different.

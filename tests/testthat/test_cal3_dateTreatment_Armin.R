@@ -52,7 +52,6 @@ cladogram <- taxa2cladogram(taxa,plot=TRUE)
 rangesCont_pointocc <- rangesCont
 rangesCont_pointocc[,2] <- rangesCont[,1]
 
-
 #this library allows one to use
 	# rate calibrated type time-scaling methods (Bapst, 2014.)
 #to use these, we need an estimate of the sampling rate
@@ -61,8 +60,12 @@ likFun<-make_durationFreqCont(rangesCont)
 srRes<-optim(parInit(likFun),likFun,
 	lower=parLower(likFun),
 	upper=parUpper(likFun),
-      method="L-BFGS-B",control=list(maxit=1000000))
+    method="L-BFGS-B",
+	control=list(maxit=1000000)
+	)
+	
 sRate <- srRes[[1]][2]
+
 # we also need extinction rate and branching rate
 # we can get extRate from getSampRateCont too
 #we'll assume extRate=brRate (ala Foote et al., 1999);
@@ -91,9 +94,9 @@ ttrees_1 <- cal3TimePaleoPhy(
 	anc.wt=0,plot=FALSE)
 
 expect_true(	
-# test if tip ages have changed
-test_identical_tip_ages(trees = ttrees_1)
-)
+	# test if tip ages have changed
+	test_identical_tip_ages(trees = ttrees_1)
+	)
 
 # Result
 # Expectation met, treatment 'firstLast' has no impact on resulting tip ages.
@@ -119,9 +122,9 @@ ttrees_2<- cal3TimePaleoPhy(
 	anc.wt=0,plot=FALSE)
 
 expect_true(		
-# test if tip ages have changed
-test_identical_tip_ages(trees = ttrees_2)
-)
+	# test if tip ages have changed
+	test_identical_tip_ages(trees = ttrees_2)
+	)
 
 # RESULT
 # Expectation met, treatment 'minMax' has no impact on resulting tip ages.
@@ -145,9 +148,9 @@ ttrees_3a <- cal3TimePaleoPhy(
 	anc.wt=0,plot=FALSE)
 
 expect_true(		
-# test if tip ages have changed
-test_identical_tip_ages(trees = ttrees_3a)
-)
+	# test if tip ages have changed
+	test_identical_tip_ages(trees = ttrees_3a)
+	)
 
 # Result
 # Expectation met, treatment 'firstLast' has no impact on resulting tip ages.
@@ -171,9 +174,9 @@ ttrees_3b <- cal3TimePaleoPhy(
 	anc.wt=0,plot=FALSE)
 
 expect_false(		
-# test if tip ages have changed
-test_identical_tip_ages(trees = ttrees_3b)
-)
+	# test if tip ages have changed
+	test_identical_tip_ages(trees = ttrees_3b)
+	)
 
 # RESULT
 # Tip ages DO differ among the trees, as expected. Huzzah!
@@ -197,9 +200,9 @@ ttrees_4a <- cal3TimePaleoPhy(
 	anc.wt=0,plot=FALSE)
 
 expect_true(	
-# test if tip ages have changed
-test_identical_tip_ages(trees = ttrees_4a)
-)
+	# test if tip ages have changed
+	test_identical_tip_ages(trees = ttrees_4a)
+	)
 
 # Result
 # Expectation met, treatment 'firstLast' has no impact on resulting tip ages.
@@ -212,22 +215,22 @@ test_identical_tip_ages(trees = ttrees_4a)
 	# minimum and maximum bounds, with variation across runs.
 
 expect_error(	
-# #cal3TimePaleoPhy method using "minMax" 
-	# ancestors excluded
-	# FAD.only = TRUE
-	# FADs and LADs can differ
-ttrees_4b<- cal3TimePaleoPhy(
-	cladogram, rangesCont,
-	brRate=divRate, extRate=divRate,
-	sampRate=sRate, dateTreatment="minMax",
-	FAD.only=TRUE, ntrees=2,
-	anc.wt=0,plot=FALSE)
-)
+	# #cal3TimePaleoPhy method using "minMax" 
+		# ancestors excluded
+		# FAD.only = TRUE
+		# FADs and LADs can differ
+	ttrees_4b<- cal3TimePaleoPhy(
+		cladogram, rangesCont,
+		brRate=divRate, extRate=divRate,
+		sampRate=sRate, dateTreatment="minMax",
+		FAD.only=TRUE, ntrees=2,
+		anc.wt=0,plot=FALSE)
+	)
 
 expect_error(
-# test if tip ages have changed
-test_identical_tip_ages(trees = ttrees_4b)
-)
+	# test if tip ages have changed
+	test_identical_tip_ages(trees = ttrees_4b)
+	)
 
 # RESULT
 # Returns an error, as it finds minMax incongruent with FAD.only = TRUE.
@@ -249,12 +252,14 @@ ttrees_5a<- cal3TimePaleoPhy(
 	brRate=divRate, extRate=divRate,
 	sampRate=sRate, dateTreatment="randObs",
 	FAD.only=FALSE, ntrees=2,
-	anc.wt=0,plot=FALSE)
+	anc.wt=0,
+	plot=FALSE
+	)
 
 expect_false(	
-# test if tip ages have changed
-test_identical_tip_ages(trees = ttrees_5a)
-)
+	# test if tip ages have changed
+	test_identical_tip_ages(trees = ttrees_5a)
+	)
 
 # RESULT
 # Expectation met, there is variation as expected.
@@ -272,18 +277,20 @@ test_identical_tip_ages(trees = ttrees_5a)
 	# FAD.only = TRUE
 	# FADs and LADs can differ
 expect_error(
-ttrees_5b<- cal3TimePaleoPhy(
-	cladogram, rangesCont,
-	brRate=divRate, extRate=divRate,
-	sampRate=sRate, dateTreatment="randObs",
-	FAD.only=TRUE, ntrees=2,
-	anc.wt=0,plot=FALSE)
-)
+	ttrees_5b<- cal3TimePaleoPhy(
+		cladogram, rangesCont,
+		brRate=divRate, extRate=divRate,
+		sampRate=sRate, dateTreatment="randObs",
+		FAD.only=TRUE, ntrees=2,
+		anc.wt=0,
+		plot=FALSE
+		)
+	)
 
 expect_error(	
-# test if tip ages have changed
-test_identical_tip_ages(trees = ttrees_5b)
-)
+	# test if tip ages have changed
+	test_identical_tip_ages(trees = ttrees_5b)
+	)
 
 # RESULT
 # Returns an error, as it finds randObs incongruent with FAD.only = TRUE.

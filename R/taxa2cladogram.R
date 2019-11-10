@@ -40,14 +40,11 @@
 #' to obtain, as we would not recognize cryptic taxa to be treated as different OTUs). By
 #' default, cryptic taxa are not dropped so that the same number of taxa as in
 #' the simulated data is retained.
- 
-#' @param taxad A five-column matrix of taxonomic data, as output by
-#' \code{simFossilRecord}, after transformation with function \code{fossilRecord2fossilTaxa}.
+
+#' @inheritParams taxa2phylo
 
 #' @param drop.cryptic Should cryptic species be dropped (except for the
 #' first)? Not dropped by default.
-
-#' @param plot Should the result be plotted?
 
 #' @return The resulting phylogeny without branch lengths is output as an
 #' object of class phylo.
@@ -98,30 +95,30 @@
 
 
 #' @export taxa2cladogram
-taxa2cladogram <- function(taxad,drop.cryptic = FALSE,plot = FALSE){
-	#take a taxad and turn it into an unscaled cladogram
+taxa2cladogram <- function(taxaData,drop.cryptic = FALSE,plot = FALSE){
+	#take a taxaData and turn it into an unscaled cladogram
 		#do this by forming the tree as newick format first
 		#essentially, this algorithm works by defining clades as only those sets of taxa which start with the FAD of the first taxon
 		#This could be a 'clade' of a single OTU
 		#or a clade of a bunch of taxa where one is a budding ancestor and the other are budding descendants or whatever
 		#the important thing is that there's only so many nodes as there are instances where morphotaxa end/start allowing for homologies
 	#require(ape)
-	if(any(taxad[,6] != taxad[,1])){
-		for(i in which(taxad[,1] != taxad[,6])){
+	if(any(taxaData[,6] != taxaData[,1])){
+		for(i in which(taxaData[,1] != taxaData[,6])){
 			#reset descendants of cryptic taxa so all bud off of first cryptic species		
-			taxad[taxad[,2] == taxad[i,1],2] <- taxad[i,6]
+			taxaData[taxaData[,2] == taxaData[i,1],2] <- taxaData[i,6]
 			}
 		}
-	if(!testParentChild(parentChild = taxad[,2:1])){stop("taxad anc-desc relationships are inconsistent")}
-	tlabs <- rownames(taxad)
-	desc <- lapply(taxad[,1],function(x) (taxad[taxad[,2] == x,1])[!is.na(taxad[taxad[,2] == x,1])])
+	if(!testParentChild(parentChild = taxaData[,2:1])){stop("taxaData anc-desc relationships are inconsistent")}
+	tlabs <- rownames(taxaData)
+	desc <- lapply(taxaData[,1],function(x) (taxaData[taxaData[,2] == x,1])[!is.na(taxaData[taxaData[,2] == x,1])])
 	ndesc <- sapply(desc,length)
 	rank <- numeric(length(ndesc))
 	rank[ndesc == 0] <- 1
 	rank[rank == 0] <- NA
 	while(any(is.na(rank))){
 		rank <- sapply(1:length(rank),function(x) ifelse(!is.na(rank[x]),rank[x],
-				1+max(rank[sapply(desc[[x]],function(y) which(y == taxad[,1]))])))}
+				1+max(rank[sapply(desc[[x]],function(y) which(y == taxaData[,1]))])))}
 	#okay, now all taxa are ranked by their depth from the tips
 	comp <- numeric(length(ndesc))
 	lab <- list()
@@ -138,8 +135,8 @@ taxa2cladogram <- function(taxad,drop.cryptic = FALSE,plot = FALSE){
 	tree1 <- paste(lab[[1]],";",sep = "")
 	tree2 <- read.tree(text = tree1)
 	tree2 <- cleanNewPhylo(tree2)
-	if(drop.cryptic & any(taxad[,6] != taxad[,1])){
-		tree2 <- drop.tip(tree2,tlabs[taxad[,6] != taxad[,1]])
+	if(drop.cryptic & any(taxaData[,6] != taxaData[,1])){
+		tree2 <- drop.tip(tree2,tlabs[taxaData[,6] != taxaData[,1]])
 		tree2 <- collapse.singles(tree2)
 		}
 	if(plot){plot(ladderize(tree2),show.tip.label = FALSE)}

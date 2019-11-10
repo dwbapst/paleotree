@@ -73,13 +73,16 @@ plot(kantoPIE,dominance)
 
 
 \dontrun{
-#######################
+#########################################
+#################################################
+#########################################################
 # Some Cool Ecology Stuff With Other Packages
 
 # basically all the analyses & visualizations
 		#for ecology in R that I think are awesome
 
 
+##########################################
 ###########################
 #Ordination (PCO, DCA)
 
@@ -129,7 +132,8 @@ plot(NNlist)
 #arrows point at the nearest neighbor of each sample
 	    # based on maximum Spearman rho correlation
 
-##################################
+#########################################
+#######################################################
 # Two Way Cluster With Heatmap
 
 # This example based on code provided by Max Christie
@@ -190,42 +194,90 @@ rainColors <- c("white", rainColors)
 	#siteDist and taxaDist made above by vegdist (bray-curtis)
 # scale is the relative abundance, let's label it as such
 
-
 dev.new(width = 10)
+
 #for some reason, mtext() doesn't recognize pheatmap as plot.new
 plot.new(width = 7) 
-pheatmap(siteStand, color = rainColors, breaks = colorBreaks, 
-	clustering_method = "ward.D", 
-	clustering_distance_rows = siteDist, 
-	clustering_distance_cols = taxaDist)
-mtext("Relative Abundance",side = 4,line = -1.4,adj = 0.95)
+
+pheatmap(
+   siteStand, 
+	  clustering_method = "ward.D", 
+	  clustering_distance_rows = siteDist, 
+	  clustering_distance_cols = taxaDist,
+   color = rainColors, 
+   breaks = colorBreaks
+   )
+mtext("Relative Abundance",
+   side = 4, line = -1.4, adj = 0.95)
 
 # pretty cool looking!
 
-##############################
+########################
+# even better: 
+   # twoWayEcologyCluster in paleotree
+
+dev.new(width=10)	
+
+twoWayEcologyCluster(
+    xDist = siteDist,
+    yDist = taxaDist,
+    propAbund = siteStandKanto,
+    cex.axisLabels = 0.8
+    )
+
+#########################################
+#########################################################
 ## Testing for differences between groups of sites
 
 #is there a difference between routes and non-routes
-groups <- rep(0,nrow(kanto))
-groups[grep(rownames(kanto),pattern = "Route")] <- 1
+groups <- rep(0, nrow(kanto))
+groups[grep(rownames(kanto), pattern = "Route")] <- 1
 
 #anosim (in vegan)
 	#are distances within groups smaller than distances between?
-#we could also use adonis from vegan instead 
 library(vegan)
+anosim(dat = kanto, grouping = groups)
 
-anosim(dat = kanto,grouping = groups)
-adonis(kanto~factor(groups))
-#both are very significant
+# we could also use PERMANOVA instead
+    # this is generally considered more robust than ANOSIM
+      # note that group needs to be factor for PERMANOVA
+groupsAsFactor <- factor(groups)
+adonis(kanto ~ groupsAsFactor)
 
-#alternative: using multivariate GLMs in mvabund
+# both analyses are very significant
+
+####################################################################
+# SIMPER analysis (SIMalarity PERcentages) in Vegan
+# which taxa contribute most to the difference between groups?
+     # this might be 'index' taxa for different communities
+# beware: it might also be the taxa that vary most within groups
+
+simperResult <- simper(comm = kanto, group = groupsAsFactor)
+simperResult
+
+# these are the species that account for at least 70\% of
+# differences between groups, based on Bray-Curtis distances
+
+# can see \% contribtion for all species with summary()
+    # as well as more detail in general...
+summary(simperResult)
+
+# other analyses to look into:
+   # SimProf to test clusters from a cluster analysis...
+
+#########################################################
+# alternative for differentiating groups:
+   # using multivariate GLMs in mvabund
 
 library(mvabund)
 
-ft <- manyglm(formula = kanto~factor(groups))
+ft <- manyglm(formula = kanto ~ groupsAsFactor)
 anova(ft)
-#also highly significant!
 
+# also highly significant!
+# note that this method though uses absolute abundances
+# it will not accepted
+    # which are usually impossible to get 
 
 }
 

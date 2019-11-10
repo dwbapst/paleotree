@@ -29,6 +29,9 @@ for(i in 1:100){
 	}
 # compare first tree with all others
 testEqual<-all(sapply(timetreesMBL,all.equal,timetreesMBL[[1]]))
-if(!testEqual){stop("Not all MBL trees are identical")}
+
+#if(!testEqual){stop("Not all MBL trees are identical")}
+
+expect_true(testEqual)
 
 })

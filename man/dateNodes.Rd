@@ -29,16 +29,19 @@ together. Thus, by default, this argument is \code{FALSE}.}
 }
 \value{
 Returns a vector of length \code{Ntip(tree) + Nnode(tree)} which contains the dates for
-all terminal tip nodes and internal nodes for the tree, in that order, as numbered in the \code{tree$edge}
-matrix. These dates are always on a descending scale (i.e. time before present);
-see help for argument \code{rootAge} for how
-the present time is determined. If \code{rootAge} is so defined that some nodes may occur later than
-time = 0 units before present, this function may (confusingly) return negative dates and a 
-warning message will be issued.
+all terminal tip nodes and internal nodes for the tree, in that order,
+as numbered in the \code{tree$edge} matrix.
+These dates are always on a descending scale (i.e. time before present);
+see help for argument \code{rootAge} for how the present time is determined.
+If \code{rootAge} is so defined that some nodes may occur later than
+time = 0 units before present, this function may (confusingly)
+return negative dates and a warning message will be issued.
 }
 \description{
-This function returns the ages of nodes (both internal and terminal tips) for a given phylogeny
-of class 'phylo'. Specialized for use with time-scaled trees from paleotree, see Details.
+This function returns the ages of nodes (both internal and terminal tips)
+for a given phylogeny of class 'phylo'.
+Its use is pecialized for application to time-scaled trees from paleotree,
+see Details below.
 }
 \details{
 This function is specialized for phylo objects time-scaled or simulated with functions from

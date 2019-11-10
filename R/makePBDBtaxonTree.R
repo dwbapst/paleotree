@@ -182,6 +182,7 @@
 #' ####################################################
 #' # let's try some other groups
 #' 
+#' ###################################
 #' #conodonts
 #' conoData <- getCladeTaxaPBDB("Conodonta")
 #' conoTree <- makePBDBtaxonTree(
@@ -194,6 +195,7 @@
 #' # pause 3 seconds so we don't spam the API
 #' Sys.sleep(3)
 #' 
+#' #############################
 #' #asaphid trilobites
 #' asaData <- getCladeTaxaPBDB("Asaphida")
 #' asaTree <- makePBDBtaxonTree(
@@ -206,6 +208,7 @@
 #' # pause 3 seconds so we don't spam the API
 #' Sys.sleep(3)
 #' 
+#' ###############################
 #' #Ornithischia
 #' ornithData <- getCladeTaxaPBDB("Ornithischia")
 #' ornithTree <- makePBDBtaxonTree(
@@ -220,17 +223,18 @@
 #' #try Linnean!
 #' 
 #' #but first... need to drop repeated taxon first: Hylaeosaurus
-#' findHylaeo <- ornithData$taxon_name == "Hylaeosaurus"
+#'     # actually this taxon seems to have been repaired 
+#'     # as of September 2019 !
+#' # findHylaeo <- ornithData$taxon_name == "Hylaeosaurus"
 #' # there's actually only one accepted ID number
-#' HylaeoIDnum <- unique(ornithData[findHylaeo,"taxon_no"])
-#' HylaeoIDnum 
-#' 
+#' # HylaeoIDnum <- unique(ornithData[findHylaeo,"taxon_no"])
+#' # HylaeoIDnum 
 #' # so, take which one has occurrences listed
-#' dropThis <- which((ornithData$n_occs < 1) & findHylaeo)
-#' ornithDataCleaned <- ornithData[-dropThis,]
+#' # dropThis <- which((ornithData$n_occs < 1) & findHylaeo)
+#' # ornithDataCleaned <- ornithData[-dropThis,]
 #' 
 #' ornithTree <- makePBDBtaxonTree(
-#'     ornithDataCleaned,
+#'     ornithData,
 #'     rankTaxon = "genus",
 #'     method = "Linnean")
 #' plotTaxaTreePBDB(ornithTree)
@@ -238,7 +242,7 @@
 #' 	# pause 3 seconds so we don't spam the API
 #' 	Sys.sleep(3)
 #' 
-#' 
+#' #########################
 #' # Rhynchonellida
 #' rynchData <- getCladeTaxaPBDB("Rhynchonellida")
 #' rynchTree <- makePBDBtaxonTree(

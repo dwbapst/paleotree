@@ -32,7 +32,7 @@
 #' a clipped branch with the earliest appearing tip descendant of that branch. 
 #' Alternatively, if \code{tipLabels = "allDesc"},
 #' these tips can instead be labeled with a compound label consisting of
-#' all descendants that were on the cropped branch, seperated by semi-colons.
+#' all descendants that were on the cropped branch, separated by semi-colons.
 
 #' @param plot If \code{TRUE}, plots input and output trees for comparison.
 

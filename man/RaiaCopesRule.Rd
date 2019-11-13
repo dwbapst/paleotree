@@ -12,7 +12,7 @@
 \title{Dated Trees and Trait Data for Ammonites, Ceratopsians and Cervids from Raia et al. 2015}
 \format{The attached datasets consist of three phylogenetic trees as \code{phylo} objects, a \code{data.frame} consisting of
 three traits for ammonites (the third trait is the log of stratigraphic duration), and the two physical traits (shell
-size and suture complexity) as seperate vectors, with taxon names.}
+size and suture complexity) as separate vectors, with taxon names.}
 \source{
 These datasets were taken from the following study:
 Raia, P., F. Passaro, F. Carotenuto, L. Maiorino, P. Piras, L. Teresi, S. Meiri,

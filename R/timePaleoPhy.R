@@ -148,17 +148,11 @@
 #' uneven size. Taxa alive in the modern should be listed as last 
 #' occurring in a time interval that begins at time 0 and ends at time 0. If taxa 
 #' occur only in single collections (i.e. their first and last appearance in the 
-#' fossil record is synchronous, the argument point.occur will force all taxa
+#' fossil record is synchronous, the argument \code{point.occur} will force all taxa
 #' to have instantaneous durations in the fossil record. Otherwise, by default,
 #' taxa are assumed to first and last appear in the fossil record at different points
-#' in time, with some positive duration. The sites matrix can be used to force
+#' in time, with some positive duration. The \code{sites} matrix can be used to force
 #' only a portion of taxa to have simultaneous first and last appearances.
-#' 
-#' By setting the argument nonstoch.bin to TRUE for \code{bin_timePaleoPhy}, the dates are NOT
-#' stochastically pulled from uniform bins but instead FADs are assigned to the
-#' earliest time of whichever interval they were placed in and LADs are placed
-#' at the most recent time in their placed interval. This option may be useful
-#' for plotting. The sites argument becomes arbitrary if \code{nonstoch.bin = TRUE}.
 #' 
 #' If \code{timeData} or the elements of \code{timeList} are actually \code{data.frames} (as output
 #' by \code{read.csv} or \code{read.table}), these will be coerced to a matrix.
@@ -307,8 +301,16 @@
 #' taxon appearance dates. The rownames of the second matrix should be the taxon IDs,
 #' identical to the \code{tip.labels} for tree. See details.
 
-#' @param nonstoch.bin If \code{TRUE}, dates are not stochastically pulled from
-#' uniform distributions. See below for more details.
+#' @param nonstoch.bin If \code{nonstoch.bin = TRUE} (the default is \code{FALSE},
+#' dates are \emph{not} stochastically drawn from
+#' uniform distributions bounded by the upper and lower boundaries
+#' of the geologic intervals (the 'bins'), as typically occurs with '\code{bin_}'
+#' time-scaling methods in \code{paleotree} but instead first-appearance dates are
+#' assigned to the earliest time of the interval a taxon first appears in, while 
+#' last-appearance dates are placed at the youngest (the 'later-most') date in the
+#' interval that that taxon last appears in.  This option may be useful for plotting.
+#' Note that if \code{nonstoch.bin = TRUE}, the \code{sites} argument becomes arbitrary
+#' and has no influence on the output.
 
 #' @param sites Optional two column matrix, composed of site IDs for taxon FADs
 #' and LADs. The sites argument allows users to constrain the placement of

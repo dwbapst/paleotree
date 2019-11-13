@@ -24,25 +24,27 @@ collected at that site. For function \code{pairwiseSpearmanRho}, the input
 vector (an object with only one dimension) will be treated as if it was
 matrix with a single row and number of columns equal to its length.}
 
-\item{dropAbsent}{Should absent taxa be dropped? Must be one of either 'bothAbsent' (drop taxa
-absent in both sites for a given pairwise comparison),'eitherAbsent' (drop taxa absent in either
-site), or 'noDrop' (drop none of the taxa). The default 'bothAbsent' is recommended, see examples.}
+\item{dropAbsent}{Should absent taxa be dropped? Must be one of either: 
+\code{dropAbsent = 'bothAbsent'} (drop taxa absent in both sites for a given pairwise comparison), 
+\code{dropAbsent = 'eitherAbsent'} (drop taxa absent in either site), or 
+\code{dropAbsent = 'noDrop'} (drop none of the taxa absent in either site). 
+The default \code{dropAbsent = 'bothAbsent'} is recommended; see examples.}
 
 \item{asDistance}{Should the rho coefficients be rescaled on a scale similar to
 dissimilarity metrics, i.e. bounded 0 to 1, with 1 representing maximum dissimilarity (i.e.
-a Spearman rho correlation of -1)? ( dissimilarity = (1 - rho) / 2 )}
+a Spearman rho correlation of -1)? (Note that dissimilarity = (1 - rho) / 2 )}
 
 \item{diag}{Should the diagonal of the output distance matrix be included?}
 
 \item{upper}{Should the upper triangle of the output distance matrix be included?}
 
-\item{na.rm}{Should taxa listed with NA values be dropped from a pair-wise site comparison?
-If FALSE, the returned value for that site pair will be NA if NAs are present.}
+\item{na.rm}{Should taxa listed with \code{NA} values be dropped from a pair-wise site comparison?
+If \code{na.rm = FALSE}, the returned value for that site pair will be NA if NAs are present.}
 
-\item{nAnalyze}{Allows users to select that PIE be calculated only on \code{nAnalyze} most
-abundant taxa in a site sample. \code{nAnalyze} must be a vector of length 1, consisting of
-whole-number value at least equal to 2. By default, \code{nAnalyze = Inf} so all taxa are
-accepted. Note that if there are less taxa in a sample than nAnalyze, the number present will
+\item{nAnalyze}{Allows users to select that PIE be calculated only on the \code{nAnalyze} 
+most-abundant taxa in a site sample. \code{nAnalyze} must be a vector of \code{length = 1}, 
+consisting of a whole-number value greater than 1. By default, \code{nAnalyze = Inf} so all taxa are
+accepted. Note that if there are less taxa in a sample than \code{nAnalyze}, the number present will
 be used.}
 }
 \value{
@@ -166,7 +168,7 @@ barplot(kantoPIE_5,las = 3,cex.names = 0.7,
 par(parX)
 }
 \references{
-Hurlbert, S. H. 1971. The nonconcept of species diversity:
+Hurlbert, S. H. 1971. The \emph{nonconcept} of species diversity:
 a critique and alternative parameters. \emph{Ecology} 52(4):577-586.
 }
 \seealso{

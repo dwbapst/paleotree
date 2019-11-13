@@ -328,11 +328,11 @@
 
 #' @return The output of these functions is a time-scaled tree or set of
 #' time-scaled trees, of either class \code{phylo} or \code{multiphylo}, depending on the
-#' argument ntrees. All trees are output with an element $root.time. This is
+#' argument \code{ntrees}. All trees are output with an element $root.time. This is
 #' the time of the root on the tree and is important for comparing patterns
 #' across trees. Note that the $root.time element is defined relative to the
 #' earliest first appearance date, and thus later tips may seem to occur in
-#' the distant future under the 'aba' and 'zbla' time-scaling methods.
+#' the distant future under the \code{"aba"} and \code{"zbla"} time-scaling methods.
 #' 
 #' Trees created with \code{bin_timePaleoPhy} will output with some additional
 #' elements, in particular $ranges.used, a matrix which records the

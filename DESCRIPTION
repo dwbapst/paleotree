@@ -18,7 +18,9 @@ Imports:
 	png,
 	RCurl,
 	utils
-Suggests: testthat
+Suggests:
+    spelling, testthat
+Language: en-US
 ByteCompile: TRUE
 Encoding: UTF-8
 Maintainer: David W. Bapst <dwbapst@gmail.com>

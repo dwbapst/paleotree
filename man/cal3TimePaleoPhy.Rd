@@ -334,7 +334,10 @@ be mistaken as the FADs and LADs desired by \code{cal3TimePaleoPhy}, as \code{ca
 will use the earliest dates provided to calibrate node ages, which is either
 an overly conservative approach to time-scaling or fairly nonsensical.
 
-Alternatively to using \code{cal3TimePaleoPhy}, \code{bin_cal3TimePaleoPhy} is a wrapper of 
+If you have time-data in discrete intervals, consider using 
+\code{bin_cal3TimePaleoPhy} as an alternative to \code{cal3TimePaleoPhy}.
+
+\code{bin_cal3TimePaleoPhy} is a wrapper of 
 \code{cal3TimePaleoPhy} which produces time-scaled trees for datasets which only have 
 interval data available. For each output tree, taxon first and last appearance 
 dates are placed within their listed intervals under a uniform distribution. 

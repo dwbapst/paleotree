@@ -4,7 +4,6 @@
 addons:
   apt:
     packages:
-      - libgsl2
       - libgslcblas0
       - gsl-bin
       - libgsl-dev

@@ -1607,24 +1607,24 @@ simFossilRecord <- function(
 				}
 			###########################################
 			#
-			#accepting or rejecting runs
+			# accepting or rejecting runs
 			#
-			#discussion with Smits 05/11/15
-				#real run condition is max limits / total ext
+			# discussion with Smits 05/11/15
+				# real run condition is max limits / total ext
 					# for typical birth-death simulators
-				#minimums are just for acceptability of runs when they hit run conditions
+				# minimums are just for acceptability of runs when they hit run conditions
 			#
 			# NEED TO AVOID HARTMANN ET AL. EFFECT ---- simFossilTaxa did it wrong!!
 				# sample simulation from intervals where it 'matched' run conditions
 			#
-			#(1) continue = TRUE until max totalTime, max nTotalTaxa, 
+			# (1) continue = TRUE until max totalTime, max nTotalTaxa, 
 					# nSamp or total extinction
 				# none of these can REVERSE in a FORARD TIME simulation
 			#
-			#(2) then go back, find all interval for which run conditions were met
+			# (2) then go back, find all interval for which run conditions were met
 				# if no acceptable intervals, reject run
 			#
-			#(3) randomly sample within intervals for a single date
+			# (3) randomly sample within intervals for a single date
 				# apply timeSliceFossilRecord
 			#
 			###########################################
@@ -1684,7 +1684,7 @@ simFossilRecord <- function(
 				# save as is in rejected simulation list
 			# 
 			# give it a class...
-			class(taxa) <- 'fossilRecordSimulation'	
+			attr(taxa, "class") <- c("fossilRecordSimulation", class(taxa))			
 			# slice at current time (or 0, whichever is greater)
 			slicingDate <- max(c(0, currentTime))
 			#
@@ -1716,7 +1716,8 @@ simFossilRecord <- function(
 				# need to convert to backwards currentTime
 			slicingDate <- runConditions$totalTime[2] - passedDate
 			#
-			class(taxa) <- 'fossilRecordSimulation'
+			# give it a class...
+			attr(taxa, "class") <- c("fossilRecordSimulation", class(taxa))	
 			#
 			# now time slice
 				# if stop and there are extant, evaluate if sampled at modern
@@ -1728,7 +1729,7 @@ simFossilRecord <- function(
 				modern.samp.prob = modern.samp.prob
 				)		
 			#
-			#browser()
+			# browser()
 			#
 			# FINAL CONDITION CHECK
 			# test that the produced taxa object actually passed the runConditions
@@ -1744,7 +1745,7 @@ simFossilRecord <- function(
 		##############################################################################
 		# FINAL CHECKS FOR ALL RUNS (Accepted and Rejected)
 		#
-		#are there any non-identical taxa in a simulation with pure cryptic speciation?
+		# are there any non-identical taxa in a simulation with pure cryptic speciation?
 		if(anag.rate == 0 & prop.cryptic == 1 & startTaxa == 1){
 			taxaIDsTest <- sapply(taxa,function(x) x[[1]][6])
 			namesIdenticalTest <- !sapply(taxaIDsTest,function(x) 
@@ -1763,8 +1764,8 @@ simFossilRecord <- function(
 		#
 		################################################################################
 		#
-		#name each normal taxon as t + ID 
-			#cryptic taxa are cryptic id + . taxon number within that complex
+		# name each normal taxon as t + ID 
+			# cryptic taxa are cryptic id + . taxon number within that complex
 		names(taxa) <- getTaxaNames(taxa = taxa)
 		#sort if sortNames
 		if(sortNames){

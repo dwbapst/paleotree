@@ -391,7 +391,7 @@ constrainParPaleo <- function(f, ..., formulae = NULL, names = parnames(f),extra
 			}
 		return(res)
 		}
-	class(g) <- c("constrained", class(f))
+	attr(g, "class") <- c("constrained", class(f))
 	attr(g, "parnames") <- final
 	attr(g, "parbounds") <- bounds
 	attr(g, "formulae") <- formulae

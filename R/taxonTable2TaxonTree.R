@@ -138,7 +138,7 @@ taxonTable2taxonTree <- function(taxonTable, cleanTree = TRUE, rootLabel = "root
 	nodes <- cbind(c(1:Ntip,nodes),c(1:Ntip,rev(nodes)))
 	edge[,1] <- sapply(edge[,1],function(x) nodes[x == nodes[,1],2])
 	edge[,2] <- sapply(edge[,2],function(x) nodes[x == nodes[,1],2])
-	#check root
+	# check root
 	nodes <- sort(unique(edge[,1]))
 	root <- nodes[sapply(nodes,function(x) all(x != edge[,2]))]
 	if(length(root) > 1){
@@ -147,13 +147,15 @@ taxonTable2taxonTree <- function(taxonTable, cleanTree = TRUE, rootLabel = "root
 	if(root != (Ntip+1)){
 		stop("Root isn't renumbering correctly")
 		}
-	#reorder edge
+	# reorder edge
 	edge <- edge[order(edge[,1],edge[,2]),]
-	#make the tree
+	# make the tree
 	tree <- list(edge = edge,tip.label = tip.label,edge.length = edge.length,
 		Nnode = Nnode,node.label = rev(node.label))	
-	class(tree) <- "phylo"
-	if(cleanTree){ #make it a good tree
+	# give the tree class phylo
+	attr(tree, "class") <- c("phylo", class(tree))
+	# make it a good tree
+	if(cleanTree){ 
 		#print(tree$edge)
 		tree <- cleanNewPhylo(tree)
 		}

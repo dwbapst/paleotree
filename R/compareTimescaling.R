@@ -130,7 +130,8 @@ compareNodeAges <- function(
 		trees2 <- tree2
 	}else{		#if it isn't multiphylo, make it into one!
 		trees2 <- list(tree2)
-		class(trees2) <- "multiPhylo"
+		# give class multiphylo
+		attr(trees2, "class") <- c("multiPhylo", class(trees2))		
 		}
 	#okay, need to find all matches common to tree1 and tree2
 		#we'll make a MATRIX of all clades held in common between

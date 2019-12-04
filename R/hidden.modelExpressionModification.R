@@ -4,7 +4,7 @@ make_paleotreeFunc <- function(f,parnames,parbounds){
 	#this should be a hidden function!!
 	np <- length(parnames)	#number of parameters 
 	#just automates making a paleotreeFunc
-	attr(f,"class") <- c("paleotreeFunc",class(f))
+	attr(f, "class") <- c("paleotreeFunc", class(f))
 	#parnames
 	value <- as.character(parnames)
 	if(any(is.na(value))){stop("NA values in parnames replacement")}

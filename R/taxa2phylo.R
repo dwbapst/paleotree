@@ -391,7 +391,8 @@ taxa2phylo <- function(
 		Nnode = length(unique(edgf[,1]))
 		)
 	#
-	class(tree1) <- "phylo"						
+	# give the tree class phylo
+	attr(tree1,"class") <- c("phylo", class(tree1))
 	#
 	#NOW ITS A TREE!
 	#

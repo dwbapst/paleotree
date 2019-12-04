@@ -377,7 +377,8 @@ obtainDatedPosteriorTreesMrB <- function(
 		}
 	# concatanate trees from each run
 	lumpTrees <- unlist(rescaledTrees,recursive = FALSE)
-	class(lumpTrees) <- "multiPhylo"
+	# give class multiphylo
+	attr(lumpTrees, "class") <- c("multiPhylo", class(lumpTrees))
 	#
 	##########################################
 	#

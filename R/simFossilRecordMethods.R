@@ -167,10 +167,12 @@
 #' @rdname simFossilRecordMethods
 #' @export
 timeSliceFossilRecord <- function(
-            fossilRecord, sliceTime,  shiftRoot4TimeSlice = FALSE,
-  modern.samp.prob = 1, 
-  tolerance = 10^-6
-){
+                     fossilRecord, 
+                     sliceTime, 
+                     shiftRoot4TimeSlice = FALSE, 
+                     modern.samp.prob = 1, 
+                     tolerance = 10^-6
+                     ){
   ########################################################
   #take a fossilRecord data object and cut it at some specific date
   #
@@ -369,7 +371,7 @@ timeSliceFossilRecord <- function(
   }
   #
   # make sure it has the right class
-  class(fossilRecord) <- 'fossilRecordSimulation'
+  attr(fossilRecord, "class") <- c("fossilRecordSimulation", class(fossilRecord))	  
   # 
   return(fossilRecord)
 }
@@ -399,7 +401,8 @@ fossilTaxa2fossilRecord<-function(fossilTaxa){
   )
   #
   names(fossilRecord) <- rownames(fossilTaxa)
-  class(fossilRecord) <- 'fossilRecordSimulation'
+  # make sure it has the right class
+  attr(fossilRecord, "class") <- c("fossilRecordSimulation", class(fossilRecord))
   #
   # CHECKS
   checkResult <- checkFossilRecord(fossilRecord)
@@ -411,8 +414,14 @@ fossilTaxa2fossilRecord<-function(fossilTaxa){
 
 #' @rdname simFossilRecordMethods
 #' @export	
-fossilRecord2fossilRanges <- function(fossilRecord, merge.cryptic = TRUE, ranges.only = TRUE){
-  # a function that transforms a simfossilrecord to a set of ranges (like from sampleRanges)
+fossilRecord2fossilRanges <- function(
+                 fossilRecord, 
+                 merge.cryptic = TRUE, 
+                 ranges.only = TRUE
+                 ){
+  ###################################
+  # a function that transforms a simfossilrecord 
+       # to a set of ranges (like from sampleRanges)
   # merge.cryptic = TRUE or FALSE
   # ranges.only or sampling times?
   # CHECKS
@@ -449,9 +458,9 @@ fossilRecord2fossilRanges <- function(fossilRecord, merge.cryptic = TRUE, ranges
   #
   #convert sampling events to FADs and LADs
   if(ranges.only){
-    ranges <- cbind(sapply(sampOcc,max),sapply(sampOcc,min))
+    ranges <- cbind(sapply(sampOcc, max),sapply(sampOcc, min))
     rownames(ranges) <- names(sampOcc)
-    colnames(ranges) <- c("FAD","LAD")
+    colnames(ranges) <- c("FAD", "LAD")
     result <- ranges
   }else{
     result <- sampOcc
@@ -462,7 +471,7 @@ fossilRecord2fossilRanges <- function(fossilRecord, merge.cryptic = TRUE, ranges
 
 # don't export
 checkFossilRecord <- function(fossilRecord){
-  if(!inherits(fossilRecord,"fossilRecordSimulation")){
+  if(!inherits(fossilRecord, what = "fossilRecordSimulation")){
     stop(
       "fossilRecord object is not of class 'fossilRecordSimulation'"
     )

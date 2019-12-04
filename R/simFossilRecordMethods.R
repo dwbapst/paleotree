@@ -4,7 +4,7 @@
 #' and editing the objects of class \code{fossilRecordSimulation} output
 #' from function \code{simFossilRecord}.
 
-#' @name simFossilRecordMethods
+#' @name simFossilRecordMethods 
 
 #' @details
 #' These functions exist to manipulate \code{fossilRecordSimulation} objects
@@ -162,7 +162,8 @@
 #' FADs <- ranges[,1]
 #' treeFAD <- taxa2phylo(taxa,
 #'     FADs,plot = TRUE)
-#' 
+#' 
+
 #' @rdname simFossilRecordMethods
 #' @export
 timeSliceFossilRecord <- function(

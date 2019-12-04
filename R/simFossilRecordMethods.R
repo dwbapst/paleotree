@@ -174,7 +174,7 @@ timeSliceFossilRecord <- function(
                      tolerance = 10^-6
                      ){
   ########################################################
-  #take a fossilRecord data object and cut it at some specific date
+  # take a fossilRecord data object and cut it at some specific date
   #
   # CHECKS
   checkResult <- checkFossilRecord(fossilRecord)
@@ -192,9 +192,9 @@ timeSliceFossilRecord <- function(
     )
   }
   #
-  #checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
+  # checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
   #
-  #check shiftRoot4TimeSlice
+  # check shiftRoot4TimeSlice
   shiftPar <- c(TRUE, FALSE, "withExtantOnly")
   shiftRoot4TimeSlice <- shiftPar[pmatch(shiftRoot4TimeSlice, shiftPar)]
   if(is.na(shiftRoot4TimeSlice)){
@@ -203,7 +203,7 @@ timeSliceFossilRecord <- function(
     )
   }
   #
-  #drop all taxa that originate after the sliceTime
+  # drop all taxa that originate after the sliceTime
   droppers <- sapply(fossilRecord,function(x) x[[1]][3]<sliceTime)
   #
   if(sum(droppers) == length(fossilRecord)){
@@ -212,9 +212,9 @@ timeSliceFossilRecord <- function(
   #
   fossilRecord <- fossilRecord[!droppers]
   #
-  #remove all sampling events after sliceTime
+  # remove all sampling events after sliceTime
   for(i in 1:length(fossilRecord)){
-    #remove all sampling events after (sliceTime + tolerance)
+    # remove all sampling events after (sliceTime + tolerance)
     fossilRecord[[i]][[2]] <- fossilRecord[[i]][[2]][
       fossilRecord[[i]][[2]] > (sliceTime + tolerance)
       ]
@@ -247,9 +247,9 @@ timeSliceFossilRecord <- function(
   })
   #
   # troubleshooting...
-  #browser()
-  #message(shiftRoot4TimeSlice)
-  #message("if you see this message works")
+  # browser()
+  # message(shiftRoot4TimeSlice)
+  # message("if you see this message works")
   #
   if(shiftRoot4TimeSlice == "withExtantOnly"){
     if(any(isAlive)){
@@ -257,7 +257,7 @@ timeSliceFossilRecord <- function(
     }else{
       shiftRoot4TimeSlice <- FALSE
     }
-    #print(shiftRoot4TimeSlice)
+    # print(shiftRoot4TimeSlice)
   }
   #
   # if shiftRoot4TimeSlice, then the whole thing shifts so time = 0 is slice time
@@ -273,18 +273,18 @@ timeSliceFossilRecord <- function(
       #
       if(isAlive[i]){
         #
-        #print("live taxon found")
-        #print("Original taxon")
-        #print(fossilRecord[[i]])
-        #print("Slice Time")
-        #print(sliceTime)
+        # print("live taxon found")
+        # print("Original taxon")
+        # print(fossilRecord[[i]])
+        # print("Slice Time")
+        # print(sliceTime)
         #
-        #turn all taxa that went extinct after sliceTime so they are still alive
+        # turn all taxa that went extinct after sliceTime so they are still alive
         fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3] - sliceTime
         fossilRecord[[i]][[1]][4:5] <- c(0, 1)
         #
-        #print("New Taxon")
-        #print(fossilRecord[[i]])
+        # print("New Taxon")
+        # print(fossilRecord[[i]])
         #
       }else{
         newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4] - sliceTime
@@ -365,7 +365,7 @@ timeSliceFossilRecord <- function(
   )
   whichSampled <- whichExtant[liveSampled]
   #
-  #add sampling event at modern
+  # add sampling event at modern
   for(i in whichSampled){
     fossilRecord[[i]][[2]] <- c(fossilRecord[[i]][[2]],modernTime)
   }
@@ -430,17 +430,17 @@ fossilRecord2fossilRanges <- function(
   checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
   #
   sampData <- lapply(fossilRecord,function(x) x[[2]]) 
-  #get sampOcc : separate out the sampling events
+  # get sampOcc : separate out the sampling events
   sampOcc <- lapply(fossilRecord,function(x) x[[2]])
   names(sampOcc) <- names(fossilRecord)
-  #merge cryptic taxa
+  # merge cryptic taxa
   if(merge.cryptic){
     taxonIDs <- sapply(fossilRecord,function(x) x[[1]][1])
     cryptIDs <- sapply(fossilRecord,function(x) x[[1]][6])
     for(i in 1:length(fossilRecord)){
       if(taxonIDs[i] == cryptIDs[i]){
-        #if its the original taxon, collect all sampling events
-        # for this cryptic complex into one pool
+        # if its the original taxon, collect all sampling events
+           # for this cryptic complex into one pool
         # browser()
         sampOcc[[i]] <- unlist(c(sampOcc[taxonIDs[i] == cryptIDs]))
         #check that its a vector
@@ -449,14 +449,14 @@ fossilRecord2fossilRanges <- function(
             "sampling data for taxa is not coercing correctly to a vector"
           )}
       }else{
-        #if its a cryptic taxon that didn't found the complex, erase its data
+        # if its a cryptic taxon that didn't found the complex, erase its data
         sampOcc[[i]] <- NA
       }
     }
   }
   sampOcc[sapply(sampOcc, length) == 0] <- NA
   #
-  #convert sampling events to FADs and LADs
+  # convert sampling events to FADs and LADs
   if(ranges.only){
     ranges <- cbind(sapply(sampOcc, max),sapply(sampOcc, min))
     rownames(ranges) <- names(sampOcc)

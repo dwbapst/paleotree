@@ -4,8 +4,7 @@
 \alias{equation2function}
 \title{Turn a Character String of the Right-Hand Side of an Equation into an R Function}
 \usage{
-equation2function(equation, envir = parent.frame(),
-  notName = "XXXXXXXXXXX")
+equation2function(equation, envir = parent.frame(), notName = "XXXXXXXXXXX")
 }
 \arguments{
 \item{equation}{The right-hand-side (RHS) of an equation, given as a character string.

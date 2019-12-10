@@ -6,20 +6,52 @@
 \alias{cal3}
 \title{Three Rate Calibrated \emph{a posteriori} Dating of Paleontological Phylogenies}
 \usage{
-cal3TimePaleoPhy(tree, timeData, brRate, extRate, sampRate, ntrees = 1,
-  anc.wt = 1, node.mins = NULL, dateTreatment = "firstLast",
-  FAD.only = FALSE, adj.obs.wt = TRUE, root.max = 200,
-  step.size = 0.1, randres = FALSE, noisyDrop = TRUE,
-  verboseWarnings = TRUE, diagnosticMode = FALSE, tolerance = 1e-04,
-  plot = FALSE)
+cal3TimePaleoPhy(
+  tree,
+  timeData,
+  brRate,
+  extRate,
+  sampRate,
+  ntrees = 1,
+  anc.wt = 1,
+  node.mins = NULL,
+  dateTreatment = "firstLast",
+  FAD.only = FALSE,
+  adj.obs.wt = TRUE,
+  root.max = 200,
+  step.size = 0.1,
+  randres = FALSE,
+  noisyDrop = TRUE,
+  verboseWarnings = TRUE,
+  diagnosticMode = FALSE,
+  tolerance = 1e-04,
+  plot = FALSE
+)
 
-bin_cal3TimePaleoPhy(tree, timeList, brRate, extRate, sampRate,
-  ntrees = 1, anc.wt = 1, node.mins = NULL,
-  dateTreatment = "firstLast", FAD.only = FALSE, sites = NULL,
-  point.occur = FALSE, nonstoch.bin = FALSE, adj.obs.wt = TRUE,
-  root.max = 200, step.size = 0.1, randres = FALSE,
-  noisyDrop = TRUE, verboseWarnings = TRUE, tolerance = 1e-04,
-  diagnosticMode = FALSE, plot = FALSE)
+bin_cal3TimePaleoPhy(
+  tree,
+  timeList,
+  brRate,
+  extRate,
+  sampRate,
+  ntrees = 1,
+  anc.wt = 1,
+  node.mins = NULL,
+  dateTreatment = "firstLast",
+  FAD.only = FALSE,
+  sites = NULL,
+  point.occur = FALSE,
+  nonstoch.bin = FALSE,
+  adj.obs.wt = TRUE,
+  root.max = 200,
+  step.size = 0.1,
+  randres = FALSE,
+  noisyDrop = TRUE,
+  verboseWarnings = TRUE,
+  tolerance = 1e-04,
+  diagnosticMode = FALSE,
+  plot = FALSE
+)
 }
 \arguments{
 \item{tree}{An unscaled cladogram of fossil taxa, of class \code{phylo}. Tip labels

@@ -6,9 +6,16 @@
 \alias{invSurv}
 \title{Inverse Survivorship Models in the Fossil Record}
 \usage{
-make_inverseSurv(timeList, groups = NULL, p_cont = TRUE,
-  q_cont = TRUE, PA_n = "fixed", PB_1 = 0, Nb = 1,
-  drop.extant = TRUE)
+make_inverseSurv(
+  timeList,
+  groups = NULL,
+  p_cont = TRUE,
+  q_cont = TRUE,
+  PA_n = "fixed",
+  PB_1 = 0,
+  Nb = 1,
+  drop.extant = TRUE
+)
 }
 \arguments{
 \item{timeList}{A 2 column matrix with the first and last occurrences of taxa

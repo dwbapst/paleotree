@@ -8,8 +8,14 @@
 \alias{ProbabilityInterspecificEncounter}
 \title{Miscellaneous Functions for Community Ecology}
 \usage{
-pairwiseSpearmanRho(x, dropAbsent = "bothAbsent", asDistance = FALSE,
-  diag = NULL, upper = NULL, na.rm = FALSE)
+pairwiseSpearmanRho(
+  x,
+  dropAbsent = "bothAbsent",
+  asDistance = FALSE,
+  diag = NULL,
+  upper = NULL,
+  na.rm = FALSE
+)
 
 HurlbertPIE(x, nAnalyze = Inf)
 }

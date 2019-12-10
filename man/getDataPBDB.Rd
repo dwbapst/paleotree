@@ -7,16 +7,26 @@
 \alias{getPBDBocc}
 \title{Obtaining Data for Taxa or Occurrences From Paleobiology Database API}
 \usage{
-getCladeTaxaPBDB(taxon, showTaxa = c("class", "parent", "app", "img",
-  "entname"), status = "accepted", urlOnly = FALSE,
-  stopIfMissing = FALSE)
+getCladeTaxaPBDB(
+  taxon,
+  showTaxa = c("class", "parent", "app", "img", "entname"),
+  status = "accepted",
+  urlOnly = FALSE,
+  stopIfMissing = FALSE
+)
 
-getSpecificTaxaPBDB(taxa, showTaxa = c("class", "parent", "app", "img",
-  "entname"), status = "accepted", urlOnly = FALSE,
-  stopIfMissing = FALSE)
+getSpecificTaxaPBDB(
+  taxa,
+  showTaxa = c("class", "parent", "app", "img", "entname"),
+  status = "accepted",
+  urlOnly = FALSE,
+  stopIfMissing = FALSE
+)
 
-getPBDBocc(taxa, showOccs = c("class", "classext", "subgenus", "ident",
-  "entname"))
+getPBDBocc(
+  taxa,
+  showOccs = c("class", "classext", "subgenus", "ident", "entname")
+)
 }
 \arguments{
 \item{taxon}{A single name of a of a higher taxon which you wish to catch

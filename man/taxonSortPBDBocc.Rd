@@ -4,8 +4,13 @@
 \alias{taxonSortPBDBocc}
 \title{Sorting Unique Taxa of a Given Rank from Paleobiology Database Occurrence Data}
 \usage{
-taxonSortPBDBocc(data, rank, onlyFormal = TRUE, cleanUncertain = TRUE,
-  cleanResoValues = c(NA, "\\"", "", "n. sp.", "n. gen.", " ", "  "))
+taxonSortPBDBocc(
+  data,
+  rank,
+  onlyFormal = TRUE,
+  cleanUncertain = TRUE,
+  cleanResoValues = c(NA, "\\"", "", "n. sp.", "n. gen.", " ", "  ")
+)
 }
 \arguments{
 \item{data}{A table of occurrence data collected from the Paleobiology Database.}

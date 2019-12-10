@@ -7,15 +7,36 @@
 \alias{phyloDiv}
 \title{Diversity Curves}
 \usage{
-taxicDivCont(timeData, int.length = 1, int.times = NULL, plot = TRUE,
-  plotLogRich = FALSE, timelims = NULL, drop.cryptic = FALSE)
+taxicDivCont(
+  timeData,
+  int.length = 1,
+  int.times = NULL,
+  plot = TRUE,
+  plotLogRich = FALSE,
+  timelims = NULL,
+  drop.cryptic = FALSE
+)
 
-taxicDivDisc(timeList, int.times = NULL, drop.singletons = FALSE,
-  plot = TRUE, plotLogRich = FALSE, timelims = NULL,
-  extant.adjust = 0.001, split.int = TRUE)
+taxicDivDisc(
+  timeList,
+  int.times = NULL,
+  drop.singletons = FALSE,
+  plot = TRUE,
+  plotLogRich = FALSE,
+  timelims = NULL,
+  extant.adjust = 0.001,
+  split.int = TRUE
+)
 
-phyloDiv(tree, int.length = 0.1, int.times = NULL, plot = TRUE,
-  plotLogRich = FALSE, drop.ZLB = TRUE, timelims = NULL)
+phyloDiv(
+  tree,
+  int.length = 0.1,
+  int.times = NULL,
+  plot = TRUE,
+  plotLogRich = FALSE,
+  drop.ZLB = TRUE,
+  timelims = NULL
+)
 }
 \arguments{
 \item{timeData}{Two-column matrix giving the per-taxon first and last

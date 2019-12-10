@@ -4,8 +4,12 @@
 \alias{createMrBayesConstraints}
 \title{Transform a Topology into a Set of Constraint Commands for MrBayes}
 \usage{
-createMrBayesConstraints(tree, partial = TRUE, file = NULL,
-  includeIngroupConstraint = FALSE)
+createMrBayesConstraints(
+  tree,
+  partial = TRUE,
+  file = NULL,
+  includeIngroupConstraint = FALSE
+)
 }
 \arguments{
 \item{tree}{An object of class \code{phylo}.}

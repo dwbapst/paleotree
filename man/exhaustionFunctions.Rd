@@ -7,15 +7,30 @@
 \alias{charExhaustPlot}
 \title{Analyses of the exhaustion of Character States Over Evolutionary History}
 \usage{
-accioExhaustionCurve(phyloTree, charData, charTypes = "unordered",
-  outgroup = NULL, firstAppearances = NULL, missingCharValue = "?",
-  inapplicableValue = "-")
+accioExhaustionCurve(
+  phyloTree,
+  charData,
+  charTypes = "unordered",
+  outgroup = NULL,
+  firstAppearances = NULL,
+  missingCharValue = "?",
+  inapplicableValue = "-"
+)
 
-accioBestAcquisitionModel(exhaustion_info, changesType,
-  models = c("exponential", "gamma", "lognormal", "zipf"))
+accioBestAcquisitionModel(
+  exhaustion_info,
+  changesType,
+  models = c("exponential", "gamma", "lognormal", "zipf")
+)
 
-charExhaustPlot(exhaustion_info, changesType, xlab = "Total Characters",
-  ylab = NULL, main = NULL, xsize = 3)
+charExhaustPlot(
+  exhaustion_info,
+  changesType,
+  xlab = "Total Characters",
+  ylab = NULL,
+  main = NULL,
+  xsize = 3
+)
 }
 \arguments{
 \item{phyloTree}{A phylogenetic tree of class \code{phylo}

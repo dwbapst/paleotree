@@ -5,17 +5,40 @@
 \alias{bin_timePaleoPhy}
 \title{Typical \emph{a posteriori} Time-Scaling Approaches For Paleontological Phylogenies}
 \usage{
-timePaleoPhy(tree, timeData, type = "basic", vartime = NULL,
-  ntrees = 1, randres = FALSE, timeres = FALSE, add.term = FALSE,
-  inc.term.adj = FALSE, dateTreatment = "firstLast",
-  node.mins = NULL, noisyDrop = TRUE, plot = FALSE)
+timePaleoPhy(
+  tree,
+  timeData,
+  type = "basic",
+  vartime = NULL,
+  ntrees = 1,
+  randres = FALSE,
+  timeres = FALSE,
+  add.term = FALSE,
+  inc.term.adj = FALSE,
+  dateTreatment = "firstLast",
+  node.mins = NULL,
+  noisyDrop = TRUE,
+  plot = FALSE
+)
 
-bin_timePaleoPhy(tree, timeList, type = "basic", vartime = NULL,
-  ntrees = 1, nonstoch.bin = FALSE, randres = FALSE,
-  timeres = FALSE, sites = NULL, point.occur = FALSE,
-  add.term = FALSE, inc.term.adj = FALSE,
-  dateTreatment = "firstLast", node.mins = NULL, noisyDrop = TRUE,
-  plot = FALSE)
+bin_timePaleoPhy(
+  tree,
+  timeList,
+  type = "basic",
+  vartime = NULL,
+  ntrees = 1,
+  nonstoch.bin = FALSE,
+  randres = FALSE,
+  timeres = FALSE,
+  sites = NULL,
+  point.occur = FALSE,
+  add.term = FALSE,
+  inc.term.adj = FALSE,
+  dateTreatment = "firstLast",
+  node.mins = NULL,
+  noisyDrop = TRUE,
+  plot = FALSE
+)
 }
 \arguments{
 \item{tree}{An unscaled cladogram of fossil taxa, of class \code{phylo}. Tip labels

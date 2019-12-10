@@ -4,8 +4,13 @@
 \alias{plotOccData}
 \title{Plotting Occurrence Data Across Taxa}
 \usage{
-plotOccData(occList, groupLabel = NULL, occColors = NULL,
-  lineWidth = NULL, xlims = NULL)
+plotOccData(
+  occList,
+  groupLabel = NULL,
+  occColors = NULL,
+  lineWidth = NULL,
+  xlims = NULL
+)
 }
 \arguments{
 \item{occList}{A list where every element is a table of occurrence data for a different taxon,

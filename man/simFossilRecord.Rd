@@ -4,14 +4,31 @@
 \alias{simFossilRecord}
 \title{Full-Scale Simulations of the Fossil Record with Birth, Death and Sampling of Morphotaxa}
 \usage{
-simFossilRecord(p, q, r = 0, anag.rate = 0, prop.bifurc = 0,
-  prop.cryptic = 0, modern.samp.prob = 1, startTaxa = 1, nruns = 1,
-  maxAttempts = Inf, totalTime = c(0, 1000), nTotalTaxa = c(1, 1000),
-  nExtant = c(0, 1000), nSamp = c(0, 1000), returnAllRuns = FALSE,
-  tolerance = 10^-6, maxStepTime = 0.01,
-  shiftRoot4TimeSlice = "withExtantOnly", count.cryptic = FALSE,
-  negRatesAsZero = TRUE, print.runs = FALSE, sortNames = FALSE,
-  plot = FALSE)
+simFossilRecord(
+  p,
+  q,
+  r = 0,
+  anag.rate = 0,
+  prop.bifurc = 0,
+  prop.cryptic = 0,
+  modern.samp.prob = 1,
+  startTaxa = 1,
+  nruns = 1,
+  maxAttempts = Inf,
+  totalTime = c(0, 1000),
+  nTotalTaxa = c(1, 1000),
+  nExtant = c(0, 1000),
+  nSamp = c(0, 1000),
+  returnAllRuns = FALSE,
+  tolerance = 10^-6,
+  maxStepTime = 0.01,
+  shiftRoot4TimeSlice = "withExtantOnly",
+  count.cryptic = FALSE,
+  negRatesAsZero = TRUE,
+  print.runs = FALSE,
+  sortNames = FALSE,
+  plot = FALSE
+)
 }
 \arguments{
 \item{p, q, r, anag.rate}{These parameters control the instantaneous

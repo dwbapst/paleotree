@@ -4,8 +4,13 @@
 \alias{timeSliceTree}
 \title{Time-Slicing a Phylogeny}
 \usage{
-timeSliceTree(ttree, sliceTime, drop.extinct = FALSE,
-  tipLabels = "earliestDesc", plot = TRUE)
+timeSliceTree(
+  ttree,
+  sliceTime,
+  drop.extinct = FALSE,
+  tipLabels = "earliestDesc",
+  plot = TRUE
+)
 }
 \arguments{
 \item{ttree}{A time-scaled phylogeny of class \code{phylo}.}

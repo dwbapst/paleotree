@@ -4,8 +4,12 @@
 \alias{fixRootTime}
 \title{Modify, Drop or Bind Terminal Branches of Various Types (Mainly for Paleontological Phylogenies)}
 \usage{
-fixRootTime(treeOrig, treeNew, testConsistentDepth = TRUE,
-  fixingMethod = "matchCladeTransferNodeAge")
+fixRootTime(
+  treeOrig,
+  treeNew,
+  testConsistentDepth = TRUE,
+  fixingMethod = "matchCladeTransferNodeAge"
+)
 }
 \arguments{
 \item{treeOrig}{A \code{phylo} object of a time-scaled

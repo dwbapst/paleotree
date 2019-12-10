@@ -4,8 +4,13 @@
 \alias{expandTaxonTree}
 \title{Extrapolating Lower-Level Taxon Phylogenies from Higher-Level Taxon Trees}
 \usage{
-expandTaxonTree(taxonTree, taxaData, collapse = NULL,
-  keepBrLen = FALSE, plot = FALSE)
+expandTaxonTree(
+  taxonTree,
+  taxaData,
+  collapse = NULL,
+  keepBrLen = FALSE,
+  plot = FALSE
+)
 }
 \arguments{
 \item{taxonTree}{A phylo object where tips represent higher taxa}

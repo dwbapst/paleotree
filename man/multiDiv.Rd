@@ -5,15 +5,36 @@
 \alias{plotMultiDiv}
 \title{Calculating Diversity Curves Across Multiple Datasets}
 \usage{
-multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE,
-  drop.ZLB = TRUE, drop.cryptic = FALSE, extant.adjust = 0.01,
-  plotLogRich = FALSE, yAxisLims = NULL, timelims = NULL,
-  int.times = NULL, plotMultCurves = FALSE, multRainbow = TRUE,
-  divPalette = NULL, divLineType = 1, main = NULL)
+multiDiv(
+  data,
+  int.length = 1,
+  plot = TRUE,
+  split.int = TRUE,
+  drop.ZLB = TRUE,
+  drop.cryptic = FALSE,
+  extant.adjust = 0.01,
+  plotLogRich = FALSE,
+  yAxisLims = NULL,
+  timelims = NULL,
+  int.times = NULL,
+  plotMultCurves = FALSE,
+  multRainbow = TRUE,
+  divPalette = NULL,
+  divLineType = 1,
+  main = NULL
+)
 
-plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL,
-  yAxisLims = NULL, plotMultCurves = FALSE, multRainbow = TRUE,
-  divPalette = NULL, divLineType = 1, main = NULL)
+plotMultiDiv(
+  results,
+  plotLogRich = FALSE,
+  timelims = NULL,
+  yAxisLims = NULL,
+  plotMultCurves = FALSE,
+  multRainbow = TRUE,
+  divPalette = NULL,
+  divLineType = 1,
+  main = NULL
+)
 }
 \arguments{
 \item{data}{A list where each element is a dataset, formatted to be input in

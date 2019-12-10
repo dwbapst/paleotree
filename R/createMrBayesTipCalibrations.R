@@ -65,16 +65,25 @@
 #' All taxa with their ages set to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
 #' are returned as a list within a commented line of the returned MrBayes block.
 
-#' @param anchorTaxon This argument may be a logical (default is \code{TRUE}, or a character string of length = 1.
-#' This argument has no effect if \code{ageCalibrationType} is not set to "uniformRange", but the argument may still be evaluated.
-#' If \code{ageCalibrationType = "uniformRange"}, MrBayes will do a tip-dating analysis with uniform age uncertainties on 
-#' all taxa (if such uncertainties exist; see \code{collapseUniform}). However, MrBayes does not record how each tree sits on an absolute time-scale,
-#' so if the placement of \emph{every} tip is uncertain, lining up multiple dated trees sampled from the posterior (where each tip's true age might
-#' differ) could be a nightmare to back-calculate, if not impossible. Thus, if \code{ageCalibrationType = "uniformRange"}, and there are no tip taxa given
-#' fixed dates due to \code{collapseUniform} (i.e. all of the tip ages have a range of uncertainty on them), then a particular taxon
-#' will be selected and given a fixed date equal to its earliest appearance time for its respective \code{whichAppearance}. This taxon can either be indicated by
-#' the user or instead the first taxon listed in \code{tipTimes} will be arbitrary selected. All taxa with their ages set
-#' to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform} are returned as a list within a commented line of the returned MrBayes block.
+#' @param anchorTaxon This argument may be a logical (default is \code{TRUE},
+#' or a character string of length = 1.
+#' This argument has no effect if \code{ageCalibrationType} is not set to
+#' \code{"uniformRange"}, but the argument may still be evaluated.
+#' If \code{ageCalibrationType = "uniformRange"}, 
+#' MrBayes will do a tip-dating analysis with uniform age uncertainties on 
+#' all taxa (if such uncertainties exist; see \code{collapseUniform}). 
+#' However, MrBayes does not record how each tree sits on an absolute time-scale,
+#' so if the placement of \emph{every} tip is uncertain, lining up multiple dated trees
+#'  sampled from the posterior (where each tip's true age might
+#' differ) could be a nightmare to back-calculate, if not impossible. 
+#' Thus, if \code{ageCalibrationType = "uniformRange"}, and there are no tip taxa given
+#' fixed dates due to \code{collapseUniform} (i.e. all of the tip ages have a range of uncertainty on them), 
+#' then a particular taxon will be selected and given a fixed date equal to its
+#' earliest appearance time for its respective \code{whichAppearance}.
+#' This taxon can either be indicated by the user or instead the first taxon listed
+#' in \code{tipTimes} will be arbitrary selected. All taxa with their ages set
+#' to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
+#' are returned as a list within a commented line of the returned MrBayes block.
 
 #' @param file Filename (possibly with path) as a character string
 #' to a file which will be overwritten with the output tip age calibrations.
@@ -107,25 +116,41 @@
 #' # uniform prior, with a 10 million year offset for
 #' 	# the expected tree age from the earliest first appearance
 #' 
-#' createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
-#' 	ageCalibrationType = "uniformRange", treeAgeOffset = 10)
+#' createMrBayesTipCalibrations(
+#'    tipTimes = retioRanges, 
+#'    whichAppearance = "first",
+#' 	  ageCalibrationType = "uniformRange", 
+#' 	  treeAgeOffset = 10)
 #' 
 #' # fixed prior, at the earliest bound for the first appearance
 #' 
-#' createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
-#' 	ageCalibrationType = "fixedDateEarlier", treeAgeOffset = 10)
+#' createMrBayesTipCalibrations(
+#'    tipTimes = retioRanges, 
+#'    whichAppearance = "first",
+#' 	  ageCalibrationType = "fixedDateEarlier", 
+#' 	  treeAgeOffset = 10
+#' 	  )
 #' 
 #' # fixed prior, sampled from between the bounds on the last appearance
 #' 	# you should probably never do this, fyi
 #' 
-#' createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
-#' 	ageCalibrationType = "fixedDateRandom", treeAgeOffset = 10)
+#' createMrBayesTipCalibrations(
+#'    tipTimes = retioRanges, 
+#'    whichAppearance = "first",
+#' 	  ageCalibrationType = "fixedDateRandom", 
+#' 	  treeAgeOffset = 10
+#' 	  )
 #' 
 #' 
 #' \dontrun{
 #' 
-#' createMrBayesTipCalibrations(tipTimes = retioRanges, whichAppearance = "first",
-#' 	ageCalibrationType = "uniformRange", treeAgeOffset = 10, file = "tipCalibrations.txt")
+#' createMrBayesTipCalibrations(
+#'    tipTimes = retioRanges, 
+#'    whichAppearance = "first",
+#' 	  ageCalibrationType = "uniformRange", 
+#' 	  treeAgeOffset = 10, 
+#' 	  file = "tipCalibrations.txt"
+#' 	  )
 #' 
 #' }
 #' 
@@ -169,7 +194,8 @@ createMrBayesTipCalibrations <- function(tipTimes,
 		"fixedDateEarlier","fixedDateLatter",
 		"fixedDateRandom","uniformRange"))){
 			stop('argument ageCalibrationType must be one of 
-				"fixedDateEarlier", "fixedDateLatter", "fixedDateRandom", or "uniformRange"')
+				"fixedDateEarlier", "fixedDateLatter",
+			  "fixedDateRandom", or "uniformRange"')
 		}
 	if(length(treeAgeOffset) != 1){
 		stop("treeAgeOffset must be of length 1")
@@ -235,7 +261,8 @@ createMrBayesTipCalibrations <- function(tipTimes,
 		pickFix <- FALSE
 		# test that its a real taxon
 		if(!any(anchorTaxon == taxonNames)){
-			stop("anchorTaxon appears to be a taxon name, but not found among rownames (presumed taxon names) in tipTimes")
+			stop("anchorTaxon appears to be a taxon name, but not found among
+			   rownames (presumed taxon names) in tipTimes")
 			}
 		}
 	####################################################################
@@ -262,13 +289,15 @@ createMrBayesTipCalibrations <- function(tipTimes,
 	misorderedTimes <- apply(tipTimes,1,function(z) diff(z[1:2]))>0.0001
 	if(any(misorderedTimes)){
 		#print(tipTimes)
-		stop(paste0("dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
+		stop(paste0(
+		  "dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
 			paste0(rownames(tipTimes)[misorderedTimes],collapse = " ")))
 		}
 	#and the other pair of dates
 	misorderedTimes <- apply(tipTimes,1,function(z) diff(z[3:4]))>0
 	if(any(misorderedTimes)){
-		stop(paste0("dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
+		stop(paste0(
+		  "dates in tipTimes do not appear to be correctly ordered from oldest to youngest: check ",
 			paste0(rownames(tipTimes)[misorderedTimes],collapse = " ")))
 		}	
 	#####################################################################
@@ -336,8 +365,9 @@ createMrBayesTipCalibrations <- function(tipTimes,
 			fixCollapse <- rep(FALSE,nrow(tipTimes))
 			}
 		# fix anchor taxon
-			# -Need to write code so that users are forced by default to constrain at least one
-			# taxon to a precise time (an anchor taxon) for sake of accurately dating tree on absolute time-scale	
+		    # NOTE: Need to write code so that users are forced by default to constrain at least one
+			     # taxon to a precise time (an anchor taxon)
+	         # for sake of accurately dating tree on absolute time-scale	
 		if(pickFix){
 			if(!any(fixCollapse)){
 				message(paste0("anchorTaxon not user-defined, forcing ",

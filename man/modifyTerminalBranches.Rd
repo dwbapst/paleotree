@@ -20,8 +20,15 @@ addTermBranchLength(tree, addtime = 0.001)
 
 dropPaleoTip(tree, ...)
 
-bindPaleoTip(tree, tipLabel, nodeAttach = NULL, tipAge = NULL,
-  edgeLength = NULL, positionBelow = 0, noNegativeEdgeLength = TRUE)
+bindPaleoTip(
+  tree,
+  tipLabel,
+  nodeAttach = NULL,
+  tipAge = NULL,
+  edgeLength = NULL,
+  positionBelow = 0,
+  noNegativeEdgeLength = TRUE
+)
 }
 \arguments{
 \item{tree}{A phylogeny as a phylo object. \code{dropPaleoTip} requires this
@@ -217,7 +224,7 @@ node <- 6
 newLength <- tree$root.time-tipAge-nodeheight(tree,node)
 tree1 <- bind.tip(tree,
     "tip.label",
-    where = node,\\
+    where = node,\
     edge.length = newLength)
 
 layout(1:2)

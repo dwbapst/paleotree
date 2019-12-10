@@ -5,9 +5,15 @@
 \alias{plotTaxaTreePBDB}
 \title{Creating a Taxon-Tree from Taxonomic Data Downloaded from the Paleobiology Database}
 \usage{
-makePBDBtaxonTree(taxaDataPBDB, rankTaxon, method = "parentChild",
-  tipSet = NULL, cleanTree = TRUE, annotatedDuplicateNames = TRUE,
-  APIversion = "1.2")
+makePBDBtaxonTree(
+  taxaDataPBDB,
+  rankTaxon,
+  method = "parentChild",
+  tipSet = NULL,
+  cleanTree = TRUE,
+  annotatedDuplicateNames = TRUE,
+  APIversion = "1.2"
+)
 
 plotTaxaTreePBDB(taxaTree, edgeLength = 1)
 }

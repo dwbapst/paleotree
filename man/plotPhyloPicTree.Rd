@@ -4,16 +4,29 @@
 \alias{plotPhyloPicTree}
 \title{Plot a Phylogeny with Organismal Silhouettes from PhyloPic, Called Via the Paleobiology Database API}
 \usage{
-plotPhyloPicTree(tree, taxaDataPBDB = tree$taxaDataPBDB,
-  maxAgeDepth = NULL, depthAxisPhylo = FALSE,
-  colorAxisPhylo = "black", addTaxonStratDurations = FALSE,
+plotPhyloPicTree(
+  tree,
+  taxaDataPBDB = tree$taxaDataPBDB,
+  maxAgeDepth = NULL,
+  depthAxisPhylo = FALSE,
+  colorAxisPhylo = "black",
+  addTaxonStratDurations = FALSE,
   taxaStratRanges = tree$tipTaxonFourDateRanges,
-  stratDurationBoxWidth = 0.7, sizeScale = 0.9,
-  removeSurroundingMargin = TRUE, orientation = "rightwards",
-  resetGrPar = TRUE, taxaColor = NULL, transparency = 1,
-  cacheDir = "cachedPhyloPicPNGs", cacheImage = TRUE,
-  noiseThreshold = 0.1, rescalePNG = TRUE, trimPNG = TRUE,
-  colorGradient = "original", ...)
+  stratDurationBoxWidth = 0.7,
+  sizeScale = 0.9,
+  removeSurroundingMargin = TRUE,
+  orientation = "rightwards",
+  resetGrPar = TRUE,
+  taxaColor = NULL,
+  transparency = 1,
+  cacheDir = "cachedPhyloPicPNGs",
+  cacheImage = TRUE,
+  noiseThreshold = 0.1,
+  rescalePNG = TRUE,
+  trimPNG = TRUE,
+  colorGradient = "original",
+  ...
+)
 }
 \arguments{
 \item{tree}{A phylogeny of class \code{phylo} which will be

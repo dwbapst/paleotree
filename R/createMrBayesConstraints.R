@@ -67,13 +67,18 @@
 #' @name createMrBayesConstraints
 #' @rdname createMrBayesConstraints
 #' @export
-createMrBayesConstraints <- function(tree,partial = TRUE,file = NULL,
-		includeIngroupConstraint = FALSE){
+createMrBayesConstraints <- function(
+    tree,
+    partial = TRUE,
+    file = NULL,
+		includeIngroupConstraint = FALSE
+		){
+  ######################
 	#checks
 	if(!inherits(tree,"phylo")){
 		stop("tree must be of class 'phylo'")
 		}
-	########################################################
+	##################################################
 	#get the splits
 	#
 	splits <- prop.part(tree)	#prop.part

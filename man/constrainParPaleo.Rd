@@ -4,8 +4,7 @@
 \alias{constrainParPaleo}
 \title{Constrain Parameters for a Model Function from paleotree}
 \usage{
-constrainParPaleo(f, ..., formulae = NULL, names = parnames(f),
-  extra = NULL)
+constrainParPaleo(f, ..., formulae = NULL, names = parnames(f), extra = NULL)
 }
 \arguments{
 \item{f}{A function to constrain. This function must be of S3 class

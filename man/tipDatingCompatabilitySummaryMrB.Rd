@@ -4,8 +4,13 @@
 \alias{tipDatingCompatabilitySummaryMrB}
 \title{Get the Compatibility Summary Topology From a Tip-Dating Analysis with MrBayes}
 \usage{
-tipDatingCompatabilitySummaryMrB(runFile, nRuns = 2, burnin = 0.5,
-  compatibilityThreshold = 0.5, labelPostProb = TRUE)
+tipDatingCompatabilitySummaryMrB(
+  runFile,
+  nRuns = 2,
+  burnin = 0.5,
+  compatibilityThreshold = 0.5,
+  labelPostProb = TRUE
+)
 }
 \arguments{
 \item{runFile}{A filename in the current directory,

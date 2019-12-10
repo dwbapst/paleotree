@@ -13,9 +13,17 @@
 \usage{
 simTermTaxa(ntaxa, sumRate = 0.2)
 
-simTermTaxaAdvanced(p = 0.1, q = 0.1, mintaxa = 1, maxtaxa = 1000,
-  mintime = 1, maxtime = 1000, minExtant = 0, maxExtant = NULL,
-  min.cond = TRUE)
+simTermTaxaAdvanced(
+  p = 0.1,
+  q = 0.1,
+  mintaxa = 1,
+  maxtaxa = 1000,
+  mintime = 1,
+  maxtime = 1000,
+  minExtant = 0,
+  maxExtant = NULL,
+  min.cond = TRUE
+)
 
 trueTermTaxaTree(TermTaxaRes, time.obs)
 
@@ -139,7 +147,7 @@ relationships and not \code{deadTree}. The arguments are thus similar to
 \code{simFossilRecord}, with some differences (as \code{simTermTaxaAdvanced}
 originally called the deprecated function \code{simFossilTaxa}).
 In particular, \code{simTermTaxaAdvanced} can be used to produce
-simulated datasets which have extant taxa.
+simulated datasets which have extant taxa. 
 
 \code{trueTermTaxaTree} is analogous to the function of \code{taxa2phylo}, in that it
 outputs the time-scaled-phylogeny for a terminal-taxon dataset for some

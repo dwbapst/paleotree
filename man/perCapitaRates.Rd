@@ -4,9 +4,15 @@
 \alias{perCapitaRates}
 \title{perCapitaRates}
 \usage{
-perCapitaRates(timeList, plot = TRUE, logRates = FALSE,
-  drop.extant = FALSE, isExtant = NULL, jitter = TRUE,
-  legendPosition = "topleft")
+perCapitaRates(
+  timeList,
+  plot = TRUE,
+  logRates = FALSE,
+  drop.extant = FALSE,
+  isExtant = NULL,
+  jitter = TRUE,
+  legendPosition = "topleft"
+)
 }
 \arguments{
 \item{timeList}{A list composed of two matrices, giving interval start and end 

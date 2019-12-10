@@ -4,8 +4,12 @@
 \alias{dateNodes}
 \title{Absolute Dates for Nodes of a Time-Scaled Phylogeny}
 \usage{
-dateNodes(tree, rootAge = tree$root.time, labelDates = FALSE,
-  tolerance = 0.001)
+dateNodes(
+  tree,
+  rootAge = tree$root.time,
+  labelDates = FALSE,
+  tolerance = 0.001
+)
 }
 \arguments{
 \item{tree}{A phylogeny object of class 'phylo'. Must have edge.lengths!}

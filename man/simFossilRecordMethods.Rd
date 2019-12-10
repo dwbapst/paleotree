@@ -8,16 +8,23 @@
 \alias{fossilTaxa2fossilRecord}
 \title{Methods for Editing or Converting Output from simFossilRecord}
 \usage{
-timeSliceFossilRecord(fossilRecord, sliceTime,
-  shiftRoot4TimeSlice = FALSE, modern.samp.prob = 1,
-  tolerance = 10^-6)
+timeSliceFossilRecord(
+  fossilRecord,
+  sliceTime,
+  shiftRoot4TimeSlice = FALSE,
+  modern.samp.prob = 1,
+  tolerance = 10^-6
+)
 
 fossilRecord2fossilTaxa(fossilRecord)
 
 fossilTaxa2fossilRecord(fossilTaxa)
 
-fossilRecord2fossilRanges(fossilRecord, merge.cryptic = TRUE,
-  ranges.only = TRUE)
+fossilRecord2fossilRanges(
+  fossilRecord,
+  merge.cryptic = TRUE,
+  ranges.only = TRUE
+)
 }
 \arguments{
 \item{fossilRecord}{A list object output by \code{simFossilRecord}, often composed

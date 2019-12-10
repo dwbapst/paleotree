@@ -6,8 +6,13 @@
 \alias{make_durationFreqDisc}
 \title{Models of Sampling and Extinction for Taxonomic Duration Datasets}
 \usage{
-make_durationFreqCont(timeData, groups = NULL, drop.extant = TRUE,
-  threshold = 0.01, tol = 1e-04)
+make_durationFreqCont(
+  timeData,
+  groups = NULL,
+  drop.extant = TRUE,
+  threshold = 0.01,
+  tol = 1e-04
+)
 
 make_durationFreqDisc(timeList, groups = NULL, drop.extant = TRUE)
 }

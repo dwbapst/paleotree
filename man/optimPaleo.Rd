@@ -10,7 +10,7 @@ optimPaleo(modelFun)
 \item{modelFun}{A likelihood function for a model, of class 'paleotreeFunc'.}
 }
 \value{
-Returns the results from using optim.
+Returns the results from using \code{\link{optim}}.
 }
 \description{
 This function is a deliberately simplistic automation wrapper for the function
@@ -23,7 +23,7 @@ is not the primary focus, and use in actual analyses should be avoided.
 \details{
 This is mainly provided in this publicly released package for pedagogical
 reasons. Users seeking an optimizer for their own analytical purposes
-should write their own optim function.
+should write their own \code{\link{optim}} function.
 }
 \examples{
 

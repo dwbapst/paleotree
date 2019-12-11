@@ -17,7 +17,7 @@
 #' last occurence of each taxon in the sampled data. Alternatively, obs_time
 #' can be supplied with different dates within the taxon ranges.
 #' 
-#' All data relating to when static morpho-taxa appear or disappear in the
+#' All data relating to when static morphotaxa appear or disappear in the
 #' record is lost; branching points will be the actual time of speciation,
 #' which (under budding) will often be in the middle of the temporal range of a
 #' taxon.

@@ -233,13 +233,13 @@ means a point in time which is 50 time-units before the present-day, if the
 present-day is zero (the default, but see argument \code{shiftRoot4TimeSlice}).
 
 Each individual element of a \code{fossilRecordSimulation} list object
-is named, generally of the form "t1" and "t2", 
+is named, generally of the form \code{"t1"} and \code{"t2"}, 
 where the number is the \code{taxon.id}. 
-Cryptic taxa are instead named in the form of "t1.2" and "t5.3",
+Cryptic taxa are instead named in the form of \code{"t1.2"} and \code{"t5.3"},
 where the first number is the taxon which they are a
 cryptic descendant of (\code{looks.like}) and the second number, after the period, is
 the order of appearance of lineage units in that cryptic complex.
-For example, for "t5.3",  the first number is the \code{taxon.id}
+For example, for \code{"t5.3"},  the first number is the \code{taxon.id}
 and the second number communicates that this is the third lineage
 to appear in this cryptic complex.
 }
@@ -301,7 +301,7 @@ both child lineages are presumed to be indistinct from
 the ancestor and from each other, which means a hypothetical paleontologist
 would not observe that branching had occurred at all.
 Anagenesis is morphological differentiation independent of
-any branching, such that a morphotaxon instanteously transitions to a
+any branching, such that a morphotaxon instantaneously transitions to a
 new morphotaxon identity, resulting in the pseudoextinction of
 the ancestral morphotaxon and the immediate 'pseudospeciation'
 of the child morphotaxon.
@@ -1265,7 +1265,7 @@ Paleobiology's Perspective.} The Paleontological Society, Lawrence, Kansas.
 Foote, M. 2012. Evolutionary dynamics of taxonomic structure. \emph{Biology Letters} 8(1):135-138.
 
 Gavryushkina, A., D. Welch, T. Stadler, and A. J. Drummond. 2014. Bayesian Inference
-of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. \emph{PLoS.Comput.Biol.}
+of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. \emph{PLoS Computational Biology}
 10(12):e1003919.
 
 Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary

@@ -10,7 +10,8 @@ reverseList(list, simplify = FALSE)
 \item{list}{A list composed of multiple elements, with each element a vector
 or list of equal length}
 
-\item{simplify}{Should the result be simplified, as the argument in sapply}
+\item{simplify}{Should the result be simplified,
+as with the identical argument in \code{sapply}?}
 }
 \value{
 Returns a list with a reversed structure relative to the input, see

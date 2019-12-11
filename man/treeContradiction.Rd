@@ -118,7 +118,7 @@ treedist(treeAA,treeBB)
 This contradiction difference measure was introduced in:
 
 Bapst, D. W., H. A. Schreiber, and S. J. Carlson. 2018. Combined Analysis of Extant Rhynchonellida
-(Brachiopoda) using Morphological and Molecular Data. \emph{Systematic Biology} 67(1):32-48. doi: 10.1093/sysbio/syx049
+(Brachiopoda) using Morphological and Molecular Data. \emph{Systematic Biology} 67(1):32-48.
 }
 \seealso{
 See \code{phangorn}'s function for calculating the Robinson-Foulds distance: \code{\link[phangorn]{treedist}}.

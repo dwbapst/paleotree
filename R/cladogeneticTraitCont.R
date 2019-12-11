@@ -28,7 +28,7 @@
 #' all in trait values. These species will all be identical.
 #' 
 #' See this link for additional details:
-#' http://nemagraptus.blogspot.com/2012/03/simulating-budding-cladogenetictrait.html
+#' \url{http://nemagraptus.blogspot.com/2012/03/simulating-budding-cladogenetictrait.html}
 #' 
 #' @param taxa A five-column matrix of taxonomic data, as output by
 #' \code{fossilRecord2fossilTaxa} after simulation with \code{simFossilRecord}

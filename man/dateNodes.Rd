@@ -23,12 +23,12 @@ is so defined that some nodes may occur later than time = 0, this function may r
 negative dates.}
 
 \item{labelDates}{If \code{FALSE} (the default), the dates returned are labeled with the
-tip/node numbers as in \code{tree$edge}. If TRUE, they are labeled with the tip labels
+tip/node numbers as in \code{tree$edge}. If \code{TRUE}, they are labeled with the tip labels
 of every descendant tip, which for terminal tips means a single taxon label, and for
 internal tips a label that might be very long, composed of multiple tip labels pasted
 together. Thus, by default, this argument is \code{FALSE}.}
 
-\item{tolerance}{The tolerance within which a node date has to be removed from time = 0 
+\item{tolerance}{The tolerance within which a node date has to be removed from zero-time 
 (i.e. the modern) to issue a warning that there are 'negative' node dates.}
 }
 \value{
@@ -43,13 +43,13 @@ return negative dates and a warning message will be issued.
 }
 \description{
 This function returns the ages of nodes (both internal and terminal tips)
-for a given phylogeny of class 'phylo'.
-Its use is pecialized for application to time-scaled trees from paleotree,
+for a given phylogeny of class \code{phylo}.
+Its use is specialized for application to time-scaled trees from \code{paleotree},
 see Details below.
 }
 \details{
-This function is specialized for phylo objects time-scaled or simulated with functions from
-paleotree, and thus have a $root.time element. This function will still work without such,
+This function is specialized for dated phylogenies, either estimated from empirical data or simulated with functions from
+\code{paleotree}, and thus have a $root.time element. This function will still work without such,
 but users should see the details for the \code{rootAge} argument.
 }
 \examples{

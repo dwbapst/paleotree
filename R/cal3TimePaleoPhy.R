@@ -44,7 +44,7 @@
 #' decreasing, i.e. the present day is zero.
 #' 
 #' These functions will intuitively drop taxa from the tree with NA for range
-#' or that are missing from timeData.
+#' or that are missing from \code{timeData}.
 #' 
 #' The sampling rate used by cal3 methods is the instantaneous sampling rate,
 #' as estimated by various other function in the paleotree package. See
@@ -143,7 +143,7 @@
 #' particularly the cal3 method, along with an example using real (graptolite)
 #' data, can be found at the following link:
 #' 
-#' http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
+#' \url{http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
 #' 
 #' @rdname cal3TimePaleoPhy
 #' @aliases cal3TimePaleoPhy bin_cal3TimePaleoPhy cal3
@@ -230,7 +230,7 @@
 # created and analysed.
 
 #' @param node.mins The minimum dates of internal nodes (clades) on a phylogeny can be set
-#' using node.mins. This argument takes a vector of the same length as the number of nodes,
+#' using \code{node.mins}. This argument takes a vector of the same length as the number of nodes,
 #' with dates given in the same order as nodes are ordered in the \code{tree$edge} matrix.
 #' Note that in \code{tree$edge}, terminal tips are given the first set of numbers
 #' (\code{1:Ntip(tree)}), so the first element of \code{node.mins} is the first internal node
@@ -639,7 +639,8 @@
 
 #' @export
 cal3TimePaleoPhy <- function(
-		tree, timeData, 
+		tree, 
+		timeData, 
 		brRate, extRate, sampRate,
 		ntrees = 1, anc.wt = 1, 
 		node.mins = NULL, 

@@ -403,7 +403,7 @@ The rationale behind the two alternative morphological models are described in m
 
 Bapst, D. W., H. A. Schreiber, and S. J. Carlson. 2018.
 Combined Analysis of Extant Rhynchonellida (Brachiopoda) using Morphological
-and Molecular Data. \emph{Systematic Biology} 67(1):32-48. doi: 10.1093/sysbio/syx049
+and Molecular Data. \emph{Systematic Biology} 67(1):32-48.
 }
 \seealso{
 This function wraps various aspects of the functions \code{\link{createMrBayesConstraints}}
@@ -421,5 +421,5 @@ funded by National Science Foundation grant EAR-1147537 to S. J. Carlson.
 The basic \emph{MrBayes} commands utilized in the output script are a collection
 of best practices taken from studying NEXUS files supplied by April Wright,
 William Gearty, Graham Slater, Davey Wright, and
-guided by the recommendations of Matzke and Wright, 2016 in Biol. Lett.
+guided by the recommendations of Matzke and Wright, 2016 in Biology Letters.
 }

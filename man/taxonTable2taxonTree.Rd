@@ -17,9 +17,9 @@ dropped prior to transformation to a taxon-tree phylogeny object.}
 post-processing, including having singles collapsed,
 nodes reordered and being written out as a Newick string and read
 back in, to ensure functionality with ape functions
-and ape-derived functions. If \code{FALSE}, none of this post-processing
-is done and users should beware, as such trees can
-lead to hard-crashes of R.}
+and ape-derived functions. 
+If \code{FALSE}, none of this post-processing is done and
+users should beware, as such trees can lead to hard-crashes of R.}
 
 \item{rootLabel}{If the lowest constant/shared level in the taxonomic hierarchy
 isn't labeled, what label should be given to this level? The default is "root".}

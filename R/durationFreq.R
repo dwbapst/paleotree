@@ -98,7 +98,7 @@
 #' will be treated as "one-hit" sampling events.
 
 #' @param tol Tolerance level for determining whether a taxon from a continuous-time
-#' analysis is extant or not. Taxa which occur at a date less than tol are treated as
+#' analysis is extant or not. Taxa which occur at a date less than \code{tol} are treated as
 #' occurring at the modern day (i.e. being functionally identical as occurring at 0 time).
 
 #' @return 

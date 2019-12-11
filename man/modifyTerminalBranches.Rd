@@ -47,12 +47,12 @@ if the operation alters the \code{tree$root.time}.}
 
 \item{addtime}{Extra amount of time to add to all terminal branch lengths.}
 
-\item{...}{additional arguments passed to dropPaleoTip are passed to \code{\link{drop.tip}}.}
+\item{...}{additional arguments passed to \code{dropPaleoTip} are passed to \code{\link{drop.tip}}.}
 
 \item{tipLabel}{A character string of \code{length = 1} containing the name of the new tip
 to be added to \code{tree}.}
 
-\item{nodeAttach}{Node or tip ID number (as given in tree$edge) at which to attach the new tip. 
+\item{nodeAttach}{Node or tip ID number (as given in \code{tree$edge}) at which to attach the new tip. 
 See documentation of \code{bind.tip} for more details.}
 
 \item{tipAge}{The age of the tip taxon added to the tree, in time before present (i.e. where
@@ -76,11 +76,12 @@ modified \code{$root.time} element.
 \description{
 These functions modify terminal branches or drop certain terminal branches
 based on various criteria.
-\code{dropZLB} drops tip-taxa that are attached to the tree via zero-length
-terminal branches ("ZLBs"). This is sometimes useful for paleo-trees, as
-various time-scaling methods often produce these ZLBs, taxa whose early
+\code{dropZLB} drops tip-taxa that are attached to the tree via 
+zero-length terminal branches ("ZLBs"). 
+This is sometimes useful for phylogenies of fossil taxa, as
+various time-scaling methods often produce these 'ZLBs', taxa whose early
 appearance causes them to be functionally interpreted as ancestors in some
-time-scaling methods. Removing ZLBs is advised for analyses of
+time-scaling methods. Removing 'ZLBs' is advised for analyses of
 diversification/diversity, as these will appear as simultaneous
 speciation/extinction events. Note this function only drops tips attached to
 a terminal zero-length branch; if you want to collapse internal zero-length
@@ -94,7 +95,8 @@ based on \code{tree$root.time} if available, or the modern is inferred to be the
 point in time when the tip furthest from the root (the latest tip)
 terminates.
 
-If the input tree has a \code{$root.time} element, as expected for most paleo-tree
+If the input tree has a \code{$root.time} element,
+as expected for most phylogeny containing fossil taxa
 objects handled by this library, that \code{$root.time} is adjusted if the relative
 time of the root divergence changes when terminal branches are dropped.
 This is typically performed via the function \code{\link{fixRootTime}}.
@@ -110,7 +112,7 @@ The function \code{addTermBranchLength} does \emph{not} call \code{fixRootTime},
 so the root.time elements in the result tree may
 be nonsensical, particularly if negative amounts are input.
 
-\code{dropPaleoTip} is a wrapper for ape's \code{\link{drop.tip}} which also modifies the
+\code{dropPaleoTip} is a wrapper for \code{ape}'s \code{\link{drop.tip}} which also modifies the
 \code{$root.time} element if necessary, using \code{fixRootTime}. Similarly,
 \code{bindPaleoTip} is a wrapper for phytool's \code{bind.tip} which allows tip age
 as input and modifies the \code{$root.time} element if necessary (i.e. if a tip

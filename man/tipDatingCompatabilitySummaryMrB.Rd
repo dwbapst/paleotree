@@ -26,7 +26,7 @@ this function probably won't be able to find them.)}
 
 \item{nRuns}{The number of runs in your analysis. This variable is used for figuring out what 
 filenames will be searched for: if you specify that you have less runs than you
-actually ran in reality, then some runs won't be examined in thi function. Conversely,
+actually ran in reality, then some runs won't be examined in this function. Conversely,
 specify too many, and this function will throw an error when it cannot find files it expects
 but do not exist. The default for this argument
 (\emph{two} runs) is based on the default number of runs in MrBayes.}
@@ -48,12 +48,12 @@ which are contradictory, will be included on the output tree, often resulting in
 \item{labelPostProb}{Logical. If \code{TRUE}, then nodes of the
 output tree will be labeled with their respective posterior 
 probabilities, as calculated based on the frequency of a clade
-occurring across the post-burnin posterior tree sample. If \code{FALSE},
+occurring across the post-burn-in posterior tree sample. If \code{FALSE},
 this is skipped.}
 }
 \value{
 A single, undated summary tree, containing those clades (splits) found in greater frequency in
-the post-burnin posterior tree sample more than the value of \code{compatibilityThreshold}, of
+the post-burn-in posterior tree sample more than the value of \code{compatibilityThreshold}, of
 class \code{phylo}. If \code{labelPostProb = TRUE}, nodes will be labeled with the posterior probability of
 the respective clade.
 }
@@ -89,12 +89,12 @@ may inadvertently combine clades that are not found on any of the actual trees
 sampled in the posterior, and may be quite far from the posterior trees
 as sampled in multivariate tree-space. This is a standard criticism leveled at consensus-type summary trees,
 except for the strict consensus (equivalent here to if a user tried \code{compatibilityThreshold = 1}). However,
-post-burnin posterior tree samples often sample (and thus contain) a considerable range of
+post-burn-in posterior tree samples often sample (and thus contain) a considerable range of
 tree-space within them, and thus the strict consensus (a total compatibility tree?)
 }
 \examples{
 \dontrun{
-#pull post-burnin trees from the posterior
+#pull post-burn-in trees from the posterior
       # and get the half-compatibility summary (majority-rule consensus)
       # by setting 'compatibilityThreshold = 0.5'
 

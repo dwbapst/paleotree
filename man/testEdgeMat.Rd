@@ -64,5 +64,5 @@ layout(1)
 David W. Bapst, with a large number of tests incorporated from Emmanuel Paradis's \code{checkValidPhylo} function,
 provided at his github repository here, which was released GPL v>2:
 
-https://github.com/emmanuelparadis/checkValidPhylo
+\url{https://github.com/emmanuelparadis/checkValidPhylo}
 }

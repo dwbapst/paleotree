@@ -64,7 +64,7 @@ the correct root age.
 This function is mainly used as a
 utility function called by other tree-modifying functions discussed
 in the manual page for \code{\link{modifyTerminalBranches}}.
-This is typically perfomed via the function \code{\link{fixRootTime}}.
+This is typically performed via the function \code{\link{fixRootTime}}.
 }
 \examples{
 

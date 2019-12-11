@@ -37,10 +37,10 @@
 #' @references
 #' See my recent blog post on temporal datasets in paleontology for some details:
 #' 
-#' http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html
+#' \url{http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html}
 
 #' @examples
-#' #timeList object from the retiolinae dataset
+#' # timeList object from the retiolinae dataset
 #' data(retiolitinae)
 #' 
 #' str(retioRanges)
@@ -50,7 +50,10 @@
 #' fourDateRet <- timeList2fourDate(retioRanges)
 #' 
 #' # total uncertainty in retio first and last appearances?
-#' sum((fourDateRet[,1]-fourDateRet[,2])+(fourDateRet[,3]-fourDateRet[,4]))
+#' sum(
+#'     (fourDateRet[,1] - fourDateRet[,2]) + 
+#'     (fourDateRet[,3]-fourDateRet[,4])
+#'     )
 #' 
 #' #convert back
 #' newTimeList <- fourDate2timeList(fourDateRet)

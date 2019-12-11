@@ -1,17 +1,17 @@
-#' Typical \emph{a posteriori} Time-Scaling Approaches For Paleontological Phylogenies
+#' Simplistic \emph{a posteriori} Dating Approaches For Paleontological Phylogenies
 #' 
-#' Time-scales an unscaled cladogram of fossil taxa using information on their
+#' Dates an unscaled cladogram of fossil taxa using information on their
 #' temporal ranges, using various methods. Also can resolve polytomies randomly
-#' and output samples of randomly-resolved trees. As simple methods of time-scaling
+#' and output samples of randomly-resolved trees. As simple methods of dating ('time-scaling')
 #' phylogenies of fossil taxa can have biasing effects on macroevolutionary analyses
 #' (Bapst, 2014, Paleobiology), this function is largely retained for legacy purposes
-#' and plotting applications. The time-scaling methods implemented
+#' and plotting applications. The methods implemented
 #' by the functions listed here do \bold{not} return realistic estimates of 
-#' divergence dates, users should investigate other time-scaling
-#' methods such as \code{\link{cal3TimePaleoPhy}}.
+#' divergence dates, and users are strongly encouraged to investigate other
+#' methods such as \code{\link{cal3TimePaleoPhy}} or \code{\link{createMrBayesTipDatingNexus}}.
 #' 
 #' @details 
-#' \emph{Time-Scaling Methods}
+#' \emph{Simplistic \emph{a posteriori} Dating ('Time-Scaling') Methods for Paleontology Phylogenies}
 #' 
 #' These functions are an attempt to unify and collect previously used and
 #' discussed \emph{a posteriori} methods for time-scaling phylogenies of fossil taxa.
@@ -20,7 +20,7 @@
 #' 
 #' There are five main \emph{a posteriori} approaches that
 #' can be used by \code{timePaleoPhy}. Four of these
-#' main types use some value of absolute time, chosen \emph{a priori}, to time-scale the tree.
+#' main types use some value of absolute time, chosen \emph{a priori}, to date the tree.
 #' This is handled by the argument \code{vartime}, which is \code{NULL} by default and unused
 #' for type \code{"basic"}.
 #' 
@@ -31,20 +31,22 @@
 #' descendant (Smith, 1994). This method produces many zero-length branches
 #' (Hunt and Carrano, 2010).}
 
-#'  \item{"equal"}{The 'equal' method defined by G. Lloyd and used in Brusatte
+#'  \item{"equal"}{The \code{"equal"} method defined by G. Lloyd and used in Brusatte
 #' et al. (2008) and Lloyd et al. (2012). Originally usable in code supplied by
-#' G. Lloyd, the algorithm is recreated here as closely as possible. This method
+#' G. Lloyd, the \code{"equal"} algorithm is recreated here as closely as possible. This method
 #' works by increasing the time of the root divergence by some amount and then
 #' adjusting zero-length branches so that time on early branches is re-apportioned
 #' out along those later branches equally. Branches are adjusted in order relative
 #' to the number of nodes separating the edge from the root, going from the furthest
-#' (most shallow) edges to the deepest edges. The choice of ordering algorithm can have
-#' an unanticipated large effect on the resulting time-scaled trees created using "equal"
-#' and it appears that paleotree and functions written by G. Lloyd were not always consistent.
-#' The default option described here was only introduced into either software sources in
-#' August 2014. Thus, two legacy 'equal' methods are included in this function, so users can
-#' emulate older ordering algorithms for 'equal' which are now deprecated, as they do not
-#' match the underlying logic of the original 'equal' algorithm and do not minimize down-passes
+#' (most shallow) edges to the deepest edges. 
+#' The choice of ordering algorithm can have an unanticipated large effect on the
+#' resulting dated trees created using \code{"equal"} and it appears that 
+#' \code{paleotree} and functions written by G. Lloyd were not always consistent.
+#' The default option described here was only introduced in \code{paleotree} 
+#' and other available software sources in August 2014. 
+#' Thus, two legacy \code{"equal"} methods are included in this function, so users can
+#' emulate older ordering algorithms for \code{"equal"} which are now deprecated, as they do not
+#' match the underlying logic of the original \code{"equal"} algorithm and do not minimize down-passes
 #' when adjusting branch lengths on the time-scaled tree.
 #' 
 #' The root age can be adjusted backwards in time by either increasing by
@@ -52,30 +54,37 @@
 #' root age directly (via the \code{node.mins} argument); conversely, the
 #' function will also allow a user to opt to not alter the root age at all.}
 
-#' \item{"equal_paleotree_legacy"}{Exactly like 'equal' above, except that edges are ordered instead
+#' \item{"equal_paleotree_legacy"}{Exactly like \code{"equal"} above, 
+#' except that edges are ordered instead
 #' by their depth (i.e. number of nodes from the root). This minor modified version
-#' was referred to as 'equal' for this \code{timePaleoPhy} function in \code{paleotree} until February 2014, and thus is
-#' included here solely for legacy purposes. This ordering algorithm does not minimize branch adjustment cycles,
-#' like the newer default offered under currently 'equal'.}
+#' was referred to as \code{"equal"} for this \code{timePaleoPhy}
+#' function in \code{paleotree} until February 2014, and thus is
+#' included here solely for legacy purposes. 
+#' This ordering algorithm does not minimize branch adjustment cycles,
+#' like the newer default offered under currently \code{"equal"}.}
 
-#' \item{"equal_date.phylo_legacy"}{Exactly like 'equal' above, except that edges are ordered relative
+#' \item{"equal_date.phylo_legacy"}{Exactly like "equal" above, except that edges are ordered relative
 #' to their time (ie. total edge length) from the root following the application of the 'basic'
 #' time-scaling method, exactly as in G. Lloyd's original application. This was the method for sorting
-#' edges in the "equal" algorithm in G. Lloyd's \code{date.phylo} script and \code{DatePhylo} in
-#' package \code{strap} until August 2014, and was the default "equal" algorithm in \code{paleotree}'s \code{timePaleoPhy}
-#' function from February 2014 until August 2014.  This ordering algorithm does not minimize branch adjustment cycles,
-#' like the newer default offered under currently 'equal'. Due to how the presence of zero-length
-#' branches can make ordering branches based on time to be very unpredictable, this version of the 'equal'
-#' algorithm is \bold{highly not recommended}.}
+#' edges in the \code{"equal"} algorithm in G. Lloyd's \code{date.phylo} script and \code{DatePhylo} in
+#' package \code{strap} until August 2014, and was the default
+#' \code{"equal"} algorithm in \code{paleotree}'s \code{timePaleoPhy}
+#' function from February 2014 until August 2014.  
+#' This ordering algorithm does not minimize branch adjustment cycles,
+#' like the newer default offered under currently \code{"equal"}. 
+#' Due to how the presence of zero-length
+#' branches can make ordering branches based on time to be very unpredictable, 
+#' this version of the \code{"equal"} algorithm is \bold{highly not recommended}.}
 
 #' \item{"aba"}{All branches additive. This method takes the "basic" tree and
-#' adds vartime to all branches. Note that this time-scaling method can warp the
+#' adds \code{vartime} to all branches. 
+#' Note that this time-scaling method can (and often will) warp the
 #' tree structure, leading to tips to originate out of order with the appearance
 #' data used.}
 
-#' \item{"zlba"}{Zero-length branches additive. This method adds vartime to all
-#' zero-length branches in the "basic" tree. Discussed (possibly?) by Hunt and Carrano,
-#' 2010.Note that this time-scaling method can warp the
+#' \item{"zlba"}{Zero-length branches additive. This method adds \code{vartime} to all
+#' zero-length branches in the "basic" tree. Discussed (possibly?) by Hunt and Carrano, 2010. 
+#' Note that this time-scaling method can warp the
 #' tree structure, leading to tips to originate out of order with the appearance
 #' data used.}
 
@@ -96,10 +105,10 @@
 #' As with many functions in the \code{paleotree} library, absolute time is always
 #' decreasing, i.e. the present day is zero.
 #' 
-#' As of August 2014, please note that the branch-ordering algorithm used in 'equal' has changed
+#' As of August 2014, please note that the branch-ordering algorithm used in \code{"equal"} has changed
 #' to match the current algorithm used by \code{DatePhylo} in package \code{strap}, and that two legacy
-#' versions of 'equal' have been added to this function, respectively representing how \code{timePaleoPhy}
-#' and \code{DatePhylo} (and its predecessor \code{date.phylo}) applied the 'equal' time-scaling method.
+#' versions of "equal" have been added to this function, respectively representing how \code{timePaleoPhy}
+#' and \code{DatePhylo} (and its predecessor \code{date.phylo}) applied the "equal" time-scaling method.
 #' 
 #' \emph{Interpretation of Taxon Ages in timePaleoPhy}
 #' 
@@ -107,21 +116,23 @@
 #' and last appearances are precisely known in continuous time, with no stratigraphic
 #' uncertainty. This is an uncommon form of data to have from the fossil record, 
 #' although not an impossible form (micropaleontologists often have very precise 
-#' range charts, for example). Instead, most data has some form of stratigraphic uncertainty. However, for some groups,
-#' the more typical 'first' and 'last' dates found in the literature or in databases represent the minimum
+#' range charts, for example). 
+#' Instead, most data has some form of stratigraphic uncertainty. 
+#' However, for some groups, the more typical 'first' and 'last' dates
+#' found in the literature or in databases represent the minimum
 #' and maximum absolute ages for the fossil collections that a taxon is known
 #' is known from. Presumably, the first and last appearances of that taxon in
 #' the fossil record is at unknown dates within these bounds. 
 #' 
 #' As of paleotree v2.0. the treatment of taxon ages in
 #' \code{timePaleoPhy} is handled by the argument \code{dateTreatment}.
-#' \emph{By default,} this argument is set to 'firstLast' which means the matrix of ages are treated
+#' \emph{By default,} this argument is set to \code{"firstLast"} which means the matrix of ages are treated
 #' as precise first and last appearance dates (i.e. FADs and LADs). The earlier FADs will be used
 #' to calibrate the node ages, which could produce fairly nonsensical results if these are 'minimum'
-#' ages instead and reflect age uncertainty. Alternatively, \code{dateTreatment} can be set to 'minMax'
+#' ages instead and reflect age uncertainty. Alternatively, \code{dateTreatment} can be set to \code{"minMax"}
 #' which instead treats taxon age data as minimum and maximum bounds on a single point date. 
 #' These point dates, if the minimum and maximum bounds option is selected,
-#' are chose under a uniform distribution. Many time-scaled trees should be created to approximate
+#' are chose under a uniform distribution. Many dated trees should be generated, in order to approximate
 #' the uncertainty in the dates. Additionally, there is a third option for \code{dateTreatment}:
 #' users may also make it so that the 'times of observation'
 #' of trees are uncertain, such that the tips of the tree (with terminal ranges added) should
@@ -137,7 +148,7 @@
 #' \code{timePaleoPhy} which produces time-scaled trees for datasets which only have 
 #' interval data available. For each output tree, taxon first and last appearance 
 #' dates are placed within their listed intervals under a uniform distribution. 
-#' Thus, a large sample of time-scaled trees will approximate the uncertainty in 
+#' Thus, a large sample of dated trees will (hopefully) approximate the uncertainty in 
 #' the actual timing of the FADs and LADs. In some ways, treating taxonomic age uncertainty
 #' may be more logical via \code{bin_timePaleoPhy}, as it is tied to specific interval bounds,
 #' and there are more options available for certain types of age uncertainty, such as for cases
@@ -161,7 +172,7 @@
 #' 
 #' A tutorial for applying the time-scaling functions in paleotree, along with
 #' an example using real (graptolite) data, can be found here:
-#' http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
+#' \url{http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
 #' 
 
 #' @aliases timePaleoPhy bin_timePaleoPhy
@@ -174,8 +185,8 @@
 #' first column is very precise FADs (first appearance dates) and the second 
 #' column is very precise LADs (last appearance dates), reflect the precise points
 #' in time when taxa first and last appear. If there is stratigraphic uncertainty in
-#' when taxa appear in the fossil record, it is preferable to use the 'bin'
-#' time-scaling functions; however, see the argument \code{dateTreatment}.
+#' when taxa appear in the fossil record, it is preferable to use the \code{bin_}
+#' dating functions; however, see the argument \code{dateTreatment}.
 
 #' @param type Type of time-scaling method used. Can be \code{"basic"},
 #' \code{"equal"}, \code{"equal_paleotree_legacy"}, \code{"equal_date.phylo_legacy"}
@@ -185,17 +196,19 @@
 #' @param vartime Time variable; usage depends on the \code{type} argument.
 #' Ignored if \code{type = "basic"}.
 
-#' @param ntrees Number of time-scaled trees to output. If ntrees is greater
-#' than one and both randres is false and dateTreatment is neither
+#' @param ntrees Number of dated trees to output. 
+#' Only applicable is there is some stochastic (random) element to the analysis.
+#' If \code{ntrees} is greater than one, and
+#' both \code{randres = FALSE} and \code{dateTreatment} is neither
 #' \code{'minMax'} or \code{'randObs'}, the function will fail and
 #' a warning is issued, as these arguments would simply produce multiple
 #' identical time-scaled trees.
 
 #' @param randres Should polytomies be randomly resolved? By default,
-#' \code{timePaleoPhy} does not resolve polytomies, instead outputting a time-scaled
-#' tree that is only as resolved as the input tree. If \code{randres = T}, then
+#' \code{timePaleoPhy} does not resolve polytomies, instead outputting a dated
+#' tree that is only as resolved as the input tree. If \code{randres = TRUE}, then
 #' polytomies will be randomly resolved using \code{\link{multi2di}} from the
-#' package ape. If \code{randres = T} and \code{ntrees = 1}, a warning is printed that users
+#' package ape. If \code{randres = TRUE} and \code{ntrees = 1}, a warning is printed that users
 #' should analyze multiple randomly-resolved trees, rather than a single such
 #' tree, although a tree is still output.
 
@@ -212,17 +225,18 @@
 #' not add the ranges of taxa when time-scaling a tree, so that the tips
 #' correspond temporally to the first appearance datums of the given taxa. If
 #' \code{add.term = TRUE}, then the 'terminal ranges' of the taxa are added to the tips
-#' after tree is time-scaled, such that the tips now correspond to the last
+#' after tree is dated, such that the tips now correspond to the last
 #' appearance datums.
 
-#' @param inc.term.adj If true, includes terminal ranges in branch length
+#' @param inc.term.adj If \code{TRUE}, includes terminal ranges in branch length
 #' estimates for the various adjustment of branch lengths under all methods
-#' except \code{type = 'basic'} (i.e. a terminal length branch will not be treated as zero
-#' length is this argument is \code{TRUE} if the taxon at this tip has a non-zero
+#' except \code{type = 'basic'} 
+#' (in other words, a terminal length branch will not be treated as zero
+#' length if \code{inc.term.adj = TRUE}, if the tip-taxon on this branch has a non-zero
 #' duration). By default, this argument is \code{FALSE} and this function will not
 #' include the ranges of taxa when adjusting branch lengths, so that
 #' zero-length branches before first appearance times will be extended. An
-#' error is returned if this argument is true but \code{type = "basic"} or
+#' error is returned if this \code{inc.term.adj = TRUE} but \code{type = "basic"} or
 #' \code{add.term = FALSE}, as this argument is inconsistent with those argument
 #' options.
 
@@ -264,7 +278,7 @@
 # i.e. the 'times of observation' for taxa, and does not impact the dates used to 
 # determine node ages. Thus, this is an alternative to using only the LADs or only the FADs
 # as the per-taxon times of observation. For these functions,rand.obs is TRUE can only impact
-# the result when add.term is FALSE (otherwise the time of observation can only be the FADs) 
+# the result when add.term is \code{FALSE} (otherwise the time of observation can only be the FADs) 
 # and so the function fails and a warning is issued. If rand.obs is TRUE, then it is assumed
 # that users wish the tips to represent observations made with some temporal
 # uncertainty, such that they might have come from any point within a taxon's
@@ -276,7 +290,7 @@
 # created and analyzed.
 
 #' @param node.mins The minimum dates of internal nodes (clades) on a phylogeny can be set
-#' using node.mins. This argument takes a vector of the same length as the number of nodes,
+#' using \code{node.mins}. This argument takes a vector of the same length as the number of nodes,
 #' with dates given in the same order as nodes are ordered in the \code{tree$edge} matrix.
 #' Note that in \code{tree$edge}, terminal tips are given the first set of numbers
 #' (\code{1:Ntip(tree)}), so the first element of \code{node.mins} is the first internal node
@@ -317,8 +331,9 @@
 #' dates by restricting multiple fossil taxa whose FADs or LADs are from the
 #' same very temporally restricted sites (such as fossil-rich Lagerstatten) to
 #' always have the same date, across many iterations of time-scaled trees. To
-#' do this, simply give a matrix where the "site" of each FAD and LAD for every
-#' taxon is listed, as corresponding to the second matrix in timeList. If no
+#' do this, provide a \code{matrix} to the \code{sites} argument
+#' where the "site" of each FAD and LAD for every
+#' taxon is listed, as corresponding to the second matrix in \code{timeList}. If no
 #' sites matrix is given (the default), then it is assumed all fossil come from
 #' different "sites" and there is no shared temporal structure among the
 #' events.
@@ -355,7 +370,7 @@
 #' 
 #' For an alternative time-scaling function, which includes the \code{'ruta'} method
 #' that weights the time-scaling of branches by estimates of character change
-#' along with implementations of the \code{'basic'} and \code{'equal'}
+#' along with implementations of the \code{'basic'} and \code{"equal"}
 #' methods described here, please see function \code{DatePhylo} in package \code{strap}.
 
 #' @references 
@@ -1105,7 +1120,7 @@ timePaleoPhy <- function(
 		if(add.term & !inc.term.adj){
 			obs_ranges <- timeData[,1]-timeData[,2]
 			term_id <- ttree$tip.label[ttree$edge[ttree$edge[,2] <= Ntip(ttree),2]]
-			term_add <- sapply(term_id,function(x) obs_ranges[x])
+			term_add <- sapply(term_id, function(x) obs_ranges[x])
 			new_term_edge_lengths <- ttree$edge.length[ttree$edge[,2] <= Ntip(ttree)]+term_add
 			ttree$edge.length[ttree$edge[,2] <= Ntip(ttree)] <- new_term_edge_lengths
 			}
@@ -1123,7 +1138,8 @@ timePaleoPhy <- function(
 			parOrig <- par(no.readonly = TRUE)
 			par(mar = c(2.5,1,1,0.5));layout(1:2)
 			plot(ladderize(tree),show.tip.label = TRUE,use.edge.length = FALSE)
-			plot(ladderize(ttree),show.tip.label = TRUE);axisPhylo()
+			plot(ladderize(ttree),show.tip.label = TRUE)
+			axisPhylo()
 			layout(1);par(parOrig)
 			}
 		names(ttree$edge.length) <- NULL
@@ -1135,10 +1151,24 @@ timePaleoPhy <- function(
 
 #' @rdname timePaleoPhy
 #' @export
-bin_timePaleoPhy <- function(tree,timeList,type = "basic",vartime = NULL,ntrees = 1,
-	nonstoch.bin = FALSE,randres = FALSE,timeres = FALSE,
-	sites = NULL,point.occur = FALSE,add.term = FALSE,inc.term.adj = FALSE,
-	dateTreatment = "firstLast",node.mins = NULL,noisyDrop = TRUE,plot = FALSE){
+bin_timePaleoPhy <- function(tree,
+                             timeList,
+                             type = "basic",
+                             vartime = NULL,
+                             ntrees = 1,
+                             nonstoch.bin = FALSE,
+                             randres = FALSE,
+                             timeres = FALSE,
+                             sites = NULL,
+                             point.occur = FALSE,
+                             add.term = FALSE,
+                             inc.term.adj = FALSE,
+                             dateTreatment = "firstLast",
+                             node.mins = NULL,
+                             noisyDrop = TRUE,
+                             plot = FALSE
+                             ){
+  #########################################
 	# wrapper for applying non-SRC time-scaling to timeData
 		# where FADs and LADs are given as bins 
 		# see timePaleoPhy function for more details

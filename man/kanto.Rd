@@ -15,7 +15,7 @@ that require a site-by-taxon table of community ecology data.
 \details{
 A classic dataset of ecological data collected by Satoshi and Okido, consisting of
 individual counts for 54 terrestrial faunal and floral species,
-fron 23 sites across the mainland Kanto region.
+from 23 sites across the mainland Kanto region.
 
 Different ontogenetic stages were compounded and recorded by the common name for the
 first ontogenetic stage, with some inconsistency for species whose earliest stage have

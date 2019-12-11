@@ -21,9 +21,9 @@ parentheses.}
 post-processing, including having singles collapsed,
 nodes reordered and being written out as a Newick string and read
 back in, to ensure functionality with ape functions
-and ape-derived functions. If \code{FALSE}, none of this post-processing
-is done and users should beware, as such trees can
-lead to hard-crashes of R.}
+and ape-derived functions. 
+If \code{FALSE}, none of this post-processing is done and
+users should beware, as such trees can lead to hard-crashes of R.}
 }
 \value{
 A phylogeny of class 'phylo', with tip taxa as

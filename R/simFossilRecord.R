@@ -57,7 +57,7 @@
 #' the ancestor and from each other, which means a hypothetical paleontologist
 #' would not observe that branching had occurred at all.
 #' Anagenesis is morphological differentiation independent of
-#' any branching, such that a morphotaxon instanteously transitions to a
+#' any branching, such that a morphotaxon instantaneously transitions to a
 #' new morphotaxon identity, resulting in the pseudoextinction of
 #' the ancestral morphotaxon and the immediate 'pseudospeciation'
 #' of the child morphotaxon.

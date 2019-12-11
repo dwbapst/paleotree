@@ -22,27 +22,27 @@
 #' taxa (i.e., if the last interval is the Holocene and the group is
 #' still alive, the probability of sampling them later is probably 1...).
 #' Should be either be (a) a numeric value between \code{0} and \code{1}, a \code{NULL} value,
-#' or can be simply be "\code{fixed"}, the default option.
-#' This default \code{PA_n = "fixed"} option allows \code{make_inverseSurv} to decide the value
-#' based on whether there is a modern interval (i.e. an interval that is 
-#' \code{c(0,0)}) or not: if there is one, then \code{PA_n = 1}, if not, 
-#' then \code{PA_n = 0}. 
+#' or can be simply be \code{"fixed"}, the default option.
+#' This default \code{PA_n = "fixed"} option allows \code{make_inverseSurv}
+#' to decide the value based on whether there is a modern interval 
+#' (i.e. an interval that is \code{c(0,0)}) or not: 
+#' if there is one, then \code{PA_n = 1}, if not, then \code{PA_n = 0}. 
 #' If \code{PA_n = NULL}, \code{PA_n} is treated as an additional free
 #' parameter in the output model.
 
 #' @param PB_1 The probability of sampling a taxon before the first interval 
-#' included in a survivorship study. Should be a value of 0 to 1, or NULL. 
-#' If NULL, PB_1 is treated as an additional free parameter in the output model.
+#' included in a survivorship study. Should be a value of 0 to 1, or \code{NULL}. 
+#' If \code{NULL}, \code{PB_1} is treated as an additional free parameter in the output model.
 
-#' @param p_cont If TRUE (the default), then origination is assumed to be a 
-#' continuous time process with an instantaneous rate. If FALSE, the origination
+#' @param p_cont If \code{TRUE} (the default), then origination is assumed to be a 
+#' continuous time process with an instantaneous rate. If \code{FALSE}, the origination
 #' is treated as a pulsed discrete-time process with a probability.
 
-#' @param q_cont If TRUE (the default), then extinction is assumed to be a 
-#' continuous time process with an instantaneous rate. If FALSE, the extinction
+#' @param q_cont If \code{TRUE} (the default), then extinction is assumed to be a 
+#' continuous time process with an instantaneous rate. If \code{FALSE}, the extinction
 #' is treated as a pulsed discrete-time process with a probability.
 
-#' @param Nb The number of taxa that enter an interval (b is for 'bottom'). This
+#' @param Nb The number of taxa that enter an interval (the \code{b} is for 'bottom'). This
 #' is an arbitrary constant used to scale other values in these calculations and
 #' can be safely set to 1.
 
@@ -68,8 +68,9 @@
 #' For \code{p}, this will be the per lineage-interval rate of a lineage producing
 #' another lineage (which can exceed 1 because diversity can more than double) and
 #' for \code{q}, this will be the per lineage-interval 'rate' of a lineage going extinct,
-#' which cannot be observed to exceed 1 (because the proportion of diversity that
-#' goes extinct \emph{cannot} exceed 1). To obtain the per lineage-interval rates from a
+#' which cannot be observed to exceed 1 
+#' (because the proportion of diversity that goes extinct \emph{cannot} exceed 1). 
+#' To obtain the per lineage-interval rates from a
 #' set of per lineage-time unit rates, simply multiply the per lineage-time-unit
 #' rate by the duration of an interval (or divide, to do the reverse; see Foote,
 #' 2003 and 2005). \code{r} is always the instantaneous per-capita sampling rate, in
@@ -101,9 +102,9 @@
 #' an alternative mode which takes input rates and returns the final values along with
 #' a rudimentary plotting function. This allows users to output per-interval and per-group
 #' parameter estimates. To select these feature, the argument \code{altMode} must
-#' be TRUE. This function will invisibly return the rate values for each
+#' be \code{TRUE}. This function will invisibly return the rate values for each
 #' group and interval as a list of matrices, with each matrix composed of the
-#' p, q and r rates for each interval, for a specific grouping.
+#' \code{p}, \code{q} and \code{r} rates for each interval, for a specific grouping.
 #' 
 #' This plotting is extremely primitive, and most users will probably find the
 #' invisibly returned rates to be of more interest. The function \code{layout} is
@@ -128,7 +129,7 @@
 #'  \item{altMode}{If \code{FALSE} (the default) the function will work like ordinary model-fitting functions,
 #' returning a negative log-likelihood value for the input parameter values in \code{par}. If \code{TRUE},
 #' however, the input parameters will instead be translated into the by-interval, by-group rates
-#' used for calculating the log-likelihoods, plotted (if \code{plotPar} is TRUE) and these final
+#' used for calculating the log-likelihoods, plotted (if \code{plotPar} is \code{TRUE}) and these final
 #' interval-specific rates will be returned invisibly as described above.}
 
 #'  \item{plotPar}{If \code{TRUE} (the default) the calculated rates will be plotted, with each
@@ -207,39 +208,52 @@
 #' 
 #' # let's simulate some taxon ranges from an imperfectly sampled fossil record
 #' set.seed(444)
-#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#' 	nTotalTaxa = c(30,40), nExtant = 0)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     nruns = 1,
+#' 	   nTotalTaxa = c(30,40), 
+#' 	   nExtant = 0
+#' 	   )
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' rangesCont <- sampleRanges(taxa,r = 0.5)
+#' rangesCont <- sampleRanges(taxa, r = 0.5)
 #' 
 #' #bin the ranges into discrete time intervals
-#' rangesDisc <- binTimeData(rangesCont,int.length = 5)
+#' rangesDisc <- binTimeData(rangesCont, int.length = 5)
 #' 
 #' #apply make_inverseSurv
 #' likFun <- make_inverseSurv(rangesDisc)
 #' 
 #' #use constrainParPaleo to make the model time-homogeneous
-#'   	#match.all ~ match.all will match parameters so only 2 pars: p = q and r
+#'   	# match.all ~ match.all will match parameters
+#'   	# so only 2 parameters: p (= q) and r
 #' 
-#' constrFun <- constrainParPaleo(likFun, match.all~match.all)
+#' constrFun <- constrainParPaleo(likFun, 
+#'    match.all~match.all)
 #' 
-#' results <- optim(parInit(constrFun), constrFun,
-#'       lower = parLower(constrFun), upper = parUpper(constrFun),
-#'       method = "L-BFGS-B", control = list(maxit = 1000000))
+#' results <- optim(parInit(constrFun), 
+#'                  constrFun,
+#'                  lower = parLower(constrFun), 
+#'                  upper = parUpper(constrFun),
+#'                  method = "L-BFGS-B", 
+#'                  control = list(maxit = 1000000)
+#'                  )
 #' results
 #' 
 #' #plot the results
 #' constrFun(results$par, altMode = TRUE)
-#' 
 #' }
-#' \dontrun{
 #' 
+#' \dontrun{
 #' #unconstrained function with ALL of the 225 possible parameters!!!
 #'     # this will take forever to converge	
-#' optim(parInit(likFun),likFun,
-#'       lower = parLower(likFun), upper = parUpper(likFun),
-#'       method = "L-BFGS-B", control = list(maxit = 1000000))
-#' 
+#' optim(parInit(likFun),
+#'       likFun,
+#'       lower = parLower(likFun), 
+#'       upper = parUpper(likFun),
+#'       method = "L-BFGS-B", 
+#'       control = list(maxit = 1000000)
+#'       )
 #' }
 
 #' @name inverseSurv

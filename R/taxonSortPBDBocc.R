@@ -41,11 +41,11 @@
 #' assumption that if a taxon's listed name in relevant fields is identical,
 #' the taxon is identical, with the important caveat that occurrences with
 #' accepted formal synonymies are sorted first based on their accepted names, followed by
-#' taxa without formal taxon IDs. This should avoid mistakingly
-#' linking the same occurrences to multiple taxa or assigning
+#' taxa without formal taxon IDs. This should avoid
+#' linking the same occurrences to multiple taxa by mistake, or assigning
 #' occurrences listed under separate formal taxa to the same taxon
 #' based on their 'identified' taxon name, as long as all
-#' formal taxa have unique names (which is an untested assumption).
+#' formal taxa have unique names (note: this is an untested assumption).
 #' In some cases, this procedure is helpful, such as when
 #' taxa with identical generic and species names are listed under
 #' separate taxon ID numbers because of a difference in the

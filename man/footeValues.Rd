@@ -10,57 +10,62 @@ footeValues(p, q, r, PA_n = 0, PB_1 = 0, p_cont = TRUE, q_cont = TRUE, Nb = 1)
 \item{p}{Instantaneous origination/branching rate of taxa. Under 
 a continuous model, assumed to be \emph{per interval}, or equal
 to the product of interval lengths and the rates per lineage time
-units for each interval. Under a pulsed mode (p_cont = FALSE), p is a 
+units for each interval. 
+Under a pulsed mode (\code{p_cont = FALSE}), \code{p} is a 
 per-interval 'rate' which can exceed 1 (because diversity can
 more than double; Foote, 2003a). Given as a vector with length
 equal to the number of intervals, so a different value may be
 given for each separate interval. Must be the same length as
-q and r.}
+\code{q} and \code{r}.}
 
 \item{q}{Instantaneous extinction rate of taxa. Under 
 a continuous model, assumed to be \emph{per interval}, or
 equal to the product of interval lengths and the rates per lineage
-time units for each interval. Under a pulsed mode (q_cont = FALSE), q is a  
+time units for each interval.
+Under a pulsed mode (\code{q_cont = FALSE}), \code{q} is a  
 per-interval 'rate' but which cannot be observed to exceed 1
 (because you can't have more taxa go extinct than exist). Given as
 a vector with length equal to the number of intervals, so a 
 different value may be given for each separate interval. 
-Must be the same length as p and r.}
+Must be the same length as \code{p} and \code{r}.}
 
 \item{r}{Instantaneous sampling rate of taxa, assumed to be
 \emph{per interval}, or equal to the product of interval lengths
 and the rates per lineage time units for each interval. Given as
 a vector with length equal to the number of intervals, so a 
 different value may be given for each separate interval. 
-Must be the same length as p and q.}
+Must be the same length as \code{p} and \code{q}.}
 
 \item{PA_n}{The probability of sampling a taxon after the last interval 
 included in a survivorship study. Usually zero for extinct groups, 
 although more logically has the value of 1 when there are still extant
 taxa (i.e., if the last interval is the Holocene and the group is
 still alive, the probability of sampling them later is probably 1...).
-Should be a value of 0 to 1.}
+Should be a value between 0 and 1.}
 
 \item{PB_1}{The probability of sampling a taxon before the first interval 
-included in a survivorship study. Should be a value of 0 to 1.}
+included in a survivorship study.
+Should be a value between 0 and 1.}
 
-\item{p_cont}{If TRUE (the default), then origination is assumed to be a 
-continuous time process with an instantaneous rate. If FALSE, the origination
+\item{p_cont}{If \code{TRUE} (the default), then origination is assumed to be a 
+continuous time process with an instantaneous rate. If \code{FALSE}, the origination
 is treated as a pulsed discrete-time process with a probability.}
 
-\item{q_cont}{If TRUE (the default), then extinction is assumed to be a 
-continuous time process with an instantaneous rate. If FALSE, the extinction
+\item{q_cont}{If \code{TRUE} (the default), then extinction is assumed to be a 
+continuous time process with an instantaneous rate. If \code{FALSE}, the extinction
 is treated as a pulsed discrete-time process with a probability.}
 
-\item{Nb}{The number of taxa that enter an interval (b is for 'bottom'). This
+\item{Nb}{The number of taxa that enter an interval (the \code{b} is for 'bottom'). This
 is an arbitrary constant used to scale other values in these calculations and
 can be safely set to 1.}
 }
 \value{
 Returns a matrix with number of rows equal to the number of intervals 
-(i.e. the length of p, q and r) and named columns representing the different
-values calculated by the function: "Nb", "Nbt", "NbL", "NFt", "NFL", "PD_bt", 
-"PD_bL", "PD_Ft", "PD_FL", "PA", "PB", "Xbt", "XbL", "XFt" and "XFL".
+(i.e. the length of \code{p}, \code{q} and \code{r})
+and named columns representing the different values calculated by the function:
+\code{"Nb"}, \code{"Nbt"}, \code{"NbL"}, \code{"NFt"}, \code{"NFL"}, \code{"PD_bt"}, 
+\code{"PD_bL"}, \code{"PD_Ft"}, \code{"PD_FL"}, \code{"PA"}, \code{"PB"},
+\code{"Xbt"}, \code{"XbL"}, \code{"XFt"} and \code{"XFL"}.
 }
 \description{
 This function calculates the intermediary values needed for
@@ -71,21 +76,26 @@ described further in Foote (2001) and Foote (2005).
 \details{
 Although most calculations in this function agree
 with the errata for Foote's 2003 table (see references), there were some additional
-corrections for Prob(D|FL) made as part of a personal communication in 2013
+corrections for the probability of \code{D} given \code{FL} (\code{Prob(D|FL)})
+made as part of a personal communication in 2013
 between the package author and Michael Foote.
 }
 \examples{
 #very simple example with three intervals, same value for all parameters
 
-#example rates (for the most part)
-rate <- rep(0.1,3)                  
+# example rates (for the most part)
+rate <- rep(0.1, 3)
+                  
 #all continuous
 footeValues(rate,rate,rate)	
-#origination pulsed
+
+# origination pulsed
 footeValues(rate,rate,rate,p_cont = FALSE)		 
-#extinction pulsed
+
+# extinction pulsed
 footeValues(rate,rate,rate,q_cont = FALSE) 	 
-#all pulsed
+
+# all pulsed
 footeValues(rate,rate,rate,p_cont = FALSE,q_cont = FALSE) 
 }
 \references{

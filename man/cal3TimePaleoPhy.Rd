@@ -62,8 +62,8 @@ continuous time, with row names as the taxon IDs used on the tree. This means th
 first column is very precise FADs (first appearance dates) and the second 
 column is very precise LADs (last appearance dates), reflect the precise points
 in time when taxa first and last appear. If there is stratigraphic uncertainty in
-when taxa appear in the fossil record, it is preferable to use the 'bin'
-time-scaling functions; however, see the argument \code{dateTreatment}.}
+when taxa appear in the fossil record, it is preferable to use the \code{bin_}
+dating functions; however, see the argument \code{dateTreatment}.}
 
 \item{brRate}{Either a single estimate of the instantaneous rate of branching
 (also known as the 'per-capita' origination rate, or speciation rate if
@@ -89,7 +89,7 @@ at all. Can be a single value or a vector of per-taxon values, such as if a
 user wants to only allow plesiomorphic taxa to be ancestors.}
 
 \item{node.mins}{The minimum dates of internal nodes (clades) on a phylogeny can be set
-using node.mins. This argument takes a vector of the same length as the number of nodes,
+using \code{node.mins}. This argument takes a vector of the same length as the number of nodes,
 with dates given in the same order as nodes are ordered in the \code{tree$edge} matrix.
 Note that in \code{tree$edge}, terminal tips are given the first set of numbers
 (\code{1:Ntip(tree)}), so the first element of \code{node.mins} is the first internal node
@@ -186,7 +186,7 @@ If \code{FALSE},the function will run as quietly as possible.}
 
 \item{diagnosticMode}{If \code{TRUE}, \code{cal3timePaleoPhy} will return to the
 console and to graphic devices an enormous number of messages, plots and
-ancilliary information that may be useful or entirely useless to figuring
+ancillary information that may be useful or entirely useless to figuring
 out what is going wrong.}
 
 \item{tolerance}{Acceptable amount of shift in tip dates from dates listed
@@ -207,8 +207,9 @@ and LADs. The sites argument allows users to constrain the placement of
 dates by restricting multiple fossil taxa whose FADs or LADs are from the
 same very temporally restricted sites (such as fossil-rich Lagerstatten) to
 always have the same date, across many iterations of time-scaled trees. To
-do this, simply give a matrix where the "site" of each FAD and LAD for every
-taxon is listed, as corresponding to the second matrix in timeList. If no
+do this, provide a \code{matrix} to the \code{sites} argument
+where the "site" of each FAD and LAD for every
+taxon is listed, as corresponding to the second matrix in \code{timeList}. If no
 sites matrix is given (the default), then it is assumed all fossil come from
 different "sites" and there is no shared temporal structure among the
 events.}
@@ -294,7 +295,7 @@ As with many functions in the paleotree library, absolute time is always
 decreasing, i.e. the present day is zero.
 
 These functions will intuitively drop taxa from the tree with NA for range
-or that are missing from timeData.
+or that are missing from \code{timeData}.
 
 The sampling rate used by cal3 methods is the instantaneous sampling rate,
 as estimated by various other function in the paleotree package. See
@@ -393,7 +394,7 @@ A tutorial for applying the time-scaling functions in paleotree,
 particularly the cal3 method, along with an example using real (graptolite)
 data, can be found at the following link:
 
-http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
+\url{http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
 }
 \note{
 Most importantly, please note the stochastic element of the three

@@ -95,7 +95,10 @@ tipDatingCompatabilitySummaryMrB <- function(
 	########################################################
 	# CHECKS
 	if(compatibilityThreshold<0.5){
-		stop("compatibilityThreshold < 0.5: Currently cannot calculate compatibility trees containing nodes found on less than half of all trees")
+		stop(
+		  "compatibilityThreshold < 0.5:
+		     Currently cannot calculate compatibility trees containing nodes found on less than half of all trees"
+		  )
 		}
 	## CAN WE DO THIS?
 	#If compatibilityThreshold = 0 is used, 

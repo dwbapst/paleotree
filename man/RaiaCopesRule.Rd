@@ -23,7 +23,8 @@ Rule and the Universal Scaling Law of Ornament Complexity. \emph{The American Na
 And the corresponding Dryad repository:
 Raia P, Passaro F, Carotenuto F, Maiorino L, Piras P, Teresi L, Meiri S, Itescu Y, Novosolov
 M, Baiano MA, Martinez R, Fortelius M (2015) Data from: Cope's rule and the universal
-scaling law of ornament complexity. \emph{Dryad Digital Repository}. (https://doi.org/10.5061/dryad.50dr8)
+scaling law of ornament complexity. \emph{Dryad Digital Repository}. 
+(\url{https://doi.org/10.5061/dryad.50dr8})
 }
 \description{
 Dated phylogenetic trees for fossil ammonite genera, fossil ceratopsian species and (both extinct and extant) cervid

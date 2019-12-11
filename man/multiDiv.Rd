@@ -63,10 +63,10 @@ to have an infinitely small width.}
 \item{plotLogRich}{If TRUE, taxic diversity is plotted on log scale.}
 
 \item{yAxisLims}{Limits for the y (i.e. richness) axis on the plotted diversity curves. Only
-affects plotting. Given as either NULL (the default) or as a vector of
+affects plotting. Given as either \code{NULL} (the default) or as a vector of
 length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
-will be plotted \emph{exactly} to these values. The minimum value must be more than 1 if
-\code{plotLogRich = TRUE}.}
+will be plotted \emph{exactly} to these values. 
+The minimum value must be more than 1 if \code{plotLogRich = TRUE}.}
 
 \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only
 affects plotting. Given as either NULL (the default) or as a vector of
@@ -78,17 +78,17 @@ times for calculating the diversity curve. If NULL, calculated internally.
 If given, the argument split.int and int.length are ignored.}
 
 \item{plotMultCurves}{If \code{TRUE}, each individual diversity curve is plotted
-rather than the median diversity curve and 95 percent quantiles. FALSE by
-default.}
+rather than the median diversity curve and 95 percent quantiles. 
+\code{plotMultCurves = FALSE} by default.}
 
 \item{multRainbow}{If \code{TRUE} and plotMultCurves are both \code{TRUE}, each line is
-plotted as a different, randomized color using the function 'rainbow'. If
-FALSE, each line is plotted as a black line. This argument is ignored if
-divPalette is supplied.}
+plotted as a different, randomized color using the function \code{rainbow}. If
+\code{FALSE}, each line is plotted as a black line. This argument is ignored if
+\code{divPalette} is supplied.}
 
 \item{divPalette}{Can be used so users can pass a vector of chosen color
-identifiers for each diversity curve in 'data' which will take precedence
-over multRainbow. Must be the same length as the number of diversity curves
+identifiers for each diversity curve in \code{data} which will take precedence
+over \code{multRainbow}. Must be the same length as the number of diversity curves
 supplied.}
 
 \item{divLineType}{Used to determine line type (\code{lty}) of the
@@ -98,7 +98,7 @@ exact length as number of diversity curves.}
 
 \item{main}{The main label for the figure.}
 
-\item{results}{The output of a previous run of multiDiv for replotting.}
+\item{results}{The output of a previous run of \code{multiDiv} for replotting.}
 }
 \value{
 A list composed of three elements will be invisibly returned:
@@ -117,7 +117,7 @@ and plotted for each interval.
 }
 \details{
 This function is essentially a wrapper for the individual diversity curve
-functions included in paleotree. multiDiv will intuitively decide whether
+functions included in paleotree. \code{multiDiv} will intuitively decide whether
 input datasets are continuous-time taxic ranges, discrete-time (binned
 interval) taxic ranges or phylogenetic trees, as long as they are formatted
 as required by the respective diversity curve functions. A list that
@@ -128,11 +128,11 @@ and treated as input for \code{taxicDivCont}.
 Data of an unknown type gives back an error.
 
 The argument split.int splits intervals, if and only if discrete interval
-time data is included among the datasets. See the help file for taxicDivDisc
+time data is included among the datasets. See the help file for \code{taxicDivDisc}
 to see an explanation of why \code{split.int = TRUE} by default is probably a good
 thing.
 
-As with many functions in the paleotree library, absolute time is always
+As with many functions in the \code{paleotree} library, absolute time is always
 decreasing, i.e. the present day is zero.
 
 The 'averaged' curve is actually the median rather than the mean as
@@ -146,7 +146,6 @@ the standard error.
 \examples{
 # let's look at this function
     # with some birth-death simulations
-
 
 set.seed(444)
 
@@ -263,7 +262,7 @@ layout(1)
 The diversity curve functions used include: \code{\link{phyloDiv}},
 \code{\link{taxicDivCont}} and \code{\link{taxicDivDisc}}.
 
-Also see the function LTT.average.root in the package TreeSim, which
+Also see the function \code{LTT.average.root} in the package TreeSim, which
 calculates an average LTT curve for multiple phylogenies, the functions
 code{mltt.plot} in ape and code{ltt} in phytools.
 }

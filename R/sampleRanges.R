@@ -67,7 +67,7 @@
 #' 'Hats' are constrained to start and end with a taxon's range, representing
 #' the rise and fall of taxa in terms of abundance and geographic range (Liow
 #' et al., 2010). However, for still-living taxa at the modern day, it is
-#' unknown how much longer they may be alive (for memoryless Poisson models,
+#' unknown how much longer they may be alive (for memory-less Poisson models,
 #' there is no age-dependent extinction). The treatment of these taxa with
 #' regards to their 'hat' (i. e. the beta distribution) is controlled by randLivehat:
 #' when \code{ranLiveHat = FALSE}, the beta distribution is fit so that the last appearance of

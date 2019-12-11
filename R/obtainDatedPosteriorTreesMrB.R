@@ -36,7 +36,7 @@
 
 #' @param nRuns The number of runs in your analysis. This variable is used for figuring out what 
 #' filenames will be searched for: if you specify that you have less runs than you
-#' actually ran in reality, then some runs won't be examined in thi function. Conversely,
+#' actually ran in reality, then some runs won't be examined in this function. Conversely,
 #' specify too many, and this function will throw an error when it cannot find files it expects
 #' but do not exist. The default for this argument
 #' (\emph{two} runs) is based on the default number of runs in MrBayes.
@@ -105,7 +105,7 @@
 #' of the sampled parameter values, given the observed data and specified models.
 #' Neither of these are the posterior probability. 
 #' The true posterior probability (as given by Bayes Theorem) is 
-#' the prooduct of the likelihood and the prior probability, divided by
+#' the product of the likelihood and the prior probability, divided by
 #' the likelihood of the model, the latter of which is very rarely known.
 #' More commonly, the calculable portion of the posterior probability is
 #' the product of the likelihood and the prior probability; or, here, easily

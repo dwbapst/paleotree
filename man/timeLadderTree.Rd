@@ -7,13 +7,13 @@
 timeLadderTree(tree, timeData)
 }
 \arguments{
-\item{tree}{A phylo object}
+\item{tree}{A phylogeny, as an object of class \code{phylo}.}
 
-\item{timeData}{Two-column matrix of per-taxon first and last occurrences in
+\item{timeData}{Two-column \code{matrix} of per-taxon first and last occurrences in
 absolute continuous time.}
 }
 \value{
-Returns the modified tree as an object of class phylo, with no edge
+Returns the modified tree as an object of class \code{phylo}, with no edge
 lengths.
 }
 \description{
@@ -33,13 +33,13 @@ Taxa with the same identical first appearance date will be ordered randomly.
 Thus, the output is slightly stochastic, but only when ties exist. This is
 probably uncommon with real data on continuous time-scales.
 
-Taxa not shared between the tree and the timeData matrix, or listed as
-having a FAD or LAD of NA in timeData will be dropped and will not be
+Taxa not shared between the input tree and the \code{timeData} matrix, or listed as
+having a FAD or LAD of \code{NA} in \code{timeData} will be dropped and will not be
 included in the output tree.
 
 See this blog post for more information:
 
-http://nemagraptus.blogspot.com/2012/07/resolving-polytomies-according-to.html
+\url{http://nemagraptus.blogspot.com/2012/07/resolving-polytomies-according-to.html}
 }
 \examples{
 \donttest{

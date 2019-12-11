@@ -305,7 +305,7 @@ to match the current algorithm used by \code{DatePhylo} in package \code{strap},
 versions of "equal" have been added to this function, respectively representing how \code{timePaleoPhy}
 and \code{DatePhylo} (and its predecessor \code{date.phylo}) applied the "equal" time-scaling method.
 
-\emph{Interpretation of Taxon Ages in timePaleoPhy}
+\emph{Interpretation of Taxon Ages in \code{timePaleoPhy}}
 
 \code{timePaleoPhy} is \emph{primarily} designed for direct application to datasets where taxon first 
 and last appearances are precisely known in continuous time, with no stratigraphic
@@ -337,7 +337,7 @@ fixed, but the 'last appearance' dates as unknown. In previous versions of paleo
 this third option was enacted with the argument \code{rand.obs}, which has been removed for
 clarity.
 
-\emph{Interpretation of Taxon Ages in bin_timePaleoPhy}
+\emph{Interpretation of Taxon Ages in \code{bin_timePaleoPhy}}
 
 As an alternative to using \code{timePaleoPhy}, \code{bin_timePaleoPhy} is a wrapper of 
 \code{timePaleoPhy} which produces time-scaled trees for datasets which only have 

@@ -20,22 +20,24 @@ qsProb2Comp(R, q, p = NULL, mode = "budding", nrep = 10000)
 qsRate2Comp(r, q)
 }
 \arguments{
-\item{R}{Per-interval probability of sampling a taxon at least once}
+\item{R}{Per-interval probability of sampling a taxon at least once.}
 
 \item{int.length}{Length of Time Intervals}
 
-\item{r}{Instantaneous rate of sampling}
+\item{r}{Instantaneous rate of sampling (per taxon, per time-unit).}
 
 \item{p}{Instantaneous rate of speciation (lambda). If the underlying model assumed is
 anagenetic (e.g. taxonomic change within a single lineage, 'phyletic evolution') 
-with no branching of lineages, then p will be used as the rate of anagenetic differentiation.}
+with no branching of lineages, then \code{p} will be used as the rate of anagenetic differentiation.}
 
 \item{q}{Instantaneous rate of extinction (mu)}
 
 \item{mode}{Mode of morphotaxon differentiation, based on definitions in Foote, 1996. Can be
-pure cladogenetic budding ("budding"), pure cladogenetic bifurcating ("bifurcating") or
-pure anagenetic within-lineage change ("anagenesis"; i.e. Foote's 'phyletic change'). Default
-mode is "budding".}
+pure cladogenetic budding (\code{"budding"}), 
+pure cladogenetic bifurcating (\code{"bifurcating"}) or
+pure anagenetic within-lineage change 
+(\code{"anagenesis"}; i.e. Foote's 'phyletic change'). 
+Default mode is "budding".}
 
 \item{nrep}{Number of repetitions to run in functions which are meant to sum over infinity.
 Default is arbitrarily high.}
@@ -52,27 +54,29 @@ record.
 This is a family of functions which all convert from some estimate of
 sampling to another estimate of sampling. Some of these also require
 estimates of an rate associated with taxonomic diversification, such as the
-speciation/origination rate or extinction rate. Diversification rates used
+speciation (or origination) rate or extinction rate. Diversification rates used
 in these functions should always be the instantaneous rates, often called
 the per-capita rates by paleontologists (Foote, 2000).
 
-As with many models used in the paleotree library, it is generally assumed
-that the fossil record of interest is composed of discrete relatively-static
-taxonomic units which diversify mainly by budding cladogenesis, and that
+As with many models used in the \code{paleotree} library, it is generally assumed
+by these functions that the fossil record of interest is composed of
+discrete relatively-static taxonomic units which diversify 
+typically by budding cladogenesis, and that
 sampling events are rare and approximated by a Poisson model of
 exponentially-distributed waiting times between sampling events. The
 veracity of those assumptions is difficult to test and the sensitivity of
 these analyses to relaxing those assumptions probably varies.
 
-sProb2sRate and sRate2sProb give rough conversions for the probability of
-sampling once per time interval (R or "sProb" in this package as used in the
+\code{sProb2sRate} and \code{sRate2sProb} give rough conversions for the probability of
+sampling once per time interval 
+(the variable \code{R} or \code{sProb} in this package as used in the
 references below) and the instantaneous rate of sampling per lineage/time
 unit ("sRate" or r). If you have estimates of the speciation and extinction
-rate, use pqsRate2sProb instead for a more accurate estimate of R.
+rate, use \code{pqsRate2sProb} instead for a more accurate estimate of R.
 
-qsProb2Comp and qsRate2Comp are different calculations for "Pp" or the
-probability/proportion of taxa sampled in a clade. Theoretically, one could
-use it to extrapolate out the 'true' diversity, assuming the sampling rate
+\code{qsProb2Comp} and \code{qsRate2Comp} are different calculations for the
+probability/proportion of taxa sampled in a clade (often labeled as the variable \code{Pp}).
+Theoretically, one could use it to extrapolate out the 'true' diversity, assuming the sampling rate
 model was correct. (See Foote and Raup, 1996.)
 
 See the references below for a more detailed explanation of the methods and

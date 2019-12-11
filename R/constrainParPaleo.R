@@ -63,9 +63,9 @@
 #' complicated exampled, with the parameter \code{x.1.3.1}, the third group
 #' for the second group system (perhaps this taxonomic data point has a morphological
 #' feature not seen in some other taxa) and group 1 of the third group system (maybe
-#' biogeographic region 1? the possibilities are endless depending on user choices). 
+#' biogeographic region 1? The possibilities are endless depending on user choices!). 
 #' 
-#' The 'all' option work like so: if \code{x.all ~ x.1} is given as a formulae, then all \code{x}
+#' The \code{all} option work like so: if \code{x.all ~ x.1} is given as a formulae, then all \code{x}
 #' parameters will be constrained to equal \code{x.1}. For example, if there is \code{x.1}, \code{x.2},
 #' \code{x.3} and \code{x.4} parameters for a model, \code{x.all ~ x.1} would be equivalent to
 #' individually giving the formulae \code{x.2~x.1}, \code{x.3~x.1} and \code{x.4~x.1}. This
@@ -126,7 +126,7 @@
 #' presumably is attempting to constrain all y values to equal the x parameter
 #' to equal half of the \code{x} parameter for group 1. This will not be parsed as such
 #' and should return an error. However, there are workarounds, but they require
-#' using constrainParPaleo more than once. For the above example, a user could
+#' using \code{constrainParPaleo} more than once. For the above example, a user could
 #' first use \code{y.all ~ y.1} constraining all y values to be equal. Then a user
 #' could constrain with the formula \code{y.1 ~ x.1 / 2} which would then constrain
 #' \code{y.1} (and all the \code{y} values constrained to equal it) to be equal to the desired
@@ -190,10 +190,10 @@
 #' (example coming later).
 
 #' @return 
-#' Modified from the diversitree manual:
+#' Modified from the \code{diversitree} manual:
 
 #' This function returns a constrained function that can be passed
-#'  through to the optimization functions of a user's choice, such as
+#' through to the optimization functions of a user's choice, such as
 #' \code{\link{optim}}, \code{find.mle} in diversitree or \code{mcmc}.
 #' It will behave like any other function.  However, it has a modified
 #' \code{class} attribute so that some methods will dispatch differently:
@@ -211,7 +211,7 @@
 #' the function (see Examples).
 
 #' @seealso
-#' As noted above, this function is based on (but does not depend on) the
+#' As noted above, this function is strongly based on (but does not depend on) the
 #' function \code{constrain} from the library \code{diversitree}.
 
 #' @author 

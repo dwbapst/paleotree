@@ -15,12 +15,12 @@
 #' time units after the root.
 #' 
 #' If \code{drop.extinct = TRUE}, then extinct tips are dropped and (if present) the
-#' $root.time of ttree is adjusted. This is done using the \code{paleotree} function
+#' \code{$root.time} of \code{ttree} is adjusted. This is done using the \code{paleotree} function
 #' \code{dropExtinct}.
 
 #' @param ttree A time-scaled phylogeny of class \code{phylo}.
 
-#' @param sliceTime Time to 'slice' the tree at. See details.
+#' @param sliceTime Time at which to 'slice' the tree. See details.
 
 #' @param drop.extinct If \code{TRUE}, drops tips that go extinct before
 #' the input \code{timeSlice} using function \code{dropExtinct}.

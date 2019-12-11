@@ -10,17 +10,17 @@
 \format{This dataset is composed of three objects: 
 
 \describe{
-\item{graptCharMatrix}{A matrix composed of mixed character data
+\item{graptCharMatrix}{A \code{matrix} composed of mixed character data
 and a group code for 183 graptoloid taxa, with rows named with species
 names and columns named with character names.}
 
-\item{graptRanges}{A list containing two matrices: the first matrix
+\item{graptRanges}{A \code{list} containing two matrices: the first matrix
 describes the first and last interval times for 20 graptolite biozones
 and the second matrix contains the first and last appearances of 183
-graptolite species in those same biozones. (In other words, graptRanges
-has the 'timeList' format called by some paleotree functions).}
+graptolite species in those same biozones. (In other words, \code{graptRanges}
+has the \code{timeList} format called by some \code{paleotree} functions).}
 
-\item{graptDistMat}{A 183x183 matrix of pair-wise distances (dissimilarities)
+\item{graptDistMat}{A 183x183 \code{matrix} of pair-wise distances (dissimilarities)
 for the 183 graptolite species, using the algorithm for discrete characters
 and min-max range values described in Bapst et al.}}}
 \source{

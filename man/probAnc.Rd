@@ -17,16 +17,18 @@ probAnc(
 \arguments{
 \item{p}{Instantaneous rate of speciation (lambda). If the underlying model assumed is
 anagenetic (e.g. taxonomic change within a single lineage, 'phyletic evolution') 
-with no branching of lineages, then p will be used as the rate of anagenetic differentiation.}
+with no branching of lineages, then \code{p} will be used as the rate of anagenetic differentiation.}
 
 \item{q}{Instantaneous rate of extinction (mu)}
 
-\item{R}{Per-interval probability of sampling a taxon at least once}
+\item{R}{Per-interval probability of sampling a taxon at least once.}
 
 \item{mode}{Mode of morphotaxon differentiation, based on definitions in Foote, 1996. Can be
-pure cladogenetic budding ("budding"), pure cladogenetic bifurcating ("bifurcating") or
-pure anagenetic within-lineage change ("anagenesis"; i.e. Foote's 'phyletic change'). Default
-mode is "budding".}
+pure cladogenetic budding (\code{"budding"}), 
+pure cladogenetic bifurcating (\code{"bifurcating"}) or
+pure anagenetic within-lineage change 
+(\code{"anagenesis"}; i.e. Foote's 'phyletic change'). 
+Default mode is "budding".}
 
 \item{analysis}{The type of analysis to be performed, either the probability of sampling direct
 descendants (\code{"directDesc"}) or of sampling indirect descendants (\code{"indirectDesc"}).}

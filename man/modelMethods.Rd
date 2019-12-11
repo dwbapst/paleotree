@@ -94,7 +94,7 @@ using one of the \code{make} functions, which automatically output a function of
 appropriate class and attributes.}
 
 \item{...}{'Ignored arguments to future methods' (i.e. for \code{diversitree}). Kept here only
-so constrainParPaleo is kept as close to the parent method in d\code{diversitree} as possible.}
+so \code{\link{constrainParPaleo}} is kept as close to the parent method in d\code{diversitree} as possible.}
 
 \item{value}{The new value with which to replace the parameter names or bounds. Must
 be a vector of the same length as the number of parameters. For \code{parbounds}, must

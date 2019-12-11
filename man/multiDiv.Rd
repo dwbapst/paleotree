@@ -41,18 +41,18 @@ plotMultiDiv(
 one of the diversity curve functions listed in \code{\link{DiversityCurves}}.}
 
 \item{int.length}{The length of intervals used to make the diversity curve.
-Ignored if int.times is given.}
+Ignored if \code{int.times} is given.}
 
 \item{plot}{If \code{TRUE}, the median diversity curve is plotted.}
 
 \item{split.int}{For discrete time data, should calculated/input intervals
-be split at discrete time interval boundaries? If FALSE, can create apparent
-artifacts in calculating the diversity curve. See below.}
+be split at discrete time interval boundaries? If \code{FALSE}, can create apparent
+artifacts in calculating the diversity curve. See details.}
 
-\item{drop.ZLB}{If true, zero-length terminal branches are dropped from the
+\item{drop.ZLB}{If \code{TRUE}, zero-length terminal branches are dropped from the
 input tree for phylogenetic datasets, before calculating standing diversity.}
 
-\item{drop.cryptic}{If TRUE, cryptic taxa are merged to form one taxon for
+\item{drop.cryptic}{If \code{TRUE}, cryptic taxa are merged to form one taxon for
 estimating taxon curves. Only works for objects from \code{simFossilRecord}
 via \code{fossilRecord2fossilTaxa}.}
 
@@ -60,22 +60,22 @@ via \code{fossilRecord2fossilTaxa}.}
 (0,0) bins for extant taxa, so that the that 'time interval' does not appear 
 to have an infinitely small width.}
 
-\item{plotLogRich}{If TRUE, taxic diversity is plotted on log scale.}
+\item{plotLogRich}{If \code{TRUE}, taxic diversity is plotted on log scale.}
 
-\item{yAxisLims}{Limits for the y (i.e. richness) axis on the plotted diversity curves. Only
-affects plotting. Given as either \code{NULL} (the default) or as a vector of
-length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
-will be plotted \emph{exactly} to these values. 
+\item{yAxisLims}{Limits for the y (i.e. richness) axis on the plotted diversity curves. 
+Only affects plotting. Given as either \code{NULL} (the default) or as a vector of
+length two as for \code{xlim} in the basic R function \code{plot}. 
+Time axes will be plotted \emph{exactly} to these values. 
 The minimum value must be more than 1 if \code{plotLogRich = TRUE}.}
 
 \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only
-affects plotting. Given as either NULL (the default) or as a vector of
+affects plotting. Given as either \code{NULL} (the default) or as a vector of
 length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
 will be plotted \emph{exactly} to these values.}
 
 \item{int.times}{An optional two-column matrix of the interval start and end
-times for calculating the diversity curve. If NULL, calculated internally.
-If given, the argument split.int and int.length are ignored.}
+times for calculating the diversity curve. If \code{NULL}, calculated internally.
+If given, the argument \code{split.int} and \code{int.length} are ignored.}
 
 \item{plotMultCurves}{If \code{TRUE}, each individual diversity curve is plotted
 rather than the median diversity curve and 95 percent quantiles. 
@@ -127,7 +127,7 @@ via simulation with \code{simFossilRecord} is allowable,
 and treated as input for \code{taxicDivCont}.
 Data of an unknown type gives back an error.
 
-The argument split.int splits intervals, if and only if discrete interval
+The argument \code{split.int} splits intervals, if and \emph{only} if discrete interval
 time data is included among the datasets. See the help file for \code{taxicDivDisc}
 to see an explanation of why \code{split.int = TRUE} by default is probably a good
 thing.
@@ -262,7 +262,7 @@ layout(1)
 The diversity curve functions used include: \code{\link{phyloDiv}},
 \code{\link{taxicDivCont}} and \code{\link{taxicDivDisc}}.
 
-Also see the function \code{LTT.average.root} in the package TreeSim, which
+Also see the function \code{LTT.average.root} in the package \code{TreeSim}, which
 calculates an average LTT curve for multiple phylogenies, the functions
-code{mltt.plot} in ape and code{ltt} in phytools.
+code{mltt.plot} in ape and code{ltt} in \code{phytools}.
 }

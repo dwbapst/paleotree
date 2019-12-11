@@ -323,7 +323,7 @@
 #' Unless you have exceptionally resolved data, use a wrapper with the cal3
 #' function, either the provided \code{bin_cal3TimePaleoPhy} or code a wrapper
 #' function of your own that accounts for stratigraphic uncertainty in 
-#' your dataset. Remember that the FADs (earliest dates) given to timePaleoPhy
+#' your dataset. Remember that the FADs (earliest dates) given to \code{timePaleoPhy}
 #'  will *always* be used to calibrate node ages!
 
 #' @author David W. Bapst

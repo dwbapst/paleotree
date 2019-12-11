@@ -11,10 +11,10 @@ occData2timeList(occList, intervalType = "dateRange")
 such as that returned by \code{\link{taxonSortPBDBocc}}. The occurrence data can be either a 
 two-column matrix composed of the lower and upper age bounds on each taxon occurrence, or has
 two named variables which match any of the field names given by the PBDB API under either
-the 'pbdb' vocab or 'com' (compact) vocab for early and late age bounds.}
+the \code{'pbdb'} vocab or \code{'com'} (compact) vocab for early and late age bounds.}
 
-\item{intervalType}{Must be either "dateRange" (the default), "occRange" or
-"zoneOverlap". Please see details below.}
+\item{intervalType}{Must be either \code{"dateRange"} (the default), \code{"occRange"} or
+\code{"zoneOverlap"}. Please see details below.}
 }
 \value{
 Returns a standard timeList data object, as used by
@@ -40,16 +40,16 @@ of a named list.
 The argument \code{intervalType} controls the algorithm used for obtain first and last interval bounds for
 each taxon, of which there are several to select from:intervalType
 \describe{
- \item{"dateRange"}{The default option. The bounds on the first appearances
+ \item{\code{"dateRange"}}{The default option. The bounds on the first appearances
 are the span between the oldest upper and lower bounds
 of the occurrences, and the bounds on the last appearances are the span between the youngest
 upper and lower bounds across all occurrences. This is guaranteed to provide the smallest
 bounds on the first and last appearances, and was originally suggested to the author by J. Marcot.}
-\item{"occRange"}{This option returns the smallest bounds among (a) the oldest occurrences for the
+\item{\code{"occRange"}}{This option returns the smallest bounds among (a) the oldest occurrences for the
 first appearance (i.e. all occurrences with their lowest bound at the oldest lower age bound), and (b) the
 youngest occurrences for the last appearance (i.e. all occurrences with their uppermost bound
 at the youngest upper age bound).}
-\item{"zoneOverlap"}{This option is an attempt to mimic the stratigraphic range algorithm used by PBDB Classic
+\item{\code{"zoneOverlap"}}{This option is an attempt to mimic the stratigraphic range algorithm used by PBDB Classic
 which "finds the oldest base that is older than at least part of all the intervals and the
 youngest that is younger than at least part of all the intervals" (personal communication, J. Alroy). 
 This is a somewhat more complex case as we are trying to obtain a \code{timeList} object.

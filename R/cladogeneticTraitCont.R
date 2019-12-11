@@ -45,8 +45,8 @@
 #' by default.
 
 #' @return Returns a vector of trait values for each taxon, with value names
-#' being the taxa IDs (column 1 of the input) with a 't' pasted (as with rtree
-#' in the ape library).
+#' being the taxa IDs (column 1 of the input) with a 't' pasted (as with \code{rtree}
+#' in the \code{ape} library).
 
 #' @author David W. Bapst
 

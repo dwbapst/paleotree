@@ -27,7 +27,8 @@ referring to the row of \code{int.times}.}
 \description{
 Converts a matrix of simulated continuous-time first occurrences and last
 occurrences for fossil taxa into first and last occurrences given in some set
-of simulated/placed discrete-time intervals, which is output along with
+of discrete-time intervals, either simulated or place \emph{a priori},
+which is output along with
 information of the dates of the given intervals.
 }
 \details{
@@ -38,32 +39,33 @@ sequential non-overlapping time-interval of equal non-zero length are used,
 with the length controlled by the argument int.length.
 
 Alternatively, a two column matrix of interval start and end times to be
-used can be input via the argument int.times. None of these intervals can
+used can be input via the argument \code{int.times}. None of these intervals can
 have a duration (temporal length) greater than zero. If a first or last
 appearance in the input range data could fit into multiple intervals (i.e.
 the input discrete time intervals are overlapping), then the appearance data
 is placed in the interval of the shortest duration. When output, the
 interval times matrix (see below) will be sorted from first to last.
 
-This function is SPECIFICALLY for simulating the effect of having a discrete
-time-scale for analyses using simulations. This function should not be used
-for non-simulations uses, such as binning temporal occurrences for analyses
-of real data. In those case, the temporal ranges (which, in real data, will
-probably be given as discrete time intervals) should already be tabulated
-within discrete intervals prior to use in paleotree. The user should place
-the temporal information in a list object, as described for the output of
-binTimeData (see below).
-
-As with many functions in the paleotree library, absolute time is always
+As with many functions in the \code{paleotree} package, absolute time is always
 decreasing, i.e. the present day is zero. However, the numbering of
 intervals giving in the output increases with time, as these are numbered
 relative to each other, from first to last.
 
-As of version 1.7 of paleotree, taxa which are
-extant as indicated in timeData as being
+As of version 1.7 of \code{paleotree}, taxa which are
+extant as indicated in \code{timeData} as being
 in a time interval bounded \code{(0, 0)}, unless time-bins are preset using
 argument \code{int.times} (prior to version 1.5 they were erroneously listed as
 NA).
+}
+\note{
+This function is \emph{SPECIFICALLY} for simulating the effect of having a discrete
+time-scale for analyses using simulations. This function should not be used
+for non-simulations uses, such as binning temporal occurrences for analyses
+of real data. In those case, the temporal ranges (which, in real data, will
+probably be given as discrete time intervals) should already be tabulated
+within discrete intervals prior to use in \code{paleotree}. The user should place
+the temporal information in a \code{list} object, as described for the output of
+\code{binTimeData}.
 }
 \examples{
 

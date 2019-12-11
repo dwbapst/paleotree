@@ -1,4 +1,4 @@
-#' perCapitaRates
+#' Instantaneous \emph{per-Capita} Rates of Origination and Extinction from the Fossil Record
 #' 
 #' Calculates and plots per-capita origination and extinction rates from
 #' sequential discrete-time taxon ranges, following Foote (2000).
@@ -13,20 +13,20 @@
 #' estimated using the matrix invisibly output by this function (See Foote,
 #' 2000, for the relevant equations for calculating these).
 #' 
-#' The timeList object should be a list composed of two matrices, the first
+#' The \code{timeList} object should be a list composed of two matrices, the first
 #' matrix giving by-interval start and end times (in absolute time), the second
 #' matrix giving the by-taxon first and last appearances in the intervals
 #' defined in the first matrix, numbered as the rows. Absolute time should be
 #' decreasing, while the intervals should be numbered so that the number
 #' increases with time. Taxa alive in the modern should be either 
-#' (a) listed in isExtant or 
+#' (a) listed in \code{isExtant} or 
 #' (b) listed as last occurring in a time interval
 #' that begins at time 0 and ends at time 0. 
 #' See the documentation for the time-scaling 
 #' function \code{\link{bin_timePaleoPhy}} and the simulation function 
 #' \code{\link{binTimeData}} for more information on formatting.
 #' 
-#' Unlike some functions in paleotree, such as the diversity curve functions,
+#' Unlike some functions in \code{paleotree}, such as the diversity curve functions,
 #' intervals must be both sequential and non-overlapping. The diversity curve
 #' functions deal with such issues by assuming taxa occur from the base of the
 #' interval they are first found in until the end of the last interval they
@@ -57,7 +57,7 @@
 
 #' @param legendPosition The position of a legend indicating which line is
 #' origination rate and which is extinction rate on the resulting plot. This
-#' is given as the possible positions for argument 'x' of the function 
+#' is given as the possible positions for argument \code{x} of the function 
 #'\code{\link{legend}}, and by default is \code{"topleft"}, which will be generally
 #' useful if origination and extinction rates are initially low. If 
 #' \code{legendPosition = NA}, then a legend will not be plotted.
@@ -66,11 +66,12 @@
 #' where the number of rows is equal to the number of intervals. The
 #' first two columns are interval start and end times and the third
 #' column is interval length. The fourth through eighth column is the
-#' four fundamental classes of taxa from Foote (2001): Nbt, NbL, NFt,
-#' NFL and their sum, N. The final two columns are the per-capita
-#' rates estimated for each interval in units per lineage time-units;
-#' the ninth column is the origination rate ('pRate') and the tenth
-#' column is the extinction rate ('qRate').
+#' four fundamental classes of taxa from Foote (2001):
+#' \code{Nbt}, \code{NbL}, \code{NFt}, \code{NFL} and their sum, \code{N}.
+#' The final two columns are the per-capita rates estimated for
+#' each interval in units per lineage time-units;
+#' the ninth column is the origination rate (\code{pRate}) and the tenth
+#' column is the extinction rate (\code{qRate}).
 
 #' @seealso \code{\link{DiversityCurves}}, \code{\link{SamplingConv}}
 

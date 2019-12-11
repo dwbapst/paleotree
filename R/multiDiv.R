@@ -17,7 +17,7 @@
 #' and treated as input for \code{taxicDivCont}.
 #' Data of an unknown type gives back an error.
 #' 
-#' The argument split.int splits intervals, if and only if discrete interval
+#' The argument \code{split.int} splits intervals, if and \emph{only} if discrete interval
 #' time data is included among the datasets. See the help file for \code{taxicDivDisc}
 #' to see an explanation of why \code{split.int = TRUE} by default is probably a good
 #' thing.
@@ -48,10 +48,10 @@
 #' rather than the median diversity curve and 95 percent quantiles. 
 #' \code{plotMultCurves = FALSE} by default.
 
-#' @param yAxisLims Limits for the y (i.e. richness) axis on the plotted diversity curves. Only
-#' affects plotting. Given as either \code{NULL} (the default) or as a vector of
-#' length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
-#' will be plotted \emph{exactly} to these values. 
+#' @param yAxisLims Limits for the y (i.e. richness) axis on the plotted diversity curves. 
+#' Only affects plotting. Given as either \code{NULL} (the default) or as a vector of
+#' length two as for \code{xlim} in the basic R function \code{plot}. 
+#' Time axes will be plotted \emph{exactly} to these values. 
 #' The minimum value must be more than 1 if \code{plotLogRich = TRUE}.
 
 #' @param multRainbow If \code{TRUE} and plotMultCurves are both \code{TRUE}, each line is
@@ -82,9 +82,9 @@
 #' @seealso The diversity curve functions used include: \code{\link{phyloDiv}},
 #' \code{\link{taxicDivCont}} and \code{\link{taxicDivDisc}}.
 #' 
-#' Also see the function \code{LTT.average.root} in the package TreeSim, which
+#' Also see the function \code{LTT.average.root} in the package \code{TreeSim}, which
 #' calculates an average LTT curve for multiple phylogenies, the functions
-#' code{mltt.plot} in ape and code{ltt} in phytools.
+#' code{mltt.plot} in ape and code{ltt} in \code{phytools}.
 
 #' @examples
 #' # let's look at this function

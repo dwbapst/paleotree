@@ -92,7 +92,7 @@ by a number of \code{paleotree} functions such as
 \code{fossilTaxa2fossilRecord} does the reverse, converting a \code{simFossilTaxa}
 table into a \code{fossilRecordSimulation} list object,
 but returns a \code{fossilRecordSimulation} object that
-considers each species as un-sampled (as sampling
+considers each species as \emph{unsampled} (as sampling
 information is not contained within a \code{simFossilTaxa} table).
 
 \code{fossilRecord2fossilRanges} converts a \code{fossilRecordSimulation} object

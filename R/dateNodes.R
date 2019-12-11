@@ -2,26 +2,26 @@
 #' 
 #' This function returns the ages of nodes (both internal and terminal tips)
 #' for a given phylogeny of class \code{phylo}.
-#' Its use is specialized for application to time-scaled trees from \code{paleotree},
+#' Its use is specialized for application to dated trees from \code{paleotree},
 #' see Details below.
 
 #' @details
 #' This function is specialized for dated phylogenies, either estimated from empirical data or simulated with functions from
-#' \code{paleotree}, and thus have a $root.time element. This function will still work without such,
+#' \code{paleotree}, and thus have a \code{$root.time} element. This function will still work without such,
 #' but users should see the details for the \code{rootAge} argument.
 
-#' @param tree A phylogeny object of class 'phylo'. Must have edge.lengths!
+#' @param tree A phylogeny object of class \code{phylo}. Must have edge lengths!
 
-#' @param rootAge The root age of the tree, assumed by default to be equal to the element
-#' tree$root.time, which is a standard element for trees time-scaled by the paleotree
+#' @param rootAge The root age of the tree, assumed by default to be equal to the element at
+#' \code{tree$root.time}, which is a standard element for trees dated by the \code{paleotree}
 #' package. If not given by the user and if the \code{$root.time} element does not exist, then
 #' the maximum depth of the tree will be taken as the root age, which implicitly assumes
-#' the latest most terminal tip is an extant taxon at the modern day (time = 0). If rootAge
+#' the latest most terminal tip is an extant taxon at the modern day (time = 0). If \code{rootAge}
 #' is so defined that some nodes may occur later than time = 0, this function may return
 #' negative dates.
 
 #' @param labelDates If \code{FALSE} (the default), the dates returned are labeled with the
-#' tip/node numbers as in \code{tree$edge}. If \code{TRUE}, they are labeled with the tip labels
+#' tip/node numbers as given in \code{tree$edge}. If \code{TRUE}, they are labeled with the tip labels
 #' of every descendant tip, which for terminal tips means a single taxon label, and for
 #' internal tips a label that might be very long, composed of multiple tip labels pasted
 #' together. Thus, by default, this argument is \code{FALSE}.

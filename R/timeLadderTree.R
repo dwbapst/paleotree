@@ -10,7 +10,7 @@
 #' assumption for poorly sampled fossil records.
 #' 
 #' This function is for resolving trees when a continuous time-scale is known.
-#' For discrete time-scales, see the function bin_timePaleoPhy.
+#' For discrete time-scales, see the function \code{bin_timePaleoPhy}.
 #' 
 #' Taxa with the same identical first appearance date will be ordered randomly.
 #' Thus, the output is slightly stochastic, but only when ties exist. This is

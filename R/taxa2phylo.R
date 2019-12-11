@@ -1,29 +1,29 @@
 #' Convert Simulated Taxon Data into a Phylogeny
 #' 
 #' Converts temporal and ancestor-descendant relationships of taxa into a
-#' time-scaled phylogeny
+#' dated phylogeny with tips at instantaneous points in time.
 #' 
 #' @details 
-#' As described in the documentation for taxa2cladogram, the relationships
+#' As described in the documentation for \code{taxa2cladogram}, the relationships
 #' among morphotaxa in the fossil record are difficult to describe in terms of
 #' traditional phylogenies. One possibility is to arbitrarily choose particular
 #' instantaneous points of time in the range of some taxa and describe the
-#' time-scaled relationships of the populations present at those dates. This is
-#' the tactic used by taxa2phylo.
+#' temporal relationships of the populations present at those dates. This is
+#' the tactic used by \code{taxa2phylo}.
 #' 
 #' By default, the dates selected (the \code{obs_time} argument) are the last occurences
 #' of the taxon, so a simple use of this function will produce a time-scaled
 #' tree which describes the relationships of the populations present at the
-#' last occurence of each taxon in the sampled data. Alternatively, obs_time
+#' last occurence of each taxon in the sampled data. Alternatively, \code{obs_time}
 #' can be supplied with different dates within the taxon ranges.
 #' 
 #' All data relating to when static morphotaxa appear or disappear in the
-#' record is lost; branching points will be the actual time of speciation,
+#' record is lost. Branching points will be the actual time of speciation,
 #' which (under budding) will often be in the middle of the temporal range of a
 #' taxon.
 #' 
-#' Cryptic taxa are not dropped or merged as can be done with taxa2cladogram.
-#' The purpose of taxa2phylo is to obtain the 'true' pattern of evolution for
+#' Cryptic taxa are not dropped or merged as can be done with \code{taxa2cladogram}.
+#' The purpose of \code{taxa2phylo} is to obtain the 'true' pattern of evolution for
 #' the observation times, independent of what we might actually be able to
 #' recover, for the purpose of comparing in simulation analyses.
 #' 
@@ -37,24 +37,25 @@
 
 #' @param obs_time A vector of per-taxon times of observation which must be in
 #' the same order of taxa as in the object \code{taxaData}. 
-#' If \code{obs_time = NULL}, the LADs (column 4) in \code{taxaData} are used
+#' If \code{obs_time = NULL}, the LADs (column 4) in \code{taxaData} are used.
 
 #' @param plot If \code{TRUE} result the output with \code{ape::plot.phylo}.
 
 #' @return The resulting phylogeny with branch lengths is output as an object
-#' of class phylo. This function will output trees with the element $root.time,
+#' of class \code{phylo}. This function will output trees with the element \code{$root.time},
 #' which is the time of the root divergence in absolute time.
 #' 
-#' The tip labels are the rownames from the simulation input; see documentation
-#' for \code{simFossilRecord} and \code{fossilRecord2fossilTaxa} documentation for details.
+#' The tip labels are the row-names from the simulation input; see the documentation
+#' for \code{simFossilRecord} and \code{fossilRecord2fossilTaxa} for details.
 
-#' @note DO NOT use this function to time-scale a real tree for a real dataset.
+#' @note 
+#' Do \emph{NOT} use this function to date a real tree for a real dataset.
 #' It assumes you know the divergence/speciation times of the branching nodes
 #' and relationships perfectly, which is almost impossible given the
-#' undersampled nature of the fossil record. Use timePaleoPhy or
-#' cal3TimePaleoPhy instead.
+#' undersampled nature of the fossil record. Use \code{timePaleoPhy} or
+#' \code{cal3TimePaleoPhy} instead.
 #' 
-#' DO use this function when doing simulations and you want to make a tree of
+#' Do use this function when doing simulations and you want to make a tree of
 #' the 'true' history, such as for simulating trait evolution along
 #' phylogenetic branches.
 #' 

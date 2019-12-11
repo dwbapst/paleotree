@@ -9,11 +9,11 @@ pqr2Ps(p, q, r, useExact = TRUE)
 \arguments{
 \item{p}{Instantaneous rate of speciation (lambda). If the underlying model assumed is
 anagenetic (e.g. taxonomic change within a single lineage, 'phyletic evolution') 
-with no branching of lineages, then p will be used as the rate of anagenetic differentiation.}
+with no branching of lineages, then \code{p} will be used as the rate of anagenetic differentiation.}
 
 \item{q}{Instantaneous rate of extinction (mu)}
 
-\item{r}{Instantaneous rate of sampling}
+\item{r}{Instantaneous rate of sampling (per taxon, per time-unit).}
 
 \item{useExact}{If TRUE, an exact solution developed by Emily King is
 used; if FALSE, an iterative, inexact solution is used, which is somewhat slower

@@ -32,7 +32,7 @@
 #' the function will expect \code{nodeDates} to contain ages only for internal
 #' branching nodes, and all tips will be assumed to be at time 0. (Thus, if your
 #' tree is ultrametric but tips aren't all at the modern, do \emph{not}
-#' use {allTipsModern = TRUE}).
+#' use \code{allTipsModern = TRUE}).
 
 #' @return
 #' A dated tree as a list of class \code{phylo}, with a \code{$root.time}

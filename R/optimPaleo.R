@@ -10,12 +10,12 @@
 #' @details
 #' This is mainly provided in this publicly released package for pedagogical
 #' reasons. Users seeking an optimizer for their own analytical purposes
-#' should write their own optim function.
+#' should write their own \code{\link{optim}} function.
 
 #' @param modelFun A likelihood function for a model, of class 'paleotreeFunc'.
 
 #' @return
-#' Returns the results from using optim.
+#' Returns the results from using \code{\link{optim}}.
 
 #' @seealso
 #' \code{\link{constrainParPaleo}} and \code{\link{modelMethods}}

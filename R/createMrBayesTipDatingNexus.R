@@ -207,7 +207,7 @@
 #' The basic \emph{MrBayes} commands utilized in the output script are a collection
 #' of best practices taken from studying NEXUS files supplied by April Wright,
 #' William Gearty, Graham Slater, Davey Wright, and
-#' guided by the recommendations of Matzke and Wright, 2016 in Biol. Lett.
+#' guided by the recommendations of Matzke and Wright, 2016 in Biology Letters.
 
 #' @references
 #' The basic fundamentals of tip-dating, and tip-dating with the fossilized

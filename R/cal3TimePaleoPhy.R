@@ -286,7 +286,7 @@
 
 #' @param diagnosticMode If \code{TRUE}, \code{cal3timePaleoPhy} will return to the
 #' console and to graphic devices an enormous number of messages, plots and
-#' ancilliary information that may be useful or entirely useless to figuring
+#' ancillary information that may be useful or entirely useless to figuring
 #' out what is going wrong.
 
 #' @param verboseWarnings if \code{TRUE} (the default), then various warnings and messages

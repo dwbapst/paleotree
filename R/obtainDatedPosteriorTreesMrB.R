@@ -78,23 +78,23 @@
 #' @param labelPostProb Logical. If \code{TRUE}, then nodes of the
 #' output tree will be labeled with their respective posterior 
 #' probabilities, as calculated based on the frequency of a clade
-#' occurring across the post-burnin posterior tree sample. If \code{FALSE},
+#' occurring across the post-burn-in posterior tree sample. If \code{FALSE},
 #' this is skipped.
 	
 #' @param outputTrees Determines the output trees produced; for format of output, see section
 #' on returned Value below. Must be of length one, and either \code{"all"},
-#' which means all trees from the post-burnin posterior will
+#' which means all trees from the post-burn-in posterior will
 #' returned, a number greater than zero, which will be the number of trees
-#' randomly sampled from across the post-burning posterior and returned,
+#' randomly sampled from across the post-burn-in posterior and returned,
 #' or a label for a type of summary tree selected from the posterior based on various
 #' properties. The two most commonly seen such point-estimate-summaries are
 #' the \emph{MCCT} tree, which stands for the 'maximum clade compatibility tree',
 #' and the \emph{MAP} tree, which stands for the 'maximum a posteri tree'. 
-#' The MCCT is the single tree from the post-burnin posterior which
+#' The MCCT is the single tree from the post-burn-in posterior which
 #' contains the set of bifurcations (clades) with the highest product of posterior
-#' probabilities (i.e. are found on the most trees in the post-burnin posterior).
+#' probabilities (i.e. are found on the most trees in the post-burn-in posterior).
 #' The MCCT tree is returned if the argument \code{outputTrees = "MCCT"} is used.
-#' The MAP is the single tree from the post-burnin posterior with the highest
+#' The MAP is the single tree from the post-burn-in posterior with the highest
 #' posterior probabilty associated with it. Unfortunately, versions of
 #' \code{paleotree} prior to version 3.2.1 did not use the posterior probability
 #' to select the supposed 'MAP' tree. MrBayes provides two values
@@ -107,7 +107,7 @@
 #' The true posterior probability (as given by Bayes Theorem) is 
 #' the prooduct of the likelihood and the prior probability, divided by
 #' the likelihood of the model, the latter of which is very rarely known.
-#' More commonly, the calculatable portion of the posterior probability is
+#' More commonly, the calculable portion of the posterior probability is
 #' the product of the likelihood and the prior probability; or, here, easily
 #' calculated as the log posterior probability, as the sum of the
 #' log likelihood and log prior probability. Given confusion over application of 'MAP'
@@ -145,7 +145,7 @@
 #' Depending on argument \code{file}, the output tree or trees is either
 #' returned directly, or instead written out in NEXUS format via
 #' ape's \code{write.NEXUS} function to an external file. The output
-#' will consist either of multiple trees sampled from the post-burnin posterior,
+#' will consist either of multiple trees sampled from the post-burn-in posterior,
 #' or will consist of a single phylogeny (a summary tree, either
 #' the MCCT or the MAP - see the details for the argument \code{outputTrees}).
 #' 

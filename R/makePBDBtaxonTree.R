@@ -25,7 +25,7 @@
 #' Note however that, contrary to common opinion among some
 #' paleontologists, taxon-trees may be just as useful for 
 #' macroevolutionary studies as reconstructed phylogenies
-#' (Soul and Friedman, 2015.).
+#' (Soul and Friedman, 2015).
 
 #' @param taxaDataPBDB A table of taxonomic data collected from
 #' the Paleobiology Database, using the taxa list option
@@ -35,16 +35,16 @@
 #' tree will have a taxon's *original* name and not
 #' any formally updated name.
 
-#' @param rankTaxon The selected taxon rank; must be one of 'species',
-#' 'genus', 'family', 'order', 'class' or 'phylum'.
+#' @param rankTaxon The selected taxon rank; must be one of \code{'species'},
+#' \code{'genus'}, \code{'family'}, \code{'order'}, \code{'class'} or \code{'phylum'}.
 
 #' @param cleanTree When \code{TRUE} (the default), the tree is run through a series of
 #' post-processing, including having singles collapsed,
 #' nodes reordered and being written out as a Newick string and read
 #' back in, to ensure functionality with ape functions
-#' and ape-derived functions. If \code{FALSE}, none of this post-processing
-#' is done and users should beware, as such trees can
-#' lead to hard-crashes of R.
+#' and ape-derived functions. 
+#' If \code{FALSE}, none of this post-processing is done and
+#' users should beware, as such trees can lead to hard-crashes of R.
 
 #' @param method Controls which algorithm is used for calculating
 #' the taxon-tree. The default option is \code{method  = "parentChild"}
@@ -77,7 +77,7 @@
 #' potential roots and link them to an artificially-constructed
 #' pseudo-root, which at least allows for visualization of the taxonomic
 #' structure in a limited dataset. This latter option will be fully
-#' offline, as it does nto do any additional API calls
+#' offline, as it does not do any additional API calls
 #' of the Paleobiology Database, unlike other options.
 
 
@@ -89,8 +89,8 @@
 #' are not listed as parents in \code{parentChild}.
 #' Alternatively, \code{tipSet = "all"} will add a tip to every
 #' internal node with the parent-taxon name encapsulated in parentheses.
-#' The default is \code{NULL} - if \code{NULL} and \code{method  = "parentChild"},
-#' then \code{tipSet }  is set to {= "nonParents"}.
+#' The default is \code{NULL} - if \code{tipSet = NULL} and \code{method  = "parentChild"},
+#' then \code{tipSet} will be set so \code{tipSet = "nonParents"}.
 
 #' @param APIversion Version of the Paleobiology Database API used by
 #' \code{makePBDBtaxonTree} when \code{method  = "parentChild"} or

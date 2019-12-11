@@ -7,7 +7,8 @@
 
 #' @details Although most calculations in this function agree
 #' with the errata for Foote's 2003 table (see references), there were some additional
-#' corrections for Prob(D|FL) made as part of a personal communication in 2013
+#' corrections for the probability of \code{D} given \code{FL} (\code{Prob(D|FL)})
+#' made as part of a personal communication in 2013
 #' between the package author and Michael Foote.
 
 #' @inheritParams inverseSurv
@@ -15,44 +16,49 @@
 #' @param p Instantaneous origination/branching rate of taxa. Under 
 #' a continuous model, assumed to be \emph{per interval}, or equal
 #' to the product of interval lengths and the rates per lineage time
-#' units for each interval. Under a pulsed mode (p_cont = FALSE), p is a 
+#' units for each interval. 
+#' Under a pulsed mode (\code{p_cont = FALSE}), \code{p} is a 
 #' per-interval 'rate' which can exceed 1 (because diversity can
 #' more than double; Foote, 2003a). Given as a vector with length
 #' equal to the number of intervals, so a different value may be
 #' given for each separate interval. Must be the same length as
-#' q and r. 
+#' \code{q} and \code{r}. 
 
 #' @param q Instantaneous extinction rate of taxa. Under 
 #' a continuous model, assumed to be \emph{per interval}, or
 #' equal to the product of interval lengths and the rates per lineage
-#' time units for each interval. Under a pulsed mode (q_cont = FALSE), q is a  
+#' time units for each interval.
+#' Under a pulsed mode (\code{q_cont = FALSE}), \code{q} is a  
 #' per-interval 'rate' but which cannot be observed to exceed 1
 #' (because you can't have more taxa go extinct than exist). Given as
 #' a vector with length equal to the number of intervals, so a 
 #' different value may be given for each separate interval. 
-#' Must be the same length as p and r. 
+#' Must be the same length as \code{p} and \code{r}. 
 
 #' @param r Instantaneous sampling rate of taxa, assumed to be
 #' \emph{per interval}, or equal to the product of interval lengths
 #' and the rates per lineage time units for each interval. Given as
 #' a vector with length equal to the number of intervals, so a 
 #' different value may be given for each separate interval. 
-#' Must be the same length as p and q. 
+#' Must be the same length as \code{p} and \code{q}. 
 
 #' @param PA_n The probability of sampling a taxon after the last interval 
 #' included in a survivorship study. Usually zero for extinct groups, 
 #' although more logically has the value of 1 when there are still extant
 #' taxa (i.e., if the last interval is the Holocene and the group is
 #' still alive, the probability of sampling them later is probably 1...).
-#' Should be a value of 0 to 1.
+#' Should be a value between 0 and 1.
 
 #' @param PB_1 The probability of sampling a taxon before the first interval 
-#' included in a survivorship study. Should be a value of 0 to 1.
+#' included in a survivorship study.
+#' Should be a value between 0 and 1.
 
 #' @return Returns a matrix with number of rows equal to the number of intervals 
-#' (i.e. the length of p, q and r) and named columns representing the different
-#' values calculated by the function: "Nb", "Nbt", "NbL", "NFt", "NFL", "PD_bt", 
-#' "PD_bL", "PD_Ft", "PD_FL", "PA", "PB", "Xbt", "XbL", "XFt" and "XFL".
+#' (i.e. the length of \code{p}, \code{q} and \code{r})
+#' and named columns representing the different values calculated by the function:
+#' \code{"Nb"}, \code{"Nbt"}, \code{"NbL"}, \code{"NFt"}, \code{"NFL"}, \code{"PD_bt"}, 
+#' \code{"PD_bL"}, \code{"PD_Ft"}, \code{"PD_FL"}, \code{"PA"}, \code{"PB"},
+#' \code{"Xbt"}, \code{"XbL"}, \code{"XFt"} and \code{"XFL"}.
 
 #' @author David W. Bapst, with advice from Michael Foote.
 
@@ -72,20 +78,32 @@
 #' @examples
 #' #very simple example with three intervals, same value for all parameters
 #' 
-#' #example rates (for the most part)
-#' rate <- rep(0.1,3)                  
+#' # example rates (for the most part)
+#' rate <- rep(0.1, 3)
+#'                   
 #' #all continuous
 #' footeValues(rate,rate,rate)	
-#' #origination pulsed
+#' 
+#' # origination pulsed
 #' footeValues(rate,rate,rate,p_cont = FALSE)		 
-#' #extinction pulsed
+#' 
+#' # extinction pulsed
 #' footeValues(rate,rate,rate,q_cont = FALSE) 	 
-#' #all pulsed
+#' 
+#' # all pulsed
 #' footeValues(rate,rate,rate,p_cont = FALSE,q_cont = FALSE) 
 
 #' @export
-footeValues <- function(p,q,r,PA_n = 0,PB_1 = 0,p_cont = TRUE,q_cont = TRUE,Nb = 1){
-	#set '03 Table Values
+footeValues <- function(
+                        p, q, r,
+                        PA_n = 0,
+                        PB_1 = 0,
+                        p_cont = TRUE,
+                        q_cont = TRUE,
+                        Nb = 1
+                        ){
+  ####################################
+  #set '03 Table Values
 	# TEST p, q, r
 	if (length(p) != length(q)){stop("p is not same length as q!")}
 	if (length(p) != length(r)){stop("p is not same length as r!")}
@@ -234,4 +252,4 @@ footeValues <- function(p,q,r,PA_n = 0,PB_1 = 0,p_cont = TRUE,q_cont = TRUE,Nb =
 	XFL <- (NFL*PD_FL)+(NbL*(1-PB)*PD_bL)+(NFt*(1-PA)*PD_Ft)+(Nbt*(1-PB)*PD_bt*(1-PA))
 	res <- data.frame(cbind(Nb = rep(Nb,n),Nbt,NbL,NFt,NFL,PD_bt,PD_bL,PD_Ft,PD_FL,PA,PB,Xbt,XbL,XFt,XFL))
 	return(res)
-	}
+}

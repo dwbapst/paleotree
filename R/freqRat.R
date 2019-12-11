@@ -45,14 +45,14 @@
 #' 
 #' @param timeData A 2 column matrix with the first and last occurrences of taxa
 #' given in relative time intervals. If a list of length two is given for
-#' timeData, such as would be expected if the output of binTimeData was
+#' \code{timeData}, such as would be expected if the output of \code{binTimeData} was
 #' directly input, the second element is used.
 
-#' @param calcExtinction If TRUE, the per-interval, per-lineage extinction rate 
+#' @param calcExtinction If \code{TRUE}, the per-interval, per-lineage extinction rate 
 #' is estimated as the negative slope of the log frequencies, ignoring single
 #' hits (as described in Foote and Raup, 1996.)
 
-#' @param plot If true, the histogram of observed taxon ranges is plotted, with
+#' @param plot If \code{TRUE}, the histogram of observed taxon ranges is plotted, with
 #' frequencies on a linear scale
 
 #' @return This function returns the per-interval sampling probability as the

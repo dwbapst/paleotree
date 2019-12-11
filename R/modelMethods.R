@@ -1,7 +1,8 @@
 #' Model Function Methods: Parameter Names, Bounds and Initial Values
 #' 
 #' A large number of functions for obtaining and modifying the parameters
-#' of likelihood models made in paleotree. These functions allow users to obtain
+#' of likelihood models made in \code{paleotree}. 
+#' These functions allow users to obtain
 #' or set parameter names, or obtain and set parameter bounds, both of which
 #' are treated as an attribute of the function class used by paleotree. In
 #' practice, this allows users to quickly obtain parameter names and upper
@@ -11,7 +12,7 @@
 #' @details
 #' Parameter names cannot be changed for a constrained function.
 #' 
-#' The parInit function calls the bounds for each parameter and gives a randomly
+#' The \code{parInit} function calls the bounds for each parameter and gives a randomly
 #' selected value selected from a uniform distribution, using the parameter bounds
 #' for each parameter as the bounds on the uniform distribution. This users a
 #' shorthand to quickly generate initial parameter values which are within the
@@ -25,21 +26,21 @@
 #' thus users should always try slightly different values to see if the resulting
 #' maximum likelihood parameter values change.
 #' 
-#' As parInit depends on the upper and lower bounds attribute, no function is offered
+#' As \code{parInit} depends on the upper and lower bounds attribute, no function is offered
 #' to allow it to be replaced (as there is nothing to replace!).
 
-#' @param x A function of S3 class 'paleotreeFunc' with all necessary attributes
+#' @param x A function of \code{S3} class \code{'paleotreeFunc'} with all necessary attributes
 #' expected of that class, which include parameter names and upper and lower bounds.
 #' As I have deliberately not exported the function which creates this class, it
 #' should be impossible for regular users to obtain such objects easily without
-#' using one of the 'make' functions, which automatically output a function of the
+#' using one of the \code{make} functions, which automatically output a function of the
 #' appropriate class and attributes.
 
-#' @param ... 'Ignored arguments to future methods' (i.e. for diversitree). Kept here only
-#' so constrainParPaleo is kept as close to the parent method in diversitree as possible.
+#' @param ... 'Ignored arguments to future methods' (i.e. for \code{diversitree}). Kept here only
+#' so constrainParPaleo is kept as close to the parent method in d\code{diversitree} as possible.
 
 #' @param value The new value with which to replace the parameter names or bounds. Must
-#' be a vector of the same length as the number of parameters. For parbounds, must
+#' be a vector of the same length as the number of parameters. For \code{parbounds}, must
 #' be a list composed of two vectors.
 
 #' @return
@@ -54,7 +55,7 @@
 
 #' @seealso
 #' These model methods were introduced to interact with the new model framework introduced in
-#' paleotree v1.9, in particular to interface with \code{\link{constrainParPaleo}}.
+#' \code{paleotree} version >1.9, in particular to interface with \code{\link{constrainParPaleo}}.
 
 #' @author
 #' These functions are strongly based on or inspired by the \code{argnames} functions

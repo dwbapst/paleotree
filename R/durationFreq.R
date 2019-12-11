@@ -28,8 +28,8 @@
 #' For \code{make_durationFreqDisc}, the intervals in timeList should be
 #' non-overlapping sequential intervals of roughly equal length. These
 #' should be in relative time as described above, so the earliest interval
-#' should be 1 and the numbering should increase as the intervals go up with
-#' age. If both previous statements are true, then differences in interval
+#' should be listed as \code{1} and the numbering should increase as the intervals go up with
+#' age. If both previous statements are \code{TRUE}, then differences in interval
 #' numbers will represent the same rough difference in the absolute timing
 #' of those intervals. For example, a dataset where all taxa are listed from
 #' a set of sequential intervals of similar length, such as North American
@@ -54,42 +54,44 @@
 #' in the fossil record, listed as NAs the supplied matrix) are automatically
 #' dropped from the matrix and from groups simultaneously.
 
-#' @param timeList A 2 column matrix with the first and last occurrences of taxa
+#' @param timeList A two column matrix, with the first and last occurrences of taxa
 #' given in relative time intervals (i.e. ordered from first to last). If a list
-#' of length two is given for timeData, such as would be expected if the output 
-#' of binTimeData was directly input, the second element is used. See details.
+#' of \code{length = 2} is given for \code{timeData}, such as would be expected if the output 
+#' of \code{binTimeData} was used as the input, the second element is used. See details.
 #' Unsampled taxa (e.g. from a simulation of sampling in the fossil record,
-#' listed as NAs in the second matrix) are automatically dropped from the
+#' listed as \code{NA}s in the second matrix) are automatically dropped from the
 #' timeList and from groups simultaneously. Living taxa observed in the modern day
-#' are expected to be listed as last observed in a special interval (0,0), i.e.
-#' begins and ends at 0 time. This interval is always automatically removed prior
+#' are expected to be listed as last observed in a special interval (\code{c(0,0)}), i.e.
+#' begins and ends at zero (modern) time. This interval is always automatically removed prior
 #' to the calculation intermediary data for fitting likelihood functions.
 
 #' @param groups Either NULL (the default) or matrix with the number of rows equal
 #' to the number of taxa and the number of columns equal to the number of 'systems'
 #' of categories for taxa. Taxonomic membership in different groups is indicated
-#' by numeric values. For example, a dataset could have a 'groups' matrix composed
-#' of a column representing thin and thick shelled taxa, coded 1 and 2 respectively,
+#' by numeric values. 
+#' For example, a dataset could have a 'groups' matrix composed of a column representing
+#' thin and thick shelled taxa, coded \code{1} and \code{2} respectively,
 #' while the second column indicates whether taxa live in coastal,
-#' outer continental shelf, or deep
-#' marine settings, coded 1-3 respectively. Different combinations of groups will
-#' be treated as having independent sampling and extinction parameters in the
-#' default analysis, for example, thinly-shelled deep marine species will have
-#' separate parameters from thinly-shelled coastal species. Grouping systems could
-#' also represent temporal heterogeneity, for example, categorizing Paleozoic versus
-#' Mesozoic taxa. If groups are NULL (the default), all taxa are assumed to be of
+#' outer continental shelf, or deep marine settings, coded \code{1-3} respectively. 
+#' Different combinations of groups will be treated as having independent
+#' sampling and extinction parameters in the default analysis,
+#' for example, thinly-shelled deep marine species will have
+#' separate parameters from thinly-shelled coastal species. 
+#' Grouping systems could also represent temporal heterogeneity,
+#' for example, categorizing Paleozoic versus Mesozoic taxa.
+#'  If groups are \code{NULL} (the default), all taxa are assumed to be of
 #' the same group with the same parameters. Unsampled taxa (e.g. from a simulation
-#' of sampling in the fossil record, listed as NAs in timeData or timeList)
-#' are automatically dropped from groupings and the time dataset (either timeData
-#' or timeList) and from groups simultaneously.
+#' of sampling in the fossil record, listed as \code{NA}s in \code{timeData} or \code{timeList})
+#' are automatically dropped from groupings and the time dataset (either \code{timeData}
+#' or \code{timeList}) and from groups simultaneously.
 
-# @param infTimeWindow Whether to use the infinite time window approach (TRUE) or
-# the finite time window approach (FALSE). The finite time window is the default for
+# @param infTimeWindow Whether to use the infinite time window approach (if \code{TRUE}) or
+# the finite time window approach (if \code{FALSE}). The finite time window is the default for
 # both functions, calculated based on the time ranges included in the input. If only
 # a 2 column matrix of per-taxon first and last intervals is given for timeList for
 # \link{make_durationFreqDisc}, the infinite time window will be used.
 
-#' @param drop.extant Drops all extant taxa from a dataset, w
+#' @param drop.extant Drops all extant taxa from a dataset before preceding.
 
 #' @param threshold The smallest allowable duration (i.e. the measured difference in
 #' the first and last occurrence dates for a given taxon). Durations below this size 
@@ -100,24 +102,25 @@
 #' occurring at the modern day (i.e. being functionally identical as occurring at 0 time).
 
 #' @return 
-#' A function of class "paleotreeFunc", which takes a vector equal to the number
-#' of parameters and returns the *negative* log likelihood (for use with optim and
-#' similar optimizing functions, which attempt to minimize support values). See the
-#' functions listed at \code{\link{modelMethods}} for manipulating and examining
+#' A function of class \code{"paleotreeFunc"}, which takes a vector equal to the number
+#' of parameters and returns the *negative* log-likelihood 
+#' (for use with \code{\link{optim}} and similar optimizing functions, 
+#' which attempt to minimize support values). 
+#' See the functions listed at \code{\link{modelMethods}} for manipulating and examining
 #' such functions and \code{\link{constrainParPaleo}} for constraining parameters.
 #' 
-#' Parameters in the output functions are named 'q' for the instantaneous per-capita
-#' extinction rate, 'r' for the instantaneous per-capita sampling rate and 'R' for
+#' Parameters in the output functions are named \code{q} for the instantaneous per-capita
+#' extinction rate, \code{r} for the instantaneous per-capita sampling rate and \code{R} for
 #' the per-interval taxonomic sampling probability. Groupings follow the parameter
 #' names, separated by periods; by default, the parameters will be placed in at
-#' least group 1 (of a grouping with a single group), such that make_durationFreqCont
-#' by default creates a function with parameters named 'q.1' and 'r.1', while
-#' make_durationFreqDisc creates a function with parameters named 'q.1' and 'R.1'.
+#' least group '\code{1}' (of a grouping scheme containing only a single group), such that \code{make_durationFreqCont}
+#' by default creates a function with parameters named \code{q.1} and \code{r.1}, while
+#' \code{make_durationFreqDisc} creates a function with parameters named \code{q.1} and \code{R.1}.
 #' 
-#' Note that the 'q' parameters estimated by \code{make_durationFreqDisc} is scaled to 
+#' Note that the \code{q} parameters estimated by \code{make_durationFreqDisc} is scaled to 
 #' per lineage intervals and not to per lineage time-units. If intervals are the same length, this
-#' can be easily corrected by multiplying 1 by the interval length. It is unclear
-#' how to treat uneven intervals and I urge workers to consider multiple strategies.
+#' can be easily corrected by multiplying one by the interval length. It is unclear
+#' how to treat uneven intervals and I urge users to consider multiple strategies.
 #' 
 #' For translating these sampling probabilities and sampling rates, see
 #' \code{\link{SamplingConv}}.
@@ -130,6 +133,7 @@
 #' @seealso
 #' See \code{\link{freqRat}}, \code{\link{sRate2sProb}},
 #' \code{\link{qsRate2Comp}} \code{\link{sProb2sRate}} and \code{\link{qsProb2Comp}}.
+
 #
 # See the original implementation of these methods at 
 # \code{\link{getSampRateCont}} and \code{\link{getSampProbDisc}}. 
@@ -142,10 +146,16 @@
 #' ranges of taxa. \emph{Paleobiology} \bold{22}(2):121--140.
 
 #' @examples
-#' #let's simulate some taxon ranges from an imperfectly sampled fossil record
+#' # let's simulate some taxon ranges from 
+#'    # an imperfectly sampled fossil record
 #' set.seed(444)
-#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#' 	nTotalTaxa = c(30,40), nExtant = 0)
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     nruns = 1,
+#' 	   nTotalTaxa = c(30,40), 
+#' 	   nExtant = 0
+#' 	   )
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' rangesCont <- sampleRanges(taxa,r = 0.5)
 #' #bin the ranges into discrete time intervals
@@ -161,26 +171,44 @@
 #' 
 #' #new ways of doing it
 #'     # we can constrain our functions
-#'     # we can use parInit, parLower and parUpper to control parameter bounds
+#'     # we can use parInit, parLower and parUpper
+#'     # to control parameter bounds
 #' 
 #' #as opposed to getSampRateCont, we can do:
 #' likFun <- make_durationFreqCont(rangesCont)
-#' optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
-#'       method = "L-BFGS-B",control = list(maxit = 1000000))
+#' optim(parInit(likFun),
+#'       likFun,
+#'       lower = parLower(likFun),
+#'       upper = parUpper(likFun),
+#'       method = "L-BFGS-B",
+#'       control = list(maxit = 1000000)
+#'       )
 #' 
 #' #as opposed to getSampProbDisc, we can do:
+#' 
 #' likFun <- make_durationFreqDisc(rangesDisc)
-#' optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
-#'      method = "L-BFGS-B",control = list(maxit = 1000000))
+#' optim(parInit(likFun),
+#'       likFun,
+#'       lower = parLower(likFun),
+#'       upper = parUpper(likFun),
+#'       method = "L-BFGS-B",
+#'       control = list(maxit = 1000000)
+#'       )
 #' 
 #' #these give the same answers (as we'd expect them to!)
 #' 
 #' #with newer functions we can constrain our functions easily
 #'     # what if we knew the extinction rate = 0.1 a priori?
+#'     
 #' likFun <- make_durationFreqCont(rangesCont)
 #' likFun <- constrainParPaleo(likFun,q.1~0.1)
-#' optim(parInit(likFun),likFun,lower = parLower(likFun),upper = parUpper(likFun),
-#' 	    method = "L-BFGS-B",control = list(maxit = 1000000))
+#' optim(parInit(likFun),
+#'       likFun,
+#'       lower = parLower(likFun),
+#'       upper = parUpper(likFun),
+#' 	     method = "L-BFGS-B",
+#' 	     control = list(maxit = 1000000)
+#' 	     )
 #' 
 #' #actually decreases our sampling rate estimate
 #'    # gets further away from true generating value, r = 0.5 (geesh!)

@@ -24,10 +24,10 @@
 #' events. See the examples section for more details.
 
 #' @format 
-#' The 'foramAM' and 'foramAL' tables include budding taxon units
+#' The \code{foramAM} and \code{foramAL} tables include budding taxon units
 #' for morphospecies and lineages respective, with four columns:
 #' taxon name, ancestral taxon's name, first appearance date and last appearance
-#' date (note that column headings vary). The 'foramAMb' and 'foramALb' tables are
+#' date (note that column headings vary). The \code{foramAMb} and \code{foramALb} tables are
 #' composed of data for the same taxon units as the previous
 #" set, except parent taxa that persist through
 #' branching events are split so that the relationships are fully 'bifurcating', rather
@@ -92,9 +92,9 @@
 #' 
 #' \dontrun{
 #' 
-#' #load the data 
-#' 	#given in supplemental as XLS sheets
-#' 	#converted to separate tab-deliminated text files
+#' # load the data 
+#'     # given in supplemental as XLS sheets
+#'     # converted to separate tab-deliminated text files
 #' 
 #' # aM: budding/bifurcating morphospecies phylogeny
 #' foramAM <- read.table(file.choose(),stringsAsFactors = FALSE,header = TRUE)
@@ -109,7 +109,7 @@
 #' 
 #' }
 #' 
-#' #instead, we'll just load the data directly
+#' # or instead, we'll just load the data directly
 #' data(macroperforateForam)
 #' 
 #' #Two distinctions among the four datasets:

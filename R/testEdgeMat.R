@@ -91,7 +91,8 @@ testEdgeMat <- function(tree){
 	if(length(tree$tip.label)<1){
 		stop("$tip.label must be of length greater than 0")
 		}
-	#check than Nnode exists, is a vector of length 1, of type number, stored as an integer
+	# check than Nnode exists, 
+    # and is a vector of length 1, of type number, stored as an integer
 	if(!is.vector(tree$Nnode)){
 		stop("$Nnode must be a vector")
 		}

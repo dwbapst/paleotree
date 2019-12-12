@@ -156,5 +156,5 @@ be obtained with \code{link{getPBDBocc}}, and sorted into taxa by
 at \code{\link{graptPBDB}}
 }
 \author{
-David W. Bapst, with the 'dateRange' algorithm suggested by Jon Marcot.
+David W. Bapst, with the \code{"dateRange"} algorithm suggested by Jon Marcot.
 }

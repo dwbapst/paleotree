@@ -80,7 +80,7 @@
 #' at \code{\link{graptPBDB}}
 
 #' @author 
-#' David W. Bapst, with the 'dateRange' algorithm suggested by Jon Marcot.
+#' David W. Bapst, with the \code{"dateRange"} algorithm suggested by Jon Marcot.
 
 #' @examples
 #' data(graptPBDB)

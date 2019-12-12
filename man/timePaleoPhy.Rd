@@ -261,8 +261,8 @@ function in \code{paleotree} until February 2014, and thus is
 included here solely for legacy purposes. 
 This ordering algorithm does not minimize branch adjustment cycles,
 like the newer default offered under currently \code{"equal"}.}
-\item{"equal_date.phylo_legacy"}{Exactly like "equal" above, except that edges are ordered relative
-to their time (ie. total edge length) from the root following the application of the 'basic'
+\item{"equal_date.phylo_legacy"}{Exactly like \code{"equal"} above, except that edges are ordered relative
+to their time (i.e., the total edge length) from the root following the application of the 'basic'
 time-scaling method, exactly as in G. Lloyd's original application. This was the method for sorting
 edges in the \code{"equal"} algorithm in G. Lloyd's \code{date.phylo} script and \code{DatePhylo} in
 package \code{strap} until August 2014, and was the default
@@ -273,16 +273,18 @@ like the newer default offered under currently \code{"equal"}.
 Due to how the presence of zero-length
 branches can make ordering branches based on time to be very unpredictable, 
 this version of the \code{"equal"} algorithm is \bold{highly not recommended}.}
-\item{"aba"}{All branches additive. This method takes the "basic" tree and
+\item{"aba"}{All branches additive. 
+This method takes the \code{"basic"} time-scaled tree and
 adds \code{vartime} to all branches. 
 Note that this time-scaling method can (and often will) warp the
 tree structure, leading to tips to originate out of order with the appearance
 data used.}
-\item{"zlba"}{Zero-length branches additive. This method adds \code{vartime} to all
-zero-length branches in the "basic" tree. Discussed (possibly?) by Hunt and Carrano, 2010. 
-Note that this time-scaling method can warp the
-tree structure, leading to tips to originate out of order with the appearance
-data used.}
+\item{"zlba"}{Zero-length branches additive. 
+This method adds \code{vartime} to all
+zero-length branches in the "basic" tree. 
+Discussed (possibly?) by Hunt and Carrano, 2010. 
+Note that this time-scaling method can warp the tree structure, 
+leading to tips to originate out of order with the appearance data used.}
 \item{"mbl"}{Minimum branch length. Scales all branches so they are
 greater than or equal to vartime, and subtract time added to later branches
 from earlier branches in order to maintain the temporal structure of events.
@@ -302,8 +304,8 @@ decreasing, i.e. the present day is zero.
 
 As of August 2014, please note that the branch-ordering algorithm used in \code{"equal"} has changed
 to match the current algorithm used by \code{DatePhylo} in package \code{strap}, and that two legacy
-versions of "equal" have been added to this function, respectively representing how \code{timePaleoPhy}
-and \code{DatePhylo} (and its predecessor \code{date.phylo}) applied the "equal" time-scaling method.
+versions of \code{"equal"} have been added to this function, respectively representing how \code{timePaleoPhy}
+and \code{DatePhylo} (and its predecessor \code{date.phylo}) applied the \code{"equal"} time-scaling method.
 
 \emph{Interpretation of Taxon Ages in \code{timePaleoPhy}}
 

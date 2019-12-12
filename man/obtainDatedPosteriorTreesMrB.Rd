@@ -100,12 +100,12 @@ occurring across the post-burn-in posterior tree sample. If \code{FALSE},
 this is skipped.}
 
 \item{getFixedTimes}{If \code{TRUE}, this function will also look for, scan, and parse an
-associated NEXUS file. Ignoring any commented lines (ie. anything between "[   ]" ), commands
-for fixing taxa will be identified, parsed and returned to the user, either as a message
-printed to the R console if output is read to a file, or as a attribute named 'fixed ages'
+associated NEXUS file. Ignoring any commented lines 
+(i.e., anything between a set of rectangular brackets \code{[]} ), 
+commands for fixing taxa will be identified, parsed and returned to the user, either as a message
+printed to the R console if output is written to a file, or as a attribute named 'fixed ages'
 if output as an R object (formatted as a two-column
 table of OTU names and their respective fixed ages).
-If the output is an R object, these objects with 
 
 Please note: the code for \code{getFixedTimes = TRUE} contains a \code{while()}
 loop in it for removing nested series of

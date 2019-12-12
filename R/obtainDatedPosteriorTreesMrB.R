@@ -46,18 +46,22 @@
 #' value greater than 0 and less than 1.
 
 #' @param getFixedTimes If \code{TRUE}, this function will also look for, scan, and parse an
-#' associated NEXUS file. Ignoring any commented lines (ie. anything between "[   ]" ), commands
-#' for fixing taxa will be identified, parsed and returned to the user, either as a message
-#' printed to the R console if output is read to a file, or as a attribute named 'fixed ages'
+#' associated NEXUS file. Ignoring any commented lines 
+#' (i.e., anything between a set of rectangular brackets \code{[]} ), 
+#' commands for fixing taxa will be identified, parsed and returned to the user, either as a message
+#' printed to the R console if output is written to a file, or as a attribute named 'fixed ages'
 #' if output as an R object (formatted as a two-column
 #' table of OTU names and their respective fixed ages).
-#' If the output is an R object, these objects with 
 #' 
 #' Please note: the code for \code{getFixedTimes = TRUE} contains a \code{while()}
 #' loop in it for removing nested series of
 #' square brackets (i.e. treated as comments in NEXUS files). Thus files with
 #' ridiculously nested series of brackets may cause this code to take a while
 #' to complete, or may even cause it to hang.
+
+# weird out of place line - copy/paste error? (12-11-19)
+# If the output is an R object, these objects with ??
+
 
 #' @param getRootAges \code{FALSE} by default. 
 #' If \code{TRUE}, and \code{getFixedTimes = TRUE}

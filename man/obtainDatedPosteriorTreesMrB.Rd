@@ -48,7 +48,7 @@ randomly sampled from across the post-burn-in posterior and returned,
 or a label for a type of summary tree selected from the posterior based on various
 properties. The two most commonly seen such point-estimate-summaries are
 the \emph{MCCT} tree, which stands for the 'maximum clade compatibility tree',
-and the \emph{MAP} tree, which stands for the 'maximum a posteri tree'. 
+and the \emph{MAP} tree, which stands for the 'maximum a posteriori tree'. 
 The MCCT is the single tree from the post-burn-in posterior which
 contains the set of bifurcations (clades) with the highest product of posterior
 probabilities (i.e. are found on the most trees in the post-burn-in posterior).

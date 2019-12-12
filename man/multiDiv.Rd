@@ -81,7 +81,7 @@ If given, the argument \code{split.int} and \code{int.length} are ignored.}
 rather than the median diversity curve and 95 percent quantiles. 
 \code{plotMultCurves = FALSE} by default.}
 
-\item{multRainbow}{If \code{TRUE} and plotMultCurves are both \code{TRUE}, each line is
+\item{multRainbow}{If \code{TRUE} and \code{plotMultCurves = TRUE}, each line is
 plotted as a different, randomized color using the function \code{rainbow}. If
 \code{FALSE}, each line is plotted as a black line. This argument is ignored if
 \code{divPalette} is supplied.}
@@ -172,8 +172,8 @@ multiDiv(taxa)
 multiDiv(taxa, plotLogRich = TRUE)
 
 #######################################
-#pure-birth example with simFossilRecord
-#note that conditioning is tricky
+# pure-birth example with simFossilRecord
+# note that conditioning is tricky
 
 set.seed(444)
 recordsPB <- simFossilRecord(
@@ -264,5 +264,5 @@ The diversity curve functions used include: \code{\link{phyloDiv}},
 
 Also see the function \code{LTT.average.root} in the package \code{TreeSim}, which
 calculates an average LTT curve for multiple phylogenies, the functions
-code{mltt.plot} in ape and code{ltt} in \code{phytools}.
+\code{mltt.plot} in ape and \code{ltt} in \code{phytools}.
 }

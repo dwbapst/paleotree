@@ -2,19 +2,19 @@
 % Please edit documentation in R/optimPaleo.R
 \name{optimPaleo}
 \alias{optimPaleo}
-\title{Simplified Optimizer for paleotree Likelihood Functions}
+\title{Simplified Optimizer for \code{paleotree} Likelihood Functions}
 \usage{
 optimPaleo(modelFun)
 }
 \arguments{
-\item{modelFun}{A likelihood function for a model, of class 'paleotreeFunc'.}
+\item{modelFun}{A likelihood function for a model, of class \code{paleotreeFunc}.}
 }
 \value{
 Returns the results from using \code{\link{optim}}.
 }
 \description{
 This function is a deliberately simplistic automation wrapper for the function
-\code{\link{optim}} and the use of the "L-BFGS-B" optimizing method,
+\code{\link{optim}} and the use of the \code{"L-BFGS-B"} optimizing method,
 with initial parameter values and bounds provided with \code{\link{parInit}},
 \code{\link{parLower}} and \code{\link{parUpper}}. It is mainly provided here
 as a shorthand to be used in educational demonstrations where model-fitting

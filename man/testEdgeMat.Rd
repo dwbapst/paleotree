@@ -31,7 +31,7 @@ to ensure functionality with ape functions
 and \code{ape}-derived functions.
 }
 \details{
-Useful when doing complex manipulations and reconstitutions of \code{phylo} objects (or their
+Useful when doing complex manipulations of \code{phylo} objects (or reconstituting them, or their
 \emph{de novo} construction), and thus is used by a number of \code{paleotree} functions.
 }
 \examples{

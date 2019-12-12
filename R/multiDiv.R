@@ -54,7 +54,7 @@
 #' Time axes will be plotted \emph{exactly} to these values. 
 #' The minimum value must be more than 1 if \code{plotLogRich = TRUE}.
 
-#' @param multRainbow If \code{TRUE} and plotMultCurves are both \code{TRUE}, each line is
+#' @param multRainbow If \code{TRUE} and \code{plotMultCurves = TRUE}, each line is
 #' plotted as a different, randomized color using the function \code{rainbow}. If
 #' \code{FALSE}, each line is plotted as a black line. This argument is ignored if
 #' \code{divPalette} is supplied.
@@ -84,7 +84,7 @@
 #' 
 #' Also see the function \code{LTT.average.root} in the package \code{TreeSim}, which
 #' calculates an average LTT curve for multiple phylogenies, the functions
-#' code{mltt.plot} in ape and code{ltt} in \code{phytools}.
+#' \code{mltt.plot} in ape and \code{ltt} in \code{phytools}.
 
 #' @examples
 #' # let's look at this function
@@ -115,8 +115,8 @@
 #' multiDiv(taxa, plotLogRich = TRUE)
 #' 
 #' #######################################
-#' #pure-birth example with simFossilRecord
-#' #note that conditioning is tricky
+#' # pure-birth example with simFossilRecord
+#' # note that conditioning is tricky
 #' 
 #' set.seed(444)
 #' recordsPB <- simFossilRecord(

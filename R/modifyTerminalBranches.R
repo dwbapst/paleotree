@@ -56,7 +56,8 @@
 
 #' @aliases dropZLB dropExtinct dropExtant addTermBranchLength 
 
-#' @param tree A phylogeny as a phylo object. \code{dropPaleoTip} requires this
+#' @param tree A phylogeny, as an object of class \code{phylo}.
+#' \code{dropPaleoTip} requires this
 #' input object to also have a \code{tree$root.time} element. If not provided for
 #' \code{bindPaleoTip}, then the \code{$root.time} will be presumed to be such that the
 #' furthest tip from the root is at \code{time = 0}.
@@ -88,7 +89,7 @@
 #' See documentation of \code{bind.tip} for more details.
 
 #' @param positionBelow The distance along the edge below the node to be attached to 
-#' (given in code{nodeAttach} to add the new tip. Cannot be negative or greater than the length of the
+#' (given in \code{nodeAttach} to add the new tip. Cannot be negative or greater than the length of the
 #' edge below \code{nodeAttach}.
 
 #' @param noNegativeEdgeLength Return an error if a negative terminal edge length is calculated

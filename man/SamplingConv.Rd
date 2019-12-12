@@ -71,7 +71,7 @@ these analyses to relaxing those assumptions probably varies.
 sampling once per time interval 
 (the variable \code{R} or \code{sProb} in this package as used in the
 references below) and the instantaneous rate of sampling per lineage/time
-unit ("sRate" or r). If you have estimates of the speciation and extinction
+unit (\code{sRate} or \code{r}). If you have estimates of the speciation and extinction
 rate, use \code{pqsRate2sProb} instead for a more accurate estimate of R.
 
 \code{qsProb2Comp} and \code{qsRate2Comp} are different calculations for the

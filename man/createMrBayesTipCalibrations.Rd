@@ -16,17 +16,18 @@ createMrBayesTipCalibrations(
 )
 }
 \arguments{
-\item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
-composed of a table of interval upper and lower time boundaries (i.e. earlier and latter bounds), and 
-a table of first and last intervals for taxa) or a matrix with rownames
-for taxa as you want listed in the MrBayes block, with either one, two
-or four columns containing ages (respectively) for point occurrences with
+\item{tipTimes}{This input may be either: (a) a \code{timeList} object, 
+consisting of a \code{list} of \code{length = 2}, composed of a table of interval 
+upper and lower time boundaries (i.e., the earlier and latter bounds of the intervals) and 
+a table of first and last intervals for taxa, or (b) a matrix with row names
+corresponding to taxon names, matching those names listed in the MrBayes block,
+with either one, two or four columns containing ages (respectively) for point occurrences with
 precise dates (for a single column), uncertainty bounds on a point occurrence
 (for two columns), or uncertainty bounds on the first and
 last occurrence (for four columns). Note that precise first and last occurrence
 dates should not be entered as a two column matrix, as this will instead be interpreted
 as uncertainty bounds on a single occurrence. Instead, either select which you want to
-use for tip-dates and give a 1-column matrix, or repeat (and collate) the columns, so that
+use for tip-dates and give a one-column matrix, or repeat (and collate) the columns, so that
 the first and last appearances has uncertainty bounds of zero.}
 
 \item{ageCalibrationType}{This argument decides how age calibrations are defined, 
@@ -52,7 +53,7 @@ offset exponential prior on tree age will be set to the minimum tree age,
 plus this offset value. Thus, an offset of 10 million years would equate to a prior
 assuming that the expected tree age is around 10 million years before the minimum age.}
 
-\item{minTreeAge}{if \code{NULL} (the default), then minTreeAge will
+\item{minTreeAge}{if \code{NULL} (the default), then \code{minTreeAge} will
 be set as the oldest date among the tip age used (those used being
 determine by user choices (or oldest bound on a tip age). Otherwise,
 the user can supply their own minimum tree, which must be greater than

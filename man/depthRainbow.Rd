@@ -7,7 +7,7 @@
 depthRainbow(tree)
 }
 \arguments{
-\item{tree}{A phylo object}
+\item{tree}{A phylogeny, as an object of class \code{phylo}.}
 }
 \value{
 No value returned, just plots a colorful phylogeny.

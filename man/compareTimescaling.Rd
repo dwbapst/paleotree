@@ -50,7 +50,8 @@ As with many \code{paleotree} functions, calculations relating to time on trees 
 done with respect to any included \code{$root.time} elements. If these are not
 present, the latest tip is assumed to be at the present day (time = 0).
 
-compareNodeAges calculates the changes in the clade ages among those clades
+The function \code{compareNodeAges} calculates
+the changes in the clade ages among those clades
 shared by the two trees, relative to the first tree in absolute time. For
 example, a shift of \code{+5} means the clade originates five time-units \code{later} in
 absolute time on the second tree, while a shift of \code{-5} means the clade

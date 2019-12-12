@@ -7,13 +7,13 @@
 constrainParPaleo(f, ..., formulae = NULL, names = parnames(f), extra = NULL)
 }
 \arguments{
-\item{f}{A function to constrain. This function must be of \code{S3} class
-'paleotreeFunc' and have all necessary attributes expected of that
-class, which include parameter names and upper and lower bounds. As
-I have deliberately not exported the function which creates this class,
-it should be impossible for regular users to obtain such objects easily
-without using one of the 'make' functions, which automatically output
-a function of the appropriate class and attributes.}
+\item{f}{A function to constrain. This function must be of the \code{S3} \code{class}
+\code{paleotreeFunc} and have all necessary attributes expected of that
+\code{class}, which include parameter names and upper and lower bounds. As
+I have deliberately not exported the function which creates this \code{class},
+it should be impossible for non-advanced users to obtain such objects easily
+without using one of the \code{make} functions, which automatically output
+a function of the appropriate \code{class} and attributes.}
 
 \item{...}{Formulae indicating how the function should be constrained.
 See details and examples for lengthy discussion.}
@@ -27,7 +27,7 @@ the number of parameters in \code{x}.  Use this only if
 Generally this should not be used. DWB: This argument is kept for
 purposes of keeping the function as close to the parent as possible
 but, in general, should not be used because the input function must
-have all attributes expected of class 'paleotreeFunc', including
+have all attributes expected of class \code{paleotreeFunc}, including
 parameter names.}
 
 \item{extra}{Optional vector of additional names that might appear on
@@ -39,7 +39,7 @@ the RHS of constraints but do not represent names in the function's
 Modified from the \code{diversitree} manual:
 This function returns a constrained function that can be passed
 through to the optimization functions of a user's choice, such as
-\code{\link{optim}}, \code{find.mle} in diversitree or \code{mcmc}.
+\code{\link{optim}}, \code{find.mle} in \code{diversitree} or \code{mcmc}.
 It will behave like any other function.  However, it has a modified
 \code{class} attribute so that some methods will dispatch differently:
 \code{\link{parnames}}, for example, will return the names of the

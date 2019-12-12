@@ -6,7 +6,7 @@
 \alias{fossilRecord2fossilTaxa}
 \alias{fossilRecord2fossilRanges}
 \alias{fossilTaxa2fossilRecord}
-\title{Methods for Editing or Converting Output from simFossilRecord}
+\title{Methods for Editing or Converting Output from Simulated Fossil Record Objects}
 \usage{
 timeSliceFossilRecord(
   fossilRecord,

@@ -8,8 +8,8 @@ taxa2phylo(taxaData, obs_time = NULL, plot = FALSE)
 }
 \arguments{
 \item{taxaData}{A five-column matrix of taxonomic data,
-as output by \code{fossilRecord2fossilTaxa} via simulations
-produced using \code{simFossilRecord}. Previously, this was the
+as output by \code{\link{fossilRecord2fossilTaxa}} via simulations
+produced using \code{\link{simFossilRecord}}. Previously, this was the
 default output of the deprecated function \code{simFossilTaxa}.}
 
 \item{obs_time}{A vector of per-taxon times of observation which must be in
@@ -24,32 +24,32 @@ of class \code{phylo}. This function will output trees with the element \code{$r
 which is the time of the root divergence in absolute time.
 
 The tip labels are the row-names from the simulation input; see the documentation
-for \code{simFossilRecord} and \code{fossilRecord2fossilTaxa} for details.
+for \code{\link{simFossilRecord}} and \code{\link{fossilRecord2fossilTaxa}} for details.
 }
 \description{
 Converts temporal and ancestor-descendant relationships of taxa into a
 dated phylogeny with tips at instantaneous points in time.
 }
 \details{
-As described in the documentation for \code{taxa2cladogram}, the relationships
+As described in the documentation for \code{\link{taxa2cladogram}}, the relationships
 among morphotaxa in the fossil record are difficult to describe in terms of
 traditional phylogenies. One possibility is to arbitrarily choose particular
 instantaneous points of time in the range of some taxa and describe the
 temporal relationships of the populations present at those dates. This is
 the tactic used by \code{taxa2phylo}.
 
-By default, the dates selected (the \code{obs_time} argument) are the last occurences
-of the taxon, so a simple use of this function will produce a time-scaled
+By default, the dates selected (the \code{obs_time} argument) are the last occurrences
+of the taxon, so a simple use of this function will produce a dated
 tree which describes the relationships of the populations present at the
-last occurence of each taxon in the sampled data. Alternatively, \code{obs_time}
-can be supplied with different dates within the taxon ranges.
+last occurrence time of each taxon in the sampled data. 
+Alternatively, \code{obs_time} can be supplied with different dates within the taxon ranges.
 
 All data relating to when static morphotaxa appear or disappear in the
 record is lost. Branching points will be the actual time of speciation,
 which (under budding) will often be in the middle of the temporal range of a
 taxon.
 
-Cryptic taxa are not dropped or merged as can be done with \code{taxa2cladogram}.
+Cryptic taxa are not dropped or merged as can be done with \code{\link{taxa2cladogram}}.
 The purpose of \code{taxa2phylo} is to obtain the 'true' pattern of evolution for
 the observation times, independent of what we might actually be able to
 recover, for the purpose of comparing in simulation analyses.
@@ -61,18 +61,18 @@ decreasing, i.e. the present day is zero.
 Do \emph{NOT} use this function to date a real tree for a real dataset.
 It assumes you know the divergence/speciation times of the branching nodes
 and relationships perfectly, which is almost impossible given the
-undersampled nature of the fossil record. Use \code{timePaleoPhy} or
-\code{cal3TimePaleoPhy} instead.
+undersampled nature of the fossil record. Use \code{\link{timePaleoPhy}} or
+\code{\link{cal3TimePaleoPhy}} instead.
 
 Do use this function when doing simulations and you want to make a tree of
 the 'true' history, such as for simulating trait evolution along
 phylogenetic branches.
 
-Unlike \code{taxa2cladogram}, this function does not merge cryptic taxa in output
-from \code{simFossilRecord} (via \code{fossilRecord2fossilTaxa})
+Unlike \code{\link{taxa2cladogram}}, this function does not merge cryptic taxa in output
+from \code{\link{simFossilRecord}} (via \code{\link{fossilRecord2fossilTaxa}})
 and I do not offer an option to secondarily drop them.
 The tip labels should provide the necessary information for users to drop
-such taxa, however. See \link{simFossilRecord}.
+such taxa, however. See \code{\link{simFossilRecord}}.
 }
 \examples{
 

@@ -1,4 +1,4 @@
-#' Methods for Editing or Converting Output from simFossilRecord
+#' Methods for Editing or Converting Output from Simulated Fossil Record Objects
 #' 
 #' These are a set of functions available for manipulating, translating
 #' and editing the objects of class \code{fossilRecordSimulation} output

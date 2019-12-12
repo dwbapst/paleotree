@@ -25,7 +25,7 @@
 #' the contrary, relative time is in intervals with non-zero integers that
 #' increase sequentially beginning with 1, from earliest to oldest.
 #' 
-#' For \code{make_durationFreqDisc}, the intervals in timeList should be
+#' For \code{make_durationFreqDisc}, the intervals in \code{timeList} should be
 #' non-overlapping sequential intervals of roughly equal length. These
 #' should be in relative time as described above, so the earliest interval
 #' should be listed as \code{1} and the numbering should increase as the intervals go up with
@@ -60,7 +60,7 @@
 #' of \code{binTimeData} was used as the input, the second element is used. See details.
 #' Unsampled taxa (e.g. from a simulation of sampling in the fossil record,
 #' listed as \code{NA}s in the second matrix) are automatically dropped from the
-#' timeList and from groups simultaneously. Living taxa observed in the modern day
+#' \code{timeList} and from \code{groups} simultaneously. Living taxa observed in the modern day
 #' are expected to be listed as last observed in a special interval (\code{c(0,0)}), i.e.
 #' begins and ends at zero (modern) time. This interval is always automatically removed prior
 #' to the calculation intermediary data for fitting likelihood functions.

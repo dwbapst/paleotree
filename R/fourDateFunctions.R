@@ -1,4 +1,4 @@
-#' Converting Datasets of Taxon Ranges in Intervals Between timeList format and fourDate format
+#' Converting Datasets of Taxon Ranges in Intervals Between \code{timeList} format and \code{fourDate} format
 #' 
 #' Functions for manipulating data where the first and last appearances of taxa
 #' are known from bounded intervals of time. The two main functions listed here

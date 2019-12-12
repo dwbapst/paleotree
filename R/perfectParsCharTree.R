@@ -20,7 +20,7 @@
 #' This function assumes, like almost every function in paleotree, that the tree given is rooted, even if the
 #' most basal node is a polytomy.
 
-#' @param tree A phylogeny of class 'phylo'
+#' @param tree A phylogeny, as an object of class \code{phylo}.
 
 #' @param nchar Number of parsimonious binary characters to simulate on the phylogeny.
 

@@ -286,7 +286,7 @@ Discussed (possibly?) by Hunt and Carrano, 2010.
 Note that this time-scaling method can warp the tree structure, 
 leading to tips to originate out of order with the appearance data used.}
 \item{"mbl"}{Minimum branch length. Scales all branches so they are
-greater than or equal to vartime, and subtract time added to later branches
+greater than or equal to \code{vartime}, and subtract time added to later branches
 from earlier branches in order to maintain the temporal structure of events.
 A version of this was first introduced by Laurin (2004).} }
 
@@ -423,7 +423,7 @@ ttree <- bin_timePaleoPhy(
 
 # examples with simulated data
 
-#Simulate some fossil ranges with simFossilRecord
+# Simulate some fossil ranges with simFossilRecord
 set.seed(444)
 record <- simFossilRecord(
     p = 0.1, q = 0.1, 

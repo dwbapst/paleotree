@@ -2,7 +2,7 @@
 #' 
 #' This function converts occurrence data, given as a list where each element
 #' is a different taxon's occurrence table (containing minimum and maximum ages
-#' for each occurrence), to the 'timeList' format, consisting of a list composed
+#' for each occurrence), to the \code{timeList} format, consisting of a list composed
 #' of a matrix of lower and upper age bounds for intervals, and a second matrix
 #' recording the interval in which taxa first and last occur in the given dataset.
 
@@ -16,7 +16,7 @@
 
 #' 
 #' The argument \code{intervalType} controls the algorithm used for obtain first and last interval bounds for
-#' each taxon, of which there are several to select from:intervalType
+#' each taxon, of which there are several options for \code{intervalType} to select from:
 #' \describe{
 
 #'  \item{\code{"dateRange"}}{The default option. The bounds on the first appearances
@@ -67,8 +67,8 @@
 #' \code{"zoneOverlap"}. Please see details below.
 
 #' @return
-#' Returns a standard timeList data object, as used by
-#' many other paleotree functions, like
+#' Returns a standard \code{timeList} data object, as used by
+#' many other \code{paleotree} functions, like
 #' \code{\link{bin_timePaleoPhy}}, \code{\link{bin_cal3TimePaleoPhy}}
 #' and \code{\link{taxicDivDisc}}
 

@@ -84,7 +84,7 @@ repeatedly drawing waiting times between sampling events from an exponential
 distribution. This is the model that is run when 
 \code{alpha}, \code{beta} and \code{rTimeRatio}.
 
-In addition to this simple model, sampleRanges also can consider a range of
+In addition to this simple model, \code{sampleRanges} also can consider a range of
 additional models, including the \emph{"hatP"} and \emph{"incP"} options of Liow et al.
 (2010). To describe the behavior of these models, users alter the default
 values for \code{alpha}, \code{beta} and \code{rTimeRatio}.
@@ -120,7 +120,7 @@ sampling means that taxa will have a sampling rate of \code{2 * r} at the mid-pe
 range, which will have considerable implications for taxonomic incompleteness.
 
 The particular distinctions about these parameter values are important: all
-models simulated in sampleRanges are structured to be effectively nested
+models simulated in \code{sampleRanges} are structured to be effectively nested
 inside a most general model with parameters \code{r},
 \code{alpha}, \code{beta} and \code{rTimeRatio}.
 

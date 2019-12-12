@@ -24,7 +24,7 @@ of \code{length = 2} is given for \code{timeData}, such as would be expected if 
 of \code{binTimeData} was used as the input, the second element is used. See details.
 Unsampled taxa (e.g. from a simulation of sampling in the fossil record,
 listed as \code{NA}s in the second matrix) are automatically dropped from the
-timeList and from groups simultaneously. Living taxa observed in the modern day
+\code{timeList} and from \code{groups} simultaneously. Living taxa observed in the modern day
 are expected to be listed as last observed in a special interval (\code{c(0,0)}), i.e.
 begins and ends at zero (modern) time. This interval is always automatically removed prior
 to the calculation intermediary data for fitting likelihood functions.}
@@ -121,7 +121,7 @@ in the analysis, unlike the \code{p}, \code{q}, and \code{r} parameters (see bel
 
 Groupings follow the parameter names, separated by periods; by default, the
 parameters will be placed in groups corresponding to the discrete intervals
-in the input timeList, such that \code{make_inverseSurv} will create a function with
+in the input \code{timeList}, such that \code{make_inverseSurv} will create a function with
 parameters \code{p.1}, \code{q.1} and \code{r.1} for interval 1; \code{p.2}, \code{q.2} and \code{r.2} for
 interval 2 and so on. Additional groupings given by the user are listed after 
 this first set (e.g. '\code{p.1.2.2}').
@@ -168,7 +168,7 @@ interval-specific rates will be returned invisibly as described above.}
  \item{plotPar}{If \code{TRUE} (the default) the calculated rates will be plotted, with each
 grouping given a separate plot. This can be repressed by setting \code{plotPar} to \code{FALSE}. As the only
 conceivable purpose for setting \code{plotPar} to \code{FALSE} is to get the calculated rates, these will not
-be returned invisibly if plotPar is \code{FALSE}.}
+be returned invisibly if \code{plotPar} is \code{FALSE}.}
  \item{ratesPerInt}{If \code{FALSE}, the default option, the rates plotted and returned will
 be in units per lineage-time units, if those rates were being treated as rates for a
 continuous-time process (i.e. \code{p_cont = TRUE} and \code{q_cont = TRUE} for \code{p} and \code{q}, respectively,
@@ -186,7 +186,7 @@ which of the three rates on the resulting plot. This
 is given as the possible positions for argument \code{x} of the function 
 \code{\link{legend}}, and by default is \code{"topleft"}, which will be generally
 useful if origination and extinction rates are initially low. If 
-legendPosition is \code{NA}, then a legend will not be plotted.}
+\code{legendPosition = NA}, then a legend will not be plotted.}
 }
 }
 }

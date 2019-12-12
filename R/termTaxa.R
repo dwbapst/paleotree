@@ -187,42 +187,43 @@
 #' layout(1)
 #'
 #' ########################################### 
-#' #let's look at the change in the terminal branches
+#' # let's look at the change in the terminal branches
 #' plot(tree$edge.length,
 #'     tree1$edge.length)
-#' #can see some edges are shorter on the new tree, cool
+#' # can see some edges are shorter on the new tree, cool
 #' 
-#' #let's now simulate sampling and use FADs
+#' # let's now simulate sampling and use FADs
 #' layout(1:2)
 #' plot(tree)
 #' axisPhylo()
+#' 
 #' FADs <- sampleRanges(
 #'     termTaxaRes$taxonRanges,
 #'     r = 0.1)[,1]
 #' tree1 <- trueTermTaxaTree(termTaxaRes, FADs)
+#' 
 #' plot(tree1)
 #' axisPhylo()
 #' 
 #' ################################################
-#' #can condition on sampling some average number of taxa
-#' #analogous to deprecated function simFossilTaxa_SRcond
+#' # can condition on sampling some average number of taxa
+#' # analogous to deprecated function simFossilTaxa_SRcond
 #' r <- 0.1
 #' avgtaxa <- 50
 #' sumRate <- 0.2
-#' #avg number necc for an avg number sampled
+#' 
+#' # avg number necc for an avg number sampled
 #' ntaxa_orig <- avgtaxa / (r / (r + sumRate))	
 #' termTaxaRes <- simTermTaxa(
 #'     ntaxa = ntaxa_orig,
 #'     sumRate = sumRate)
 #' 
-#' #note that conditioning must be conducted using full sumRate
-#' #this is because durations are functions of both rates
-#' #just like in bifurcation
+#' # note that conditioning must be conducted using full sumRate
+#' # this is because durations are functions of both rates
+#' # just like in bifurcation
 #' 
-#' 
-#' #################################
-#' #use advanced version of simTermTaxa: simTermTaxaAdvanced
-#'     #allows for extant taxa in a term-taxa simulation
+#' # now, use advanced version of simTermTaxa: simTermTaxaAdvanced
+#'     # allows for extant taxa in a term-taxa simulation
 #' 
 #' #with min.cond
 #' termTaxaRes <- simTermTaxaAdvanced(
@@ -235,12 +236,14 @@
 #'     maxExtant = 20,
 #'     min.cond = TRUE
 #'     )
-#' #notice that arguments are similar to simFossilRecord
+#'     
+#' # notice that arguments are similar to simFossilRecord
 #' 	# and even more similar to deprecated function simFossilTaxa
+#' 	
 #' plot(termTaxaRes$tree)
 #' Ntip(termTaxaRes$tree)
 #' 
-#' #without min.cond
+#' # without min.cond
 #' termTaxaRes <- simTermTaxaAdvanced(
 #'     p = 0.1,
 #'     q = 0.1,
@@ -251,11 +254,12 @@
 #'     maxExtant = 20,
 #'     min.cond = FALSE
 #'     )
+#'     
 #' plot(termTaxaRes$tree)
 #' Ntip(termTaxaRes$tree)
 #' 
 #' layout(1)
-#' 
+
 #' @name termTaxa
 #' @rdname termTaxa
 #' @export

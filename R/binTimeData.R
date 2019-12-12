@@ -64,20 +64,23 @@
 
 #' @examples
 #' 
-#' #Simulate some fossil ranges with simFossilRecord
+#' # Simulate some fossil ranges with simFossilRecord
 #' set.seed(444)
-#' record <- simFossilRecord(
-#'     p = 0.1, q = 0.1, nruns = 1,
-#'     nTotalTaxa = c(30,40), nExtant = 0)
+#' record <- simFossilRecord(p = 0.1, 
+#'                           q = 0.1, 
+#'                           nruns = 1,
+#'                           nTotalTaxa = c(30,40), 
+#'                           nExtant = 0
+#'                           )
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' #simulate a fossil record with imperfect sampling via sampleRanges
+#' # simulate a fossil record with imperfect sampling via sampleRanges
 #' rangesCont <- sampleRanges(taxa,r = 0.5)
-#' #Now let's use binTimeData() to bin in intervals of 1 time unit
+#' # Now let's use binTimeData() to bin in intervals of 1 time unit
 #' rangesDisc <- binTimeData(rangesCont,int.length = 1)
-#' #plot with taxicDivDisc()
+#' # plot with taxicDivDisc()
 #' equalDiscInt <- taxicDivDisc(rangesDisc)
 #' 
-#' #example with pre-set intervals input (including overlapping)
+#' # example with pre-set intervals input (including overlapping)
 #' presetIntervals <- cbind(
 #'     c(1000, 990, 970, 940),
 #'     c(980, 970, 950, 930)
@@ -96,23 +99,24 @@
 #' ####################################
 #' #example with extant taxa
 #' set.seed(444)
-#' record <- simFossilRecord(
-#'    p = 0.1, q = 0.1, nruns = 1,
-#'    nTotalTaxa = c(30,40))
+#' record <- simFossilRecord(p = 0.1, 
+#'                           q = 0.1, 
+#'                           nruns = 1,
+#'                           nTotalTaxa = c(30,40)
+#'                           )
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' #simulate a fossil record with imperfect sampling via sampleRanges
+#' # simulate a fossil record 
+#'     # with imperfect sampling via sampleRanges
 #' rangesCont <- sampleRanges(
 #'     taxa, r = 0.5,
 #'     modern.samp.prob = 1)
-#' #Now let's use binTimeDat to bin into intervals of 1 time-unit
+#' # Now let's use binTimeDat to bin into intervals of 1 time-unit
 #' rangesDisc <- binTimeData(rangesCont,
 #'     int.length = 1)
-#' #plot with taxicDivDisc()
+#' # plot with taxicDivDisc()
 #' taxicDivDisc(rangesDisc)
 #' 
-#' 
-#' #################################################
-#' #example with pre-set intervals input
+#' # example with pre-set intervals input
 #'     # (including overlapping)
 #' presetIntervals <- cbind(
 #'     c(40, 30, 20, 10),
@@ -120,8 +124,10 @@
 #'     )
 #' rangesDisc1 <- binTimeData(rangesCont,
 #'     int.times = presetIntervals)
+#'     
 #' taxicDivDisc(rangesDisc1)
 #' 
+
 #' @export binTimeData
 binTimeData <- function(timeData,int.length = 1,start = NA,int.times = NULL){
 	#bin temporal data

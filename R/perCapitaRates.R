@@ -46,9 +46,9 @@
 #' calculating per-capita origination and extinction rates.
 
 #' @param isExtant A vector of \code{TRUE} and \code{FALSE} values, same length as the
-#' number of taxa in the second matrix of timeList, where \code{TRUE} values indicate
+#' number of taxa in the second matrix of \code{timeList}, where \code{TRUE} values indicate
 #' taxa that are alive in the modern day (and thus are boundary crossers which
-#' leave the most recent interval). By default, this argument is NULL and instead
+#' leave the most recent interval). By default, this argument is \code{NULL} and instead
 #' which taxa are extant is inferred based on which taxa occur in an interval
 #' with start and end times both equal to zero. See details.
 

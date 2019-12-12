@@ -86,7 +86,7 @@
 #' 
 #' Groupings follow the parameter names, separated by periods; by default, the
 #' parameters will be placed in groups corresponding to the discrete intervals
-#' in the input timeList, such that \code{make_inverseSurv} will create a function with
+#' in the input \code{timeList}, such that \code{make_inverseSurv} will create a function with
 #' parameters \code{p.1}, \code{q.1} and \code{r.1} for interval 1; \code{p.2}, \code{q.2} and \code{r.2} for
 #' interval 2 and so on. Additional groupings given by the user are listed after 
 #' this first set (e.g. '\code{p.1.2.2}').
@@ -135,7 +135,7 @@
 #'  \item{plotPar}{If \code{TRUE} (the default) the calculated rates will be plotted, with each
 #' grouping given a separate plot. This can be repressed by setting \code{plotPar} to \code{FALSE}. As the only
 #' conceivable purpose for setting \code{plotPar} to \code{FALSE} is to get the calculated rates, these will not
-#' be returned invisibly if plotPar is \code{FALSE}.}
+#' be returned invisibly if \code{plotPar} is \code{FALSE}.}
 
 #'  \item{ratesPerInt}{If \code{FALSE}, the default option, the rates plotted and returned will
 #' be in units per lineage-time units, if those rates were being treated as rates for a
@@ -157,7 +157,7 @@
 #' is given as the possible positions for argument \code{x} of the function 
 #' \code{\link{legend}}, and by default is \code{"topleft"}, which will be generally
 #' useful if origination and extinction rates are initially low. If 
-#' legendPosition is \code{NA}, then a legend will not be plotted.}
+#' \code{legendPosition = NA}, then a legend will not be plotted.}
 #' }
 #' }
 

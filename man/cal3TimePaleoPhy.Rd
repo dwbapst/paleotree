@@ -154,7 +154,7 @@ in '\code{bin_}' time-scaling functions; please use \code{points.occur} instead.
 the taxon ranges? \code{FAD.only = TRUE}, the resulting output
 is similar to when terminal ranges are no
 added on with \code{timePaleoPhy}. If \code{FAD.only = TRUE}
-and {dateTreatment = "minMax"} or {dateTreatment = "randObs"}, the
+and \code{dateTreatment = "minMax"} or \code{dateTreatment = "randObs"}, the
 function will stop and a warning will be produced, as these combinations imply
 contradictory sets of times of observation.}
 
@@ -413,25 +413,25 @@ your dataset. Remember that the FADs (earliest dates) given to \code{timePaleoPh
 }
 \examples{
 
-#Simulate some fossil ranges with simFossilRecord
+# Simulate some fossil ranges with simFossilRecord
 set.seed(444)
 record <- simFossilRecord(p = 0.1,
-     q = 0.1,
-     nruns = 1,
-	    nTotalTaxa = c(30,40),
-     nExtant = 0)
+                          q = 0.1,
+                          nruns = 1,
+	                         nTotalTaxa = c(30,40),
+                          nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 
-#simulate a fossil record with imperfect sampling with sampleRanges
+# simulate a fossil record with imperfect sampling with sampleRanges
 rangesCont <- sampleRanges(taxa,
       r = 0.5)
-#let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
+# let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
 cladogram <- taxa2cladogram(taxa,
       plot = TRUE)
 
-#this package allows one to use
+# this package allows one to use
   # rate calibrated type time-scaling methods (Bapst, 2014)
-#to use these, we need an estimate of the sampling rate 
+# to use these, we need an estimate of the sampling rate 
      # (we set it to 0.5 above)
 likFun <- make_durationFreqCont(rangesCont)
 srRes <- optim(
@@ -445,7 +445,7 @@ sRate <- srRes[[1]][2]
 
 # we also need extinction rate and branching rate
    # we can get extRate from getSampRateCont too
-#we'll assume extRate = brRate (ala Foote et al., 1999)
+# we'll assume extRate = brRate (ala Foote et al., 1999)
     # this may not always be a good assumption!
 divRate <- srRes[[1]][1]
 
@@ -461,11 +461,12 @@ ttree <- cal3TimePaleoPhy(
     sampRate = sRate,
     ntrees = 1,
     plot = TRUE)
-#notice the warning it gives!
+    
+# notice the warning it gives!
 phyloDiv(ttree)
 
-#by default, cal3TimePaleoPhy may predict indirect ancestor-descendant relationships
-#can turn this off by setting anc.wt = 0
+# by default, cal3TimePaleoPhy may predict indirect ancestor-descendant relationships
+     # can turn this off by setting anc.wt = 0
 ttree <- cal3TimePaleoPhy(
     cladogram,
      rangesCont,
@@ -476,10 +477,8 @@ ttree <- cal3TimePaleoPhy(
     anc.wt = 0,
     plot = TRUE)
 
-
-
 \donttest{
-#let's look at how three trees generated
+# let's look at how three trees generated
     # with very different time of obs. look
     
 ttreeFAD <- cal3TimePaleoPhy(
@@ -503,7 +502,7 @@ ttreeRand <- cal3TimePaleoPhy(
     sampRate = sRate,
     ntrees = 1,plot = TRUE)
     
-#by default the time of observations are the LADs
+# by default the time of observations are the LADs
 ttreeLAD <- cal3TimePaleoPhy(
     cladogram, 
     rangesCont,
@@ -531,7 +530,7 @@ plot(ladderize(ttreeLAD));text(5,5,
 layout(1)
 par(parOrig)
 
-#to get a fair sample of trees
+# to get a fair sample of trees
     # let's increase ntrees
     
 ttrees <- cal3TimePaleoPhy(
@@ -543,7 +542,7 @@ ttrees <- cal3TimePaleoPhy(
     ntrees = 9,
     plot = FALSE)
     
-#let's compare nine of them at once in a plot
+# let's compare nine of them at once in a plot
     
 layout(matrix(1:9,3,3))
 parOrig <- par(no.readonly = TRUE)
@@ -554,15 +553,15 @@ for(i in 1:9){
     }
 layout(1)
 par(parOrig)
-#they are all a bit different!
+# they are all a bit different!
 
-#can plot the median diversity curve with multiDiv
+# can plot the median diversity curve with multiDiv
 multiDiv(ttrees)
 
-#using node.mins
-#let's say we have (molecular??) evidence that
+# using node.mins
+# let's say we have (molecular??) evidence that
     # node (5) is at least 1200 time-units ago
-#to use node.mins, first need to drop any unshared taxa
+# to use node.mins, first need to drop any unshared taxa
 droppers <- cladogram$tip.label[is.na(
     match(cladogram$tip.label,
            names(which(!is.na(rangesCont[,1])))
@@ -585,7 +584,7 @@ ttree <- cal3TimePaleoPhy(cladoDrop,
     node.mins = nodeDates,
     plot = TRUE)
 
-#example with time in discrete intervals
+# example with time in discrete intervals
 set.seed(444)
 record <- simFossilRecord(p = 0.1,
      q = 0.1,
@@ -593,15 +592,15 @@ record <- simFossilRecord(p = 0.1,
      nTotalTaxa = c(30,40),
      nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
-#simulate a fossil record
+# simulate a fossil record
     # with imperfect sampling with sampleRanges
 rangesCont <- sampleRanges(taxa,r = 0.5)
-#let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
+# let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
 cladogram <- taxa2cladogram(taxa,plot = TRUE)
-#Now let's use binTimeData to bin in intervals of 1 time unit
+# Now let's use binTimeData to bin in intervals of 1 time unit
 rangesDisc <- binTimeData(rangesCont,int.length = 1)
     
-#we can do something very similar for
+# we can do something very similar for
     # the discrete time data (can be a bit slow)
 likFun <- make_durationFreqDisc(rangesDisc)
 spRes <- optim(
@@ -613,20 +612,20 @@ spRes <- optim(
     control = list(maxit = 1000000))
 sProb <- spRes[[1]][2]
     
-#but that's the sampling PROBABILITY per bin
+# but that's the sampling PROBABILITY per bin
     # NOT the instantaneous rate of change
     
-#we can use sProb2sRate() to get the rate
+# we can use sProb2sRate() to get the rate
     # We'll need to also tell it the int.length
 sRate1 <- sProb2sRate(sProb,int.length = 1)
     
-#we also need extinction rate and branching rate (see above)
-    #need to divide by int.length...
+# we also need extinction rate and branching rate (see above)
+    # need to divide by int.length...
 divRate <- spRes[[1]][1]/1
     
-#estimates that r = 0.3... 
+# estimates that r = 0.3... 
     # that's kind of low (simulated sampling rate is 0.5)
-#Note: for real data, you may need to use an average int.length 
+# Note: for real data, you may need to use an average int.length 
     # (i.e. if intervals aren't all the same duration)
 ttree <- bin_cal3TimePaleoPhy(cladogram,
     rangesDisc,
@@ -637,7 +636,7 @@ ttree <- bin_cal3TimePaleoPhy(cladogram,
     plot = TRUE)
 phyloDiv(ttree)
     
-#can also force the appearance timings
+# can also force the appearance timings
     # not to be chosen stochastically
 ttree1 <- bin_cal3TimePaleoPhy(cladogram,
     rangesDisc,
@@ -670,7 +669,7 @@ ttree <- bin_cal3TimePaleoPhy(cladoDrop,
     plot = TRUE)
 
 
-#example with multiple values of anc.wt
+# example with multiple values of anc.wt
 ancWt <- sample(0:1,
     nrow(rangesDisc[[2]]),
     replace = TRUE)

@@ -4,7 +4,7 @@
 \alias{timeList2fourDate}
 \alias{fourDateFunctions}
 \alias{fourDate2timeList}
-\title{Converting Datasets of Taxon Ranges in Intervals Between timeList format and fourDate format}
+\title{Converting Datasets of Taxon Ranges in Intervals Between \code{timeList} format and \code{fourDate} format}
 \usage{
 timeList2fourDate(timeList)
 

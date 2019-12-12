@@ -31,7 +31,8 @@ bindPaleoTip(
 )
 }
 \arguments{
-\item{tree}{A phylogeny as a phylo object. \code{dropPaleoTip} requires this
+\item{tree}{A phylogeny, as an object of class \code{phylo}.
+\code{dropPaleoTip} requires this
 input object to also have a \code{tree$root.time} element. If not provided for
 \code{bindPaleoTip}, then the \code{$root.time} will be presumed to be such that the
 furthest tip from the root is at \code{time = 0}.}
@@ -63,7 +64,7 @@ given if \code{edgeLength} is given.}
 Cannot be given if \code{tipAge} is given.}
 
 \item{positionBelow}{The distance along the edge below the node to be attached to 
-(given in code{nodeAttach} to add the new tip. Cannot be negative or greater than the length of the
+(given in \code{nodeAttach} to add the new tip. Cannot be negative or greater than the length of the
 edge below \code{nodeAttach}.}
 
 \item{noNegativeEdgeLength}{Return an error if a negative terminal edge length is calculated

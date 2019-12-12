@@ -14,7 +14,7 @@
 #' @aliases cleanNewPhylo cleanTree
 
 #' @details
-#' Useful when doing complex manipulations and reconstitutions of \code{phylo} objects (or their
+#' Useful when doing complex manipulations of \code{phylo} objects (or reconstituting them, or their
 #' \emph{de novo} construction), and thus is used by a number of \code{paleotree} functions.
 
 #' @param tree A phylogeny object of type \code{phylo}

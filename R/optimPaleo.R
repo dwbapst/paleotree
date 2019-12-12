@@ -1,7 +1,7 @@
-#' Simplified Optimizer for paleotree Likelihood Functions
+#' Simplified Optimizer for \code{paleotree} Likelihood Functions
 #' 
 #' This function is a deliberately simplistic automation wrapper for the function
-#' \code{\link{optim}} and the use of the "L-BFGS-B" optimizing method,
+#' \code{\link{optim}} and the use of the \code{"L-BFGS-B"} optimizing method,
 #' with initial parameter values and bounds provided with \code{\link{parInit}},
 #' \code{\link{parLower}} and \code{\link{parUpper}}. It is mainly provided here
 #' as a shorthand to be used in educational demonstrations where model-fitting
@@ -12,7 +12,7 @@
 #' reasons. Users seeking an optimizer for their own analytical purposes
 #' should write their own \code{\link{optim}} function.
 
-#' @param modelFun A likelihood function for a model, of class 'paleotreeFunc'.
+#' @param modelFun A likelihood function for a model, of class \code{paleotreeFunc}.
 
 #' @return
 #' Returns the results from using \code{\link{optim}}.

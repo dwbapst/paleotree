@@ -1,3 +1,8 @@
+Version - 3.3.25 - 12-12-19 (CRAN release)
+- Fixed all instances where class was checked as if it was assumed only to be a single value, and instead check now with inherits() instead, so to be acceptable for CRAN.
+- Moved several slow examples (simFossilRecord, perCapitaRates) to examples
+- fixes to spelling throughout, updated WORDLIST, wow so much work...
+
 Version - 3.3.23 - 11-10-19 (Not Released to CRAN)
 - Added option 'tipLabels' to timeSliceTree to allow users to replace the tip labels put on cropped branches (branches with multiple descendants, cropped to a single branch at the sliceTime) with concatanated lists of descendant taxa rather than arbitrarily returning the label of the earliest descendant taxon (the latter is still the default though!).
 - added tests for timeSliceTree
@@ -15,7 +20,7 @@ Version - 3.3.20 - 07-17-19 (Not Released to CRAN)
 Version - 3.3.5 - 07-07-19 (Not Released to CRAN)
 - Added in some extra checks to simFossilRecord (and related methods), and a new test, to catch a rare and yet-unexplained occurrence of negative taxon dates being returned by simFossilTaxa. Unfortunately, this error is very hard to reproduce.
 
-Version - 3.3.0 - 06-03-19 
+Version - 3.3.0 - 06-03-19 (CRAN Release)
 - Lots of style edits to doc and examples in many places.
 - Released to CRAN!
 

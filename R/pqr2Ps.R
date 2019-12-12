@@ -38,7 +38,7 @@
 #' 
 #' \eqn{Ps = 1-(((p+q+r)-(sqrt(((p+q+r)^2)-(4*p*q))))/(2*p))}
 #' 
-#' The above exact solution was independent derived and published by Dider et al. (2017).
+#' The above exact solution was independent derived and published by Didier et al. (2017).
 #' Also see Wagner (2019) for additional discussion of this value and its importance for
 #' understanding the timing of branching events in an imperfect fossil record.
 

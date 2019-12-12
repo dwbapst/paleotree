@@ -44,10 +44,11 @@
 #' @inheritParams taxa2phylo
 
 #' @param drop.cryptic Should cryptic species be dropped (except for the
-#' first)? Not dropped by default.
+#' first; effectively merging the cryptic species complexes into a single apparent species)? 
+#' \code{drop.cryptic = FALSE} by default, so cryptic species are not dropped by default.
 
 #' @return The resulting phylogeny without branch lengths is output as an
-#' object of class phylo.
+#' object of class \code{phylo}.
 #' 
 #' The tip labels are the rownames from the simulation input; see documentation
 #' for \code{simFossilRecord} and \code{fossilRecord2fossilTaxa} documentation for details.

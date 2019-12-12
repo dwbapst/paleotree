@@ -24,7 +24,8 @@ A phylogeny with edge lengths of class \code{phylo}.
 }
 \description{
 Rescales a tree with edge lengths so that all edge lengths
-are at least some minimum branch length ("MBL" or 'mbl').
+are at least some minimum branch length 
+(sometimes abbreviated as "\code{MBL}" or "\code{mbl}").
 Edge lengths are transformed so they are
 greater than or equal to the input minimum branch length, by
 subtracting edge length from more root-ward edges

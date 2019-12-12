@@ -12,7 +12,7 @@
 \title{Dated Trees and Trait Data for Ammonites, Ceratopsians and Cervids from Raia et al. 2015}
 \format{The attached datasets consist of three phylogenetic trees as \code{phylo} objects, a \code{data.frame} consisting of
 three traits for ammonites (the third trait is the log of stratigraphic duration), and the two physical traits (shell
-size and suture complexity) as seperate vectors, with taxon names.}
+size and suture complexity) as separate vectors, with taxon names.}
 \source{
 These datasets were taken from the following study:
 Raia, P., F. Passaro, F. Carotenuto, L. Maiorino, P. Piras, L. Teresi, S. Meiri,
@@ -23,7 +23,8 @@ Rule and the Universal Scaling Law of Ornament Complexity. \emph{The American Na
 And the corresponding Dryad repository:
 Raia P, Passaro F, Carotenuto F, Maiorino L, Piras P, Teresi L, Meiri S, Itescu Y, Novosolov
 M, Baiano MA, Martinez R, Fortelius M (2015) Data from: Cope's rule and the universal
-scaling law of ornament complexity. \emph{Dryad Digital Repository}. (https://doi.org/10.5061/dryad.50dr8)
+scaling law of ornament complexity. \emph{Dryad Digital Repository}. 
+(\url{https://doi.org/10.5061/dryad.50dr8})
 }
 \description{
 Dated phylogenetic trees for fossil ammonite genera, fossil ceratopsian species and (both extinct and extant) cervid

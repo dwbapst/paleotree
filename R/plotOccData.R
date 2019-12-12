@@ -21,8 +21,9 @@
 #' If not given (the default) a generic plot title is appended.
 
 #' @param occColors A vector of numbers or characters indicating colors on a color
-#' palette for use with basic plot. Must be the same length as occList. If empty, the
-#' default, the colors used are sampled randomly from the \code{rainbow()} function.
+#' palette for use with the basic \code{plot} function. 
+#' Must be the same length as \code{occList}. If empty, as with the
+#' default, the colors used are sampled randomly from the \code{rainbow} function.
 
 #' @param lineWidth A numeric value giving the length to be used for the width of lines
 #' plotted in \code{plotOccData}. If not given (the default), this is calculated using

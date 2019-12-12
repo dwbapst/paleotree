@@ -7,10 +7,10 @@
 rootSplit(tree)
 }
 \arguments{
-\item{tree}{A phylo object}
+\item{tree}{A phylogeny, as an object of class \code{phylo}.}
 }
 \value{
-Returns a list with each element a character vector containing the
+Returns a \code{list} with each element a character vector containing the
 names of terminal taxa descended from each lineage splitting off of the root
 node.
 }
@@ -27,7 +27,6 @@ bifurcation.
 
 tree <- rtree(100)
 rootSplit(tree)
-
 }
 \author{
 David W. Bapst

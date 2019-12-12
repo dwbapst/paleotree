@@ -6,7 +6,7 @@
 #' Evolution). 
 #' 
 #' \code{accioExhaustionCurve} uses a Sankoff parsimony ancestral-reconstruction
-#' algorithm (written by PJ Wagner, \emph{not} the one from \code{phangorn} used
+#' algorithm (written by P.J. Wagner, \emph{not} the one from \code{phangorn} used
 #' elsewhere in \code{paleotree}) to calculate character changes across each branch
 #' (internode edge) of a tree, and then reports the counts of character state
 #" changes, new state changes, etc. 
@@ -25,7 +25,7 @@
 #' and \code{charExhaustPlot} offer
 #' users two different options for examining character change: \code{totalAcc}
 #' fits models to the total accumulated number of state changes over the phylogeny,
-#' thus using exhaustion to explor the size and distribution of character space. The
+#' thus using exhaustion to explore the size and distribution of character space. The
 #' other option \code{charAlt} fits models to the number of character that alter from
 #' primitive to derived over phylogeny, thus reflecting the size and distribution of state space.
 #' 
@@ -103,16 +103,16 @@
 #' The output of \code{accioBestAcquisitionModel}
 #' is a list object containing
 #' information on the best-fit model, the
-#' parameters of that model, the calculated
-#' probabilition distribution for that model
-#' at the same intervals, for use in quantile plots.	
+#' parameters of that model, and the calculated
+#' probability distribution function for that model
+#' at the same intervals (for use in quantile plots).	
 #' 
 #' \code{charExhaustPlot} produces a plot, and outputs no data.
 	
 
 
 #' @note
-#' This family of functios presented here were originally written 
+#' This family of functions presented here were originally written 
 #' by Peter J. Wagner, and then modified and adapted by David W.
 #' Bapst for wider release  in a CRAN-distributed
 #' package: \code{paleotree}. This makes the code presented here

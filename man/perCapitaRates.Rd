@@ -2,11 +2,17 @@
 % Please edit documentation in R/perCapitaRates.R
 \name{perCapitaRates}
 \alias{perCapitaRates}
-\title{perCapitaRates}
+\title{Instantaneous \emph{per-Capita} Rates of Origination and Extinction from the Fossil Record}
 \usage{
-perCapitaRates(timeList, plot = TRUE, logRates = FALSE,
-  drop.extant = FALSE, isExtant = NULL, jitter = TRUE,
-  legendPosition = "topleft")
+perCapitaRates(
+  timeList,
+  plot = TRUE,
+  logRates = FALSE,
+  drop.extant = FALSE,
+  isExtant = NULL,
+  jitter = TRUE,
+  legendPosition = "topleft"
+)
 }
 \arguments{
 \item{timeList}{A list composed of two matrices, giving interval start and end 
@@ -23,9 +29,9 @@ author takes no responsibility for the aesthetics of this plot.}
 calculating per-capita origination and extinction rates.}
 
 \item{isExtant}{A vector of \code{TRUE} and \code{FALSE} values, same length as the
-number of taxa in the second matrix of timeList, where \code{TRUE} values indicate
+number of taxa in the second matrix of \code{timeList}, where \code{TRUE} values indicate
 taxa that are alive in the modern day (and thus are boundary crossers which
-leave the most recent interval). By default, this argument is NULL and instead
+leave the most recent interval). By default, this argument is \code{NULL} and instead
 which taxa are extant is inferred based on which taxa occur in an interval
 with start and end times both equal to zero. See details.}
 
@@ -34,7 +40,7 @@ ahead of the origination rate on the time axis, so the two can be differentiated
 
 \item{legendPosition}{The position of a legend indicating which line is
 origination rate and which is extinction rate on the resulting plot. This
-is given as the possible positions for argument 'x' of the function 
+is given as the possible positions for argument \code{x} of the function 
 \code{\link{legend}}, and by default is \code{"topleft"}, which will be generally
 useful if origination and extinction rates are initially low. If 
 \code{legendPosition = NA}, then a legend will not be plotted.}
@@ -44,11 +50,12 @@ This function will invisibly return a ten column matrix,
 where the number of rows is equal to the number of intervals. The
 first two columns are interval start and end times and the third
 column is interval length. The fourth through eighth column is the
-four fundamental classes of taxa from Foote (2001): Nbt, NbL, NFt,
-NFL and their sum, N. The final two columns are the per-capita
-rates estimated for each interval in units per lineage time-units;
-the ninth column is the origination rate ('pRate') and the tenth
-column is the extinction rate ('qRate').
+four fundamental classes of taxa from Foote (2001):
+\code{Nbt}, \code{NbL}, \code{NFt}, \code{NFL} and their sum, \code{N}.
+The final two columns are the per-capita rates estimated for
+each interval in units per lineage time-units;
+the ninth column is the origination rate (\code{pRate}) and the tenth
+column is the extinction rate (\code{qRate}).
 }
 \description{
 Calculates and plots per-capita origination and extinction rates from
@@ -64,18 +71,20 @@ the 'Van Valen' rate metrics, these are not implemented here, but could be
 estimated using the matrix invisibly output by this function (See Foote,
 2000, for the relevant equations for calculating these).
 
-The timeList object should be a list composed of two matrices, the first
+The \code{timeList} object should be a list composed of two matrices, the first
 matrix giving by-interval start and end times (in absolute time), the second
 matrix giving the by-taxon first and last appearances in the intervals
 defined in the first matrix, numbered as the rows. Absolute time should be
 decreasing, while the intervals should be numbered so that the number
-increases with time. Taxa alive in the modern should be either (a) listed 
-in isExtant or (b) listed as last occurring in a time interval that 
-begins at time 0 and ends at time 0. See the documentation for the time-scaling 
+increases with time. Taxa alive in the modern should be either 
+(a) listed in \code{isExtant} or 
+(b) listed as last occurring in a time interval
+that begins at time 0 and ends at time 0. 
+See the documentation for the time-scaling 
 function \code{\link{bin_timePaleoPhy}} and the simulation function 
 \code{\link{binTimeData}} for more information on formatting.
 
-Unlike some functions in paleotree, such as the diversity curve functions,
+Unlike some functions in \code{paleotree}, such as the diversity curve functions,
 intervals must be both sequential and non-overlapping. The diversity curve
 functions deal with such issues by assuming taxa occur from the base of the
 interval they are first found in until the end of the last interval they
@@ -84,41 +93,61 @@ of per-capita diversification rates.
 }
 \examples{
 
+\donttest{
+
 #with the retiolinae dataset
 data(retiolitinae)
 perCapitaRates(retioRanges)
 
-#Simulate some fossil ranges with simFossilRecord
+# Simulate some fossil ranges with simFossilRecord
 set.seed(444)
-record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-	nTotalTaxa = c(80,100), nExtant = 0)
+record <- simFossilRecord(
+    p = 0.1, q = 0.1, nruns = 1, nTotalTaxa = c(80,100), nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
+
 #simulate a fossil record with imperfect sampling with sampleRanges()
 rangesCont <- sampleRanges(taxa,r = 0.5)
+
 #Now let's use binTimeData() to bin in intervals of 5 time units
 rangesDisc <- binTimeData(rangesCont,int.length = 5)
+
 #and get the per-capita rates
 perCapitaRates(rangesDisc)
+
 #on a log scale
 perCapitaRates(rangesDisc,logRates = TRUE)
 
+
 #get mean and median per-capita rates
 res <- perCapitaRates(rangesDisc,plot = FALSE)
+
 apply(res[,c("pRate","qRate")],2,mean,na.rm = TRUE)
+
 apply(res[,c("pRate","qRate")],2,median,na.rm = TRUE)
 
+##############################
 #with modern taxa
 set.seed(444)
-record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-	nExtant = c(10,50))
+
+record <- simFossilRecord(
+    p = 0.1, 
+    q = 0.1, 
+    nruns = 1,
+    nExtant = c(10,50)
+    )
+    
 taxa <- fossilRecord2fossilTaxa(record)
+
 #simulate a fossil record with imperfect sampling with sampleRanges()
 rangesCont <- sampleRanges(taxa,r = 0.5,,modern.samp.prob = 1)
+
 #Now let's use binTimeData() to bin in intervals of 5 time units
 rangesDisc <- binTimeData(rangesCont,int.length = 5)
+
 #and now get per-capita rates
 perCapitaRates(rangesDisc)
 
+}
 }
 \references{
 Foote, M. 2000 Origination and extinction components of taxonomic diversity:

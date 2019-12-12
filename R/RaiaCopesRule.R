@@ -20,7 +20,7 @@
 #' @format 
 #' The attached datasets consist of three phylogenetic trees as \code{phylo} objects, a \code{data.frame} consisting of
 #' three traits for ammonites (the third trait is the log of stratigraphic duration), and the two physical traits (shell
-#' size and suture complexity) as seperate vectors, with taxon names.
+#' size and suture complexity) as separate vectors, with taxon names.
 #' 
 
 #' @source 
@@ -33,7 +33,8 @@
 #' And the corresponding Dryad repository:
 #' Raia P, Passaro F, Carotenuto F, Maiorino L, Piras P, Teresi L, Meiri S, Itescu Y, Novosolov
 #' M, Baiano MA, Martinez R, Fortelius M (2015) Data from: Cope's rule and the universal
-#' scaling law of ornament complexity. \emph{Dryad Digital Repository}. (https://doi.org/10.5061/dryad.50dr8)
+#' scaling law of ornament complexity. \emph{Dryad Digital Repository}. 
+#' (\url{https://doi.org/10.5061/dryad.50dr8})
 #' 
 
 #' @seealso

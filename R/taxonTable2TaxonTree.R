@@ -4,7 +4,7 @@
 #' indicating a set of hierarchical taxonomic relationships
 #' conveyed as nested placements for a set of tip-taxa (listed in
 #' the last column of the matrix) and returns
-#' a 'taxonomy-tree' phylogeny object of class 'phylo'.
+#' a 'taxonomy-tree' phylogeny object of class \code{phylo}.
  
 #' @details
 #' This function can deal with empty entries in cells of \code{taxonTable} by assuming these
@@ -20,16 +20,19 @@
 #' dropped prior to transformation to a taxon-tree phylogeny object.
 
 #' @param rootLabel If the lowest constant/shared level in the taxonomic hierarchy
-#' isn't labeled, what label should be given to this level? The default is "root".
+#' isn't labeled, what label should be given to this level? The default is \code{"root"}.
 
 #' @return
-#' A phylogeny of class 'phylo', where each tip is a taxon listed in the last column of the
-#' input taxonTable. Edges are scaled so that
-#' the distance from one taxon rank to another 1, then merged to remove singleton nodes. As not all
-#' taxa have parents at the immediate taxon level above, this leads to some odd cases. For example,
-#' two genera emanating from a node representing a class but with a very short (length = 1) branch
-#' and a long branch (length = 3) means one genus is simply placed in the class, with no family or order listed
-#' while the one on the long branch is within an order and family that is otherwise monogeneric.
+#' A phylogeny of class \code{phylo}, where each tip is a taxon listed in the last column of the
+#' input \code{taxonTable}. Edges are scaled so that
+#' the distance from one taxon rank to another rank is one unit, 
+#' then merged to remove singleton nodes. 
+#' As not all taxa have parents at the immediate taxon level above, this leads to some odd cases. 
+#' For example, two genera emanating from a node representing a class 
+#' but with a very short (length = 1) branch
+#' and a long branch (length = 3) means one genus is simply placed in the class, 
+#' with no family or order listed while the one on the long branch 
+#' is within an order and family that is otherwise monogeneric.
 #' 
 #' The names of higher taxa than the tips should be appended as the element $node.label for the internal nodes.
 
@@ -39,17 +42,19 @@
 
 #' @examples
 #' 
-#' #let's create a small, really cheesy example
+#' # let's create a small, really cheesy example
 #' pokeTable <- rbind(cbind("Pokezooa","Shelloidea","Squirtadae",
-#' 		c("Squirtle","Blastoise","Wartortle")),
-#' 	c("Pokezooa","Shelloidea","","Lapras"),
-#' 	c("Pokezooa","","","Parasect"),
-#' 	cbind("Pokezooa","Hirsutamona","Rodentapokemorpha",
-#' 		c("Linoone","Sandshrew","Pikachu")),
-#' 	c("Pokezooa","Hirsutamona",NA,"Ursaring"))
+#'      c("Squirtle","Blastoise","Wartortle")),
+#'      c("Pokezooa","Shelloidea","","Lapras"),
+#'      c("Pokezooa","","","Parasect"),
+#'      cbind("Pokezooa","Hirsutamona","Rodentapokemorpha",
+#'      c("Linoone","Sandshrew","Pikachu")),
+#'      c("Pokezooa","Hirsutamona",NA,"Ursaring"))
 #' 
 #' pokeTree <- taxonTable2taxonTree(pokeTable)
-#' plot(pokeTree);nodelabels(pokeTree$node.label)
+#' 
+#' plot(pokeTree)
+#' nodelabels(pokeTree$node.label)
 #' 
 
 #' @name taxonTable2taxonTree
@@ -138,7 +143,7 @@ taxonTable2taxonTree <- function(taxonTable, cleanTree = TRUE, rootLabel = "root
 	nodes <- cbind(c(1:Ntip,nodes),c(1:Ntip,rev(nodes)))
 	edge[,1] <- sapply(edge[,1],function(x) nodes[x == nodes[,1],2])
 	edge[,2] <- sapply(edge[,2],function(x) nodes[x == nodes[,1],2])
-	#check root
+	# check root
 	nodes <- sort(unique(edge[,1]))
 	root <- nodes[sapply(nodes,function(x) all(x != edge[,2]))]
 	if(length(root) > 1){
@@ -147,13 +152,15 @@ taxonTable2taxonTree <- function(taxonTable, cleanTree = TRUE, rootLabel = "root
 	if(root != (Ntip+1)){
 		stop("Root isn't renumbering correctly")
 		}
-	#reorder edge
+	# reorder edge
 	edge <- edge[order(edge[,1],edge[,2]),]
-	#make the tree
+	# make the tree
 	tree <- list(edge = edge,tip.label = tip.label,edge.length = edge.length,
 		Nnode = Nnode,node.label = rev(node.label))	
-	class(tree) <- "phylo"
-	if(cleanTree){ #make it a good tree
+	# give the tree class phylo
+	attr(tree, "class") <- c("phylo", class(tree))
+	# make it a good tree
+	if(cleanTree){ 
 		#print(tree$edge)
 		tree <- cleanNewPhylo(tree)
 		}

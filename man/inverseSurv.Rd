@@ -6,46 +6,55 @@
 \alias{invSurv}
 \title{Inverse Survivorship Models in the Fossil Record}
 \usage{
-make_inverseSurv(timeList, groups = NULL, p_cont = TRUE,
-  q_cont = TRUE, PA_n = "fixed", PB_1 = 0, Nb = 1,
-  drop.extant = TRUE)
+make_inverseSurv(
+  timeList,
+  groups = NULL,
+  p_cont = TRUE,
+  q_cont = TRUE,
+  PA_n = "fixed",
+  PB_1 = 0,
+  Nb = 1,
+  drop.extant = TRUE
+)
 }
 \arguments{
-\item{timeList}{A 2 column matrix with the first and last occurrences of taxa
+\item{timeList}{A two column matrix, with the first and last occurrences of taxa
 given in relative time intervals (i.e. ordered from first to last). If a list
-of length two is given for timeData, such as would be expected if the output 
-of binTimeData was directly input, the second element is used. See details.
+of \code{length = 2} is given for \code{timeData}, such as would be expected if the output 
+of \code{binTimeData} was used as the input, the second element is used. See details.
 Unsampled taxa (e.g. from a simulation of sampling in the fossil record,
-listed as NAs in the second matrix) are automatically dropped from the
-timeList and from groups simultaneously. Living taxa observed in the modern day
-are expected to be listed as last observed in a special interval (0,0), i.e.
-begins and ends at 0 time. This interval is always automatically removed prior
+listed as \code{NA}s in the second matrix) are automatically dropped from the
+\code{timeList} and from \code{groups} simultaneously. Living taxa observed in the modern day
+are expected to be listed as last observed in a special interval (\code{c(0,0)}), i.e.
+begins and ends at zero (modern) time. This interval is always automatically removed prior
 to the calculation intermediary data for fitting likelihood functions.}
 
 \item{groups}{Either NULL (the default) or matrix with the number of rows equal
 to the number of taxa and the number of columns equal to the number of 'systems'
 of categories for taxa. Taxonomic membership in different groups is indicated
-by numeric values. For example, a dataset could have a 'groups' matrix composed
-of a column representing thin and thick shelled taxa, coded 1 and 2 respectively,
+by numeric values. 
+For example, a dataset could have a 'groups' matrix composed of a column representing
+thin and thick shelled taxa, coded \code{1} and \code{2} respectively,
 while the second column indicates whether taxa live in coastal,
-outer continental shelf, or deep
-marine settings, coded 1-3 respectively. Different combinations of groups will
-be treated as having independent sampling and extinction parameters in the
-default analysis, for example, thinly-shelled deep marine species will have
-separate parameters from thinly-shelled coastal species. Grouping systems could
-also represent temporal heterogeneity, for example, categorizing Paleozoic versus
-Mesozoic taxa. If groups are NULL (the default), all taxa are assumed to be of
+outer continental shelf, or deep marine settings, coded \code{1-3} respectively. 
+Different combinations of groups will be treated as having independent
+sampling and extinction parameters in the default analysis,
+for example, thinly-shelled deep marine species will have
+separate parameters from thinly-shelled coastal species. 
+Grouping systems could also represent temporal heterogeneity,
+for example, categorizing Paleozoic versus Mesozoic taxa.
+ If groups are \code{NULL} (the default), all taxa are assumed to be of
 the same group with the same parameters. Unsampled taxa (e.g. from a simulation
-of sampling in the fossil record, listed as NAs in timeData or timeList)
-are automatically dropped from groupings and the time dataset (either timeData
-or timeList) and from groups simultaneously.}
+of sampling in the fossil record, listed as \code{NA}s in \code{timeData} or \code{timeList})
+are automatically dropped from groupings and the time dataset (either \code{timeData}
+or \code{timeList}) and from groups simultaneously.}
 
-\item{p_cont}{If TRUE (the default), then origination is assumed to be a 
-continuous time process with an instantaneous rate. If FALSE, the origination
+\item{p_cont}{If \code{TRUE} (the default), then origination is assumed to be a 
+continuous time process with an instantaneous rate. If \code{FALSE}, the origination
 is treated as a pulsed discrete-time process with a probability.}
 
-\item{q_cont}{If TRUE (the default), then extinction is assumed to be a 
-continuous time process with an instantaneous rate. If FALSE, the extinction
+\item{q_cont}{If \code{TRUE} (the default), then extinction is assumed to be a 
+continuous time process with an instantaneous rate. If \code{FALSE}, the extinction
 is treated as a pulsed discrete-time process with a probability.}
 
 \item{PA_n}{The probability of sampling a taxon after the last interval 
@@ -53,28 +62,31 @@ included in a survivorship study. Usually zero for extinct groups,
 although more logically has the value of 1 when there are still extant
 taxa (i.e., if the last interval is the Holocene and the group is
 still alive, the probability of sampling them later is probably 1...).
-Should be a value of 0 to 1, NULL, or can be simply "fixed", the default option.
-This default "fixed" option allows \code{make_inverseSurv} to decide the value
-based on whether there is a modern interval (i.e. an interval that is 
-\code{c(0,0)}) or not: if there is one, then \code{PA_n = 1}, if not, 
-then \code{PA_n = 0}. If NULL, PA_n is treated as an additional free
+Should be either be (a) a numeric value between \code{0} and \code{1}, a \code{NULL} value,
+or can be simply be \code{"fixed"}, the default option.
+This default \code{PA_n = "fixed"} option allows \code{make_inverseSurv}
+to decide the value based on whether there is a modern interval 
+(i.e. an interval that is \code{c(0,0)}) or not: 
+if there is one, then \code{PA_n = 1}, if not, then \code{PA_n = 0}. 
+If \code{PA_n = NULL}, \code{PA_n} is treated as an additional free
 parameter in the output model.}
 
 \item{PB_1}{The probability of sampling a taxon before the first interval 
-included in a survivorship study. Should be a value of 0 to 1, or NULL. 
-If NULL, PB_1 is treated as an additional free parameter in the output model.}
+included in a survivorship study. Should be a value of 0 to 1, or \code{NULL}. 
+If \code{NULL}, \code{PB_1} is treated as an additional free parameter in the output model.}
 
-\item{Nb}{The number of taxa that enter an interval (b is for 'bottom'). This
+\item{Nb}{The number of taxa that enter an interval (the \code{b} is for 'bottom'). This
 is an arbitrary constant used to scale other values in these calculations and
 can be safely set to 1.}
 
-\item{drop.extant}{Drops all extant taxa from a dataset, w}
+\item{drop.extant}{Drops all extant taxa from a dataset before preceding.}
 }
 \value{
-A function of class "paleotreeFunc", which takes a vector equal to the number
-of parameters and returns the *negative* log likelihood (for use with optim and
-similar optimizing functions, which attempt to minimize support values). See the
-functions listed at \code{\link{modelMethods}} for manipulating and examining
+A function of class \code{paleotreeFunc}, which takes a vector equal to the number
+of parameters and returns the *negative* log likelihood 
+(for use with \code{\link{optim}} and
+similar optimizing functions, which attempt to minimize support values). 
+See the functions listed at \code{\link{modelMethods}} for manipulating and examining
 such functions and \code{\link{constrainParPaleo}} for constraining parameters.
 
 The function output will take the largest number of parameters possible with
@@ -82,36 +94,37 @@ respect to groupings and time-intervals, which means the number of parameters
 may number in the hundreds. Constraining the function for optimization
 is recommended except when datasets are very large.
 
-Parameters in the output functions are named 'p', 'q' and 'r', which are
+Parameters in the output functions are named \code{p}, \code{q} and \code{r}, which are
 respectively the origination, extinction and sampling parameters. If the
-respective arguments 'p_cont' and 'q_cont' are TRUE, then 'p' and 'q' will
+respective arguments \code{p_cont} and \code{q_cont} are \code{TRUE}, then \code{p} and \code{q} will
 represent the instantaneous per-capita origination and extinction rates
-(in units of per lineage time-units). When one of these arguments is given as
-FALSE, the respective parameter (p or q) will represent per-lineage-interval
-rates. For p, this will be the per lineage-interval rate of a lineage producing
+(in units of per lineage time-units). When one of these arguments is given as \code{FALSE},
+the respective parameter (\code{p} or \code{q}) will represent per-lineage-interval rates. 
+For \code{p}, this will be the per lineage-interval rate of a lineage producing
 another lineage (which can exceed 1 because diversity can more than double) and
-for q, this will be the per lineage-interval 'rate' of a lineage going extinct,
-which cannot be observed to exceed 1 (because the proportion of diversity that
-goes extinct cannot exceed 1). To obtain the per lineage-interval rates from a
+for \code{q}, this will be the per lineage-interval 'rate' of a lineage going extinct,
+which cannot be observed to exceed 1 
+(because the proportion of diversity that goes extinct \emph{cannot} exceed 1). 
+To obtain the per lineage-interval rates from a
 set of per lineage-time unit rates, simply multiply the per lineage-time-unit
 rate by the duration of an interval (or divide, to do the reverse; see Foote,
-2003 and 2005). 'r' is always the instantaneous per-capita sampling rate, in
+2003 and 2005). \code{r} is always the instantaneous per-capita sampling rate, in
 units per lineage-time units. 
 
-If PA_n or PB_1 were given as NULL in the arguments, two additional parameters
-will be added, named respectively 'PA_n' and 'PB_1', and listed separately for every
+If \code{PA_n} or \code{PB_1} were given as \code{NULL} in the arguments, two additional parameters
+will be added, named respectively \code{PA_n} and \code{PB_1}, and listed separately for every
 additional grouping. These are the probability of a taxon occurring before the first
-interval in the dataset (PB_1) and the probability of a taxon occurring after
-the last interval in a dataset (PA_n). Theses will be listed as 'PA_n.0' and 'PB_1.0'
+interval in the dataset (\code{PB_1}) and the probability of a taxon occurring after
+the last interval in a dataset (\code{PA_n}). Theses will be listed as \code{PA_n.0} and \code{PB_1.0}
 to indicate that they are not related to any particular time-interval included
-in the analysis, unlike the p, q, and r parameters (see below).
+in the analysis, unlike the \code{p}, \code{q}, and \code{r} parameters (see below).
 
 Groupings follow the parameter names, separated by periods; by default, the
 parameters will be placed in groups corresponding to the discrete intervals
-in the input timeList, such that \code{make_inverseSurv} will create a function with
-parameters 'p.1', 'q.1' and 'r.1' for interval 1; 'p.2', 'q.2' and 'r.2' for
+in the input \code{timeList}, such that \code{make_inverseSurv} will create a function with
+parameters \code{p.1}, \code{q.1} and \code{r.1} for interval 1; \code{p.2}, \code{q.2} and \code{r.2} for
 interval 2 and so on. Additional groupings given by the user are listed after 
-this first set (e.g. 'p.1.2.2').
+this first set (e.g. '\code{p.1.2.2}').
 
 \subsection{Calculating The Results of an Inverse Survivorship Model}{
 Because of the complicated grouping and time interval scheme, combined with
@@ -124,16 +137,16 @@ To account for this, the function output by \code{inverseSurv} also contains
 an alternative mode which takes input rates and returns the final values along with
 a rudimentary plotting function. This allows users to output per-interval and per-group
 parameter estimates. To select these feature, the argument \code{altMode} must
-be TRUE. This function will invisibly return the rate values for each
+be \code{TRUE}. This function will invisibly return the rate values for each
 group and interval as a list of matrices, with each matrix composed of the
-p, q and r rates for each interval, for a specific grouping.
+\code{p}, \code{q} and \code{r} rates for each interval, for a specific grouping.
 
 This plotting is extremely primitive, and most users will probably find the
 invisibly returned rates to be of more interest. The function \code{layout} is
 used to play plots for different groupings in sequence, and this may lead to
 plots which are either hard to read or even cause errors (because of too many
 groupings, producing impossible plots). To repress this, the argument \code{plotPar}
-can be set to FALSE.
+can be set to \code{FALSE}.
 
 This capability means the function has more arguments that just the
 usual \code{par} argument that accepts the vector of parameters for running an
@@ -147,33 +160,33 @@ To summarize, a function output by \code{inverseSurv} has the following argument
 \describe{
  \item{par}{A vector of parameters, the same length as the number of parameters needed.
 For plotting, can be obtained with optimization}
- \item{altMode}{If FALSE (the default) the function will work like ordinary model-fitting functions,
-returning a negative log-likelihood value for the input parameter values in \code{par}. If TRUE,
+ \item{altMode}{If \code{FALSE} (the default) the function will work like ordinary model-fitting functions,
+returning a negative log-likelihood value for the input parameter values in \code{par}. If \code{TRUE},
 however, the input parameters will instead be translated into the by-interval, by-group rates
-used for calculating the log-likelihoods, plotted (if plotPar is TRUE) and these final
+used for calculating the log-likelihoods, plotted (if \code{plotPar} is \code{TRUE}) and these final
 interval-specific rates will be returned invisibly as described above.}
- \item{plotPar}{If TRUE (the default) the calculated rates will be plotted, with each
-grouping given a separate plot. This can be repressed by setting plotPar to FALSE. As the only
-conceivable purpose for setting plotPar to FALSE is to get the calculated rates, these will not
-be returned invisibly if plotPar is FALSE.}
- \item{ratesPerInt}{If FALSE, the default option, the rates plotted and returned will
+ \item{plotPar}{If \code{TRUE} (the default) the calculated rates will be plotted, with each
+grouping given a separate plot. This can be repressed by setting \code{plotPar} to \code{FALSE}. As the only
+conceivable purpose for setting \code{plotPar} to \code{FALSE} is to get the calculated rates, these will not
+be returned invisibly if \code{plotPar} is \code{FALSE}.}
+ \item{ratesPerInt}{If \code{FALSE}, the default option, the rates plotted and returned will
 be in units per lineage-time units, if those rates were being treated as rates for a
-continuous-time process (i.e. p_cont = TRUE and q_cont = TRUE for p and q, respectively,
+continuous-time process (i.e. \code{p_cont = TRUE} and \code{q_cont = TRUE} for \code{p} and \code{q}, respectively,
 while r is always per lineage-time units). Otherwise, the respective rate will be in
-units per lineage-interval. If ratesPerInt is TRUE instead, then \emph{all} rates, even
+units per lineage-interval. If \code{ratesPerInt} is \code{TRUE} instead, then \emph{all} rates, even
 rates modeled as continuous-time process, will be returned as per lineage-interval rates,
-even the sampling rate r.}
- \item{logRates}{If FALSE (the default) rates are plotted on a linear scale. If TRUE,
+even the sampling rate \code{r}.}
+ \item{logRates}{If \code{FALSE} (the default) rates are plotted on a linear scale. If \code{TRUE},
 rates are plotted on a vertical log axis.}
- \item{jitter}{If TRUE (default) the sampling rate and extinction rate will be plotted slightly
+ \item{jitter}{If \code{TRUE} (default) the sampling rate and extinction rate will be plotted slightly
 ahead of the origination rate on the time axis, so the three rates can be easily differentiated. 
-If false, this is repressed.}
+If \code{FALSE}, this is repressed.}
  \item{legendPoisition}{The position of a legend indicating which line is
 which of the three rates on the resulting plot. This
-is given as the possible positions for argument 'x' of the function 
-\code{\link{legend}}, and by default is "topleft", which will be generally
+is given as the possible positions for argument \code{x} of the function 
+\code{\link{legend}}, and by default is \code{"topleft"}, which will be generally
 useful if origination and extinction rates are initially low. If 
-legendPosition is NA, then a legend will not be plotted.}
+\code{legendPosition = NA}, then a legend will not be plotted.}
 }
 }
 }
@@ -211,39 +224,52 @@ thus forewarned of this essentially 'beta' status of this function.
 
 # let's simulate some taxon ranges from an imperfectly sampled fossil record
 set.seed(444)
-record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-	nTotalTaxa = c(30,40), nExtant = 0)
+record <- simFossilRecord(
+    p = 0.1, 
+    q = 0.1, 
+    nruns = 1,
+	   nTotalTaxa = c(30,40), 
+	   nExtant = 0
+	   )
 taxa <- fossilRecord2fossilTaxa(record)
-rangesCont <- sampleRanges(taxa,r = 0.5)
+rangesCont <- sampleRanges(taxa, r = 0.5)
 
 #bin the ranges into discrete time intervals
-rangesDisc <- binTimeData(rangesCont,int.length = 5)
+rangesDisc <- binTimeData(rangesCont, int.length = 5)
 
 #apply make_inverseSurv
 likFun <- make_inverseSurv(rangesDisc)
 
 #use constrainParPaleo to make the model time-homogeneous
-  	#match.all ~ match.all will match parameters so only 2 pars: p = q and r
+  	# match.all ~ match.all will match parameters
+  	# so only 2 parameters: p (= q) and r
 
-constrFun <- constrainParPaleo(likFun, match.all~match.all)
+constrFun <- constrainParPaleo(likFun, 
+   match.all~match.all)
 
-results <- optim(parInit(constrFun), constrFun,
-      lower = parLower(constrFun), upper = parUpper(constrFun),
-      method = "L-BFGS-B", control = list(maxit = 1000000))
+results <- optim(parInit(constrFun), 
+                 constrFun,
+                 lower = parLower(constrFun), 
+                 upper = parUpper(constrFun),
+                 method = "L-BFGS-B", 
+                 control = list(maxit = 1000000)
+                 )
 results
 
 #plot the results
 constrFun(results$par, altMode = TRUE)
-
 }
-\dontrun{
 
+\dontrun{
 #unconstrained function with ALL of the 225 possible parameters!!!
     # this will take forever to converge	
-optim(parInit(likFun),likFun,
-      lower = parLower(likFun), upper = parUpper(likFun),
-      method = "L-BFGS-B", control = list(maxit = 1000000))
-
+optim(parInit(likFun),
+      likFun,
+      lower = parLower(likFun), 
+      upper = parUpper(likFun),
+      method = "L-BFGS-B", 
+      control = list(maxit = 1000000)
+      )
 }
 }
 \references{

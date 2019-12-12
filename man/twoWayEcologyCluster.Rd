@@ -4,9 +4,17 @@
 \alias{twoWayEcologyCluster}
 \title{R-Mode vs Q-Mode Two-Way Cluster Analyses and Abundance Plot for Community Ecology Data}
 \usage{
-twoWayEcologyCluster(xDist, yDist, propAbund, clustMethod = "average",
-  marginBetween = 0.1, abundExpansion = 3, cex.axisLabels = 1,
-  xAxisLabel = "Across Sites", yAxisLabel = "Across Taxa")
+twoWayEcologyCluster(
+  xDist,
+  yDist,
+  propAbund,
+  clustMethod = "average",
+  marginBetween = 0.1,
+  abundExpansion = 3,
+  cex.axisLabels = 1,
+  xAxisLabel = "Across Sites",
+  yAxisLabel = "Across Taxa"
+)
 }
 \arguments{
 \item{xDist}{The pair-wise distance matrix for the cluster diagram drawn along the

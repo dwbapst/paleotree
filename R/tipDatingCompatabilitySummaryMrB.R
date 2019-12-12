@@ -44,12 +44,12 @@
 #' sampled in the posterior, and may be quite far from the posterior trees
 #' as sampled in multivariate tree-space. This is a standard criticism leveled at consensus-type summary trees,
 #' except for the strict consensus (equivalent here to if a user tried \code{compatibilityThreshold = 1}). However,
-#' post-burnin posterior tree samples often sample (and thus contain) a considerable range of
+#' post-burn-in posterior tree samples often sample (and thus contain) a considerable range of
 #' tree-space within them, and thus the strict consensus (a total compatibility tree?)
 
 #' @return
 #' A single, undated summary tree, containing those clades (splits) found in greater frequency in
-#' the post-burnin posterior tree sample more than the value of \code{compatibilityThreshold}, of
+#' the post-burn-in posterior tree sample more than the value of \code{compatibilityThreshold}, of
 #' class \code{phylo}. If \code{labelPostProb = TRUE}, nodes will be labeled with the posterior probability of
 #' the respective clade.
 
@@ -64,7 +64,7 @@
 
 #' @examples
 #' \dontrun{
-#' #pull post-burnin trees from the posterior
+#' #pull post-burn-in trees from the posterior
 #'       # and get the half-compatibility summary (majority-rule consensus)
 #'       # by setting 'compatibilityThreshold = 0.5'
 #' 
@@ -95,7 +95,10 @@ tipDatingCompatabilitySummaryMrB <- function(
 	########################################################
 	# CHECKS
 	if(compatibilityThreshold<0.5){
-		stop("compatibilityThreshold < 0.5: Currently cannot calculate compatibility trees containing nodes found on less than half of all trees")
+		stop(
+		  "compatibilityThreshold < 0.5:
+		     Currently cannot calculate compatibility trees containing nodes found on less than half of all trees"
+		  )
 		}
 	## CAN WE DO THIS?
 	#If compatibilityThreshold = 0 is used, 

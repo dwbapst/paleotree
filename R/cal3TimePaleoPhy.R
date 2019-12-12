@@ -1,15 +1,16 @@
-#' Three Rate Calibrated \emph{a posteriori} Time-Scaling of Paleo-Phylogenies
+#' Three Rate Calibrated \emph{a posteriori} Dating of Paleontological Phylogenies
 #' 
-#' Time-scales an unscaled cladogram of fossil taxa, using information on their
+#' Time-scales an undated cladogram of fossil taxa, using information on their
 #' ranges and estimates of the instantaneous rates of branching, extinction and
 #' sampling. The output is a sample of \emph{a posteriori} time-scaled trees, as resulting from a
 #' stochastic algorithm which samples observed gaps in the fossil record with
 #' weights calculated based on the input rate estimates. This function also
-#' uses the three-rate calibrated time-scaling algorithm to stochastically
+#' uses the three-rate calibrated dating algorithm to stochastically
 #' resolve polytomies and infer potential ancestor-descendant relationships,
 #' simultaneous with the time-scaling treatment.
 #' 
-#' @details The three-rate calibrated ("cal3") algorithm time-scales trees
+#' @details 
+#' The three-rate calibrated ("cal3") algorithm time-scales trees
 #' \emph{a posteriori} by stochastically picking node divergence times
 #' relative to a probability distribution of expected waiting times between speciation and first
 #' appearance in the fossil record. This algorithm is extended to apply to
@@ -31,7 +32,7 @@
 #' times under an exponential) and a rate parameter which takes into account
 #' both the probability of not observing a lineage of a certain duration and
 #' the 'twiginess' of the branch, i.e. the probability of having short-lived
-#' descendants which went extinct and never were sampled (ala Friedman and
+#' descendants which went extinct and never were sampled (similar to Friedman and
 #' Brazeau, 2011). These densities calculated under the gamma distribution are
 #' then used as weights to stochastically sample the possible positions for the
 #' branching node. This basic framework is extended to polytomies by allowing a
@@ -43,7 +44,7 @@
 #' decreasing, i.e. the present day is zero.
 #' 
 #' These functions will intuitively drop taxa from the tree with NA for range
-#' or that are missing from timeData.
+#' or that are missing from \code{timeData}.
 #' 
 #' The sampling rate used by cal3 methods is the instantaneous sampling rate,
 #' as estimated by various other function in the paleotree package. See
@@ -78,9 +79,10 @@
 #' By default, the cal3 functions will consider that ancestor-descendant
 #' relationships may exist among the given taxa, under a budding cladogenetic
 #' or anagenetic modes. Which tips are designated as which is given by two
-#' additional elements added to the output tree, $budd.tips (taxa designated as
-#' ancestors via budding cladogenesis) and $anag.tips (taxa designated as
-#' ancestors via anagenesis). This can be turned off by setting \code{anc.wt = 0}. As
+#' additional elements added to the output tree, 
+#' \code{$budd.tips} (taxa designated as ancestors via budding cladogenesis) and 
+#' \code{$anag.tips} (taxa designated as ancestors via anagenesis). 
+#' This can be turned off by setting \code{anc.wt = 0}. As
 #' this function may infer anagenetic relationships during time-scaling, this
 #' can create zero-length terminal branches in the output. Use
 #' \code{\link{dropZLB}} to get rid of these before doing analyses of lineage
@@ -89,7 +91,7 @@
 #' Unlike \code{timePaleoPhy}, cal3 methods will always resolve polytomies. In
 #' general, this is done using the rate calibrated algorithm, although if
 #' argument \code{randres = TRUE}, polytomies will be randomly resolved with uniform
-#' probability, ala \code{multi2di} from ape. Also, cal3 will always add the terminal
+#' probability, similar to \code{multi2di} from ape. Also, cal3 will always add the terminal
 #' ranges of taxa. However, because of the ability to infer potential
 #' ancestor-descendant relationships, the length of terminal branches may be
 #' shorter than taxon ranges themselves, as budding may have occurred during
@@ -114,7 +116,10 @@
 #' will use the earliest dates provided to calibrate node ages, which is either
 #' an overly conservative approach to time-scaling or fairly nonsensical.
 #' 
-#' Alternatively to using \code{cal3TimePaleoPhy}, \code{bin_cal3TimePaleoPhy} is a wrapper of 
+#' If you have time-data in discrete intervals, consider using 
+#' \code{bin_cal3TimePaleoPhy} as an alternative to \code{cal3TimePaleoPhy}.
+#' 
+#' \code{bin_cal3TimePaleoPhy} is a wrapper of 
 #' \code{cal3TimePaleoPhy} which produces time-scaled trees for datasets which only have 
 #' interval data available. For each output tree, taxon first and last appearance 
 #' dates are placed within their listed intervals under a uniform distribution. 
@@ -125,18 +130,11 @@
 #' and intervals of uneven size. Taxa alive in the modern should be listed as last 
 #' occurring in a time interval that begins at time 0 and ends at time 0. If taxa 
 #' occur only in single collections (i.e. their first and last appearance in the 
-#' fossil record is synchronous, the argument point.occur will force all taxa
+#' fossil record is synchronous, the argument \code{point.occur} will force all taxa
 #' to have instantaneous durations in the fossil record. Otherwise, by default,
 #' taxa are assumed to first and last appear in the fossil record at different points
-#' in time, with some positive duration. The sites matrix can be used to force
+#' in time, with some positive duration. The \code{sites} matrix can be used to force
 #' only a portion of taxa to have simultaneous first and last appearances.
-#' 
-#' By setting the argument \code{nonstoch.bin} to \code{TRUE} in \code{bin_cal3TimePaleoPhy}, the
-#' dates are NOT stochastically pulled from uniform bins but instead FADs are
-#' assigned to the earliest time of whichever interval they were placed in and
-#' LADs are placed at the most recent time in their placed interval. This
-#' option may be useful for plotting. The sites argument becomes arbitrary if
-#' nonstoch.bin is \code{TRUE}.
 #' 
 #' If \code{timeData} or the elements of \code{timeList} are actually data frames (as output
 #' by \code{read.csv} or \code{read.table}), these will be coerced to a matrix.
@@ -145,7 +143,7 @@
 #' particularly the cal3 method, along with an example using real (graptolite)
 #' data, can be found at the following link:
 #' 
-#' http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html
+#' \url{http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
 #' 
 #' @rdname cal3TimePaleoPhy
 #' @aliases cal3TimePaleoPhy bin_cal3TimePaleoPhy cal3
@@ -161,15 +159,15 @@
 #' @param sampRate Either a single estimate of the instantaneous sampling rate or
 #' a vector of per-taxon estimates
 
-#' @param ntrees Number of time-scaled trees to output
+#' @param ntrees Number of dated trees to output.
 
 #' @param anc.wt Weighting against inferring ancestor-descendant relationships.
-#' The argument anc.wt allows users to change the default consideration of
-#' anc-desc relationships. This value is used as a multiplier applied to the
+#' The argument \code{anc.wt} allows users to alter the default consideration of
+#' ancestor-descendant relationships. This value is used as a multiplier applied to the
 #' probability of choosing any node position which would infer an
-#' ancestor-descendant relationship. By default, anc.wt = 1, and thus these
-#' probabilities are unaltered. if anc.wt is less than 1, the probabilities
-#' decrease and at anc.wt = 0, no ancestor-descendant relationships are inferred
+#' ancestor-descendant relationship. By default, \code{anc.wt = 1}, and thus these
+#' probabilities are unaltered. if \code{anc.wt} is less than 1, the probabilities
+#' decrease and at \code{anc.wt = 0}, no ancestor-descendant relationships are inferred
 #' at all. Can be a single value or a vector of per-taxon values, such as if a
 #' user wants to only allow plesiomorphic taxa to be ancestors.
 
@@ -215,7 +213,7 @@
 #' compel users to produce many time-scaled trees for any given analytical purpose.
 #'
 #' Note that  \code{dateTreatment = "minMax"} returns an error
-#' in 'bin' time-scaling functions; please use \code{points.occur} instead.
+#' in '\code{bin_}' time-scaling functions; please use \code{points.occur} instead.
 
 # @param rand.obs Should the tips represent observation times uniform
 # distributed within taxon ranges? This only impacts the location of tip-dates, 
@@ -232,12 +230,12 @@
 # created and analysed.
 
 #' @param node.mins The minimum dates of internal nodes (clades) on a phylogeny can be set
-#' using node.mins. This argument takes a vector of the same length as the number of nodes,
+#' using \code{node.mins}. This argument takes a vector of the same length as the number of nodes,
 #' with dates given in the same order as nodes are ordered in the \code{tree$edge} matrix.
 #' Note that in \code{tree$edge}, terminal tips are given the first set of numbers
 #' (\code{1:Ntip(tree)}), so the first element of \code{node.mins} is the first internal node
 #' (the node numbered \code{Ntip(tree)+1}, which is generally the root for most \code{phylo}
-#' objects read by \code{read.tree}). Not all nodes need be given minimum dates; those without
+#' objects read by \code{read.tree}). Not all nodes need be given minimum dates. Nodes without
 #' minimum dates can be given as NA in \code{node.mins}, but the vector must be the same length
 #' as the number of internal nodes in \code{tree}. These are minimum date constraints, such that
 #' a node will be 'frozen' by the cal3 algorithm so that constrained nodes will always be
@@ -253,17 +251,19 @@
 #' the taxon ranges? \code{FAD.only = TRUE}, the resulting output
 #' is similar to when terminal ranges are no
 #' added on with \code{timePaleoPhy}. If \code{FAD.only = TRUE}
-#' and {dateTreatment = "minMax"} or {dateTreatment = "randObs"}, the
+#' and \code{dateTreatment = "minMax"} or \code{dateTreatment = "randObs"}, the
 #' function will stop and a warning will be produced, as these combinations imply
 #' contradictory sets of times of observation.
 
-#' @param adj.obs.wt If the time of observation are before the LAD of a taxon,
+#' @param adj.obs.wt 
+#' If the time of observation of a taxon is before the last appearance of that taxon,
 #' should the weight of the time of observation be adjusted to account for the
-#' known observed history of the taxon which occurs AFTER the time of
-#' observation? Should only have an effect if time of observation \emph{IS NOT} the
-#' LAD, if times of observation for a potential ancestor are earlier than the
-#' first appearance of their potential descendants and if the ancestral weights
-#' for taxa are not set to zero (so there can be potential ancestors).
+#' known observed history of the taxon which occurs \emph{after} the time of observation? 
+#' If so, then set \code{adj.obs.wt = TRUE}.
+#' This argument should only have an effect if time of observation \emph{IS NOT} the LAD, 
+#' if the times of observation for for a potential ancestor are earlier than 
+#' the first appearance of their potential descendants, \emph{and} 
+#' if the ancestral weights for taxa are not set to zero (so there can be potential ancestors).
 
 #' @param root.max Maximum time before the first FAD that the root can be
 #' pushed back to.
@@ -286,19 +286,16 @@
 
 #' @param diagnosticMode If \code{TRUE}, \code{cal3timePaleoPhy} will return to the
 #' console and to graphic devices an enormous number of messages, plots and
-#' ancilliary information that may be useful or entirely useless to figuring
+#' ancillary information that may be useful or entirely useless to figuring
 #' out what is going wrong.
 
 #' @param verboseWarnings if \code{TRUE} (the default), then various warnings and messages
 #' regarding best practices will be issued to the console about the analysis. 
 #' If \code{FALSE},the function will run as quietly as possible.
 
-#' @param nonstoch.bin If true, dates are not stochastically pulled from
-#' uniform distributions. See below for more details.
-
 #' @return The output of these functions is a time-scaled tree or set of
-#' time-scaled trees, of either class phylo or multiphylo, depending on the
-#' argument ntrees. All trees are output with an element \code{$root.time}. This is
+#' time-scaled trees, of either class \code{phylo} or \code{multiPhylo}, depending on the
+#' argument \code{ntrees}. All trees are output with an element \code{$root.time}. This is
 #' the time of the root on the tree and is important for comparing patterns
 #' across trees.
 #' 
@@ -306,14 +303,14 @@
 #' record a vector containing
 #' the 'log-densities' of the various node-ages selected for each tree by the 'zipper'
 #' algorithm, and the sum of those log-densities. Although they are very similar to
-#' log-likelihood values, they may not be true likelihoods, as node ages are conditional on the other
+#' log-likelihood values, they are not true likelihoods, as node ages are conditional on the other
 #' ages selected by other nodes. However, these values may give an indication about the relative
 #' optimality of a set of trees output by the cal3 functions.
 #' 
 #' Trees created with \code{bin_cal3TimePaleoPhy} will output with some additional
 #' elements, in particular \code{$ranges.used}, a matrix which records the
-#' continuous-time ranges generated for time-scaling each tree. (Essentially a
-#' pseudo-timeData matrix.)
+#' continuous-time ranges generated for time-scaling each tree (essentially a
+#' pseudo-\code{timeData} matrix.)
 
 #' @note Most importantly, please note the stochastic element of the three
 #' rate-calibrated time-scaling methods. These do not use traditional
@@ -326,7 +323,7 @@
 #' Unless you have exceptionally resolved data, use a wrapper with the cal3
 #' function, either the provided \code{bin_cal3TimePaleoPhy} or code a wrapper
 #' function of your own that accounts for stratigraphic uncertainty in 
-#' your dataset. Remember that the FADs (earliest dates) given to timePaleoPhy
+#' your dataset. Remember that the FADs (earliest dates) given to \code{timePaleoPhy}
 #'  will *always* be used to calibrate node ages!
 
 #' @author David W. Bapst
@@ -361,25 +358,25 @@
 
 #' @examples
 #' 
-#' #Simulate some fossil ranges with simFossilRecord
+#' # Simulate some fossil ranges with simFossilRecord
 #' set.seed(444)
 #' record <- simFossilRecord(p = 0.1,
-#'      q = 0.1,
-#'      nruns = 1,
-#' 	    nTotalTaxa = c(30,40),
-#'      nExtant = 0)
+#'                           q = 0.1,
+#'                           nruns = 1,
+#' 	                         nTotalTaxa = c(30,40),
+#'                           nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
 #' 
-#' #simulate a fossil record with imperfect sampling with sampleRanges
+#' # simulate a fossil record with imperfect sampling with sampleRanges
 #' rangesCont <- sampleRanges(taxa,
 #'       r = 0.5)
-#' #let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
+#' # let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
 #' cladogram <- taxa2cladogram(taxa,
 #'       plot = TRUE)
 #' 
-#' #this package allows one to use
+#' # this package allows one to use
 #'	  # rate calibrated type time-scaling methods (Bapst, 2014)
-#' #to use these, we need an estimate of the sampling rate 
+#' # to use these, we need an estimate of the sampling rate 
 #'      # (we set it to 0.5 above)
 #' likFun <- make_durationFreqCont(rangesCont)
 #' srRes <- optim(
@@ -393,7 +390,7 @@
 #' 
 #' # we also need extinction rate and branching rate
 #'    # we can get extRate from getSampRateCont too
-#' #we'll assume extRate = brRate (ala Foote et al., 1999)
+#' # we'll assume extRate = brRate (ala Foote et al., 1999)
 #'     # this may not always be a good assumption!
 #' divRate <- srRes[[1]][1]
 #' 
@@ -409,11 +406,12 @@
 #'     sampRate = sRate,
 #'     ntrees = 1,
 #'     plot = TRUE)
-#' #notice the warning it gives!
+#'     
+#' # notice the warning it gives!
 #' phyloDiv(ttree)
 #' 
-#' #by default, cal3TimePaleoPhy may predict indirect ancestor-descendant relationships
-#' #can turn this off by setting anc.wt = 0
+#' # by default, cal3TimePaleoPhy may predict indirect ancestor-descendant relationships
+#'      # can turn this off by setting anc.wt = 0
 #' ttree <- cal3TimePaleoPhy(
 #'     cladogram,
 #'      rangesCont,
@@ -424,10 +422,8 @@
 #'     anc.wt = 0,
 #'     plot = TRUE)
 #' 
-#' 
-#' 
 #' \donttest{
-#' #let's look at how three trees generated
+#' # let's look at how three trees generated
 #'     # with very different time of obs. look
 #'     
 #' ttreeFAD <- cal3TimePaleoPhy(
@@ -451,7 +447,7 @@
 #'     sampRate = sRate,
 #'     ntrees = 1,plot = TRUE)
 #'     
-#' #by default the time of observations are the LADs
+#' # by default the time of observations are the LADs
 #' ttreeLAD <- cal3TimePaleoPhy(
 #'     cladogram, 
 #'     rangesCont,
@@ -479,7 +475,7 @@
 #' layout(1)
 #' par(parOrig)
 #' 
-#' #to get a fair sample of trees
+#' # to get a fair sample of trees
 #'     # let's increase ntrees
 #'     
 #' ttrees <- cal3TimePaleoPhy(
@@ -491,7 +487,7 @@
 #'     ntrees = 9,
 #'     plot = FALSE)
 #'     
-#' #let's compare nine of them at once in a plot
+#' # let's compare nine of them at once in a plot
 #'     
 #' layout(matrix(1:9,3,3))
 #' parOrig <- par(no.readonly = TRUE)
@@ -502,15 +498,15 @@
 #'     }
 #' layout(1)
 #' par(parOrig)
-#' #they are all a bit different!
+#' # they are all a bit different!
 #' 
-#' #can plot the median diversity curve with multiDiv
+#' # can plot the median diversity curve with multiDiv
 #' multiDiv(ttrees)
 #' 
-#' #using node.mins
-#' #let's say we have (molecular??) evidence that
+#' # using node.mins
+#' # let's say we have (molecular??) evidence that
 #'     # node (5) is at least 1200 time-units ago
-#' #to use node.mins, first need to drop any unshared taxa
+#' # to use node.mins, first need to drop any unshared taxa
 #' droppers <- cladogram$tip.label[is.na(
 #'     match(cladogram$tip.label,
 #'            names(which(!is.na(rangesCont[,1])))
@@ -533,7 +529,7 @@
 #'     node.mins = nodeDates,
 #'     plot = TRUE)
 #' 
-#' #example with time in discrete intervals
+#' # example with time in discrete intervals
 #' set.seed(444)
 #' record <- simFossilRecord(p = 0.1,
 #'      q = 0.1,
@@ -541,15 +537,15 @@
 #'      nTotalTaxa = c(30,40),
 #'      nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' #simulate a fossil record
+#' # simulate a fossil record
 #'     # with imperfect sampling with sampleRanges
 #' rangesCont <- sampleRanges(taxa,r = 0.5)
-#' #let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
+#' # let's use taxa2cladogram to get the 'ideal' cladogram of the taxa
 #' cladogram <- taxa2cladogram(taxa,plot = TRUE)
-#' #Now let's use binTimeData to bin in intervals of 1 time unit
+#' # Now let's use binTimeData to bin in intervals of 1 time unit
 #' rangesDisc <- binTimeData(rangesCont,int.length = 1)
 #'     
-#' #we can do something very similar for
+#' # we can do something very similar for
 #'     # the discrete time data (can be a bit slow)
 #' likFun <- make_durationFreqDisc(rangesDisc)
 #' spRes <- optim(
@@ -561,20 +557,20 @@
 #'     control = list(maxit = 1000000))
 #' sProb <- spRes[[1]][2]
 #'     
-#' #but that's the sampling PROBABILITY per bin
+#' # but that's the sampling PROBABILITY per bin
 #'     # NOT the instantaneous rate of change
 #'     
-#' #we can use sProb2sRate() to get the rate
+#' # we can use sProb2sRate() to get the rate
 #'     # We'll need to also tell it the int.length
 #' sRate1 <- sProb2sRate(sProb,int.length = 1)
 #'     
-#' #we also need extinction rate and branching rate (see above)
-#'     #need to divide by int.length...
+#' # we also need extinction rate and branching rate (see above)
+#'     # need to divide by int.length...
 #' divRate <- spRes[[1]][1]/1
 #'     
-#' #estimates that r = 0.3... 
+#' # estimates that r = 0.3... 
 #'     # that's kind of low (simulated sampling rate is 0.5)
-#' #Note: for real data, you may need to use an average int.length 
+#' # Note: for real data, you may need to use an average int.length 
 #'     # (i.e. if intervals aren't all the same duration)
 #' ttree <- bin_cal3TimePaleoPhy(cladogram,
 #'     rangesDisc,
@@ -585,7 +581,7 @@
 #'     plot = TRUE)
 #' phyloDiv(ttree)
 #'     
-#' #can also force the appearance timings
+#' # can also force the appearance timings
 #'     # not to be chosen stochastically
 #' ttree1 <- bin_cal3TimePaleoPhy(cladogram,
 #'     rangesDisc,
@@ -618,7 +614,7 @@
 #'     plot = TRUE)
 #' 
 #' 
-#' #example with multiple values of anc.wt
+#' # example with multiple values of anc.wt
 #' ancWt <- sample(0:1,
 #'     nrow(rangesDisc[[2]]),
 #'     replace = TRUE)
@@ -642,7 +638,8 @@
 
 #' @export
 cal3TimePaleoPhy <- function(
-		tree, timeData, 
+		tree, 
+		timeData, 
 		brRate, extRate, sampRate,
 		ntrees = 1, anc.wt = 1, 
 		node.mins = NULL, 

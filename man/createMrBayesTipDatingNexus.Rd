@@ -5,28 +5,44 @@
 \alias{tipdating}
 \title{Construct a Fully Formatted NEXUS Script for Performing Tip-Dating Analyses With MrBayes}
 \usage{
-createMrBayesTipDatingNexus(tipTimes, outgroupTaxa = NULL,
-  treeConstraints = NULL, ageCalibrationType,
-  whichAppearance = "first", treeAgeOffset, minTreeAge = NULL,
-  collapseUniform = TRUE, anchorTaxon = TRUE, newFile = NULL,
-  origNexusFile = NULL, parseOriginalNexus = TRUE,
-  createEmptyMorphMat = TRUE, orderedChars = NULL,
-  morphModel = "strong", morphFiltered = "parsInf", runName = NULL,
-  ngen = "100000000", doNotRun = FALSE, autoCloseMrB = FALSE,
-  cleanNames = TRUE, printExecute = TRUE)
+createMrBayesTipDatingNexus(
+  tipTimes,
+  outgroupTaxa = NULL,
+  treeConstraints = NULL,
+  ageCalibrationType,
+  whichAppearance = "first",
+  treeAgeOffset,
+  minTreeAge = NULL,
+  collapseUniform = TRUE,
+  anchorTaxon = TRUE,
+  newFile = NULL,
+  origNexusFile = NULL,
+  parseOriginalNexus = TRUE,
+  createEmptyMorphMat = TRUE,
+  orderedChars = NULL,
+  morphModel = "strong",
+  morphFiltered = "parsInf",
+  runName = NULL,
+  ngen = "100000000",
+  doNotRun = FALSE,
+  autoCloseMrB = FALSE,
+  cleanNames = TRUE,
+  printExecute = TRUE
+)
 }
 \arguments{
-\item{tipTimes}{This input may be either a timeList object (i.e. a list of length 2, 
-composed of a table of interval upper and lower time boundaries (i.e. earlier and latter bounds), and 
-a table of first and last intervals for taxa) or a matrix with rownames
-for taxa as you want listed in the MrBayes block, with either one, two
-or four columns containing ages (respectively) for point occurrences with
+\item{tipTimes}{This input may be either: (a) a \code{timeList} object, 
+consisting of a \code{list} of \code{length = 2}, composed of a table of interval 
+upper and lower time boundaries (i.e., the earlier and latter bounds of the intervals) and 
+a table of first and last intervals for taxa, or (b) a matrix with row names
+corresponding to taxon names, matching those names listed in the MrBayes block,
+with either one, two or four columns containing ages (respectively) for point occurrences with
 precise dates (for a single column), uncertainty bounds on a point occurrence
 (for two columns), or uncertainty bounds on the first and
 last occurrence (for four columns). Note that precise first and last occurrence
 dates should not be entered as a two column matrix, as this will instead be interpreted
 as uncertainty bounds on a single occurrence. Instead, either select which you want to
-use for tip-dates and give a 1-column matrix, or repeat (and collate) the columns, so that
+use for tip-dates and give a one-column matrix, or repeat (and collate) the columns, so that
 the first and last appearances has uncertainty bounds of zero.}
 
 \item{outgroupTaxa}{A vector of type 'character', containing taxon names designating the outgroup.
@@ -74,7 +90,8 @@ arbitrary). When \code{whichAppearance = "rangeThrough"}, each taxon will be
 duplicated into as many OTUs as each
 interval that a taxon ranges through (in a \code{timeList} format, see other
 \code{paleotree} functions), with the corresponding age uncertainties for those intervals.
-If the input \code{tipTimes} is not a list of \code{length = 2}, however, the function will 
+If the input \code{tipTimes} is not a list of 
+\code{length = 2}, however, the function will 
 return an error under this option.}
 
 \item{treeAgeOffset}{A parameter given by the user controlling the offset 
@@ -83,7 +100,7 @@ offset exponential prior on tree age will be set to the minimum tree age,
 plus this offset value. Thus, an offset of 10 million years would equate to a prior
 assuming that the expected tree age is around 10 million years before the minimum age.}
 
-\item{minTreeAge}{if \code{NULL} (the default), then minTreeAge will
+\item{minTreeAge}{if \code{NULL} (the default), then \code{minTreeAge} will
 be set as the oldest date among the tip age used (those used being
 determine by user choices (or oldest bound on a tip age). Otherwise,
 the user can supply their own minimum tree, which must be greater than
@@ -97,16 +114,25 @@ will override setting \code{ageCalibrationType = "uniformRange"} for those dates
 All taxa with their ages set to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
 are returned as a list within a commented line of the returned MrBayes block.}
 
-\item{anchorTaxon}{This argument may be a logical (default is \code{TRUE}, or a character string of length = 1.
-This argument has no effect if \code{ageCalibrationType} is not set to "uniformRange", but the argument may still be evaluated.
-If \code{ageCalibrationType = "uniformRange"}, MrBayes will do a tip-dating analysis with uniform age uncertainties on 
-all taxa (if such uncertainties exist; see \code{collapseUniform}). However, MrBayes does not record how each tree sits on an absolute time-scale,
-so if the placement of \emph{every} tip is uncertain, lining up multiple dated trees sampled from the posterior (where each tip's true age might
-differ) could be a nightmare to back-calculate, if not impossible. Thus, if \code{ageCalibrationType = "uniformRange"}, and there are no tip taxa given
-fixed dates due to \code{collapseUniform} (i.e. all of the tip ages have a range of uncertainty on them), then a particular taxon
-will be selected and given a fixed date equal to its earliest appearance time for its respective \code{whichAppearance}. This taxon can either be indicated by
-the user or instead the first taxon listed in \code{tipTimes} will be arbitrary selected. All taxa with their ages set
-to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform} are returned as a list within a commented line of the returned MrBayes block.}
+\item{anchorTaxon}{This argument may be a logical (default is \code{TRUE},
+or a character string of length = 1.
+This argument has no effect if \code{ageCalibrationType} is not set to
+\code{"uniformRange"}, but the argument may still be evaluated.
+If \code{ageCalibrationType = "uniformRange"}, 
+MrBayes will do a tip-dating analysis with uniform age uncertainties on 
+all taxa (if such uncertainties exist; see \code{collapseUniform}). 
+However, MrBayes does not record how each tree sits on an absolute time-scale,
+so if the placement of \emph{every} tip is uncertain, lining up multiple dated trees
+ sampled from the posterior (where each tip's true age might
+differ) could be a nightmare to back-calculate, if not impossible. 
+Thus, if \code{ageCalibrationType = "uniformRange"}, and there are no tip taxa given
+fixed dates due to \code{collapseUniform} (i.e. all of the tip ages have a range of uncertainty on them), 
+then a particular taxon will be selected and given a fixed date equal to its
+earliest appearance time for its respective \code{whichAppearance}.
+This taxon can either be indicated by the user or instead the first taxon listed
+in \code{tipTimes} will be arbitrary selected. All taxa with their ages set
+to fixed by the behavior of \code{anchorTaxon} or \code{collapseUniform}
+are returned as a list within a commented line of the returned MrBayes block.}
 
 \item{newFile}{Filename (possibly with path) as a character string
 leading to a file which will be overwritten with the output tip age calibrations.
@@ -262,50 +288,75 @@ data(retiolitinae)
 # let's try making a NEXUS file!
 
 # Use a uniform prior, with a 10 million year offset for
-	# the expected tree age from the earliest first appearance
-# set average tree age to be 10 Ma earlier than first FAD
+	 # the expected tree age from the earliest first appearance
 
-outgroupRetio <- "Rotaretiolites" # sister to all other included taxa
+# Also set average tree age to be 10 Ma earlier than first FAD
 
-# the following will create a NEXUS file with an 'empty' morph matrix
-	# with the only topological constraint on ingroup monophyly
-	# Probably shouldn't do this: leaves too much to the FBD prior
+outgroupRetio <- "Rotaretiolites" 
+# this taxon will now be sister to all other included taxa
+
+# the following will create a NEXUS file 
+  # with an 'empty' morph matrix
+	 # where the only topological constraint is on ingroup monophyly
+	 # Probably shouldn't do this: leaves too much to the FBD prior
  
 # with doNotRun set to TRUE for troubleshooting
 
-createMrBayesTipDatingNexus(tipTimes = retioRanges,
-		outgroupTaxa = outgroupRetio,treeConstraints = NULL,
-		ageCalibrationType = "uniformRange",whichAppearance = "first",
-		treeAgeOffset = 10,	newFile = NULL,	
-		origNexusFile = NULL,createEmptyMorphMat = TRUE,
-		runName = "retio_dating",doNotRun = TRUE)
+createMrBayesTipDatingNexus(
+tipTimes = retioRanges,
+		outgroupTaxa = outgroupRetio,
+		treeConstraints = NULL,
+		ageCalibrationType = "uniformRange",
+		whichAppearance = "first",
+		treeAgeOffset = 10,	
+		newFile = NULL,	
+		origNexusFile = NULL,
+		createEmptyMorphMat = TRUE,
+		runName = "retio_dating",
+		doNotRun = TRUE
+		)
 
 # let's try it with a tree for topological constraints
      # this requires setting outgroupTaxa to NULL
 # let's also set doNotRun to FALSE
 
-createMrBayesTipDatingNexus(tipTimes = retioRanges,
-		outgroupTaxa = NULL,treeConstraints = retioTree,
-		ageCalibrationType = "uniformRange",whichAppearance = "first",
-		treeAgeOffset = 10,	newFile = NULL,	
-		origNexusFile = NULL,createEmptyMorphMat = TRUE,
-		runName = "retio_dating",doNotRun = FALSE)
+createMrBayesTipDatingNexus(
+   tipTimes = retioRanges,
+		outgroupTaxa = NULL,
+		treeConstraints = retioTree,
+		ageCalibrationType = "uniformRange",
+		whichAppearance = "first",
+		treeAgeOffset = 10,	
+		newFile = NULL,	
+		origNexusFile = NULL,
+		createEmptyMorphMat = TRUE,
+		runName = "retio_dating",
+		doNotRun = FALSE
+		)
 
 # the above is essentially cal3 with a better algorithm,
 		# and no need for a priori rate estimates
 # just need a tree and age estimates for the tips!
 
-#############################################################################
+####################################################
 # some more variations for testing purposes
 
 # no morph matrix supplied or generated
 	# you'll need to manually append to an existing NEXUS file
-createMrBayesTipDatingNexus(tipTimes = retioRanges,
-		outgroupTaxa = NULL,treeConstraints = retioTree,
-		ageCalibrationType = "uniformRange",whichAppearance = "first",
-		treeAgeOffset = 10,	newFile = NULL,	
-		origNexusFile = NULL,createEmptyMorphMat = FALSE,
-		runName = "retio_dating",doNotRun = TRUE)
+	
+createMrBayesTipDatingNexus(
+   tipTimes = retioRanges,
+		outgroupTaxa = NULL,
+		treeConstraints = retioTree,
+		ageCalibrationType = "uniformRange",
+		whichAppearance = "first",
+		treeAgeOffset = 10,
+		newFile = NULL,	
+		origNexusFile = NULL,
+		createEmptyMorphMat = FALSE,
+		runName = "retio_dating",
+		doNotRun = TRUE
+		)
 
 \dontrun{
 
@@ -315,12 +366,19 @@ createMrBayesTipDatingNexus(tipTimes = retioRanges,
 # here's my super secret MrBayes directory
 file <- "D:\\\\dave\\\\workspace\\\\mrbayes\\\\exampleRetio.nex"
 
-createMrBayesTipDatingNexus(tipTimes = retioRanges,
-		outgroupTaxa = NULL,treeConstraints = retioTree,
-		ageCalibrationType = "uniformRange",whichAppearance = "first",
-		treeAgeOffset = 10,	newFile = file,	
-		origNexusFile = NULL,createEmptyMorphMat = TRUE,
-		runName = "retio_dating",doNotRun = FALSE)
+createMrBayesTipDatingNexus(
+   tipTimes = retioRanges,
+		outgroupTaxa = NULL,
+		treeConstraints = retioTree,
+		ageCalibrationType = "uniformRange",
+		whichAppearance = "first",
+		treeAgeOffset = 10,	
+		newFile = file,	
+		origNexusFile = NULL,
+		createEmptyMorphMat = TRUE,
+		runName = "retio_dating",
+		doNotRun = FALSE
+		)
 
 }
 
@@ -346,16 +404,16 @@ The rationale behind the two alternative morphological models are described in m
 
 Bapst, D. W., H. A. Schreiber, and S. J. Carlson. 2018.
 Combined Analysis of Extant Rhynchonellida (Brachiopoda) using Morphological
-and Molecular Data. \emph{Systematic Biology} 67(1):32-48. doi: 10.1093/sysbio/syx049
+and Molecular Data. \emph{Systematic Biology} 67(1):32-48.
 }
 \seealso{
 This function wraps various aspects of the functions \code{\link{createMrBayesConstraints}}
-and \code{\link{createMrBayesTipCalibrations}}. In many ways, this functionality is a
-replacement for the probabilistic dating method \code{\link{cal3}}.
+and the function \code{\link{createMrBayesTipCalibrations}}. In many ways, this functionality is a
+replacement for the probabilistic dating method represented by the \code{\link{cal3}} dating functions.
 
 For putting the posterior estimated trees on an absolute time scale, see
-functions \code{\link{obtainDatedPosteriorTreesMrB}}, with \code{getFixedTimes = TRUE}
-if you used a taxon with a fixed age, and function \code{\link{setRootAges}}.
+functions \code{\link{obtainDatedPosteriorTreesMrB}}. Use the argument \code{getFixedTimes = TRUE}
+if you used a taxon with a fixed age, and function \code{\link{setRootAges}} to set the root age.
 }
 \author{
 David W. Bapst. This code was produced as part of a project 
@@ -364,5 +422,5 @@ funded by National Science Foundation grant EAR-1147537 to S. J. Carlson.
 The basic \emph{MrBayes} commands utilized in the output script are a collection
 of best practices taken from studying NEXUS files supplied by April Wright,
 William Gearty, Graham Slater, Davey Wright, and
-guided by the recommendations of Matzke and Wright, 2016 in Biol. Lett.
+guided by the recommendations of Matzke and Wright, 2016 in Biology Letters.
 }

@@ -4,7 +4,7 @@
 \alias{timeList2fourDate}
 \alias{fourDateFunctions}
 \alias{fourDate2timeList}
-\title{Converting Datasets of Taxon Ranges in Intervals Between timeList format and fourDate format}
+\title{Converting Datasets of Taxon Ranges in Intervals Between \code{timeList} format and \code{fourDate} format}
 \usage{
 timeList2fourDate(timeList)
 
@@ -39,7 +39,7 @@ a \code{fourDate} format. \code{fourDate2timeList} is for converting from
 a \code{fourDate} format to a \code{timeList} format.
 }
 \examples{
-#timeList object from the retiolinae dataset
+# timeList object from the retiolinae dataset
 data(retiolitinae)
 
 str(retioRanges)
@@ -49,7 +49,10 @@ taxicDivDisc(retioRanges)
 fourDateRet <- timeList2fourDate(retioRanges)
 
 # total uncertainty in retio first and last appearances?
-sum((fourDateRet[,1]-fourDateRet[,2])+(fourDateRet[,3]-fourDateRet[,4]))
+sum(
+    (fourDateRet[,1] - fourDateRet[,2]) + 
+    (fourDateRet[,3]-fourDateRet[,4])
+    )
 
 #convert back
 newTimeList <- fourDate2timeList(fourDateRet)
@@ -59,7 +62,7 @@ taxicDivDisc(retioRanges)
 \references{
 See my recent blog post on temporal datasets in paleontology for some details:
 
-http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html
+\url{http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html}
 }
 \seealso{
 \code{\link{bin_timePaleoPhy}} and \code{\link{taxicDivDisc}} for common applications;

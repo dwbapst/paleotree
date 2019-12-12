@@ -11,7 +11,7 @@
 #' utility function called by other tree-modifying functions discussed
 #' in the manual page for \code{\link{modifyTerminalBranches}}.
 
-#' This is typically perfomed via the function \code{\link{fixRootTime}}.
+#' This is typically performed via the function \code{\link{fixRootTime}}.
 
 #' @param treeOrig A \code{phylo} object of a time-scaled
 #' phylogeny with a \code{$root.time} element.

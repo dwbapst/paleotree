@@ -5,8 +5,13 @@
 \alias{collapseNodes}
 \title{Randomly Collapse a Portion of Nodes on a Phylogeny}
 \usage{
-degradeTree(tree, prop_collapse = NULL, nCollapse = NULL,
-  node.depth = NA, leave.zlb = FALSE)
+degradeTree(
+  tree,
+  prop_collapse = NULL,
+  nCollapse = NULL,
+  node.depth = NA,
+  leave.zlb = FALSE
+)
 
 collapseNodes(tree, nodeID, collapseType, leave.zlb = FALSE)
 }

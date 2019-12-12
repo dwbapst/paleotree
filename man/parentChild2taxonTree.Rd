@@ -4,8 +4,7 @@
 \alias{parentChild2taxonTree}
 \title{Create a Taxonomy-Based Phylogeny ('Taxon Tree') from a Table of Parent-Child Taxon Relationships}
 \usage{
-parentChild2taxonTree(parentChild, tipSet = "nonParents",
-  cleanTree = TRUE)
+parentChild2taxonTree(parentChild, tipSet = "nonParents", cleanTree = TRUE)
 }
 \arguments{
 \item{parentChild}{A two-column matrix of type \code{character} where
@@ -22,23 +21,23 @@ parentheses.}
 post-processing, including having singles collapsed,
 nodes reordered and being written out as a Newick string and read
 back in, to ensure functionality with ape functions
-and ape-derived functions. If \code{FALSE}, none of this post-processing
-is done and users should beware, as such trees can
-lead to hard-crashes of R.}
+and ape-derived functions. 
+If \code{FALSE}, none of this post-processing is done and
+users should beware, as such trees can lead to hard-crashes of R.}
 }
 \value{
-A phylogeny of class 'phylo', with tip taxa as
+A phylogeny of class \code{phylo}, with tip taxa as
 controlled by argument \code{tipSet}.
 The output tree is returned with no edge lengths.
 
 The names of higher taxa than the tips should be appended
-as the element $node.label for the internal nodes.
+as the element \code{$node.label} for the internal nodes.
 }
 \description{
 This function takes a two-column matrix of taxon names,
 indicating a set of binary parent-taxon:child-taxon 
 paired relationships with a common root, and returns
-a 'taxonomy-tree' phylogeny object of class 'phylo'.
+a 'taxonomy-tree' phylogeny object of class \code{phylo}.
 }
 \details{
 All taxa listed must be traceable via their parent-child relationships to a single,

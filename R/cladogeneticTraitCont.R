@@ -28,7 +28,7 @@
 #' all in trait values. These species will all be identical.
 #' 
 #' See this link for additional details:
-#' http://nemagraptus.blogspot.com/2012/03/simulating-budding-cladogenetictrait.html
+#' \url{http://nemagraptus.blogspot.com/2012/03/simulating-budding-cladogenetictrait.html}
 #' 
 #' @param taxa A five-column matrix of taxonomic data, as output by
 #' \code{fossilRecord2fossilTaxa} after simulation with \code{simFossilRecord}
@@ -45,8 +45,8 @@
 #' by default.
 
 #' @return Returns a vector of trait values for each taxon, with value names
-#' being the taxa IDs (column 1 of the input) with a 't' pasted (as with rtree
-#' in the ape library).
+#' being the taxa IDs (column 1 of the input) with a 't' pasted (as with \code{rtree}
+#' in the \code{ape} library).
 
 #' @author David W. Bapst
 

@@ -4,22 +4,31 @@
 \alias{probAnc}
 \title{Probability of being a sampled ancestor of another sampled taxon}
 \usage{
-probAnc(p, q, R, mode = "budding", analysis = "directDesc",
-  Mmax = 85, nrep = 10000)
+probAnc(
+  p,
+  q,
+  R,
+  mode = "budding",
+  analysis = "directDesc",
+  Mmax = 85,
+  nrep = 10000
+)
 }
 \arguments{
 \item{p}{Instantaneous rate of speciation (lambda). If the underlying model assumed is
 anagenetic (e.g. taxonomic change within a single lineage, 'phyletic evolution') 
-with no branching of lineages, then p will be used as the rate of anagenetic differentiation.}
+with no branching of lineages, then \code{p} will be used as the rate of anagenetic differentiation.}
 
 \item{q}{Instantaneous rate of extinction (mu)}
 
-\item{R}{Per-interval probability of sampling a taxon at least once}
+\item{R}{Per-interval probability of sampling a taxon at least once.}
 
 \item{mode}{Mode of morphotaxon differentiation, based on definitions in Foote, 1996. Can be
-pure cladogenetic budding ("budding"), pure cladogenetic bifurcating ("bifurcating") or
-pure anagenetic within-lineage change ("anagenesis"; i.e. Foote's 'phyletic change'). Default
-mode is "budding".}
+pure cladogenetic budding (\code{"budding"}), 
+pure cladogenetic bifurcating (\code{"bifurcating"}) or
+pure anagenetic within-lineage change 
+(\code{"anagenesis"}; i.e. Foote's 'phyletic change'). 
+Default mode is "budding".}
 
 \item{analysis}{The type of analysis to be performed, either the probability of sampling direct
 descendants (\code{"directDesc"}) or of sampling indirect descendants (\code{"indirectDesc"}).}
@@ -33,18 +42,17 @@ small upper bound on M.}
 Default is arbitrarily high.}
 }
 \description{
-Uses models from Foote (1996) to calculate the probability
+This function uses models from Foote (1996) to calculate the probability 
+of sampling a descendant of a morphotaxon in the fossil record, given the sampling probability 
+and estimates of origination and extinction rates.
 }
 \details{
-probAnc obtains the probability of sampling a descendant of a 
-morphotaxon in the fossil record, given the sampling probability 
-and estimates of origination and extinction rates. These values are 
-always calculated assuming infinite time for the potential ancestor
+These values are always calculated assuming infinite time for the potential ancestor
 to produce daughter taxa (assuming it lives that long) and under 
 homogenous birth, death and sampling rates/probabilities, which is a
 situation that may be overly ideal relative to many real fossil records.
 
-This can be calculated for either direct descendants, i.e. the probability 
+These probabilities can be calculated for either direct descendants, i.e. the probability 
 of sampling any morphotaxa that arise immediately from the particular 
 morphotaxon that could be an ancestor, or indirect descendants, i.e. the 
 probability for any morphotaxon that has the morphotaxon of question as an
@@ -52,7 +60,8 @@ ancestor, no matter how distant. See the argument \code{analysis} for
 details. Mode of differentiation can also be varied
 for three different models, see the argument \code{mode}.
 
-This probability is calculated including the probability that extinction might
+The probability of sampling a taxon's ancestor 
+is calculated while accounting for the probability that extinction might
 occur before any descendants are produced. Thus, if \code{p = q}, the probability of 
 a taxon going extinct before it produces any descendants will be 0.5, which 
 means that even when sampling is perfect (\code{R = 1}, meaning completeness of 
@@ -66,25 +75,42 @@ should be discounted, and in general when sampling rate is high, results should
 be treated cautiously as overestimates.
 }
 \examples{
-#examples, run at very low nrep for sake of speed (examples need to be fast)
+# examples, run at very low nrep for sake of speed (examples need to be fast)
 
-#default: probability of sampling a direct descendant
+# default options 
+    # probability of sampling a direct descendant
 probAnc(p = 0.1, q = 0.1, R = 0.5, 
-   mode = "budding", analysis = "directDesc",nrep = 100)
+        mode = "budding", 
+        analysis = "directDesc",
+        nrep = 100)
 
-#other modes
+# other modes
 probAnc(p = 0.1, q = 0.1, R = 0.5, 
-   mode = "bifurcating", analysis = "directDesc",nrep = 100)
+        mode = "bifurcating", 
+        analysis = "directDesc",
+        nrep = 100)
 probAnc(p = 0.1, q = 0.1, R = 0.5, 
-   mode = "anagenesis", analysis = "directDesc",nrep = 100)
+        mode = "anagenesis", 
+        analysis = "directDesc",
+        nrep = 100)
 
-#probability of having sampled indirect descendants of a taxon
+# probability of having sampled indirect descendants of a taxon
+
+# first, the default
 probAnc(p = 0.1, q = 0.1, R = 0.5, 
-   mode = "budding", analysis = "indirectDesc",nrep = 100)	#default
+        mode = "budding", 
+        analysis = "indirectDesc",
+        nrep = 100)
+        	
 probAnc(p = 0.1, q = 0.1, R = 0.5, 
-   mode = "bifurcating", analysis = "indirectDesc",nrep = 100)
+        mode = "bifurcating", 
+        analysis = "indirectDesc", 
+        nrep = 100)
+        
 probAnc(p = 0.1, q = 0.1, R = 0.5, 
-   mode = "anagenesis", analysis = "indirectDesc",nrep = 100)
+        mode = "anagenesis", 
+        analysis = "indirectDesc",
+        nrep = 100)
 
 }
 \references{

@@ -7,15 +7,36 @@
 \alias{phyloDiv}
 \title{Diversity Curves}
 \usage{
-taxicDivCont(timeData, int.length = 1, int.times = NULL, plot = TRUE,
-  plotLogRich = FALSE, timelims = NULL, drop.cryptic = FALSE)
+taxicDivCont(
+  timeData,
+  int.length = 1,
+  int.times = NULL,
+  plot = TRUE,
+  plotLogRich = FALSE,
+  timelims = NULL,
+  drop.cryptic = FALSE
+)
 
-taxicDivDisc(timeList, int.times = NULL, drop.singletons = FALSE,
-  plot = TRUE, plotLogRich = FALSE, timelims = NULL,
-  extant.adjust = 0.001, split.int = TRUE)
+taxicDivDisc(
+  timeList,
+  int.times = NULL,
+  drop.singletons = FALSE,
+  plot = TRUE,
+  plotLogRich = FALSE,
+  timelims = NULL,
+  extant.adjust = 0.001,
+  split.int = TRUE
+)
 
-phyloDiv(tree, int.length = 0.1, int.times = NULL, plot = TRUE,
-  plotLogRich = FALSE, drop.ZLB = TRUE, timelims = NULL)
+phyloDiv(
+  tree,
+  int.length = 0.1,
+  int.times = NULL,
+  plot = TRUE,
+  plotLogRich = FALSE,
+  drop.ZLB = TRUE,
+  timelims = NULL
+)
 }
 \arguments{
 \item{timeData}{Two-column matrix giving the per-taxon first and last
@@ -23,29 +44,29 @@ appearances in absolute time. The simulated data tables output by \code{fossilRe
 following simulation with \code{simFossilRecord} can also be supplied to \code{taxicDivCont}.}
 
 \item{int.length}{The length of intervals used to make the diversity curve.
-Ignored if int.times is given.}
+Ignored if \code{int.times} is given.}
 
 \item{int.times}{An optional two-column matrix of the interval start and end
-times for calculating the diversity curve. If NULL, calculated internally.
-If given, the argument split.int and int.length are ignored.}
+times for calculating the diversity curve. If \code{NULL}, calculated internally.
+If given, the argument \code{split.int} and \code{int.length} are ignored.}
 
-\item{plot}{If TRUE, a diversity curve generated from the data is plotted.}
+\item{plot}{If \code{TRUE}, a diversity curve generated from the data is plotted.}
 
-\item{plotLogRich}{If TRUE, taxic diversity is plotted on log scale.}
+\item{plotLogRich}{If \code{TRUE}, taxic diversity is plotted on log scale.}
 
 \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only
-affects plotting. Given as either NULL (the default) or as a vector of
+affects plotting. Given as either \code{NULL} (the default) or as a vector of
 length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
 will be plotted \emph{exactly} to these values.}
 
-\item{drop.cryptic}{If TRUE, cryptic taxa are merged to form one taxon for
+\item{drop.cryptic}{If \code{TRUE}, cryptic taxa are merged to form one taxon for
 estimating taxon curves. Only works for objects from \code{simFossilRecord}
 via \code{fossilRecord2fossilTaxa}.}
 
 \item{timeList}{A list composed of two matrices, giving interval start and end 
 dates and taxon first and last occurrences within those intervals. See details.}
 
-\item{drop.singletons}{If TRUE, taxa confined to a single interval will be
+\item{drop.singletons}{If \code{TRUE}, taxa confined to a single interval will be
 dropped prior to the diversity curve calculation. This is sometimes done if
 single intervals have overly high diversities due to the 'monograph' effect
 where more named taxa are known in certain intervals largely due to
@@ -56,25 +77,26 @@ taxonomic expert effort and not real changes in historical biotic diversity.}
 to have an infinitely small width.}
 
 \item{split.int}{For discrete time data, should calculated/input intervals
-be split at discrete time interval boundaries? If FALSE, can create apparent
-artifacts in calculating the diversity curve. See below.}
+be split at discrete time interval boundaries? If \code{FALSE}, can create apparent
+artifacts in calculating the diversity curve. See details.}
 
-\item{tree}{A time-scaled phylogeny of class phylo.}
+\item{tree}{A time-scaled phylogeny of class \code{phylo}.}
 
-\item{drop.ZLB}{If true, zero-length terminal branches are dropped from the
+\item{drop.ZLB}{If \code{TRUE}, zero-length terminal branches are dropped from the
 input tree for phylogenetic datasets, before calculating standing diversity.}
 }
 \value{
 These functions will invisibly return a three-column matrix, where
 the first two columns are interval start and end times and the third column
-is the number of taxa/lineages counted in that interval.
+is the number of taxa (or lineages) counted in that interval.
 }
 \description{
 Functions to plot diversity curves based on taxic range data, in both
 discrete and continuous time, and for phylogenies.
 }
 \details{
-First, some background. Diversity curves are plots of species/taxon/lineage richness
+First, some background. 
+Diversity curves are plots of species/taxon/lineage richness
 over time for a particular group of organisms. For paleontological studies,
 these are generally based on per-taxon range data while more recently in
 evolutionary biology, molecular phylogenies have been used to calculate
@@ -91,7 +113,7 @@ some time-averaging or uncertain temporal resolution and thus is probably
 not finely-resolved enough to calculate instantaneous estimates of
 diversity.
 
-As with many functions in the paleotree library, absolute time is always
+As with many functions in the \code{paleotree} library, absolute time is always
 decreasing, i.e. the present day is zero.
 
 As diversity is counted within binned intervals, the true standing diversity
@@ -104,11 +126,11 @@ original intervals will create a 'spiky' diversity curve, as these smaller
 intersecting bins will have a large number of taxa which may have been
 present in either of the neighboring intervals. This will give these small
 bins an apparently high estimated standing diversity. This artifact is
-avoided with the default setting split.int = TRUE, which will split any input
+avoided with the default setting \code{split.int = TRUE}, which will split any input
 or calculated intervals so that they start and end at the boundaries of the
 discrete-time range bins.
 
-The timeList object should be a list composed of two matrices, the first
+The \code{timeList} object should be a list composed of two matrices, the first
 matrix giving by-interval start and end times (in absolute time), the second
 matrix giving the by-taxon first and last appearances in the intervals
 defined in the first matrix, numbered as the rows. Absolute time should be
@@ -119,30 +141,32 @@ See the documentation for the time-scaling  function
 \code{\link{bin_timePaleoPhy}} and the simulation function 
 \code{\link{binTimeData}} for more information on formatting.
 
-Unlike some paleotree functions, such as  perCapitaRates, the intervals
+Unlike some \code{paleotree} functions,
+such as \code{\link{perCapitaRates}}, the intervals
 can be overlapping or of unequal length. The diversity curve functions
 deal with such issues by assuming taxa occur from the base of the interval
 they are first found in until the end of the last interval they are occur
 in. Taxa in wide-ranging intervals that contain many others will be treated
 as occurring in all nested intervals. 
 
-phyloDiv will resolve polytomies to be dichotomous nodes separated by
+\code{\link{phyloDiv}} will resolve polytomies to be dichotomous nodes separated by
 zero-length branches prior to calculating the diversity curve. There is no
 option to alter this behavior, but it should not affect the use of the
 function because the addition of the zero-length branches should produce an
-identical diversity history as a polytomy. phyloDiv will also drop
-zero-length terminal branches, as with the function dropZLB. This the
+identical diversity history as a polytomy. \code{phyloDiv} will also drop
+zero-length terminal branches, as with the function \code{\link{dropZLB}}. This the
 default behavior for the function but can be turned off by setting the
-argument drop.zlb to FALSE.
+argument \code{drop.zlb} to FALSE.
 }
 \examples{
 
-#taxicDivDisc with the retiolinae dataset
+# taxicDivDisc example with the retiolinae dataset
 data(retiolitinae)
 taxicDivDisc(retioRanges)
 
 ##################################################
-#simulation examples
+
+# simulation examples
 
 # 07-15-19
 # note that the examples below are weird and rather old
@@ -159,30 +183,30 @@ record <- simFossilRecord(
        nExtant = 0)
 taxa <- fossilRecord2fossilTaxa(record)
 
-#let's see what the 'true' diversity curve looks like in this case
+# let's see what the 'true' diversity curve looks like in this case
 #plot the FADs and LADs with taxicDivCont
 taxicDivCont(taxa)
 
-#simulate a fossil record with imperfect sampling via sampleRanges
+# simulate a fossil record with imperfect sampling via sampleRanges
 rangesCont <- sampleRanges(taxa, r = 0.5)
 
-#plot the diversity curve based on the sampled ranges
+# plot the diversity curve based on the sampled ranges
 layout(1:2)
 taxicDivCont(rangesCont)
-#Now let's use binTimeData to bin in intervals of 1 time unit
+# Now let's use binTimeData to bin in intervals of 1 time unit
 rangesDisc <- binTimeData(rangesCont,
        int.length = 1)
-#plot with taxicDivDisc
+# plot with taxicDivDisc
 taxicDivDisc(rangesDisc)
-#compare to the continuous time diversity curve
+# compare to the continuous time diversity curve
 
 layout(1)
-#Now let's make a tree using taxa2phylo
+# Now let's make a tree using taxa2phylo
 tree <- taxa2phylo(taxa,obs_time = rangesCont[,2])
 phyloDiv(tree)
 
-#a simple example with phyloDiv
-  #using a tree from rtree in ape
+# a simple example with phyloDiv
+  # using a tree from rtree in ape
 set.seed(444)
 tree <- rtree(100)
 phyloDiv(tree)
@@ -268,9 +292,9 @@ taxicDivDisc(rangesDisc,
 
 There are several different functions for traditional LTT plots
 (phylogenetic diversity curves), such as the function
-,\code{\link{ltt.plot}} in the package ape, the function \code{ltt} in the
-package phytools, the function \code{plotLtt} in the package laser and the
-function \code{LTT.average.root} in the package TreeSim.
+,\code{\link{ltt.plot}} in the package \code{ape}, the function \code{ltt} in the
+package \code{phytools}, the function \code{plotLtt} in the package \code{laser} and the
+function \code{LTT.average.root} in the package \code{TreeSim}.
 }
 \author{
 David W. Bapst

@@ -13,7 +13,7 @@ representing missing values (states coded as '?'), read in with \code{readNexus}
 \code{phylobase}. \code{cladogramDicranoX12} and 
 \code{cladogramDicranoX13} are both cladograms, formatted as \code{phylo} class objects
 for use with package \code{ape}, without branch-lengths (as
-these was are, respectively, consensus tree and a maximum-parsimony tree from seperate
+these was are, respectively, consensus tree and a maximum-parsimony tree from separate
 maximum-parsimony analyses).}
 \source{
 Song, Y., and Y. Zhang. 2014. A preliminary study on the relationship of the

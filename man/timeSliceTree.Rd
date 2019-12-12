@@ -4,13 +4,18 @@
 \alias{timeSliceTree}
 \title{Time-Slicing a Phylogeny}
 \usage{
-timeSliceTree(ttree, sliceTime, drop.extinct = FALSE,
-  tipLabels = "earliestDesc", plot = TRUE)
+timeSliceTree(
+  ttree,
+  sliceTime,
+  drop.extinct = FALSE,
+  tipLabels = "earliestDesc",
+  plot = TRUE
+)
 }
 \arguments{
 \item{ttree}{A time-scaled phylogeny of class \code{phylo}.}
 
-\item{sliceTime}{Time to 'slice' the tree at. See details.}
+\item{sliceTime}{Time at which to 'slice' the tree. See details.}
 
 \item{drop.extinct}{If \code{TRUE}, drops tips that go extinct before
 the input \code{timeSlice} using function \code{dropExtinct}.
@@ -22,7 +27,7 @@ which had multiple descendants? The default option, \code{"earliestDesc"} labels
 a clipped branch with the earliest appearing tip descendant of that branch. 
 Alternatively, if \code{tipLabels = "allDesc"},
 these tips can instead be labeled with a compound label consisting of
-all descendants that were on the cropped branch, seperated by semi-colons.}
+all descendants that were on the cropped branch, separated by semi-colons.}
 
 \item{plot}{If \code{TRUE}, plots input and output trees for comparison.}
 }
@@ -47,7 +52,7 @@ In other words, if \code{root.time = 100}, then \code{timeSlice = 80} will slice
 time units after the root.
 
 If \code{drop.extinct = TRUE}, then extinct tips are dropped and (if present) the
-$root.time of ttree is adjusted. This is done using the \code{paleotree} function
+\code{$root.time} of \code{ttree} is adjusted. This is done using the \code{paleotree} function
 \code{dropExtinct}.
 }
 \note{

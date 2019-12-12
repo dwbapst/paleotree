@@ -9,14 +9,14 @@
 #' @param trait A vector of trait values for a discrete character, preferably named with taxon names
 #' identical to the tip labels on the input tree.
 
-#' @param tree A cladogram of type 'phylo'. Any branch lengths are ignored.
+#' @param tree A cladogram of type \code{phylo}. Any branch lengths are ignored.
 
 #' @param randomMax The maximum number of cladograms examined when searching a large number of solutions
 #' consistent with the reconstructed ancestral states from \code{ancestral.pars} with the minimum number
-#' of character state transitions. If the number of potential solutions is less than randomMax, then
+#' of character state transitions. If the number of potential solutions is less than \code{randomMax}, then
 #' solutions are exhaustively searched.
 
-#' @param maxParsimony If maxParsimony is \code{TRUE} (the default) then only solutions
+#' @param maxParsimony If \code{TRUE} (the default), then only solutions
 #' with the smallest number of total transitions examined will be returned.
 #' Note that since solutions are stochastically 'guessed' at, and the number
 #' of possible solutions may not be exhaustively searched, there may have

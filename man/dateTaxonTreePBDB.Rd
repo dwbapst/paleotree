@@ -4,9 +4,14 @@
 \alias{dateTaxonTreePBDB}
 \title{Date a Taxon-Topology from the Paleobiology Database Using Appearance Data from the API}
 \usage{
-dateTaxonTreePBDB(taxaTree, taxaDataPBDB = taxaTree$taxaDataPBDB,
-  minBranchLen = 0, tipTaxonDateUsed = "shallowestAge",
-  dropZeroOccurrenceTaxa = TRUE, plotTree = FALSE)
+dateTaxonTreePBDB(
+  taxaTree,
+  taxaDataPBDB = taxaTree$taxaDataPBDB,
+  minBranchLen = 0,
+  tipTaxonDateUsed = "shallowestAge",
+  dropZeroOccurrenceTaxa = TRUE,
+  plotTree = FALSE
+)
 }
 \arguments{
 \item{taxaTree}{A tree with tip taxon names matching the taxon names
@@ -32,7 +37,7 @@ produced by this function. The default, \code{tipTaxonDateUsed = "shallowestAge"
 will use the minimum age of the last appearance time of that taxon, which if it
 is extant will be 0, and if it is extinct, will be the maximum constraint on the
 age of its last appearance (i.e. the last time we saw it before it went extinct).
-Other options are "deepestAge", which is the oldest possible first appearance time
+A second option is \code{"deepestAge"}, which is the oldest possible first appearance time
 from the PBDB, i.e. the maximum age constraint for the first appearance. As closely
 related taxa often first occur in the same short interval of geologic time, due to
 diversification bursts and/or the heterogeneity of fossil preservation, this may

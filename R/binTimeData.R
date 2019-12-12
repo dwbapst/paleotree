@@ -2,7 +2,8 @@
 #' 
 #' Converts a matrix of simulated continuous-time first occurrences and last
 #' occurrences for fossil taxa into first and last occurrences given in some set
-#' of simulated/placed discrete-time intervals, which is output along with
+#' of discrete-time intervals, either simulated or place \emph{a priori},
+#' which is output along with
 #' information of the dates of the given intervals.
 #' 
 #' @details This function takes a simulated matrix of per-taxon first and last
@@ -12,33 +13,34 @@
 #' with the length controlled by the argument int.length.
 #' 
 #' Alternatively, a two column matrix of interval start and end times to be
-#' used can be input via the argument int.times. None of these intervals can
+#' used can be input via the argument \code{int.times}. None of these intervals can
 #' have a duration (temporal length) greater than zero. If a first or last
 #' appearance in the input range data could fit into multiple intervals (i.e.
 #' the input discrete time intervals are overlapping), then the appearance data
 #' is placed in the interval of the shortest duration. When output, the
 #' interval times matrix (see below) will be sorted from first to last.
 #' 
-#' This function is SPECIFICALLY for simulating the effect of having a discrete
-#' time-scale for analyses using simulations. This function should not be used
-#' for non-simulations uses, such as binning temporal occurrences for analyses
-#' of real data. In those case, the temporal ranges (which, in real data, will
-#' probably be given as discrete time intervals) should already be tabulated
-#' within discrete intervals prior to use in paleotree. The user should place
-#' the temporal information in a list object, as described for the output of
-#' binTimeData (see below).
-#' 
-#' As with many functions in the paleotree library, absolute time is always
+#' As with many functions in the \code{paleotree} package, absolute time is always
 #' decreasing, i.e. the present day is zero. However, the numbering of
 #' intervals giving in the output increases with time, as these are numbered
 #' relative to each other, from first to last.
 #' 
-#' As of version 1.7 of paleotree, taxa which are
-#' extant as indicated in timeData as being
+#' As of version 1.7 of \code{paleotree}, taxa which are
+#' extant as indicated in \code{timeData} as being
 #' in a time interval bounded \code{(0, 0)}, unless time-bins are preset using
 #' argument \code{int.times} (prior to version 1.5 they were erroneously listed as
 #' NA).
-#' 
+
+#' @note
+#' This function is \emph{SPECIFICALLY} for simulating the effect of having a discrete
+#' time-scale for analyses using simulations. This function should not be used
+#' for non-simulations uses, such as binning temporal occurrences for analyses
+#' of real data. In those case, the temporal ranges (which, in real data, will
+#' probably be given as discrete time intervals) should already be tabulated
+#' within discrete intervals prior to use in \code{paleotree}. The user should place
+#' the temporal information in a \code{list} object, as described for the output of
+#' \code{binTimeData}.
+
 #' @param timeData Two-column matrix of simulated first and last occurrences in
 #' absolute continuous time.
 
@@ -62,20 +64,23 @@
 
 #' @examples
 #' 
-#' #Simulate some fossil ranges with simFossilRecord
+#' # Simulate some fossil ranges with simFossilRecord
 #' set.seed(444)
-#' record <- simFossilRecord(
-#'     p = 0.1, q = 0.1, nruns = 1,
-#'     nTotalTaxa = c(30,40), nExtant = 0)
+#' record <- simFossilRecord(p = 0.1, 
+#'                           q = 0.1, 
+#'                           nruns = 1,
+#'                           nTotalTaxa = c(30,40), 
+#'                           nExtant = 0
+#'                           )
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' #simulate a fossil record with imperfect sampling via sampleRanges
+#' # simulate a fossil record with imperfect sampling via sampleRanges
 #' rangesCont <- sampleRanges(taxa,r = 0.5)
-#' #Now let's use binTimeData() to bin in intervals of 1 time unit
+#' # Now let's use binTimeData() to bin in intervals of 1 time unit
 #' rangesDisc <- binTimeData(rangesCont,int.length = 1)
-#' #plot with taxicDivDisc()
+#' # plot with taxicDivDisc()
 #' equalDiscInt <- taxicDivDisc(rangesDisc)
 #' 
-#' #example with pre-set intervals input (including overlapping)
+#' # example with pre-set intervals input (including overlapping)
 #' presetIntervals <- cbind(
 #'     c(1000, 990, 970, 940),
 #'     c(980, 970, 950, 930)
@@ -94,23 +99,24 @@
 #' ####################################
 #' #example with extant taxa
 #' set.seed(444)
-#' record <- simFossilRecord(
-#'    p = 0.1, q = 0.1, nruns = 1,
-#'    nTotalTaxa = c(30,40))
+#' record <- simFossilRecord(p = 0.1, 
+#'                           q = 0.1, 
+#'                           nruns = 1,
+#'                           nTotalTaxa = c(30,40)
+#'                           )
 #' taxa <- fossilRecord2fossilTaxa(record)
-#' #simulate a fossil record with imperfect sampling via sampleRanges
+#' # simulate a fossil record 
+#'     # with imperfect sampling via sampleRanges
 #' rangesCont <- sampleRanges(
 #'     taxa, r = 0.5,
 #'     modern.samp.prob = 1)
-#' #Now let's use binTimeDat to bin into intervals of 1 time-unit
+#' # Now let's use binTimeDat to bin into intervals of 1 time-unit
 #' rangesDisc <- binTimeData(rangesCont,
 #'     int.length = 1)
-#' #plot with taxicDivDisc()
+#' # plot with taxicDivDisc()
 #' taxicDivDisc(rangesDisc)
 #' 
-#' 
-#' #################################################
-#' #example with pre-set intervals input
+#' # example with pre-set intervals input
 #'     # (including overlapping)
 #' presetIntervals <- cbind(
 #'     c(40, 30, 20, 10),
@@ -118,8 +124,10 @@
 #'     )
 #' rangesDisc1 <- binTimeData(rangesCont,
 #'     int.times = presetIntervals)
+#'     
 #' taxicDivDisc(rangesDisc1)
 #' 
+
 #' @export binTimeData
 binTimeData <- function(timeData,int.length = 1,start = NA,int.times = NULL){
 	#bin temporal data

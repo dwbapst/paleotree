@@ -7,15 +7,30 @@
 \alias{charExhaustPlot}
 \title{Analyses of the exhaustion of Character States Over Evolutionary History}
 \usage{
-accioExhaustionCurve(phyloTree, charData, charTypes = "unordered",
-  outgroup = NULL, firstAppearances = NULL, missingCharValue = "?",
-  inapplicableValue = "-")
+accioExhaustionCurve(
+  phyloTree,
+  charData,
+  charTypes = "unordered",
+  outgroup = NULL,
+  firstAppearances = NULL,
+  missingCharValue = "?",
+  inapplicableValue = "-"
+)
 
-accioBestAcquisitionModel(exhaustion_info, changesType,
-  models = c("exponential", "gamma", "lognormal", "zipf"))
+accioBestAcquisitionModel(
+  exhaustion_info,
+  changesType,
+  models = c("exponential", "gamma", "lognormal", "zipf")
+)
 
-charExhaustPlot(exhaustion_info, changesType, xlab = "Total Characters",
-  ylab = NULL, main = NULL, xsize = 3)
+charExhaustPlot(
+  exhaustion_info,
+  changesType,
+  xlab = "Total Characters",
+  ylab = NULL,
+  main = NULL,
+  xsize = 3
+)
 }
 \arguments{
 \item{phyloTree}{A phylogenetic tree of class \code{phylo}
@@ -89,9 +104,9 @@ to the primitive position along each internode edge.
 The output of \code{accioBestAcquisitionModel}
 is a list object containing
 information on the best-fit model, the
-parameters of that model, the calculated
-probabilition distribution for that model
-at the same intervals, for use in quantile plots.	
+parameters of that model, and the calculated
+probability distribution function for that model
+at the same intervals (for use in quantile plots).	
 
 \code{charExhaustPlot} produces a plot, and outputs no data.
 }
@@ -103,7 +118,7 @@ Evolution).
 }
 \details{
 \code{accioExhaustionCurve} uses a Sankoff parsimony ancestral-reconstruction
-algorithm (written by PJ Wagner, \emph{not} the one from \code{phangorn} used
+algorithm (written by P.J. Wagner, \emph{not} the one from \code{phangorn} used
 elsewhere in \code{paleotree}) to calculate character changes across each branch
 (internode edge) of a tree, and then reports the counts of character state
 
@@ -120,7 +135,7 @@ The functions \code{accioBestAcquisitionModel}
 and \code{charExhaustPlot} offer
 users two different options for examining character change: \code{totalAcc}
 fits models to the total accumulated number of state changes over the phylogeny,
-thus using exhaustion to explor the size and distribution of character space. The
+thus using exhaustion to explore the size and distribution of character space. The
 other option \code{charAlt} fits models to the number of character that alter from
 primitive to derived over phylogeny, thus reflecting the size and distribution of state space.
 
@@ -128,7 +143,7 @@ primitive to derived over phylogeny, thus reflecting the size and distribution o
 of change by stratigraphic order of first appearances. It is unclear what this means.
 }
 \note{
-This family of functios presented here were originally written 
+This family of functions presented here were originally written 
 by Peter J. Wagner, and then modified and adapted by David W.
 Bapst for wider release  in a CRAN-distributed
 package: \code{paleotree}. This makes the code presented here

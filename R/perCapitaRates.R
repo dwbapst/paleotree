@@ -1,4 +1,4 @@
-#' perCapitaRates
+#' Instantaneous \emph{per-Capita} Rates of Origination and Extinction from the Fossil Record
 #' 
 #' Calculates and plots per-capita origination and extinction rates from
 #' sequential discrete-time taxon ranges, following Foote (2000).
@@ -13,18 +13,20 @@
 #' estimated using the matrix invisibly output by this function (See Foote,
 #' 2000, for the relevant equations for calculating these).
 #' 
-#' The timeList object should be a list composed of two matrices, the first
+#' The \code{timeList} object should be a list composed of two matrices, the first
 #' matrix giving by-interval start and end times (in absolute time), the second
 #' matrix giving the by-taxon first and last appearances in the intervals
 #' defined in the first matrix, numbered as the rows. Absolute time should be
 #' decreasing, while the intervals should be numbered so that the number
-#' increases with time. Taxa alive in the modern should be either (a) listed 
-#' in isExtant or (b) listed as last occurring in a time interval that 
-#' begins at time 0 and ends at time 0. See the documentation for the time-scaling 
+#' increases with time. Taxa alive in the modern should be either 
+#' (a) listed in \code{isExtant} or 
+#' (b) listed as last occurring in a time interval
+#' that begins at time 0 and ends at time 0. 
+#' See the documentation for the time-scaling 
 #' function \code{\link{bin_timePaleoPhy}} and the simulation function 
 #' \code{\link{binTimeData}} for more information on formatting.
 #' 
-#' Unlike some functions in paleotree, such as the diversity curve functions,
+#' Unlike some functions in \code{paleotree}, such as the diversity curve functions,
 #' intervals must be both sequential and non-overlapping. The diversity curve
 #' functions deal with such issues by assuming taxa occur from the base of the
 #' interval they are first found in until the end of the last interval they
@@ -44,9 +46,9 @@
 #' calculating per-capita origination and extinction rates.
 
 #' @param isExtant A vector of \code{TRUE} and \code{FALSE} values, same length as the
-#' number of taxa in the second matrix of timeList, where \code{TRUE} values indicate
+#' number of taxa in the second matrix of \code{timeList}, where \code{TRUE} values indicate
 #' taxa that are alive in the modern day (and thus are boundary crossers which
-#' leave the most recent interval). By default, this argument is NULL and instead
+#' leave the most recent interval). By default, this argument is \code{NULL} and instead
 #' which taxa are extant is inferred based on which taxa occur in an interval
 #' with start and end times both equal to zero. See details.
 
@@ -55,7 +57,7 @@
 
 #' @param legendPosition The position of a legend indicating which line is
 #' origination rate and which is extinction rate on the resulting plot. This
-#' is given as the possible positions for argument 'x' of the function 
+#' is given as the possible positions for argument \code{x} of the function 
 #'\code{\link{legend}}, and by default is \code{"topleft"}, which will be generally
 #' useful if origination and extinction rates are initially low. If 
 #' \code{legendPosition = NA}, then a legend will not be plotted.
@@ -64,11 +66,12 @@
 #' where the number of rows is equal to the number of intervals. The
 #' first two columns are interval start and end times and the third
 #' column is interval length. The fourth through eighth column is the
-#' four fundamental classes of taxa from Foote (2001): Nbt, NbL, NFt,
-#' NFL and their sum, N. The final two columns are the per-capita
-#' rates estimated for each interval in units per lineage time-units;
-#' the ninth column is the origination rate ('pRate') and the tenth
-#' column is the extinction rate ('qRate').
+#' four fundamental classes of taxa from Foote (2001):
+#' \code{Nbt}, \code{NbL}, \code{NFt}, \code{NFL} and their sum, \code{N}.
+#' The final two columns are the per-capita rates estimated for
+#' each interval in units per lineage time-units;
+#' the ninth column is the origination rate (\code{pRate}) and the tenth
+#' column is the extinction rate (\code{qRate}).
 
 #' @seealso \code{\link{DiversityCurves}}, \code{\link{SamplingConv}}
 
@@ -80,41 +83,62 @@
 
 #' @examples
 #' 
+#' \donttest{
+#' 
 #' #with the retiolinae dataset
 #' data(retiolitinae)
 #' perCapitaRates(retioRanges)
 #' 
-#' #Simulate some fossil ranges with simFossilRecord
+#' # Simulate some fossil ranges with simFossilRecord
 #' set.seed(444)
-#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#' 	nTotalTaxa = c(80,100), nExtant = 0)
+#' record <- simFossilRecord(
+#'     p = 0.1, q = 0.1, nruns = 1, nTotalTaxa = c(80,100), nExtant = 0)
 #' taxa <- fossilRecord2fossilTaxa(record)
+#' 
 #' #simulate a fossil record with imperfect sampling with sampleRanges()
 #' rangesCont <- sampleRanges(taxa,r = 0.5)
+#' 
 #' #Now let's use binTimeData() to bin in intervals of 5 time units
 #' rangesDisc <- binTimeData(rangesCont,int.length = 5)
+#' 
 #' #and get the per-capita rates
 #' perCapitaRates(rangesDisc)
+#' 
 #' #on a log scale
 #' perCapitaRates(rangesDisc,logRates = TRUE)
 #' 
+#' 
 #' #get mean and median per-capita rates
 #' res <- perCapitaRates(rangesDisc,plot = FALSE)
+#' 
 #' apply(res[,c("pRate","qRate")],2,mean,na.rm = TRUE)
+#' 
 #' apply(res[,c("pRate","qRate")],2,median,na.rm = TRUE)
 #' 
+#' ##############################
 #' #with modern taxa
 #' set.seed(444)
-#' record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-#' 	nExtant = c(10,50))
+#' 
+#' record <- simFossilRecord(
+#'     p = 0.1, 
+#'     q = 0.1, 
+#'     nruns = 1,
+#'     nExtant = c(10,50)
+#'     )
+#'     
 #' taxa <- fossilRecord2fossilTaxa(record)
+#' 
 #' #simulate a fossil record with imperfect sampling with sampleRanges()
 #' rangesCont <- sampleRanges(taxa,r = 0.5,,modern.samp.prob = 1)
+#' 
 #' #Now let's use binTimeData() to bin in intervals of 5 time units
 #' rangesDisc <- binTimeData(rangesCont,int.length = 5)
+#' 
 #' #and now get per-capita rates
 #' perCapitaRates(rangesDisc)
 #' 
+#' }
+
 #' @export
 perCapitaRates <- function(
 		timeList,
@@ -127,19 +151,22 @@ perCapitaRates <- function(
 		){
 	#####################
 	#
-	#this function estimates per-capita rates for binned intervals from discrete interval range data
-		#based on Foote, 2000
-	#input is a list with (1) interval times matrix and (2) species FOs and LOs
-	#time interval starts and ends can be pre-input as a 2 column matrix
-		#HOWEVER this could be pretty misleading!
-		#standing richness may never be high as the apparent richness of some bins
-	#if there is a single interval that is start = 0 and end = 0, it is dropped and all appearances in this interval are either
-		#(a) melded onto the next most recent interval
-		#(b) dropped if drop.extant = TRUE
-	#output is a matrix of int-start, int-end, p, q
-	#example
-		#timeList <- rangesDisc;int.times = NULL;plot = TRUE;plotLogRates = FALSE;timelims = NULL
-			#drop.extant = FALSE;isExtant = NULL;split.int = TRUE
+	# this function estimates per-capita rates 
+    # for binned intervals from discrete interval range data
+		# based on Foote, 2000
+	# input is a list with (1) interval times matrix and (2) species FOs and LOs
+	# time interval starts and ends can be pre-input as a 2 column matrix
+		# HOWEVER this could be pretty misleading!
+		# standing richness may never be high as the apparent richness of some bins
+	# if there is a single interval that is start = 0 and end = 0,
+    # it is dropped and all appearances in this interval are either
+		# (a) melded onto the next most recent interval
+		# (b) dropped if drop.extant = TRUE
+	# output is a matrix of int-start, int-end, p, q
+	# example
+		# timeList <- rangesDisc;int.times = NULL;
+      # plot = TRUE;plotLogRates = FALSE;timelims = NULL
+			# drop.extant = FALSE;isExtant = NULL;split.int = TRUE
 	#
 	if(!inherits(timeList[[1]],"matrix")){
 		if(inherits(timeList[[1]],"data.frame")){
@@ -155,14 +182,25 @@ perCapitaRates <- function(
 			stop("timeList[[2]] not of matrix or data.frame format")
 			}
 		}
-	intMat <- timeList[[1]]	#the intervals the DATA is given in
+  #the intervals the DATA is given in
+  intMat <- timeList[[1]]	
 	timeData <- timeList[[2]]
 	timeData <- timeData[!is.na(timeData[,1]),,drop = FALSE]
-	if(any(is.na(timeData))){stop("Weird NAs in Data??")}
-	if(any(apply(intMat,1,diff)>0)){stop("timeList[[1]] not in intervals in time relative to modern")}
-	if(any(intMat[,2]<0)){stop("Some dates in timeList[[1]] <0 ?")}
-	if(any(apply(timeData,1,diff)<0)){stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")}
-	if(any(timeData[,2]<0)){stop("Some dates in timeList[[2]] <0 ?")}
+	if(any(is.na(timeData))){
+	  stop("Weird NAs in Data??")
+	  }
+	if(any(apply(intMat,1,diff)>0)){
+	  stop("timeList[[1]] not in intervals in time relative to modern")
+	  }
+	if(any(intMat[,2]<0)){
+	  stop("Some dates in timeList[[1]] <0 ?")
+	  }
+	if(any(apply(timeData,1,diff)<0)){
+	  stop("timeList[[2]] not in intervals numbered from first to last (1 to infinity)")
+	  }
+	if(any(timeData[,2]<0)){stop(
+	  "Some dates in timeList[[2]] <0 ?")
+	  }
 	#get rid of modern intervals
 	modInt <- which(intMat[,1] == 0)
 	if(length(modInt)>0){
@@ -182,16 +220,25 @@ perCapitaRates <- function(
 	isNonRep <- all(apply(intMat,2,function(x) identical(length(x),length(unique(x)))))
 	isSequential_2 <- all(sapply(2:nrow(intMat),function(x) intMat[x,1] == intMat[x-1,2]))
 	if(!(isSequential_1 & isSequential_2 & isNonRep)){
-		stop("Sorry, intervals need to be sequential, ordered and non-overlapping.")}
+		  stop("Sorry, intervals need to be sequential, ordered and non-overlapping.")
+	    }
 	#now get int length to modify rates with
 	intlen <- (-apply(intMat,1,diff))
 	#modify timeData if there are any extant taxa
 	if(any(isExtant)){timeData[isExtant,2] <- nrow(intMat)+1}
 	#get the four values
-	Nbt <- sapply(1:nrow(intMat),function(x) sum(timeData[,1]<x & timeData[,2]>x))
-	NbL <- sapply(1:nrow(intMat),function(x) sum(timeData[,1]<x & timeData[,2] == x))
-	NFt <- sapply(1:nrow(intMat),function(x) sum(timeData[,1] == x & timeData[,2]>x))	
-	NFL <- sapply(1:nrow(intMat),function(x) sum(timeData[,1] == x & timeData[,2] == x))
+	Nbt <- sapply(1:nrow(intMat), function(x) 
+	                              sum(timeData[,1]<x & timeData[,2]>x)
+	                              )
+	NbL <- sapply(1:nrow(intMat), function(x) 
+	                              sum(timeData[,1]<x & timeData[,2] == x)
+	                              )
+	NFt <- sapply(1:nrow(intMat), function(x) 
+	                              sum(timeData[,1] == x & timeData[,2]>x)
+	                              )	
+	NFL <- sapply(1:nrow(intMat), function(x) 
+	                              sum(timeData[,1] == x & timeData[,2] == x)
+	                              )
 	N <- Nbt+NbL+NFt+NFL	#total diversity
 	#now calculate rates
 	pRate <- ifelse(Nbt == 0,NA,-log(Nbt/(Nbt+NFt))/intlen)
@@ -207,23 +254,52 @@ perCapitaRates <- function(
 		if(logRates){
 			p1[!(p1>0)] <- NA
 			q1[!(q1>0)] <- NA
-			ylims <- c(min(c(p1,q1),na.rm = TRUE),(max(c(p1,q1),na.rm = TRUE))*1.5)
-			plot(times1,p1,type = "l",log = "y",col = 4,lwd = 2,lty = 5,
-				xlim = c(max(times1),max(0,min(times1))),ylim = ylims,
-				xlab = "Time (Before Present)",ylab = "Instantaneous Per-Capita Rate (per Ltu)")
+			ylims <- c(
+			           min(c(p1,q1),na.rm = TRUE),
+			           (max(c(p1,q1),na.rm = TRUE))*1.5
+			           )
+			plot(
+			     times1, p1,
+			     type = "l", log = "y", 
+			     col = 4, lwd = 2, lty = 5,
+				   xlim = c(max(times1),max(0,min(times1))),
+				   ylim = ylims,
+				   xlab = "Time (Before Present)",
+				   ylab = "Instantaneous Per-Capita Rate (per Ltu)"
+				   )
 		}else{
-			ylims <- c(min(c(p1,q1),na.rm = TRUE),(max(c(p1,q1),na.rm = TRUE))*1.2)
-			plot(times1,p1,type = "l",col = 4,lwd = 2,lty = 5,
-				xlim = c(max(times1),max(0,min(times1))),ylim = ylims,
-				xlab = "Time (Before Present)",ylab = "Instantaneous Per-Capita Rate (per Ltu)")
+			ylims <- c(
+			           min(c(p1,q1),na.rm = TRUE),
+			           (max(c(p1,q1),na.rm = TRUE))*1.2
+			           )
+			plot(
+			     times1, p1, 
+			     type = "l", col = 4, lwd = 2, lty = 5,
+			     xlim = c(max(times1), max(0,min(times1))),
+			     ylim = ylims,
+				   xlab = "Time (Before Present)",
+				   ylab = "Instantaneous Per-Capita Rate (per Ltu)"
+				   )
 			}
 		if(jitter){
 			lines(times1+jigger,q1,col = 2,lwd = 2,lty = 2)
 		}else{
 			lines(times1,q1,col = 2,lwd = 2,lty = 2)
 			}
-		if(!is.na(legendPosition)){legend(x = legendPosition,legend = c("Origination","Extinction"),lty = c(5,2),lwd = 2,col = c(4,2))}
+		if(!is.na(legendPosition)){
+		  legend(
+		         x = legendPosition,
+		         legend = c("Origination","Extinction"),
+		         lty = c(5,2),
+		         lwd = 2,
+		         col = c(4,2)
+		         )
+		  }
 		}
-	res <- cbind(intMat,intlen,Nbt,NbL,NFt,NFL,N,pRate,qRate)
+	res <- cbind(
+	  intMat, intlen, 
+	  Nbt, NbL, NFt, NFL,
+	  N, pRate, qRate
+	  )
 	return(invisible(res))
 	}

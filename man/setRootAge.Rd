@@ -10,14 +10,15 @@ setRootAge(tree, fixedAges = NULL)
 setRootAges(trees, fixedAges = NULL)
 }
 \arguments{
-\item{tree}{A phylogeny with branch lengths of type "phylo".}
+\item{tree}{A phylogeny with branch lengths of class \code{phylo}.}
 
 \item{fixedAges}{A table of fixed ages for tip taxa, generally as a dataframe where the
-first column is of type character, and the second column is of type numeric.  = Such a table is automatically
+first column is of type character, and the second column is of type \code{numeric}.  
+Such a table is automatically
 generated as an attribute of the output from \code{\link{obtainDatedPosteriorTreesMrB}}, 
 when argument \code{getFixedTimes = TRUE}.}
 
-\item{trees}{A list of type "multiPhylo" consisting of multiple phylogenetic trees with branch lengths.}
+\item{trees}{A list of class \code{multiPhylo} consisting of multiple phylogenetic trees with branch lengths.}
 }
 \value{
 The input tree is output, with a new \code{$root.time} element.
@@ -26,22 +27,25 @@ The input tree is output, with a new \code{$root.time} element.
 This function uses a table of fixed dates for operational-taxon-units (tip taxa) to calculate the absolute
 age of the root divergence for a tree with branch lengths, and then appends this root age to the tree
 as a \code{$root.time} element, and then outputs the tree. Function \code{setRootAges} is a wrapper for
-\code{setRootAge} for use with multiple trees in a "multiPhylo" object. This function was mainly written for
-dealing with trees of extinct taxa dated in units of absolute time from Bayesian analyses, such as with MrBayes, 
+\code{setRootAge} for use with multiple trees in a object of class \code{multiPhylo}. 
+This function was mainly written for dealing with trees of extinct taxa dated in units of 
+absolute time from Bayesian analyses, such as with MrBayes, 
 with trees scaled to time units by functions such as \code{\link{obtainDatedPosteriorTreesMrB}}.
 }
 \details{
 Trees of fossil taxa come with one issue rarely encountered by those dealing with molecular
 phylogenies: the absolute timing of when tips and divergences is not certain. With the vast
-majority of molecular phylogenies, it can be assumed the youngest tips occur at 0 time -- i.e.,
-the modern. This knowledge gives the tree an anchor for figuring out the absolute timing of events.
+majority of molecular phylogenies, it can be assumed the youngest tips occur at time 0 
+-- in other words , the modern. 
+This knowledge gives the tree an \emph{'anchor'} for fixing the absolute timing of events.
 Many programs and other software designed for depicting and analyzing phylogenetic hypotheses
-assumes such an apparent absolute time-scale (in R and elsewhere). A tree of Paleozoic brachiopods that include no
+assumes such an apparent absolute time-scale (in R and elsewhere). 
+A phylogenetic analysis of Paleozoic brachiopods that include no
 extant members has no such anchor at time = 0, and such a default assumption in available
-software can be misleading. The $root.time protocol is intended to grant this
+software can be misleading. The \code{$root.time} protocol is intended to grant this
 absolute time-scale to a dated tree of fossil taxa, and is appended by most of the
 dating functions in package paleotree. However, trees dated by other approaches, such as via tip-dating in
-programs such as MrBayes and BEAST, will not have $root.time elements when read into R.
+programs such as MrBayes and BEAST, will not have \code{$root.time} elements when read into R.
 }
 \examples{
 

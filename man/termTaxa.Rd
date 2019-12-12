@@ -13,9 +13,17 @@
 \usage{
 simTermTaxa(ntaxa, sumRate = 0.2)
 
-simTermTaxaAdvanced(p = 0.1, q = 0.1, mintaxa = 1, maxtaxa = 1000,
-  mintime = 1, maxtime = 1000, minExtant = 0, maxExtant = NULL,
-  min.cond = TRUE)
+simTermTaxaAdvanced(
+  p = 0.1,
+  q = 0.1,
+  mintaxa = 1,
+  maxtaxa = 1000,
+  mintime = 1,
+  maxtime = 1000,
+  minExtant = 0,
+  maxExtant = NULL,
+  min.cond = TRUE
+)
 
 trueTermTaxaTree(TermTaxaRes, time.obs)
 
@@ -50,30 +58,30 @@ simulations.}
 \item{maxExtant}{Maximum number of living taxa allowed at end of
 simulations.}
 
-\item{min.cond}{If TRUE, the default, simulations are stopped when they meet
-all minimum conditions. If FALSE, simulations will continue until they hit
+\item{min.cond}{If \code{TRUE}, the default, simulations are stopped when they meet
+all minimum conditions. If \code{FALSE}, simulations will continue until they hit
 maximum conditions, but are only accepted as long as they still meet all
 minimum conditions in addition.}
 
-\item{TermTaxaRes}{The list output produced by simTermTaxa}
+\item{TermTaxaRes}{The list output produced by \code{simTermTaxa}.}
 
 \item{time.obs}{A per-taxon vector of times of observation for the taxa in
-TermTaxaRes}
+\code{TermTaxaRes}.}
 }
 \value{
-\code{deadTree} gives time-scaled phylo object, with a $root.time element.
+\code{deadTree} gives a dated \code{phylo} object, with a \code{$root.time} element.
 As discussed above, the result is always an extinct phylogeny of exactly
 \code{ntaxa}.
 
 \code{simTermTaxa} and \code{simTermTaxaAdvanced} both produce a list with two components:
 \code{$taxonRanges} which is a two-column matrix where each row gives the true
 first and last appearance of observable taxa and \code{$tree} which is a
-time-scaled phylogeny with end-points at the true last appearance time of
+dated phylogeny with end-points at the true last appearance time of
 taxa.
 
-\code{trueTermTaxaTree} produces a time-scaled tree as a phylo object, which
+\code{trueTermTaxaTree} produces a dated tree as a \code{phylo} object, which
 describes the relationships of populations at the times of observation given
-in the time.obs argument.
+in the \code{time.obs} argument.
 }
 \description{
 This function simulates the diversification of clades composed of
@@ -93,11 +101,11 @@ rate. The frequency of nodes is a simple mathematical function of the number
 of taxa (i.e. number of nodes is the number of taxa -1) and their placement
 should completely random, given that we generally treat birth-death
 processes as independent Poisson processes. Thus, in terms of generating the
-topology, this function is nothing but a simple wrapper for the ape function
-rtree, which randomly places splits among a set of taxa using a simple
+topology, this function is nothing but a simple wrapper for the \code{ape} function
+\code{rtree}, which randomly places splits among a set of taxa using a simple
 algorithm (see Paradis, 2012). To match the expectation of a birth-death
 process, new branch lengths are calculated as an exponential distribution
-with mean 1/sumRate, where sumRate represents the sum of the branching and
+with mean 1/\code{sumRate}, where \code{sumRate} represents the sum of the branching and
 extinction rates. Although as long as both the branching rate and extinction
 rates are more than zero, any non-ultrametric tree is possible, only when
 the two rates are non-zero and equal to each other will there be a high
@@ -117,7 +125,7 @@ such a tree would represent a sample of all the terminal branches, which
 start with some speciation event and end in an extinction event. These are
 taken to be the true original ranges of these taxa. No further taxa can be
 sampled than this set, whatsoever. Note that the differentiation here is a
-result of a posteriori consideration of the phylogeny: one can't even know
+result of \emph{a posteriori} consideration of the phylogeny: one can't even know
 what lineages could be sampled or the actual start points of such taxa until
 after the entire phylogeny of a group of organisms is generated.
 
@@ -139,7 +147,7 @@ relationships and not \code{deadTree}. The arguments are thus similar to
 \code{simFossilRecord}, with some differences (as \code{simTermTaxaAdvanced}
 originally called the deprecated function \code{simFossilTaxa}).
 In particular, \code{simTermTaxaAdvanced} can be used to produce
-simulated datasets which have extant taxa.
+simulated datasets which have extant taxa. 
 
 \code{trueTermTaxaTree} is analogous to the function of \code{taxa2phylo}, in that it
 outputs the time-scaled-phylogeny for a terminal-taxon dataset for some
@@ -198,42 +206,43 @@ plot(tree1)
 layout(1)
 
 ########################################### 
-#let's look at the change in the terminal branches
+# let's look at the change in the terminal branches
 plot(tree$edge.length,
     tree1$edge.length)
-#can see some edges are shorter on the new tree, cool
+# can see some edges are shorter on the new tree, cool
 
-#let's now simulate sampling and use FADs
+# let's now simulate sampling and use FADs
 layout(1:2)
 plot(tree)
 axisPhylo()
+
 FADs <- sampleRanges(
     termTaxaRes$taxonRanges,
     r = 0.1)[,1]
 tree1 <- trueTermTaxaTree(termTaxaRes, FADs)
+
 plot(tree1)
 axisPhylo()
 
 ################################################
-#can condition on sampling some average number of taxa
-#analogous to deprecated function simFossilTaxa_SRcond
+# can condition on sampling some average number of taxa
+# analogous to deprecated function simFossilTaxa_SRcond
 r <- 0.1
 avgtaxa <- 50
 sumRate <- 0.2
-#avg number necc for an avg number sampled
+
+# avg number necc for an avg number sampled
 ntaxa_orig <- avgtaxa / (r / (r + sumRate))	
 termTaxaRes <- simTermTaxa(
     ntaxa = ntaxa_orig,
     sumRate = sumRate)
 
-#note that conditioning must be conducted using full sumRate
-#this is because durations are functions of both rates
-#just like in bifurcation
+# note that conditioning must be conducted using full sumRate
+# this is because durations are functions of both rates
+# just like in bifurcation
 
-
-#################################
-#use advanced version of simTermTaxa: simTermTaxaAdvanced
-    #allows for extant taxa in a term-taxa simulation
+# now, use advanced version of simTermTaxa: simTermTaxaAdvanced
+    # allows for extant taxa in a term-taxa simulation
 
 #with min.cond
 termTaxaRes <- simTermTaxaAdvanced(
@@ -246,12 +255,14 @@ termTaxaRes <- simTermTaxaAdvanced(
     maxExtant = 20,
     min.cond = TRUE
     )
-#notice that arguments are similar to simFossilRecord
+    
+# notice that arguments are similar to simFossilRecord
 	# and even more similar to deprecated function simFossilTaxa
+	
 plot(termTaxaRes$tree)
 Ntip(termTaxaRes$tree)
 
-#without min.cond
+# without min.cond
 termTaxaRes <- simTermTaxaAdvanced(
     p = 0.1,
     q = 0.1,
@@ -262,11 +273,11 @@ termTaxaRes <- simTermTaxaAdvanced(
     maxExtant = 20,
     min.cond = FALSE
     )
+    
 plot(termTaxaRes$tree)
 Ntip(termTaxaRes$tree)
 
 layout(1)
-
 }
 \references{
 Paradis, E. (2012) \emph{Analysis of Phylogenetics and Evolution

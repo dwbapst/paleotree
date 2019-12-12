@@ -1,4 +1,4 @@
-#' Methods for Editing or Converting Output from simFossilRecord
+#' Methods for Editing or Converting Output from Simulated Fossil Record Objects
 #' 
 #' These are a set of functions available for manipulating, translating
 #' and editing the objects of class \code{fossilRecordSimulation} output
@@ -26,7 +26,7 @@
 #' \code{fossilTaxa2fossilRecord} does the reverse, converting a \code{simFossilTaxa}
 #' table into a \code{fossilRecordSimulation} list object,
 #' but returns a \code{fossilRecordSimulation} object that
-#' considers each species as un-sampled (as sampling
+#' considers each species as \emph{unsampled} (as sampling
 #' information is not contained within a \code{simFossilTaxa} table).
 #' 
 #' \code{fossilRecord2fossilRanges} converts a \code{fossilRecordSimulation} object
@@ -65,7 +65,7 @@
 #' @param merge.cryptic If \code{TRUE}, sampling events for cryptic taxon-units (i.e.
 #' those in the same cryptic complex) will be merged into sampling events for a single
 #' taxon-unit (with the name of the first taxon in that cryptic complex).
- 
+
 #' @param ranges.only If \code{TRUE} (the default), \code{fossilRecord2fossilRanges}
 #' will return the dates of the first and last sampled occurrences of each taxon-unit
 #' (i.e. the stratigraphic range of each taxon).
@@ -162,331 +162,339 @@
 #' FADs <- ranges[,1]
 #' treeFAD <- taxa2phylo(taxa,
 #'     FADs,plot = TRUE)
-#' 
+#' 
+
 #' @rdname simFossilRecordMethods
 #' @export
 timeSliceFossilRecord <- function(
-		fossilRecord, 
-		sliceTime, 
-		shiftRoot4TimeSlice = FALSE,
-		modern.samp.prob = 1, 
-		tolerance = 10^-6
-		){
-	########################################################
-	#take a fossilRecord data object and cut it at some specific date
-	#
-	# CHECKS
-	checkResult <- checkFossilRecord(fossilRecord)
-	#
-	# check sliceTime
-	if(!(is.numeric(sliceTime) & (length(sliceTime) == 1))){
-		stop(
-			"sliceTime must be a single numeric value"
-			)
-		}
-	#
-	if(sliceTime < 0){
-		stop(
-			"sliceTime cannot be a negative value"
-			)
-		}
-	#
-	#checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
-	#
-	#check shiftRoot4TimeSlice
-	shiftPar <- c(TRUE, FALSE, "withExtantOnly")
-	shiftRoot4TimeSlice <- shiftPar[pmatch(shiftRoot4TimeSlice, shiftPar)]
-	if(is.na(shiftRoot4TimeSlice)){
-		stop(
-			"shiftRoot4TimeSlice must be a logical or the string 'withExtantOnly'"
-			)
-		}
-	#
-	#drop all taxa that originate after the sliceTime
-	droppers <- sapply(fossilRecord,function(x) x[[1]][3]<sliceTime)
-	#
-	if(sum(droppers) == length(fossilRecord)){
-		stop("All taxa appear to originate *after* the slicing time?!")
-		}
-	#
-	fossilRecord <- fossilRecord[!droppers]
-	#
-	#remove all sampling events after sliceTime
-	for(i in 1:length(fossilRecord)){
-		#remove all sampling events after (sliceTime + tolerance)
-		fossilRecord[[i]][[2]] <- fossilRecord[[i]][[2]][
-			fossilRecord[[i]][[2]] > (sliceTime + tolerance)
-			]
-		}
-	# adjusting time, making taxa extant
-		# need to first test if there are extant taxa or not
-	isAlive <- sapply(fossilRecord,function(x){
-		if(is.na(x[[1]][4])){
-			TRUE
-		}else{
-			# the old code:
-			#
-			# (sliceTime-x[[1]][4]) > tolerance
-			#
-			# new (07-15-19)
-			if(x[[1]][4] <= sliceTime){	
-				# is the absolute difference in dates
-					# greater than the tolerance
-				# (otherwise the events are equivalent - should be extinct!)
-				#
-				# the allowability of finding extinct taxa needs to be higher
-					# or else difficult to identify extinct taxa, due to rounding issues
-				# so need to be as relaxed as possible identifying extinct taxa
-				#
-				abs(sliceTime - x[[1]][4]) > tolerance
-			}else{
-				FALSE
-				}
-			}
-		})
-	#
-	# troubleshooting...
-	#browser()
-	#message(shiftRoot4TimeSlice)
-	#message("if you see this message works")
-	#
-	if(shiftRoot4TimeSlice == "withExtantOnly"){
-		if(any(isAlive)){
-			shiftRoot4TimeSlice <- TRUE
-		}else{
-			shiftRoot4TimeSlice <- FALSE
-			}
-		#print(shiftRoot4TimeSlice)
-		}
-	#
-	# if shiftRoot4TimeSlice, then the whole thing shifts so time = 0 is slice time
-	if(shiftRoot4TimeSlice){	
-		#adjust all dates so cutdate becomes 0
-		for(i in 1:length(fossilRecord)){
-			# adjust all dates so cutdate becomes 0
-			# so if stillAlive, replace 4:5 with 0,1
-			#
-			# 07-09-19
-			# why would I replace it with 0 and not something standard like NA ??
-			# oh because extantTime might NOT be zero... well, shoot!
-			#
-			if(isAlive[i]){
-				#
-				#print("live taxon found")
-				#print("Original taxon")
-				#print(fossilRecord[[i]])
-				#print("Slice Time")
-				#print(sliceTime)
-				#
-				#turn all taxa that went extinct after sliceTime so they are still alive
-				fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3] - sliceTime
-				fossilRecord[[i]][[1]][4:5] <- c(0, 1)
-				#
-				#print("New Taxon")
-				#print(fossilRecord[[i]])
-				#
-			}else{
-				newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4] - sliceTime
-				# test dates
-				if(any(newStartEndTime_extinct < 0)){
-					#
-					# any dates within tolerance are put precisely at 0
-						# maybe also try? (0 - tolerance) ?
-					#
-					withinTolerance <- (
-						(newStartEndTime_extinct < 0) & 
-							(newStartEndTime_extinct > -tolerance)
-						)
-					newStartEndTime_extinct[withinTolerance] <- 0 
-					# 
-					# do we still have problems?
-					#
-					if(any(newStartEndTime_extinct < 0)){
-						stop(paste0(
-							"Extinct taxon dates being shifted incorrectly to\n",
-							"  rescale modern time to zero, creating negative dates.\n",
-							" - Old FAD & LAD are: ", 
-								paste(fossilRecord[[i]][[1]][3:4], collapse=" "),
-								"\n",
-							" - sliceTime is: ", sliceTime, "\n",
-							" - Newly assigned FAD & LAD are: ", 
-								paste(newStartEndTime_extinct, collapse=" ")
-							))
-						}
-					}
-				fossilRecord[[i]][[1]][3:4] <- newStartEndTime_extinct
-				}
-			newSamplingTimes_all <- fossilRecord[[i]][[2]] - sliceTime
-			#
-			# honestly we should remove all sampling times at or after extant time
-			# newSamplingTimes_all <- newSamplingTimes_all[newSamplingTimes_all > 0]
-			#
-			# test dates
-			if(any(newSamplingTimes_all <= 0)){			
-				#
-				if(any(newSamplingTimes_all <= 0)){
-					stop(paste0(
-						"Sampling times for taxa are being shifted incorrectly to\n",
-						"    rescale modern time to zero, creating negative dates.\n",
-						" - Old sampling dates are: ", 
-							paste(fossilRecord[[i]][[2]], collapse=" "),
-							"\n",
-						" - sliceTime is: ", sliceTime,"\n",
-						" - Newly assigned sampling dates are: ", 
-							paste(newSamplingTimes_all, collapse=" ")					
-						))
-					}
-				}
-			fossilRecord[[i]][[2]] <- newSamplingTimes_all
-			}
-		modernTime <- 0
-	# if shiftRoot4TimeSlice = FALSE, then simply replace all extant taxa with
-		# LADs at sliceTime and score as extant
-	}else{
-		for(i in 1:length(fossilRecord)){
-			if(isAlive[i]){
-				fossilRecord[[i]][[1]][4:5] <- c(sliceTime,1)
-				}
-			}
-		modernTime <- sliceTime
-		}
-	#
-	# sample at modern based on modern.samp.prob
-	whichExtant <- which(sapply(fossilRecord,function(x) 
-		x[[1]][5] == 1))
-	nLive <- length(whichExtant)
-	liveSampled <- as.logical(
-		rbinom(
-			n = nLive, 
-			size = 1, 
-			prob = modern.samp.prob
-			)
-		)
-	whichSampled <- whichExtant[liveSampled]
-	#
-	#add sampling event at modern
-	for(i in whichSampled){
-		fossilRecord[[i]][[2]] <- c(fossilRecord[[i]][[2]],modernTime)
-		}
-	#
-	# make sure it has the right class
-	class(fossilRecord) <- 'fossilRecordSimulation'
-	# 
-	return(fossilRecord)
-	}
+                     fossilRecord, 
+                     sliceTime, 
+                     shiftRoot4TimeSlice = FALSE, 
+                     modern.samp.prob = 1, 
+                     tolerance = 10^-6
+                     ){
+  ########################################################
+  # take a fossilRecord data object and cut it at some specific date
+  #
+  # CHECKS
+  checkResult <- checkFossilRecord(fossilRecord)
+  #
+  # check sliceTime
+  if(!(is.numeric(sliceTime) & (length(sliceTime) == 1))){
+    stop(
+      "sliceTime must be a single numeric value"
+    )
+  }
+  #
+  if(sliceTime < 0){
+    stop(
+      "sliceTime cannot be a negative value"
+    )
+  }
+  #
+  # checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
+  #
+  # check shiftRoot4TimeSlice
+  shiftPar <- c(TRUE, FALSE, "withExtantOnly")
+  shiftRoot4TimeSlice <- shiftPar[pmatch(shiftRoot4TimeSlice, shiftPar)]
+  if(is.na(shiftRoot4TimeSlice)){
+    stop(
+      "shiftRoot4TimeSlice must be a logical or the string 'withExtantOnly'"
+    )
+  }
+  #
+  # drop all taxa that originate after the sliceTime
+  droppers <- sapply(fossilRecord,function(x) x[[1]][3]<sliceTime)
+  #
+  if(sum(droppers) == length(fossilRecord)){
+    stop("All taxa appear to originate *after* the slicing time?!")
+  }
+  #
+  fossilRecord <- fossilRecord[!droppers]
+  #
+  # remove all sampling events after sliceTime
+  for(i in 1:length(fossilRecord)){
+    # remove all sampling events after (sliceTime + tolerance)
+    fossilRecord[[i]][[2]] <- fossilRecord[[i]][[2]][
+      fossilRecord[[i]][[2]] > (sliceTime + tolerance)
+      ]
+  }
+  # adjusting time, making taxa extant
+  # need to first test if there are extant taxa or not
+  isAlive <- sapply(fossilRecord,function(x){
+    if(is.na(x[[1]][4])){
+      TRUE
+    }else{
+      # the old code:
+      #
+      # (sliceTime-x[[1]][4]) > tolerance
+      #
+      # new (07-15-19)
+      if(x[[1]][4] <= sliceTime){	
+        # is the absolute difference in dates
+        # greater than the tolerance
+        # (otherwise the events are equivalent - should be extinct!)
+        #
+        # the allowability of finding extinct taxa needs to be higher
+        # or else difficult to identify extinct taxa, due to rounding issues
+        # so need to be as relaxed as possible identifying extinct taxa
+        #
+        abs(sliceTime - x[[1]][4]) > tolerance
+      }else{
+        FALSE
+      }
+    }
+  })
+  #
+  # troubleshooting...
+  # browser()
+  # message(shiftRoot4TimeSlice)
+  # message("if you see this message works")
+  #
+  if(shiftRoot4TimeSlice == "withExtantOnly"){
+    if(any(isAlive)){
+      shiftRoot4TimeSlice <- TRUE
+    }else{
+      shiftRoot4TimeSlice <- FALSE
+    }
+    # print(shiftRoot4TimeSlice)
+  }
+  #
+  # if shiftRoot4TimeSlice, then the whole thing shifts so time = 0 is slice time
+  if(shiftRoot4TimeSlice){	
+    #adjust all dates so cutdate becomes 0
+    for(i in 1:length(fossilRecord)){
+      # adjust all dates so cutdate becomes 0
+      # so if stillAlive, replace 4:5 with 0,1
+      #
+      # 07-09-19
+      # why would I replace it with 0 and not something standard like NA ??
+      # oh because extantTime might NOT be zero... well, shoot!
+      #
+      if(isAlive[i]){
+        #
+        # print("live taxon found")
+        # print("Original taxon")
+        # print(fossilRecord[[i]])
+        # print("Slice Time")
+        # print(sliceTime)
+        #
+        # turn all taxa that went extinct after sliceTime so they are still alive
+        fossilRecord[[i]][[1]][3] <- fossilRecord[[i]][[1]][3] - sliceTime
+        fossilRecord[[i]][[1]][4:5] <- c(0, 1)
+        #
+        # print("New Taxon")
+        # print(fossilRecord[[i]])
+        #
+      }else{
+        newStartEndTime_extinct <- fossilRecord[[i]][[1]][3:4] - sliceTime
+        # test dates
+        if(any(newStartEndTime_extinct < 0)){
+          #
+          # any dates within tolerance are put precisely at 0
+          # maybe also try? (0 - tolerance) ?
+          #
+          withinTolerance <- (
+            (newStartEndTime_extinct < 0) & 
+              (newStartEndTime_extinct > -tolerance)
+          )
+          newStartEndTime_extinct[withinTolerance] <- 0 
+          # 
+          # do we still have problems?
+          #
+          if(any(newStartEndTime_extinct < 0)){
+            stop(paste0(
+              "Extinct taxon dates being shifted incorrectly to\n",
+              "  rescale modern time to zero, creating negative dates.\n",
+              " - Old FAD & LAD are: ", 
+              paste(fossilRecord[[i]][[1]][3:4], collapse=" "),
+              "\n",
+              " - sliceTime is: ", sliceTime, "\n",
+              " - Newly assigned FAD & LAD are: ", 
+              paste(newStartEndTime_extinct, collapse=" ")
+            ))
+          }
+        }
+        fossilRecord[[i]][[1]][3:4] <- newStartEndTime_extinct
+      }
+      newSamplingTimes_all <- fossilRecord[[i]][[2]] - sliceTime
+      #
+      # honestly we should remove all sampling times at or after extant time
+      # newSamplingTimes_all <- newSamplingTimes_all[newSamplingTimes_all > 0]
+      #
+      # test dates
+      if(any(newSamplingTimes_all <= 0)){			
+        #
+        if(any(newSamplingTimes_all <= 0)){
+          stop(paste0(
+            "Sampling times for taxa are being shifted incorrectly to\n",
+            "    rescale modern time to zero, creating negative dates.\n",
+            " - Old sampling dates are: ", 
+            paste(fossilRecord[[i]][[2]], collapse=" "),
+            "\n",
+            " - sliceTime is: ", sliceTime,"\n",
+            " - Newly assigned sampling dates are: ", 
+            paste(newSamplingTimes_all, collapse=" ")					
+          ))
+        }
+      }
+      fossilRecord[[i]][[2]] <- newSamplingTimes_all
+    }
+    modernTime <- 0
+    # if shiftRoot4TimeSlice = FALSE, then simply replace all extant taxa with
+    # LADs at sliceTime and score as extant
+  }else{
+    for(i in 1:length(fossilRecord)){
+      if(isAlive[i]){
+        fossilRecord[[i]][[1]][4:5] <- c(sliceTime,1)
+      }
+    }
+    modernTime <- sliceTime
+  }
+  #
+  # sample at modern based on modern.samp.prob
+  whichExtant <- which(sapply(fossilRecord,function(x) 
+    x[[1]][5] == 1))
+  nLive <- length(whichExtant)
+  liveSampled <- as.logical(
+    rbinom(
+      n = nLive, 
+      size = 1, 
+      prob = modern.samp.prob
+    )
+  )
+  whichSampled <- whichExtant[liveSampled]
+  #
+  # add sampling event at modern
+  for(i in whichSampled){
+    fossilRecord[[i]][[2]] <- c(fossilRecord[[i]][[2]],modernTime)
+  }
+  #
+  # make sure it has the right class
+  attr(fossilRecord, "class") <- c("fossilRecordSimulation", class(fossilRecord))	  
+  # 
+  return(fossilRecord)
+}
 
 #' @rdname simFossilRecordMethods
 #' @export
 fossilRecord2fossilTaxa <- function(fossilRecord){
-	# CHECKS
-	checkResult <- checkFossilRecord(fossilRecord)
-	checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
-	#
-	# a function that transforms a simfossilrecord to a taxa object
-	taxaConvert <- t(sapply(fossilRecord,function(x) x[[1]]))	
-	rownames(taxaConvert) <- names(fossilRecord)
-	return(taxaConvert)
-	}
+  # CHECKS
+  checkResult <- checkFossilRecord(fossilRecord)
+  checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
+  #
+  # a function that transforms a simfossilrecord to a taxa object
+  taxaConvert <- t(sapply(fossilRecord,function(x) x[[1]]))	
+  rownames(taxaConvert) <- names(fossilRecord)
+  return(taxaConvert)
+}
 
 #' @rdname simFossilRecordMethods
 #' @export	
 fossilTaxa2fossilRecord<-function(fossilTaxa){
-	# convert a fossilTaxa object to a fossilRecord object
-	fossilRecord <- apply(fossilTaxa,1,function(x)
-		list(
-			taxa.data=x,
-			sampling.times=numeric(0)
-			)
-		)
-	#
-	names(fossilRecord) <- rownames(fossilTaxa)
-	class(fossilRecord) <- 'fossilRecordSimulation'
-	#
-	# CHECKS
-	checkResult <- checkFossilRecord(fossilRecord)
-	checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
-	#
-	return(fossilRecord)
-	}
-	
-	
+  # convert a fossilTaxa object to a fossilRecord object
+  fossilRecord <- apply(fossilTaxa,1,function(x)
+    list(
+      taxa.data=x,
+      sampling.times=numeric(0)
+    )
+  )
+  #
+  names(fossilRecord) <- rownames(fossilTaxa)
+  # make sure it has the right class
+  attr(fossilRecord, "class") <- c("fossilRecordSimulation", class(fossilRecord))
+  #
+  # CHECKS
+  checkResult <- checkFossilRecord(fossilRecord)
+  checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
+  #
+  return(fossilRecord)
+}
+
+
 #' @rdname simFossilRecordMethods
 #' @export	
-fossilRecord2fossilRanges <- function(fossilRecord, merge.cryptic = TRUE, ranges.only = TRUE){
-	# a function that transforms a simfossilrecord to a set of ranges (like from sampleRanges)
-		# merge.cryptic = TRUE or FALSE
-		# ranges.only or sampling times?
-	# CHECKS
-	# browser()
-	checkResult <- checkFossilRecord(fossilRecord)
-	checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
-	#
-	sampData <- lapply(fossilRecord,function(x) x[[2]]) 
-	#get sampOcc : separate out the sampling events
-	sampOcc <- lapply(fossilRecord,function(x) x[[2]])
-	names(sampOcc) <- names(fossilRecord)
-	#merge cryptic taxa
-	if(merge.cryptic){
-		taxonIDs <- sapply(fossilRecord,function(x) x[[1]][1])
-		cryptIDs <- sapply(fossilRecord,function(x) x[[1]][6])
-		for(i in 1:length(fossilRecord)){
-			if(taxonIDs[i] == cryptIDs[i]){
-				#if its the original taxon, collect all sampling events
-					# for this cryptic complex into one pool
-				# browser()
-				sampOcc[[i]] <- unlist(c(sampOcc[taxonIDs[i] == cryptIDs]))
-				#check that its a vector
-				if(is.list(sampOcc[[i]])){
-					stop(
-						"sampling data for taxa is not coercing correctly to a vector"
-						)}
-			}else{
-				#if its a cryptic taxon that didn't found the complex, erase its data
-				sampOcc[[i]] <- NA
-				}
-			}
-		}
-	sampOcc[sapply(sampOcc, length) == 0] <- NA
-	#
-	#convert sampling events to FADs and LADs
-	if(ranges.only){
-		ranges <- cbind(sapply(sampOcc,max),sapply(sampOcc,min))
-		rownames(ranges) <- names(sampOcc)
-		colnames(ranges) <- c("FAD","LAD")
-		result <- ranges
-	}else{
-		result <- sampOcc
-		}
-	return(result)
-	}
+fossilRecord2fossilRanges <- function(
+                 fossilRecord, 
+                 merge.cryptic = TRUE, 
+                 ranges.only = TRUE
+                 ){
+  ###################################
+  # a function that transforms a simfossilrecord 
+       # to a set of ranges (like from sampleRanges)
+  # merge.cryptic = TRUE or FALSE
+  # ranges.only or sampling times?
+  # CHECKS
+  # browser()
+  checkResult <- checkFossilRecord(fossilRecord)
+  checkNegDates <- checkRecordForNoDatePastZero(fossilRecord = fossilRecord)
+  #
+  sampData <- lapply(fossilRecord,function(x) x[[2]]) 
+  # get sampOcc : separate out the sampling events
+  sampOcc <- lapply(fossilRecord,function(x) x[[2]])
+  names(sampOcc) <- names(fossilRecord)
+  # merge cryptic taxa
+  if(merge.cryptic){
+    taxonIDs <- sapply(fossilRecord,function(x) x[[1]][1])
+    cryptIDs <- sapply(fossilRecord,function(x) x[[1]][6])
+    for(i in 1:length(fossilRecord)){
+      if(taxonIDs[i] == cryptIDs[i]){
+        # if its the original taxon, collect all sampling events
+           # for this cryptic complex into one pool
+        # browser()
+        sampOcc[[i]] <- unlist(c(sampOcc[taxonIDs[i] == cryptIDs]))
+        #check that its a vector
+        if(is.list(sampOcc[[i]])){
+          stop(
+            "sampling data for taxa is not coercing correctly to a vector"
+          )}
+      }else{
+        # if its a cryptic taxon that didn't found the complex, erase its data
+        sampOcc[[i]] <- NA
+      }
+    }
+  }
+  sampOcc[sapply(sampOcc, length) == 0] <- NA
+  #
+  # convert sampling events to FADs and LADs
+  if(ranges.only){
+    ranges <- cbind(sapply(sampOcc, max),sapply(sampOcc, min))
+    rownames(ranges) <- names(sampOcc)
+    colnames(ranges) <- c("FAD", "LAD")
+    result <- ranges
+  }else{
+    result <- sampOcc
+  }
+  return(result)
+}
 
-	
+
 # don't export
 checkFossilRecord <- function(fossilRecord){
-	if(!inherits(fossilRecord,"fossilRecordSimulation")){
-		stop(
-			"fossilRecord object is not of class 'fossilRecordSimulation'"
-			)
-		}
-	#
-	if(length(fossilRecord)<1){
-		stop(
-			"fossilRecord object is empty?!")
-		}
-	#
-	if(any(sapply(fossilRecord,length) != 2)){
-		stop(
-			"fossilRecord object has taxon entries with more or less than two elements"
-			)
-		}
-	#
-	if(any(sapply(fossilRecord,function(x) length(x[[1]])) != 6)){
-		stop(
-			"fossilRecord object has taxon entries with more or less than six elements in first element"
-			)
-		}		
-	#
-	return(TRUE)
-	}
-	
-	
+  if(!inherits(fossilRecord, what = "fossilRecordSimulation")){
+    stop(
+      "fossilRecord object is not of class 'fossilRecordSimulation'"
+    )
+  }
+  #
+  if(length(fossilRecord)<1){
+    stop(
+      "fossilRecord object is empty?!")
+  }
+  #
+  if(any(sapply(fossilRecord,length) != 2)){
+    stop(
+      "fossilRecord object has taxon entries with more or less than two elements"
+    )
+  }
+  #
+  if(any(sapply(fossilRecord,function(x) length(x[[1]])) != 6)){
+    stop(
+      "fossilRecord object has taxon entries with more or less than six elements in first element"
+    )
+  }		
+  #
+  return(TRUE)
+}
+
+

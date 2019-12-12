@@ -10,11 +10,11 @@
 \format{This dataset is composed of three objects:
 
 \describe{
- \item{\code{retioTree}}{An \code{ape} 'phylo' object containing the consensus cladogram.} 
+ \item{\code{retioTree}}{The consensus cladogram, given as an object of class \code{phylo}.} 
  \item{\code{retioRanges}}{A list containing two matrices. The first matrix describes the first
 and last interval times for 20 Silurian graptolite zones and the second matrix describes when the
 various genera on the cladogram first and last appear in those graptolite zones. (In other words,
-\code{retioRanges} has the 'timeList' format called by some paleotree functions).}
+\code{retioRanges} has the \code{timeList} format called by some \code{paleotree} functions).}
 \item{\code{retioChar}}{A matrix containing binary presence-absence character states for these 22
 Retiolitinae genera for three characters which they vary in: the presence of extrathecal threads
 (note only one taxon lacks this character state), the presence of determinant growth and the
@@ -62,11 +62,13 @@ taxicDivDisc(retioRanges)
 #Can plot the unscaled cladogram
 plot(retioTree)
 #Can plot the determinant growth character on the cladogram
-tiplabels(pch = 16,col = (retioChar[,2]+1),adj = 0.25)
+tiplabels(pch = 16, col = (retioChar[,2]+1),adj = 0.25)
 
 #Use basic time-scaling (terminal branches only go to FADs)
-ttree <- bin_timePaleoPhy(tree = retioTree,timeList = retioRanges,type = "basic",
-	ntrees = 1,plot = TRUE)
+ttree <- bin_timePaleoPhy(tree = retioTree,
+    timeList = retioRanges,
+    type = "basic",
+	   ntrees = 1,plot = TRUE)
 
 #Note that this function creates stochastic time-scaled trees...
 	#A sample of 1 is not representative!

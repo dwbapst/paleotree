@@ -5,27 +5,46 @@
 \alias{ancPropStateMat}
 \title{Estimating the Minimum Number of Character Transitions Using Maximum Parsimony}
 \usage{
-minCharChange(trait, tree, randomMax = 10000, maxParsimony = TRUE,
-  orderedChar = FALSE, type = "MPR", cost = NULL,
-  printMinResult = TRUE, ambiguity = c(NA, "?"),
-  dropAmbiguity = FALSE, polySymbol = "&", contrast = NULL)
+minCharChange(
+  trait,
+  tree,
+  randomMax = 10000,
+  maxParsimony = TRUE,
+  orderedChar = FALSE,
+  type = "MPR",
+  cost = NULL,
+  printMinResult = TRUE,
+  ambiguity = c(NA, "?"),
+  dropAmbiguity = FALSE,
+  polySymbol = "&",
+  contrast = NULL
+)
 
-ancPropStateMat(trait, tree, orderedChar = FALSE, type = "MPR",
-  cost = NULL, ambiguity = c(NA, "?"), dropAmbiguity = FALSE,
-  polySymbol = "&", contrast = NULL, returnContrast = FALSE)
+ancPropStateMat(
+  trait,
+  tree,
+  orderedChar = FALSE,
+  type = "MPR",
+  cost = NULL,
+  ambiguity = c(NA, "?"),
+  dropAmbiguity = FALSE,
+  polySymbol = "&",
+  contrast = NULL,
+  returnContrast = FALSE
+)
 }
 \arguments{
 \item{trait}{A vector of trait values for a discrete character, preferably named with taxon names
 identical to the tip labels on the input tree.}
 
-\item{tree}{A cladogram of type 'phylo'. Any branch lengths are ignored.}
+\item{tree}{A cladogram of type \code{phylo}. Any branch lengths are ignored.}
 
 \item{randomMax}{The maximum number of cladograms examined when searching a large number of solutions
 consistent with the reconstructed ancestral states from \code{ancestral.pars} with the minimum number
-of character state transitions. If the number of potential solutions is less than randomMax, then
+of character state transitions. If the number of potential solutions is less than \code{randomMax}, then
 solutions are exhaustively searched.}
 
-\item{maxParsimony}{If maxParsimony is \code{TRUE} (the default) then only solutions
+\item{maxParsimony}{If \code{TRUE} (the default), then only solutions
 with the smallest number of total transitions examined will be returned.
 Note that since solutions are stochastically 'guessed' at, and the number
 of possible solutions may not be exhaustively searched, there may have
@@ -294,11 +313,11 @@ layout(1:2)
 quickAncPlotter(tree,
         ancMPR, cex = 0.3)
 text(x = 8, y = 15,
-        "unordered char\\nMPR", cex = 1.5)
+        "unordered char\nMPR", cex = 1.5)
 quickAncPlotter(tree,
         ancMPRord,cex = 0.3)
 text(x = 9, y = 15,
-        "ordered char\\nMPR", cex = 1.5)
+        "ordered char\nMPR", cex = 1.5)
 layout(1)
 
 
@@ -397,17 +416,17 @@ layout(1:2)
 quickAncPlotter(tree,
         ancPoly, cex = 0.5)
 text(x = 3.5, y = 1.2,
-        "manually-constructed\\ncontrast", cex = 1.3)
+        "manually-constructed\ncontrast", cex = 1.3)
 quickAncPlotter(tree,
         ancPolyAuto, cex = 0.5)
 text(x = 3.5, y = 1.2,
-        "auto-constructed\\ncontrast", cex = 1.3)
+        "auto-constructed\ncontrast", cex = 1.3)
 layout(1)
 
 # look pretty similar!
 
 # i.e. the default polySymbol = "&", but could be a different symbol
-     # such as "," or "\\"... it can only be *one* symbol, though
+     # such as "," or "\"... it can only be *one* symbol, though
 
 # all of this machinery should function just fine in minCharChange
 		# again, by default polySymbol = "&" (included anyway here for kicks)

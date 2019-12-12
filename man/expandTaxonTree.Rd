@@ -4,25 +4,31 @@
 \alias{expandTaxonTree}
 \title{Extrapolating Lower-Level Taxon Phylogenies from Higher-Level Taxon Trees}
 \usage{
-expandTaxonTree(taxonTree, taxaData, collapse = NULL,
-  keepBrLen = FALSE, plot = FALSE)
+expandTaxonTree(
+  taxonTree,
+  taxaData,
+  collapse = NULL,
+  keepBrLen = FALSE,
+  plot = FALSE
+)
 }
 \arguments{
-\item{taxonTree}{A phylo object where tips represent higher taxa}
+\item{taxonTree}{A phylogeny as an object of class \code{phylo}, where tips represent 
+some 'higher taxa' that is to be expanded at a lower taxonomic level.}
 
 \item{taxaData}{Character vector of higher taxa, with elements names equal
 to the lower taxa. See below.}
 
-\item{collapse}{Character vector of non-monophyletic higher taxa to be
-collapsed}
+\item{collapse}{Character vector containing names of non-monophyletic higher taxa to be
+collapsed.}
 
 \item{keepBrLen}{Logical, decides if branch lengths should be kept or
-discarded. FALSE by default. See details below.}
+discarded. \code{FALSE} by default. See details below.}
 
-\item{plot}{If true, plots a comparison between input and output trees}
+\item{plot}{If \code{TRUE}, plots a comparison between input and output trees}
 }
 \value{
-Outputs the modified tree as an object of class phylo, with the
+Outputs the modified tree as an object of class \code{phylo}, with the
 higher-level taxa expanded into polytomies and the lower-level taxa as the
 tip labels.
 }
@@ -39,14 +45,14 @@ The output tree will probably be a rough unresolved view of the
 relationships among the taxa, due to the treatment of higher-level taxa as
 polytomies. This is similar to the methods used in Webb and Donoghue (2005)
 and Friedman (2009). Any analyses should be done by resolving this tree with
-\code{\link{multi2di}} in the ape package or via the various time-scaling
+\code{\link{multi2di}} in the \code{ape} package or via the various time-scaling
 functions found in this package (paleotree).
 
-The taxaData vector should have one element per lower-level taxon that is to
+The \code{taxaData} vector should have one element per lower-level taxon that is to
 be added to the tree. The name of each element in the vector should be the
 names of the lower-level taxa, which will be used as new tip labels of the
-output lower-taxon tree. There should be no empty elements! expandTaxonTree
-won't know what to do with taxa that don't go anywhere.
+output lower-taxon tree. There should be no empty elements! 
+Otherwise, \code{expandTaxonTree} won't know what to do with taxa that aren't being expanded.
 
 By default, all higher-level taxa are treated as monophyletic clades if not
 otherwise specified. The collapse vector can (and probably should) be used
@@ -55,24 +61,28 @@ the input taxon-tree, so that such a group would be treated as a paraphyletic
 group in the output tree.
 
 Also by default, the output tree will lack branch lengths and thus will not be
-time-scaled. If keepBrLen is true, then the tree's edge lengths are kept and
+dated, even if the input phylogeny is dated. 
+If \code{keepBrLen = TRUE}, then the tree's edge lengths are kept and
 new taxa are added as zero length branches attaching to a node that
 represents the previous higher-taxon. This tree is probably not useful for
-most applications, and may even strongly bias some analyses. USE WITH
-CAUTION! The 'collapse' vector will cause such edges to be replaced by
+most applications, and may even strongly bias some analyses. \emph{USE WITH
+CAUTION!} The \code{collapse} argument, given as a vector, 
+will cause such edges to be replaced by
 zero-length branches rather than fully collapsing them, which could have odd
-effects. If 'collapse' is not null and keepBrLen is true, a warning is
-issued that the output probably won't make much sense at all.
+effects. If \code{collapse} is not \code{NULL} and \code{keepBrLen = TRUE}, 
+a warning is issued that the output probably won't make much sense at all.
 }
 \examples{
 
 set.seed(444)
-#lets make our hypothetical simulated tree of higher taxa
+# lets make our hypothetical simulated tree of higher taxa
 taxtr <- rtree(10)
-taxd <- sample(taxtr$tip.label,30,replace = TRUE)	#taxa to place within higher taxa
-names(taxd) <- paste(taxd,"_x",1:30,sep = "")
+# taxa to place within higher taxa
+taxd <- sample(taxtr$tip.label, 30, replace = TRUE)	
+names(taxd) <- paste(taxd,"_x", 1:30, sep = "")
 coll <- sample(taxtr$tip.label,3)		#what to collapse?
-expandTaxonTree(taxonTree = taxtr,taxaData = taxd,collapse = coll,plot = TRUE)
+expandTaxonTree(taxonTree = taxtr, taxaData = taxd, 
+                collapse = coll, plot = TRUE)
 
 }
 \references{

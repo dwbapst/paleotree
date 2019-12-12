@@ -3,7 +3,7 @@
 #' This function takes a two-column matrix of taxon names,
 #' indicating a set of binary parent-taxon:child-taxon 
 #' paired relationships with a common root, and returns
-#' a 'taxonomy-tree' phylogeny object of class 'phylo'.
+#' a 'taxonomy-tree' phylogeny object of class \code{phylo}.
 
 #' @details
 #' All taxa listed must be traceable via their parent-child relationships to a single,
@@ -33,12 +33,12 @@
 #' @inheritParams makePBDBtaxonTree
 
 #' @return
-#' A phylogeny of class 'phylo', with tip taxa as
+#' A phylogeny of class \code{phylo}, with tip taxa as
 #' controlled by argument \code{tipSet}.
 #' The output tree is returned with no edge lengths.
 #' 
 #' The names of higher taxa than the tips should be appended
-#' as the element $node.label for the internal nodes.
+#' as the element \code{$node.label} for the internal nodes.
 
 #' @seealso \code{\link{makePBDBtaxonTree}}, \code{\link{taxonTable2taxonTree}}
 
@@ -161,8 +161,9 @@ parentChild2taxonTree <- function(
 		stop("parentChild relationships are inconsistent")
 		}
 	#
-	#remove singular root edges
-	#trace tips to ultimate ancestor (should be same for all, as this has already been checked)
+	# remove singular root edges
+	   # trace tips to ultimate ancestor 
+     # (should be same for all, as this has already been checked)
 	continue <- TRUE
 	while(continue){
 		unqIDs <- unique(c(parentChild[,1],parentChild[,2]))
@@ -176,7 +177,7 @@ parentChild2taxonTree <- function(
 		descEdge <- which(parentChild[,1] == ultAnc1)
 		if(length(descEdge) == 1){
 			message(paste("Removing singular node leading to root:",ultAnc1))
-			#remove from parentChild
+			# remove from parentChild
 			parentChild <- parentChild[-descEdge,,drop = FALSE]
 			if(nrow(parentChild)<1){
 				stop("No branching nodes found?!")
@@ -186,11 +187,11 @@ parentChild2taxonTree <- function(
 			}
 		}
 	#
-	#first, get nodeNames, with root name first
+	# first, get nodeNames, with root name first
 	nodeNames <- unique(parentChild[,1])
 	whichRoot <- which(sapply(nodeNames,function(x) 
 		!any(sapply(parentChild[,2],identical,unname(x)))))
-	#check that there isn't more than one root
+	# check that there isn't more than one root
 	if(length(whichRoot)>1){
 		stop(paste(
 			"Not all taxable are traceable to a single common root \n",
@@ -198,7 +199,7 @@ parentChild2taxonTree <- function(
 			paste0(nodeNames[whichRoot],collapse = ", ")
 			))
 		}
-	#now resort nodeNames
+	# now resort nodeNames
 	nodeNames <- c(nodeNames[whichRoot],nodeNames[-whichRoot])
 	if(tipSet != "nonParents"){
 		if(tipSet == "all"){
@@ -210,14 +211,14 @@ parentChild2taxonTree <- function(
 				)
 			}
 		}
-	#identify tip taxa, this will be all taxa who are not-parents
+	# identify tip taxa, this will be all taxa who are not-parents
 	notParents <- sapply(parentChild[ , 2], function(x) 
 		!any(sapply(parentChild[,1], identical,unname(x))))
 	tipNames <- parentChild[notParents, 2]
-	#now convert parentChild matrix to edge matrix
+	# now convert parentChild matrix to edge matrix
 	edgeMat <- matrix(,nrow(parentChild), ncol(parentChild))
 	taxonNames <- c(tipNames,nodeNames)
-	#test that none have been lost
+	# test that none have been lost
 	nUniquePC <- length(unique(c(parentChild[,1], parentChild[,2])))
 	if(length(taxonNames) != nUniquePC){
 		stop(
@@ -229,13 +230,13 @@ parentChild2taxonTree <- function(
 		which(sapply(taxonNames,identical,x)))
 	edgeMat[,2] <- sapply(parentChild[,2],function(x) 
 		which(sapply(taxonNames,identical,x)))
-	#reorder edge
+	# reorder edge
 	edge <- edgeMat[order(edgeMat[,1],edgeMat[,2]),]
-	#check edge
+	# check edge
 	if(!testParentChild(parentChild = edge)){
 		stop("created edge relationships are inconsistent")
 		}	
-	#make the tree
+	# make the tree
 	tree <- list(
 		edge = edge,
 		tip.label = tipNames,
@@ -244,15 +245,18 @@ parentChild2taxonTree <- function(
 		Nnode = length(nodeNames),
 		node.label = nodeNames
 		)
-	class(tree) <- "phylo"
-	if(cleanTree){ #make it a good tree
-		#reordering seems to cause errors?? 06-11-15
+	# give the tree class phylo
+	attr(tree, "class") <- c("phylo", class(tree))
+	#
+	# make it a good tree
+	if(cleanTree){ 
+		# reordering seems to cause errors?? 06-11-15
 		tree <- cleanNewPhylo(tree)
 		}
 	if(Ntip(tree) != length(tipNames)){
 		stop("Taxa number changed while cleaning tree")
 		}
-	#plot(tree);nodelabels(tree$node.label)
+	# plot(tree); nodelabels(tree$node.label)
 	return(tree)
 	}
 

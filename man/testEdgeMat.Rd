@@ -11,10 +11,11 @@ testEdgeMat(tree)
 cleanNewPhylo(tree)
 }
 \arguments{
-\item{tree}{A phylogeny object of type \code{phylo}}
+\item{tree}{A phylogeny object of type \code{phylo}.}
 }
 \value{
-For \code{testEdgeMat}, if all the checks in the function pass correctly, the logical \code{TRUE} is returned.
+For \code{testEdgeMat}, if all the checks in the function pass correctly, 
+the logical \code{TRUE} is returned.
 
 For \code{cleanNewPhylo}, an object of class \code{phylo} is returned.
 }
@@ -31,7 +32,7 @@ to ensure functionality with ape functions
 and \code{ape}-derived functions.
 }
 \details{
-Useful when doing complex manipulations and reconstitutions of \code{phylo} objects (or their
+Useful when doing complex manipulations of \code{phylo} objects (or reconstituting them, or their
 \emph{de novo} construction), and thus is used by a number of \code{paleotree} functions.
 }
 \examples{
@@ -61,8 +62,7 @@ plot(tree1)
 layout(1)
 }
 \author{
-David W. Bapst, with a large number of tests incorporated from Emmanuel Paradis's \code{checkValidPhylo} function,
-provided at his github repository here, which was released GPL v>2:
-
-https://github.com/emmanuelparadis/checkValidPhylo
+David W. Bapst, with a large number of tests incorporated from 
+Emmanuel Paradis's \code{checkValidPhylo} function in package \code{ape},
+(released under the GPL v>2).
 }

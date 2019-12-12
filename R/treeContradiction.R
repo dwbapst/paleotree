@@ -16,26 +16,35 @@
 #' were found to be more closely related to some other taxa, not so segregated by the
 #' considered split. 
 #' 
-#' This metric was designed mainly for use with trees that differ in their resolution, particularly when it is necessary
-#' to compare between summary trees (such as consensus trees of half-compatibility summaries) from separate phylogenetic analyses.
-#' Note that comparing summary trees can be problematic in some instances, and users should carefully consider their 
-#' question of interest, and whether it may be more ideal to consider whole samples of trees (e.g., the posterior sample, or the sample of
-#' most parsimonious trees).
+#' This metric was designed mainly for use with trees that differ in their resolution, 
+#' particularly when it is necessary to compare between summary trees 
+#' (such as consensus trees of half-compatibility summaries) from separate phylogenetic analyses.
+#' Note that comparing summary trees can be problematic in some instances, 
+#' and users should carefully consider their question of interest, 
+#' and whether it may be more ideal to consider whole samples of trees 
+#' (e.g., the posterior sample, or the sample of most parsimonious trees).
 #' 
-#' The contradiction difference is \emph{not} a metric distance: most notably, the triangle inequality is not held and thus
-#' the 'space' it describes between topologies is not a metric space. This can be shown most simply when considering any two
-#' different but fully-resolve topologies and a third topology that is a star tree. The star tree will have a zero pair-wise
-#' CD with either fully-resolved phylogeny, but there will be a positive CD between the fully-resolved trees. An example of
-#' this is shown in the examples below.
+#' The contradiction difference is \emph{not} a metric distance: 
+#' most notably, the triangle inequality is not held and thus
+#' the 'space' it describes between topologies is not a metric space. 
+#' This can be shown most simply when considering any two
+#' different but fully-resolve topologies and a third topology that is a star tree. 
+#' The star tree will have a zero pair-wise CD with either fully-resolved phylogeny, 
+#' but there will be a positive CD between the fully-resolved trees. 
+#' An example of this is shown in the examples below.
 #' 
-#' The CD also suggest very large differences when small numbers of taxa shift greatly across the tree, a property shared by
+#' The CD also suggest very large differences when small numbers of taxa shift
+#'  greatly across the tree, a property shared by
 #' many other typical tree comparisons, such as RF distances. See examples below.
 
-#' @param tree1,tree2 Two phylogenies, with the same number of tips and an identical set of tip labels, both of class \code{phylo}. 
+#' @param tree1,tree2 Two phylogenies, with the same number of tips and 
+#' an identical set of tip labels, both of class \code{phylo}. 
 
-#' @param rescale A logical.  If \code{FALSE}, the raw number of contradicted splits across both trees is reported.
-#' If \code{TRUE} (the default), the contradiction difference value is returned rescaled to the total number
-#' of splits across both input trees that could have contradicted.
+#' @param rescale A logical.  If \code{FALSE}, the raw number of contradicted 
+#' splits across both trees is reported.
+#' If \code{TRUE} (the default), the contradiction difference value is 
+#' returned rescaled to the total number of splits across 
+#' both input trees that could have contradicted.
 
 #' @return
 #' The contradiction difference between two trees is reported as a single numeric variable.
@@ -45,8 +54,8 @@
 #' 
 #' Graeme Lloyd's \code{metatree} package, currently not on CRAN,
 #' also contains the function \code{MultiTreeDistance}
-#' for calculating both the contradiction difference measure and the Robinson-Foulds distance. This function is
-#' optimized for very large samples of trees  or very large
+#' for calculating both the contradiction difference measure and the Robinson-Foulds distance. 
+#' This function is optimized for very large samples of trees or very large
 #' trees, and thus may be faster than \code{treeContradiction}.
 #' Also see the function \code{MultiTreeContradiction} in the same package.
 
@@ -61,7 +70,7 @@
 #' This contradiction difference measure was introduced in:
 #' 
 #' Bapst, D. W., H. A. Schreiber, and S. J. Carlson. 2018. Combined Analysis of Extant Rhynchonellida
-#' (Brachiopoda) using Morphological and Molecular Data. \emph{Systematic Biology} 67(1):32-48. doi: 10.1093/sysbio/syx049
+#' (Brachiopoda) using Morphological and Molecular Data. \emph{Systematic Biology} 67(1):32-48. 
 
 
 #' @examples

@@ -4,8 +4,12 @@
 \alias{fixRootTime}
 \title{Modify, Drop or Bind Terminal Branches of Various Types (Mainly for Paleontological Phylogenies)}
 \usage{
-fixRootTime(treeOrig, treeNew, testConsistentDepth = TRUE,
-  fixingMethod = "matchCladeTransferNodeAge")
+fixRootTime(
+  treeOrig,
+  treeNew,
+  testConsistentDepth = TRUE,
+  fixingMethod = "matchCladeTransferNodeAge"
+)
 }
 \arguments{
 \item{treeOrig}{A \code{phylo} object of a time-scaled
@@ -60,7 +64,7 @@ the correct root age.
 This function is mainly used as a
 utility function called by other tree-modifying functions discussed
 in the manual page for \code{\link{modifyTerminalBranches}}.
-This is typically perfomed via the function \code{\link{fixRootTime}}.
+This is typically performed via the function \code{\link{fixRootTime}}.
 }
 \examples{
 

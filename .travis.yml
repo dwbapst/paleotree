@@ -7,7 +7,7 @@ addons:
       - libgslcblas0
       - gsl-bin
       - libgsl-dev
-      - libmagick++-dev
+      - libmagick++-dev  
       
 # replaced libgsl2 with libgslcblas0
 

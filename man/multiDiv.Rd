@@ -5,33 +5,54 @@
 \alias{plotMultiDiv}
 \title{Calculating Diversity Curves Across Multiple Datasets}
 \usage{
-multiDiv(data, int.length = 1, plot = TRUE, split.int = TRUE,
-  drop.ZLB = TRUE, drop.cryptic = FALSE, extant.adjust = 0.01,
-  plotLogRich = FALSE, yAxisLims = NULL, timelims = NULL,
-  int.times = NULL, plotMultCurves = FALSE, multRainbow = TRUE,
-  divPalette = NULL, divLineType = 1, main = NULL)
+multiDiv(
+  data,
+  int.length = 1,
+  plot = TRUE,
+  split.int = TRUE,
+  drop.ZLB = TRUE,
+  drop.cryptic = FALSE,
+  extant.adjust = 0.01,
+  plotLogRich = FALSE,
+  yAxisLims = NULL,
+  timelims = NULL,
+  int.times = NULL,
+  plotMultCurves = FALSE,
+  multRainbow = TRUE,
+  divPalette = NULL,
+  divLineType = 1,
+  main = NULL
+)
 
-plotMultiDiv(results, plotLogRich = FALSE, timelims = NULL,
-  yAxisLims = NULL, plotMultCurves = FALSE, multRainbow = TRUE,
-  divPalette = NULL, divLineType = 1, main = NULL)
+plotMultiDiv(
+  results,
+  plotLogRich = FALSE,
+  timelims = NULL,
+  yAxisLims = NULL,
+  plotMultCurves = FALSE,
+  multRainbow = TRUE,
+  divPalette = NULL,
+  divLineType = 1,
+  main = NULL
+)
 }
 \arguments{
 \item{data}{A list where each element is a dataset, formatted to be input in
 one of the diversity curve functions listed in \code{\link{DiversityCurves}}.}
 
 \item{int.length}{The length of intervals used to make the diversity curve.
-Ignored if int.times is given.}
+Ignored if \code{int.times} is given.}
 
 \item{plot}{If \code{TRUE}, the median diversity curve is plotted.}
 
 \item{split.int}{For discrete time data, should calculated/input intervals
-be split at discrete time interval boundaries? If FALSE, can create apparent
-artifacts in calculating the diversity curve. See below.}
+be split at discrete time interval boundaries? If \code{FALSE}, can create apparent
+artifacts in calculating the diversity curve. See details.}
 
-\item{drop.ZLB}{If true, zero-length terminal branches are dropped from the
+\item{drop.ZLB}{If \code{TRUE}, zero-length terminal branches are dropped from the
 input tree for phylogenetic datasets, before calculating standing diversity.}
 
-\item{drop.cryptic}{If TRUE, cryptic taxa are merged to form one taxon for
+\item{drop.cryptic}{If \code{TRUE}, cryptic taxa are merged to form one taxon for
 estimating taxon curves. Only works for objects from \code{simFossilRecord}
 via \code{fossilRecord2fossilTaxa}.}
 
@@ -39,35 +60,35 @@ via \code{fossilRecord2fossilTaxa}.}
 (0,0) bins for extant taxa, so that the that 'time interval' does not appear 
 to have an infinitely small width.}
 
-\item{plotLogRich}{If TRUE, taxic diversity is plotted on log scale.}
+\item{plotLogRich}{If \code{TRUE}, taxic diversity is plotted on log scale.}
 
-\item{yAxisLims}{Limits for the y (i.e. richness) axis on the plotted diversity curves. Only
-affects plotting. Given as either NULL (the default) or as a vector of
-length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
-will be plotted \emph{exactly} to these values. The minimum value must be more than 1 if
-\code{plotLogRich = TRUE}.}
+\item{yAxisLims}{Limits for the y (i.e. richness) axis on the plotted diversity curves. 
+Only affects plotting. Given as either \code{NULL} (the default) or as a vector of
+length two as for \code{xlim} in the basic R function \code{plot}. 
+Time axes will be plotted \emph{exactly} to these values. 
+The minimum value must be more than 1 if \code{plotLogRich = TRUE}.}
 
 \item{timelims}{Limits for the x (time) axis for diversity curve plots. Only
-affects plotting. Given as either NULL (the default) or as a vector of
+affects plotting. Given as either \code{NULL} (the default) or as a vector of
 length two as for \code{xlim} in the basic R function \code{plot}. Time axes 
 will be plotted \emph{exactly} to these values.}
 
 \item{int.times}{An optional two-column matrix of the interval start and end
-times for calculating the diversity curve. If NULL, calculated internally.
-If given, the argument split.int and int.length are ignored.}
+times for calculating the diversity curve. If \code{NULL}, calculated internally.
+If given, the argument \code{split.int} and \code{int.length} are ignored.}
 
 \item{plotMultCurves}{If \code{TRUE}, each individual diversity curve is plotted
-rather than the median diversity curve and 95 percent quantiles. FALSE by
-default.}
+rather than the median diversity curve and 95 percent quantiles. 
+\code{plotMultCurves = FALSE} by default.}
 
-\item{multRainbow}{If \code{TRUE} and plotMultCurves are both \code{TRUE}, each line is
-plotted as a different, randomized color using the function 'rainbow'. If
-FALSE, each line is plotted as a black line. This argument is ignored if
-divPalette is supplied.}
+\item{multRainbow}{If \code{TRUE} and \code{plotMultCurves = TRUE}, each line is
+plotted as a different, randomized color using the function \code{rainbow}. If
+\code{FALSE}, each line is plotted as a black line. This argument is ignored if
+\code{divPalette} is supplied.}
 
 \item{divPalette}{Can be used so users can pass a vector of chosen color
-identifiers for each diversity curve in 'data' which will take precedence
-over multRainbow. Must be the same length as the number of diversity curves
+identifiers for each diversity curve in \code{data} which will take precedence
+over \code{multRainbow}. Must be the same length as the number of diversity curves
 supplied.}
 
 \item{divLineType}{Used to determine line type (\code{lty}) of the
@@ -77,7 +98,7 @@ exact length as number of diversity curves.}
 
 \item{main}{The main label for the figure.}
 
-\item{results}{The output of a previous run of multiDiv for replotting.}
+\item{results}{The output of a previous run of \code{multiDiv} for replotting.}
 }
 \value{
 A list composed of three elements will be invisibly returned:
@@ -96,7 +117,7 @@ and plotted for each interval.
 }
 \details{
 This function is essentially a wrapper for the individual diversity curve
-functions included in paleotree. multiDiv will intuitively decide whether
+functions included in paleotree. \code{multiDiv} will intuitively decide whether
 input datasets are continuous-time taxic ranges, discrete-time (binned
 interval) taxic ranges or phylogenetic trees, as long as they are formatted
 as required by the respective diversity curve functions. A list that
@@ -106,12 +127,12 @@ via simulation with \code{simFossilRecord} is allowable,
 and treated as input for \code{taxicDivCont}.
 Data of an unknown type gives back an error.
 
-The argument split.int splits intervals, if and only if discrete interval
-time data is included among the datasets. See the help file for taxicDivDisc
+The argument \code{split.int} splits intervals, if and \emph{only} if discrete interval
+time data is included among the datasets. See the help file for \code{taxicDivDisc}
 to see an explanation of why \code{split.int = TRUE} by default is probably a good
 thing.
 
-As with many functions in the paleotree library, absolute time is always
+As with many functions in the \code{paleotree} library, absolute time is always
 decreasing, i.e. the present day is zero.
 
 The 'averaged' curve is actually the median rather than the mean as
@@ -125,7 +146,6 @@ the standard error.
 \examples{
 # let's look at this function
     # with some birth-death simulations
-
 
 set.seed(444)
 
@@ -152,8 +172,8 @@ multiDiv(taxa)
 multiDiv(taxa, plotLogRich = TRUE)
 
 #######################################
-#pure-birth example with simFossilRecord
-#note that conditioning is tricky
+# pure-birth example with simFossilRecord
+# note that conditioning is tricky
 
 set.seed(444)
 recordsPB <- simFossilRecord(
@@ -242,7 +262,7 @@ layout(1)
 The diversity curve functions used include: \code{\link{phyloDiv}},
 \code{\link{taxicDivCont}} and \code{\link{taxicDivDisc}}.
 
-Also see the function LTT.average.root in the package TreeSim, which
+Also see the function \code{LTT.average.root} in the package \code{TreeSim}, which
 calculates an average LTT curve for multiple phylogenies, the functions
-code{mltt.plot} in ape and code{ltt} in phytools.
+\code{mltt.plot} in ape and \code{ltt} in \code{phytools}.
 }

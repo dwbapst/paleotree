@@ -23,8 +23,8 @@ by default.}
 }
 \value{
 Returns a vector of trait values for each taxon, with value names
-being the taxa IDs (column 1 of the input) with a 't' pasted (as with rtree
-in the ape library).
+being the taxa IDs (column 1 of the input) with a 't' pasted (as with \code{rtree}
+in the \code{ape} library).
 }
 \description{
 This function simulates trait evolution at each speciation/branching event
@@ -56,7 +56,7 @@ Cryptic taxa generated with \code{prop.cryptic} in \code{simFossilRecord} will n
 all in trait values. These species will all be identical.
 
 See this link for additional details:
-http://nemagraptus.blogspot.com/2012/03/simulating-budding-cladogenetictrait.html
+\url{http://nemagraptus.blogspot.com/2012/03/simulating-budding-cladogenetictrait.html}
 }
 \examples{
 

@@ -14,24 +14,29 @@
 #' @aliases cleanNewPhylo cleanTree
 
 #' @details
-#' Useful when doing complex manipulations and reconstitutions of \code{phylo} objects (or their
+#' Useful when doing complex manipulations of \code{phylo} objects (or reconstituting them, or their
 #' \emph{de novo} construction), and thus is used by a number of \code{paleotree} functions.
 
-#' @param tree A phylogeny object of type \code{phylo}
+#' @param tree A phylogeny object of type \code{phylo}.
 
-# @param reorderTree A logical indicating whether a step of \code{reorder.phylo()} will be applied.
+# @param reorderTree A logical indicating whether a step of 
+# \code{reorder.phylo} from \code{ape} will be applied.
 # Reordering may cause more problems than it is worth.
 
 #' @return
-#' For \code{testEdgeMat}, if all the checks in the function pass correctly, the logical \code{TRUE} is returned.
+#' For \code{testEdgeMat}, if all the checks in the function pass correctly, 
+#' the logical \code{TRUE} is returned.
 #' 
 #' For \code{cleanNewPhylo}, an object of class \code{phylo} is returned.
 
 #' @author
-#' David W. Bapst, with a large number of tests incorporated from Emmanuel Paradis's \code{checkValidPhylo} function,
-#' provided at his github repository here, which was released GPL v>2:
-#' 
-#' https://github.com/emmanuelparadis/checkValidPhylo
+#' David W. Bapst, with a large number of tests incorporated from 
+#' Emmanuel Paradis's \code{checkValidPhylo} function in package \code{ape},
+#' (released under the GPL v>2).
+
+# formerly could be found at:
+# \url{https://github.com/emmanuelparadis/checkValidPhylo}
+# which no longer seems to exist...
 
 #' @examples
 #' 
@@ -86,7 +91,8 @@ testEdgeMat <- function(tree){
 	if(length(tree$tip.label)<1){
 		stop("$tip.label must be of length greater than 0")
 		}
-	#check than Nnode exists, is a vector of length 1, of type number, stored as an integer
+	# check than Nnode exists, 
+    # and is a vector of length 1, of type number, stored as an integer
 	if(!is.vector(tree$Nnode)){
 		stop("$Nnode must be a vector")
 		}

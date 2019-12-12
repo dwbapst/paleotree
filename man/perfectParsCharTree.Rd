@@ -7,7 +7,7 @@
 perfectParsCharTree(tree, nchar)
 }
 \arguments{
-\item{tree}{A phylogeny of class 'phylo'}
+\item{tree}{A phylogeny, as an object of class \code{phylo}.}
 
 \item{nchar}{Number of parsimonious binary characters to simulate on the phylogeny.}
 }

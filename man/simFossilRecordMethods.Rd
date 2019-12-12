@@ -6,18 +6,25 @@
 \alias{fossilRecord2fossilTaxa}
 \alias{fossilRecord2fossilRanges}
 \alias{fossilTaxa2fossilRecord}
-\title{Methods for Editing or Converting Output from simFossilRecord}
+\title{Methods for Editing or Converting Output from Simulated Fossil Record Objects}
 \usage{
-timeSliceFossilRecord(fossilRecord, sliceTime,
-  shiftRoot4TimeSlice = FALSE, modern.samp.prob = 1,
-  tolerance = 10^-6)
+timeSliceFossilRecord(
+  fossilRecord,
+  sliceTime,
+  shiftRoot4TimeSlice = FALSE,
+  modern.samp.prob = 1,
+  tolerance = 10^-6
+)
 
 fossilRecord2fossilTaxa(fossilRecord)
 
 fossilTaxa2fossilRecord(fossilTaxa)
 
-fossilRecord2fossilRanges(fossilRecord, merge.cryptic = TRUE,
-  ranges.only = TRUE)
+fossilRecord2fossilRanges(
+  fossilRecord,
+  merge.cryptic = TRUE,
+  ranges.only = TRUE
+)
 }
 \arguments{
 \item{fossilRecord}{A list object output by \code{simFossilRecord}, often composed
@@ -85,7 +92,7 @@ by a number of \code{paleotree} functions such as
 \code{fossilTaxa2fossilRecord} does the reverse, converting a \code{simFossilTaxa}
 table into a \code{fossilRecordSimulation} list object,
 but returns a \code{fossilRecordSimulation} object that
-considers each species as un-sampled (as sampling
+considers each species as \emph{unsampled} (as sampling
 information is not contained within a \code{simFossilTaxa} table).
 
 \code{fossilRecord2fossilRanges} converts a \code{fossilRecordSimulation} object

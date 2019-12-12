@@ -4,14 +4,31 @@
 \alias{simFossilRecord}
 \title{Full-Scale Simulations of the Fossil Record with Birth, Death and Sampling of Morphotaxa}
 \usage{
-simFossilRecord(p, q, r = 0, anag.rate = 0, prop.bifurc = 0,
-  prop.cryptic = 0, modern.samp.prob = 1, startTaxa = 1, nruns = 1,
-  maxAttempts = Inf, totalTime = c(0, 1000), nTotalTaxa = c(1, 1000),
-  nExtant = c(0, 1000), nSamp = c(0, 1000), returnAllRuns = FALSE,
-  tolerance = 10^-6, maxStepTime = 0.01,
-  shiftRoot4TimeSlice = "withExtantOnly", count.cryptic = FALSE,
-  negRatesAsZero = TRUE, print.runs = FALSE, sortNames = FALSE,
-  plot = FALSE)
+simFossilRecord(
+  p,
+  q,
+  r = 0,
+  anag.rate = 0,
+  prop.bifurc = 0,
+  prop.cryptic = 0,
+  modern.samp.prob = 1,
+  startTaxa = 1,
+  nruns = 1,
+  maxAttempts = Inf,
+  totalTime = c(0, 1000),
+  nTotalTaxa = c(1, 1000),
+  nExtant = c(0, 1000),
+  nSamp = c(0, 1000),
+  returnAllRuns = FALSE,
+  tolerance = 10^-6,
+  maxStepTime = 0.01,
+  shiftRoot4TimeSlice = "withExtantOnly",
+  count.cryptic = FALSE,
+  negRatesAsZero = TRUE,
+  print.runs = FALSE,
+  sortNames = FALSE,
+  plot = FALSE
+)
 }
 \arguments{
 \item{p, q, r, anag.rate}{These parameters control the instantaneous
@@ -216,13 +233,13 @@ means a point in time which is 50 time-units before the present-day, if the
 present-day is zero (the default, but see argument \code{shiftRoot4TimeSlice}).
 
 Each individual element of a \code{fossilRecordSimulation} list object
-is named, generally of the form "t1" and "t2", 
+is named, generally of the form \code{"t1"} and \code{"t2"}, 
 where the number is the \code{taxon.id}. 
-Cryptic taxa are instead named in the form of "t1.2" and "t5.3",
+Cryptic taxa are instead named in the form of \code{"t1.2"} and \code{"t5.3"},
 where the first number is the taxon which they are a
 cryptic descendant of (\code{looks.like}) and the second number, after the period, is
 the order of appearance of lineage units in that cryptic complex.
-For example, for "t5.3",  the first number is the \code{taxon.id}
+For example, for \code{"t5.3"},  the first number is the \code{taxon.id}
 and the second number communicates that this is the third lineage
 to appear in this cryptic complex.
 }
@@ -284,7 +301,7 @@ both child lineages are presumed to be indistinct from
 the ancestor and from each other, which means a hypothetical paleontologist
 would not observe that branching had occurred at all.
 Anagenesis is morphological differentiation independent of
-any branching, such that a morphotaxon instanteously transitions to a
+any branching, such that a morphotaxon instantaneously transitions to a
 new morphotaxon identity, resulting in the pseudoextinction of
 the ancestral morphotaxon and the immediate 'pseudospeciation'
 of the child morphotaxon.
@@ -405,9 +422,11 @@ record <- simFossilRecord(
     nTotalTaxa = 50, 
     plot = TRUE
     )
+    
+################
+\donttest{
 
-\donttest{ 
-# examining multiple runs of simulations
+# Now let's examine with multiple runs of simulations
 
 # example of repeated pure birth simulations over 50 time-units
 records <- simFossilRecord(
@@ -429,10 +448,10 @@ multiDiv(records,
 # histogram of total number of taxa
 hist(sapply(records, nrow))
 
-
 ##############################################
 # example of repeated birth-death-sampling
     # simulations over 50 time-units
+    
 records <- simFossilRecord(
     p = 0.1, 
     q = 0.1, 
@@ -479,8 +498,10 @@ set.seed(1)
 
 # Let's look at an example of a birth-death process
     # with high extinction relative to branching
-# use default run conditions (barely any conditioning)
-# use print.runs to look at acceptance probability
+
+# notes:     
+    # a) use default run conditions (barely any conditioning)
+    # b) use print.runs to look at acceptance probability
     
 records <- simFossilRecord(
     p = 0.1, 
@@ -516,9 +537,7 @@ records <- simFossilRecord(
 
 # TLDR: You should look at print.runs = TRUE
 
-######################
-##############################
-######################################
+##################################################################
 
 # Using the rate equation-input for complex diversification models
 
@@ -614,8 +633,8 @@ multiDiv(records,
     #( maybe there is more turnover at K? )
 # also, it took a longer for the rapid rise to occur
 
-#######################################################
-###############################
+##########################################################
+
 # Now let's try an example with time-dependent origination
     # and extinction constrained to equal origination
 
@@ -631,8 +650,10 @@ timeEquation <- "0.4-(0.007*T)"
 #in this equation, 0.4 is the rate at time = 0
     # and it will decrease by 0.007 with every time-unit
     # at time = 50, the final rate will be 0.05
-# We can easily make it so extinction is always equal to branching rate
-# "P" is the algebraic equivalent for "branching rate" in simFossilRecord
+# We can easily make it so extinction
+    # is always equal to branching rate
+# "P" is the algebraic equivalent for
+     # "branching rate" in simFossilRecord
 
 # now let's try it
 records <- simFossilRecord(
@@ -692,7 +713,6 @@ record <- simFossilRecord(
     # another during this interval, etc
 	# The problem is setting this up within a fixed function
 
-
 #############################################################
 # Worked Example
 # What if we want to draw a new rate from a
@@ -707,16 +727,26 @@ rates <- 0.1+rlnorm(100,meanlog = 1,sdlog = 1)/100
 
 # Now paste it into a formulae that describes a function that
     # will change the rate output every 10 time units
-rateEquation <- paste0("c(",paste0(rates,collapse = ","),")[1+(T\%/\%10)]")
+rateEquation <- paste0(
+                       "c(",
+                       paste0(rates,collapse = ","),
+                       ")[1+(T\%/\%10)]"
+                       )
 
 # and let's run it
-record <- simFossilRecord(p = rateEquation, q = 0.1, r = 0.1, nruns = 1,
-    totalTime = c(30,40), plot = TRUE)
-
+record <- simFossilRecord(
+    p = rateEquation, 
+    q = 0.1, 
+    r = 0.1, 
+    nruns = 1,
+    totalTime = c(30,40), 
+    plot = TRUE
+    )
  
-##########################################################
+#####################################################################
 
 # Speciation Modes
+
 # Some examples of varying the 'speciation modes' in simFossilRecord
 
 # The default is pure budding cladogenesis
@@ -766,13 +796,17 @@ record <- simFossilRecord(
     nTotalTaxa = c(20,30) ,
     nExtant = 0
     )
-tree <- taxa2phylo(fossilRecord2fossilTaxa(record),
-    plot = TRUE)
+tree <- taxa2phylo(
+    fossilRecord2fossilTaxa(record),
+    plot = TRUE
+    )
 # lots and lots of pseudoextinction
 
 # an example with half cryptic speciation
 record <- simFossilRecord(
-    p = 0.1, q = 0.1, r = 0.1,
+    p = 0.1, 
+    q = 0.1, 
+    r = 0.1,
     anag.rate = 0, 
     prop.bifurc = 0, 
     prop.cryptic = 0.5,
@@ -780,7 +814,9 @@ record <- simFossilRecord(
     nTotalTaxa = c(20,30), 
     nExtant = 0
     )
-tree <- taxa2phylo(fossilRecord2fossilTaxa(record),
+
+tree <- taxa2phylo(
+    fossilRecord2fossilTaxa(record),
     plot = TRUE)
 
 # notice that the tree has many more than the maximum of 30 tips:
@@ -797,8 +833,11 @@ record <- simFossilRecord(
     nTotalTaxa = c(20,30), 
     nExtant = 0
     )
-tree <- taxa2phylo(fossilRecord2fossilTaxa(record),
+
+tree <- taxa2phylo(
+    fossilRecord2fossilTaxa(record),
     plot = TRUE)
+
 # note in this case, 50\% of branching is cryptic
     # 25\% is bifurcation, 25\% is budding
 
@@ -830,15 +869,16 @@ record <- simFossilRecord(
 
 # there looks like there is only a single taxon, but...
 length(record)	
+
 #the above is the *actual* number of cryptic lineages
 
-######################################
-###############################
+#########################################################################
 
 # playing with count.cryptic with simulations of pure cryptic speciation
+    # what if we had fossil records with NO morphological differentiation?
 
-#can choose to condition on total morphologically-distinguishable taxa
-    #or total taxa including cryptic taxa with count.cryptic = FALSE
+# We can choose to condition on total morphologically-distinguishable taxa
+    # or total taxa including cryptic taxa with count.cryptic = FALSE
 
 # an example with pure cryptic speciation with count.cryptic = TRUE
 record <- simFossilRecord(
@@ -851,16 +891,19 @@ record <- simFossilRecord(
     nTotalTaxa = c(10,100), 
     count.cryptic = TRUE
     )
+    
 tree <- taxa2phylo(fossilRecord2fossilTaxa(record))
 
 # plot the tree
 plot(tree)
 axisPhylo()
+
 # notice how the tip labels indicate all are the same morphotaxon?
 
 #################
 # an example with pure cryptic speciation with count.cryptic = FALSE
     # Need to be careful with this!
+
 # We'll have to replace the # of taxa constraints with a time constraint
     # or else the count.cryptic = FALSE simulation will never end!
 
@@ -880,12 +923,13 @@ plot(tree)
 axisPhylo()
 
 ###########################################
-#let's look at numbers of taxa returned when varying count.cryptic
+# let's look at numbers of taxa returned when varying count.cryptic
     # with prop.cryptic = 0.5
 
-#simple simulation going for 50 total taxa	
+# Count Cryptic Example Number One
+# simple simulation going for 50 total taxa	
 
-#first, count.cryptic = FALSE (default)
+# first, count.cryptic = FALSE (default)
 record <- simFossilRecord(
     p = 0.1, 
     q = 0.1, 
@@ -897,16 +941,21 @@ record <- simFossilRecord(
     nTotalTaxa = 50, 
     count.cryptic = FALSE
     )
+    
 taxa <- fossilRecord2fossilTaxa(record)
 
 #### Count the taxa/lineages !
 # number of lineages (inc. cryptic)
 nrow(taxa)               
+
 # number of morph-distinguishable taxa
 length(unique(taxa[,6]))     
 
 ###################
-# Now let' try with count.cryptic = TRUE
+
+# Count Cryptic Example Number Two
+# Now let's try with count.cryptic = TRUE
+
 record <- simFossilRecord(
     p = 0.1, 
     q = 0.1, 
@@ -918,18 +967,20 @@ record <- simFossilRecord(
     nTotalTaxa = 50, 
     count.cryptic = TRUE
     )
+    
 taxa <- fossilRecord2fossilTaxa(record)
 
 ### Count the taxa/lineages !
 # number of lineages (inc. cryptic)
 nrow(taxa)               
+
 # number of morph-distinguishable taxa
 length(unique(taxa[,6]))     
-
 # okay...
 
-########################
-#######################
+###########
+
+# Count Cryptic Example Number Three 
 # now let's try cryptic speciation *with* 50 extant taxa!
 
 # first, count.cryptic = FALSE (default)
@@ -945,16 +996,21 @@ record <- simFossilRecord(
     totalTime = c(1,100), 
     count.cryptic = FALSE
     )
+    
 taxa <- fossilRecord2fossilTaxa(record)
 
 ### Count the taxa/lineages !
 # number of still-living lineages (inc. cryptic)
 sum(taxa[,5])          
+
 # number of still-living morph-dist. taxa
 length(unique(taxa[taxa[,5] == 1,6]))	
 
 ##############
-# and count.cryptic = TRUE
+
+# Count Cryptic Example Number Four
+# like above with count.cryptic = TRUE
+
 record <- simFossilRecord(
     p = 0.1, 
     q = 0.1, 
@@ -976,6 +1032,7 @@ sum(taxa[,5])
 length(unique(taxa[taxa[,5] == 1,6]))	
 
 #################################################
+
 # Specifying Number of Initial Taxa
     # Example using startTaxa to have more initial taxa
 
@@ -990,6 +1047,7 @@ record <- simFossilRecord(
     )
 
 ######################################################
+
 # Specifying Combinations of Simulation Conditions
 
 # Users can generate datasets that meet multiple conditions:
@@ -1022,6 +1080,7 @@ record <- simFossilRecord(
     print.runs = TRUE, 
     plot = TRUE
     )
+    
 # still okay acceptance rates
 
 # alright, now let's add a constraint on sampled taxa
@@ -1040,8 +1099,9 @@ record <- simFossilRecord(
 
 # still okay acceptance rates
 
-# we can be really odd and condition on having a single taxon
+# we can be really odd and instead condition on having a single taxon
 set.seed(1)
+
 record <- simFossilRecord(
     p = 0.1,
     q = 0.1, 
@@ -1052,6 +1112,7 @@ record <- simFossilRecord(
     )
 
 ########################################################
+
 # Simulations of Entirely Extinct Taxa
 
 # Typically, a user may want to condition on a precise
@@ -1096,7 +1157,6 @@ record <- simFossilRecord(
     print.runs = TRUE, 
     plot = TRUE
     )
-}
 
 ########################################################
 # Retaining Rejected Simulations
@@ -1142,12 +1202,13 @@ length(record$rejected)
 
 # how many taxa are in each rejected simulation run?
 totalTaxa_rej <- sapply(record$rejected, length)
+
 # plot as a histogram
 hist(totalTaxa_rej)
-
 # a very nice exponential distribution...
 
 # plot the rejected simulation with the most taxa
+
 divCurveFossilRecordSim(
      fossilRecord = record$rejected[[
            which(max(totalTaxa_rej) == totalTaxa_rej)[1]
@@ -1182,7 +1243,7 @@ hist(durations_rej)
       # satisfying the other specified constraints
       # (probably they didn't have the min of 10 taxa total)
 
-
+} 
 }
 \references{
 Bapst, D. W. 2013. When Can Clades Be Potentially Resolved with
@@ -1204,7 +1265,7 @@ Paleobiology's Perspective.} The Paleontological Society, Lawrence, Kansas.
 Foote, M. 2012. Evolutionary dynamics of taxonomic structure. \emph{Biology Letters} 8(1):135-138.
 
 Gavryushkina, A., D. Welch, T. Stadler, and A. J. Drummond. 2014. Bayesian Inference
-of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. \emph{PLoS.Comput.Biol.}
+of Sampled Ancestor Trees for Epidemiology and Fossil Calibration. \emph{PLoS Computational Biology}
 10(12):e1003919.
 
 Hartmann, K., D. Wong, and T. Stadler. 2010 Sampling Trees from Evolutionary

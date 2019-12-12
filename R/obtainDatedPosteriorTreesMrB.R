@@ -36,7 +36,7 @@
 
 #' @param nRuns The number of runs in your analysis. This variable is used for figuring out what 
 #' filenames will be searched for: if you specify that you have less runs than you
-#' actually ran in reality, then some runs won't be examined in thi function. Conversely,
+#' actually ran in reality, then some runs won't be examined in this function. Conversely,
 #' specify too many, and this function will throw an error when it cannot find files it expects
 #' but do not exist. The default for this argument
 #' (\emph{two} runs) is based on the default number of runs in MrBayes.
@@ -46,18 +46,22 @@
 #' value greater than 0 and less than 1.
 
 #' @param getFixedTimes If \code{TRUE}, this function will also look for, scan, and parse an
-#' associated NEXUS file. Ignoring any commented lines (ie. anything between "[   ]" ), commands
-#' for fixing taxa will be identified, parsed and returned to the user, either as a message
-#' printed to the R console if output is read to a file, or as a attribute named 'fixed ages'
+#' associated NEXUS file. Ignoring any commented lines 
+#' (i.e., anything between a set of rectangular brackets \code{[]} ), 
+#' commands for fixing taxa will be identified, parsed and returned to the user, either as a message
+#' printed to the R console if output is written to a file, or as a attribute named 'fixed ages'
 #' if output as an R object (formatted as a two-column
 #' table of OTU names and their respective fixed ages).
-#' If the output is an R object, these objects with 
 #' 
 #' Please note: the code for \code{getFixedTimes = TRUE} contains a \code{while()}
 #' loop in it for removing nested series of
 #' square brackets (i.e. treated as comments in NEXUS files). Thus files with
 #' ridiculously nested series of brackets may cause this code to take a while
 #' to complete, or may even cause it to hang.
+
+# weird out of place line - copy/paste error? (12-11-19)
+# If the output is an R object, these objects with ??
+
 
 #' @param getRootAges \code{FALSE} by default. 
 #' If \code{TRUE}, and \code{getFixedTimes = TRUE}
@@ -78,23 +82,23 @@
 #' @param labelPostProb Logical. If \code{TRUE}, then nodes of the
 #' output tree will be labeled with their respective posterior 
 #' probabilities, as calculated based on the frequency of a clade
-#' occurring across the post-burnin posterior tree sample. If \code{FALSE},
+#' occurring across the post-burn-in posterior tree sample. If \code{FALSE},
 #' this is skipped.
 	
 #' @param outputTrees Determines the output trees produced; for format of output, see section
 #' on returned Value below. Must be of length one, and either \code{"all"},
-#' which means all trees from the post-burnin posterior will
+#' which means all trees from the post-burn-in posterior will
 #' returned, a number greater than zero, which will be the number of trees
-#' randomly sampled from across the post-burning posterior and returned,
+#' randomly sampled from across the post-burn-in posterior and returned,
 #' or a label for a type of summary tree selected from the posterior based on various
 #' properties. The two most commonly seen such point-estimate-summaries are
 #' the \emph{MCCT} tree, which stands for the 'maximum clade compatibility tree',
-#' and the \emph{MAP} tree, which stands for the 'maximum a posteri tree'. 
-#' The MCCT is the single tree from the post-burnin posterior which
+#' and the \emph{MAP} tree, which stands for the 'maximum a posteriori tree'. 
+#' The MCCT is the single tree from the post-burn-in posterior which
 #' contains the set of bifurcations (clades) with the highest product of posterior
-#' probabilities (i.e. are found on the most trees in the post-burnin posterior).
+#' probabilities (i.e. are found on the most trees in the post-burn-in posterior).
 #' The MCCT tree is returned if the argument \code{outputTrees = "MCCT"} is used.
-#' The MAP is the single tree from the post-burnin posterior with the highest
+#' The MAP is the single tree from the post-burn-in posterior with the highest
 #' posterior probabilty associated with it. Unfortunately, versions of
 #' \code{paleotree} prior to version 3.2.1 did not use the posterior probability
 #' to select the supposed 'MAP' tree. MrBayes provides two values
@@ -105,9 +109,9 @@
 #' of the sampled parameter values, given the observed data and specified models.
 #' Neither of these are the posterior probability. 
 #' The true posterior probability (as given by Bayes Theorem) is 
-#' the prooduct of the likelihood and the prior probability, divided by
+#' the product of the likelihood and the prior probability, divided by
 #' the likelihood of the model, the latter of which is very rarely known.
-#' More commonly, the calculatable portion of the posterior probability is
+#' More commonly, the calculable portion of the posterior probability is
 #' the product of the likelihood and the prior probability; or, here, easily
 #' calculated as the log posterior probability, as the sum of the
 #' log likelihood and log prior probability. Given confusion over application of 'MAP'
@@ -145,7 +149,7 @@
 #' Depending on argument \code{file}, the output tree or trees is either
 #' returned directly, or instead written out in NEXUS format via
 #' ape's \code{write.NEXUS} function to an external file. The output
-#' will consist either of multiple trees sampled from the post-burnin posterior,
+#' will consist either of multiple trees sampled from the post-burn-in posterior,
 #' or will consist of a single phylogeny (a summary tree, either
 #' the MCCT or the MAP - see the details for the argument \code{outputTrees}).
 #' 
@@ -377,7 +381,8 @@ obtainDatedPosteriorTreesMrB <- function(
 		}
 	# concatanate trees from each run
 	lumpTrees <- unlist(rescaledTrees,recursive = FALSE)
-	class(lumpTrees) <- "multiPhylo"
+	# give class multiphylo
+	attr(lumpTrees, "class") <- c("multiPhylo", class(lumpTrees))
 	#
 	##########################################
 	#

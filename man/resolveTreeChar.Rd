@@ -4,12 +4,21 @@
 \alias{resolveTreeChar}
 \title{Resolve Polytomies Using Parsimony-Based Reconstruction of a Discrete Character}
 \usage{
-resolveTreeChar(tree, trait, orderedChar = FALSE, stateBias = NULL,
-  iterative = TRUE, cost = NULL, ambiguity = c(NA, "?"),
-  dropAmbiguity = FALSE, polySymbol = "&", contrast = NULL)
+resolveTreeChar(
+  tree,
+  trait,
+  orderedChar = FALSE,
+  stateBias = NULL,
+  iterative = TRUE,
+  cost = NULL,
+  ambiguity = c(NA, "?"),
+  dropAmbiguity = FALSE,
+  polySymbol = "&",
+  contrast = NULL
+)
 }
 \arguments{
-\item{tree}{A cladogram of type 'phylo'. Any branch lengths are ignored.}
+\item{tree}{A cladogram of type \code{phylo}. Any branch lengths are ignored.}
 
 \item{trait}{A vector of trait values for a discrete character, preferably named with taxon names
 identical to the tip labels on the input tree.}

@@ -12,20 +12,21 @@ dates and taxon first and last occurrences within those intervals. Some interval
 are expected to overlap (thus necessitating the use of this function), and datasets
 lacking overlapping intervals will return an error message.}
 
-\item{nruns}{Number of new timeList composed of non-overlapping intervals produced.}
+\item{nruns}{Number of new \code{timeList} composed of non-overlapping intervals produced.}
 
-\item{weightSampling}{If TRUE, weight sampling of new intervals toward smaller intervals. FALSE by default.}
+\item{weightSampling}{If \code{TRUE}, weight sampling of new intervals toward smaller intervals. 
+\code{FALSE} by default.}
 }
 \value{
-A list, composed of three elements: \code{nIntervals} which is a vector of the
-number of intervals in each solution, \code{nTaxa} which is a vector of the number of
-taxa in each solution and \code{timeLists} which is a list composed of each new
-timeList object as an element.
+A list, composed of three elements: \code{nIntervals}, a vector of the
+number of intervals in each solution, \code{nTaxa}, a vector of the number of
+taxa in each solution, and \code{timeLists}, a list composed of each new
+\code{timeList} object as an element.
 }
 \description{
-This function randomly samples from a timeList object (i.e. a list composed of a matrix of interval start and end
+This function randomly samples from a \code{timeList} object (i.e. a list composed of a matrix of interval start and end
 dates and a matrix of taxon first and last intervals), to find a set of taxa and intervals that do not overlap,
-output as a new timeList object.
+output as a new \code{timeList} object.
 }
 \details{
 Many analyses of diversification and sampling in the fossil record require a dataset composed of sequential non-overlapping intervals,
@@ -37,7 +38,7 @@ This function offers an approach to avoid this issue in large datasets by random
 the available taxa and intervals to produce stochastic
 sets of ranges composed of data drawn from non-overlapping intervals. 
 
-This function is stochastic and thus should be set for many runs to produce many such solutions. Additionally,
+\code{seqTimeList} is stochastic and thus should be set for many runs to produce many such solutions. Additionally,
 all solutions found are returned, and users may wish to sort amongst these to maximize the number of intervals and 
 number of taxa returned. A single solution which maximizes returned taxa and intervals may not be a precise enough approach
 to estimating sampling rates, however, given the uncertainty in data. Thus, many runs should always be considered.
@@ -47,47 +48,54 @@ Alternatively, we can 'weight' selection toward the smallest intervals in the se
 intervals presumably overlap less and thus should retain more taxa and intervals of more equal length. However, in practice with empirical datasets,
 the package author finds these approaches do not seem to produce very different estimates.
 
-For some datasets, many solutions found using seqTimeList may return infinite sampling values. This is often due to saving too many taxa
+For some datasets, many solutions found using \code{seqTimeList} may return infinite sampling values. This is often due to saving too many taxa
 found in single intervals to the exclusion of longer-ranging taxa (see the example). This excess of single interval taxa is a clear artifact
-of the randomized seqTimeList procedure and such solutions should probably be ignored.
+of the randomized \code{seqTimeList} procedure and such solutions should probably be ignored.
 }
 \examples{
-#Simulate some fossil ranges with simFossilRecord
+# Simulate some fossil ranges with simFossilRecord
 set.seed(444)
-record <- simFossilRecord(p = 0.1, q = 0.1, nruns = 1,
-	nTotalTaxa = c(60,80), nExtant = 0)
+record <- simFossilRecord(
+    p = 0.1, 
+    q = 0.1, 
+    nruns = 1,
+    nTotalTaxa = c(60,80), 
+    nExtant = 0
+    )
 taxa <- fossilRecord2fossilTaxa(record)
-#simulate a fossil record with imperfect sampling with sampleRanges()
+# simulate a fossil record with imperfect sampling with sampleRanges()
 rangesCont <- sampleRanges(taxa,r = 0.1)
 
-#Now let's use binTimeData to get ranges in discrete overlapping intervals
-    #via pre-set intervals input
-presetIntervals <- cbind(c(1000,995,990,980,970,975,960,950,940,930,900,890,888,879,875),
-  c(995,989,960,975,960,950,930,930,930,900,895,888,880,875,870))
-rangesDisc1 <- binTimeData(rangesCont,int.times = presetIntervals)
+# Now let's use binTimeData to get ranges in discrete overlapping intervals
+    # via pre-set intervals input
+presetIntervals <- cbind(
+  c(1000, 995, 990, 980, 970, 975, 960, 950, 940, 930, 900, 890, 888, 879, 875),
+   c(995, 989, 960, 975, 960, 950, 930, 930, 930, 900, 895, 888, 880, 875, 870)
+  )
+rangesDisc1 <- binTimeData(rangesCont, int.times = presetIntervals)
 
-seqLists <- seqTimeList(rangesDisc1,nruns = 10)
+seqLists <- seqTimeList(rangesDisc1, nruns = 10)
 seqLists$nTaxa
 seqLists$nIntervals
 
 #apply freqRat as an example analysis
-sapply(seqLists$timeLists,freqRat)
+sapply(seqLists$timeLists, freqRat)
 
-#notice the zero and infinite freqRat estimates? What's going on?
+# notice the zero and infinite freqRat estimates? What's going on?
 
-freqRat(seqLists$timeLists[[4]],plot = TRUE)
+freqRat(seqLists$timeLists[[4]], plot = TRUE)
 
-#too few taxa of two or three interval durations for the ratio to work properly
-    #perhaps ignore these estimates
+# too few taxa of two or three interval durations for the ratio to work properly
+    # perhaps ignore these estimates
 
-#with weighted selection of intervals
-seqLists <- seqTimeList(rangesDisc1,nruns = 10,weightSampling = TRUE)
+# with weighted selection of intervals
+seqLists <- seqTimeList(rangesDisc1, nruns = 10, weightSampling = TRUE)
 
 seqLists$nTaxa
 seqLists$nIntervals
-sapply(seqLists$timeLists,freqRat)
+sapply(seqLists$timeLists, freqRat)
 
-#didn't have much effect in this simulated example
+# didn't have much effect in this simulated example
 }
 \seealso{
 Resulting time-lists can be analyzed with \code{\link{freqRat}}, \code{\link{durationFreq}}, etc.

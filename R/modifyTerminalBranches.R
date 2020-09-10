@@ -404,7 +404,7 @@ addTermBranchLength <- function(tree,addtime = 0.001){
 	#
 	branchSel <- tree$edge[,2]<(Ntip(tree)+1)
 	newBrLen <- tree$edge.length[branchSel]+addtime
-	tree$edge.length[newBrLen] <- newBrLen
+	tree$edge.length[branchSel] <- newBrLen
 	if(any(tree$edge.length<0)){
 		stop("tree has negative branch lengths!")
 		}

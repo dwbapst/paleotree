@@ -1,18 +1,18 @@
-# as of 04-17-15 can be just
-
-
-addons:
-  apt:
-    packages:
-      - libgslcblas0
-      - gsl-bin
-      - libgsl-dev
-      - libmagick++-dev  
-      
-# replaced libgsl2 with libgslcblas0
+# last updated 09-17-20
+    # using @tguillerme's dispRity travis.yml as a guide 
 
 language: r
 sudo: required
+
+addons:
+  apt:
+    update: true
+    packages:
+      # replaced libgsl2 with libgslcblas0
+      #- libgslcblas0
+      #- gsl-bin
+      #- libgsl-dev
+      - libmagick++-dev  
 
 ##because of phangorn
 #bioc_packages:

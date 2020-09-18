@@ -8,13 +8,15 @@
 \alias{graptTimeTree}
 \alias{graptTree}
 \title{Example Occurrence and Taxonomic Datasets of the Graptolithina from the Paleobiology Database}
-\format{The example occurrence dataset (\code{graptOccPBDB}) is a
+\format{
+The example occurrence dataset (\code{graptOccPBDB}) is a
 \code{data.frame} consisting of 5900 occurrences (rows) and 35 variables (columns).
 The example taxonomy dataset (\code{graptTaxaPBDB}) is a
 \code{data.frame} consisting of 364 formal taxa (rows) and 53 variables (columns).
 Variables are coded in the 'pbdb' vocabulary of the PBDB API v1.2.
 Two phylogeny-like objects, an undated taxon-tree, and a dated version
-of the former, are provided as \code{graptTree} and \code{graptTimeTree} respectively.}
+of the former, are provided as \code{graptTree} and \code{graptTimeTree} respectively.
+}
 \source{
 See examples for the full R code used to obtain the data from the API.
 You can find the Paleobiology Database at \url{http://paleobiodb.org}

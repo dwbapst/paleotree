@@ -7,7 +7,8 @@
 \alias{graptRanges}
 \alias{graptDistMat}
 \title{Morphlogical Character and Range Data for late Ordovician and Early Silurian Graptoloidea}
-\format{This dataset is composed of three objects: 
+\format{
+This dataset is composed of three objects: 
 
 \describe{
 \item{graptCharMatrix}{A \code{matrix} composed of mixed character data
@@ -22,7 +23,8 @@ has the \code{timeList} format called by some \code{paleotree} functions).}
 
 \item{graptDistMat}{A 183x183 \code{matrix} of pair-wise distances (dissimilarities)
 for the 183 graptolite species, using the algorithm for discrete characters
-and min-max range values described in Bapst et al.}}}
+and min-max range values described in Bapst et al.}}
+}
 \source{
 Source for stratigraphic ranges and character data: 
 

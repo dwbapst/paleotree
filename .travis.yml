@@ -4,16 +4,17 @@
 
 language: r
 sudo: required
+cache: packages
 
 addons:
   apt:
     update: true
-    packages:
+    #packages:
       # replaced libgsl2 with libgslcblas0
       #- libgslcblas0
       #- gsl-bin
       #- libgsl-dev
-      - libmagick++-dev  
+      #- libmagick++-dev  
 
 ##because of phangorn
 #bioc_packages:
@@ -33,7 +34,6 @@ after_success:
 
 ###########
 #OLD: brought back due to r-travis not failing bad builds
-
 
 # Sample .travis.yml for R projects from https://github.com/craigcitro/r-travis
  

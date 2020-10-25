@@ -121,6 +121,8 @@
 #' 
 #' \donttest{
 #' 
+#' if(require(curl)){
+#' 
 #' # we can also use this for pre-existing trees
 #'     # for example, this tree of equuids (horses)
 #'     # borrowed from UCMP materials on horse evolution
@@ -165,6 +167,8 @@
 #' 	
 #' # a fairly boring phylopic diagram
 #'     # not many horse phylopics as of 07-16-19?
+#' 
+#' }
 #' }
 #' 
 #' \dontrun{

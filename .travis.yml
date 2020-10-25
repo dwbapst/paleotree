@@ -23,6 +23,11 @@ addons:
 # Be strict when checking our package
 warnings_are_errors: true
 
+script: 
+  - |
+    R CMD build .
+    travis_wait 30 R CMD check paleotree*tar.gz
+
 # r_check_args: --as-cran --run-donttest 
 
 # for code coverage

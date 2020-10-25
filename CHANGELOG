@@ -1,5 +1,7 @@
 Version - 3.3.26
 - Fixed a bug in addTermBranchLength, caught by Phil Novack-Gottshall. This bug appears to have been introduced in 2018, and likely hasn't affected any actual research publication.
+- Added an addition step to the clean-phylo function in test-tree so that order is set to NULL before being reordered, to match an example from Emmanuel Paradis from R-Sig-Phylo
+- 
 
 Version - 3.3.25 - 12-12-19 (CRAN release)
 - Fixed all instances where class was checked as if it was assumed only to be a single value, and instead check now with inherits() instead, so to be acceptable for CRAN.

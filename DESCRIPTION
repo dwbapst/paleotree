@@ -19,7 +19,7 @@ Imports:
 	RCurl,
 	utils
 Suggests:
-    spelling, testthat
+    spelling, testthat, curl
 Language: en-US
 ByteCompile: TRUE
 Encoding: UTF-8

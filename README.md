@@ -55,3 +55,9 @@ This code is mainly authored by David Bapst, with some functions authored by Pet
 The current total number of downloads of the `paleotree` package from the RStudio CRAN mirror is: [![Number of Downloads](http://cranlogs.r-pkg.org/badges/grand-total/paleotree)](https://github.com/metacran/cranlogs.app)
 
 [![Research software impact](http://depsy.org/api/package/cran/paleotree/badge.svg)](http://depsy.org/package/r/paleotree)
+
+Trying out using GitHub actions insted of Travis CI:
+
+[![R-CMD-check](https://github.com/dwbapst/paleotree/workflows/R-CMD-check/badge.svg)](https://github.com/dwbapst/paleotree/actions)
+  <!-- badges: end -->
+

@@ -26,7 +26,7 @@ expect_equal(length(record), 3)
 test_that("simFossilRecord is returning right output for returnAllRuns", {
 
 testthat::skip_on_cran()
-testthat::skip_on_travis()
+testthat::skip_on_ci()
 	
 # with returnAllRuns
 

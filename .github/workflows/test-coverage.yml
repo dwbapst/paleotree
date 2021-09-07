@@ -3,8 +3,8 @@
 
 # only run it for the master branch which shouldn't get may pushes to it
 on:
-  push:
-    branches: [main, master]
+  #push:
+  #  branches: [main, master]
   pull_request:
     branches: [main, master]
 

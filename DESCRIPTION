@@ -17,7 +17,8 @@ Imports:
 	methods,
 	png,
 	RCurl,
-	utils
+	utils,
+	curl
 Suggests:
     spelling, testthat
 Language: en-US

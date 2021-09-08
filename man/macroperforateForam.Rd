@@ -8,7 +8,8 @@
 \alias{foramALb}
 \alias{foramAMb}
 \title{Ancestor-Descendant Relationships for Macroperforate Foraminifera, from Aze et al. (2011)}
-\format{The \code{foramAM} and \code{foramAL} tables include budding taxon units
+\format{
+The \code{foramAM} and \code{foramAL} tables include budding taxon units
 for morphospecies and lineages respective, with four columns:
 taxon name, ancestral taxon's name, first appearance date and last appearance
 date (note that column headings vary). The \code{foramAMb} and \code{foramALb} tables are
@@ -16,7 +17,8 @@ composed of data for the same taxon units as the previous
 branching events are split so that the relationships are fully 'bifurcating', rather
 than 'budding'. As this obscures taxonomic identity, taxon identification labels
 are included in an additional, fifth column in these tables.
-See the examples section for more details.}
+See the examples section for more details.
+}
 \source{
 This dataset is obtained from the supplementary materials of, specifically
 'Appendix S5':

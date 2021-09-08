@@ -7,14 +7,16 @@
 \alias{cladogramDicranoX12}
 \alias{cladogramDicranoX13}
 \title{Cladistic Data for Dicranograptid Graptolites from Song and Zhang (2014)}
-\format{Loading this dataset adds two objects to the R environment.
+\format{
+Loading this dataset adds two objects to the R environment.
 \code{charMatDicrano} is a \code{data.frame} object composed of multiple factors, with \code{NA} values
 representing missing values (states coded as '?'), read in with \code{readNexus} from package
 \code{phylobase}. \code{cladogramDicranoX12} and 
 \code{cladogramDicranoX13} are both cladograms, formatted as \code{phylo} class objects
 for use with package \code{ape}, without branch-lengths (as
 these was are, respectively, consensus tree and a maximum-parsimony tree from separate
-maximum-parsimony analyses).}
+maximum-parsimony analyses).
+}
 \source{
 Song, Y., and Y. Zhang. 2014. A preliminary study on the relationship of the
 early dicranograptids based on cladistic analysis. \emph{GFF} 136(1):243-248.

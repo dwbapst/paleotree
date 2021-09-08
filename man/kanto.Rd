@@ -4,7 +4,9 @@
 \name{kanto}
 \alias{kanto}
 \title{Example Species Abundances Tables}
-\format{A table of type integer, representing terrestrial fauna and flora abundance counts.}
+\format{
+A table of type integer, representing terrestrial fauna and flora abundance counts.
+}
 \source{
 Pokemon And All Respective Names are Trademark and Copyright of Nintendo 1996-2015.
 }

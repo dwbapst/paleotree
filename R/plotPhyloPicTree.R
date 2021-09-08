@@ -191,7 +191,7 @@
 
 #' @examples
 #' 
-#' \donttest{
+#' \dontrun{
 #' 
 #' library(paleotree)
 #' 

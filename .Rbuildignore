@@ -1,5 +1,6 @@
 ^\.travis\.yml$
 ^\.git$
+^\.github$
 ^\.lintr$
 ^revdep$
 

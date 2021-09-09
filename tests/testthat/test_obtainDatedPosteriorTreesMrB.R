@@ -1,7 +1,10 @@
 test_that("obtainDatedPosteriorTreesMrB works", {
 
+
 #library(paleotree)
-#setwd("d://dave//workspace//paleotree//tests//testthat")
+#setwd("C://Users//dwbapst//workspace//paleotree//tests//testthat")
+
+set.seed(44)
 
 fileTest <- "data//retio_dating.run1.t"
 
@@ -59,8 +62,8 @@ hundredRandomlySelectedTrees <- obtainDatedPosteriorTreesMrB(
 	file = NULL)
 
 testthat::skip_on_cran()
-testthat::skip_on_travis()	
-expect_equal_to_reference(hundredRandomlySelectedTrees, update=TRUE,
+testthat::skip_on_ci()	
+testthat::expect_equal_to_reference(hundredRandomlySelectedTrees, update=TRUE,
 	file = ".//references//datedPosteriorTreesMrB//hundredRandom") 
 
 })

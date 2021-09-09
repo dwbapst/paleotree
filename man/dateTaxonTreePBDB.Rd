@@ -88,6 +88,9 @@ tree <- makePBDBtaxonTree(data, rankTaxon = "genus")
 #get the ranges 
 timeTree <- dateTaxonTreePBDB(tree)
 
+}
+\dontrun{
+
 plotPhyloPicTree(tree = timeTree,
      depthAxisPhylo = TRUE)
 

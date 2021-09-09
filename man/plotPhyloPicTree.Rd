@@ -186,7 +186,7 @@ the user directly, or as an element of \code{tree}.
 }
 \examples{
 
-\donttest{
+\dontrun{
 
 library(paleotree)
 

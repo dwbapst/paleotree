@@ -6,32 +6,75 @@
 # See https://github.com/r-lib/actions/tree/master/examples#readme for
 # additional example workflows available for the R community.
 
-name: R
-
 on:
-  push:
-    branches: [ developmentBranch ]
+  push
   pull_request:
-    branches: [ developmentBranch ]
+    branches: [ master, developmentBranch ]
+
+name: R-CMD-check
+
+# runs R CMD check via the rcmdcheck package on the three major OSs (linux, macOS and Windows) 
+    # with the current, development, and previous versions of R
 
 jobs:
-  build:
-    runs-on: macOS-latest
+  R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
     strategy:
+      fail-fast: false
       matrix:
-        r-version: [3.5, 3.6]
+        config:
+          - {os: macOS-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
+          - {os: ubuntu-latest,   r: 'oldrel/1'}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v2 
-      - name: Set up R ${{ matrix.r-version }}
-        uses: r-lib/actions/setup-r@ffe45a39586f073cc2e9af79c4ba563b657dc6e3
+
+      
+      - name: checkout repo
+        uses: actions/checkout@v2
+
+      - name: setup pandoc
+        uses: r-lib/actions/setup-pandoc@v1
+
+      - name: setup R
+        uses: r-lib/actions/setup-r@v1
+
         with:
-          r-version: ${{ matrix.r-version }}
-      - name: Install dependencies
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+
+      - name: setup R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v1
+        with:
+          extra-packages: rcmdcheck
+
+      - name: run R CMD Check
+        env:
+          _R_CHECK_CRAN_INCOMING_: false
         run: |
-          install.packages(c("remotes", "rcmdcheck"))
-          remotes::install_deps(dependencies = TRUE)
+          options(crayon.enabled = TRUE)
+          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
-      - name: Check
-        run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
-        shell: Rscript {0}
+
+      - name: get testthat output
+        if: always()
+        run: find check -name 'testthat.Rout*' -exec cat '{}' \; || true
+        shell: bash
+
+      - name: upload check results
+        if: failure()
+        uses: actions/upload-artifact@main
+        with:
+          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
+          path: check
+      

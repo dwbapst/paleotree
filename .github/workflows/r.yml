@@ -39,25 +39,25 @@ jobs:
 
     steps:
       
-      - name: checkoutRepo
+      - name: checkout repo
         uses: actions/checkout@v2
 
-      - name: setupPandoc
+      - name: setup pandoc
         uses: r-lib/actions/setup-pandoc@v1
 
-      - name: setupR
+      - name: setup R
         uses: r-lib/actions/setup-r@v1
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: setupDependencies
+      - name: setup R dependencies
         uses: r-lib/actions/setup-r-dependencies@v1
         with:
           extra-packages: rcmdcheck
 
-      - name: R_CMD_Check
+      - name: run R CMD Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
         run: |
@@ -65,12 +65,12 @@ jobs:
           rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
-      - name: testthat_output
+      - name: get testthat output
         if: always()
         run: find check -name 'testthat.Rout*' -exec cat '{}' \; || true
         shell: bash
 
-      - name: uploadCheckResults
+      - name: upload check results
         if: failure()
         uses: actions/upload-artifact@main
         with:

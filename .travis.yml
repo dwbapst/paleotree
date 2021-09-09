@@ -1,18 +1,20 @@
-# as of 04-17-15 can be just
-
-
-addons:
-  apt:
-    packages:
-      - libgslcblas0
-      - gsl-bin
-      - libgsl-dev
-      - libmagick++-dev  
-      
-# replaced libgsl2 with libgslcblas0
+# last updated 09-17-20
+    # using @tguillerme's dispRity travis.yml as a guide
+    # https://github.com/TGuillerme/dispRity/blob/master/.travis.yml 
 
 language: r
 sudo: required
+cache: packages
+
+addons:
+  apt:
+    update: true
+    #packages:
+      # replaced libgsl2 with libgslcblas0
+      #- libgslcblas0
+      #- gsl-bin
+      #- libgsl-dev
+      #- libmagick++-dev  
 
 ##because of phangorn
 #bioc_packages:
@@ -20,6 +22,11 @@ sudo: required
 
 # Be strict when checking our package
 warnings_are_errors: true
+
+script: 
+  - |
+    R CMD build .
+    travis_wait 30 R CMD check paleotree*tar.gz
 
 # r_check_args: --as-cran --run-donttest 
 
@@ -32,7 +39,6 @@ after_success:
 
 ###########
 #OLD: brought back due to r-travis not failing bad builds
-
 
 # Sample .travis.yml for R projects from https://github.com/craigcitro/r-travis
  

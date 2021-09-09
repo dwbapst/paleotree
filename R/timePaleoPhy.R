@@ -567,7 +567,10 @@
 #'     add.term = TRUE
 #'     )))
 #' axisPhylo()
-#' text(x = 50,y = 23,"type = basic",adj = c(0,0.5),cex = 1.2)
+#' text(x = 50,y = 23,
+#'      "type = basic",
+#'      adj = c(0,0.5),
+#'      cex = 1.2)
 #' #
 #' plot(ladderize(timePaleoPhy(
 #'     cladogram,
@@ -577,38 +580,71 @@
 #'     add.term = TRUE
 #'     )))
 #' axisPhylo()
-#' text(x = 55,y = 23,"type = equal",adj = c(0,0.5),cex = 1.2)
+#' text(x = 55,y = 23,
+#'      "type = equal",
+#'      adj = c(0,0.5),
+#'      cex = 1.2)
 #' #
-#' plot(ladderize(timePaleoPhy(
-#'     cladogram,
-#'     rangesCont,
-#'     type = "aba",
-#'     vartime = 1,
-#'     add.term = TRUE
-#'     )))
+#' plot(
+#'     ladderize(
+#'         timePaleoPhy(
+#'             cladogram,
+#'             rangesCont,
+#'             type = "aba",
+#'             vartime = 1,
+#'             add.term = TRUE
+#'             )
+#'         )
+#'     )
+#'     
 #' axisPhylo()
-#' text(x = 55,y = 23,"type = aba",adj = c(0,0.5),cex = 1.2)
+#' text(x = 55,y = 23,
+#'      "type = aba",
+#'      adj = c(0,0.5),
+#'      cex = 1.2)
+#'      
+#'      
 #' #
-#' plot(ladderize(timePaleoPhy(
-#'     cladogram,
-#'     rangesCont,
-#'     type = "zlba",
-#'     vartime = 1,
-#'     add.term = TRUE
-#'     )))
+#' plot(
+#'     ladderize(
+#'         timePaleoPhy(
+#'            cladogram,
+#'            rangesCont,
+#'            type = "zlba",
+#'            vartime = 1,
+#'            add.term = TRUE
+#'            )
+#'         )
+#'      )
+#'     
 #' axisPhylo()
-#' text(x = 55, y = 23, "type = zlba",
-#'      adj = c(0,0.5), cex = 1.2)
+#' text(x = 55, 
+#'      y = 23, 
+#'      "type = zlba",
+#'      adj = c(0,0.5), 
+#'      cex = 1.2
+#'      )
+#'      
+#'      
 #' #
-#' plot(ladderize(timePaleoPhy(
-#'     cladogram,
-#'     rangesCont,
-#'     type = "mbl",
-#'     vartime = 1,
-#'     add.term = TRUE
-#'     )))
+#' plot(
+#'   ladderize(
+#'      timePaleoPhy(
+#'         cladogram,
+#'         rangesCont,
+#'         type = "mbl",
+#'         vartime = 1,
+#'         add.term = TRUE
+#'         )
+#'      )
+#'   )
+#'     
 #' axisPhylo()
-#' text(x = 55,y = 23,"type = mbl",adj = c(0,0.5),cex = 1.2)
+#' text(x = 55,y = 23,
+#'      "type = mbl",
+#'      adj = c(0,0.5),
+#'      cex = 1.2
+#'      )
 #' layout(1)
 #' par(parOrig)
 #' 
@@ -629,12 +665,14 @@
 #' # now make vector same length as number of nodes
 #' nodeDates <- rep(NA, Nnode(cladoDrop))
 #' nodeDates[5] <- 1200
+#' 
 #' ttree1 <- timePaleoPhy(
 #'     cladoDrop,rangesCont,
 #'     type = "basic",
 #'     randres = FALSE,
 #'     node.mins = nodeDates,
 #'     plot = TRUE)
+#'     
 #' ttree2 <- timePaleoPhy(
 #'     cladoDrop,
 #'     rangesCont,
@@ -681,7 +719,8 @@
 #' 
 #' #can also force the appearance timings not to be chosen stochastically
 #' ttreeB3 <- bin_timePaleoPhy(
-#'     cladogram,rangesDisc,
+#'     cladogram,
+#'     rangesDisc,
 #'     type = "basic",
 #'     ntrees = 1,
 #'     nonstoch.bin = TRUE,
@@ -709,7 +748,8 @@
 #' ttree <- bin_timePaleoPhy(
 #'     cladoDrop,
 #'     rangesDisc,
-#'     type = "basic",ntrees = 1,
+#'     type = "basic",
+#'     ntrees = 1,
 #'     add.term = TRUE,
 #'     randres = TRUE,
 #'     node.mins = nodeDates,
@@ -718,16 +758,19 @@
 #' 
 #' \donttest{
 #' #simple three taxon example for testing inc.term.adj
-#' ranges1 <- cbind(c(3,4,5), c(2,3,1))
+#' ranges1 <- cbind(c(3, 4, 5), c(2, 3, 1))
 #' rownames(ranges1) <- paste("t", 1:3, sep = "")
+#' 
 #' clado1 <- read.tree(file = NA,
 #'     text = "(t1,(t2,t3));")
+#'     
 #' ttree1 <- timePaleoPhy(
 #'     clado1,
 #'     ranges1,
 #'     type = "mbl",
 #'     vartime = 1
 #'     )
+#'     
 #' ttree2 <- timePaleoPhy(
 #'     clado1,
 #'     ranges1,
@@ -735,6 +778,7 @@
 #'     vartime = 1,
 #'     add.term = TRUE
 #'     )
+#'     
 #' ttree3 <- timePaleoPhy(
 #'     clado1,
 #'     ranges1,
@@ -748,13 +792,17 @@
 #' ttree1$root.time
 #' ttree2$root.time
 #' ttree3$root.time
-#' -apply(ranges1,1,diff)
+#' 
+#' -apply(ranges1, 1, diff)
 #' 
 #' layout(1:3)
+#' 
 #' plot(ttree1)
 #' axisPhylo()
+#' 
 #' plot(ttree2)
 #' axisPhylo()
+#' 
 #' plot(ttree3)
 #' axisPhylo()
 #' 
@@ -826,8 +874,8 @@ timePaleoPhy <- function(
 	#require(ape)	
 	if(!inherits(tree, "phylo")){
 		stop("tree is not of class phylo")}
-	if(!inherits(timeData,"matrix")){
-		if(inherits(timeData,"data.frame")){
+	if(!inherits(timeData, "matrix")){
+		if(inherits(timeData, "data.frame")){
 			timeData <- as.matrix(timeData)
 		}else{
 			stop("timeData not of matrix or data.frame format")
@@ -900,7 +948,7 @@ timePaleoPhy <- function(
 				)
 			)
 		]
-	if(length(droppers)>0){
+	if(length(droppers) > 0){
 		if(length(droppers) == Ntip(tree)){
 			stop("Absolutely NO valid taxa shared between the tree and temporal data!"
 			)}
@@ -975,15 +1023,19 @@ timePaleoPhy <- function(
 					"Drop unshared taxa and recalculate location of constrained nodes before analysis instead"
 					))
 				}
-			if((!ape::is.binary.phylo(originalInputTree) | !is.rooted(tree)) & randres){
-				origDesc <- lapply(prop.part(originalInputTree),
-					function(x) sort(originalInputTree$tip.label[x])
-					)
-				treeDesc <- lapply(prop.part(tree),
-					function(x) sort(tree$tip.label[x])
-					)
+			if(
+			  (!ape::is.binary.phylo(originalInputTree)
+			    | !is.rooted(tree)
+			   ) &
+			   randres){
+		        	origDesc <- lapply(prop.part(originalInputTree),
+				    	function(x) sort(originalInputTree$tip.label[x])
+					    )
+			    	treeDesc <- lapply(prop.part(tree),
+			    		function(x) sort(tree$tip.label[x])
+			    		)
 				node_changes <- match(origDesc, treeDesc)
-				node.mins1 <- rep(NA,Nnode(tree))
+				node.mins1 <- rep(NA, Nnode(tree))
 				node.mins1[node_changes] <- node.mins
 			}else{
 				node.mins1 <- node.mins
@@ -992,8 +1044,8 @@ timePaleoPhy <- function(
 			#require(phangorn)
 			#
 			#all internal nodes
-			for(i in (Ntip(tree)+1):length(ntime)){	
-				desc_all <- unlist(Descendants(tree,i,type = "all"))
+			for(i in (Ntip(tree) + 1):length(ntime)){	
+				desc_all <- unlist(phangorn::Descendants(tree,i,type = "all"))
 				desc_nodes <- c(desc_all[desc_all>Ntip(tree)],i)-Ntip(tree)	#INCLUDING ITSELF			
 				node_times <- node.mins1[desc_nodes]
 				ntime[i] <- max(ntime[i],node_times[!is.na(node_times)])
@@ -1001,14 +1053,15 @@ timePaleoPhy <- function(
 			}
 		#
 		#add to root, if method = "equal"
-		if((type == "equal"|type == "equal_paleotree_legacy") & !is.null(vartime)){				
-			ntime[Ntip(tree)+1] <- vartime+ntime[Ntip(tree)+1]
-			#anchor_adjust <- vartime+anchor_adjust
-			}	
+		if((type == "equal"|type == "equal_paleotree_legacy") &
+		   !is.null(vartime)){				
+			    ntime[Ntip(tree)+1] <- vartime+ntime[Ntip(tree)+1]
+			    #anchor_adjust <- vartime+anchor_adjust
+			    }	
 		ttree <- tree
-		ttree$edge.length <- sapply(1:Nedge(ttree),function(x) 
+		ttree$edge.length <- sapply(1:Nedge(ttree), function(x) 
 			#finds each edge length easy peasy, based on G. Lloyd's code
-			ntime[ttree$edge[x,1]]-ntime[ttree$edge[x,2]]
+			ntime[ttree$edge[x, 1]]-ntime[ttree$edge[x, 2]]
 			)	 
 		#okay, now time to do add terminal branch lengths if inc.term.adj
 		if(add.term & inc.term.adj){
@@ -1043,24 +1096,29 @@ timePaleoPhy <- function(
 				}
 			ttree <- minBranchLength(tree = ttree, mbl = vartime)
 			}
-		if(type == "equal" | type == "equal_paleotree_legacy" | type == "equal_date.phylo_legacy"){	
+		if(type == "equal" | 
+		   type == "equal_paleotree_legacy" | 
+		   type == "equal_date.phylo_legacy"
+		   ){	
 			#G. Lloyd's "equal" method(s)
 			if(type == "equal"){
 				#Newest of the NEW 08-19-14 - the most logical choice
                 #get a vector of zero-length branches ordered by 
 					# the number of nodes separating the edge from the root
 				#
+			    # get number of nodes from root
+			    nNodeFromRoot <- (-node.depth.edgelength(unitLengthTree(ttree))[ttree$edge[,2]])
 				#Get branch list; 1st col = end-node, 2nd = # of nodes from root
-				zbr <- cbind(1:Nedge(ttree),
-					-node.depth.edgelength(unitLengthTree(ttree))[ttree$edge[,2]]) 	
-				
-				}
+				zbr <- cbind(1:Nedge(ttree), nNodeFromRoot) 	
+    			}
 			if(type == "equal_paleotree_legacy"){
 				#OLD
 				#get a depth-ordered vector that identifies zero-length branches
 				#
 				#Get branch list; 1st col = end-node, 2nd = depth
-				zbr <- cbind(1:Nedge(ttree),node.depth(ttree)[ttree$edge[,2]]) 	
+				zbr <- cbind(1:Nedge(ttree),
+	                node.depth(ttree)[ttree$edge[,2]]
+	                ) 	
 				}
 			if(type == "equal_date.phylo_legacy"){
 				#NEW 02-03-04 
@@ -1068,22 +1126,30 @@ timePaleoPhy <- function(
 					# as Graeme's DatePhylo originally worked prior to August 2014
 				#
 				#Get branch list; 1st col = end-node, 2nd = abs distance (time) from root
-				zbr <- cbind(1:Nedge(ttree),node.depth.edgelength(ttree)[ttree$edge[,2]]) 	
+				zbr <- cbind(1:Nedge(ttree), 
+		             node.depth.edgelength(ttree)[ttree$edge[,2]]
+		             ) 	
 				}
 			#
 			#Parses zbr to just zero-length branches
-			zbr <- zbr[ttree$edge.length == 0,]						
+			zbrSel <- zbr[ttree$edge.length == 0, , drop = FALSE]
+			
+			# is zbr still a matrix?
+			if(!is.matrix(zbr)){
+			    stop("zbr is no longer a matrix")
+			    }
 			#order zbr by depth
 			zbr <- zbr[order(zbr[,2]),1]							
 			#if the edge lengths leading away from the root are somehow ZERO issue a warning
-			if(is.null(vartime) & any(ttree$edge.length[ttree$edge[,1] == (Ntip(ttree)+1)] == 0)){
-				stop(paste0(
-					"The equal method requires edges leading away from root to initially have non-zero length\n",
-					" This expectation is current not met. Perhaps increase vartime?"
-					))
-				}
-			#
+			if(is.null(vartime) & 
+			   any(ttree$edge.length[ttree$edge[,1] == (Ntip(ttree)+1)] == 0)){
+				  stop(paste0(
+					 "The equal method requires edges leading away from root to initially have non-zero length\n",
+					 " This expectation is current not met. Perhaps increase vartime?"
+					 ))
+				  }
 			
+			###############################
 			for(i in zbr){
 				#starting with most shallow zlb, is this branch a zlb?
 				if (ttree$edge.length[i]  ==  0) {			

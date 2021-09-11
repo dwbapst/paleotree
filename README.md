@@ -56,8 +56,8 @@ The current total number of downloads of the `paleotree` package from the RStudi
 
 [![Research software impact](http://depsy.org/api/package/cran/paleotree/badge.svg)](http://depsy.org/package/r/paleotree)
 
-Trying out using GitHub actions insted of Travis CI:
+Trying out using GitHub actions instead of Travis CI:
 
-[![R-CMD-check](https://github.com/dwbapst/paleotree/workflows/R-CMD-check/badge.svg)](https://github.com/dwbapst/paleotree/actions)
+[![R Check](https://github.com/dwbapst/paleotree/workflows/R-CMD-check/badge.svg)](https://github.com/dwbapst/paleotree/actions)
   <!-- badges: end -->
 

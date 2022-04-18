@@ -12,6 +12,7 @@ twoWayEcologyCluster(
   marginBetween = 0.1,
   abundExpansion = 3,
   cex.axisLabels = 1,
+  trimChar = 5,
   xAxisLabel = "Across Sites",
   yAxisLabel = "Across Taxa"
 )
@@ -30,9 +31,11 @@ abundance scaled as proportions of the total number of individuals
 at each site. This data determines the size scale of the taxon/site dots.}
 
 \item{clustMethod}{The agglomerative clustering method used, as with
-argument \code{method} with function \code{hclust}. \code{clustMethod} must
-be one of \code{"average"} (the default method for this function, also known as
-average-linkage or as UPGMA), \code{"ward.D"}, \code{"ward.D2"}, \code{"single"}, \code{"complete"},
+argument \code{method} with function \code{hclust}. 
+\code{clustMethod} must be one of \code{"average"} 
+(the default method for this function, 
+also known as average-linkage or as UPGMA), 
+\code{"ward.D"}, \code{"ward.D2"}, \code{"single"}, \code{"complete"},
 \code{"mcquitty"} (also known as WPGMA), \code{"median"}
 (also known as WPGMC) or \code{"centroid"} (also known as UPGMC).}
 
@@ -45,6 +48,10 @@ of dots plotted for reflecting relative abundance.}
 \item{cex.axisLabels}{Character expansion parameter for controlling the plotting
 of axis labels on the abundance dot-grid only.}
 
+\item{trimChar}{How many characters should the axis labels be trimmed to?
+Default is 5, which means only the first five letters of each taxon/site
+label will be shown on the dot-abundance plot.}
+
 \item{xAxisLabel}{The label placed on the horizontal axis of the plot.}
 
 \item{yAxisLabel}{The label placed on the vertical axis of the plot.}
@@ -54,7 +61,7 @@ This function creates a plot, and returns nothing, not even invisible output.
 }
 \description{
 This mode plots both R-mode (across sites) and Q-mode (across taxa) dendrograms
-for a community ecology dataset, with branches aligned with a grid of dots
+for a community ecology data set, with branches aligned with a grid of dots
 representing the relative abundance of taxa at each site in the dataset.
 }
 \details{
@@ -65,7 +72,7 @@ of proportional abundance, but I can't guarantee or even predict what will happe
 set.seed(1)
 
 # generate random community ecology data
-	# using a Poisson distribution
+    # using a Poisson distribution
 data<-matrix(rpois(5*7,1),5,7)
 
 # get relative abundance, distance matrices
@@ -74,34 +81,34 @@ rownames(propAbundMat)<-paste0("site ", 1:nrow(propAbundMat))
 colnames(propAbundMat)<-paste0("taxon ", 1:ncol(propAbundMat))
 
 # for simplicity, let's calculate
-	# the pairwise square chord distance
-	# between sites and taxa
+    # the pairwise square chord distance
+    # between sites and taxa
 
 squareChordDist<-function(mat){
-	res<-apply(mat,1,function(x)
-		apply(mat,1,function(y)
-			sum((sqrt(x)-sqrt(y))^2)
-			)
-		)
-	#
-	res<-as.dist(res)
-	return(res)
-	}
+    res<-apply(mat,1,function(x)
+        apply(mat,1,function(y)
+            sum((sqrt(x)-sqrt(y))^2)
+            )
+        )
+    #
+    res<-as.dist(res)
+    return(res)
+    }
 
 # its not a very popular distance metric
-	# but it will do
-	# quite popular in palynology
+    # but it will do
+    # quite popular in palynology
 
 siteDist<-squareChordDist(propAbundMat)
 taxaDist<-squareChordDist(t(propAbundMat))
 
-dev.new(width=10)	
+dev.new(width=10)    
 
 twoWayEcologyCluster(
-	xDist = siteDist, 
-	yDist = taxaDist,
-	propAbund = propAbundMat
-	)
+    xDist = siteDist, 
+    yDist = taxaDist,
+    propAbund = propAbundMat
+    )
 
 \dontrun{
 
@@ -113,8 +120,8 @@ library(vegan)
 data(kanto)
 
 # get distance matrices for sites and taxa
-	# based on bray-curtis dist
-	# standardized to total abundance
+    # based on bray-curtis dist
+    # standardized to total abundance
 
 # standardize site matrix to relative abundance
 siteStandKanto <- decostand(kanto, method = "total")
@@ -123,10 +130,10 @@ siteStandKanto <- decostand(kanto, method = "total")
 siteDistKanto <- vegdist(siteStandKanto, "bray")
 
 # calculate taxa distance matrix (Bray-Curtis)
-	# from transposed standardized site matrix 
+    # from transposed standardized site matrix 
 taxaDistKanto <- vegdist(t(siteStandKanto), "bray")
 
-dev.new(width=10)	
+dev.new(width=10)    
 
 twoWayEcologyCluster(
     xDist = siteDistKanto,
@@ -146,7 +153,8 @@ Remains: Implications for Paleobiological Analyses. \emph{Paleobiology} 14(1):91
 }
 \seealso{
 Several other functions for community ecology data in paleotree are described
-at the \code{\link{communityEcology}} help file. Also see the example dataset, \code{\link{kanto}}.
+at the \code{\link{communityEcology}} help file. 
+Also see the example dataset, \code{\link{kanto}}.
 }
 \author{
 David W. Bapst

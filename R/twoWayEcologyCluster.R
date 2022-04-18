@@ -1,7 +1,7 @@
 #' R-Mode vs Q-Mode Two-Way Cluster Analyses and Abundance Plot for Community Ecology Data
 #' 
 #' This mode plots both R-mode (across sites) and Q-mode (across taxa) dendrograms
-#' for a community ecology dataset, with branches aligned with a grid of dots
+#' for a community ecology data set, with branches aligned with a grid of dots
 #' representing the relative abundance of taxa at each site in the dataset.
 
 #' @details

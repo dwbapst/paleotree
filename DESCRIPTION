@@ -5,7 +5,7 @@ Title: Paleontological and Phylogenetic Analyses of Evolution
 Date: 2022-04-18
 Author: David W. Bapst, Peter J. Wagner
 Depends:
-	R (>= 3.5.0),
+	R (>= 4.1.0),
 	ape (>= 4.1)
 Imports:
 	phangorn (>= 2.6.3),

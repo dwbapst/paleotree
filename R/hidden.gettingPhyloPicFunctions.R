@@ -31,6 +31,7 @@ getPhyloPicPNG<-function(
 	if(is.null(picPNG)){
 		picUID <- paste0("https://paleobiodb.org/data1.2/taxa/thumb.txt?id="
 							,picID_PBDB)
+	    testConnect <- canConnectPBDB()
 		picUID <- read.csv(picUID, stringsAsFactors = FALSE)
 		picUID <- picUID$uid
 		picPNG <- getPhyloPicFromPhyloPic(picUID)
@@ -62,8 +63,9 @@ getPhyloPicPNG<-function(
 	}		
 
 getPhyloPicUIDsTableFromPBDB <- function(picIDs){
+    testConnect <- canConnectPBDB()
 	imgNumAPIurl <- "https://paleobiodb.org/data1.2/taxa/thumb.txt?id="
-	URLwithNums <- paste0(imgNumAPIurl,picIDs)	
+	URLwithNums <- paste0(imgNumAPIurl, picIDs)	
 	names(URLwithNums) <- names(picIDs)
 	res <- do.call(rbind,
           lapply(URLwithNums, read.csv, stringsAsFactors=FALSE)
@@ -144,6 +146,7 @@ getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
 			tiptaxa, "&rel=exact&show=img"
 			)	
 		# call PBDB API
+		testConnect <- canConnectPBDB()
 		taxaData <- read.csv(apiAddressTaxa,
 			stringsAsFactors = FALSE)
 		# get the PBDB image IDs and label with tip labels
@@ -200,5 +203,29 @@ getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
 	}
 
 
+
+# test if there is internet
+canConnectPBDB <- function(fail = TRUE){
+    # ip = "8.8.8.8"
+    # is PBDB up
+    res <- RCurl::url.exists("https://paleobiodb.org/")
+    if(!res & fail){
+        stop("Cannot connect to Paleobiology Database at https://paleobiodb.org/")
+        }
+    #
+    # is PBDB data service up
+    res <- RCurl::url.exists(
+        "http://paleobiodb.org/data1.2/taxa/single.txt?name=Dicellograptus/"
+        )
+    if(!res & fail){
+        stop("Cannot connect to Paleobiology Database API at https://paleobiodb.org/data1.2/")
+        }    
+    #
+    #res <- try(read.csv(
+    #    "http://paleobiodb.org/data1.2/taxa/single.txt?name=Dicellograptus",
+    #    stringsAsFactors = TRUE
+    #    ))
+    return(res)
+    }
 	
 	

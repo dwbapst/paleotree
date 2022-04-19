@@ -102,6 +102,7 @@ queryMissingParents <- function(taxaID,
 	# taxaID <- as.numeric(taxaID[taxaID != "1"])
 	#
 	# let's get some taxonomic data
+    testConnect <- canConnectPBDB()
 	floatData <- read.csv(
 		paste0("http://paleobiodb.org/data",APIversion,
 			"/taxa/list.txt?taxon_id=",paste0(taxaID,collapse=","),

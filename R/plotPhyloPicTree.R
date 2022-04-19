@@ -230,6 +230,7 @@
 #'     depthAxisPhylo= TRUE)
 #' 
 #' ###################################
+#' 
 #' # plotting a time tree with stratigraphic ranges
 #' 
 #' plotPhyloPicTree(tree = timeTree,
@@ -241,6 +242,7 @@
 #'    depthAxisPhylo= TRUE)
 #' 
 #' ########
+#' 
 #' # adjusting a tree to ignore a very old root
 #' 
 #' # let's pretend that metazoans are extremely old
@@ -282,6 +284,7 @@
 #'     taxaColor=taxaColors)
 #' 
 #' ######################################
+#' 
 #' # let's try some different phylopics
 #'       # like a nice tree of commonly known tetrapods
 #' 
@@ -300,10 +303,8 @@
 #' 
 #' plotPhyloPicTree(tree = tree)
 #' 
-#' 
-#' }
 #' ####################################
-#' \dontrun{
+#' 
 #' # let's check our speed increase from caching!
 #'     # can try this on your own machine
 #' 

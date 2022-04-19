@@ -225,6 +225,7 @@ plotPhyloPicTree(tree = timeTree,
     depthAxisPhylo= TRUE)
 
 ###################################
+
 # plotting a time tree with stratigraphic ranges
 
 plotPhyloPicTree(tree = timeTree,
@@ -236,6 +237,7 @@ plotPhyloPicTree(tree = timeTree,
    depthAxisPhylo= TRUE)
 
 ########
+
 # adjusting a tree to ignore a very old root
 
 # let's pretend that metazoans are extremely old
@@ -277,6 +279,7 @@ plotPhyloPicTree(
     taxaColor=taxaColors)
 
 ######################################
+
 # let's try some different phylopics
       # like a nice tree of commonly known tetrapods
 
@@ -295,10 +298,8 @@ tree <- makePBDBtaxonTree(data, rankTaxon = "genus")
 
 plotPhyloPicTree(tree = tree)
 
-
-}
 ####################################
-\dontrun{
+
 # let's check our speed increase from caching!
     # can try this on your own machine
 

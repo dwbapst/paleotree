@@ -264,6 +264,7 @@ dateTaxonTreePBDB <- function(
 				nodeNames,"&show=app,parent"
 				)
 			# browseURL(apiAddressNodes)
+			testConnect <- canConnectPBDB()
 			nodeData <- read.csv(apiAddressNodes,
 				stringsAsFactors = FALSE)
 			# combine with taxon data

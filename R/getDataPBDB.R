@@ -295,7 +295,8 @@ getPBDBtaxaCSV <- function(
 			}
 		lineRemove <- c(which(isWarning),which(linesOut == "\"Records:\""))
 		linesOut<-linesOut[-lineRemove]
-		}
+	    }
+	testConnect <- canConnectPBDB()
 	res<- read.csv(text = linesOut,
 	    stringsAsFactors = FALSE)
 	###############
@@ -335,10 +336,12 @@ getPBDBocc <- function(
 		warn <- paste0(warn,collapse = "\n")
 		names(warn) <- NULL
 		mat <- downData[-(1:start)]
+		testConnect <- canConnectPBDB()
 		mat <- read.csv(textConnection(mat))
 		message(warn)
 	}else{
 		mat <- downData
+		testConnect <- canConnectPBDB()
 		mat <- read.csv(textConnection(mat))
 		}
 	return(mat)

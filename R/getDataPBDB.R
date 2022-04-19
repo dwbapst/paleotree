@@ -264,6 +264,7 @@ getPBDBtaxaCSV <- function(
 		stopIfMissing=FALSE
 		){
 	##########################################
+    testConnect <- canConnectPBDB()
 	linesOut <- readLines(requestURL)
 	###############
 	# stop if contains no records returned

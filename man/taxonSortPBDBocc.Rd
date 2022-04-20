@@ -115,17 +115,33 @@ to NAs, as they may be due to issues
 with using read.csv to convert API-downloaded data.
 }
 \examples{
+# Note that most examples here using getPBDBocc()
+    # use the  argument 'failIfNoInternet = FALSE'
+    # so that functions do not error out 
+    # but simply return NULL if internet
+    # connection is not available, and thus
+    # fail gracefully rather than error out (required by CRAN).
+# Remove this argument or set to TRUE so functions DO fail
+    # when internet resources (paleobiodb) is not available.
+
 \donttest{
 
 # getting occurrence data for a genus, sorting it
-# Dicellograptus
-dicelloData <- getPBDBocc("Dicellograptus")
+# firest example: Dicellograptus
+
+dicelloData <- getPBDBocc("Dicellograptus", 
+    failIfNoInternet = FALSE)
+    
+if(!is.null(dicelloData)){  
+
 dicelloOcc2 <- taxonSortPBDBocc(
    data = dicelloData, 
    rank = "species",
    onlyFormal = FALSE
    )
 names(dicelloOcc2)
+
+}
 
 # try a PBDB API download with lots of synonymization
 	#this should have only 1 species
@@ -135,7 +151,11 @@ names(dicelloOcc2)
 #	"base_name = Acosarina\%20minuta&show=ident,phylo"))
 #
 # *new* method - with getPBDBocc, using v1.2 of PBDB API:
-acoData <- getPBDBocc("Acosarina minuta")
+acoData <- getPBDBocc("Acosarina minuta", 
+    failIfNoInternet = FALSE)
+    
+if(!is.null(acoData)){  
+
 acoOcc <- taxonSortPBDBocc(
    data = acoData, 
    rank = "species", 
@@ -144,6 +164,10 @@ acoOcc <- taxonSortPBDBocc(
 names(acoOcc)
 
 }
+
+}
+
+###########################################
 
 #load example graptolite PBDB occ dataset
 data(graptPBDB)

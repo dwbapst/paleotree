@@ -209,7 +209,9 @@ dateTaxonTreePBDB <- function(
 		minBranchLen = 0,
 		tipTaxonDateUsed = "shallowestAge",
 		dropZeroOccurrenceTaxa = TRUE,
-		plotTree = FALSE){
+		plotTree = FALSE,
+        failIfNoInternet = TRUE
+        ){
 	###################################
 	if(!any(colnames(taxaDataPBDB)!="lastapp_min_ma")){
 		stop(paste0(
@@ -264,7 +266,12 @@ dateTaxonTreePBDB <- function(
 				nodeNames,"&show=app,parent"
 				)
 			# browseURL(apiAddressNodes)
-			testConnect <- canConnectPBDB()
+			# first test internet
+			testConnect <- canConnectPBDB(fail = failIfNoInternet)    
+			if(is.null(testConnect)){
+                return(NULL)
+                }
+			#
 			nodeData <- read.csv(apiAddressNodes,
 				stringsAsFactors = FALSE)
 			# combine with taxon data

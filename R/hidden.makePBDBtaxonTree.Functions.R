@@ -95,14 +95,21 @@ queryMissingParents <- function(taxaID,
 		APIversion = "1.2",
 		status = "all",
 		convertAccepted = FALSE,
-		stopIfSelfParent = FALSE){
+		stopIfSelfParent = FALSE,
+        failIfNoInternet = TRUE
+        ){
 	# find missing parents by access API
 	#
 	# drop Eukarya, as it won't return if status = senior under 1.1
 	# taxaID <- as.numeric(taxaID[taxaID != "1"])
 	#
 	# let's get some taxonomic data
-    testConnect <- canConnectPBDB()
+    # first test internet
+    testConnect <- canConnectPBDB(fail = failIfNoInternet)
+    if(is.null(testConnect)){
+        return(NULL)
+        }
+    #
 	floatData <- read.csv(
 		paste0("http://paleobiodb.org/data",APIversion,
 			"/taxa/list.txt?taxon_id=",paste0(taxaID,collapse=","),

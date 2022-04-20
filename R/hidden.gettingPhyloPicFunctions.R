@@ -3,7 +3,8 @@
 getPhyloPicPNG<-function(
 		picID_PBDB, 
 		cacheDir = NULL,
-		cacheImage = FALSE
+		cacheImage = FALSE,
+        failIfNoInternet = TRUE
 		){
 	####################################################
 	# first try to find and load a cached version
@@ -31,7 +32,12 @@ getPhyloPicPNG<-function(
 	if(is.null(picPNG)){
 		picUID <- paste0("https://paleobiodb.org/data1.2/taxa/thumb.txt?id="
 							,picID_PBDB)
-	    testConnect <- canConnectPBDB()
+	    # first test internet
+        testConnect <- canConnectPBDB(fail = failIfNoInternet)
+        if(is.null(testConnect)){
+            return(NULL)
+            }
+        #
 		picUID <- read.csv(picUID, stringsAsFactors = FALSE)
 		picUID <- picUID$uid
 		picPNG <- getPhyloPicFromPhyloPic(picUID)
@@ -62,8 +68,16 @@ getPhyloPicPNG<-function(
 	return(picPNG)	
 	}		
 
-getPhyloPicUIDsTableFromPBDB <- function(picIDs){
-    testConnect <- canConnectPBDB()
+getPhyloPicUIDsTableFromPBDB <- function(
+        picIDs,
+        failIfNoInternet = TRUE
+        ){
+    # first test internet
+    testConnect <- canConnectPBDB(fail = failIfNoInternet)
+    if(is.null(testConnect)){
+        return(NULL)
+        }
+    #
 	imgNumAPIurl <- "https://paleobiodb.org/data1.2/taxa/thumb.txt?id="
 	URLwithNums <- paste0(imgNumAPIurl, picIDs)	
 	names(URLwithNums) <- names(picIDs)
@@ -108,7 +122,9 @@ getPhyloPicFromPhyloPic <- function(picUID){
 
 	
 getPhyloPicPNG_PBDB<-function(
-		picID_PBDB){
+		picID_PBDB,
+        failIfNoInternet = TRUE
+        ){
 	############################################
 	#	
 	# require(png);require(RCurl)
@@ -123,6 +139,11 @@ getPhyloPicPNG_PBDB<-function(
 		"http://paleobiodb.org/data1.2/taxa/thumb.png?id=",
 		picID_PBDB)
 	#
+	# first test internet
+    testConnect <- canConnectPBDB(fail = failIfNoInternet)
+    if(is.null(testConnect)){
+        return(NULL)
+        }
 	# get picPNG		
 	picPNG <-  png::readPNG(RCurl::getURLContent(apiPicURL))
 	############
@@ -132,7 +153,11 @@ getPhyloPicPNG_PBDB<-function(
 	return(picPNG)
 	}
 	
-getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
+getPhyloPicIDNumFromPBDB <- function(
+        taxaData, 
+        tree, 
+        failIfNoInternet = TRUE
+        ){
 	# check or obtain the PBDB phylopic IDs from PBDB
 		# get the phylopic-specific IDs  as well
 	#
@@ -146,7 +171,11 @@ getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
 			tiptaxa, "&rel=exact&show=img"
 			)	
 		# call PBDB API
-		testConnect <- canConnectPBDB()
+        # first test internet
+        testConnect <- canConnectPBDB(fail = failIfNoInternet)
+        if(is.null(testConnect)){
+            return(NULL)
+            }
 		taxaData <- read.csv(apiAddressTaxa,
 			stringsAsFactors = FALSE)
 		# get the PBDB image IDs and label with tip labels
@@ -202,30 +231,39 @@ getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
 	return(phylopicIDsPBDB)
 	}
 
-
-
 # test if there is internet
 canConnectPBDB <- function(fail = TRUE){
     # ip = "8.8.8.8"
     # is PBDB up
     res <- RCurl::url.exists("https://paleobiodb.org/")
-    if(!res & fail){
-        stop("Cannot connect to Paleobiology Database at https://paleobiodb.org/")
+    if(!res){ 
+        connectMessage <- "Cannot connect to Paleobiology Database at https://paleobiodb.org/"
+        if(fail){
+            stop(connectMessage)
+            }
+        message(connectMessage)
+        res <- NULL
+        return(NULL)
         }
     #
     # is PBDB data service up
     res <- RCurl::url.exists(
         "http://paleobiodb.org/data1.2/taxa/single.txt?name=Dicellograptus/"
         )
-    if(!res & fail){
-        stop("Cannot connect to Paleobiology Database API at https://paleobiodb.org/data1.2/")
-        }    
-    #
-    #res <- try(read.csv(
+    if(!res){
+        connectMessage <- "Cannot connect to Paleobiology Database API at https://paleobiodb.org/data1.2/"
+        if(fail){
+            stop(connectMessage)
+            }
+        message(connectMessage)
+        return(NULL)
+        }
+    
+    # res <- try(read.csv(
     #    "http://paleobiodb.org/data1.2/taxa/single.txt?name=Dicellograptus",
     #    stringsAsFactors = TRUE
     #    ))
-    return(res)
+    return(TRUE)
     }
 	
 	

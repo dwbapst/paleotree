@@ -12,7 +12,8 @@ getCladeTaxaPBDB(
   showTaxa = c("class", "parent", "app", "img", "entname"),
   status = "accepted",
   urlOnly = FALSE,
-  stopIfMissing = FALSE
+  stopIfMissing = FALSE,
+  failIfNoInternet = TRUE
 )
 
 getSpecificTaxaPBDB(
@@ -20,12 +21,14 @@ getSpecificTaxaPBDB(
   showTaxa = c("class", "parent", "app", "img", "entname"),
   status = "accepted",
   urlOnly = FALSE,
-  stopIfMissing = FALSE
+  stopIfMissing = FALSE,
+  failIfNoInternet = TRUE
 )
 
 getPBDBocc(
   taxa,
-  showOccs = c("class", "classext", "subgenus", "ident", "entname")
+  showOccs = c("class", "classext", "subgenus", "ident", "entname"),
+  failIfNoInternet = TRUE
 )
 }
 \arguments{
@@ -68,6 +71,15 @@ instead as a character string.}
 to be missing from the Paleobiology Database's taxonomy table, should
 the function halt with an error?}
 
+\item{failIfNoInternet}{If the Paleobiology Database or another 
+needed internet resource cannot be accessed, perhaps because of
+no internet connection, should the function fail (with an error)
+or should the function return \code{NULL} and return an
+informative message instead, thus meeting the CRAN policy
+that such functionalities must 'fail gracefully'?
+The default is \code{TRUE} but all examples that might be auto-run
+use \code{FALSE} so they do not fail during R CHECK.}
+
 \item{taxa}{A character vector listing taxa of interest that the user
 wishes to download information on from the Paleobiology Database.
 Multiple taxa can be listed as a single character string, with desired taxa
@@ -108,29 +120,38 @@ applications in \code{paleotree} easier.
 }
 \examples{
 \donttest{
+# Note that all examples here use argument 
+    # failIfNoInternet = FALSE so that functions do
+    # not error out but simply return NULL if internet
+    # connection is not available, and thus
+    # fail gracefully rather than error out (required by CRAN).
+# Remove this argument or set to TRUE so functions fail
+    # when internet resources (paleobiodb) is not available.
 
 #graptolites
-graptData <- getCladeTaxaPBDB("Graptolithina")
+graptData <- getCladeTaxaPBDB("Graptolithina", 
+    failIfNoInternet = FALSE)
 dim(graptData)
-sum(graptData$taxon_rank=="genus")
+sum(graptData$taxon_rank == "genus")
 
 # so we can see that our call for graptolithina returned 
-	# a large number of taxa, a large portion of which are
-	# individual genera
+    # a large number of taxa, a large portion of which are
+    # individual genera
 # (554 and 318 respectively, as of 03-18-19)
 
 tetrapodList<-c("Archaeopteryx", "Columba", "Ectopistes",
-"Corvus", "Velociraptor", "Baryonyx", "Bufo",
-"Rhamphorhynchus", "Quetzalcoatlus", "Natator",
-"Tyrannosaurus", "Triceratops", "Gavialis",
-"Brachiosaurus", "Pteranodon", "Crocodylus",
-"Alligator", "Giraffa", "Felis", "Ambystoma",
-	"Homo", "Dimetrodon", "Coleonyx", "Equus",
-"Sphenodon", "Amblyrhynchus")
+   "Corvus", "Velociraptor", "Baryonyx", "Bufo",
+   "Rhamphorhynchus", "Quetzalcoatlus", "Natator",
+   "Tyrannosaurus", "Triceratops", "Gavialis",
+   "Brachiosaurus", "Pteranodon", "Crocodylus",
+   "Alligator", "Giraffa", "Felis", "Ambystoma",
+    "Homo", "Dimetrodon", "Coleonyx", "Equus",
+   "Sphenodon", "Amblyrhynchus")
 
-tetrapodData <-getSpecificTaxaPBDB(tetrapodList)
+tetrapodData <-getSpecificTaxaPBDB(tetrapodList, 
+    failIfNoInternet = FALSE)
 dim(tetrapodData)
-sum(tetrapodData$taxon_rank=="genus")
+sum(tetrapodData$taxon_rank == "genus")
 # should be 26, with all 26 as genera
 
 #############################################
@@ -138,9 +159,11 @@ sum(tetrapodData$taxon_rank=="genus")
 
 # getting occurrence data for a genus, sorting it
 # Dicellograptus
-dicelloData <- getPBDBocc("Dicellograptus")
+dicelloData <- getPBDBocc("Dicellograptus", 
+    failIfNoInternet = FALSE)
 dicelloOcc2 <- taxonSortPBDBocc(dicelloData, 
-	rank = "species", onlyFormal = FALSE)
+    rank = "species", onlyFormal = FALSE, 
+    failIfNoInternet = FALSE)
 names(dicelloOcc2)
 
 }

@@ -492,7 +492,7 @@ parentChildPBDBOld <- function(
 				if(method == "parentChildOldQueryPBDB"){
 					floatData <- queryMissingParents(
 						taxaID = floatersNew, 
-						APIversion = APIversion
+						APIversion = APIversion,
 						failIfNoInternet = failIfNoInternet
 	                    )
                     if(is.null(floatData)){ return(NULL) }	

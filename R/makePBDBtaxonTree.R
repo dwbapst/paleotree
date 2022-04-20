@@ -164,6 +164,7 @@
 #'     # when internet resources (paleobiodb) is not available.
 #' 
 #' set.seed(1)
+#' 
 #' \donttest{
 #' 
 #' #get some example occurrence and taxonomic data
@@ -201,18 +202,20 @@
 #' ###################################
 #' #conodonts
 #' 
-#' conoData <- getCladeTaxaPBDB("Conodonta")
+#' conoData <- getCladeTaxaPBDB("Conodonta", 
+#'     failIfNoInternet = FALSE)
 #' 
+#' if(!is.null(conoData)){ 
+#'  
 #' conoTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = conoData,
 #'     rankTaxon = "genus",
-#'     method = "parentChild", 
-#'     failIfNoInternet = FALSE)
+#'     method = "parentChild")
 #' 
-#' if(!is.null(conoTree)){    
-#'     # if it worked, plot it!
-#'     plotTaxaTreePBDB(conoTree)
-#'     }
+#' # if it worked, plot it!
+#' plotTaxaTreePBDB(conoTree)
+#' 
+#' }
 #' 
 #' # pause 3 seconds so we don't spam the API
 #' Sys.sleep(3)
@@ -220,18 +223,20 @@
 #' #############################
 #' #asaphid trilobites
 #' 
-#' asaData <- getCladeTaxaPBDB("Asaphida")
+#' asaData <- getCladeTaxaPBDB("Asaphida", 
+#'     failIfNoInternet = FALSE)
+#'     
+#' if(!is.null(asaData)){
 #' 
 #' asaTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = asaData,
 #'     rankTaxon = "genus",
-#'     method = "parentChild", 
-#'     failIfNoInternet = FALSE)
+#'     method = "parentChild")
 #' 
-#' if(!is.null(asaTree)){    
-#'     # if it worked, plot it!
-#'     plotTaxaTreePBDB(asaTree)
-#'     }
+#' # if it worked, plot it!
+#' plotTaxaTreePBDB(asaTree)
+#' 
+#' }
 #' 
 #' # pause 3 seconds so we don't spam the API
 #' Sys.sleep(3)
@@ -239,18 +244,18 @@
 #' ###############################
 #' #Ornithischia
 #' 
-#' ornithData <- getCladeTaxaPBDB("Ornithischia")
+#' ornithData <- getCladeTaxaPBDB("Ornithischia", 
+#'     failIfNoInternet = FALSE)
+#' 
+#' if(!is.null(ornithData)){
 #' 
 #' ornithTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = ornithData,
 #'     rankTaxon = "genus",
-#'     method = "parentChild", 
-#'     failIfNoInternet = FALSE)
+#'     method = "parentChild")
 #' 
-#' if(!is.null(ornithTree)){    
-#'     # if it worked, plot it!
-#'     plotTaxaTreePBDB(ornithTree)
-#'     }
+#' # if it worked, plot it!
+#' plotTaxaTreePBDB(ornithTree)
 #' 
 #' # pause 3 seconds so we don't spam the API
 #' Sys.sleep(3)
@@ -274,10 +279,10 @@
 #'     method = "Linnean", 
 #'     failIfNoInternet = FALSE)
 #' 
-#' if(!is.null(ornithTree)){    
-#'     # if it worked, plot it!
-#'     plotTaxaTreePBDB(ornithTree)
-#'     }
+#' # if it worked, plot it!
+#' plotTaxaTreePBDB(ornithTree)
+#' 
+#' }
 #' 
 #' # pause 3 seconds so we don't spam the API
 #' Sys.sleep(3)
@@ -285,15 +290,16 @@
 #' #########################
 #' # Rhynchonellida
 #' 
-#' rhynchData <- getCladeTaxaPBDB("Rhynchonellida")
+#' rhynchData <- getCladeTaxaPBDB("Rhynchonellida", 
+#'     failIfNoInternet = FALSE)
+#'     
+#' if(!is.null(rhynchData)){  
 #' 
 #' rhynchTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = rhynchData,
 #'     rankTaxon = "genus",
-#'     method = "parentChild", 
-#'     failIfNoInternet = FALSE)
+#'     method = "parentChild")
 #' 
-#' if(!is.null(rhynchTree)){    
 #'     # if it worked, plot it!
 #'     plotTaxaTreePBDB(rhynchTree)
 #'     }

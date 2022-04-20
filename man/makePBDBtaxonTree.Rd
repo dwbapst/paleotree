@@ -97,6 +97,15 @@ names are found.}
 \code{method  = "parentChildOldQueryPBDB"} is used. The current default
 is \code{APIversion = "1.2"}, the most recent API version as of 12/11/2018.}
 
+\item{failIfNoInternet}{If the Paleobiology Database or another 
+needed internet resource cannot be accessed, perhaps because of
+no internet connection, should the function fail (with an error)
+or should the function return \code{NULL} and return an
+informative message instead, thus meeting the CRAN policy
+that such functionalities must 'fail gracefully'?
+The default is \code{TRUE} but all examples that might be auto-run
+use \code{FALSE} so they do not fail during R CHECK.}
+
 \item{taxaTree}{A phylogeny of class \code{phylo}, presumably a taxon tree as output from
 \code{makePBDBtaxonTree} with higher-taxon names as node labels.}
 

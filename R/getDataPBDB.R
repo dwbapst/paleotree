@@ -109,6 +109,7 @@
 
 #' @examples
 #' \donttest{
+#' 
 #' # Note that all examples here use argument 
 #'     # failIfNoInternet = FALSE so that functions do
 #'     # not error out but simply return NULL if internet
@@ -150,10 +151,15 @@
 #' # Dicellograptus
 #' dicelloData <- getPBDBocc("Dicellograptus", 
 #'     failIfNoInternet = FALSE)
+#' 
+#' if(!is.null(dicelloData)){
+#' 
 #' dicelloOcc2 <- taxonSortPBDBocc(dicelloData, 
 #'     rank = "species", onlyFormal = FALSE, 
 #'     failIfNoInternet = FALSE)
 #' names(dicelloOcc2)
+#' 
+#' }
 #' 
 #' }
 #' 

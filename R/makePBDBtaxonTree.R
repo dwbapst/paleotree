@@ -27,7 +27,7 @@
 #' macroevolutionary studies as reconstructed phylogenies
 #' (Soul and Friedman, 2015).
 
-#' @inheritParams makePBDBtaxonTree
+#' @inheritParams getDataPBDB
 
 #' @param taxaDataPBDB A table of taxonomic data collected from
 #' the Paleobiology Database, using the taxa list option

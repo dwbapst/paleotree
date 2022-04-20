@@ -51,6 +51,15 @@ or tips with \code{NA} ages listed cannot be processed by \code{parentChild2Taxo
 
 \item{plotTree}{If \code{TRUE}, the resulting dated tree is plotted.
 This is \code{FALSE} by default.}
+
+\item{failIfNoInternet}{If the Paleobiology Database or another 
+needed internet resource cannot be accessed, perhaps because of
+no internet connection, should the function fail (with an error)
+or should the function return \code{NULL} and return an
+informative message instead, thus meeting the CRAN policy
+that such functionalities must 'fail gracefully'?
+The default is \code{TRUE} but all examples that might be auto-run
+use \code{FALSE} so they do not fail during R CHECK.}
 }
 \value{
 Returns a dated phylogeny of class \code{phylo}, with an additional element

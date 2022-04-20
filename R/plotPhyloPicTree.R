@@ -19,6 +19,8 @@
 #' Paleobiology Database API. If \code{taxaDataPBDB} isn't provided, either by
 #' the user directly, or as an element of \code{tree}. 
 
+#' @inheritParams getDataPBDB
+
 #' @param tree A phylogeny of class \code{phylo} which will be
 #' plotted, with the terminal tip taxa replaced by silhouettes.
 #' The tree will be plotted with edge lengths.

@@ -13,6 +13,8 @@
 #' straight interpretation of what the PBDB reports. The dated trees
 #' produced should not be taken overly seriously.
 
+#' @inheritParams getDataPBDB
+
 #' @param taxaTree A tree with tip taxon names matching the taxon names
 #' in \code{taxaDataPBDB}. Probably a taxon tree estimated
 #' with \code{\link{makePBDBtaxonTree}}.
@@ -218,7 +220,6 @@
 #' 
 #' }
 #' 
-
 
 
 #' @name dateTaxonTreePBDB

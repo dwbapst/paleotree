@@ -150,6 +150,15 @@ extreme option is applied, with values transformed to greatly remove
 in-between gray-scale value, shifting them toward color or
 not-color without making the silhouette purely monochrome.}
 
+\item{failIfNoInternet}{If the Paleobiology Database or another 
+needed internet resource cannot be accessed, perhaps because of
+no internet connection, should the function fail (with an error)
+or should the function return \code{NULL} and return an
+informative message instead, thus meeting the CRAN policy
+that such functionalities must 'fail gracefully'?
+The default is \code{TRUE} but all examples that might be auto-run
+use \code{FALSE} so they do not fail during R CHECK.}
+
 \item{...}{Additional arguments, passed to
 \code{plot.phylo} for plotting of the tree. These
 additional arguments may be passed to \code{plot},

@@ -184,12 +184,14 @@ fixSelfParents <- function(dataParents, approach = "clean"){
 		return(dataParents)
 		}
 		
-getAllParents<-function(
+getAllParents <- function(
 		inputData, 
 		status, 
 		annotatedDuplicateNames = TRUE,
 		convertAccepted = TRUE,
-		stopIfSelfParent = FALSE){
+		stopIfSelfParent = FALSE,
+        failIfNoInternet = TRUE
+        ){
 	###############################################
 	parData<-parseParentPBDBData(inputData)
 	noParentMatch<-findNoParentMatch(parData)
@@ -226,10 +228,14 @@ getAllParents<-function(
 			# if convertAccepted is TRUE, then the taxon name and taxon no will be replaced
 				# with the accepted name and no for that taxon
 				# this is (probably?) NOT disirable for trying to trace parents in a set of taxa
-		dataNew <- queryMissingParents(floatingParentNum,
+		dataNew <- queryMissingParents(
+		    floatingParentNum,
 			status = status, 
 			convertAccepted = convertAccepted,
-			stopIfSelfParent = stopIfSelfParent)
+			stopIfSelfParent = stopIfSelfParent,    
+		    failIfNoInternet = failIfNoInternet
+	        )
+        if(is.null(dataNew)){return(NULL)}
 		# add new parents to the top of the matrix 
 			# so if duplicated names are annotated, its the originals that get annotated
 		parData <- rbind(dataNew,parData)
@@ -480,7 +486,9 @@ parentChildPBDBOld <- function(dataTransform, tipSet, cleanTree, method, APIvers
 					floatData <- queryMissingParents(
 						taxaID = floatersNew, 
 						APIversion = APIversion
-						)	
+						failIfNoInternet = failIfNoInternet
+	                    )
+                    if(is.null(floatData)){ return(NULL) }	
 					#update taxon names in taxonNameTable
 					whichUpdate <- match(floatData[,"taxon_no"],taxonNameTable[,1])
 					replaceFloatName <- floatData[!is.na(whichUpdate), "taxon_name"]

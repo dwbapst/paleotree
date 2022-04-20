@@ -190,8 +190,15 @@
 #' 
 
 #' @examples
+#' # Note that some examples here use argument 
+#'     # failIfNoInternet = FALSE so that functions do
+#'     # not error out but simply return NULL if internet
+#'     # connection is not available, and thus
+#'     # fail gracefully rather than error out (required by CRAN).
+#' # Remove this argument or set to TRUE so functions DO fail
+#'     # when internet resources (paleobiodb) is not available.
 #' 
-#' \dontrun{
+#' \donttest{
 #' 
 #' library(paleotree)
 #' 
@@ -203,15 +210,25 @@
 #'     "Rhynchotrema", "Pecten", "Homo", "Dimetrodon",
 #'     "Nemagraptus", "Panthera", "Anomalocaris")
 #' 
-#' data <-getSpecificTaxaPBDB(taxaAnimals)
-#' tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
+#' animalData <-getSpecificTaxaPBDB(taxaAnimals, 
+#'     failIfNoInternet = FALSE)
+#'     
+#' if(!is.null(animalData)){  
+#'   
+#' tree <- makePBDBtaxonTree(
+#'     animalData, 
+#'     rankTaxon = "genus", 
+#'     failIfNoInternet = FALSE
+#'     ) 
 #' 
-#' plotPhyloPicTree(tree = tree)
+#' plotPhyloPicTree(tree = tree, 
+#'     failIfNoInternet = FALSE)
 #' 
 #' # let's plot upwards but at a funny size
 #' dev.new(height = 5, width = 10)
 #' plotPhyloPicTree(tree = tree,
-#'      orientation = "upwards") 
+#'     orientation = "upwards", 
+#'     failIfNoInternet = FALSE) 
 #' 
 #' # dated tree plotting
 #' 
@@ -221,8 +238,9 @@
 #' plotPhyloPicTree(tree = timeTree)
 #' 
 #' # plotting the dated tree with an axis
-#' plotPhyloPicTree(tree = timeTree,
-#'     depthAxisPhylo= TRUE)
+#' plotPhyloPicTree(
+#'     tree = timeTree,
+#'     depthAxisPhylo = TRUE)
 #' 
 #' # now upwards!
 #' plotPhyloPicTree(tree = timeTree,
@@ -283,7 +301,12 @@
 #'     edge.color = "white",
 #'     taxaColor=taxaColors)
 #' 
+#' 
+#' } # end if to test if animalData was NULL
+#' } # end donttest segment
+#' 
 #' ######################################
+#' \dontrun{
 #' 
 #' # let's try some different phylopics
 #'       # like a nice tree of commonly known tetrapods
@@ -297,9 +320,9 @@
 #'      "Homo", "Dimetrodon", "Coleonyx", "Equus",
 #'     "Sphenodon", "Amblyrhynchus")
 #' 
-#' data <-getSpecificTaxaPBDB(tetrapodList)
+#' tetrapodData <-getSpecificTaxaPBDB(tetrapodList)
 #' 
-#' tree <- makePBDBtaxonTree(data, rankTaxon = "genus")
+#' tree <- makePBDBtaxonTree(tetrapodData, rankTaxon = "genus")
 #' 
 #' plotPhyloPicTree(tree = tree)
 #' 
@@ -400,6 +423,8 @@ plotPhyloPicTree <- function(
         rescalePNG = TRUE,
         trimPNG = TRUE,
         colorGradient = "original",
+        ################################
+        failIfNoInternet = TRUE,
         ...
         ){        
     #########################################
@@ -676,8 +701,12 @@ plotPhyloPicTree <- function(
         picPNG <- getPhyloPicPNG(
             picID_PBDB = phylopicIDsPBDB[i], 
             cacheDir = cacheDir,
-            cacheImage = cacheImage
+            cacheImage = cacheImage,
+            failIfNoInternet = failIfNoInternet
             )
+        if(is.null(picPNG) & failIfNoInternet){
+            return(NULL)
+            }
         ######################################
         # PREP IMAGE
         # if this pic is colored, make it truly monochrome

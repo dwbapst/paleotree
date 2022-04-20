@@ -51,7 +51,6 @@
 #' use in the API call. For full list of other options that you might want to include, please refer
 #' to \href{https://paleobiodb.org/data1.2/occs/list_doc.html}{documentation for the API}.
 
-    
 #' @param status What taxonomic status should the pull taxa have? 
 #' The default is \code{status = "accepted"}, which means 
 #' only those taxa that are both valid taxa and 
@@ -77,6 +76,15 @@
 #' to be missing from the Paleobiology Database's taxonomy table, should
 #' the function halt with an error?
 
+#' @param failIfNoInternet If the Paleobiology Database or another 
+#' needed internet resource cannot be accessed, perhaps because of
+#' no internet connection, should the function fail (with an error)
+#' or should the function return \code{NULL} and return an
+#' informative message instead, thus meeting the CRAN policy
+#' that such functionalities must 'fail gracefully'?
+#' The default is \code{TRUE} but all examples that might be auto-run
+#' use \code{FALSE} so they do not fail during R CHECK.
+
 #' @return 
 #' These functions return a \code{data.frame} containing
 #' variables pulled for the requested taxon selection.
@@ -101,7 +109,7 @@
 
 #' @examples
 #' \donttest{
-#' # Note that all examples here use arg 
+#' # Note that all examples here use argument 
 #'     # failIfNoInternet = FALSE so that functions do
 #'     # not error out but simply return NULL if internet
 #'     # connection is not available, and thus

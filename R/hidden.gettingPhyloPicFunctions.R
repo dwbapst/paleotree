@@ -46,7 +46,13 @@ getPhyloPicPNG<-function(
 	# if that doesn't work
 		# try to load the image from PBDB		
 	if(is.null(picPNG)){
-		picPNG <- getPhyloPicPNG_PBDB(picID_PBDB = picID_PBDB)
+		picPNG <- getPhyloPicPNG_PBDB(
+		        picID_PBDB = picID_PBDB,
+		        failIfNoInternet = failIfNoInternet
+            	)
+        if(is.null(picPNG) & failIfNoInternet){
+            return(NULL)
+            }
 		}
 	#########################
 	if(cacheImage & notCached){

@@ -163,13 +163,15 @@
 #' graptTreeLinnean <- makePBDBtaxonTree(
 #'     taxaDataPBDB = graptTaxaPBDB,
 #'     rankTaxon = "genus",
-#'     method = "Linnean")
+#'     method = "Linnean"
+#'     )
 #' 
 #' #get the taxon tree: parentChild method
 #' graptTreeParentChild <- makePBDBtaxonTree(
 #'     taxaDataPBDB = graptTaxaPBDB,
 #'     rankTaxon = "genus",
-#'     method = "parentChild")
+#'     method = "parentChild"
+#'     )
 #' 
 #' # let's plot these and compare them! 
 #' plotTaxaTreePBDB(graptTreeParentChild)
@@ -188,7 +190,8 @@
 #' conoTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = conoData,
 #'     rankTaxon = "genus",
-#'     method = "parentChild")
+#'     method = "parentChild"
+#'     )
 #' # plot it!
 #' plotTaxaTreePBDB(conoTree)
 #' 
@@ -201,7 +204,8 @@
 #' asaTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = asaData,
 #'     rankTaxon = "genus",
-#'     method = "parentChild")
+#'     method = "parentChild"
+#'     )
 #' # plot it!
 #' plotTaxaTreePBDB(asaTree)
 #' 
@@ -214,7 +218,8 @@
 #' ornithTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = ornithData,
 #'     rankTaxon = "genus",
-#'     method = "parentChild")
+#'     method = "parentChild"
+#'     )
 #' plotTaxaTreePBDB(ornithTree)
 #' 
 #' # pause 3 seconds so we don't spam the API
@@ -239,8 +244,8 @@
 #'     method = "Linnean")
 #' plotTaxaTreePBDB(ornithTree)
 #' 
-#' 	# pause 3 seconds so we don't spam the API
-#' 	Sys.sleep(3)
+#'     # pause 3 seconds so we don't spam the API
+#'     Sys.sleep(3)
 #' 
 #' #########################
 #' # Rhynchonellida
@@ -257,7 +262,6 @@
 #' 
 
 
- 
 # # plot it!
 # # let's make a simple helper function
 #    # for plotting these taxon trees
@@ -265,167 +269,171 @@
 #    plot(tree,show.tip.label = FALSE,
 #        no.margin = TRUE,edge.width = 0.35)
 #    nodelabels(tree$node.label,adj = c(0,1/2))
-# 	  }
+#       }
 # 
-
-
 
 
 #' @name makePBDBtaxonTree
 #' @rdname makePBDBtaxonTree
 #' @export
 makePBDBtaxonTree <- function(
-					taxaDataPBDB, rankTaxon,
-					method = "parentChild", #solveMissing = NULL,
-					tipSet = NULL, 
-					cleanTree = TRUE,
-					annotatedDuplicateNames = TRUE,
-					APIversion = "1.2"){		
-	############################################################
-	############################################################
-	# library(paleotree);data(graptPBDB);
-	# taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
-	# taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
-	# taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
-	# taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "Linnean"; 
-	#
-	#CHECKS
-	if(length(method) != 1 | !is.character(method)){
-		stop("method must be a single character value")
-		}
-	if(!any(method == c("Linnean", "parentChild"))){
-		stop("method must be one of either 'Linnean' or 'parentChild'")
-		}
-	#if(!is.null(solveMissing)){
-	#	if(length(solveMissing)>1 | !is.character(solveMissing)){
-	#		stop("solveMissing must be either NULL or a single character value")
-	#		}
-	#	if(is.na(match(solveMissing,c("queryPBDB","mergeRoots")))){
-	#		stop('solveMissing but be either NULL or "queryPBDB" or "mergeRoots"')
-	#		}
-	#	}
-	if(!is(taxaDataPBDB,"data.frame")){
-		stop("taxaDataPBDB isn't a data.frame")
-		}
-	if(length(rankTaxon) != 1 | !is.character(rankTaxon)){
-		stop("rankTaxon must be a single character value")
-		}
-	if(!any(sapply(c("species","genus","family","order","class","phylum"),
-			function(x) x == rankTaxon))){
-		stop("rankTaxon must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")
-		}
-	#
-	#########################################
-	# CLEAN DATA
-	#
-	#translate to a common vocabulary
-	dataTransform <- translatePBDBtaxa(taxaDataPBDB)
-	dataTransform <- unique(dataTransform)
-	#
-	if(method == "parentChild"){
-		# need two things: a table of parent-child relationships as IDs
-			#and a look-up table of IDs and taxon names
-		# 
-		if(is.null(tipSet)){
-			tipSet <- "nonParents"
-			}
-		##############################
-		# FIND ALL PARENTS FIRST
-			# three column matrix with taxon name, taxon ID, parent ID
-			# (in that order)
-		parData<- getAllParents(dataTransform,
-			status="all", 
-			annotatedDuplicateNames = annotatedDuplicateNames,
-			convertAccepted = FALSE,
-			stopIfSelfParent = FALSE)
-		#print(parData)
-		#
-		#######################################
-		# NOW FILTER OUT TIP TAXA WE WANT
-		#tipIDs <- getTaxaIDsDesiredRank(data=dataTransform, rank=rankTaxon)
-		tipIDs <- dataTransform$taxon_no[dataTransform$taxon_rank==rankTaxon]
-		# check that all of these are unique values
-		tipIDs <- unique(tipIDs)
-		# figure out which taxon numbers match tip IDs
-		whichTip <- match(tipIDs, parData$taxon_no)		
-		#
-		###############################
-		# BUILD PARENT-CHILD matrix
-		# get parent-child matrix for just desired OTUs 
-			# start matrix with those parent-child relationships
-			# subset these from parData using the taxon ID numbers
-		pcMat <- subsetParDataPBDB(
-			subsetNum = tipIDs,
-			parData = parData
-			)			
-		# starting from desired tip OTUs, work backwards to a common ancestor from the full parData
-		pcMat<-constructParentChildMatrixPBDB(
-			initPCmat=pcMat,
-			parData = parData
-			)	
-		#################################
-		# convert parent-child matrix to accepted taxon names
-		pcMat <- apply(pcMat, 1:2, 
-			convertParentChildMatNames,
-			parData = parData
-			)
-		# 03-24-19 
-		# why are some taxa gettign mysterious ".1" additions?
-		#print(sort(unique(pcMat[,1])))
-		# made it so that original names get annotated, not newly added parents
-		# this issue is now avoided
-		#
-		# remove "NODE" root-stem 
-		pcMat <- pcMat[pcMat[,1] != "NODE", ]
-		############################
-		# Calculate the taxon tree!
-		tree <- parentChild2taxonTree(
-			parentChild = pcMat,
-			tipSet = tipSet,
-			cleanTree = cleanTree)
-		#
-		tree$parentChild <- pcMat
-		}
-	##############
-	#
-	if(method == "Linnean"){
-		tree <- getLinneanTaxonTreePBDB(
-			dataTransform = dataTransform, 
-			tipSet = tipSet,
-			cleanTree = cleanTree,
-			rankTaxon = rankTaxon
-			)
-		}
-	#########
-	#
-	if(method == "parentChildOldMergeRoot" | method == "parentChildOldQueryPBDB"){
-		tree <- parentChildPBDBOld(
-			dataTransform = dataTransform, 
-			tipSet = tipSet,
-			cleanTree = cleanTree,
-			method = method, 
-			APIversion = APIversion
-			)
-		}
-	####################
-	tree$taxaDataPBDB <- taxaDataPBDB
-	return(tree)
-	}		
-	
-	
+                    taxaDataPBDB, 
+                    rankTaxon,
+                    method = "parentChild", 
+                    #solveMissing = NULL,
+                    tipSet = NULL, 
+                    cleanTree = TRUE,
+                    annotatedDuplicateNames = TRUE,
+                    APIversion = "1.2",
+                    failIfNoInternet = TRUE
+                    ){        
+    ############################################################
+    ############################################################
+    # library(paleotree);data(graptPBDB);
+    # taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
+    # taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
+    # taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "parentChild"; tipSet = "nonParents"; cleanTree = TRUE
+    # taxaDataPBDB <- graptTaxaPBDB; rankTaxon = "genus"; method = "Linnean"; 
+    #
+    #CHECKS
+    if(length(method) != 1 | !is.character(method)){
+        stop("method must be a single character value")
+        }
+    if(!any(method == c("Linnean", "parentChild"))){
+        stop("method must be one of either 'Linnean' or 'parentChild'")
+        }
+    #if(!is.null(solveMissing)){
+    #    if(length(solveMissing)>1 | !is.character(solveMissing)){
+    #        stop("solveMissing must be either NULL or a single character value")
+    #        }
+    #    if(is.na(match(solveMissing,c("queryPBDB","mergeRoots")))){
+    #        stop('solveMissing but be either NULL or "queryPBDB" or "mergeRoots"')
+    #        }
+    #    }
+    if(!is(taxaDataPBDB,"data.frame")){
+        stop("taxaDataPBDB isn't a data.frame")
+        }
+    if(length(rankTaxon) != 1 | !is.character(rankTaxon)){
+        stop("rankTaxon must be a single character value")
+        }
+    if(!any(sapply(c("species","genus","family","order","class","phylum"),
+            function(x) x == rankTaxon))){
+        stop("rankTaxon must be one of 'species', 'genus', 'family', 'order', 'class' or 'phylum'")
+        }
+    #
+    #########################################
+    # CLEAN DATA
+    #
+    #translate to a common vocabulary
+    dataTransform <- translatePBDBtaxa(taxaDataPBDB)
+    dataTransform <- unique(dataTransform)
+    #
+    if(method == "parentChild"){
+        # need two things: a table of parent-child relationships as IDs
+            #and a look-up table of IDs and taxon names
+        # 
+        if(is.null(tipSet)){
+            tipSet <- "nonParents"
+            }
+        ##############################
+        # FIND ALL PARENTS FIRST
+            # three column matrix with taxon name, taxon ID, parent ID
+            # (in that order)
+        parData<- getAllParents(dataTransform,
+            status="all", 
+            annotatedDuplicateNames = annotatedDuplicateNames,
+            convertAccepted = FALSE,
+            stopIfSelfParent = FALSE)
+        #print(parData)
+        #
+        #######################################
+        # NOW FILTER OUT TIP TAXA WE WANT
+        #tipIDs <- getTaxaIDsDesiredRank(data=dataTransform, rank=rankTaxon)
+        tipIDs <- dataTransform$taxon_no[dataTransform$taxon_rank==rankTaxon]
+        # check that all of these are unique values
+        tipIDs <- unique(tipIDs)
+        # figure out which taxon numbers match tip IDs
+        whichTip <- match(tipIDs, parData$taxon_no)        
+        #
+        ###############################
+        # BUILD PARENT-CHILD matrix
+        # get parent-child matrix for just desired OTUs 
+            # start matrix with those parent-child relationships
+            # subset these from parData using the taxon ID numbers
+        pcMat <- subsetParDataPBDB(
+            subsetNum = tipIDs,
+            parData = parData
+            )            
+        # starting from desired tip OTUs, work backwards to a common ancestor from the full parData
+        pcMat<-constructParentChildMatrixPBDB(
+            initPCmat=pcMat,
+            parData = parData
+            )    
+        #################################
+        # convert parent-child matrix to accepted taxon names
+        pcMat <- apply(pcMat, 1:2, 
+            convertParentChildMatNames,
+            parData = parData
+            )
+        # 03-24-19 
+        # why are some taxa gettign mysterious ".1" additions?
+        #print(sort(unique(pcMat[,1])))
+        # made it so that original names get annotated, not newly added parents
+        # this issue is now avoided
+        #
+        # remove "NODE" root-stem 
+        pcMat <- pcMat[pcMat[,1] != "NODE", ]
+        ############################
+        # Calculate the taxon tree!
+        tree <- parentChild2taxonTree(
+            parentChild = pcMat,
+            tipSet = tipSet,
+            cleanTree = cleanTree)
+        #
+        tree$parentChild <- pcMat
+        }
+    ##############
+    #
+    if(method == "Linnean"){
+        tree <- getLinneanTaxonTreePBDB(
+            dataTransform = dataTransform, 
+            tipSet = tipSet,
+            cleanTree = cleanTree,
+            rankTaxon = rankTaxon
+            )
+        }
+    #########
+    #
+    if(method == "parentChildOldMergeRoot" | method == "parentChildOldQueryPBDB"){
+        tree <- parentChildPBDBOld(
+            dataTransform = dataTransform, 
+            tipSet = tipSet,
+            cleanTree = cleanTree,
+            method = method, 
+            APIversion = APIversion,
+            failIfNoInternet = failIfNoInternet
+            )
+        if(is.null(tree)){return(NULL)}
+        }
+    ####################
+    tree$taxaDataPBDB <- taxaDataPBDB
+    return(tree)
+    }        
+    
+    
 #' @rdname makePBDBtaxonTree
-#' @export	
+#' @export    
 plotTaxaTreePBDB<-function(taxaTree, edgeLength = 1){
-	taxaTree$edge.length <- rep(edgeLength ,Nedge(taxaTree))
-	taxaTree$edge.length [taxaTree$edge[,2] <= Ntip(taxaTree)] <- edgeLength/5
-	taxaTree$root.edge <- edgeLength*1.5
-	plot(taxaTree,
-		show.tip.label = FALSE,
-    		no.margin = TRUE,
-		root.edge=TRUE,
-		edge.width = 0.2)
-	nodelabels(taxaTree$node.label,
-		cex=0.5, 
-		adj = c(1.1,0.5))
-	}
+    taxaTree$edge.length <- rep(edgeLength ,Nedge(taxaTree))
+    taxaTree$edge.length [taxaTree$edge[,2] <= Ntip(taxaTree)] <- edgeLength/5
+    taxaTree$root.edge <- edgeLength*1.5
+    plot(taxaTree,
+        show.tip.label = FALSE,
+            no.margin = TRUE,
+        root.edge=TRUE,
+        edge.width = 0.2)
+    nodelabels(taxaTree$node.label,
+        cex=0.5, 
+        adj = c(1.1,0.5))
+    }
 

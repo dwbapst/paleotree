@@ -259,7 +259,7 @@
 #'    orientation = "upwards",
 #'    depthAxisPhylo= TRUE)
 #' 
-#' ########
+#' ################################################
 #' 
 #' # adjusting a tree to ignore a very old root
 #' 
@@ -357,8 +357,8 @@
 #'     "Smilodon", "Mammuthus", "Exaeretodon", "Redondasaurus", "Dimetrodon",
 #'     "Megatheriidae", "Metasequoia", "Aedes", "Panthera", "Megalonyx")
 #' 
-#' data <-getSpecificTaxaPBDB(taxaSeventyEight)
-#' tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
+#' dataSeventyEight <-getSpecificTaxaPBDB(taxaSeventyEight)
+#' tree <- makePBDBtaxonTree(dataSeventyEight, rankTaxon = "genus") 
 #' 
 #' timeTree <- dateTaxonTreePBDB(tree,
 #'   minBranchLen = 10)
@@ -543,7 +543,12 @@ plotPhyloPicTree <- function(
     # check or obtain the phylopic IDs from PBDB    
     phylopicIDsPBDB <- getPhyloPicIDNumFromPBDB(
         taxaData = taxaDataPBDB,
-        tree = tree)
+        tree = tree,
+        failIfNoInternet = failIfNoInternet
+        )
+    if(!is.null(phylopicIDsPBDB)){
+        return(NULL)
+        }
     ###############################################
     # determine colors for every taxon using taxaColor
     taxaColor <- matchTaxaColor(

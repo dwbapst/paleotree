@@ -153,6 +153,14 @@
 
 
 #' @examples
+#' # Note that most examples here use argument 
+#'     # failIfNoInternet = FALSE so that functions do
+#'     # not error out but simply return NULL if internet
+#'     # connection is not available, and thus
+#'     # fail gracefully rather than error out (required by CRAN).
+#' # Remove this argument or set to TRUE so functions DO fail
+#'     # when internet resources (paleobiodb) is not available.
+#' 
 #' set.seed(1)
 #' \donttest{
 #' 
@@ -163,20 +171,24 @@
 #' graptTreeLinnean <- makePBDBtaxonTree(
 #'     taxaDataPBDB = graptTaxaPBDB,
 #'     rankTaxon = "genus",
-#'     method = "Linnean"
-#'     )
+#'     method = "Linnean", 
+#'     failIfNoInternet = FALSE)
 #' 
 #' #get the taxon tree: parentChild method
 #' graptTreeParentChild <- makePBDBtaxonTree(
 #'     taxaDataPBDB = graptTaxaPBDB,
 #'     rankTaxon = "genus",
-#'     method = "parentChild"
-#'     )
+#'     method = "parentChild", 
+#'     failIfNoInternet = FALSE)
+#'     
+#' if(!is.null(graptTreeParentChild) & 
+#'         !is.null(graptTreeLinnean)){
+#'     # if those functions worked...
+#'     # let's plot these and compare them! 
+#'     plotTaxaTreePBDB(graptTreeParentChild)
+#'     plotTaxaTreePBDB(graptTreeLinnean)
+#'     }
 #' 
-#' # let's plot these and compare them! 
-#' plotTaxaTreePBDB(graptTreeParentChild)
-#' 
-#' plotTaxaTreePBDB(graptTreeLinnean)
 #' 
 #' # pause 3 seconds so we don't spam the API
 #' Sys.sleep(3)
@@ -186,41 +198,57 @@
 #' 
 #' ###################################
 #' #conodonts
+#' 
 #' conoData <- getCladeTaxaPBDB("Conodonta")
+#' 
 #' conoTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = conoData,
 #'     rankTaxon = "genus",
-#'     method = "parentChild"
-#'     )
-#' # plot it!
-#' plotTaxaTreePBDB(conoTree)
+#'     method = "parentChild", 
+#'     failIfNoInternet = FALSE)
+#' 
+#' if(!is.null(conoTree)){    
+#'     # if it worked, plot it!
+#'     plotTaxaTreePBDB(conoTree)
+#'     }
 #' 
 #' # pause 3 seconds so we don't spam the API
 #' Sys.sleep(3)
 #' 
 #' #############################
 #' #asaphid trilobites
+#' 
 #' asaData <- getCladeTaxaPBDB("Asaphida")
+#' 
 #' asaTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = asaData,
 #'     rankTaxon = "genus",
-#'     method = "parentChild"
-#'     )
-#' # plot it!
-#' plotTaxaTreePBDB(asaTree)
+#'     method = "parentChild", 
+#'     failIfNoInternet = FALSE)
+#' 
+#' if(!is.null(asaTree)){    
+#'     # if it worked, plot it!
+#'     plotTaxaTreePBDB(asaTree)
+#'     }
 #' 
 #' # pause 3 seconds so we don't spam the API
 #' Sys.sleep(3)
 #' 
 #' ###############################
 #' #Ornithischia
+#' 
 #' ornithData <- getCladeTaxaPBDB("Ornithischia")
+#' 
 #' ornithTree <- makePBDBtaxonTree(
 #'     taxaDataPBDB = ornithData,
 #'     rankTaxon = "genus",
-#'     method = "parentChild"
-#'     )
-#' plotTaxaTreePBDB(ornithTree)
+#'     method = "parentChild", 
+#'     failIfNoInternet = FALSE)
+#' 
+#' if(!is.null(ornithTree)){    
+#'     # if it worked, plot it!
+#'     plotTaxaTreePBDB(ornithTree)
+#'     }
 #' 
 #' # pause 3 seconds so we don't spam the API
 #' Sys.sleep(3)
@@ -241,20 +269,32 @@
 #' ornithTree <- makePBDBtaxonTree(
 #'     ornithData,
 #'     rankTaxon = "genus",
-#'     method = "Linnean")
-#' plotTaxaTreePBDB(ornithTree)
+#'     method = "Linnean", 
+#'     failIfNoInternet = FALSE)
 #' 
-#'     # pause 3 seconds so we don't spam the API
-#'     Sys.sleep(3)
+#' if(!is.null(ornithTree)){    
+#'     # if it worked, plot it!
+#'     plotTaxaTreePBDB(ornithTree)
+#'     }
+#' 
+#' # pause 3 seconds so we don't spam the API
+#' Sys.sleep(3)
 #' 
 #' #########################
 #' # Rhynchonellida
-#' rynchData <- getCladeTaxaPBDB("Rhynchonellida")
-#' rynchTree <- makePBDBtaxonTree(
-#'     taxaDataPBDB = rynchData,
+#' 
+#' rhynchData <- getCladeTaxaPBDB("Rhynchonellida")
+#' 
+#' rhynchTree <- makePBDBtaxonTree(
+#'     taxaDataPBDB = rhynchData,
 #'     rankTaxon = "genus",
-#'     method = "parentChild")
-#' plotTaxaTreePBDB(rynchTree)
+#'     method = "parentChild", 
+#'     failIfNoInternet = FALSE)
+#' 
+#' if(!is.null(rhynchTree)){    
+#'     # if it worked, plot it!
+#'     plotTaxaTreePBDB(rhynchTree)
+#'     }
 #' 
 #' #some of these look pretty messy!
 #' 
@@ -277,16 +317,16 @@
 #' @rdname makePBDBtaxonTree
 #' @export
 makePBDBtaxonTree <- function(
-                    taxaDataPBDB, 
-                    rankTaxon,
-                    method = "parentChild", 
-                    #solveMissing = NULL,
-                    tipSet = NULL, 
-                    cleanTree = TRUE,
-                    annotatedDuplicateNames = TRUE,
-                    APIversion = "1.2",
-                    failIfNoInternet = TRUE
-                    ){        
+                      taxaDataPBDB, 
+                      rankTaxon,
+                      method = "parentChild", 
+                      #solveMissing = NULL,
+                      tipSet = NULL, 
+                      cleanTree = TRUE,
+                      annotatedDuplicateNames = TRUE,
+                      APIversion = "1.2",
+                      failIfNoInternet = TRUE
+                      ){        
     ############################################################
     ############################################################
     # library(paleotree);data(graptPBDB);
@@ -339,11 +379,15 @@ makePBDBtaxonTree <- function(
         # FIND ALL PARENTS FIRST
             # three column matrix with taxon name, taxon ID, parent ID
             # (in that order)
-        parData<- getAllParents(dataTransform,
+        parData <- getAllParents(
+            dataTransform,
             status="all", 
             annotatedDuplicateNames = annotatedDuplicateNames,
             convertAccepted = FALSE,
-            stopIfSelfParent = FALSE)
+            stopIfSelfParent = FALSE,
+            failIfNoInternet = failIfNoInternet
+            )
+        if(is.null(parData) & !failIfNoInternet){return(NULL)}
         #print(parData)
         #
         #######################################

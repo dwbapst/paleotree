@@ -92,13 +92,14 @@
 #'     failIfNoInternet = FALSE)
 #'     
 #' if(!is.null(animalData)){
-#'     tree <- makePBDBtaxonTree(animalData, 
-#'         rankTaxon = "genus") 
 #' 
-#'     #get the ranges 
-#'     timeTree <- dateTaxonTreePBDB(tree, 
-#'         failIfNoInternet = FALSE)
-#'     }
+#' tree <- makePBDBtaxonTree(animalData, 
+#'     rankTaxon = "genus")
+#' 
+#' #get the ranges 
+#' timeTree <- dateTaxonTreePBDB(tree)
+#'     
+#' }
 #' 
 #' }
 #' 
@@ -171,24 +172,26 @@
 #'     failIfNoInternet = FALSE)
 #' 
 #' if(!is.null(horseData)){
-#'     # now we can date the tree with dateTaxonTreePBDB
 #' 
-#'     datedHorseTree <- dateTaxonTreePBDB(
-#'         taxaTree = horseTree,
-#'         taxaDataPBDB = horseData,
-#'         minBranchLen = 1, 
-#'         failIfNoInternet = FALSE)
+#' # now we can date the tree with dateTaxonTreePBDB
 #' 
-#'     # and let's try plotting it!	
-#'     plotPhyloPicTree(
-#'         tree = datedHorseTree,
-#'         depthAxisPhylo = TRUE, 
-#'         failIfNoInternet = FALSE)		
+#' datedHorseTree <- dateTaxonTreePBDB(
+#'     taxaTree = horseTree,
+#'     taxaDataPBDB = horseData,
+#'     minBranchLen = 1, 
+#'     failIfNoInternet = FALSE)
+#' 
+#' # and let's try plotting it!	
+#' plotPhyloPicTree(
+#'     tree = datedHorseTree,
+#'     depthAxisPhylo = TRUE, 
+#'     failIfNoInternet = FALSE)		
 #' 	
-#'     # a fairly boring phylopic diagram
-#'          # not many horse phylopics as of 07-16-19?
+#' # a fairly boring phylopic diagram
+#'      # not many horse phylopics as of 07-16-19?
 #' 
-#'     }
+#' }
+#' 
 #' #}
 #' }
 #' 

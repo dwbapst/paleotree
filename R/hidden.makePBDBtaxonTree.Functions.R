@@ -428,7 +428,14 @@ getLinneanTaxonTreePBDB <- function(dataTransform, tipSet, cleanTree, rankTaxon)
 	return(tree)
 	}
 
-parentChildPBDBOld <- function(dataTransform, tipSet, cleanTree, method, APIversion){
+parentChildPBDBOld <- function(
+        dataTransform, 
+        tipSet, 
+        cleanTree, 
+        method, 
+        APIversion,
+        failIfNoInternet = TRUE
+        ){
 	dataTransform <- apply(dataTransform, 2, as.character)
 	# need two things: a table of parent-child relationships as IDs
 		#and a look-up table of IDs and taxon names

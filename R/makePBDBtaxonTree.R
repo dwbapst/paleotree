@@ -151,7 +151,7 @@
 #' 
 #' Soul, L. C., and M. Friedman. 2015. Taxonomy and Phylogeny Can Yield
 #' Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology} 
-#' (\href{https://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract}{Link})
+#' (\doi{10.1093/sysbio/syv015})
 
 
 #' @examples

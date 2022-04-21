@@ -284,7 +284,7 @@ dateTaxonTreePBDB <- function(
 				# get API URL
 			nodeNames <- paste0(nodeNames, collapse=",")
 			apiAddressNodes <- paste0(
-				"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
+				"https://paleobiodb.org/data1.2/taxa/list.txt?name=",
 				nodeNames,"&show=app,parent"
 				)
 			# browseURL(apiAddressNodes)

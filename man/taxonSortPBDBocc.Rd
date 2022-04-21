@@ -147,7 +147,7 @@ names(dicelloOcc2)
 	#this should have only 1 species
 # *old* way, using v1.1 of PBDB API:
 # acoData <- read.csv(paste0(
-#	"http://paleobiodb.org/data1.1/occs/list.txt?",
+#	"https://paleobiodb.org/data1.1/occs/list.txt?",
 #	"base_name = Acosarina\%20minuta&show=ident,phylo"))
 #
 # *new* method - with getPBDBocc, using v1.2 of PBDB API:

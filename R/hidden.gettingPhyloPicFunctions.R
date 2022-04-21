@@ -95,7 +95,7 @@ getPhyloPicUIDsTableFromPBDB <- function(
 	
 getPhyloPicFromPhyloPic <- function(picUID){
 	# get image info
-	picInfoURL <- paste0("http://phylopic.org/api/a/image/",
+	picInfoURL <- paste0("https://phylopic.org/api/a/image/",
 		picUID,"?options=credit+licenseURL+pngFiles")
 	if(RCurl::url.exists(picInfoURL)){
 		picInfo <- jsonlite::fromJSON(picInfoURL,  
@@ -107,7 +107,7 @@ getPhyloPicFromPhyloPic <- function(picUID){
 			picPNGurl <- picInfo$result$pngFiles[[
 					length(picInfo$result$pngFiles)
 				]]$url
-			picPNGurl <- paste0("http://phylopic.org",
+			picPNGurl <- paste0("https://phylopic.org",
 				picPNGurl)
 			##############
 			if(RCurl::url.exists(picPNGurl)){
@@ -142,7 +142,7 @@ getPhyloPicPNG_PBDB<-function(
 	# GET IMAGE
 	# get the URL address for the pic via API
 	apiPicURL <- paste0(
-		"http://paleobiodb.org/data1.2/taxa/thumb.png?id=",
+		"https://paleobiodb.org/data1.2/taxa/thumb.png?id=",
 		picID_PBDB)
 	#
 	# first test internet
@@ -173,7 +173,7 @@ getPhyloPicIDNumFromPBDB <- function(
 		tiptaxa <- paste0(tree$tip.label, 
 			collapse = ",")
 		apiAddressTaxa <- paste0(
-			"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
+			"https://paleobiodb.org/data1.2/taxa/list.txt?name=",
 			tiptaxa, "&rel=exact&show=img"
 			)	
 		# call PBDB API
@@ -254,7 +254,7 @@ canConnectPBDB <- function(fail = TRUE){
     #
     # is PBDB data service up
     res <- RCurl::url.exists(
-        "http://paleobiodb.org/data1.2/taxa/single.txt?name=Dicellograptus/"
+        "https://paleobiodb.org/data1.2/taxa/single.txt?name=Dicellograptus/"
         )
     if(!res){
         connectMessage <- "Cannot connect to Paleobiology Database API at https://paleobiodb.org/data1.2/"
@@ -266,7 +266,7 @@ canConnectPBDB <- function(fail = TRUE){
         }
     
     # res <- try(read.csv(
-    #    "http://paleobiodb.org/data1.2/taxa/single.txt?name=Dicellograptus",
+    #    "https://paleobiodb.org/data1.2/taxa/single.txt?name=Dicellograptus",
     #    stringsAsFactors = TRUE
     #    ))
     return(TRUE)

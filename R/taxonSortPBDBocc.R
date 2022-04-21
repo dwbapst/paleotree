@@ -152,7 +152,7 @@
 #' 	#this should have only 1 species
 #' # *old* way, using v1.1 of PBDB API:
 #' # acoData <- read.csv(paste0(
-#' #	"http://paleobiodb.org/data1.1/occs/list.txt?",
+#' #	"https://paleobiodb.org/data1.1/occs/list.txt?",
 #' #	"base_name = Acosarina%20minuta&show=ident,phylo"))
 #' #
 #' # *new* method - with getPBDBocc, using v1.2 of PBDB API:
@@ -219,7 +219,7 @@
 # old examples involving compact vocabulary
 #
 #make sure works with compact vocab v1.2
-#dicelloData <- read.csv(paste0("http://paleobiodb.org",
+#dicelloData <- read.csv(paste0("https://paleobiodb.org",
 #	"/data1.2/occs/list.txt?base_name=Dicellograptus",
 #	"&show=ident,phylo&vocab=com"))
 #dicelloOccCom1 <- taxonSortPBDBocc(dicelloData,
@@ -228,7 +228,7 @@
 #head(dicelloOccCom1[[1]])[,1:7]
 
 #make sure works with compact vocab v1.2
-#dicelloData <- read.csv(paste0("http://paleobiodb.org",
+#dicelloData <- read.csv(paste0("https://paleobiodb.org",
 #	"/data1.2/occs/list.txt?base_name=Dicellograptus",
 #	"&show=ident,phylo&vocab=com"))
 #dicelloOccCom1 <- taxonSortPBDBocc(dicelloData,

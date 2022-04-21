@@ -1,6 +1,6 @@
 #' Obtaining Data for Taxa or Occurrences From Paleobiology Database API
 #' 
-#' The Paleobiology Database API (\href{http://paleobiodb.org/data1.2}{link})
+#' The Paleobiology Database API (\href{https://paleobiodb.org/data1.2/}{link})
 #' is very easy to use, and generally any data one wishes to collect can be obtained
 #' in R through a variety of ways - the simplest being to wrap a data retrieval request
 #' to the API, specified for CSV output, with R function \code{read.csv}. The functions
@@ -38,7 +38,7 @@
 #' which will then formatted for use in the API call. Other options that
 #' you might want to include, such as information on ecospace or taphonomy,
 #' can be included: please refer to the full list at
-#' the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.
+#' the \href{https://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.
 
 #' @param showOccs Which variables for occurrence data should be requested
 #' from the Paleobiology Database? The default is to include classification (\code{"class"}),
@@ -59,7 +59,7 @@
 #' senior homonyms and valid subjective synonyms, and \code{"all"},
 #' which will return all valid taxa and all otherwise repressed invalid taxa.
 #' For additional statuses that you can request, please see the documentation at  
-#' the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.
+#' the \href{https://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.
     
     # status -> all, accepted, valid
     # accepted -> only senior synonyms
@@ -194,7 +194,7 @@ getCladeTaxaPBDB <- function(
     ###################################
     # 12-30-18: modified for API version 1.2
     #let's get some taxonomic data
-    requestURLPBDB <- paste0("http://paleobiodb.org/",
+    requestURLPBDB <- paste0("https://paleobiodb.org/",
             "data1.2/taxa/list.txt?base_name=", taxon,
             "&show=",paste0(showTaxa,collapse = ","),
             # status -> all, accepted, valid
@@ -245,7 +245,7 @@ getSpecificTaxaPBDB <- function(
         }
     #
     requestURLPBDB <- paste0(
-        "http://paleobiodb.org/data1.2/taxa/list.txt?name=",
+        "https://paleobiodb.org/data1.2/taxa/list.txt?name=",
             taxaMerged,
         "&show=",
             paste0(showTaxa,collapse = ","),
@@ -363,7 +363,7 @@ getPBDBocc <- function(
     taxa <- paste(unlist(strsplit(taxa,"_")),collapse = "%20")
     showOccs <- paste(showOccs,collapse = ",")
     command <- paste0(
-        "http://paleobiodb.org/data1.2/occs/list.txt?base_name=",
+        "https://paleobiodb.org/data1.2/occs/list.txt?base_name=",
         taxa,"&show=",showOccs,        
         # "&limit=all", # not a command in 1.2
         collapse = "")

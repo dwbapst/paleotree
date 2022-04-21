@@ -316,7 +316,7 @@ application programming interface. \emph{Paleobiology} 42(1):1-7.
 
 Soul, L. C., and M. Friedman. 2015. Taxonomy and Phylogeny Can Yield
 Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology} 
-(\href{http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract}{Link})
+(\href{https://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract}{Link})
 }
 \seealso{
 Two other functions in paleotree are used as sub-algorithms by \code{makePBDBtaxonTree}

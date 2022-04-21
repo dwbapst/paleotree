@@ -143,7 +143,7 @@
 #' particularly the cal3 method, along with an example using real (graptolite)
 #' data, can be found at the following link:
 #' 
-#' \url{http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
+#' \url{https://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
 #' 
 #' @rdname cal3TimePaleoPhy
 #' @aliases cal3TimePaleoPhy bin_cal3TimePaleoPhy cal3

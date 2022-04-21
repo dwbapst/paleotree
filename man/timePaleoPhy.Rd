@@ -369,7 +369,7 @@ by \code{read.csv} or \code{read.table}), these will be coerced to a matrix.
 
 A tutorial for applying the time-scaling functions in paleotree, along with
 an example using real (graptolite) data, can be found here:
-\url{http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
+\url{https://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
 }
 \note{
 Please account for stratigraphic uncertainty in your analysis.

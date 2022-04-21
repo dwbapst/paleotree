@@ -111,7 +111,7 @@ queryMissingParents <- function(taxaID,
         }
     #
 	floatData <- read.csv(
-		paste0("http://paleobiodb.org/data",APIversion,
+		paste0("https://paleobiodb.org/data",APIversion,
 			"/taxa/list.txt?taxon_id=",paste0(taxaID,collapse=","),
 				### should we take all or only ACCEPTED parents?
 			 "&rel=exact&status=",status,

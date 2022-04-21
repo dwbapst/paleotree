@@ -49,7 +49,7 @@ as a vector of character strings (ex. \code{c("class", "img", "app")}),
 which will then formatted for use in the API call. Other options that
 you might want to include, such as information on ecospace or taphonomy,
 can be included: please refer to the full list at
-the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
+the \href{https://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
 
 \item{status}{What taxonomic status should the pull taxa have? 
 The default is \code{status = "accepted"}, which means 
@@ -59,7 +59,7 @@ to consider are \code{"valid"}, which is all valid taxa:
 senior homonyms and valid subjective synonyms, and \code{"all"},
 which will return all valid taxa and all otherwise repressed invalid taxa.
 For additional statuses that you can request, please see the documentation at  
-the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
+the \href{https://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
 
 \item{urlOnly}{If \code{FALSE} (the default), then the
 function behaves as expected, the API is called and a
@@ -105,7 +105,7 @@ variables pulled for the requested taxon selection.
 This behavior can be modified by argument \code{urlOnly}.
 }
 \description{
-The Paleobiology Database API (\href{http://paleobiodb.org/data1.2}{link})
+The Paleobiology Database API (\href{https://paleobiodb.org/data1.2/}{link})
 is very easy to use, and generally any data one wishes to collect can be obtained
 in R through a variety of ways - the simplest being to wrap a data retrieval request
 to the API, specified for CSV output, with R function \code{read.csv}. The functions

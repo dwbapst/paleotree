@@ -19,6 +19,8 @@
 #' Paleobiology Database API. If \code{taxaDataPBDB} isn't provided, either by
 #' the user directly, or as an element of \code{tree}. 
 
+#' @inheritParams getDataPBDB
+
 #' @param tree A phylogeny of class \code{phylo} which will be
 #' plotted, with the terminal tip taxa replaced by silhouettes.
 #' The tree will be plotted with edge lengths.
@@ -162,7 +164,7 @@
 #' either all the plotted PhyloPics, or allows user control over each PhyloPic
 #' individually. The default is 1, which represents maximum opaqueness,
 #' applied to all PhyloPics.
-	
+    
 #' @param ... Additional arguments, passed to
 #' \code{plot.phylo} for plotting of the tree. These
 #' additional arguments may be passed to \code{plot},
@@ -190,28 +192,45 @@
 #' 
 
 #' @examples
+#' # Note that some examples here use argument 
+#'     # failIfNoInternet = FALSE so that functions do
+#'     # not error out but simply return NULL if internet
+#'     # connection is not available, and thus
+#'     # fail gracefully rather than error out (required by CRAN).
+#' # Remove this argument or set to TRUE so functions DO fail
+#'     # when internet resources (paleobiodb) is not available.
 #' 
-#' \dontrun{
+#' \donttest{
 #' 
 #' library(paleotree)
 #' 
 #' taxaAnimals<-c("Archaeopteryx", "Eldredgeops",
-#' 	"Corvus", "Acropora", "Velociraptor", "Gorilla", 
-#' 	"Olenellus", "Lingula", "Dunkleosteus",
-#' 	"Tyrannosaurus", "Triceratops", "Giraffa",
-#' 	"Megatheriidae", "Aedes", "Histiodella",
-#' 	"Rhynchotrema", "Pecten", "Homo", "Dimetrodon",
-#' 	"Nemagraptus", "Panthera", "Anomalocaris")
+#'     "Corvus", "Acropora", "Velociraptor", "Gorilla", 
+#'     "Olenellus", "Lingula", "Dunkleosteus",
+#'     "Tyrannosaurus", "Triceratops", "Giraffa",
+#'     "Megatheriidae", "Aedes", "Histiodella",
+#'     "Rhynchotrema", "Pecten", "Homo", "Dimetrodon",
+#'     "Nemagraptus", "Panthera", "Anomalocaris")
 #' 
-#' data <-getSpecificTaxaPBDB(taxaAnimals)
-#' tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
+#' animalData <-getSpecificTaxaPBDB(taxaAnimals, 
+#'     failIfNoInternet = FALSE)
+#'     
+#' if(!is.null(animalData)){  
+#'   
+#' tree <- makePBDBtaxonTree(
+#'     animalData, 
+#'     rankTaxon = "genus", 
+#'     failIfNoInternet = FALSE
+#'     ) 
 #' 
-#' plotPhyloPicTree(tree = tree)
+#' plotPhyloPicTree(tree = tree, 
+#'     failIfNoInternet = FALSE)
 #' 
 #' # let's plot upwards but at a funny size
 #' dev.new(height = 5, width = 10)
 #' plotPhyloPicTree(tree = tree,
-#' 	 orientation = "upwards") 
+#'     orientation = "upwards", 
+#'     failIfNoInternet = FALSE) 
 #' 
 #' # dated tree plotting
 #' 
@@ -221,15 +240,17 @@
 #' plotPhyloPicTree(tree = timeTree)
 #' 
 #' # plotting the dated tree with an axis
-#' plotPhyloPicTree(tree = timeTree,
-#' 	depthAxisPhylo= TRUE)
+#' plotPhyloPicTree(
+#'     tree = timeTree,
+#'     depthAxisPhylo = TRUE)
 #' 
 #' # now upwards!
 #' plotPhyloPicTree(tree = timeTree,
-#' 	orientation = "upwards",
-#' 	depthAxisPhylo= TRUE)
+#'     orientation = "upwards",
+#'     depthAxisPhylo= TRUE)
 #' 
 #' ###################################
+#' 
 #' # plotting a time tree with stratigraphic ranges
 #' 
 #' plotPhyloPicTree(tree = timeTree,
@@ -240,7 +261,8 @@
 #'    orientation = "upwards",
 #'    depthAxisPhylo= TRUE)
 #' 
-#' ########
+#' ################################################
+#' 
 #' # adjusting a tree to ignore a very old root
 #' 
 #' # let's pretend that metazoans are extremely old
@@ -257,18 +279,18 @@
 #' 
 #' # let's plot it now with the PhyloPic
 #' plotPhyloPicTree(tree = treeOldRoot,
-#' 	depthAxisPhylo = TRUE)
+#'     depthAxisPhylo = TRUE)
 #' 
 #' # let's crop that old lineage
 #' plotPhyloPicTree(tree = treeOldRoot,
-#' 	maxAgeDepth = 500,
-#' 	depthAxisPhylo = TRUE)
+#'     maxAgeDepth = 500,
+#'     depthAxisPhylo = TRUE)
 #' # cool!
 #' 
 #' ##################################
 #' # playing with colors
 #' plotPhyloPicTree(tree = tree,
-#' 	 taxaColor = "green")
+#'      taxaColor = "green")
 #' 
 #' # inverting the colors
 #' par(bg="black")
@@ -276,35 +298,39 @@
 #' # making a red giraffe
 #' taxaColors[4] <- "red"
 #' plotPhyloPicTree(
-#' 	tree = tree, 
-#' 	orientation = "upwards",
-#' 	edge.color = "white",
-#' 	taxaColor=taxaColors)
+#'     tree = tree, 
+#'     orientation = "upwards",
+#'     edge.color = "white",
+#'     taxaColor=taxaColors)
+#' 
+#' 
+#' } # end if to test if animalData was NULL
+#' } # end donttest segment
 #' 
 #' ######################################
+#' \dontrun{
+#' 
 #' # let's try some different phylopics
-#' 	  # like a nice tree of commonly known tetrapods
+#'       # like a nice tree of commonly known tetrapods
 #' 
 #' tetrapodList<-c("Archaeopteryx", "Columba", "Ectopistes",
-#' 	"Corvus", "Velociraptor", "Baryonyx", "Bufo",
-#' 	"Rhamphorhynchus", "Quetzalcoatlus", "Natator",
-#' 	"Tyrannosaurus", "Triceratops", "Gavialis",
-#' 	"Brachiosaurus", "Pteranodon", "Crocodylus",
-#' 	"Alligator", "Giraffa", "Felis", "Ambystoma",
-#'  	"Homo", "Dimetrodon", "Coleonyx", "Equus",
-#' 	"Sphenodon", "Amblyrhynchus")
+#'     "Corvus", "Velociraptor", "Baryonyx", "Bufo",
+#'     "Rhamphorhynchus", "Quetzalcoatlus", "Natator",
+#'     "Tyrannosaurus", "Triceratops", "Gavialis",
+#'     "Brachiosaurus", "Pteranodon", "Crocodylus",
+#'     "Alligator", "Giraffa", "Felis", "Ambystoma",
+#'      "Homo", "Dimetrodon", "Coleonyx", "Equus",
+#'     "Sphenodon", "Amblyrhynchus")
 #' 
-#' data <-getSpecificTaxaPBDB(tetrapodList)
+#' tetrapodData <-getSpecificTaxaPBDB(tetrapodList)
 #' 
-#' tree <- makePBDBtaxonTree(data, rankTaxon = "genus")
+#' tree <- makePBDBtaxonTree(tetrapodData, rankTaxon = "genus")
 #' 
 #' plotPhyloPicTree(tree = tree)
 #' 
-#' 
-#' }
 #' ####################################
-#' \dontrun{
-#' # let's check out speed increase from caching!
+#' 
+#' # let's check our speed increase from caching!
 #'     # can try this on your own machine
 #' 
 #' #first time
@@ -316,51 +342,51 @@
 #' # make a pretty plot
 #' 
 #' taxaSeventyEight <- c(
-#' 	"Archaeopteryx", "Pinus", "Procoptodon", "Olenellus", "Eldredgeops",
-#' 	"Quetzalcoatlus", "Homo", "Tyrannosaurus", "Triceratops", "Giraffa",
-#' 	"Bolivina", "Cancer", "Dicellograptus", "Dunkleosteus", "Solanum",
-#' 	"Anomalocaris", "Climacograptus", "Halysites", "Cyrtograptus", 
-#' 	"Procoptodon", "Megacerops", "Moropus", "Dimetrodon", "Lingula",
-#' 	"Rhynchosaurus", "Equus", "Megaloceros", "Rhynchotrema", "Pecten",
-#' 	"Echinaster", "Eocooksonia", "Neospirifer", # "Prototaxites", 
-#' 	"Cincinnaticrinus", "Nemagraptus", "Monograptus", "Pongo", "Acropora",
-#' 	"Histiodella", "Agathiceras", "Juramaia", "Opabinia", "Arandaspis",
-#' 	"Corvus", "Plethodon", "Latimeria", "Phrynosoma", "Araucarioxylon",
-#' 	"Velociraptor", "Hylonomus", "Elginerpeton", "Rhyniognatha",
-#' 	"Tyto", "Dromaius", "Solenopsis", "Gorilla", "Ginkgo", "Terebratella", 
-#' 	"Caretta", "Crocodylus", "Rosa", "Prunus", "Lycopodium", "Meganeura",
-#' 	"Diplodocus", "Brachiosaurus", "Hepaticae", "Canadaspis", "Pikaia",
-#' 	"Smilodon", "Mammuthus", "Exaeretodon", "Redondasaurus", "Dimetrodon",
-#' 	"Megatheriidae", "Metasequoia", "Aedes", "Panthera", "Megalonyx")
+#'     "Archaeopteryx", "Pinus", "Procoptodon", "Olenellus", "Eldredgeops",
+#'     "Quetzalcoatlus", "Homo", "Tyrannosaurus", "Triceratops", "Giraffa",
+#'     "Bolivina", "Cancer", "Dicellograptus", "Dunkleosteus", "Solanum",
+#'     "Anomalocaris", "Climacograptus", "Halysites", "Cyrtograptus", 
+#'     "Procoptodon", "Megacerops", "Moropus", "Dimetrodon", "Lingula",
+#'     "Rhynchosaurus", "Equus", "Megaloceros", "Rhynchotrema", "Pecten",
+#'     "Echinaster", "Eocooksonia", "Neospirifer", # "Prototaxites", 
+#'     "Cincinnaticrinus", "Nemagraptus", "Monograptus", "Pongo", "Acropora",
+#'     "Histiodella", "Agathiceras", "Juramaia", "Opabinia", "Arandaspis",
+#'     "Corvus", "Plethodon", "Latimeria", "Phrynosoma", "Araucarioxylon",
+#'     "Velociraptor", "Hylonomus", "Elginerpeton", "Rhyniognatha",
+#'     "Tyto", "Dromaius", "Solenopsis", "Gorilla", "Ginkgo", "Terebratella", 
+#'     "Caretta", "Crocodylus", "Rosa", "Prunus", "Lycopodium", "Meganeura",
+#'     "Diplodocus", "Brachiosaurus", "Hepaticae", "Canadaspis", "Pikaia",
+#'     "Smilodon", "Mammuthus", "Exaeretodon", "Redondasaurus", "Dimetrodon",
+#'     "Megatheriidae", "Metasequoia", "Aedes", "Panthera", "Megalonyx")
 #' 
-#' data <-getSpecificTaxaPBDB(taxaSeventyEight)
-#' tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
+#' dataSeventyEight <-getSpecificTaxaPBDB(taxaSeventyEight)
+#' tree <- makePBDBtaxonTree(dataSeventyEight, rankTaxon = "genus") 
 #' 
 #' timeTree <- dateTaxonTreePBDB(tree,
 #'   minBranchLen = 10)
 #' 
 #' date <- format(Sys.time(), "%m-%d-%y")
 #' file <- paste0(
-#'	"tree_taxa78_phylopic_stratTree_",
-#' 	date, ".pdf")
+#'    "tree_taxa78_phylopic_stratTree_",
+#'     date, ".pdf")
 #' 
 #' png(file = file,
-#' 	height = 5, width = 12, 
-#' 	units = "in", res = 300)
+#'     height = 5, width = 12, 
+#'     units = "in", res = 300)
 #' par(bg="black")
 #' par(mar=c(0,0,3,0))
 #' taxaColors <- rep("white", Ntip(timeTree))
 #' taxaColors[4] <- "red"
 #' 
 #' plotPhyloPicTree(
-#' 	tree = timeTree, 
-#' 	orientation = "upwards",
-#' 	addTaxonStratDurations = TRUE,
-#' 	edge.color = "white",
-#' 	maxAgeDepth = 700,
-#' 	taxaColor=taxaColors,
-#' 	depthAxisPhylo = TRUE,
-#' 	colorAxisPhylo = "white")
+#'     tree = timeTree, 
+#'     orientation = "upwards",
+#'     addTaxonStratDurations = TRUE,
+#'     edge.color = "white",
+#'     maxAgeDepth = 700,
+#'     taxaColor=taxaColors,
+#'     depthAxisPhylo = TRUE,
+#'     colorAxisPhylo = "white")
 #' dev.off()
 #' shell.exec(file)
 #' 
@@ -371,352 +397,364 @@
 #' @rdname plotPhyloPicTree
 #' @export
 plotPhyloPicTree <- function(
-		tree, 
-		taxaDataPBDB = tree$taxaDataPBDB,
-		# phylopicIDsPBDB = NULL, 
-		#extraMargin = 0.08,
-		#######################
-		maxAgeDepth = NULL,
-		depthAxisPhylo = FALSE,
-		colorAxisPhylo  = "black",
-		#######################
-		addTaxonStratDurations = FALSE,
-		taxaStratRanges = tree$tipTaxonFourDateRanges,
-		stratDurationBoxWidth = 0.7,
-		####################
-		sizeScale = 0.9,
-		removeSurroundingMargin = TRUE,
-		orientation = "rightwards",
-		resetGrPar = TRUE,
-		###########################
-		taxaColor = NULL,
-		transparency = 1,
-		######################
-		cacheDir = "cachedPhyloPicPNGs",
-		cacheImage = TRUE,		
-		##########################
-		noiseThreshold = 0.1,
-		rescalePNG = TRUE,
-		trimPNG = TRUE,
-		colorGradient = "original",
-		...
-		){		
-	#########################################
-	# uses calls to the Paleobiology Database's API
-		# or the phylopic API
-		# to construct a phylogeny with PhyloPics
-	# used as pictorial replacements for the tip labels
-	# images taken directory from PhyloPic, or PBDB
-	###############################################
-	# save original graphic par
-	oldPar<-par(no.readonly = TRUE)
-	##########################
-	# check that reserved arguments are not in ...
-	reservedPlotArgs <- c("direction", "show.tip.label",
-		"no.margin", "plot", "xlim", "ylim")
-	dotArgNames <- names(list(...))
-	if(any(!is.na(match(reservedPlotArgs, dotArgNames)))){
-		matchingReserved <- match(reservedPlotArgs, dotArgNames)[
-			!is.na(match(reservedPlotArgs, dotArgNames))
-			]
-		matchingReserved <- dotArgNames[matchingReserved]
-		stop(paste0(
-			"arguments '",
-				paste0(matchingReserved, collapse= "' & '"),
-				"' are reserved and cannot be directly passed to plot.phylo; see documentation"
-			))
-		}
-	#############################################
-	# test that orientation is one of the two values it can be
-	if(length(orientation)!=1){
-		stop("argument orientation must be a single value")}
-	if(orientation != "upwards" & orientation != "rightwards"){
-		stop('only orientation values of "upwards" and "rightwards" are currently accepted')
-		}
-	############################################
-	# check that the tree and its root age makes sense
-	checkRes <- checkRootTime(tree)			
-	#############################
-	# get ranges if addTaxonStratDurations
-		# then need to adjust tree so that plotting takes into account range ages
-	if(addTaxonStratDurations){
-		if(is.null(tree$edge.length)){
-			stop("addTaxonStratDurations is inapplicable for undated trees - input tree has no branch lengths")
-		}else{
-			if(is.null(taxaStratRanges)){
-				stop("addTaxonStratDurations = TRUE, but taxaStratRanges not supplied")
-				}
-			ranges <- getSortedMinMaxStratRanges(timeTree = tree,
-				rangesFourDate = taxaStratRanges)
-			}
-	}else{
-		ranges<-NULL	
-		}
-	#############################
-	# get root age if not already present
-	if(!is.null(tree$edge.length) & is.null(tree$root.time)){
-		# not sure how this could happen but...
-		tree$root.time <- max(node.depth.edgelength(tree))
-		}
-	#############################
-	# get maximum age depth, which should be a function of maxAgeDepth and tree depth only
-	if(is.null(maxAgeDepth)){
-		if(is.null(tree$edge.length)){
-			maxAgeLim <- NA
-		}else{
-			maxAgeLim <- tree$root.time
-			}
-	}else{
-		if(length(maxAgeDepth) != 1 | !is.numeric(maxAgeDepth)){
-			stop("maxAgeDepth must be a numeric vector of length 1 if provided")
-			}
-		# test if the tree even has edge lengths
-			# if it does, see if the edge lengths mean anything 
-		if(is.null(tree$edge.length)){
-			stop("maxAgeDepth provided but input tree has no branch lengths, and thus is undated - please reconcile")
-		}else{
-			# in absolute time
-			maxAgeLim <- maxAgeDepth
-			}
-		}
-	###################################
-	# now need to get minAgeLim
-		# need to adjust tree so that plotting takes into account range ages	
-	if(is.null(ranges)){
-		if(is.null(tree$edge.length)){
-			minAgeLim <- NA
-		}else{
-			furthestTipDist <- max(node.depth.edgelength(tree))
-			minAgeLim <- tree$root.time - furthestTipDist
-			}		
-	}else{
-		minAgeLim <- min(ranges)
-		}
-	############
-	if(is.na(maxAgeLim) & is.na(minAgeLim)){
-		ageLimInput <- NULL
-	}else{
-		ageLimInput <- c(maxAgeLim, minAgeLim)
-		# but now need to make from root = 0
-			# subtract from the age of the root, which will become zero		
-		ageLimInput<- tree$root.time - c(maxAgeLim, minAgeLim)
-		# rescale ranges relative to the maximum age depth
-		rangesRescaled <- tree$root.time - ranges	
-		}
-	##################
-	# assign limits depending on orientation
-	if(orientation == "rightwards"){
-		xlimInput <- ageLimInput
-		ylimInput <- NULL
-		}
-	if(orientation == "upwards"){
-		xlimInput <- NULL
-		ylimInput <- ageLimInput		
-		}
-	#################################################
-	# check or obtain the phylopic IDs from PBDB	
-	phylopicIDsPBDB <- getPhyloPicIDNumFromPBDB(
-		taxaData = taxaDataPBDB,
-		tree = tree)
-	###############################################
-	# determine colors for every taxon using taxaColor
-	taxaColor <- matchTaxaColor(
-		taxaColorOld = taxaColor, 
-		taxaNames = tree$tip.label,
-		transparency = transparency
-		)	
-	############################################
-	if(depthAxisPhylo & is.null(tree$edge.length)){
-		stop(paste0("depthAxisPhylo is TRUE but tree doesn't have branch lengths -",
-			"\nWhy do you want to plot a phylo axis on a tree with no branch lengths??"
-			))
-		}
-	if(removeSurroundingMargin & depthAxisPhylo){
-		# reset removeSurroundingMargin
-		removeSurroundingMargin <- FALSE
-		if(orientation == "rightwards"){
-			par(mar = c(2.5,0,0,0))
-			}
-		if(orientation == "upwards"){
-			par(mar = c(0,0,0,2.5))		
-			}		
-		}
-	##############################################
-	# plot a tree but with blank tip labels
-		# so can adjust x.lim to include an extra margin
-	# calculate new x.lim by
-		# *not* plotting a tree
-	outPlot <- plot.phylo(
-		tree,
-		show.tip.label=FALSE,
-		x.lim = xlimInput,
-		y.lim = ylimInput,
-		direction = orientation,
-		no.margin = removeSurroundingMargin,
-		plot=FALSE,
-		...)
-	#
-	# get the device's aspect ratio
-	devAspRatio <- grDevices::dev.size()[1] / grDevices::dev.size()[2]
-	#
-	# get the x and y lims of the previous plot
-	new_xlim <- c(outPlot$x.lim[1], 
-		outPlot$x.lim[2])	
-	new_ylim <- c(outPlot$y.lim[1], 
-		outPlot$y.lim[2])	
-	plotSizeX <- new_xlim[2] - new_xlim[1] 
-	plotSizeY <- new_ylim[2] - new_ylim[1]
-	#
-	# could also get from par("usr")
-	#plotSizeX <- par("usr")[2] - par("usr")[1]
-	#plotSizeY <- par("usr")[4] - par("usr")[3]
-	#
-	# get how many user coord units are in inches for each axis
-	OneUserCoordUnitX_in_InchesX <- grDevices::dev.size()[1] / plotSizeX
-	OneUserCoordUnitY_in_InchesY <- grDevices::dev.size()[2] / plotSizeY
-	#
-	# calculate how many horizontal user coords are equivalent to how many vertical user coord
-	OneUserCoordUnitY_in_UserCoordUnitX <- OneUserCoordUnitY_in_InchesY / OneUserCoordUnitX_in_InchesX
-	# calculate how many horizontal user coords are equivalent to how many vertical user coord
-	OneUserCoordUnitX_in_UserCoordUnitY <- OneUserCoordUnitX_in_InchesX / OneUserCoordUnitY_in_InchesY
-	#	
-	# modify margins based on orientation
-	if(orientation == "rightwards"){
-		# extra margin is one vertical unit, in horizontal user coord units
-			# adjust by aspect ratio and sizescale/2
-		extraMargin <- OneUserCoordUnitY_in_UserCoordUnitX * (sizeScale/2) / devAspRatio
-		new_xlim[2] <- new_xlim[2] + extraMargin
-		}
-	if(orientation == "upwards"){
-		# extra margin is one horizontal unit, in vertical user coord units
-			# adjust by aspect ratio and sizescale/2
-		extraMargin <- OneUserCoordUnitX_in_UserCoordUnitY * (sizeScale/2) * devAspRatio
-		new_ylim[2] <- new_ylim[2] + extraMargin
-		}
-	#####
-	par(new = TRUE)
-	#####
-	plot.phylo(
-		tree,
-		x.lim = new_xlim,
-		y.lim = new_ylim,
-		direction = orientation,
-		show.tip.label = FALSE,
-		no.margin = removeSurroundingMargin,
-		...
-		)
-	#
-	##########################################
-	# plot axisPhylo if depthAxisPhylo 
-	if(depthAxisPhylo){
-		if(orientation == "rightwards"){
-			axisPhylo(side=1,
-				col = colorAxisPhylo, col.axis = colorAxisPhylo)
-			}
-		if(orientation == "upwards"){
-			axisPhylo(side=4,
-				col = colorAxisPhylo, col.axis = colorAxisPhylo)
-			}		
-		}
-	##########################################
-	# now get the last plotting environment
-	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
-	############################################
-	if(addTaxonStratDurations){
-		#
-		newXY <- plotTaxonStratDurations(
-			rangesMinMax = rangesRescaled,
-			orientation = orientation,
-			XX = lastPP$xx, YY = lastPP$yy,
-			boxWidth = stratDurationBoxWidth, 
-			boxCol = taxaColor)
-	}else{
-		newXY <- list(XX = lastPP$xx,
-			YY = lastPP$yy)
-		}
-	#########################################################
-	# get the plot's own aspect ratio
-	#plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
-	# actually... better to get from par("usr")
-		# xmin, ymin, xmax, ymax
-	plotDimensions <- list(
-		xmin = par("usr")[1],
-		xmax = par("usr")[2],
-		ymin = par("usr")[3],
-		ymax = par("usr")[4]
-		)
-	plotSizeX <- plotDimensions$xmax - plotDimensions$xmin
-	plotSizeY <- plotDimensions$ymax - plotDimensions$ymin
-	plotAspRatio <- plotSizeX / plotSizeY
-	#
-	# true aspect ratio is their product apparently
-	plotAspRatio <- plotAspRatio / devAspRatio 
-	#
-	# calculate offsetPic as a function of orientation and plot limits
-	if(orientation == "rightwards"){
-		offsetPic <- plotDimensions$xmax - max(newXY$XX)
-		}
-	if(orientation == "upwards"){
-		offsetPic <- plotDimensions$ymax - max(newXY$YY)
-		}
-	#
-	offsetPic <- offsetPic * 0.5
-	#
-	##################################################
-	#
-	# pause 3 seconds so we don't spam the API
-	#Sys.sleep(3)
-	#	
-	########################################
-	for (i in 1:lastPP$Ntip){
-		##########################
-		# GET IMAGE
-		picPNG <- getPhyloPicPNG(
-			picID_PBDB = phylopicIDsPBDB[i], 
-			cacheDir = cacheDir,
-			cacheImage = cacheImage
-			)
-		######################################
-		# PREP IMAGE
-		# if this pic is colored, make it truly monochrome
-		if(is.na(taxaColor[i])){
-			colorGradientTaxon <- colorGradient
-		}else{
-			colorGradientTaxon <- "trueMonochrome"
-			}
-		#
-		picPNG <- prepPhyloPic(picPNG, 
-			noiseThreshold = noiseThreshold,
-			rescalePNG = rescalePNG, 
-			trimPNG = trimPNG,
-			colorGradient = colorGradientTaxon,
-			plotComparison = FALSE
-			)
-		##################################
-		# PLOT IMAGE
-		plotSinglePhyloPic(
-			picPNG = picPNG,
-			whichTip = i,
-			XX = newXY$XX,
-			YY = newXY$YY,
-			offsetPic = offsetPic,
-			orientation = orientation,
-			plotAspRatio = plotAspRatio,
-			sizeScale = sizeScale,
-			taxonColor = taxaColor[i]
-			)	
-		}
-	modPhyloPlotInfo <- lastPP
-	# add stuff here about what we did to the phylo plot?
-		# like what?
-	# adjusted graphic parameters
-	modPhyloPlotInfo$savedPar <- par(no.readonly = TRUE)
-	# adjusted XY
-	modPhyloPlotInfo$newXY <- newXY
-	# reset graphic par
-	if(resetGrPar){
-		suppressWarnings(par(oldPar))
-		}
-	#
-	return(invisible(modPhyloPlotInfo))
-	}
+        tree, 
+        taxaDataPBDB = tree$taxaDataPBDB,
+        # phylopicIDsPBDB = NULL, 
+        #extraMargin = 0.08,
+        #######################
+        maxAgeDepth = NULL,
+        depthAxisPhylo = FALSE,
+        colorAxisPhylo  = "black",
+        #######################
+        addTaxonStratDurations = FALSE,
+        taxaStratRanges = tree$tipTaxonFourDateRanges,
+        stratDurationBoxWidth = 0.7,
+        ####################
+        sizeScale = 0.9,
+        removeSurroundingMargin = TRUE,
+        orientation = "rightwards",
+        resetGrPar = TRUE,
+        ###########################
+        taxaColor = NULL,
+        transparency = 1,
+        ######################
+        cacheDir = "cachedPhyloPicPNGs",
+        cacheImage = TRUE,        
+        ##########################
+        noiseThreshold = 0.1,
+        rescalePNG = TRUE,
+        trimPNG = TRUE,
+        colorGradient = "original",
+        ################################
+        failIfNoInternet = TRUE,
+        ...
+        ){        
+    #########################################
+    # uses calls to the Paleobiology Database's API
+        # or the phylopic API
+        # to construct a phylogeny with PhyloPics
+    # used as pictorial replacements for the tip labels
+    # images taken directory from PhyloPic, or PBDB
+    ###############################################
+    # save original graphic par
+    oldPar<-par(no.readonly = TRUE)
+    ##########################
+    # check that reserved arguments are not in ...
+    reservedPlotArgs <- c("direction", "show.tip.label",
+        "no.margin", "plot", "xlim", "ylim")
+    dotArgNames <- names(list(...))
+    if(any(!is.na(match(reservedPlotArgs, dotArgNames)))){
+        matchingReserved <- match(reservedPlotArgs, dotArgNames)[
+            !is.na(match(reservedPlotArgs, dotArgNames))
+            ]
+        matchingReserved <- dotArgNames[matchingReserved]
+        stop(paste0(
+            "arguments '",
+                paste0(matchingReserved, collapse= "' & '"),
+                "' are reserved and cannot be directly passed to plot.phylo; see documentation"
+            ))
+        }
+    #############################################
+    # test that orientation is one of the two values it can be
+    if(length(orientation)!=1){
+        stop("argument orientation must be a single value")}
+    if(orientation != "upwards" & orientation != "rightwards"){
+        stop('only orientation values of "upwards" and "rightwards" are currently accepted')
+        }
+    ############################################
+    # check that the tree and its root age makes sense
+    checkRes <- checkRootTime(tree)            
+    #############################
+    # get ranges if addTaxonStratDurations
+        # then need to adjust tree so that plotting takes into account range ages
+    if(addTaxonStratDurations){
+        if(is.null(tree$edge.length)){
+            stop("addTaxonStratDurations is inapplicable for undated trees - input tree has no branch lengths")
+        }else{
+            if(is.null(taxaStratRanges)){
+                stop("addTaxonStratDurations = TRUE, but taxaStratRanges not supplied")
+                }
+            ranges <- getSortedMinMaxStratRanges(timeTree = tree,
+                rangesFourDate = taxaStratRanges)
+            }
+    }else{
+        ranges<-NULL    
+        }
+    #############################
+    # get root age if not already present
+    if(!is.null(tree$edge.length) & is.null(tree$root.time)){
+        # not sure how this could happen but...
+        tree$root.time <- max(node.depth.edgelength(tree))
+        }
+    #############################
+    # get maximum age depth, which should be a function of maxAgeDepth and tree depth only
+    if(is.null(maxAgeDepth)){
+        if(is.null(tree$edge.length)){
+            maxAgeLim <- NA
+        }else{
+            maxAgeLim <- tree$root.time
+            }
+    }else{
+        if(length(maxAgeDepth) != 1 | !is.numeric(maxAgeDepth)){
+            stop("maxAgeDepth must be a numeric vector of length 1 if provided")
+            }
+        # test if the tree even has edge lengths
+            # if it does, see if the edge lengths mean anything 
+        if(is.null(tree$edge.length)){
+            stop("maxAgeDepth provided but input tree has no branch lengths, and thus is undated - please reconcile")
+        }else{
+            # in absolute time
+            maxAgeLim <- maxAgeDepth
+            }
+        }
+    ###################################
+    # now need to get minAgeLim
+        # need to adjust tree so that plotting takes into account range ages    
+    if(is.null(ranges)){
+        if(is.null(tree$edge.length)){
+            minAgeLim <- NA
+        }else{
+            furthestTipDist <- max(node.depth.edgelength(tree))
+            minAgeLim <- tree$root.time - furthestTipDist
+            }        
+    }else{
+        minAgeLim <- min(ranges)
+        }
+    ############
+    if(is.na(maxAgeLim) & is.na(minAgeLim)){
+        ageLimInput <- NULL
+    }else{
+        ageLimInput <- c(maxAgeLim, minAgeLim)
+        # but now need to make from root = 0
+            # subtract from the age of the root, which will become zero        
+        ageLimInput<- tree$root.time - c(maxAgeLim, minAgeLim)
+        # rescale ranges relative to the maximum age depth
+        rangesRescaled <- tree$root.time - ranges    
+        }
+    ##################
+    # assign limits depending on orientation
+    if(orientation == "rightwards"){
+        xlimInput <- ageLimInput
+        ylimInput <- NULL
+        }
+    if(orientation == "upwards"){
+        xlimInput <- NULL
+        ylimInput <- ageLimInput        
+        }
+    #################################################
+    # check or obtain the phylopic IDs from PBDB    
+    phylopicIDsPBDB <- getPhyloPicIDNumFromPBDB(
+        taxaData = taxaDataPBDB,
+        tree = tree,
+        failIfNoInternet = failIfNoInternet
+        )
+    if(!is.null(phylopicIDsPBDB)){
+        return(NULL)
+        }
+    ###############################################
+    # determine colors for every taxon using taxaColor
+    taxaColor <- matchTaxaColor(
+        taxaColorOld = taxaColor, 
+        taxaNames = tree$tip.label,
+        transparency = transparency
+        )    
+    ############################################
+    if(depthAxisPhylo & is.null(tree$edge.length)){
+        stop(paste0(
+            "depthAxisPhylo is TRUE but tree doesn't have branch lengths -",
+            "\nWhy do you want to plot a phylo axis on a tree with no branch lengths??"
+            ))
+        }
+    if(removeSurroundingMargin & depthAxisPhylo){
+        # reset removeSurroundingMargin
+        removeSurroundingMargin <- FALSE
+        if(orientation == "rightwards"){
+            par(mar = c(2.5,0,0,0))
+            }
+        if(orientation == "upwards"){
+            par(mar = c(0,0,0,2.5))        
+            }        
+        }
+    ##############################################
+    # plot a tree but with blank tip labels
+        # so can adjust x.lim to include an extra margin
+    # calculate new x.lim by
+        # *not* plotting a tree
+    outPlot <- plot.phylo(
+        tree,
+        show.tip.label=FALSE,
+        x.lim = xlimInput,
+        y.lim = ylimInput,
+        direction = orientation,
+        no.margin = removeSurroundingMargin,
+        plot=FALSE,
+        ...)
+    #
+    # get the device's aspect ratio
+    devAspRatio <- grDevices::dev.size()[1] / grDevices::dev.size()[2]
+    #
+    # get the x and y lims of the previous plot
+    new_xlim <- c(outPlot$x.lim[1], 
+        outPlot$x.lim[2])    
+    new_ylim <- c(outPlot$y.lim[1], 
+        outPlot$y.lim[2])    
+    plotSizeX <- new_xlim[2] - new_xlim[1] 
+    plotSizeY <- new_ylim[2] - new_ylim[1]
+    #
+    # could also get from par("usr")
+    #plotSizeX <- par("usr")[2] - par("usr")[1]
+    #plotSizeY <- par("usr")[4] - par("usr")[3]
+    #
+    # get how many user coord units are in inches for each axis
+    OneUserCoordUnitX_in_InchesX <- grDevices::dev.size()[1] / plotSizeX
+    OneUserCoordUnitY_in_InchesY <- grDevices::dev.size()[2] / plotSizeY
+    #
+    # calculate how many horizontal user coords are equivalent to how many vertical user coord
+    OneUserCoordUnitY_in_UserCoordUnitX <- OneUserCoordUnitY_in_InchesY / OneUserCoordUnitX_in_InchesX
+    # calculate how many horizontal user coords are equivalent to how many vertical user coord
+    OneUserCoordUnitX_in_UserCoordUnitY <- OneUserCoordUnitX_in_InchesX / OneUserCoordUnitY_in_InchesY
+    #    
+    # modify margins based on orientation
+    if(orientation == "rightwards"){
+        # extra margin is one vertical unit, in horizontal user coord units
+            # adjust by aspect ratio and sizescale/2
+        extraMargin <- OneUserCoordUnitY_in_UserCoordUnitX * (sizeScale/2) / devAspRatio
+        new_xlim[2] <- new_xlim[2] + extraMargin
+        }
+    if(orientation == "upwards"){
+        # extra margin is one horizontal unit, in vertical user coord units
+            # adjust by aspect ratio and sizescale/2
+        extraMargin <- OneUserCoordUnitX_in_UserCoordUnitY * (sizeScale/2) * devAspRatio
+        new_ylim[2] <- new_ylim[2] + extraMargin
+        }
+    #####
+    par(new = TRUE)
+    #####
+    plot.phylo(
+        tree,
+        x.lim = new_xlim,
+        y.lim = new_ylim,
+        direction = orientation,
+        show.tip.label = FALSE,
+        no.margin = removeSurroundingMargin,
+        ...
+        )
+    #
+    ##########################################
+    # plot axisPhylo if depthAxisPhylo 
+    if(depthAxisPhylo){
+        if(orientation == "rightwards"){
+            axisPhylo(side=1,
+                col = colorAxisPhylo, col.axis = colorAxisPhylo)
+            }
+        if(orientation == "upwards"){
+            axisPhylo(side=4,
+                col = colorAxisPhylo, col.axis = colorAxisPhylo)
+            }        
+        }
+    ##########################################
+    # now get the last plotting environment
+    lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+    ############################################
+    if(addTaxonStratDurations){
+        #
+        newXY <- plotTaxonStratDurations(
+            rangesMinMax = rangesRescaled,
+            orientation = orientation,
+            XX = lastPP$xx, YY = lastPP$yy,
+            boxWidth = stratDurationBoxWidth, 
+            boxCol = taxaColor)
+    }else{
+        newXY <- list(XX = lastPP$xx,
+            YY = lastPP$yy)
+        }
+    #########################################################
+    # get the plot's own aspect ratio
+    #plotAspRatio <- diff(lastPP$x.lim) / diff(lastPP$y.lim)
+    # actually... better to get from par("usr")
+        # xmin, ymin, xmax, ymax
+    plotDimensions <- list(
+        xmin = par("usr")[1],
+        xmax = par("usr")[2],
+        ymin = par("usr")[3],
+        ymax = par("usr")[4]
+        )
+    plotSizeX <- plotDimensions$xmax - plotDimensions$xmin
+    plotSizeY <- plotDimensions$ymax - plotDimensions$ymin
+    plotAspRatio <- plotSizeX / plotSizeY
+    #
+    # true aspect ratio is their product apparently
+    plotAspRatio <- plotAspRatio / devAspRatio 
+    #
+    # calculate offsetPic as a function of orientation and plot limits
+    if(orientation == "rightwards"){
+        offsetPic <- plotDimensions$xmax - max(newXY$XX)
+        }
+    if(orientation == "upwards"){
+        offsetPic <- plotDimensions$ymax - max(newXY$YY)
+        }
+    #
+    offsetPic <- offsetPic * 0.5
+    #
+    ##################################################
+    #
+    # pause 3 seconds so we don't spam the API
+    #Sys.sleep(3)
+    #    
+    ########################################
+    for (i in 1:lastPP$Ntip){
+        ##########################
+        # GET IMAGE
+        picPNG <- getPhyloPicPNG(
+            picID_PBDB = phylopicIDsPBDB[i], 
+            cacheDir = cacheDir,
+            cacheImage = cacheImage,
+            failIfNoInternet = failIfNoInternet
+            )
+        if(is.null(picPNG) & failIfNoInternet){
+            return(NULL)
+            }
+        ######################################
+        # PREP IMAGE
+        # if this pic is colored, make it truly monochrome
+        if(is.na(taxaColor[i])){
+            colorGradientTaxon <- colorGradient
+        }else{
+            colorGradientTaxon <- "trueMonochrome"
+            }
+        #
+        picPNG <- prepPhyloPic(picPNG, 
+            noiseThreshold = noiseThreshold,
+            rescalePNG = rescalePNG, 
+            trimPNG = trimPNG,
+            colorGradient = colorGradientTaxon,
+            plotComparison = FALSE
+            )
+        ##################################
+        # PLOT IMAGE
+        plotSinglePhyloPic(
+            picPNG = picPNG,
+            whichTip = i,
+            XX = newXY$XX,
+            YY = newXY$YY,
+            offsetPic = offsetPic,
+            orientation = orientation,
+            plotAspRatio = plotAspRatio,
+            sizeScale = sizeScale,
+            taxonColor = taxaColor[i]
+            )    
+        }
+    modPhyloPlotInfo <- lastPP
+    # add stuff here about what we did to the phylo plot?
+        # like what?
+    # adjusted graphic parameters
+    modPhyloPlotInfo$savedPar <- par(no.readonly = TRUE)
+    # adjusted XY
+    modPhyloPlotInfo$newXY <- newXY
+    # reset graphic par
+    if(resetGrPar){
+        suppressWarnings(par(oldPar))
+        }
+    #
+    return(invisible(modPhyloPlotInfo))
+    }

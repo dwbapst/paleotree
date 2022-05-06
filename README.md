@@ -18,8 +18,6 @@ The latest pre-release version of `paleotree` can be found at github:
 
 	https://github.com/dwbapst/paleotree
 	
-The most recent commit is currently: [![Build Status](https://travis-ci.org/dwbapst/paleotree.svg?branch=master)](https://travis-ci.org/dwbapst/paleotree) (Travis CI)
-	
 You can install this latest development version using the R function `install_github` in the package `devtools`:
 
 ```
@@ -52,12 +50,10 @@ citation("paleotree")
 	
 This code is mainly authored by David Bapst, with some functions authored by Peter Wagner, and offered under CC0. Some functions are strongly based on code from Rich Fitzjohn's `diversitree` package, while others are greatly inspired by code written by Graeme Lloyd and Gene Hunt.
 
-The current total number of downloads of the `paleotree` package from the RStudio CRAN mirror is: [![Number of Downloads](http://cranlogs.r-pkg.org/badges/grand-total/paleotree)](https://github.com/metacran/cranlogs.app)
+The current total number of downloads of the `paleotree` package from the RStudio CRAN mirror is: [![Number of Downloads](http://cranlogs.r-pkg.org/badges/grand-total/paleotree)](https://github.com/r-hub/cranlogs.app)
 
-[![Research software impact](http://depsy.org/api/package/cran/paleotree/badge.svg)](http://depsy.org/package/r/paleotree)
+Trying out using GitHub actions instead of Travis CI:
 
-Trying out using GitHub actions insted of Travis CI:
-
-[![R-CMD-check](https://github.com/dwbapst/paleotree/workflows/R-CMD-check/badge.svg)](https://github.com/dwbapst/paleotree/actions)
+[![R Check](https://github.com/dwbapst/paleotree/workflows/R-CMD-check/badge.svg)](https://github.com/dwbapst/paleotree/actions)
   <!-- badges: end -->
 

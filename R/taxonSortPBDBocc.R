@@ -120,11 +120,25 @@
 #' application programming interface. \emph{Paleobiology} 42(1):1-7.
 
 #' @examples
+#' # Note that most examples here using getPBDBocc()
+#'     # use the  argument 'failIfNoInternet = FALSE'
+#'     # so that functions do not error out 
+#'     # but simply return NULL if internet
+#'     # connection is not available, and thus
+#'     # fail gracefully rather than error out (required by CRAN).
+#' # Remove this argument or set to TRUE so functions DO fail
+#'     # when internet resources (paleobiodb) is not available.
+#' 
 #' \donttest{
 #' 
 #' # getting occurrence data for a genus, sorting it
-#' # Dicellograptus
-#' dicelloData <- getPBDBocc("Dicellograptus")
+#' # firest example: Dicellograptus
+#' 
+#' dicelloData <- getPBDBocc("Dicellograptus", 
+#'     failIfNoInternet = FALSE)
+#'     
+#' if(!is.null(dicelloData)){  
+#' 
 #' dicelloOcc2 <- taxonSortPBDBocc(
 #'    data = dicelloData, 
 #'    rank = "species",
@@ -132,15 +146,21 @@
 #'    )
 #' names(dicelloOcc2)
 #' 
+#' }
+#' 
 #' # try a PBDB API download with lots of synonymization
 #' 	#this should have only 1 species
 #' # *old* way, using v1.1 of PBDB API:
 #' # acoData <- read.csv(paste0(
-#' #	"http://paleobiodb.org/data1.1/occs/list.txt?",
+#' #	"https://paleobiodb.org/data1.1/occs/list.txt?",
 #' #	"base_name = Acosarina%20minuta&show=ident,phylo"))
 #' #
 #' # *new* method - with getPBDBocc, using v1.2 of PBDB API:
-#' acoData <- getPBDBocc("Acosarina minuta")
+#' acoData <- getPBDBocc("Acosarina minuta", 
+#'     failIfNoInternet = FALSE)
+#'     
+#' if(!is.null(acoData)){  
+#' 
 #' acoOcc <- taxonSortPBDBocc(
 #'    data = acoData, 
 #'    rank = "species", 
@@ -149,6 +169,10 @@
 #' names(acoOcc)
 #' 
 #' }
+#' 
+#' }
+#' 
+#' ###########################################
 #' 
 #' #load example graptolite PBDB occ dataset
 #' data(graptPBDB)
@@ -195,7 +219,7 @@
 # old examples involving compact vocabulary
 #
 #make sure works with compact vocab v1.2
-#dicelloData <- read.csv(paste0("http://paleobiodb.org",
+#dicelloData <- read.csv(paste0("https://paleobiodb.org",
 #	"/data1.2/occs/list.txt?base_name=Dicellograptus",
 #	"&show=ident,phylo&vocab=com"))
 #dicelloOccCom1 <- taxonSortPBDBocc(dicelloData,
@@ -204,7 +228,7 @@
 #head(dicelloOccCom1[[1]])[,1:7]
 
 #make sure works with compact vocab v1.2
-#dicelloData <- read.csv(paste0("http://paleobiodb.org",
+#dicelloData <- read.csv(paste0("https://paleobiodb.org",
 #	"/data1.2/occs/list.txt?base_name=Dicellograptus",
 #	"&show=ident,phylo&vocab=com"))
 #dicelloOccCom1 <- taxonSortPBDBocc(dicelloData,

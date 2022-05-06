@@ -11,16 +11,18 @@ taxa <- fossilRecord2fossilTaxa(record)
 tree <- taxa2phylo(taxa)
 
 tree950 <- timeSliceTree(
-    tree,
+    ttree = tree,
     sliceTime = 950,
-    drop.extinct = FALSE
+    drop.extinct = FALSE,
+    plot = FALSE
     )
 
 # compare tip labels when we use tipLabels = "allDesc"
 tree950_NoExtinct <- timeSliceTree(
-    tree,
+    ttree = tree,
     sliceTime = 950,
-    drop.extinct = TRUE
+    drop.extinct = TRUE,
+    plot = FALSE
     )
     
 expect_false(tree950$root.time == tree950_NoExtinct$root.time)

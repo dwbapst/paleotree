@@ -37,7 +37,7 @@
 #' @references
 #' See my recent blog post on temporal datasets in paleontology for some details:
 #' 
-#' \url{http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html}
+#' \url{https://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html}
 
 #' @examples
 #' # timeList object from the retiolinae dataset

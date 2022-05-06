@@ -38,7 +38,7 @@
 
 #' @source 
 #' See examples for the full R code used to obtain the data from the API.
-#' You can find the Paleobiology Database at \url{http://paleobiodb.org}
+#' You can find the Paleobiology Database at \url{https://paleobiodb.org}
 #' 
 #' The occurrence data was entered by many, including
 #' (six most prominent enterers, in order of relative portion):

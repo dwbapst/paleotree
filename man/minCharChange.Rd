@@ -294,19 +294,19 @@ ancMPRord <- ancPropStateMat(tree,
         orderedChar = TRUE, 
         type = "MPR")
 
- #let's compare MPR versus ACCTRAN results
- layout(1:2)
- quickAncPlotter(tree,
-        ancMPR, cex = 0.3)
- text(x = 8, y = 15,
-        "type = 'MPR'", cex = 1.5)
- quickAncPlotter(tree,
-        ancACCTRAN, cex = 0.3)
- text(x = 9, y = 15,
-        "type = 'ACCTRAN'",cex = 1.5)
-
- # MPR has much more uncertainty in node estimates
-	 # but that doesn't mean ACCTRAN is preferable
+#let's compare MPR versus ACCTRAN results
+layout(1:2)
+quickAncPlotter(tree,
+       ancMPR, cex = 0.3)
+text(x = 8, y = 15,
+       "type = 'MPR'", cex = 1.5)
+quickAncPlotter(tree,
+       ancACCTRAN, cex = 0.3)
+text(x = 9, y = 15,
+       "type = 'ACCTRAN'",cex = 1.5)
+       
+# MPR has much more uncertainty in node estimates
+	  # but that doesn't mean ACCTRAN is preferable
 
 #let's compare unordered versus ordered under MPR
 layout(1:2)
@@ -328,13 +328,13 @@ require(phangorn)
 char1 <- matrix(char,,1)
 rownames(char1) <- names(char)
 #translate into something for phangorn to read
-char1 <- phyDat(char1,
+char1 <- phangorn::phyDat(char1,
         type = "USER",
         levels = sort(unique(char1))
         )
-x <- ancestral.pars(tree,
+x <- phangorn::ancestral.pars(tree,
         char1,type = "MPR")
-y <- ancestral.pars(tree,
+y <- phangorn::ancestral.pars(tree,
         char1,type = "ACCTRAN")
 }
 

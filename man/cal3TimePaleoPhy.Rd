@@ -394,7 +394,7 @@ A tutorial for applying the time-scaling functions in paleotree,
 particularly the cal3 method, along with an example using real (graptolite)
 data, can be found at the following link:
 
-\url{http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
+\url{https://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
 }
 \note{
 Most importantly, please note the stochastic element of the three

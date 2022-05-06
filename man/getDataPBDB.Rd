@@ -12,7 +12,8 @@ getCladeTaxaPBDB(
   showTaxa = c("class", "parent", "app", "img", "entname"),
   status = "accepted",
   urlOnly = FALSE,
-  stopIfMissing = FALSE
+  stopIfMissing = FALSE,
+  failIfNoInternet = TRUE
 )
 
 getSpecificTaxaPBDB(
@@ -20,12 +21,14 @@ getSpecificTaxaPBDB(
   showTaxa = c("class", "parent", "app", "img", "entname"),
   status = "accepted",
   urlOnly = FALSE,
-  stopIfMissing = FALSE
+  stopIfMissing = FALSE,
+  failIfNoInternet = TRUE
 )
 
 getPBDBocc(
   taxa,
-  showOccs = c("class", "classext", "subgenus", "ident", "entname")
+  showOccs = c("class", "classext", "subgenus", "ident", "entname"),
+  failIfNoInternet = TRUE
 )
 }
 \arguments{
@@ -46,7 +49,7 @@ as a vector of character strings (ex. \code{c("class", "img", "app")}),
 which will then formatted for use in the API call. Other options that
 you might want to include, such as information on ecospace or taphonomy,
 can be included: please refer to the full list at
-the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
+the \href{https://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
 
 \item{status}{What taxonomic status should the pull taxa have? 
 The default is \code{status = "accepted"}, which means 
@@ -56,7 +59,7 @@ to consider are \code{"valid"}, which is all valid taxa:
 senior homonyms and valid subjective synonyms, and \code{"all"},
 which will return all valid taxa and all otherwise repressed invalid taxa.
 For additional statuses that you can request, please see the documentation at  
-the \href{http://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
+the \href{https://paleobiodb.org/data1.2/taxa/list_doc.htm}{documentation for the API}.}
 
 \item{urlOnly}{If \code{FALSE} (the default), then the
 function behaves as expected, the API is called and a
@@ -67,6 +70,15 @@ instead as a character string.}
 \item{stopIfMissing}{If some taxa within the requested set appear
 to be missing from the Paleobiology Database's taxonomy table, should
 the function halt with an error?}
+
+\item{failIfNoInternet}{If the Paleobiology Database or another 
+needed internet resource cannot be accessed, perhaps because of
+no internet connection, should the function fail (with an error)
+or should the function return \code{NULL} and return an
+informative message instead, thus meeting the CRAN policy
+that such functionalities must 'fail gracefully'?
+The default is \code{TRUE} but all examples that might be auto-run
+use \code{FALSE} so they do not fail during R CHECK.}
 
 \item{taxa}{A character vector listing taxa of interest that the user
 wishes to download information on from the Paleobiology Database.
@@ -93,7 +105,7 @@ variables pulled for the requested taxon selection.
 This behavior can be modified by argument \code{urlOnly}.
 }
 \description{
-The Paleobiology Database API (\href{http://paleobiodb.org/data1.2}{link})
+The Paleobiology Database API (\href{https://paleobiodb.org/data1.2/}{link})
 is very easy to use, and generally any data one wishes to collect can be obtained
 in R through a variety of ways - the simplest being to wrap a data retrieval request
 to the API, specified for CSV output, with R function \code{read.csv}. The functions
@@ -109,28 +121,38 @@ applications in \code{paleotree} easier.
 \examples{
 \donttest{
 
+# Note that all examples here use argument 
+    # failIfNoInternet = FALSE so that functions do
+    # not error out but simply return NULL if internet
+    # connection is not available, and thus
+    # fail gracefully rather than error out (required by CRAN).
+# Remove this argument or set to TRUE so functions fail
+    # when internet resources (paleobiodb) is not available.
+
 #graptolites
-graptData <- getCladeTaxaPBDB("Graptolithina")
+graptData <- getCladeTaxaPBDB("Graptolithina", 
+    failIfNoInternet = FALSE)
 dim(graptData)
-sum(graptData$taxon_rank=="genus")
+sum(graptData$taxon_rank == "genus")
 
 # so we can see that our call for graptolithina returned 
-	# a large number of taxa, a large portion of which are
-	# individual genera
+    # a large number of taxa, a large portion of which are
+    # individual genera
 # (554 and 318 respectively, as of 03-18-19)
 
 tetrapodList<-c("Archaeopteryx", "Columba", "Ectopistes",
-"Corvus", "Velociraptor", "Baryonyx", "Bufo",
-"Rhamphorhynchus", "Quetzalcoatlus", "Natator",
-"Tyrannosaurus", "Triceratops", "Gavialis",
-"Brachiosaurus", "Pteranodon", "Crocodylus",
-"Alligator", "Giraffa", "Felis", "Ambystoma",
-	"Homo", "Dimetrodon", "Coleonyx", "Equus",
-"Sphenodon", "Amblyrhynchus")
+   "Corvus", "Velociraptor", "Baryonyx", "Bufo",
+   "Rhamphorhynchus", "Quetzalcoatlus", "Natator",
+   "Tyrannosaurus", "Triceratops", "Gavialis",
+   "Brachiosaurus", "Pteranodon", "Crocodylus",
+   "Alligator", "Giraffa", "Felis", "Ambystoma",
+    "Homo", "Dimetrodon", "Coleonyx", "Equus",
+   "Sphenodon", "Amblyrhynchus")
 
-tetrapodData <-getSpecificTaxaPBDB(tetrapodList)
+tetrapodData <-getSpecificTaxaPBDB(tetrapodList, 
+    failIfNoInternet = FALSE)
 dim(tetrapodData)
-sum(tetrapodData$taxon_rank=="genus")
+sum(tetrapodData$taxon_rank == "genus")
 # should be 26, with all 26 as genera
 
 #############################################
@@ -138,10 +160,17 @@ sum(tetrapodData$taxon_rank=="genus")
 
 # getting occurrence data for a genus, sorting it
 # Dicellograptus
-dicelloData <- getPBDBocc("Dicellograptus")
+dicelloData <- getPBDBocc("Dicellograptus", 
+    failIfNoInternet = FALSE)
+
+if(!is.null(dicelloData)){
+
 dicelloOcc2 <- taxonSortPBDBocc(dicelloData, 
-	rank = "species", onlyFormal = FALSE)
+    rank = "species", onlyFormal = FALSE, 
+    failIfNoInternet = FALSE)
 names(dicelloOcc2)
+
+}
 
 }
 

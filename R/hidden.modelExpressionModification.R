@@ -22,6 +22,13 @@ make_paleotreeFunc <- function(f,parnames,parbounds){
 	attr(f,"parbounds") <- parbounds
 	#
 	attr(f,"np") <- length(parnames)
+	#
+	#test if initial parameters gives Inf
+	initTry <- f(parInit.paleotreeFunc(f))
+	if(is.infinite(initTry)){
+	    stop("Initial parameters used returns an infinite likelihood - Check data set to see if model assumptions are met!")
+	    }
+	#
 	return(f)
 	}
 

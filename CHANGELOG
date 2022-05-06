@@ -1,7 +1,12 @@
+Version - 3.4.4 - 04-21-22 (CRAN Release)
+- All functions that call on external Internet resources now fail gracefully if the resource is not available when examples are run, including examples in 'donttest' sections. This should address concerns raised in emails from CRAN about paleotree in April 2022.
+    - This mainly meant changes to functions involving Paleobiology Database resources.
+- First paleotree update pushed to CRAN since the start of the pandemic, March 2020. Wow!
+- Small changes to two-way cluster analysis function to allow for longer taxon and site labels. More changes may come in future versions.
+
 Version - 3.3.26
 - Fixed a bug in addTermBranchLength, caught by Phil Novack-Gottshall. This bug appears to have been introduced in 2018, and likely hasn't affected any actual research publication.
 - Added an addition step to the clean-phylo function in test-tree so that order is set to NULL before being reordered, to match an example from Emmanuel Paradis from R-Sig-Phylo
-- 
 
 Version - 3.3.25 - 12-12-19 (CRAN release)
 - Fixed all instances where class was checked as if it was assumed only to be a single value, and instead check now with inherits() instead, so to be acceptable for CRAN.

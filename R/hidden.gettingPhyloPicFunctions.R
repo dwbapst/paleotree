@@ -3,7 +3,8 @@
 getPhyloPicPNG<-function(
 		picID_PBDB, 
 		cacheDir = NULL,
-		cacheImage = FALSE
+		cacheImage = FALSE,
+        failIfNoInternet = TRUE
 		){
 	####################################################
 	# first try to find and load a cached version
@@ -31,6 +32,12 @@ getPhyloPicPNG<-function(
 	if(is.null(picPNG)){
 		picUID <- paste0("https://paleobiodb.org/data1.2/taxa/thumb.txt?id="
 							,picID_PBDB)
+	    # first test internet
+        testConnect <- canConnectPBDB(fail = failIfNoInternet)
+        if(is.null(testConnect)){
+            return(NULL)
+            }
+        #
 		picUID <- read.csv(picUID, stringsAsFactors = FALSE)
 		picUID <- picUID$uid
 		picPNG <- getPhyloPicFromPhyloPic(picUID)
@@ -39,7 +46,13 @@ getPhyloPicPNG<-function(
 	# if that doesn't work
 		# try to load the image from PBDB		
 	if(is.null(picPNG)){
-		picPNG <- getPhyloPicPNG_PBDB(picID_PBDB = picID_PBDB)
+		picPNG <- getPhyloPicPNG_PBDB(
+		        picID_PBDB = picID_PBDB,
+		        failIfNoInternet = failIfNoInternet
+            	)
+        if(is.null(picPNG) & failIfNoInternet){
+            return(NULL)
+            }
 		}
 	#########################
 	if(cacheImage & notCached){
@@ -61,9 +74,18 @@ getPhyloPicPNG<-function(
 	return(picPNG)	
 	}		
 
-getPhyloPicUIDsTableFromPBDB <- function(picIDs){
+getPhyloPicUIDsTableFromPBDB <- function(
+        picIDs,
+        failIfNoInternet = TRUE
+        ){
+    # first test internet
+    testConnect <- canConnectPBDB(fail = failIfNoInternet)
+    if(is.null(testConnect)){
+        return(NULL)
+        }
+    #
 	imgNumAPIurl <- "https://paleobiodb.org/data1.2/taxa/thumb.txt?id="
-	URLwithNums <- paste0(imgNumAPIurl,picIDs)	
+	URLwithNums <- paste0(imgNumAPIurl, picIDs)	
 	names(URLwithNums) <- names(picIDs)
 	res <- do.call(rbind,
           lapply(URLwithNums, read.csv, stringsAsFactors=FALSE)
@@ -73,7 +95,7 @@ getPhyloPicUIDsTableFromPBDB <- function(picIDs){
 	
 getPhyloPicFromPhyloPic <- function(picUID){
 	# get image info
-	picInfoURL <- paste0("http://phylopic.org/api/a/image/",
+	picInfoURL <- paste0("https://phylopic.org/api/a/image/",
 		picUID,"?options=credit+licenseURL+pngFiles")
 	if(RCurl::url.exists(picInfoURL)){
 		picInfo <- jsonlite::fromJSON(picInfoURL,  
@@ -85,7 +107,7 @@ getPhyloPicFromPhyloPic <- function(picUID){
 			picPNGurl <- picInfo$result$pngFiles[[
 					length(picInfo$result$pngFiles)
 				]]$url
-			picPNGurl <- paste0("http://phylopic.org",
+			picPNGurl <- paste0("https://phylopic.org",
 				picPNGurl)
 			##############
 			if(RCurl::url.exists(picPNGurl)){
@@ -106,7 +128,9 @@ getPhyloPicFromPhyloPic <- function(picUID){
 
 	
 getPhyloPicPNG_PBDB<-function(
-		picID_PBDB){
+		picID_PBDB,
+        failIfNoInternet = TRUE
+        ){
 	############################################
 	#	
 	# require(png);require(RCurl)
@@ -118,9 +142,14 @@ getPhyloPicPNG_PBDB<-function(
 	# GET IMAGE
 	# get the URL address for the pic via API
 	apiPicURL <- paste0(
-		"http://paleobiodb.org/data1.2/taxa/thumb.png?id=",
+		"https://paleobiodb.org/data1.2/taxa/thumb.png?id=",
 		picID_PBDB)
 	#
+	# first test internet
+    testConnect <- canConnectPBDB(fail = failIfNoInternet)
+    if(is.null(testConnect)){
+        return(NULL)
+        }
 	# get picPNG		
 	picPNG <-  png::readPNG(RCurl::getURLContent(apiPicURL))
 	############
@@ -130,7 +159,11 @@ getPhyloPicPNG_PBDB<-function(
 	return(picPNG)
 	}
 	
-getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
+getPhyloPicIDNumFromPBDB <- function(
+        taxaData, 
+        tree, 
+        failIfNoInternet = TRUE
+        ){
 	# check or obtain the PBDB phylopic IDs from PBDB
 		# get the phylopic-specific IDs  as well
 	#
@@ -140,10 +173,15 @@ getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
 		tiptaxa <- paste0(tree$tip.label, 
 			collapse = ",")
 		apiAddressTaxa <- paste0(
-			"http://paleobiodb.org/data1.2/taxa/list.txt?name=",
+			"https://paleobiodb.org/data1.2/taxa/list.txt?name=",
 			tiptaxa, "&rel=exact&show=img"
 			)	
 		# call PBDB API
+        # first test internet
+        testConnect <- canConnectPBDB(fail = failIfNoInternet)
+        if(is.null(testConnect)){
+            return(NULL)
+            }
 		taxaData <- read.csv(apiAddressTaxa,
 			stringsAsFactors = FALSE)
 		# get the PBDB image IDs and label with tip labels
@@ -199,6 +237,39 @@ getPhyloPicIDNumFromPBDB <- function(taxaData, tree){
 	return(phylopicIDsPBDB)
 	}
 
-
+# test if there is internet
+canConnectPBDB <- function(fail = TRUE){
+    # ip = "8.8.8.8"
+    # is PBDB up
+    res <- RCurl::url.exists("https://paleobiodb.org/")
+    if(!res){ 
+        connectMessage <- "Cannot connect to Paleobiology Database at https://paleobiodb.org/"
+        if(fail){
+            stop(connectMessage)
+            }
+        message(connectMessage)
+        res <- NULL
+        return(NULL)
+        }
+    #
+    # is PBDB data service up
+    res <- RCurl::url.exists(
+        "https://paleobiodb.org/data1.2/taxa/single.txt?name=Dicellograptus/"
+        )
+    if(!res){
+        connectMessage <- "Cannot connect to Paleobiology Database API at https://paleobiodb.org/data1.2/"
+        if(fail){
+            stop(connectMessage)
+            }
+        message(connectMessage)
+        return(NULL)
+        }
+    
+    # res <- try(read.csv(
+    #    "https://paleobiodb.org/data1.2/taxa/single.txt?name=Dicellograptus",
+    #    stringsAsFactors = TRUE
+    #    ))
+    return(TRUE)
+    }
 	
 	

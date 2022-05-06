@@ -62,7 +62,7 @@ taxicDivDisc(retioRanges)
 \references{
 See my recent blog post on temporal datasets in paleontology for some details:
 
-\url{http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html}
+\url{https://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html}
 }
 \seealso{
 \code{\link{bin_timePaleoPhy}} and \code{\link{taxicDivDisc}} for common applications;

@@ -10,7 +10,8 @@ dateTaxonTreePBDB(
   minBranchLen = 0,
   tipTaxonDateUsed = "shallowestAge",
   dropZeroOccurrenceTaxa = TRUE,
-  plotTree = FALSE
+  plotTree = FALSE,
+  failIfNoInternet = TRUE
 )
 }
 \arguments{
@@ -50,6 +51,15 @@ or tips with \code{NA} ages listed cannot be processed by \code{parentChild2Taxo
 
 \item{plotTree}{If \code{TRUE}, the resulting dated tree is plotted.
 This is \code{FALSE} by default.}
+
+\item{failIfNoInternet}{If the Paleobiology Database or another 
+needed internet resource cannot be accessed, perhaps because of
+no internet connection, should the function fail (with an error)
+or should the function return \code{NULL} and return an
+informative message instead, thus meeting the CRAN policy
+that such functionalities must 'fail gracefully'?
+The default is \code{TRUE} but all examples that might be auto-run
+use \code{FALSE} so they do not fail during R CHECK.}
 }
 \value{
 Returns a dated phylogeny of class \code{phylo}, with an additional element
@@ -71,10 +81,17 @@ straight interpretation of what the PBDB reports. The dated trees
 produced should not be taken overly seriously.
 }
 \examples{
-
+# Note that all examples here use argument 
+    # failIfNoInternet = FALSE so that functions do
+    # not error out but simply return NULL if internet
+    # connection is not available, and thus
+    # fail gracefully rather than error out (required by CRAN).
+# Remove this argument or set to TRUE so functions fail
+    # when internet resources (paleobiodb) is not available.
+    
 \donttest{
 
-taxaAnimals<-c("Archaeopteryx", "Eldredgeops",
+taxaAnimals <- c("Archaeopteryx", "Eldredgeops",
 	"Corvus", "Acropora", "Velociraptor", "Gorilla", 
 	"Olenellus", "Lingula", "Dunkleosteus",
 	"Tyrannosaurus", "Triceratops", "Giraffa",
@@ -82,49 +99,58 @@ taxaAnimals<-c("Archaeopteryx", "Eldredgeops",
 	"Rhynchotrema", "Pecten", "Homo", "Dimetrodon",
 	"Nemagraptus", "Panthera", "Anomalocaris")
 
-data <-getSpecificTaxaPBDB(taxaAnimals)
-tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
+animalData <-getSpecificTaxaPBDB(taxaAnimals, 
+    failIfNoInternet = FALSE)
+    
+if(!is.null(animalData)){
+
+tree <- makePBDBtaxonTree(animalData, 
+    rankTaxon = "genus")
 
 #get the ranges 
 timeTree <- dateTaxonTreePBDB(tree)
+    
+}
 
 }
+
+#####################################
+
 \dontrun{
+ 
+# plotting the tree with phyloPics
 
 plotPhyloPicTree(tree = timeTree,
-     depthAxisPhylo = TRUE)
+     depthAxisPhylo = TRUE, 
+     failIfNoInternet = FALSE)
 
-}
-
-####################################
-
-\dontrun{
 
 # can also plot dated tree with strap
 
 library(strap)
 #now plot it
 strap::geoscalePhylo(
-    tree=timeTree,
+    tree = timeTree,
     direction = "upwards",
-    ages=rangesMinMax,
-    cex.tip=0.7,
-    cex.ts=0.55,
-    cex.age=0.5,
-    width=3,
+    ages = rangesMinMax,
+    cex.tip = 0.7,
+    cex.ts = 0.55,
+    cex.age = 0.5,
+    width = 3,
     tick.scale = 50,
-    quat.rm=TRUE,
+    quat.rm = TRUE,
     boxes = "Period",
     arotate = 90,
-    units=c("Eon","Period","Era"),
-    x.lim=c(650,-20)
+    units = c("Eon","Period","Era"),
+    x.lim = c(650,-20)
     )
 }
 
 ##############################################################
 
-\donttest{
+## HORSES
 
+\donttest{
 #if(require(curl)){
 
 # we can also use this for pre-existing trees
@@ -153,24 +179,29 @@ plot(horseTree)
 
 # now let's get data on the tip from the PBDB
     # using getSpecificTaxaPBDB
-horseData <- getSpecificTaxaPBDB(horseTree$tip.label)
+horseData <- getSpecificTaxaPBDB(horseTree$tip.label, 
+    failIfNoInternet = FALSE)
+
+if(!is.null(horseData)){
 
 # now we can date the tree with dateTaxonTreePBDB
 
 datedHorseTree <- dateTaxonTreePBDB(
     taxaTree = horseTree,
     taxaDataPBDB = horseData,
-    minBranchLen = 1
-    )
+    minBranchLen = 1, 
+    failIfNoInternet = FALSE)
 
 # and let's try plotting it!	
 plotPhyloPicTree(
     tree = datedHorseTree,
-    depthAxisPhylo = TRUE
-    )		
+    depthAxisPhylo = TRUE, 
+    failIfNoInternet = FALSE)		
 	
 # a fairly boring phylopic diagram
-    # not many horse phylopics as of 07-16-19?
+     # not many horse phylopics as of 07-16-19?
+
+}
 
 #}
 }

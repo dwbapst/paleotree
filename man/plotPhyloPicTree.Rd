@@ -25,6 +25,7 @@ plotPhyloPicTree(
   rescalePNG = TRUE,
   trimPNG = TRUE,
   colorGradient = "original",
+  failIfNoInternet = TRUE,
   ...
 )
 }
@@ -149,6 +150,15 @@ extreme option is applied, with values transformed to greatly remove
 in-between gray-scale value, shifting them toward color or
 not-color without making the silhouette purely monochrome.}
 
+\item{failIfNoInternet}{If the Paleobiology Database or another 
+needed internet resource cannot be accessed, perhaps because of
+no internet connection, should the function fail (with an error)
+or should the function return \code{NULL} and return an
+informative message instead, thus meeting the CRAN policy
+that such functionalities must 'fail gracefully'?
+The default is \code{TRUE} but all examples that might be auto-run
+use \code{FALSE} so they do not fail during R CHECK.}
+
 \item{...}{Additional arguments, passed to
 \code{plot.phylo} for plotting of the tree. These
 additional arguments may be passed to \code{plot},
@@ -185,28 +195,45 @@ Paleobiology Database API. If \code{taxaDataPBDB} isn't provided, either by
 the user directly, or as an element of \code{tree}.
 }
 \examples{
+# Note that some examples here use argument 
+    # failIfNoInternet = FALSE so that functions do
+    # not error out but simply return NULL if internet
+    # connection is not available, and thus
+    # fail gracefully rather than error out (required by CRAN).
+# Remove this argument or set to TRUE so functions DO fail
+    # when internet resources (paleobiodb) is not available.
 
-\dontrun{
+\donttest{
 
 library(paleotree)
 
 taxaAnimals<-c("Archaeopteryx", "Eldredgeops",
-	"Corvus", "Acropora", "Velociraptor", "Gorilla", 
-	"Olenellus", "Lingula", "Dunkleosteus",
-	"Tyrannosaurus", "Triceratops", "Giraffa",
-	"Megatheriidae", "Aedes", "Histiodella",
-	"Rhynchotrema", "Pecten", "Homo", "Dimetrodon",
-	"Nemagraptus", "Panthera", "Anomalocaris")
+    "Corvus", "Acropora", "Velociraptor", "Gorilla", 
+    "Olenellus", "Lingula", "Dunkleosteus",
+    "Tyrannosaurus", "Triceratops", "Giraffa",
+    "Megatheriidae", "Aedes", "Histiodella",
+    "Rhynchotrema", "Pecten", "Homo", "Dimetrodon",
+    "Nemagraptus", "Panthera", "Anomalocaris")
 
-data <-getSpecificTaxaPBDB(taxaAnimals)
-tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
+animalData <-getSpecificTaxaPBDB(taxaAnimals, 
+    failIfNoInternet = FALSE)
+    
+if(!is.null(animalData)){  
+  
+tree <- makePBDBtaxonTree(
+    animalData, 
+    rankTaxon = "genus", 
+    failIfNoInternet = FALSE
+    ) 
 
-plotPhyloPicTree(tree = tree)
+plotPhyloPicTree(tree = tree, 
+    failIfNoInternet = FALSE)
 
 # let's plot upwards but at a funny size
 dev.new(height = 5, width = 10)
 plotPhyloPicTree(tree = tree,
-	 orientation = "upwards") 
+    orientation = "upwards", 
+    failIfNoInternet = FALSE) 
 
 # dated tree plotting
 
@@ -216,15 +243,17 @@ timeTree <- dateTaxonTreePBDB(tree, minBranchLen = 10)
 plotPhyloPicTree(tree = timeTree)
 
 # plotting the dated tree with an axis
-plotPhyloPicTree(tree = timeTree,
-	depthAxisPhylo= TRUE)
+plotPhyloPicTree(
+    tree = timeTree,
+    depthAxisPhylo = TRUE)
 
 # now upwards!
 plotPhyloPicTree(tree = timeTree,
-	orientation = "upwards",
-	depthAxisPhylo= TRUE)
+    orientation = "upwards",
+    depthAxisPhylo= TRUE)
 
 ###################################
+
 # plotting a time tree with stratigraphic ranges
 
 plotPhyloPicTree(tree = timeTree,
@@ -235,7 +264,8 @@ plotPhyloPicTree(tree = timeTree,
    orientation = "upwards",
    depthAxisPhylo= TRUE)
 
-########
+################################################
+
 # adjusting a tree to ignore a very old root
 
 # let's pretend that metazoans are extremely old
@@ -252,18 +282,18 @@ axisPhylo()
 
 # let's plot it now with the PhyloPic
 plotPhyloPicTree(tree = treeOldRoot,
-	depthAxisPhylo = TRUE)
+    depthAxisPhylo = TRUE)
 
 # let's crop that old lineage
 plotPhyloPicTree(tree = treeOldRoot,
-	maxAgeDepth = 500,
-	depthAxisPhylo = TRUE)
+    maxAgeDepth = 500,
+    depthAxisPhylo = TRUE)
 # cool!
 
 ##################################
 # playing with colors
 plotPhyloPicTree(tree = tree,
-	 taxaColor = "green")
+     taxaColor = "green")
 
 # inverting the colors
 par(bg="black")
@@ -271,35 +301,39 @@ taxaColors <- rep("white",Ntip(tree))
 # making a red giraffe
 taxaColors[4] <- "red"
 plotPhyloPicTree(
-	tree = tree, 
-	orientation = "upwards",
-	edge.color = "white",
-	taxaColor=taxaColors)
+    tree = tree, 
+    orientation = "upwards",
+    edge.color = "white",
+    taxaColor=taxaColors)
+
+
+} # end if to test if animalData was NULL
+} # end donttest segment
 
 ######################################
+\dontrun{
+
 # let's try some different phylopics
-	  # like a nice tree of commonly known tetrapods
+      # like a nice tree of commonly known tetrapods
 
 tetrapodList<-c("Archaeopteryx", "Columba", "Ectopistes",
-	"Corvus", "Velociraptor", "Baryonyx", "Bufo",
-	"Rhamphorhynchus", "Quetzalcoatlus", "Natator",
-	"Tyrannosaurus", "Triceratops", "Gavialis",
-	"Brachiosaurus", "Pteranodon", "Crocodylus",
-	"Alligator", "Giraffa", "Felis", "Ambystoma",
- 	"Homo", "Dimetrodon", "Coleonyx", "Equus",
-	"Sphenodon", "Amblyrhynchus")
+    "Corvus", "Velociraptor", "Baryonyx", "Bufo",
+    "Rhamphorhynchus", "Quetzalcoatlus", "Natator",
+    "Tyrannosaurus", "Triceratops", "Gavialis",
+    "Brachiosaurus", "Pteranodon", "Crocodylus",
+    "Alligator", "Giraffa", "Felis", "Ambystoma",
+     "Homo", "Dimetrodon", "Coleonyx", "Equus",
+    "Sphenodon", "Amblyrhynchus")
 
-data <-getSpecificTaxaPBDB(tetrapodList)
+tetrapodData <-getSpecificTaxaPBDB(tetrapodList)
 
-tree <- makePBDBtaxonTree(data, rankTaxon = "genus")
+tree <- makePBDBtaxonTree(tetrapodData, rankTaxon = "genus")
 
 plotPhyloPicTree(tree = tree)
 
-
-}
 ####################################
-\dontrun{
-# let's check out speed increase from caching!
+
+# let's check our speed increase from caching!
     # can try this on your own machine
 
 #first time
@@ -311,51 +345,51 @@ system.time(plotPhyloPicTree(tree = tree))
 # make a pretty plot
 
 taxaSeventyEight <- c(
-	"Archaeopteryx", "Pinus", "Procoptodon", "Olenellus", "Eldredgeops",
-	"Quetzalcoatlus", "Homo", "Tyrannosaurus", "Triceratops", "Giraffa",
-	"Bolivina", "Cancer", "Dicellograptus", "Dunkleosteus", "Solanum",
-	"Anomalocaris", "Climacograptus", "Halysites", "Cyrtograptus", 
-	"Procoptodon", "Megacerops", "Moropus", "Dimetrodon", "Lingula",
-	"Rhynchosaurus", "Equus", "Megaloceros", "Rhynchotrema", "Pecten",
-	"Echinaster", "Eocooksonia", "Neospirifer", # "Prototaxites", 
-	"Cincinnaticrinus", "Nemagraptus", "Monograptus", "Pongo", "Acropora",
-	"Histiodella", "Agathiceras", "Juramaia", "Opabinia", "Arandaspis",
-	"Corvus", "Plethodon", "Latimeria", "Phrynosoma", "Araucarioxylon",
-	"Velociraptor", "Hylonomus", "Elginerpeton", "Rhyniognatha",
-	"Tyto", "Dromaius", "Solenopsis", "Gorilla", "Ginkgo", "Terebratella", 
-	"Caretta", "Crocodylus", "Rosa", "Prunus", "Lycopodium", "Meganeura",
-	"Diplodocus", "Brachiosaurus", "Hepaticae", "Canadaspis", "Pikaia",
-	"Smilodon", "Mammuthus", "Exaeretodon", "Redondasaurus", "Dimetrodon",
-	"Megatheriidae", "Metasequoia", "Aedes", "Panthera", "Megalonyx")
+    "Archaeopteryx", "Pinus", "Procoptodon", "Olenellus", "Eldredgeops",
+    "Quetzalcoatlus", "Homo", "Tyrannosaurus", "Triceratops", "Giraffa",
+    "Bolivina", "Cancer", "Dicellograptus", "Dunkleosteus", "Solanum",
+    "Anomalocaris", "Climacograptus", "Halysites", "Cyrtograptus", 
+    "Procoptodon", "Megacerops", "Moropus", "Dimetrodon", "Lingula",
+    "Rhynchosaurus", "Equus", "Megaloceros", "Rhynchotrema", "Pecten",
+    "Echinaster", "Eocooksonia", "Neospirifer", # "Prototaxites", 
+    "Cincinnaticrinus", "Nemagraptus", "Monograptus", "Pongo", "Acropora",
+    "Histiodella", "Agathiceras", "Juramaia", "Opabinia", "Arandaspis",
+    "Corvus", "Plethodon", "Latimeria", "Phrynosoma", "Araucarioxylon",
+    "Velociraptor", "Hylonomus", "Elginerpeton", "Rhyniognatha",
+    "Tyto", "Dromaius", "Solenopsis", "Gorilla", "Ginkgo", "Terebratella", 
+    "Caretta", "Crocodylus", "Rosa", "Prunus", "Lycopodium", "Meganeura",
+    "Diplodocus", "Brachiosaurus", "Hepaticae", "Canadaspis", "Pikaia",
+    "Smilodon", "Mammuthus", "Exaeretodon", "Redondasaurus", "Dimetrodon",
+    "Megatheriidae", "Metasequoia", "Aedes", "Panthera", "Megalonyx")
 
-data <-getSpecificTaxaPBDB(taxaSeventyEight)
-tree <- makePBDBtaxonTree(data, rankTaxon = "genus") 
+dataSeventyEight <-getSpecificTaxaPBDB(taxaSeventyEight)
+tree <- makePBDBtaxonTree(dataSeventyEight, rankTaxon = "genus") 
 
 timeTree <- dateTaxonTreePBDB(tree,
   minBranchLen = 10)
 
 date <- format(Sys.time(), "\%m-\%d-\%y")
 file <- paste0(
-"tree_taxa78_phylopic_stratTree_",
-	date, ".pdf")
+   "tree_taxa78_phylopic_stratTree_",
+    date, ".pdf")
 
 png(file = file,
-	height = 5, width = 12, 
-	units = "in", res = 300)
+    height = 5, width = 12, 
+    units = "in", res = 300)
 par(bg="black")
 par(mar=c(0,0,3,0))
 taxaColors <- rep("white", Ntip(timeTree))
 taxaColors[4] <- "red"
 
 plotPhyloPicTree(
-	tree = timeTree, 
-	orientation = "upwards",
-	addTaxonStratDurations = TRUE,
-	edge.color = "white",
-	maxAgeDepth = 700,
-	taxaColor=taxaColors,
-	depthAxisPhylo = TRUE,
-	colorAxisPhylo = "white")
+    tree = timeTree, 
+    orientation = "upwards",
+    addTaxonStratDurations = TRUE,
+    edge.color = "white",
+    maxAgeDepth = 700,
+    taxaColor=taxaColors,
+    depthAxisPhylo = TRUE,
+    colorAxisPhylo = "white")
 dev.off()
 shell.exec(file)
 

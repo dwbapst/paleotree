@@ -39,7 +39,7 @@ included in the output tree.
 
 See this blog post for more information:
 
-\url{http://nemagraptus.blogspot.com/2012/07/resolving-polytomies-according-to.html}
+\url{https://nemagraptus.blogspot.com/2012/07/resolving-polytomies-according-to.html}
 }
 \examples{
 \donttest{

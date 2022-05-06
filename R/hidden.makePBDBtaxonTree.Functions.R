@@ -95,15 +95,23 @@ queryMissingParents <- function(taxaID,
 		APIversion = "1.2",
 		status = "all",
 		convertAccepted = FALSE,
-		stopIfSelfParent = FALSE){
+		stopIfSelfParent = FALSE,
+        failIfNoInternet = TRUE
+        ){
 	# find missing parents by access API
 	#
 	# drop Eukarya, as it won't return if status = senior under 1.1
 	# taxaID <- as.numeric(taxaID[taxaID != "1"])
 	#
 	# let's get some taxonomic data
+    # first test internet
+    testConnect <- canConnectPBDB(fail = failIfNoInternet)
+    if(is.null(testConnect)){
+        return(NULL)
+        }
+    #
 	floatData <- read.csv(
-		paste0("http://paleobiodb.org/data",APIversion,
+		paste0("https://paleobiodb.org/data",APIversion,
 			"/taxa/list.txt?taxon_id=",paste0(taxaID,collapse=","),
 				### should we take all or only ACCEPTED parents?
 			 "&rel=exact&status=",status,
@@ -176,12 +184,14 @@ fixSelfParents <- function(dataParents, approach = "clean"){
 		return(dataParents)
 		}
 		
-getAllParents<-function(
+getAllParents <- function(
 		inputData, 
 		status, 
 		annotatedDuplicateNames = TRUE,
 		convertAccepted = TRUE,
-		stopIfSelfParent = FALSE){
+		stopIfSelfParent = FALSE,
+        failIfNoInternet = TRUE
+        ){
 	###############################################
 	parData<-parseParentPBDBData(inputData)
 	noParentMatch<-findNoParentMatch(parData)
@@ -218,10 +228,14 @@ getAllParents<-function(
 			# if convertAccepted is TRUE, then the taxon name and taxon no will be replaced
 				# with the accepted name and no for that taxon
 				# this is (probably?) NOT disirable for trying to trace parents in a set of taxa
-		dataNew <- queryMissingParents(floatingParentNum,
+		dataNew <- queryMissingParents(
+		    floatingParentNum,
 			status = status, 
 			convertAccepted = convertAccepted,
-			stopIfSelfParent = stopIfSelfParent)
+			stopIfSelfParent = stopIfSelfParent,    
+		    failIfNoInternet = failIfNoInternet
+	        )
+        if(is.null(dataNew)){return(NULL)}
 		# add new parents to the top of the matrix 
 			# so if duplicated names are annotated, its the originals that get annotated
 		parData <- rbind(dataNew,parData)
@@ -414,7 +428,14 @@ getLinneanTaxonTreePBDB <- function(dataTransform, tipSet, cleanTree, rankTaxon)
 	return(tree)
 	}
 
-parentChildPBDBOld <- function(dataTransform, tipSet, cleanTree, method, APIversion){
+parentChildPBDBOld <- function(
+        dataTransform, 
+        tipSet, 
+        cleanTree, 
+        method, 
+        APIversion,
+        failIfNoInternet = TRUE
+        ){
 	dataTransform <- apply(dataTransform, 2, as.character)
 	# need two things: a table of parent-child relationships as IDs
 		#and a look-up table of IDs and taxon names
@@ -471,8 +492,10 @@ parentChildPBDBOld <- function(dataTransform, tipSet, cleanTree, method, APIvers
 				if(method == "parentChildOldQueryPBDB"){
 					floatData <- queryMissingParents(
 						taxaID = floatersNew, 
-						APIversion = APIversion
-						)	
+						APIversion = APIversion,
+						failIfNoInternet = failIfNoInternet
+	                    )
+                    if(is.null(floatData)){ return(NULL) }	
 					#update taxon names in taxonNameTable
 					whichUpdate <- match(floatData[,"taxon_no"],taxonNameTable[,1])
 					replaceFloatName <- floatData[!is.na(whichUpdate), "taxon_name"]

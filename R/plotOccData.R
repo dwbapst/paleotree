@@ -7,7 +7,7 @@
 
 #' @details
 #' This function was originally conceived of in the following blog post: 
-#' \href{http://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html}{Link}
+#' \href{https://nemagraptus.blogspot.com/2015/02/how-do-we-treat-fossil-age-data-dates.html}{Link}
 #' 
 
 #' @param occList A list where every element is a table of occurrence data for a different taxon,

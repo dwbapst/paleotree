@@ -369,7 +369,7 @@ by \code{read.csv} or \code{read.table}), these will be coerced to a matrix.
 
 A tutorial for applying the time-scaling functions in paleotree, along with
 an example using real (graptolite) data, can be found here:
-\url{http://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
+\url{https://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
 }
 \note{
 Please account for stratigraphic uncertainty in your analysis.
@@ -541,7 +541,10 @@ plot(ladderize(timePaleoPhy(
     add.term = TRUE
     )))
 axisPhylo()
-text(x = 50,y = 23,"type = basic",adj = c(0,0.5),cex = 1.2)
+text(x = 50,y = 23,
+     "type = basic",
+     adj = c(0,0.5),
+     cex = 1.2)
 #
 plot(ladderize(timePaleoPhy(
     cladogram,
@@ -551,38 +554,71 @@ plot(ladderize(timePaleoPhy(
     add.term = TRUE
     )))
 axisPhylo()
-text(x = 55,y = 23,"type = equal",adj = c(0,0.5),cex = 1.2)
+text(x = 55,y = 23,
+     "type = equal",
+     adj = c(0,0.5),
+     cex = 1.2)
 #
-plot(ladderize(timePaleoPhy(
-    cladogram,
-    rangesCont,
-    type = "aba",
-    vartime = 1,
-    add.term = TRUE
-    )))
+plot(
+    ladderize(
+        timePaleoPhy(
+            cladogram,
+            rangesCont,
+            type = "aba",
+            vartime = 1,
+            add.term = TRUE
+            )
+        )
+    )
+    
 axisPhylo()
-text(x = 55,y = 23,"type = aba",adj = c(0,0.5),cex = 1.2)
+text(x = 55,y = 23,
+     "type = aba",
+     adj = c(0,0.5),
+     cex = 1.2)
+     
+     
 #
-plot(ladderize(timePaleoPhy(
-    cladogram,
-    rangesCont,
-    type = "zlba",
-    vartime = 1,
-    add.term = TRUE
-    )))
+plot(
+    ladderize(
+        timePaleoPhy(
+           cladogram,
+           rangesCont,
+           type = "zlba",
+           vartime = 1,
+           add.term = TRUE
+           )
+        )
+     )
+    
 axisPhylo()
-text(x = 55, y = 23, "type = zlba",
-     adj = c(0,0.5), cex = 1.2)
+text(x = 55, 
+     y = 23, 
+     "type = zlba",
+     adj = c(0,0.5), 
+     cex = 1.2
+     )
+     
+     
 #
-plot(ladderize(timePaleoPhy(
-    cladogram,
-    rangesCont,
-    type = "mbl",
-    vartime = 1,
-    add.term = TRUE
-    )))
+plot(
+  ladderize(
+     timePaleoPhy(
+        cladogram,
+        rangesCont,
+        type = "mbl",
+        vartime = 1,
+        add.term = TRUE
+        )
+     )
+  )
+    
 axisPhylo()
-text(x = 55,y = 23,"type = mbl",adj = c(0,0.5),cex = 1.2)
+text(x = 55,y = 23,
+     "type = mbl",
+     adj = c(0,0.5),
+     cex = 1.2
+     )
 layout(1)
 par(parOrig)
 
@@ -603,12 +639,14 @@ cladoDrop <- drop.tip(cladogram, droppers)
 # now make vector same length as number of nodes
 nodeDates <- rep(NA, Nnode(cladoDrop))
 nodeDates[5] <- 1200
+
 ttree1 <- timePaleoPhy(
     cladoDrop,rangesCont,
     type = "basic",
     randres = FALSE,
     node.mins = nodeDates,
     plot = TRUE)
+    
 ttree2 <- timePaleoPhy(
     cladoDrop,
     rangesCont,
@@ -655,7 +693,8 @@ phyloDiv(ttreeB2)
 
 #can also force the appearance timings not to be chosen stochastically
 ttreeB3 <- bin_timePaleoPhy(
-    cladogram,rangesDisc,
+    cladogram,
+    rangesDisc,
     type = "basic",
     ntrees = 1,
     nonstoch.bin = TRUE,
@@ -683,7 +722,8 @@ ttree <- bin_timePaleoPhy(
 ttree <- bin_timePaleoPhy(
     cladoDrop,
     rangesDisc,
-    type = "basic",ntrees = 1,
+    type = "basic",
+    ntrees = 1,
     add.term = TRUE,
     randres = TRUE,
     node.mins = nodeDates,
@@ -692,16 +732,19 @@ ttree <- bin_timePaleoPhy(
 
 \donttest{
 #simple three taxon example for testing inc.term.adj
-ranges1 <- cbind(c(3,4,5), c(2,3,1))
+ranges1 <- cbind(c(3, 4, 5), c(2, 3, 1))
 rownames(ranges1) <- paste("t", 1:3, sep = "")
+
 clado1 <- read.tree(file = NA,
     text = "(t1,(t2,t3));")
+    
 ttree1 <- timePaleoPhy(
     clado1,
     ranges1,
     type = "mbl",
     vartime = 1
     )
+    
 ttree2 <- timePaleoPhy(
     clado1,
     ranges1,
@@ -709,6 +752,7 @@ ttree2 <- timePaleoPhy(
     vartime = 1,
     add.term = TRUE
     )
+    
 ttree3 <- timePaleoPhy(
     clado1,
     ranges1,
@@ -722,13 +766,17 @@ ttree3 <- timePaleoPhy(
 ttree1$root.time
 ttree2$root.time
 ttree3$root.time
--apply(ranges1,1,diff)
+
+-apply(ranges1, 1, diff)
 
 layout(1:3)
+
 plot(ttree1)
 axisPhylo()
+
 plot(ttree2)
 axisPhylo()
+
 plot(ttree3)
 axisPhylo()
 

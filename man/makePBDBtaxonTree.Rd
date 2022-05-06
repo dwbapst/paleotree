@@ -12,7 +12,8 @@ makePBDBtaxonTree(
   tipSet = NULL,
   cleanTree = TRUE,
   annotatedDuplicateNames = TRUE,
-  APIversion = "1.2"
+  APIversion = "1.2",
+  failIfNoInternet = TRUE
 )
 
 plotTaxaTreePBDB(taxaTree, edgeLength = 1)
@@ -96,6 +97,15 @@ names are found.}
 \code{method  = "parentChildOldQueryPBDB"} is used. The current default
 is \code{APIversion = "1.2"}, the most recent API version as of 12/11/2018.}
 
+\item{failIfNoInternet}{If the Paleobiology Database or another 
+needed internet resource cannot be accessed, perhaps because of
+no internet connection, should the function fail (with an error)
+or should the function return \code{NULL} and return an
+informative message instead, thus meeting the CRAN policy
+that such functionalities must 'fail gracefully'?
+The default is \code{TRUE} but all examples that might be auto-run
+use \code{FALSE} so they do not fail during R CHECK.}
+
 \item{taxaTree}{A phylogeny of class \code{phylo}, presumably a taxon tree as output from
 \code{makePBDBtaxonTree} with higher-taxon names as node labels.}
 
@@ -146,7 +156,16 @@ macroevolutionary studies as reconstructed phylogenies
 (Soul and Friedman, 2015).
 }
 \examples{
+# Note that most examples here use argument 
+    # failIfNoInternet = FALSE so that functions do
+    # not error out but simply return NULL if internet
+    # connection is not available, and thus
+    # fail gracefully rather than error out (required by CRAN).
+# Remove this argument or set to TRUE so functions DO fail
+    # when internet resources (paleobiodb) is not available.
+
 set.seed(1)
+
 \donttest{
 
 #get some example occurrence and taxonomic data
@@ -156,18 +175,24 @@ data(graptPBDB)
 graptTreeLinnean <- makePBDBtaxonTree(
     taxaDataPBDB = graptTaxaPBDB,
     rankTaxon = "genus",
-    method = "Linnean")
+    method = "Linnean", 
+    failIfNoInternet = FALSE)
 
 #get the taxon tree: parentChild method
 graptTreeParentChild <- makePBDBtaxonTree(
     taxaDataPBDB = graptTaxaPBDB,
     rankTaxon = "genus",
-    method = "parentChild")
+    method = "parentChild", 
+    failIfNoInternet = FALSE)
+    
+if(!is.null(graptTreeParentChild) & 
+        !is.null(graptTreeLinnean)){
+    # if those functions worked...
+    # let's plot these and compare them! 
+    plotTaxaTreePBDB(graptTreeParentChild)
+    plotTaxaTreePBDB(graptTreeLinnean)
+    }
 
-# let's plot these and compare them! 
-plotTaxaTreePBDB(graptTreeParentChild)
-
-plotTaxaTreePBDB(graptTreeLinnean)
 
 # pause 3 seconds so we don't spam the API
 Sys.sleep(3)
@@ -177,37 +202,60 @@ Sys.sleep(3)
 
 ###################################
 #conodonts
-conoData <- getCladeTaxaPBDB("Conodonta")
+
+conoData <- getCladeTaxaPBDB("Conodonta", 
+    failIfNoInternet = FALSE)
+
+if(!is.null(conoData)){ 
+ 
 conoTree <- makePBDBtaxonTree(
     taxaDataPBDB = conoData,
     rankTaxon = "genus",
     method = "parentChild")
-# plot it!
+
+# if it worked, plot it!
 plotTaxaTreePBDB(conoTree)
+
+}
 
 # pause 3 seconds so we don't spam the API
 Sys.sleep(3)
 
 #############################
 #asaphid trilobites
-asaData <- getCladeTaxaPBDB("Asaphida")
+
+asaData <- getCladeTaxaPBDB("Asaphida", 
+    failIfNoInternet = FALSE)
+    
+if(!is.null(asaData)){
+
 asaTree <- makePBDBtaxonTree(
     taxaDataPBDB = asaData,
     rankTaxon = "genus",
     method = "parentChild")
-# plot it!
+
+# if it worked, plot it!
 plotTaxaTreePBDB(asaTree)
+
+}
 
 # pause 3 seconds so we don't spam the API
 Sys.sleep(3)
 
 ###############################
 #Ornithischia
-ornithData <- getCladeTaxaPBDB("Ornithischia")
+
+ornithData <- getCladeTaxaPBDB("Ornithischia", 
+    failIfNoInternet = FALSE)
+
+if(!is.null(ornithData)){
+
 ornithTree <- makePBDBtaxonTree(
     taxaDataPBDB = ornithData,
     rankTaxon = "genus",
     method = "parentChild")
+
+# if it worked, plot it!
 plotTaxaTreePBDB(ornithTree)
 
 # pause 3 seconds so we don't spam the API
@@ -229,20 +277,33 @@ Sys.sleep(3)
 ornithTree <- makePBDBtaxonTree(
     ornithData,
     rankTaxon = "genus",
-    method = "Linnean")
+    method = "Linnean", 
+    failIfNoInternet = FALSE)
+
+# if it worked, plot it!
 plotTaxaTreePBDB(ornithTree)
 
-	# pause 3 seconds so we don't spam the API
-	Sys.sleep(3)
+}
+
+# pause 3 seconds so we don't spam the API
+Sys.sleep(3)
 
 #########################
 # Rhynchonellida
-rynchData <- getCladeTaxaPBDB("Rhynchonellida")
-rynchTree <- makePBDBtaxonTree(
-    taxaDataPBDB = rynchData,
+
+rhynchData <- getCladeTaxaPBDB("Rhynchonellida", 
+    failIfNoInternet = FALSE)
+    
+if(!is.null(rhynchData)){  
+
+rhynchTree <- makePBDBtaxonTree(
+    taxaDataPBDB = rhynchData,
     rankTaxon = "genus",
     method = "parentChild")
-plotTaxaTreePBDB(rynchTree)
+
+    # if it worked, plot it!
+    plotTaxaTreePBDB(rhynchTree)
+    }
 
 #some of these look pretty messy!
 
@@ -255,7 +316,7 @@ application programming interface. \emph{Paleobiology} 42(1):1-7.
 
 Soul, L. C., and M. Friedman. 2015. Taxonomy and Phylogeny Can Yield
 Comparable Results in Comparative Palaeontological Analyses. \emph{Systematic Biology} 
-(\href{http://sysbio.oxfordjournals.org/content/early/2015/03/23/sysbio.syv015.abstract}{Link})
+(\doi{10.1093/sysbio/syv015})
 }
 \seealso{
 Two other functions in paleotree are used as sub-algorithms by \code{makePBDBtaxonTree}

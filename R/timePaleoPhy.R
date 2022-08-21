@@ -11,7 +11,7 @@
 #' methods such as \code{\link{cal3TimePaleoPhy}} or \code{\link{createMrBayesTipDatingNexus}}.
 #' 
 #' @details 
-#' \emph{Simplistic \emph{a posteriori} Dating ('Time-Scaling') Methods for Paleontology Phylogenies}
+#' \emph{Simplistic 'a posteriori' Dating (aka 'Time-Scaling') Methods for Paleontology Phylogenies}
 #' 
 #' These functions are an attempt to unify and collect previously used and
 #' discussed \emph{a posteriori} methods for time-scaling phylogenies of fossil taxa.

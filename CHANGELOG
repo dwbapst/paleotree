@@ -1,3 +1,6 @@
+Version - 3.4.5 - 08-21-22 (CRAN Release)
+- Minor formatting fix to avoid an HTML error in building the help file for timePaleoPhy, and a minor version bump
+
 Version - 3.4.4 - 04-21-22 (CRAN Release)
 - All functions that call on external Internet resources now fail gracefully if the resource is not available when examples are run, including examples in 'donttest' sections. This should address concerns raised in emails from CRAN about paleotree in April 2022.
     - This mainly meant changes to functions involving Paleobiology Database resources.

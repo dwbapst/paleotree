@@ -32,6 +32,11 @@
 
 #' @param marginBetween Argument controlling space placed between
 #' the cluster diagrams and the abundance plot. Default is 0.1.
+
+#' @param extraMarginForLabels Argument for extending the space for 
+#' plotting taxon and site labels. This parameter is currently being
+#' tested and may not behave well, especially for plots that
+#' aren't being made with very large dimensions.
  
 #' @param abundExpansion An argument that is a multiplier controlling the size
 #' of dots plotted for reflecting relative abundance.
@@ -156,6 +161,8 @@ twoWayEcologyCluster<-function(
         #
         # space to place between cluster diagrams and abundance plot
         marginBetween = 0.1,
+        # try to make margin bigger for taxon/site names
+        extraMarginForLabels = 0,
         # multiplier applies for plotting dots reflecting abundance
         abundExpansion = 3, 
         # axis label cex
@@ -196,17 +203,20 @@ twoWayEcologyCluster<-function(
     # make panes
     oldPar<-par(no.readonly = TRUE)
     layout(mat=rbind(3:4,1:2),
-        heights=c(1,5),
-        widths=c(5,1)
+        heights=c(1, 5 + extraMarginForLabels),
+        widths=c(5 + extraMarginForLabels, 1)
         )
     #
     # (lower left)
     ## major abund dot plot
     #
     par(
-        mar=c(5,5,
-        marginBetween,
-        marginBetween)
+        mar=c(
+            5+extraMarginForLabels,
+            5+extraMarginForLabels,
+            marginBetween,
+            marginBetween
+            )
         )
     iSet<-1:nrow(propAbund)
     jSet<-1:ncol(propAbund)
@@ -223,20 +233,20 @@ twoWayEcologyCluster<-function(
     for(i in iSet){
         for(j in jSet){
             points(
-                i,j,
-                pch=16,col="black",
-                cex=propScale[i,j]
+                i, j,
+                pch = 16, col = "black",
+                cex = propScale[i, j]
                 )
             }
         }
     #
     axis(
-        side=1,
-        at=iSet,
-        las=2,
-        lwd.ticks=0,
-        #padj=-1,
-        mgp=c(3,0.1,0),
+        side = 1,
+        at = iSet,
+        las = 2,
+        lwd.ticks = 0,
+        #padj = -1,
+        mgp=c(3, 0.1, 0),
         labels = rownames(propAbund),
         cex.axis = cex.axisLabels
         )
@@ -252,7 +262,12 @@ twoWayEcologyCluster<-function(
     #
     #################
     # lower right
-    par(mar=c(5,0,marginBetween,1))
+    par(
+        mar=c(
+            5 + extraMarginForLabels, 0,
+            marginBetween, 1
+            )
+        )
     plot(
         yPhylo,
         direction = "leftwards",
@@ -273,7 +288,10 @@ twoWayEcologyCluster<-function(
     
     # upper left
     par(
-        mar=c(0,5,1,marginBetween)
+        mar=c(
+            0, 5+extraMarginForLabels,
+            1, marginBetween
+            )
         )
     plot(xPhylo,
         direction="downwards",    

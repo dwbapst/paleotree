@@ -138,12 +138,12 @@ pqsRate2sProb <- function(r,p,q,int.length = 1){
 		#29b corrected with addition sign!
 	PDFL <- function(p,q,r,dt){
 		if(p == q){
-			NbNFL <- 1/(exp(-q*dt)+(p*dt)-1)		#N(b)/N(FL) based on eq 1b and 6b
-			term1 <- (r*dt)/(p+r)				#first term in square brackets in eq 29b
-			term2 <- (1-exp(-p*dt))/p				#second term
-			term3 <- (p*(1-exp(-(p+r)*dt)))/((p+r)^2)	#third term
-			terms <- term1-term2+term3			#full terms in square brackets
-			res <- (NbNFL)*p*terms					#P(D|FL)
+			NbNFL <- 1/(exp(-q*dt)+(p*dt)-1)            # N(b)/N(FL) based on eq 1b and 6b
+			term1 <- (r*dt)/(p+r)                       # first term in square brackets in eq 29b
+			term2 <- (1-exp(-p*dt))/p				    # second term
+			term3 <- (p*(1-exp(-(p+r)*dt)))/((p+r)^2)   # third term
+			terms <- term1-term2+term3		            # full terms in square brackets
+			res <- (NbNFL)*p*terms					    # P(D|FL)
 		}else{
 			NbNFL <- 1/(((q*exp((p-q)*dt))+((p-q)*exp(-q*dt))-p)/(p-q))
 			term1 <- (p*r*(exp((p-q)*dt)-1))/((q+r)*(p-q))
@@ -179,14 +179,18 @@ qsProb2Comp <- function(R,q,p = NULL,mode = "budding",nrep = 10000){
 		Pd <- function(p,q,Ti){exp(-(p+q)*(Ti-1))-exp(-(p+q)*Ti)}
 		if(is.null(p)){
 			p <- q
-			message("Origination rate (p) not given, assuming equal to extinction rate")
+			message(
+			    "Origination rate (p) not given, assuming equal to extinction rate"
+			    )
 			}
 		}
 	if(mode == "anagenesis"){
 		Pd <- function(p,q,Ti){exp(-(p+q)*(Ti-1))-exp(-(p+q)*Ti)}
 		if(is.null(p)){
 			p <- q
-			message("Rate of pseudo-speciation / anagenesis (p) not given, assuming equal to extinction rate")
+			message(
+			    "Rate of pseudo-speciation / anagenesis (p) not given, assuming equal to extinction rate"
+			    )
 			}
 		}
 	res <- numeric()

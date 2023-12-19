@@ -103,7 +103,9 @@ probAnc <- function(p,q,R,mode = "budding",analysis = "directDesc",Mmax = 85,nre
 	#test
 	if(!any(mode == c("budding","bifurcating","anagenesis"))){
 		stop("Mode not designated, must be 'budding', 'bifurcating' or 'anagenesis'")}
-	if(mode == "anagenesis"){message("p will be treated as the rate of anagenesis/pseudospeciation")}
+	if(mode == "anagenesis"){
+	    message("p will be treated as the rate of anagenesis/pseudospeciation")
+	    }
 	if(!any(analysis == c("directDesc","indirectDesc"))){
 		stop("Analysis type not designated, must be 'directDesc' or 'indirectDesc'")}
 	if(nrep<0){stop("Nrep is less than zero?")}
@@ -165,10 +167,13 @@ probAnc <- function(p,q,R,mode = "budding",analysis = "directDesc",Mmax = 85,nre
 				res <- ((p+q)/(2*p))*(factorial(2*M)/((2^(2*M))*factorial(M)^2))*((x^M)/((2*M)-1))
 				return(res)
 				}
-			Pp <- qsProb2Comp(R = R,q = q,mode = "budding")	#as per instructions in Foote, 1996, use 'budding' for both
+			Pp <- qsProb2Comp(R = R,q = q,mode = "budding")	
+			    #as per instructions in Foote, 1996, use 'budding' for both
 			#get prob using P'		
 			res <- numeric()
-			for(M in 1:Mmax){	#85 is the maximum number we can do factorial(2*M) too... but doesn't matter mostly
+			for(M in 1:Mmax){	
+			    #85 is the maximum number we can do factorial(2*M) too... 
+			        # but doesn't matter mostly
 				res[M] <- Qm(p = p,q = q,M = M)*(1-(1-Pp)^M)
 				}
 			}
@@ -177,9 +182,11 @@ probAnc <- function(p,q,R,mode = "budding",analysis = "directDesc",Mmax = 85,nre
 			QmStar <- function(p,q,M,T){
 				firstTerm <- numeric()
 				for(t in 1:(T-1)){
-					firstTerm <- (exp(-q*(t-1))-exp(-q*t))*(exp(-p*t)*((p*t)^(M-1)))/factorial(M-1)
+					firstTerm <- (exp(-q*(t-1))-exp(-q*t))*(
+					    exp(-p*t)*((p*t)^(M-1)))/factorial(M-1)
 					}
-				secondTerm <- exp(-q*(T-1))*(exp(-p*T)*((p*T)^(M-1)))/factorial(M-1)
+				secondTerm <- exp(-q*(T-1))*(
+				    exp(-p*T)*((p*T)^(M-1)))/factorial(M-1)
 				res <- sum(firstTerm)+secondTerm
 				return(res)
 				}
@@ -187,22 +194,27 @@ probAnc <- function(p,q,R,mode = "budding",analysis = "directDesc",Mmax = 85,nre
 			for(T in 1:nrep){
 				Tres <- numeric()
 				for(M in 1:Mmax){	
-					Tres[M] <- QmStar(p = p,q = q,M = M,T = T)*(1-(1-Pp)^M)
+					Tres[M] <- QmStar(p = p,
+					                  q = q,
+					                  M = M,
+					                  T = T
+					                 )
+					             *(1-(1-Pp)^M)
 					}
 				res[T] <- sum(Tres)
 				}
 			}
 		}
 	if(any(is.nan(res))){
-		message("Input parameters and nrep produce NaN values, which are replaced with zeroes.")
+		message("Input parameters and nrep produce NaN\n values, which are replaced with zeroes.")
 		message("May want to decrease nrep to see if returned estimate holds.")
 		res[is.nan(res)] <- 0
 		}
 	res <- sum(res)
 	names(res) <- NULL
 	if(res>0.5 & p == q){
-		message("Treat result with caution: if p = q, then prob of a taxon being an ancestor should be no greater than 0.5.")
-		message("Values higher than 0.5 result from limits of finite calculates, particularly with high sampling probabilities.")
+		message("Treat result with caution:\n if p = q, then prob of a taxon being an\n ancestor should be no greater than 0.5.")
+		message("Values higher than 0.5 result from\n limits of finite calculates, particularly\n with high sampling probabilities.")
 		message("See documentation.")
 		}
 	return(res)

@@ -161,7 +161,8 @@ probAnc <- function(p,q,R,mode = "budding",analysis = "directDesc",Mmax = 85,nre
 	if(analysis == "indirectDesc"){
 		if(mode == "budding" | mode == "bifurcating"){
 			if(p>q){stop(
-				"Indirect Descendant formulae are unsolved if p>q, see Foote 1996")}
+			  "Indirect Descendant formulae are unsolved if p>q, see Foote 1996"
+			    )}
 			Qm <- function(p,q,M){
 				x <- (4*p*q)/((p+q)^2)
 				res <- ((p+q)/(2*p))*(factorial(2*M)/((2^(2*M))*factorial(M)^2))*((x^M)/((2*M)-1))
@@ -198,8 +199,7 @@ probAnc <- function(p,q,R,mode = "budding",analysis = "directDesc",Mmax = 85,nre
 					                  q = q,
 					                  M = M,
 					                  T = T
-					                 )
-					             *(1-(1-Pp)^M)
+					                 ) * (1 - (1 - Pp) ^ M)
 					}
 				res[T] <- sum(Tres)
 				}

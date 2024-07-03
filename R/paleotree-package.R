@@ -13,7 +13,7 @@
 #' 
 #' @name paleotree-package
 #' @aliases paleotree-package paleotree
-#' @docType package
+# @docType package
 #' @author David W. Bapst
 #' 
 #' Maintainer: David W. Bapst <dwbapst@@gmail.com>
@@ -118,5 +118,4 @@
 #' @importFrom RCurl getURLContent 
 #' @importFrom jsonlite fromJSON
 
-
-NULL
+"_PACKAGE"

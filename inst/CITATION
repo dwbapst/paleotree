@@ -17,6 +17,6 @@ bibentry(bibtype="Article",
         "Methods Ecol. Evol. ", "3: 803-807. ","doi: 10.1111/j.2041-210X.2012.00223.x")	   
     )
 
-citFooter("As paleotree is continually evolving, you should cite its version number. Find it with 'packageVersion("paleotree")'.")
+citFooter("As paleotree is continually evolving, you should cite its version number. Find it with 'packageVersion(\"paleotree\")'.")
 
 

@@ -46,4 +46,4 @@ Description: Provides tools for transforming, a posteriori time-scaling, and
     among taxon units.
 License: CC0
 URL: https://github.com/dwbapst/paleotree
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.2

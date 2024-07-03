@@ -131,7 +131,7 @@ some morphological character), so the sums of rows and
 columns can sum to more than 1.  If \code{contrast} is
 not \code{NULL} (the default), the arguments will nullify
 This argument is designed to mirror an hidden argument with
-an identical name in function \code{phyDat} in package {phangorn}.
+an identical name in function \code{phyDat} in package \code{phangorn}.
 This structure is based on \code{phangorn}'s use of
 \code{contrasts} table used for statistical evaluation of factors.
 See the \code{phangorn} vignette "Special features of phangorn" for more details

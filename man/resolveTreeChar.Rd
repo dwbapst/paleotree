@@ -24,10 +24,10 @@ resolveTreeChar(
 identical to the tip labels on the input tree.}
 
 \item{orderedChar}{Is the character of interest given for \code{trait} ordered or not?
-If FALSE (the default), then for each polytomy, all child nodes that appear to have the
+If \code{FALSE} (the default), then for each polytomy, all child nodes that appear to have the
 same state as the ancestor node will remain in the polytomy, and any additional states held by child nodes will
 each be grouped into their own unique polytomy that forms from a descendant node of the original polytomy.
-If TRUE, then the character will be reconstructed with a cost (step)
+If \code{TRUE}, then the character will be reconstructed with a cost (step)
 matrix of a linear, ordered character, and polytomies will be resolved so that lineages with different
 states will be placed into a nested ladder that reflects the ordered character. As with the unordered option,
 child nodes with a state equivalent to the ancestral node will remain in the polytomy, while more primitive
@@ -45,8 +45,8 @@ assignments to either be the most primitive (i.e. the minimum) or the most deriv
 maximum-weight states. In particular, \code{stateBias = 'primitive'} should favor gains and bias any analysis of
 character transitions against finding reversals.}
 
-\item{iterative}{A logical argument which, if TRUE (the default), causes the function to repeat the polytomy-resolving
-functionality across the entire tree until the number of nodes stabilizes. If FALSE, polytomies are only passed a single
+\item{iterative}{A logical argument which, if \code{TRUE} (the default), causes the function to repeat the polytomy-resolving
+functionality across the entire tree until the number of nodes stabilizes. If \code{FALSE}, polytomies are only passed a single
 time.}
 
 \item{cost}{A matrix of the cost (i.e. number of steps) necessary to
@@ -95,7 +95,7 @@ some morphological character), so the sums of rows and
 columns can sum to more than 1.  If \code{contrast} is
 not \code{NULL} (the default), the arguments will nullify
 This argument is designed to mirror an hidden argument with
-an identical name in function \code{phyDat} in package {phangorn}.
+an identical name in function \code{phyDat} in package \code{phangorn}.
 This structure is based on \code{phangorn}'s use of
 \code{contrasts} table used for statistical evaluation of factors.
 See the \code{phangorn} vignette "Special features of phangorn" for more details

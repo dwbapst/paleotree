@@ -10,6 +10,7 @@ twoWayEcologyCluster(
   propAbund,
   clustMethod = "average",
   marginBetween = 0.1,
+  extraMarginForLabels = 0,
   abundExpansion = 3,
   cex.axisLabels = 1,
   trimChar = 5,
@@ -41,6 +42,11 @@ also known as average-linkage or as UPGMA),
 
 \item{marginBetween}{Argument controlling space placed between
 the cluster diagrams and the abundance plot. Default is 0.1.}
+
+\item{extraMarginForLabels}{Argument for extending the space for 
+plotting taxon and site labels. This parameter is currently being
+tested and may not behave well, especially for plots that
+aren't being made with very large dimensions.}
 
 \item{abundExpansion}{An argument that is a multiplier controlling the size
 of dots plotted for reflecting relative abundance.}

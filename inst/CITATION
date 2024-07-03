@@ -5,7 +5,7 @@ bibentry(bibtype="Article",
     author =  person(
         c("David", "W."), 
         "Bapst", role = "aut", 
-        comment = "D. Bapst is the author and maintainer of most code in paleotree. Some code was written by P. Wagner.")
+        comment = "D. Bapst is the author and maintainer of most code in paleotree. Some code was written by P. Wagner."
         ),
     journal = "Methods in Ecology and Evolution",
     number = "3",

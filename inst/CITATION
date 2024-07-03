@@ -1,12 +1,22 @@
-     citHeader("To cite package 'paleotree' in publications use:")
-       
-     citEntry(entry="Manual",
-              title = "paleotree: Paleontological and Phylogenetic Analyses of Evolution",
-              author = "David W. Bapst",
-              year = "2012",
-	      textVersion=paste("Bapst, David W. (2012). ",
-			"paleotree: an R package for paleontological and phylogenetic analyses of evolution. ",
-			"Methods Ecol. Evol. ", "3: 803-807. ","doi: 10.1111/j.2041-210X.2012.00223.x")	   
-	)
+citHeader("To cite package 'paleotree' in publications use:")
 
-	citFooter("As paleotree is continually evolving, you may want to cite its version number. Find it with 'help(package=paleotree)'.")
+bibentry(bibtype="Article",
+    title = "paleotree: Paleontological and Phylogenetic Analyses of Evolution",
+    author =  person(
+        c("David", "W."), 
+        "Bapst", role = "aut", 
+        comment = "D. Bapst is the author and maintainer of most code in paleotree. Some code was written by P. Wagner.")
+        ),
+    journal = "Methods in Ecology and Evolution",
+    number = "3",
+    pages = "803-807",
+    year = "2012",
+    doi = "10.1111/j.2041-210X.2012.00223.x",
+    textVersion=paste("Bapst, David W. (2012). ",
+        "paleotree: an R package for paleontological and phylogenetic analyses of evolution. ",
+        "Methods Ecol. Evol. ", "3: 803-807. ","doi: 10.1111/j.2041-210X.2012.00223.x")	   
+    )
+
+citFooter("As paleotree is continually evolving, you should cite its version number. Find it with 'packageVersion("paleotree")'.")
+
+

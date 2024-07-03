@@ -331,5 +331,5 @@ if(!test | !test1){
 }
 \author{
 David W. Bapst. The functions \code{dropTipPaleo} and \code{bindTipPaleo} are modified imports of
-\code{\link[ape]{drop.tip}} and \code{\link[ape]{bind.tip}} from packages \code{ape} and \code{phytools}.
+\code{\link[ape]{drop.tip}} and \code{bind.tip} from packages \code{ape} and \code{phytools}.
 }

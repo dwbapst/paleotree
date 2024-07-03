@@ -103,7 +103,7 @@
 
 #' @seealso 
 #' \code{\link{compareTermBranches}}, \code{\link{phyloDiv}}, 
-#' \code{\link[ape]{drop.tip}}, \code{\link[ape]{bind.tip}}
+#' \code{\link[ape]{drop.tip}}, \code{bind.tip}
 
 #' @examples
 #' 

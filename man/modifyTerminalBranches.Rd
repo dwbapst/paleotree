@@ -327,7 +327,7 @@ if(!test | !test1){
 }
 \seealso{
 \code{\link{compareTermBranches}}, \code{\link{phyloDiv}}, 
-\code{\link[ape]{drop.tip}}, \code{\link[ape]{bind.tip}}
+\code{\link[ape]{drop.tip}}, \code{bind.tip}
 }
 \author{
 David W. Bapst. The functions \code{dropTipPaleo} and \code{bindTipPaleo} are modified imports of

@@ -35,7 +35,7 @@
 
 #' @author David W. Bapst
 
-#' @seealso \code{\link{di2multi}}
+#' @seealso \code{\link[ape]{di2multi}}
 
 #' @examples
 #' \donttest{

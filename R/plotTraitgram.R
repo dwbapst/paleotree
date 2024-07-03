@@ -41,7 +41,7 @@
 
 #' @author David W. Bapst
 
-#' @seealso \code{\link{ace}}
+#' @seealso \code{\link[ape]{ace}}
 #' 
 #' Also see the functions \code{traitgram} in the library picante and
 #' \code{phenogram} in the library phytools.

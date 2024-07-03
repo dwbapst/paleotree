@@ -65,7 +65,7 @@ layout(1)
 }
 }
 \seealso{
-\code{\link{di2multi}}
+\code{\link[ape]{di2multi}}
 }
 \author{
 David W. Bapst

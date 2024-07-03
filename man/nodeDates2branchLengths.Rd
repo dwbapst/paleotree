@@ -39,7 +39,7 @@ absolute time, for the internal nodes and (by default) the terminal tips
 of that phylogeny,  and returns a dated phylogeny consistent with those input ages.
 }
 \details{
-The function \code{\link{compute.brtime}} in package \code{ape} does
+The function \code{\link[ape]{compute.brtime}} in package \code{ape} does
 a very similar functionality, but is limited in its application for
 only ultrametric trees, as it does not allow for tips to have
 incongruent ages. It also only accepts node ages as on the relative
@@ -118,7 +118,8 @@ estimates from a sample of trees, to produce a single dated tree
 to act as a point estimate. Beware however that point estimates of
 tree samples may have little resemblance to any individual tree in that sample.
 
-This function should perform identically for ultrametric trees as package \code{ape}'s function \code{\link{compute.brtime}}.
+This function should perform identically for ultrametric trees as package 
+\code{ape}'s function \code{\link[ape]{compute.brtime}}.
 }
 \author{
 David W. Bapst

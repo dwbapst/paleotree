@@ -73,7 +73,7 @@ functional traits: Evolutionary rates versus phylogenetic signal.
 2):19699--19706.
 }
 \seealso{
-\code{\link{ace}}
+\code{\link[ape]{ace}}
 
 Also see the functions \code{traitgram} in the library picante and
 \code{phenogram} in the library phytools.

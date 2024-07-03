@@ -45,7 +45,7 @@ The output tree will probably be a rough unresolved view of the
 relationships among the taxa, due to the treatment of higher-level taxa as
 polytomies. This is similar to the methods used in Webb and Donoghue (2005)
 and Friedman (2009). Any analyses should be done by resolving this tree with
-\code{\link{multi2di}} in the \code{ape} package or via the various time-scaling
+\code{\link[ape]{multi2di}} in the \code{ape} package or via the various time-scaling
 functions found in this package (paleotree).
 
 The \code{taxaData} vector should have one element per lower-level taxon that is to
@@ -94,7 +94,7 @@ Webb, C. O., and M. J. Donoghue. 2005 Phylomatic: tree assembly for applied
 phylogenetics. \emph{Molecular Ecology Notes} \bold{5}(1):181--183.
 }
 \seealso{
-\code{\link{multi2di}}, \code{\link{bind.tree}}
+\code{\link[ape]{multi2di}}, \code{\link{bind.tree}}
 }
 \author{
 David W. Bapst

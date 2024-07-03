@@ -102,7 +102,7 @@ layout(1)
 
 }
 \seealso{
-\code{\link{di2multi}},\code{\link{timeLadderTree}}
+\code{\link[ape]{di2multi}},\code{\link{timeLadderTree}}
 }
 \author{
 David W. Bapst

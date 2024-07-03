@@ -109,7 +109,7 @@ state labels separated by an \code{"&"} symbol.}
 \value{
 Returns the resulting tree, which may be fully resolved, partly more resolved or not more resolved at all
 (i.e. have less polytomies) depending on what was possible, as constrained by ambiguities in character
-reconstructions. Applying \code{\link{multi2di}} is suggested as a post-step to obtain a fully-resolved
+reconstructions. Applying \code{\link[ape]{multi2di}} is suggested as a post-step to obtain a fully-resolved
 cladogram, if one is desired.
 }
 \description{

@@ -1,3 +1,7 @@
+Version - 3.4.7 - 07-05-24 (CRAN Release)
+- New argument added to twoWayEcologyCluster to allow for extra room for margins.
+- General tidying up of loose syntax in documentation that R CHECK didn't like.
+
 Version - 3.4.5 - 08-21-22 (CRAN Release)
 - Minor formatting fix to avoid an HTML error in building the help file for timePaleoPhy, and a minor version bump
 

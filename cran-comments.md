@@ -1,4 +1,5 @@
-#####
+07-06-24:
+Double-checked to ensure there are package anchors for all Rd \link{} targets. None noted in R CHECK locally, on winbuilder, or using Github Actions.
 
 07-05-24: 
 One new feature under the hood, passes R CHECK both locally and on win builder.

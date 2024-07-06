@@ -59,7 +59,7 @@
 
 #' @author David W. Bapst
 
-#' @seealso \code{\link[ape]{multi2di}}, \code{\link{bind.tree}}
+#' @seealso \code{\link[ape]{multi2di}}, \code{bind.tree}
 
 #' @references Friedman, M. 2009 Ecomorphological selectivity among marine
 #' teleost fishes during the end-Cretaceous extinction. \emph{Proceedings of

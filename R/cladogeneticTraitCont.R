@@ -28,6 +28,7 @@
 #' all in trait values. These species will all be identical.
 #' 
 #' See this link for additional details:
+#' 
 #' \url{https://nemagraptus.blogspot.com/2012/03/simulating-budding-cladogenetictrait.html}
 #' 
 #' @param taxa A five-column matrix of taxonomic data, as output by

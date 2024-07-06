@@ -174,6 +174,7 @@
 #' 
 #' A tutorial for applying the time-scaling functions in paleotree, along with
 #' an example using real (graptolite) data, can be found here:
+#' 
 #' \url{https://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
 #' 
 

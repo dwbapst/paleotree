@@ -35,7 +35,7 @@ to calculate node values. (Ackerly, 2009) given a tree and a set of continuous t
 values.
 }
 \details{
-By default, this function will use \code{\link{ace}} from the library \code{ape} to
+By default, this function will use \code{\link[ape]{ace}} from the library \code{ape} to
 reconstruct ancestral traits and confidence intervals using the PIC method, if internal
 node values (i.e. ancestral node values) are not given.
 

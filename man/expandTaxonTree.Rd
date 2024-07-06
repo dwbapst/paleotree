@@ -94,7 +94,7 @@ Webb, C. O., and M. J. Donoghue. 2005 Phylomatic: tree assembly for applied
 phylogenetics. \emph{Molecular Ecology Notes} \bold{5}(1):181--183.
 }
 \seealso{
-\code{\link[ape]{multi2di}}, \code{\link{bind.tree}}
+\code{\link[ape]{multi2di}}, \code{bind.tree}
 }
 \author{
 David W. Bapst

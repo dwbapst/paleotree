@@ -11,7 +11,7 @@
 #' relationships among the taxa, due to the treatment of higher-level taxa as
 #' polytomies. This is similar to the methods used in Webb and Donoghue (2005)
 #' and Friedman (2009). Any analyses should be done by resolving this tree with
-#' \code{\link{multi2di}} in the \code{ape} package or via the various time-scaling
+#' \code{\link[ape]{multi2di}} in the \code{ape} package or via the various time-scaling
 #' functions found in this package (paleotree).
 #' 
 #' The \code{taxaData} vector should have one element per lower-level taxon that is to
@@ -59,7 +59,7 @@
 
 #' @author David W. Bapst
 
-#' @seealso \code{\link{multi2di}}, \code{\link{bind.tree}}
+#' @seealso \code{\link[ape]{multi2di}}, \code{bind.tree}
 
 #' @references Friedman, M. 2009 Ecomorphological selectivity among marine
 #' teleost fishes during the end-Cretaceous extinction. \emph{Proceedings of

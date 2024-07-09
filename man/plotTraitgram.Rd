@@ -35,7 +35,7 @@ to calculate node values. (Ackerly, 2009) given a tree and a set of continuous t
 values.
 }
 \details{
-By default, this function will use \code{\link{ace}} from the library \code{ape} to
+By default, this function will use \code{\link[ape]{ace}} from the library \code{ape} to
 reconstruct ancestral traits and confidence intervals using the PIC method, if internal
 node values (i.e. ancestral node values) are not given.
 
@@ -73,7 +73,7 @@ functional traits: Evolutionary rates versus phylogenetic signal.
 2):19699--19706.
 }
 \seealso{
-\code{\link{ace}}
+\code{\link[ape]{ace}}
 
 Also see the functions \code{traitgram} in the library picante and
 \code{phenogram} in the library phytools.

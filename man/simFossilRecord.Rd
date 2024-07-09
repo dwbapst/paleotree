@@ -41,7 +41,7 @@ quantities which will/may change throughout the simulation:
 the standing richness is \code{N},
 the current time passed since the start of the simulation is \code{T}, 
 the present duration of a given still-living lineage
-since its origination time is code{D},
+since its origination time is \code{D},
 and the current branching rate is \code{P}
 (corresponding to the argument name \code{p}).
 Note that \code{P} cannot be used in equations for the branching rate itself;

@@ -56,6 +56,7 @@ Cryptic taxa generated with \code{prop.cryptic} in \code{simFossilRecord} will n
 all in trait values. These species will all be identical.
 
 See this link for additional details:
+
 \url{https://nemagraptus.blogspot.com/2012/03/simulating-budding-cladogenetictrait.html}
 }
 \examples{

@@ -17,7 +17,7 @@
 #' If \code{$root.time} is not present, the most recent tips will be interpreted as 
 #' being at the modern day (i.e. 0 time-units before present).
 
-#' @param whichExtant A logical vector with length equal to number of tips in the tree. A {TRUE} value indicates
+#' @param whichExtant A logical vector with length equal to number of tips in the tree. A \code{TRUE} value indicates
 #' that the respective tip taxon (as indicated by the ordering of the tip labels) that is extant
 #' at the modern day, while \code{FALSE} values equate to the respect being extinct at the present day. 
 #' If present, this vector is used for determining which taxa are extant, and which are extinct.

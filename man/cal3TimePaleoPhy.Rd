@@ -714,7 +714,7 @@ Co., San Francisco.
 \code{\link{make_durationFreqCont}},
 \code{\link{pqr2Ps}},
 \code{\link{sProb2sRate}},
-\code{\link{multi2di}}
+\code{\link[ape]{multi2di}}
 }
 \author{
 David W. Bapst

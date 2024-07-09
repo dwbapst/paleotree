@@ -332,7 +332,7 @@
 #' \code{\link{make_durationFreqCont}},
 #' \code{\link{pqr2Ps}},
 #' \code{\link{sProb2sRate}},
-#' \code{\link{multi2di}}
+#' \code{\link[ape]{multi2di}}
 
 #' @references 
 #' Bapst, D. W. 2013. A stochastic rate-calibrated method for time-scaling

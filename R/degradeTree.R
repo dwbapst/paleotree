@@ -50,7 +50,7 @@
 #' @return Returns the modified tree as an object of class \code{phylo}, with no edge
 #' lengths by default.
 
-#' @seealso \code{\link{di2multi}},\code{\link{timeLadderTree}}
+#' @seealso \code{\link[ape]{di2multi}},\code{\link{timeLadderTree}}
 
 #' @author David W. Bapst
 

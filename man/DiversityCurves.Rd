@@ -292,7 +292,7 @@ taxicDivDisc(rangesDisc,
 
 There are several different functions for traditional LTT plots
 (phylogenetic diversity curves), such as the function
-,\code{\link{ltt.plot}} in the package \code{ape}, the function \code{ltt} in the
+,\code{\link[ape]{ltt.plot}} in the package \code{ape}, the function \code{ltt} in the
 package \code{phytools}, the function \code{plotLtt} in the package \code{laser} and the
 function \code{LTT.average.root} in the package \code{TreeSim}.
 }

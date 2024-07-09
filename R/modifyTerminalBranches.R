@@ -12,7 +12,7 @@
 #' diversification/diversity, as these will appear as simultaneous
 #' speciation/extinction events. Note this function only drops tips attached to
 #' a terminal zero-length branch; if you want to collapse internal zero-length
-#' branches, see the ape function \code{\link{di2multi}}.
+#' branches, see the ape function \code{\link[ape]{di2multi}}.
 #' 
 #' \code{dropExtinct} drops all terminal branches which end before the modern (i.e.
 #' extinct taxa). \code{DropExtant} drops all terminal branches which end at the
@@ -38,7 +38,7 @@
 #' so the root.time elements in the result tree may
 #' be nonsensical, particularly if negative amounts are input.
 #' 
-#' \code{dropPaleoTip} is a wrapper for \code{ape}'s \code{\link{drop.tip}} which also modifies the
+#' \code{dropPaleoTip} is a wrapper for \code{ape}'s \code{\link[ape]{drop.tip}} which also modifies the
 #' \code{$root.time} element if necessary, using \code{fixRootTime}. Similarly,
 #' \code{bindPaleoTip} is a wrapper for phytool's \code{bind.tip} which allows tip age
 #' as input and modifies the \code{$root.time} element if necessary (i.e. if a tip
@@ -46,7 +46,7 @@
 #' 
 #' Note that for \code{bindPaleoTip}, tips added below the root are subtracted from
 #' any existing \code{$root.edge} element,
-#' as per behavior of \code{link{bind.tip}} and \code{\link{bind.tree}}.
+#' as per behavior of \code{link[ape]{bind.tip}} and \code{\link[ape]{bind.tree}}.
 #' However, \code{bindPaleoTip} will append a \code{$root.edge} of
 #' the appropriate value (i.e., root edge length)
 #' if one does not exist (or is not long enough) to avoid an error. After
@@ -73,7 +73,7 @@
 
 #' @param addtime Extra amount of time to add to all terminal branch lengths.
 
-#' @param ... additional arguments passed to \code{dropPaleoTip} are passed to \code{\link{drop.tip}}.
+#' @param ... additional arguments passed to \code{dropPaleoTip} are passed to \code{\link[ape]{drop.tip}}.
 
 #' @param tipLabel A character string of \code{length = 1} containing the name of the new tip
 #' to be added to \code{tree}.
@@ -99,11 +99,11 @@
 #' modified \code{$root.time} element.
 
 #' @author David W. Bapst. The functions \code{dropTipPaleo} and \code{bindTipPaleo} are modified imports of
-#' \code{\link{drop.tip}} and \code{\link{bind.tip}} from packages \code{ape} and \code{phytools}.
+#' \code{\link[ape]{drop.tip}} and \code{bind.tip} from packages \code{ape} and \code{phytools}.
 
 #' @seealso 
 #' \code{\link{compareTermBranches}}, \code{\link{phyloDiv}}, 
-#' \code{\link{drop.tip}}, \code{\link{bind.tip}}
+#' \code{\link[ape]{drop.tip}}, \code{bind.tip}
 
 #' @examples
 #' 

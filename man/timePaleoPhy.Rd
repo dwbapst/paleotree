@@ -71,7 +71,7 @@ identical time-scaled trees.}
 \item{randres}{Should polytomies be randomly resolved? By default,
 \code{timePaleoPhy} does not resolve polytomies, instead outputting a dated
 tree that is only as resolved as the input tree. If \code{randres = TRUE}, then
-polytomies will be randomly resolved using \code{\link{multi2di}} from the
+polytomies will be randomly resolved using \code{\link[ape]{multi2di}} from the
 package ape. If \code{randres = TRUE} and \code{ntrees = 1}, a warning is printed that users
 should analyze multiple randomly-resolved trees, rather than a single such
 tree, although a tree is still output.}
@@ -369,6 +369,7 @@ by \code{read.csv} or \code{read.table}), these will be coerced to a matrix.
 
 A tutorial for applying the time-scaling functions in paleotree, along with
 an example using real (graptolite) data, can be found here:
+
 \url{https://nemagraptus.blogspot.com/2013/06/a-tutorial-to-cal3-time-scaling-using.html}
 }
 \note{
@@ -814,7 +815,7 @@ evolutionary patterns. Blackwell Scientific, Oxford.
 }
 \seealso{
 \code{\link{cal3TimePaleoPhy}}, \code{\link{binTimeData}},
-\code{\link{multi2di}}
+\code{\link[ape]{multi2di}}
 
 For an alternative time-scaling function, which includes the \code{'ruta'} method
 that weights the time-scaling of branches by estimates of character change

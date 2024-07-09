@@ -7,7 +7,7 @@
 #' values.
 #' 
 
-#' @details By default, this function will use \code{\link{ace}} from the library \code{ape} to
+#' @details By default, this function will use \code{\link[ape]{ace}} from the library \code{ape} to
 #' reconstruct ancestral traits and confidence intervals using the PIC method, if internal
 #' node values (i.e. ancestral node values) are not given.
 #' 
@@ -41,7 +41,7 @@
 
 #' @author David W. Bapst
 
-#' @seealso \code{\link{ace}}
+#' @seealso \code{\link[ape]{ace}}
 #' 
 #' Also see the functions \code{traitgram} in the library picante and
 #' \code{phenogram} in the library phytools.

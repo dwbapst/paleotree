@@ -174,7 +174,7 @@ resolveTreeChar <- function(tree, trait,
     #require(phangorn)
     # check that tree makes sense
     # ape::checkValidPhylo(tree)
-    if(!paleotree::testEdgeMat(tree)){
+    if(!testEdgeMat(tree)){
         stop("Edge matrix of tree has inconsistencies")
         }
     
@@ -205,7 +205,7 @@ resolveTreeChar <- function(tree, trait,
         tree2 <- tree
         continueRes <- TRUE
         while(continueRes){
-            tree1 <- paleotree:::resolveTreeCharMechanism(
+            tree1 <- resolveTreeCharMechanism(
                 tree2, trait, 
                 orderedChar = orderedChar, 
                 stateBias = stateBias, 
@@ -218,7 +218,7 @@ resolveTreeChar <- function(tree, trait,
         treeFinal <- tree2
     }else{
         #only do it once
-        treeFinal <- paleotree:::resolveTreeCharMechanism(
+        treeFinal <- resolveTreeCharMechanism(
             tree, trait, 
             orderedChar = orderedChar, 
             stateBias = stateBias, 

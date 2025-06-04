@@ -195,7 +195,7 @@ testEdgeMat <- function(tree){
             ))
         }
     #test edge matrix
-    if(!paleotree:::testParentChild(parentChild = tree$edge)){
+    if(!testParentChild(parentChild = tree$edge)){
         stop("Edge matrix has inconsistencies")
         }
     #more tests of edge matrix

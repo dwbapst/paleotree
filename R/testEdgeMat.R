@@ -182,7 +182,7 @@ testEdgeMat <- function(tree){
 		stop(paste0("Apparent tip IDs appear in column 1 of $edge: \n",
 		tree$edge[tree$edge[,1]<(length(tree$tip.label) + 1),1],collapse = " "))}
 	#test edge matrix
-	if(!testParentChild(parentChild = tree$edge)){
+	if(!paleotree:::testParentChild(parentChild = tree$edge)){
 		stop("Edge matrix has inconsistencies")
 		}
 	#more tests of edge matrix
@@ -277,13 +277,12 @@ cleanNewPhylo <- function(tree){ 		#,reorderTree = TRUE
 			tree1 <- tree
 			}
 		
-		
+		###############
 		#REORDER IT
 		#reorder	#if(reorderTree){
         attr(tree1, "order") <- NULL		
 		tree1 <- reorder.phylo(tree1,"cladewise") 	
-        
-        
+        #
 		if(!testEdgeMat(tree1)){
 			stop("Edge matrix has inconsistencies")
 			}

@@ -281,19 +281,23 @@ resolveTreeCharMechanism <- function(
             }
         #
         ancMat <- ancPropStateMat(trait, tree1, 
-                                  orderedChar = orderedChar, type = type, cost = cost)
+                                  orderedChar = orderedChar, 
+                                  type = type, cost = cost)
         #convert state/node matrix table from state weights to T/F, 
             # where T = max weight per node for a state
-        maxWt <- t(apply(ancMat,1,function(x) x == max(x)))
-        if(any(apply(maxWt,1,sum) == 0)){
+        maxWt <- t(apply(ancMat, 1, function(x) x == max(x)))
+        if(any(apply(maxWt, 1, sum) == 0)){
             stop("Error in ancestral state reconstruction, some have no state possible?")
             }
         #now get the chosen's children
         descChosen <- tree1$edge[tree1$edge[,1] == chosen,2]
         #now decide what state each desc and ancestor has
         if(is.null(stateBias)){				
-            nodeChar <- apply(maxWt[sapply(rownames(maxWt),function(y) 
-                any(y == descChosen)),],1,function(x) which(x))
+            nodeChar <- apply(
+                maxWt[sapply(rownames(maxWt), 
+                    function(y) any(y == descChosen)),],
+                1, function(x) which(x)
+                )
             ancChar <- which(maxWt[rownames(maxWt) == chosen,])				
         }else{
             if(orderedChar & (stateBias == "derived" | stateBias == "primitive")){
@@ -301,13 +305,19 @@ resolveTreeCharMechanism <- function(
                 # choose highest or lowest state if an ordered character
                 # the lower would weight against reversals
                 if(stateBias == "derived"){				
-                    nodeChar <- apply(maxWt[sapply(rownames(maxWt),function(y) 
-                        any(y == descChosen)),],1,function(x) max(which(x)))
+                    nodeChar <- apply(
+                        maxWt[sapply(rownames(maxWt), 
+                            function(y) any(y == descChosen)),], 
+                        1, function(x) max(which(x))
+                        )
                     ancChar <- max(which(maxWt[rownames(maxWt) == chosen,]))
                     }
                 if(stateBias == "primitive"){				
-                    nodeChar <- apply(maxWt[sapply(rownames(maxWt),function(y) 
-                        any(y == descChosen)),],1,function(x) min(which(x)))
+                    nodeChar <- apply(
+                        maxWt[sapply(rownames(maxWt),function(y) 
+                            any(y == descChosen)),], 
+                        1, function(x) min(which(x))
+                        )
                     ancChar <- min(which(maxWt[rownames(maxWt) == chosen,]))
                     }
             }else{
@@ -321,76 +331,99 @@ resolveTreeCharMechanism <- function(
         groupings <- unique(foundStates)
         #need to remove groupings that are short subsets of longer groupings
         #order by length first
-        groupings <- groupings[order(-sapply(groupings,length))]
+        groupings <- groupings[order(-sapply(groupings, length))]
         k <- 1
         # use while loop to go through groupings
         while(k <= length(groupings)){
-            drop <- sapply(groupings,function(x) 
-                all(sapply(x,function(y) any(y == groupings[[k]]))))
+            # set anything that has overlap with current grouping to TRUE
+                # and then we will remove on TRUE
+            drop <- sapply(
+                groupings, 
+                function(x) all(sapply(x, 
+                    function(y) any(y == groupings[[k]])
+                    ))
+                )
+            # don't remove the grouping you are looking at
             drop[k] <- FALSE
-            #edit foundStates
-            dropFS <- sapply(foundStates,function(x) 
-                any(sapply(groupings[drop],identical,x)))
-            for(m in which(dropFS)){foundStates[[m]] <- groupings[[k]]}
+            # are there any foundStates we need to remove?
+            dropFS <- sapply(foundStates, function(x) 
+                any(sapply(groupings[drop], identical, x))
+                )
+            # if foundStates needs to be edited at all...
+            if(any(dropFS)){
+                for(m in which(dropFS)){
+                    foundStates[[m]] <- groupings[[k]]
+                    }
+                }
+            # remove the groupings with overlap, move on to next grouping
             groupings <- groupings[!drop]
             k <- k+1
             }
         # and now an intermission...
         # lalala
         # back to our show
-        if(length(groupings)>1){
+        if(length(groupings) > 1){
             #if only one group, just move on
             #
-            #order groupings by average state
-            groupings <- groupings[order(sapply(groupings,mean))]
-            #assign groups, now in order
-            groupAssign <- sapply(foundStates,function(x) 
-                which(sapply(groupings,identical,x)))
+            # otherwise, order groupings by average state
+            groupings <- groupings[order(sapply(groupings, mean))]
+            # assign groups, now in order of foundStates
+            groupAssign <- sapply(foundStates,
+                function(x) which(sapply(groupings, identical, x))
+                )
             #replace groupings with ranked grouping by taking unique of groupAssign
             groupings <- sort(unique(groupAssign))
             #
-            #now we have a nodeChar vector with names = desc node IDs, values = ranked groupings
+            # now we have a nodeChar vector with names = desc node IDs, values = ranked groupings
             nodeChar <- groupAssign[-length(groupAssign)]
-            #and the ranked grouping for the ancestor
+            # and the ranked grouping for the ancestor
             ancChar <- groupAssign[length(groupAssign)]
             #
             #what if anc grouping isn't in nodeChar, add an artificial one
             if(!any(nodeChar == ancChar)){
-                nodeChar <- c(nodeChar,'NaN' = ancChar)
+                nodeChar <- c(nodeChar, 'NaN' = ancChar)
                 }
             #
-            #now is time to build a tree
-            #build a new edgeMat
-            edgeMat <- matrix(,1,2)
+            # now is time to build a tree
+            # build a new edgeMat
+            edgeMat <- matrix( , 1, 2)
             #for adding each level
-            bottom <- chosen	#the ancestral node
-            newsie <- max(tree1$edge)+1	#the new descendant node
+            bottom <- chosen	# the ancestral node
+            newsie <- max(tree1$edge) + 1	# the new descendant node
             #
             # split algorithm into ordered and not ordered now
             if(orderedChar){
-                #build a ladder tree with nested paraphyletic grades
-                #first build anc to upwards ladder
+                # build a ladder tree with nested paraphyletic grades
+                # first build anc to upwards ladder
                 chainUp <- groupings[groupings >= ancChar]			
-                #then down from anc ladder; reverse so going away from anc state
-                chainDown <- rev(groupings[groupings<ancChar])
-                #okay, chainUp
+                # then down from anc ladder; reverse so going away from anc state
+                chainDown <- rev(groupings[groupings < ancChar])
+                # okay, chainUp
                 for(j in 1:length(chainUp)){
-                    #which char is this 'level' of nodes going to use
+                    # which char is this 'level' of nodes going to use
                     leveler <- chainUp[j]
-                    #let's make a polytomy for each unique level of nodeChar
+                    # let's make a polytomy for each unique level of nodeChar
                     edgar <- cbind(bottom, 
-                        as.numeric(names(nodeChar[nodeChar == leveler])))
+                        as.numeric(names(nodeChar[nodeChar == leveler]))
+                        )
                     #add a new edge for chainDown (if such exists)
-                    if(length(chainDown)>0 & j == 1){
-                        edgar <- rbind(edgar, c(bottom,newsie))
-                        savedBottom <- newsie	#this will be the new bottom
-                        if(j != length(chainUp)){newsie <- newsie+1}
-                        }
-                    if(j != length(chainUp)){
-                        #Need to add the edge for the polytomy of the next level: bottom,newsie
+                    if((length(chainDown) > 0) & (j == 1)){
                         edgar <- rbind(edgar, c(bottom, newsie))
-                        #need to update bottom and newsie
-                        #the old newsie becomes the new ancestor (bottom)
+                        #save current newsie to be the new bottom for chaindown loop
+                        savedBottom <- newsie	
+                        # if j (which must be 1) is not the length of chainup,
+                            # step newsie forward one step
+                        # if it is, then we are over with chainup for loop
+                        if(j != length(chainUp)){
+                            newsie <- newsie + 1
+                            }
+                        }
+                    if(j != length(chainUp)){    # if j is not the length of chainup...
+                        # Need to add the edge for the polytomy 
+                            # of the next level: bottom, newsie
+                        edgar <- rbind(edgar, c(bottom, newsie))
+                        # need to update bottom and newsie
+                        # the old newsie becomes the new ancestor (bottom)
                         bottom <- newsie   
                         #need to define a new descendant from that ancestor for attaching next level
                         newsie <- newsie + 1 
@@ -419,10 +452,12 @@ resolveTreeCharMechanism <- function(
                         }
                     }
                 edgeMat <- edgeMat[-1,]
+                # number of rows in edgeMat should match the length of unique values in nodeChar minus one
                 if( nrow(edgeMat) != (length(nodeChar) + length(unique(nodeChar)) - 1) ){
-                    stop(paste("edgeMat is not the right size for polyParts = ", i))}
-                #
-            }else{	#if unordered
+                    stop(paste("edgeMat is not the right size for polyParts = ", i))
+                    }
+            ###############
+            }else{	# if data is un-ordered
                 #
                 #make every grouping but the ancestor a monophyletic cluster
                 #old lolz: # stop("haven't done this yet")

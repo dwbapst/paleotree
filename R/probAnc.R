@@ -22,7 +22,7 @@
 #' occur before any descendants are produced. Thus, if \code{p = q}, the probability of 
 #' a taxon going extinct before it produces any descendants will be 0.5, which 
 #' means that even when sampling is perfect (\code{R = 1}, meaning completeness of 
-#' 100%) the probability of a taxon being an ancestor of another sampled taxon
+#' 100 percent) the probability of a taxon being an ancestor of another sampled taxon
 #' can be no higher than 0.5. See Foote (1996) for a graphic depiction of this
 #' non-intuitive ceiling. For reasons (probably?) having to do with finite
 #' approximations of infinite summations, values close to perfect sampling

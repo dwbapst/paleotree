@@ -1,3 +1,7 @@
+Version - 3.5.0 - 07-10-25 (in development)
+- Hurlbert's PIE equation had an error where the number of species was used instead of the number of specimens. Previous estimates are probably off but relative differences were probably okay if also calculated with previous Hurlbert's PIE function.
+- 
+
 Version - 3.4.7 - 07-05-24 (CRAN Release)
 - New argument added to twoWayEcologyCluster to allow for extra room for margins.
 - General tidying up of loose syntax in documentation that R CHECK didn't like.

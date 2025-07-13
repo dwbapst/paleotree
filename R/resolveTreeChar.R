@@ -459,23 +459,25 @@ resolveTreeCharMechanism <- function(
             ###############
             }else{	# if data is un-ordered
                 #
-                #make every grouping but the ancestor a monophyletic cluster
-                #old lolz: # stop("haven't done this yet")
+                # make every grouping but the ancestor a monophyletic cluster
+                # old lolz: # stop("haven't done this yet")
                 edgar <- cbind(bottom, as.numeric(names(nodeChar[nodeChar == ancChar])))
-                #add to edgeMat
+                # add to edgeMat
                 edgeMat <- rbind(edgeMat, edgar)
                 grouping <- groupings[groupings != ancChar]
                 for(j in 1:length(grouping)){
-                    #Need to add the edge for the polytomy of the next group: bottom,newsie
-                    #add directly to edgemat
-                    edgeMat <- rbind(edgeMat, c(bottom,newsie))	#bottom never changes
-                    #need to update bottom and newsie
+                    # Need to add the edge for the polytomy of the next group: bottom,newsie
+                    # add directly to edgemat
+                    edgeMat <- rbind(edgeMat, c(bottom, newsie))	#bottom never changes
+                    # need to update bottom and newsie
                     bottomG <- newsie   #the old newsie becomes the new ancestor (bottom)
-                    #which char is this 'level' of nodes going to use
+                    # which char is this 'level' of nodes going to use
                     leveler <- grouping[j]
-                    #let's make a polytomy for each unique level of nodeChar
-                    edgar <- cbind(bottomG, as.numeric(names(nodeChar[nodeChar == leveler])))
-                    #need to define a new descendant from that ancestor for attaching next level
+                    # let's make a polytomy for each unique level of nodeChar
+                    edgar <- cbind(bottomG, 
+                        as.numeric(names(nodeChar[nodeChar == leveler]))
+                        )
+                    # need to define a new descendant from that ancestor for attaching next level
                     newsie <- newsie + 1 
                     edgeMat <- rbind(edgeMat, edgar)
                     }
@@ -483,7 +485,8 @@ resolveTreeCharMechanism <- function(
                 }
             #drop any artificial ancestral taxa added to nodeChar
             edgeMat <- edgeMat[!is.nan(edgeMat[ , 2]), ]
-            #now need to clean old edge matrix, remove all with chosen as edge[,1], combine with edgeMat
+            #now need to clean old edge matrix, 
+                # remove all with chosen as edge[,1], combine with edgeMat
             tree2 <- tree1		
             newEdge <- tree2$edge[tree2$edge[ , 1] != chosen,]
             newEdgeMat <- rbind(newEdge, edgeMat)

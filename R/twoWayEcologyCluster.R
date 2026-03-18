@@ -46,7 +46,12 @@
 
 #' @param trimChar How many characters should the axis labels be trimmed to?
 #' Default is 5, which means only the first five letters of each taxon/site
-#' label will be shown on the dot-abundance plot.
+#' label will be shown on the dot-abundance plot. 
+#' Note that 'row labels' (the horizontal X-axis elements, typically sites)
+#' cannot be duplicated -- each has to be unique, so if the set level of trimming
+#' results in duplicated labels, the trimming for those labels will be rejected,
+#' and the full labels will be plotted with a warning.
+#' If you want more detailed trimming of labels, trim it yourself!
 
 #' @param xAxisLabel The label placed on the horizontal axis of the plot.
 
@@ -194,8 +199,21 @@ twoWayEcologyCluster<-function(
     #            substr(rownames(propAbund),
     #                start=1,stop=5)
     #            ,"...")
-    rownames(propAbund) <- strtrim(rownames(propAbund), width = trimChar)
-    colnames(propAbund) <- strtrim(colnames(propAbund), width = trimChar)
+    trimmedRowNames <- strtrim(rownames(propAbund), width = trimChar)
+    trimmedColNames <- strtrim(colnames(propAbund), width = trimChar)    
+    #
+    if(any(duplicated(trimmedRowNames))){
+        warning("trimmed rownames had duplicates, so were not used, try a higher trimChar setting")
+    }else{
+        rownames(propAbund) <- trimmedRowNames
+        }
+    if(any(duplicated(trimmedColNames))){
+        #warning("trimmed colnames had duplicates, so were not used, try a higher trimChar setting")    
+        warning("When trimmed, some column names weren't unique")    
+        colnames(propAbund) <- trimmedColNames
+    }else{
+        colnames(propAbund) <- trimmedColNames
+        }
     #
     ####################################
     ## PLOTTING IT

@@ -1,9 +1,17 @@
 Package: paleotree
 Type: Package
-Version: 3.45.0
+Version: 3.5.44
 Title: Paleontological and Phylogenetic Analyses of Evolution
-Date: 2025-07-13
+Date: 2026-03-25
 Author: David W. Bapst, Peter J. Wagner
+Authors@R: c(person(given = c("David", "W."),
+                      family = "Bapst",
+                      role = c("aut", "cre"),
+                      email = "dwbapst@gmail.com"),
+               person(given = c("Peter", "J."),
+                      family = "Wagner",
+                      role = "aut"),
+                      comment = "Original code for functions involving the measuring and fitting various distributions to the gradual exhaustion of unexpressed character states")
 Depends:
 	R (>= 4.1.0),
 	ape (>= 4.1)

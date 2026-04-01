@@ -59,17 +59,18 @@
 #' and upper triangle of the matrix. Otherwise, a full matrix is returned (by default)
 #' if the \code{asDistance} argument is not enabled. 
 #' 
-#' \code{HurlbertPIE} provides the 'Probability of Interspecific Encounter' metric for
+#' \code{HurlbertPIE} provides the \emph{Probability of Interspecific Encounter} metric for
 #' relative community abundance data, a commonly used metric for evenness of community
 #' abundance data based on derivations in Hurlbert (1971). This estimate is given by
 #' the equation:
 #' 
-#' \equ{PIE = ( \frac{N}{N - 1} ) ( 1 - \sum_{i=1}^{S} p_i^2 )}
+#' \deqn{PIE = \left( \frac{N}{N - 1} \right) \left( 1 - \sum_{i=1}^{S} p_i^2 \right)}
 #' 
 #' where \emph{N} is the total number of individuals, 
 #' \emph{S} is the total number of species,
 #' and \emph{p} is the proportional abundance of species \emph{i}. 
-#' (Of course, proportional abundance is number of specimens observed for species \{i}, divided by \emph{N}.)
+#' 
+#' (Of course, proportional abundance is number of specimens observed for species \emph{i}, divided by \emph{N}.)
 #' 
 #' An optional argument allows users to apply Hurlbert's PIE to 
 #' only a subselection of the most abundant taxa.
@@ -248,7 +249,7 @@ pairwiseSpearmanRho <- function(
 		}
 	colnames(rhos) <- rownames(rhos) <- rownames(x)
 	if(asDistance){
-		rhos <- (1-rhos)/2
+		rhos <- (1-rhos) / 2
 		result <- as.dist(rhos)
 		attr(result, 'Diag') <- diag
 		attr(result, 'Upper') <- upper

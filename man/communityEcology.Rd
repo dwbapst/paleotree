@@ -87,10 +87,29 @@ This behavior can be modified via the arguments for including the diagonal
 and upper triangle of the matrix. Otherwise, a full matrix is returned (by default)
 if the \code{asDistance} argument is not enabled. 
 
-\code{HurlbertPIE} provides the 'Probability of Interspecific Encounter' metric for
+\code{HurlbertPIE} provides the \emph{Probability of Interspecific Encounter} metric for
 relative community abundance data, a commonly used metric for evenness of community
-abundance data based on derivations in Hurlbert (1971). An optional argument allows
-users to apply Hurlbert's PIE to only a subselection of the most abundant taxa.
+abundance data based on derivations in Hurlbert (1971). This estimate is given by
+the equation:
+
+\deqn{PIE = \left( \frac{N}{N - 1} \right) \left( 1 - \sum_{i=1}^{S} p_i^2 \right)}
+
+where \emph{N} is the total number of individuals, 
+\emph{S} is the total number of species,
+and \emph{p} is the proportional abundance of species \emph{i}. 
+
+(Of course, proportional abundance is number of specimens observed for species \emph{i}, divided by \emph{N}.)
+
+An optional argument allows users to apply Hurlbert's PIE to 
+only a subselection of the most abundant taxa.
+}
+\note{
+The code for Hurlbert's PIE had an error from September 2015 
+through July 2025 where the number of specimens was erroneously replaced 
+with the number of species. Previous estimates were probably considerably off
+in an absolute sense, but those measures were probably okay if only compared
+to other PIE scores calculated using the same function. 
+I apologize for this error. -DWB
 }
 \examples{
 

@@ -35,6 +35,7 @@
 #' formulae used. The relevant equations are generally found in the appendices
 #' of those papers.
 #' 
+
 #' @aliases sProb2sRate sRate2sProb pqsRate2sProb qsProb2Comp qsRate2Comp
 
 #' @param R Per-interval probability of sampling a taxon at least once.

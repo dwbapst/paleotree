@@ -47,11 +47,7 @@
 #' Returns the sought parameter names, bounds or initial values or (for the replacement methods) 
 #' returns a modified function with the respective attributes altered.
 
-#' @aliases modelMethods parbounds parbounds.constrained parbounds.paleotreeFunc
-#' parInit parInit.constrained parInit.paleotreeFunc parLower
-#' parLower.constrained parLower.paleotreeFunc parnames
-#' parnames.constrained parnames.paleotreeFunc parUpper
-#' parUpper.constrained parUpper.paleotreeFunc
+#' @aliases modelMethods parbounds parbounds.constrained parbounds.paleotreeFunc parInit parInit.constrained parInit.paleotreeFunc parLower parLower.constrained parLower.paleotreeFunc parnames parnames.constrained parnames.paleotreeFunc parUpper parUpper.constrained parUpper.paleotreeFunc
 
 #' @seealso
 #' These model methods were introduced to interact with the new model framework introduced in

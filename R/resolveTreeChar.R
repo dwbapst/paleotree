@@ -95,18 +95,22 @@
 #' 
 #' # examples with simulated data
 #' 
-#' set.seed(2)
+#' set.seed(44)   #2
 #' tree <- rtree(50)
 #' #simulate under a likelihood model
-#' trait <- rTraitDisc(tree,k = 3,rate = 0.7)
-#' tree <- degradeTree(tree,prop_collapse = 0.6)
-#' tree <- ladderize(tree,right = FALSE)
+#' trait <- rTraitDisc(tree, k = 3, rate = 0.7)
+#' tree <- degradeTree(tree, prop_collapse = 0.6)
+#' tree <- ladderize(tree, right = FALSE)
 #' 
 #' #a bunch of type = MPR (default) examples
-#' treeUnord <- resolveTreeChar(tree,trait,orderedChar = FALSE)
-#' treeOrd <- resolveTreeChar(tree,trait,orderedChar = TRUE,stateBias = NULL)
-#' treeOrdPrim <- resolveTreeChar(tree,trait,orderedChar = TRUE,stateBias = "primitive")
-#' treeOrdDer <- resolveTreeChar(tree,trait,orderedChar = TRUE,stateBias = "derived")
+#' treeUnord <- resolveTreeChar(tree, trait, 
+#'     orderedChar = FALSE)
+#' treeOrd <- resolveTreeChar(tree, trait, 
+#'     orderedChar = TRUE, stateBias = NULL)
+#' treeOrdPrim <- resolveTreeChar(tree, trait, 
+#'     orderedChar = TRUE, stateBias = "primitive")
+#' treeOrdDer <- resolveTreeChar(tree, trait, 
+#'     orderedChar = TRUE, stateBias = "derived")
 #' 
 #' #compare number of nodes
 #' Nnode(tree)			#original
@@ -117,38 +121,49 @@
 #' 
 #' #let's compare original tree with unordered-resolved tree
 #' layout(1:2)
-#' quickAncPlot(tree,trait,orderedChar = FALSE,cex = 0.3)
-#' text(x = 43,y = 10,"Original",cex = 1.5)
-#' quickAncPlot(treeUnord,trait,orderedChar = FALSE,cex = 0.3)
-#' text(x = 43,y = 10,"orderedChar = FALSE",cex = 1.5)
+#' quickAncPlot(tree, trait, 
+#'     orderedChar = FALSE, cex = 0.3)
+#' text(x = 43, y = 10,"Original", cex = 1.5)
+#' quickAncPlot(treeUnord, trait, 
+#'     orderedChar = FALSE, cex = 0.3)
+#' text(x = 43, y = 10, "orderedChar = FALSE", cex = 1.5)
 #' #some resolution gained
 #' 
 #' #now let's compare the original and ordered, both biasStates = NULL
 #' layout(1:2)
-#' quickAncPlot(tree,trait,orderedChar = FALSE,cex = 0.3)
+#' quickAncPlot(tree, trait, 
+#'     orderedChar = FALSE,cex = 0.3)
 #' text(x = 43,y = 10,"Original",cex = 1.5)
-#' quickAncPlot(treeOrd,trait,orderedChar = TRUE,cex = 0.3)
+#' quickAncPlot(treeOrd, trait, 
+#'     orderedChar = TRUE,cex = 0.3)
 #' text(x = 43,y = 10,"orderedChar = TRUE",cex = 1.5)
 #' 
 #' #now let's compare the three ordered trees
 #' layout(1:3)
-#' quickAncPlot(treeOrd,trait,orderedChar = TRUE,cex = 0.3)
-#' text(x = 41,y = 8,"ordered, biasStates = NULL",cex = 1.5)
-#' quickAncPlot(treeOrdPrim,trait,orderedChar = TRUE,cex = 0.3)
-#' text(x = 41.5,y = 8,"ordered, biasStates = 'primitive'",cex = 1.5)
-#' quickAncPlot(treeOrdDer,trait,orderedChar = TRUE,cex = 0.3)
+#' quickAncPlot(treeOrd, trait, 
+#'     orderedChar = TRUE,cex = 0.3)
+#' text(x = 41, y = 8, 
+#'     "ordered, biasStates = NULL", cex = 1.5)
+#' quickAncPlot(treeOrdPrim, trait, 
+#'     orderedChar = TRUE,cex = 0.3)
+#' text(x = 41.5, y = 8, 
+#'     "ordered, biasStates = 'primitive'", cex = 1.5)
+#' quickAncPlot(treeOrdDer, trait, 
+#'     orderedChar = TRUE,cex = 0.3)
 #' text(x = 42,y = 8,"ordered, biasStates = 'derived'",cex = 1.5)
 #' 
 #' #let's compare unordered with ordered, biasStates = 'primitive'
 #' layout(1:2)
-#' quickAncPlot(treeUnord,trait,orderedChar = FALSE,cex = 0.3)
-#' text(x = 41,y = 8,"orderedChar = FALSE",cex = 1.5)
-#' quickAncPlot(treeOrdPrim,trait,orderedChar = TRUE,cex = 0.3)
-#' text(x = 40,y = 11,"orderedChar = TRUE",cex = 1.5)
-#' text(x = 40,y = 4,"biasStates = 'primitive'",cex = 1.5)
+#' quickAncPlot(treeUnord, trait, 
+#'     orderedChar = FALSE, cex = 0.3)
+#' text(x = 41, y = 8, "orderedChar = FALSE", cex = 1.5)
+#' quickAncPlot(treeOrdPrim, trait, 
+#'     orderedChar = TRUE, cex = 0.3)
+#' text(x = 40, y = 11, "orderedChar = TRUE", cex = 1.5)
+#' text(x = 40, y = 4, "biasStates = 'primitive'", cex = 1.5)
 #' 
 #' 
-#' #these comparisons will differ greatly between datasets
+#' #these comparisons will differ greatly between data sets
 #' 	# need to try them on your own
 #' 
 #' layout(1)
@@ -159,239 +174,347 @@
 #' @name resolveTreeChar
 #' @rdname resolveTreeChar
 #' @export
-resolveTreeChar <- function(tree, trait, orderedChar = FALSE, stateBias = NULL, iterative = TRUE, cost = NULL,
-			ambiguity =  c(NA, "?"), dropAmbiguity = FALSE, polySymbol = "&", contrast = NULL){
-		#	orderedChar = TRUE; type = "MPR"; cost = NULL; stateBias = "primitive"
-		#	orderedChar = FALSE; type = "MPR"; cost = NULL; stateBias = NULL
-	#orderedChar = TRUE : put clades together relative to character being ordered, 0 is most primitive state
-		# nested paraphyletic grades
-	#if FALSE, clades within a polytomy are formed for all groups which the ancestor has 0 prob of being
-	#require(phangorn)
-	if(Nnode(tree) == (Ntip(tree)-1)){stop("Input tree is fully resolved??")}
-	#tests of orderedChar and stateBias
-	if(!is.null(stateBias)){
-		if(orderedChar){
-			if(!any(stateBias == c("primitive","derived"))){
-				stop("For 'orderedChar' analyses, stateBias must be set to NULL, 'primitive' or 'derived'")}
-		}else{
-			stop("stateBias cannot be used in analyses for unordered characters")
-			}}
-	#check iterative
-	if(!is.logical(iterative)){
-		stop("iterative must be a logical class element")
-		}
-	if(length(iterative) != 1){
-		stop("iterative must be a single logical element")
-		}
-	#now run the resolution mechanism function, possibly in a loop
-	if(iterative){
-		tree2 <- tree
-		continueRes <- TRUE
-		while(continueRes){
-			tree1 <- resolveTreeCharMechanism(tree2, trait, orderedChar = orderedChar, stateBias = stateBias, type = "MPR", cost = cost)
-			if(ape::is.binary.phylo(tree1) & is.rooted(tree1)){continueRes <- FALSE}
-			if(Nnode(tree1) == Nnode(tree2)){continueRes <- FALSE}
-			tree2 <- tree1
-			}
-		treeFinal <- tree2
-	}else{
-		#only do it once
-		treeFinal <- resolveTreeCharMechanism(tree, trait, orderedChar = orderedChar, stateBias = stateBias, type = "MPR", cost = cost)
-		}
-	return(treeFinal)
-	}
+resolveTreeChar <- function(tree, trait, 
+                            orderedChar = FALSE, stateBias = NULL, 
+                            iterative = TRUE, cost = NULL,
+                            ambiguity =  c(NA, "?"), dropAmbiguity = FALSE, 
+                            polySymbol = "&", contrast = NULL
+                            ){
+    
+    #	orderedChar = TRUE; type = "MPR"; cost = NULL; stateBias = "primitive"
+    #	orderedChar = FALSE; type = "MPR"; cost = NULL; stateBias = NULL
+    #orderedChar = TRUE : put clades together relative to character being ordered, 0 is most primitive state
+    # nested paraphyletic grades
+    
+    #require(phangorn)
+    # check that tree makes sense
+    # ape::checkValidPhylo(tree)
+    if(!testEdgeMat(tree)){
+        stop("Edge matrix of tree has inconsistencies")
+        }
+    
+    # dropAmbiguity = FALSE
+    #if FALSE, clades within a polytomy are formed for all groups which the ancestor has 0 prob of being
+    #
+    if(Nnode(tree) == (Ntip(tree)-1)){
+        stop("Input tree is fully resolved??")
+        }
+    #tests of orderedChar and stateBias
+    if(!is.null(stateBias)){
+        if(orderedChar){
+            if(!any(stateBias == c("primitive","derived"))){
+                stop("For 'orderedChar' analyses, stateBias must be set to NULL, 'primitive' or 'derived'")}
+        }else{
+            stop("stateBias cannot be used in analyses for unordered characters")
+            }
+        }
+    #check iterative
+    if(!is.logical(iterative)){
+        stop("iterative must be a logical class element")
+        }
+    if(length(iterative) != 1){
+        stop("iterative must be a single logical element")
+        }
+    #now run the resolution mechanism function, possibly in a loop
+    if(iterative){
+        tree2 <- tree
+        continueRes <- TRUE
+        while(continueRes){
+            tree1 <- resolveTreeCharMechanism(
+                tree2, trait, 
+                orderedChar = orderedChar, 
+                stateBias = stateBias, 
+                type = "MPR", cost = cost
+                )
+            if(ape::is.binary.phylo(tree1) & is.rooted(tree1)){continueRes <- FALSE}
+            if(Nnode(tree1) == Nnode(tree2)){continueRes <- FALSE}
+            tree2 <- tree1
+            }
+        treeFinal <- tree2
+    }else{
+        #only do it once
+        treeFinal <- resolveTreeCharMechanism(
+            tree, trait, 
+            orderedChar = orderedChar, 
+            stateBias = stateBias, 
+            type = "MPR", 
+            cost = cost
+            )
+        }
+    return(treeFinal)
+    }
 
 # internal function called by resolveTreeChar
-resolveTreeCharMechanism <- function(tree, trait, orderedChar, stateBias, type = "MPR", cost){
-	nodeParts <- c(1:Ntip(tree),prop.part(tree))
-	#pick nodes based on being a polytomy
-	whichPoly <- sapply(1:max(tree$edge),function(x) sum(x == tree$edge[,1])>2)
-	#polytomy parts
-	polyParts <- nodeParts[whichPoly & node.depth(tree)>1]
-	#sort polyParts by depth
-	polyParts <- polyParts[order(node.depth(tree)[whichPoly & node.depth(tree)>1])]	
-		#depthPoly <- cbind(1:max(tree$edge),node.depth(tree))[whichPoly & node.depth(tree)>1,]
-		#chosen <- (depthPoly[order(depthPoly[,2]),]
-	#replace polyParts number IDs with taxon labels
-	polyParts <- lapply(polyParts,function(x) sort(tree$tip.label[x]))
-	tree1 <- tree
-	for(i in 1:length(polyParts)){	
-		#check to make sure taxon lists are still the same
-		if(!identical(sort(tree$tip.label),sort(tree1$tip.label))){
-			stop("taxa mysteriously lost/added?")}
-		#chosen is the polytomy to be resolved
-		labelClades <- lapply(prop.part(tree1),function(x) sort(tree1$tip.label[x]))
-		chosen <- Ntip(tree1)+which(sapply(labelClades,function(x) identical(x,polyParts[[i]])))
-		if(length(chosen) == 0){stop("Cannot find a polytomy on the input tree??")}
-		if(length(chosen)>1){stop("Selected more than one polytomy based on descendants??")}
-		#
-		ancMat <- ancPropStateMat(trait, tree1, orderedChar = orderedChar, type = type, cost = cost)
-		#convert state/node matrix table from state weights to T/F, where T = max weight per node for a state
-		maxWt <- t(apply(ancMat,1,function(x) x == max(x)))
-		if(any(apply(maxWt,1,sum) == 0)){stop("Error in ancestral state reconstruction, some have no state possible?")}
-		#now get the chosen's children
-		descChosen <- tree1$edge[tree1$edge[,1] == chosen,2]
-		#now decide what state each desc and ancestor has
-		if(is.null(stateBias)){				
-			nodeChar <- apply(maxWt[sapply(rownames(maxWt),function(y) any(y == descChosen)),],1,function(x) which(x))
-			ancChar <- which(maxWt[rownames(maxWt) == chosen,])				
-		}else{
-			if(orderedChar & (stateBias == "derived" | stateBias == "primitive")){
-				#given max wt uncertainty for states, choose highest or lowest state if an ordered character
-					#the lower would weight against reversals
-				if(stateBias == "derived"){				
-					nodeChar <- apply(maxWt[sapply(rownames(maxWt),function(y) any(y == descChosen)),],1,function(x) max(which(x)))
-					ancChar <- max(which(maxWt[rownames(maxWt) == chosen,]))
-					}
-				if(stateBias == "primitive"){				
-					nodeChar <- apply(maxWt[sapply(rownames(maxWt),function(y) any(y == descChosen)),],1,function(x) min(which(x)))
-					ancChar <- min(which(maxWt[rownames(maxWt) == chosen,]))
-					}
-			}else{
-				stop("Inconsistent orderedChar and stateBias arguments")
-				}
-			}
-		#combine above into a single list
-		foundStates <- c(nodeChar,list(ancChar))
-		#find unique character groupings
-			#if uncertainty, merge states into single state
-		groupings <- unique(foundStates)
-		#need to remove groupings that are short subsets of longer groupings
-			#order by length first
-		groupings <- groupings[order(-sapply(groupings,length))]
-		k <- 1
-		#use while loop to go through groupings
-		while(k <= length(groupings)){
-			drop <- sapply(groupings,function(x) all(sapply(x,function(y) any(y == groupings[[k]]))))
-			drop[k] <- FALSE
-			#edit foundStates
-			dropFS <- sapply(foundStates,function(x) any(sapply(groupings[drop],identical,x)))
-			for(m in which(dropFS)){foundStates[[m]] <- groupings[[k]]}
-			groupings <- groupings[!drop]
-			k <- k+1
-			}
-		if(length(groupings)>1){
-			#if only one group, just move on
-			#
-			#order groupings by average state
-			groupings <- groupings[order(sapply(groupings,mean))]
-			#assign groups, now in order
-			groupAssign <- sapply(foundStates,function(x) which(sapply(groupings,identical,x)))
-			#replace groupings with ranked grouping by taking unique of groupAssign
-			groupings <- sort(unique(groupAssign))
-			#
-			#now we have a nodeChar vector with names = desc node IDs, values = ranked groupings
-			nodeChar <- groupAssign[-length(groupAssign)]
-			#and the ranked grouping for the ancestor
-			ancChar <- groupAssign[length(groupAssign)]
-			#
-			#what if anc grouping isn't in nodeChar, add an artificial one
-			if(!any(nodeChar == ancChar)){
-				nodeChar <- c(nodeChar,'NaN' = ancChar)
-				}
-			#
-			#now is time to build a tree
-			#build a new edgeMat
-			edgeMat <- matrix(,1,2)
-			#for adding each level
-			bottom <- chosen	#the ancestral node
-			newsie <- max(tree1$edge)+1	#the new descendant node
-			#
-			# split algorithm into ordered and not ordered now
-			if(orderedChar){
-				#build a ladder tree with nested paraphyletic grades
-				#first build anc to upwards ladder
-				chainUp <- groupings[groupings >= ancChar]			
-				#then down from anc ladder; reverse so going away from anc state
-				chainDown <- rev(groupings[groupings<ancChar])
-				#okay, chainUp
-				for(j in 1:length(chainUp)){
-					#which char is this 'level' of nodes going to use
-					leveler <- chainUp[j]
-					#let's make a polytomy for each unique level of nodeChar
-					edgar <- cbind(bottom,as.numeric(names(nodeChar[nodeChar == leveler])))
-					#add a new edge for chainDown (if such exists)
-					if(length(chainDown)>0 & j == 1){
-						edgar <- rbind(edgar,c(bottom,newsie))
-						savedBottom <- newsie	#this will be the new bottom
-						if(j != length(chainUp)){newsie <- newsie+1}
-						}
-					if(j != length(chainUp)){
-						#Need to add the edge for the polytomy of the next level: bottom,newsie
-						edgar <- rbind(edgar,c(bottom,newsie))
-						#need to update bottom and newsie
-						bottom <- newsie   #the old newsie becomes the new ancestor (bottom)
-						newsie <- newsie+1 #need to define a new descendant from that ancestor for attaching next level
-						}
-					edgeMat <- rbind(edgeMat,edgar)
-					}
-				if(length(chainDown)>0){ 
-					bottom <- savedBottom
-					newsie <- newsie+1
-					for(j in 1:length(chainDown)){
-						#which char is this 'level' of nodes going to use
-						leveler <- chainDown[j]
-						#let's make a polytomy for each unique level of nodeChar
-						edgar <- cbind(bottom,as.numeric(names(nodeChar[nodeChar == leveler])))
-						if(j != length(chainDown)){
-							#Need to add the edge for the polytomy of the next level: bottom,newsie
-							edgar <- rbind(edgar,c(bottom,newsie))
-							#need to update bottom and newsie
-							bottom <- newsie   #the old newsie becomes the new ancestor (bottom)
-							newsie <- newsie+1 #need to define a new descendant from that ancestor for attaching next level
-							}
-						edgeMat <- rbind(edgeMat,edgar)
-						}
-					}
-				edgeMat <- edgeMat[-1,]
-				if(nrow(edgeMat) != (length(nodeChar)+length(unique(nodeChar))-1)){
-					stop(paste("edgeMat is not the right size for polyParts = ",i))}
-				#
-			}else{	#if unordered
-				#
-				#make every grouping but the ancestor a monophyletic cluster
-					#old lolz: # stop("haven't done this yet")
-				edgar <- cbind(bottom,as.numeric(names(nodeChar[nodeChar == ancChar])))
-				#add to edgeMat
-				edgeMat <- rbind(edgeMat,edgar)
-				grouping <- groupings[groupings != ancChar]
-				for(j in 1:length(grouping)){
-					#Need to add the edge for the polytomy of the next group: bottom,newsie
-						#add directly to edgemat
-					edgeMat <- rbind(edgeMat,c(bottom,newsie))	#bottom never changes
-					#need to update bottom and newsie
-					bottomG <- newsie   #the old newsie becomes the new ancestor (bottom)
-					#which char is this 'level' of nodes going to use
-					leveler <- grouping[j]
-					#let's make a polytomy for each unique level of nodeChar
-					edgar <- cbind(bottomG,as.numeric(names(nodeChar[nodeChar == leveler])))
-					newsie <- newsie+1 #need to define a new descendant from that ancestor for attaching next level
-					edgeMat <- rbind(edgeMat,edgar)
-					}
-				edgeMat <- edgeMat[-1,]
-				}
-			#drop any artificial ancestral taxa added to nodeChar
-			edgeMat <- edgeMat[!is.nan(edgeMat[,2]),]
-			#now need to clean old edge matrix, remove all with chosen as edge[,1], combine with edgeMat
-			tree2 <- tree1
-			tree2$edge <- rbind(tree2$edge[tree2$edge[,1] != chosen,],edgeMat)
-			tree2$Nnode <- tree2$Nnode+length(unique(nodeChar))-1
-			#tree2 <- collapse.singles(reorder(tree2))
-			#if(!testEdgeMat(tree2)){stop("Produced edge matrix has inconsistencies")}
-			#tree3 <- read.tree(text = write.tree(tree2))
-			tree3 <- cleanNewPhylo(tree2)
-			if(Ntip(tree1) != Ntip(tree3)){
-				if(Ntip(tree1) != Ntip(tree2)){
-					stop("Taxa loss/added somehow in fixing polytomies?")
-				}else{
-					stop("Taxa loss/added somehow in fixing tree structure?")
-					}
-				}
-			tree1 <- tree3							
-			}
-		}
-	#randRes remaining unresolved areas: yes, no?
-		#no, leave this alone, can be a second line of code, for god sakes
-	treeFinal <- ladderize(tree1,right = FALSE)
-	return(treeFinal)
-	}
+resolveTreeCharMechanism <- function(
+        tree, trait, orderedChar, 
+        stateBias, type = "MPR", cost
+        ){
+    #
+    nodeParts <- c(1:Ntip(tree),prop.part(tree))
+    #pick nodes based on being a polytomy
+    whichPoly <- sapply(1:max(tree$edge),function(x) sum(x == tree$edge[,1])>2)
+    #polytomy parts
+    polyParts <- nodeParts[whichPoly & node.depth(tree)>1]
+    #sort polyParts by depth
+    polyParts <- polyParts[order(node.depth(tree)[whichPoly & node.depth(tree)>1])]	
+    #depthPoly <- cbind(1:max(tree$edge),node.depth(tree))[whichPoly & node.depth(tree)>1,]
+    #chosen <- (depthPoly[order(depthPoly[,2]),]
+    #replace polyParts number IDs with taxon labels
+    polyParts <- lapply(polyParts,function(x) sort(tree$tip.label[x]))
+    tree1 <- tree
+    for(i in 1:length(polyParts)){	
+        #check to make sure taxon lists are still the same
+        if(!identical(sort(tree$tip.label),sort(tree1$tip.label))){
+            stop("taxa mysteriously lost/added?")}
+        #chosen is the polytomy to be resolved
+        labelClades <- lapply(prop.part(tree1),function(x) sort(tree1$tip.label[x]))
+        chosen <- Ntip(tree1) + which(
+            sapply(labelClades,function(x) 
+                identical(x,polyParts[[i]])
+                )
+            )
+        if(length(chosen) == 0){
+            stop("Cannot find a polytomy on the input tree??")
+            }
+        if(length(chosen)>1){
+            stop("Selected more than one polytomy based on descendants??")
+            }
+        #
+        ancMat <- ancPropStateMat(trait, tree1, 
+                                  orderedChar = orderedChar, 
+                                  type = type, cost = cost)
+        #convert state/node matrix table from state weights to T/F, 
+            # where T = max weight per node for a state
+        maxWt <- t(apply(ancMat, 1, function(x) x == max(x)))
+        if(any(apply(maxWt, 1, sum) == 0)){
+            stop("Error in ancestral state reconstruction, some have no state possible?")
+            }
+        #now get the chosen's children
+        descChosen <- tree1$edge[tree1$edge[,1] == chosen,2]
+        #now decide what state each desc and ancestor has
+        if(is.null(stateBias)){				
+            nodeChar <- apply(
+                maxWt[sapply(rownames(maxWt), 
+                    function(y) any(y == descChosen)),],
+                1, function(x) which(x)
+                )
+            ancChar <- which(maxWt[rownames(maxWt) == chosen,])				
+        }else{
+            if(orderedChar & (stateBias == "derived" | stateBias == "primitive")){
+                # given max weighted uncertainty for states, 
+                # choose highest or lowest state if an ordered character
+                # the lower would weight against reversals
+                if(stateBias == "derived"){				
+                    nodeChar <- apply(
+                        maxWt[sapply(rownames(maxWt), 
+                            function(y) any(y == descChosen)),], 
+                        1, function(x) max(which(x))
+                        )
+                    ancChar <- max(which(maxWt[rownames(maxWt) == chosen,]))
+                    }
+                if(stateBias == "primitive"){				
+                    nodeChar <- apply(
+                        maxWt[sapply(rownames(maxWt),function(y) 
+                            any(y == descChosen)),], 
+                        1, function(x) min(which(x))
+                        )
+                    ancChar <- min(which(maxWt[rownames(maxWt) == chosen,]))
+                    }
+            }else{
+                stop("Inconsistent orderedChar and stateBias arguments")
+            }
+            }
+        #combine above into a single list
+        foundStates <- c(nodeChar,list(ancChar))
+        #find unique character groupings
+        #if uncertainty, merge states into single state
+        groupings <- unique(foundStates)
+        #need to remove groupings that are short subsets of longer groupings
+        #order by length first
+        groupings <- groupings[order(-sapply(groupings, length))]
+        k <- 1
+        # use while loop to go through groupings
+        while(k <= length(groupings)){
+            # set anything that has overlap with current grouping to TRUE
+                # and then we will remove on TRUE
+            drop <- sapply(
+                groupings, 
+                function(x) all(sapply(x, 
+                    function(y) any(y == groupings[[k]])
+                    ))
+                )
+            # don't remove the grouping you are looking at
+            drop[k] <- FALSE
+            # are there any foundStates we need to remove?
+            dropFS <- sapply(foundStates, function(x) 
+                any(sapply(groupings[drop], identical, x))
+                )
+            # if foundStates needs to be edited at all...
+            if(any(dropFS)){
+                for(m in which(dropFS)){
+                    foundStates[[m]] <- groupings[[k]]
+                    }
+                }
+            # remove the groupings with overlap, move on to next grouping
+            groupings <- groupings[!drop]
+            k <- k+1
+            }
+        # and now an intermission...
+        # lalala
+        # back to our show
+        if(length(groupings) > 1){
+            #if only one group, just move on
+            #
+            # otherwise, order groupings by average state
+            groupings <- groupings[order(sapply(groupings, mean))]
+            # assign groups, now in order of foundStates
+            groupAssign <- sapply(foundStates,
+                function(x) which(sapply(groupings, identical, x))
+                )
+            #replace groupings with ranked grouping by taking unique of groupAssign
+            groupings <- sort(unique(groupAssign))
+            #
+            # now we have a nodeChar vector with names = desc node IDs, values = ranked groupings
+            nodeChar <- groupAssign[-length(groupAssign)]
+            # and the ranked grouping for the ancestor
+            ancChar <- groupAssign[length(groupAssign)]
+            #
+            #what if anc grouping isn't in nodeChar, add an artificial one
+            if(!any(nodeChar == ancChar)){
+                nodeChar <- c(nodeChar, 'NaN' = ancChar)
+                }
+            #
+            # now is time to build a tree
+            # build a new edgeMat
+            edgeMat <- matrix( , 1, 2)
+            #for adding each level
+            bottom <- chosen	# the ancestral node
+            newsie <- max(tree1$edge) + 1	# the new descendant node
+            #
+            # split algorithm into ordered and not ordered now
+            if(orderedChar){
+                # build a ladder tree with nested paraphyletic grades
+                # first build anc to upwards ladder
+                chainUp <- groupings[groupings >= ancChar]			
+                # then down from anc ladder; reverse so going away from anc state
+                chainDown <- rev(groupings[groupings < ancChar])
+                # okay, chainUp
+                for(j in 1:length(chainUp)){
+                    # which char is this 'level' of nodes going to use
+                    leveler <- chainUp[j]
+                    # let's make a polytomy for each unique level of nodeChar
+                    edgar <- cbind(bottom, 
+                        as.numeric(names(nodeChar[nodeChar == leveler]))
+                        )
+                    #add a new edge for chainDown (if such exists)
+                    if((length(chainDown) > 0) & (j == 1)){
+                        edgar <- rbind(edgar, c(bottom, newsie))
+                        #save current newsie to be the new bottom for chaindown loop
+                        savedBottom <- newsie	
+                        # if j (which must be 1) is not the length of chainup,
+                            # step newsie forward one step
+                        # if it is, then we are over with chainup for loop
+                        if(j != length(chainUp)){
+                            newsie <- newsie + 1
+                            }
+                        }
+                    if(j != length(chainUp)){    # if j is not the length of chainup...
+                        # Need to add the edge for the polytomy 
+                            # of the next level: bottom, newsie
+                        edgar <- rbind(edgar, c(bottom, newsie))
+                        # need to update bottom and newsie
+                        # the old newsie becomes the new ancestor (bottom)
+                        bottom <- newsie   
+                        #need to define a new descendant from that ancestor for attaching next level
+                        newsie <- newsie + 1 
+                        }
+                    edgeMat <- rbind(edgeMat, edgar)
+                    }
+                if(length(chainDown) > 0){ 
+                    bottom <- savedBottom
+                    # it isn't necessary to iterate newsie by +1 if it hasn't been used yet...
+                    #newsie <- newsie+1
+                    for(j in 1:length(chainDown)){
+                        #which char is this 'level' of nodes going to use
+                        leveler <- chainDown[j]
+                        #let's make a polytomy for each unique level of nodeChar
+                        edgar <- cbind(bottom, as.numeric(names(nodeChar[nodeChar == leveler])))
+                        if(j != length(chainDown)){
+                            #Need to add the edge for the polytomy of the next level: bottom,newsie
+                            edgar <- rbind(edgar, c(bottom, newsie))
+                            # need to update bottom and newsie
+                            # - the old newsie becomes the new ancestor (bottom)
+                            bottom <- newsie   
+                            # - need to define a new descendant from that ancestor for attaching next level
+                            newsie <- newsie + 1 
+                            }
+                        edgeMat <- rbind(edgeMat, edgar)
+                        }
+                    }
+                edgeMat <- edgeMat[-1,]
+                # number of rows in edgeMat should match the length of unique values in nodeChar minus one
+                if( nrow(edgeMat) != (length(nodeChar) + length(unique(nodeChar)) - 1) ){
+                    stop(paste("edgeMat is not the right size for polyParts = ", i))
+                    }
+            ###############
+            }else{	# if data is un-ordered
+                #
+                # make every grouping but the ancestor a monophyletic cluster
+                # old lolz: # stop("haven't done this yet")
+                edgar <- cbind(bottom, as.numeric(names(nodeChar[nodeChar == ancChar])))
+                # add to edgeMat
+                edgeMat <- rbind(edgeMat, edgar)
+                grouping <- groupings[groupings != ancChar]
+                for(j in 1:length(grouping)){
+                    # Need to add the edge for the polytomy of the next group: bottom,newsie
+                    # add directly to edgemat
+                    edgeMat <- rbind(edgeMat, c(bottom, newsie))	#bottom never changes
+                    # need to update bottom and newsie
+                    bottomG <- newsie   #the old newsie becomes the new ancestor (bottom)
+                    # which char is this 'level' of nodes going to use
+                    leveler <- grouping[j]
+                    # let's make a polytomy for each unique level of nodeChar
+                    edgar <- cbind(bottomG, 
+                        as.numeric(names(nodeChar[nodeChar == leveler]))
+                        )
+                    # need to define a new descendant from that ancestor for attaching next level
+                    newsie <- newsie + 1 
+                    edgeMat <- rbind(edgeMat, edgar)
+                    }
+                edgeMat <- edgeMat[-1, ]
+                }
+            #drop any artificial ancestral taxa added to nodeChar
+            edgeMat <- edgeMat[!is.nan(edgeMat[ , 2]), ]
+            #now need to clean old edge matrix, 
+                # remove all with chosen as edge[,1], combine with edgeMat
+            tree2 <- tree1		
+            newEdge <- tree2$edge[tree2$edge[ , 1] != chosen,]
+            newEdgeMat <- rbind(newEdge, edgeMat)
+            storage.mode(newEdgeMat) <- "integer"
+            tree2$edge <- newEdgeMat
+            tree2$Nnode <- as.integer(tree2$Nnode + length(unique(nodeChar)) - 1)
+            #tree2 <- collapse.singles(reorder(tree2))
+            if(!testEdgeMat(tree2)){
+                stop("Produced edge matrix has inconsistencies")
+                }
+            #tree3 <- read.tree(text = write.tree(tree2))
+            tree3 <- cleanNewPhylo(tree2)
+            if(Ntip(tree1) != Ntip(tree3)){
+                if(Ntip(tree1) != Ntip(tree2)){
+                    stop("Taxa loss/added somehow in fixing polytomies?")
+                }else{
+                    stop("Taxa loss/added somehow in fixing tree structure?")
+                    }
+                }
+            tree1 <- tree3							
+            }
+        }
+    #randRes remaining unresolved areas: yes, no?
+    #no, leave this alone, can be a second line of code, for god sakes
+    treeFinal <- ladderize(tree1, right = FALSE)
+    if(testEdgeMat(treeFinal)){
+        return(treeFinal)
+    }else{
+        stop('resolveTreeCharMechanism returned a bad tree according to testEdgeMat')
+        }
+    }

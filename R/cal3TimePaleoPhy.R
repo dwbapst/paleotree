@@ -632,10 +632,6 @@
 #' }
 #' 
 
-#NOT NEEDED
-#NULL
-# @rdname cal3Timescaling
-
 #' @export
 cal3TimePaleoPhy <- function(
 		tree, 

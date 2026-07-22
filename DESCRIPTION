@@ -1,9 +1,17 @@
 Package: paleotree
 Type: Package
-Version: 3.4.7
+Version: 3.5.44
 Title: Paleontological and Phylogenetic Analyses of Evolution
-Date: 2024-07-06
-Author: David W. Bapst, Peter J. Wagner
+Date: 2026-04-01
+Author: David W. Bapst [aut, cre], Peter J. Wagner [aut] (Original code for functions involving the measuring and fitting various distributions to the gradual exhaustion of unexpressed character states)
+Authors@R: c(person(given = c("David", "W."),
+                      family = "Bapst",
+                      role = c("aut", "cre"),
+                      email = "dwbapst@gmail.com"),
+               person(given = c("Peter", "J."),
+                      family = "Wagner",
+                      role = "aut",
+                      comment = "Original code for functions involving the measuring and fitting various distributions to the gradual exhaustion of unexpressed character states"))
 Depends:
 	R (>= 4.1.0),
 	ape (>= 4.1)
@@ -46,4 +54,4 @@ Description: Provides tools for transforming, a posteriori time-scaling, and
     among taxon units.
 License: CC0
 URL: https://github.com/dwbapst/paleotree
-RoxygenNote: 7.3.2
+Config/roxygen2/version: 8.0.0

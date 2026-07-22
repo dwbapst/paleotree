@@ -13,23 +13,23 @@ You can install the most recent public release version of `paleotree` in R from 
 ```
 install.packages("paleotree")
 ```
-	
+
 The latest pre-release version of `paleotree` can be found at github:
 
 	https://github.com/dwbapst/paleotree
-	
+
 You can install this latest development version using the R function `install_github` in the package `devtools`:
 
 ```
 devtools::install_github("dwbapst/paleotree")
 ```
-	
+
 The above command will install the **master** branch (as the default option), which should be the most recent stable release (ideally the CRAN release, and thus should be identical to installing `paleotree` from CRAN). There will also generally be an in-development branch where the code may be in a state of change, with new features and bug-fixes. For example, the current development branch is named **developmentBranch** and can be specified with the `ref = ` argument:
 
 ```
 devtools::install_github("dwbapst/paleotree", ref="developmentBranch")
 ```	
-	
+
 Once installed, you can check the version number of your `paleotree` install using the R function `packageVersion`:
 
 ```
@@ -39,18 +39,20 @@ packageVersion("paleotree")
 If you use `paleotree` in your research, you can cite my paper describing paleotree in Methods in Ecology and Evolution:
 
 	Bapst, D.W. 2012. `paleotree`: an R package for paleontological and phylogenetic analyses of evolution. Methods in Ecology and Evolution. 3: 803-807. doi: 10.1111/j.2041-210X.2012.00223.x
-	
+
 	http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00223.x/abstract
-	
+
 You can also call the citation for `paleotree` from within R, using the citation function:
-	
+
 ```
 citation("paleotree")
 ```
-	
+
 This code is mainly authored by David Bapst, with some functions authored by Peter Wagner, and offered under CC0. Some functions are strongly based on code from Rich Fitzjohn's `diversitree` package, while others are greatly inspired by code written by Graeme Lloyd and Gene Hunt.
 
-The current total number of downloads of the `paleotree` package from the RStudio CRAN mirror is: [![Number of Downloads](http://cranlogs.r-pkg.org/badges/grand-total/paleotree)](https://github.com/r-hub/cranlogs.app)
+The current total number of downloads of the `paleotree` package from the RStudio CRAN mirror is: ![](https://cranlogs.r-pkg.org/badges/grand-total/paleotree)
+
+The monthly rate of downloads is: ![](https://cranlogs.r-pkg.org/badges/paleotree)
 
 Package Status of R CHECK via GitHub actions:
 

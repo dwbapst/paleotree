@@ -81,8 +81,8 @@
 #' As with many functions in the paleotree library, absolute time is always
 #' decreasing, i.e. the present day is zero.
 #' 
-#' @aliases termTaxa candleTaxa simCandleTaxa trueCandle simTermTaxa
-#' simTermTaxaAdvanced trueTermTaxaTree deadTree
+
+#' @aliases termTaxa candleTaxa simCandleTaxa trueCandle simTermTaxa simTermTaxaAdvanced trueTermTaxaTree deadTree
 
 #' @param ntaxa Number of monophyletic 'terminal' taxa (tip terminals) to be
 #' included on the simulated tree

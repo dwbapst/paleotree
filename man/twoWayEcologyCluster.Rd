@@ -56,7 +56,12 @@ of axis labels on the abundance dot-grid only.}
 
 \item{trimChar}{How many characters should the axis labels be trimmed to?
 Default is 5, which means only the first five letters of each taxon/site
-label will be shown on the dot-abundance plot.}
+label will be shown on the dot-abundance plot. 
+Note that 'row labels' (the horizontal X-axis elements, typically sites)
+cannot be duplicated -- each has to be unique, so if the set level of trimming
+results in duplicated labels, the trimming for those labels will be rejected,
+and the full labels will be plotted with a warning.
+If you want more detailed trimming of labels, trim it yourself!}
 
 \item{xAxisLabel}{The label placed on the horizontal axis of the plot.}
 
